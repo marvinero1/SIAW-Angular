@@ -1,0 +1,141 @@
+<div class="container-fluid p-2">
+  <mat-card style="background-color: #f9f9f9;">
+    <div class="row">
+      <div class="col-md text-left headTittle">
+        <h3><strong>Solicitudes Urgentes</strong></h3>
+      </div>
+      <div class="col-md text-right headTittle">
+        <mat-icon color="primary" (click)="close();">close</mat-icon>
+      </div>
+    </div>
+
+    <div class="pl-2">
+      <span><strong><u>Almacen: </u></strong>&nbsp; {{ almacen.codigo }}</span> &nbsp;
+    </div>
+
+    <div class="row">
+      <div class="col-lg">
+        <div class="team bg-white scrollmenu">
+          <div class="col-lg-12">
+            <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8">
+              <ng-container matColumnDef="codtarifa">
+                <th mat-header-cell *matHeaderCellDef class="th2"> Precio </th>
+                <td mat-cell *matCellDef="let element">{{ element.codtarifa }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="suarea">
+                <th mat-header-cell *matHeaderCellDef class="th2"> Su Area </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;">
+                  <input type="checkbox" [checked]="element.suarea" disabled></td>
+              </ng-container>
+
+              <ng-container matColumnDef="monto">
+                <th mat-header-cell *matHeaderCellDef class="th2"> Monto </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.monto | number: '1.2-2'}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="codmoneda">
+                <th mat-header-cell *matHeaderCellDef class="th1"> Moneda </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.codmoneda }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="peso">
+                <th mat-header-cell *matHeaderCellDef class="th1"> Peso </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.peso }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="accion">
+                <th mat-header-cell *matHeaderCellDef style="color: white !important;">Acción</th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button1 [matMenuTriggerFor]="menu">
+                    <i class="fa fa-ellipsis-v" aria-hidden="true" style="color: #093070;"></i>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item class="danger" (click)="eliminar(element);">
+                      <span><i class="fa fa-trash"></i> Eliminar</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator #paginator class="mat-paginator-sticky" [pageSizeOptions]="[5, 10]" showFirstLastButtons>
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="p-2" style="background-color: #f9f9f9;">
+    <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+      <div class="row">
+        <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Solicitudes en</u></mat-label>
+        <select formControlName="suarea" style="width: 60%;" required>
+          <option [ngValue]="trueBooleano">SU AREA</option>
+          <option [ngValue]="falseBooleano">A OTRAS AREAS</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="input-group">
+          <mat-label style="padding-right: 44px;padding-top: 7px;"><u>Precio</u>
+          </mat-label>
+          <input type="number" style="width: 56% !important;" formControlName="codtarifa" min="0"
+            [(ngModel)]="cod_precio_venta_modal_codigo" (blur)="onLeavePrecio($event)">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="modalPrecioVenta();"
+              style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+          <span></span>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <!-- <mat-label style="padding-right: 41.5px;padding-top: 7px;"><u>Monto: </u></mat-label> -->
+        <mat-slide-toggle (click)="verMonto(true);"> Monto </mat-slide-toggle>
+        &nbsp;&nbsp;&nbsp;
+        <mat-slide-toggle (click)="verPeso(true);"> Peso </mat-slide-toggle>
+
+
+        <!-- <mat-label style="padding-right: 7.5px;padding-top: 7px;"><u>Peso: </u></mat-label>
+        <input type="checkbox" value="false"> -->
+      </div>
+
+      <div class="row">
+        <ng-container *ngIf="montoInputView">
+          <div class="input-group">
+            <mat-label style="padding-right: 41.5px;padding-top: 7px;"><u>Monto: </u></mat-label>
+            <input type="number" style="width: 30% !important;" formControlName="monto" min="0">
+
+            <select formControlName="codmoneda" style="width: 30% !important;">
+              <option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                {{ monedas.codigo }}
+              </option>
+            </select>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="row">
+        <ng-container *ngIf="pesoInputView">
+          <div class="input-group">
+            <mat-label style="padding-right: 47px;padding-top: 7px;"><u>Peso: </u></mat-label>
+            <input type="number" style="width: 60% !important;" formControlName="peso" min="0">
+          </div>
+        </ng-container>
+      </div>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"
+          (click)="submitData()"><i class="fa fa-plus"></i> Adicionar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

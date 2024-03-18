@@ -1,0 +1,37 @@
+.tittle{
+    text-align: center;
+    border-style: solid;
+    border-color: #ffc107;
+    background: #093070;
+    color: white;
+}
+.mat-mdc-header-row{
+    background: #093070;
+    position: sticky;
+    top: 0;
+}
+th{
+    text-align: center;
+    color: #fff; 
+}
+td{
+    text-align: left;
+    cursor: pointer;
+}
+.mat-mdc-table .mdc-data-table__row{
+    height: calc(0rem + 0px) !important;
+}
+.mat-mdc-header-row{
+    height: calc(0rem + 0px) !important;
+}
+.mat-mdc-form-field{
+    flex-direction: inherit !important;
+}
+.mat-mdc-table .mdc-data-table__header-row {
+    height: 21px;
+}
+td:hover {
+    background-color:  #093070;
+    color: white;
+}
+

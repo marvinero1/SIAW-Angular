@@ -1,0 +1,75 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Contabilidad">
+  <span><i class="fa fa-book" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
+    <mat-icon style="padding-block-start: 8px;color: #093070;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item [matMenuTriggerFor]="transacacciones_contabilidad">Transacciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="modificaciones_contabilidad">Modificaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_contabilidad">Operaciones</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_periodicas_contabilidad">Operaciones Periodicas</a>
+  <a mat-menu-item [matMenuTriggerFor]="libros_contabilidad">Libros</a>
+  <a mat-menu-item [matMenuTriggerFor]="estado_contable_contabilidad">Estados Contables Generales</a>
+  <a mat-menu-item [matMenuTriggerFor]="costeo_contabilidad">Costeo</a>
+  <a mat-menu-item [matMenuTriggerFor]="contabilizacion_automatico_contabilidad">Contabilización Automatico</a>
+</mat-menu>
+  
+<mat-menu #transacacciones_contabilidad="matMenu">
+  <a mat-menu-item >Ingresar Comprobantes</a>
+</mat-menu>
+
+<mat-menu #modificaciones_contabilidad="matMenu">
+  <a mat-menu-item >Modificar Comprobante</a>
+</mat-menu>
+
+<mat-menu #operaciones_contabilidad="matMenu">
+  <a mat-menu-item >Aprobación de Comprobantes</a>
+  <a mat-menu-item >Mayorizar Comprobantes</a>
+  <a mat-menu-item >Cambiar Glosa de Comprobantes</a>
+  <a mat-menu-item >Des-Mayorizar Comprobantes</a>
+  <a mat-menu-item >Eliminar Comprobantes</a>
+  <a mat-menu-item >Eliminar Cuentas Auxiliares Sin Movimiento</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item >Generar Presupuesto Ejecutados</a>
+  <a mat-menu-item >Numeración General de Comprobantes</a>
+  <a mat-menu-item >Numeración Manual de Comprobantes</a>
+  <a mat-menu-item >Cambiar Centro de Costo a un Comprobante</a>
+  <a mat-menu-item >Copiar un Rango de Comprobantes</a>
+  <a mat-menu-item >Re-Numeración Por Tipo de Comprobantes</a>
+</mat-menu>
+
+<mat-menu #operaciones_periodicas_contabilidad="matMenu">
+  <a mat-menu-item >Ajuste Moneda Extranjera</a>
+  <a mat-menu-item >Ajuste Moneda Nacional</a>
+  <a mat-menu-item >Ajuste por Mantenimiento de Valor</a>
+  <a mat-menu-item >Inicio de Gestión por Centro de Costo</a>
+</mat-menu>
+
+<mat-menu #libros_contabilidad="matMenu">
+  <a mat-menu-item >Libro Mayor</a>
+  <a mat-menu-item >Generar Libro de Compra IVA</a>
+  <a mat-menu-item >Generar Libro de Ventas IVA version SIAT</a>
+  <a mat-menu-item >Generar Libro de Ventas IVA - NC Debito</a>
+</mat-menu>
+
+<mat-menu #estado_contable_contabilidad="matMenu">
+  <a mat-menu-item >Pedido de Compra</a>
+  <a mat-menu-item >Proforma de Proveedor</a>
+  <a mat-menu-item >Orden de Compra</a>
+  <a mat-menu-item >Embarque de Compra</a>
+</mat-menu>
+
+<mat-menu #costeo_contabilidad="matMenu">
+  <a mat-menu-item >Pedido de Compra</a>
+  <a mat-menu-item >Proforma de Proveedor</a>
+  <a mat-menu-item >Orden de Compra</a>
+  <a mat-menu-item >Embarque de Compra</a>
+</mat-menu>
+
+<mat-menu #contabilizacion_automatico_contabilidad="matMenu">
+  <a mat-menu-item >Pedido de Compra</a>
+  <a mat-menu-item >Proforma de Proveedor</a>
+  <a mat-menu-item >Orden de Compra</a>
+  <a mat-menu-item >Embarque de Compra</a>
+</mat-menu>

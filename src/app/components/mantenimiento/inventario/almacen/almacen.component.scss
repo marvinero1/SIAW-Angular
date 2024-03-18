@@ -1,0 +1,27 @@
+.mat-mdc-header-row{
+    background: #093070;
+}
+th{
+    text-align: center;
+    color: #fff; 
+}
+td{
+    text-align: center;
+}
+.mat-mdc-table .mdc-data-table__header-row{
+    height: calc(1.6rem + 0px) !important;
+}
+.mat-mdc-table .mdc-data-table__row{
+    height: calc(0rem + 0px) !important;
+}
+span{
+    color: #093070 !important;
+}
+
+.form-control-sm{
+	height: calc(1.6rem + 0px) !important;
+}
+
+.mat-mdc-tab.mdc-tab{
+    height: 26px !important;
+}

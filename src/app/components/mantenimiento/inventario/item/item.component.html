@@ -1,0 +1,107 @@
+<div class="p-2">
+  <div class="overlay"></div>
+  <div class="p-4 mb-3 mat-elevation-z8">
+    <div class="row">
+      <div class="col">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Buscar Item por Codigo </mat-label>
+          <input type="text" matInput [formControl]="myControl" (keyup)="applyFilter($event)" placeholder="Codigo"
+            #input style="text-transform: uppercase;">
+        </mat-form-field>
+      </div>
+
+      <div class="col-md text-center">
+        <h3>Item</h3>
+      </div>
+      <div class="col-sm">
+        <button mat-button color="primary" (click)="openDialog('500ms', '700ms')" style="float: right;">
+          <i class="fa fa-plus"></i> Crear Item</button>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team p-2 bg-white scrollmenu">
+        <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8" matSort>
+
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef> Codigo </th>
+              <td mat-cell *matCellDef="let element"> {{ element.codigo }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef> Descripcion</th>
+              <td mat-cell *matCellDef="let element"> {{ element.descripcion }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcorta">
+              <th mat-header-cell *matHeaderCellDef>Descripcion Corta</th>
+              <td mat-cell *matCellDef="let element"> {{ element.descripcorta }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripabr">
+              <th mat-header-cell *matHeaderCellDef> Descripcion Abreviada </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.descripabr }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="medida">
+              <th mat-header-cell *matHeaderCellDef> Medida </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.medida }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="unidad">
+              <th mat-header-cell *matHeaderCellDef> Unidad </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.unidad }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="accion">
+              <th mat-header-cell *matHeaderCellDef>Acción</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button1 [matMenuTriggerFor]="menu" style="color: #093070;">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="editar(element);">
+                    <span><i class="fa fa-pen"></i> Editar</span>
+                  </button>
+
+                  <button mat-menu-item (click)="eliminar(element);">
+                    <span><i class="fa fa-trash"></i> Eliminar</span>
+                  </button>
+
+                  <button mat-menu-item (click)="saldosAcubrir(element);">
+                    <span><i class="fa fa-cogs"></i> Saldos A Cubrir</span>
+                  </button>
+
+                  <button mat-menu-item (click)="componentesArmarKit(element);">
+                    <span><i class="fa fa-cogs"></i> Componentes / Armar Kit</span>
+                  </button>
+
+                  <button mat-menu-item (click)="maximoVentas(element);">
+                    <span><i class="fa fa-cogs"></i> Maximo de Venta</span>
+                  </button>
+
+                  <button mat-menu-item (click)="controPrecio(element);">
+                    <span><i class="fa fa-cogs"></i> Control de Precios</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table><br>
+
+          <mat-paginator #paginator [pageSizeOptions]="[20, 35, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

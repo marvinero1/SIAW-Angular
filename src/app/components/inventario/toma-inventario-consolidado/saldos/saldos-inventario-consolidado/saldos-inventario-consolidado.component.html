@@ -1,0 +1,73 @@
+<ng-container *ngIf="primera_ventana">
+  <div class="p-2">
+    <mat-card style="background-color: #f0f0f0;">
+      <mat-card-header class="mb-1">
+        <mat-card-title><strong>Atención</strong></mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+
+            <p class="text-center">Antes de cargar saldos en este documento de inventario, usted <strong>DEBE DE
+                ACTUALIZAR STOCK A LA FECHA
+                DEL INVENTARIO</strong>,
+              caso contrario podria trabajar con saldos erroneos, si ya actualizo saldos actuales puede continuar. <br>
+              <strong>¿ Desea Continuar ?</strong>
+            </p>
+
+            <div style="float: right;">
+              <button mat-raised-button color="primary" (click)="confirmacion()"><i class="fa fa-check"></i> Sí
+              </button>&nbsp;
+              <button mat-raised-button color="primary" (click)="close()"><i class="fa fa-times"></i> No </button>&nbsp;
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="segunda_ventana">
+  <div class="p-2">
+    <mat-card style="background-color: #f0f0f0;">
+      <mat-card-header class="mb-1">
+        <mat-card-title>Sacar Saldo Fisico</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <table class="tg">
+              <tr>
+                <th class="tg-0lax">
+                  <div class="input-group">
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Almacen</u></mat-label>
+                    <input type="text" [(ngModel)]="cod_almacen_cliente.codigo">
+
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen()"
+                        style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                        matTooltip="Buscar Almacen">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                  {{ cod_almacen_cliente.descripcion }}
+                </th>
+              </tr>
+            </table>
+
+            <mat-card-actions align="start">
+              <button mat-raised-button color="primary" (click)="generarSaldoFisico();"><i class="fa fa-cogs"></i>
+                Generar
+              </button>
+              <button mat-raised-button color="primary" (click)="close()"><i class="fa fa-times"></i> Cerrar
+              </button>&nbsp;
+            </mat-card-actions>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-container>

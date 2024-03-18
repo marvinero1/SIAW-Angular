@@ -1,0 +1,83 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Inventario">
+  <span><i class="fa fa-archive" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;">
+    </i>
+    <mat-icon style="padding-block-start: 8px;color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item [matMenuTriggerFor]="transacacciones_inventarios">Transacciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="modificaciones_inventarios">Modificaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_inventarios">Operaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="saldos_inventarios">Saldo de Inventario</a>
+  <a mat-menu-item [matMenuTriggerFor]="inventario_fisico">Inventario Fisico</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tomaInventario','/inventario/ExportarImportarSaldos');">
+    Exportar/Importar Saldos Actuales ✅</a>
+</mat-menu>
+
+<mat-menu #transacacciones_inventarios="matMenu">
+  <a mat-menu-item>Pedido</a>
+  <a mat-menu-item>Notas de Movimiento</a>
+  <a mat-menu-item>Conocimiento de Carga</a>
+  <a mat-menu-item>Solicitud de Mercaderia Urgente</a>
+  <a mat-menu-item>Lote</a>
+  <a mat-menu-item>Empaquetado</a>
+</mat-menu>
+
+<mat-menu #modificaciones_inventarios="matMenu">
+  <a mat-menu-item>Pedido</a>
+  <a mat-menu-item>Notas de Movimiento</a>
+  <a mat-menu-item>Conocimiento de Carga</a>
+  <a mat-menu-item>Solicitud de Mercaderia Urgente</a>
+  <a mat-menu-item>Lote</a>
+  <a mat-menu-item>Empaquetado</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Modificar Descuentos por Item</a>
+  <a mat-menu-item>Modificar Lista de Stocks Minimos y Maximos</a>
+  <a mat-menu-item>Modificar Listas de Empaques</a>
+</mat-menu>
+
+<mat-menu #operaciones_inventarios="matMenu">
+  <a mat-menu-item>Actualizar Empaques Remoto</a>
+  <a mat-menu-item>Determinación Stocks Minimo y Maximo</a>
+  <a mat-menu-item>Enlazar Solicitudes Urgentes</a>
+  <a mat-menu-item>Generación Pedidos de Excel</a>
+  <a mat-menu-item>Generación Pedidos Automaticos</a>
+  <a mat-menu-item>Liberar lista de Empaques de Excel</a>
+  <a mat-menu-item [matMenuTriggerFor]="clasificacion_abc">Clasificación ABC</a>
+  <a mat-menu-item>Exportar Notas de Movimiento</a>
+  <a mat-menu-item>Importar Importaciones por llegar</a>
+  <a mat-menu-item>Solicitudes Complementarias</a>
+  <a mat-menu-item>Revisar Codigos de Aduana</a>
+  <a mat-menu-item>Definir Hoja de Ruta de Entregas</a>
+  <a mat-menu-item>Cambiar Estado de Items</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tomaInventario','/inventario/operaciones/definirPrecioItem');">Definir
+    Precio de Item ✅</a>
+</mat-menu>
+
+<mat-menu #clasificacion_abc="matMenu">
+  <a mat-menu-item>Clasificación ABC Automatica</a>
+  <a mat-menu-item>Clasificación ABC Manual</a>
+</mat-menu>
+
+<mat-menu #saldos_inventarios="matMenu">
+  <a mat-menu-item>Generar Liquidación de Stocks</a>
+  <a mat-menu-item>Eliminar Liquidación de Stocks</a>
+  <a mat-menu-item (click)="guardarRutaLOG('actualizarStock','/inventario/saldoInventario/actualizarStockActual');">
+    Actualizar Stock Actual ✅</a>
+  <a mat-menu-item>Actualizar Stock de Paquetes</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Fecha de Actualización de Saldos</a>
+</mat-menu>
+
+<mat-menu #inventario_fisico="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('CreartomaInventario','/inventario/inventarioFisico/inventario');">Crear Toma
+    de Inventario ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tomaInventario','/inventario/inventarioFisico/tomaInventario');">Toma de
+    Inventario Consolidado ✅</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('registroInventario','inventario/inventarioFisico/RegistrarTomaInventarioGrupo');">Registrar
+    Toma de Inventario por Grupo ✅ </a>
+  <a mat-menu-item>Revisar Toma de Inventario por Grupos </a>
+</mat-menu>

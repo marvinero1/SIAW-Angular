@@ -1,0 +1,31 @@
+.mat-dialog-actions{
+  float: right;
+}
+
+.input-planillas2{
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.input_right{
+  float: right;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+mat-label{
+  padding-top: 6px;
+}

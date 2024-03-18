@@ -1,0 +1,183 @@
+<!-- Brand Logo -->
+<a [routerLink]="['/']" class="brand-link text-center">
+  <img src="assets/img/logo.png" alt="Pertec S.R.L Logo" style="width: 42.5%;display: block;margin: auto;"
+    class="logoRespomsive">
+  <span class="brand-text font-weight-light" style="color: white !important;">SIAW</span>
+</a>
+
+<div class="sidebar"><br>
+  <!-- Sidebar -->
+  <!-- <div class="user-panel mt-3 pb-3 mb-3 d-flex"> -->
+  <!-- <div class="image" style="padding-block-start: 0.4rem;"> -->
+  <!-- <pf-image [src]="user.picture" fallback-src="assets/img/default-profile.png"
+                class="img-circle"
+                alt="User Image"
+                width="34"
+                height="34"
+                rounded></pf-image> -->
+  <!-- <i class="fa fa-user"></i> -->
+  <!-- </div> -->
+  <!-- <div class="info">
+            <a [routerLink]="['/profile']" class="d-block"></a>
+        </div> -->
+  <!-- </div> -->
+
+  <div class="form-inline">
+    <app-sidebar-search></app-sidebar-search>
+  </div>
+
+  <div class="user-panel mt-2 pb-2 mb-2 d-flex">
+    <ul class="navbar-nav mr-auto p-2">
+      <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
+      <li>
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>calendar_today</mat-icon>
+              </td>
+              <td>&nbsp; Fecha Actual:</td>
+            </tr>
+            <tr>
+              <td>&nbsp; <strong>{{ fecha_actual_format | date:'EEEE, dd/MM/yyyy' }}</strong></td>
+            </tr>
+          </thead>
+        </table>
+      </li>
+      <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
+      <li>
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>monetization_on</mat-icon>
+              </td>
+              <td>&nbsp; Tipo Cambio: <strong>{{tipo_cambio_dolar_dolar }} {{ tipo_cambio_dolar_moneda_base }} </strong>
+              </td>
+            </tr>
+          </thead>
+        </table>
+        <!-- <span *ngFor="let tipo_cambios of tipo_cambio">
+            <ng-container *ngIf="tipo_cambios.moneda === 'US'">
+                <mat-icon>attach_money</mat-icon> Tipo Cambio: <strong><mat-icon> monetization_on</mat-icon></strong>
+            </ng-container>
+        </span> -->
+      </li>
+      <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
+      <li>
+        <!-- <span><mat-icon>settings_input_component</mat-icon>&nbsp;&nbsp;<strong>Servidor: </strong>{{ agencia_storage }}</span> -->
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>settings_input_component</mat-icon>
+              </td>
+              <td>&nbsp; Servidor:</td>
+            </tr>
+            <tr>
+              <td>&nbsp; <strong>{{ agencia_storage }}</strong></td>
+            </tr>
+          </thead>
+        </table>
+      </li>
+      <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
+      <li>
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>assignment_ind</mat-icon>
+              </td>
+              <td>&nbsp; Usuario: <strong *ngIf="session">{{ session }}</strong> </td>
+            </tr>
+          </thead>
+        </table>
+        <!-- <span><mat-icon>assignment_ind</mat-icon>&nbsp;&nbsp;<strong>Usuario</strong></span> &nbsp; -->
+      </li>
+      <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
+      <li>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>data_usage</mat-icon>
+              </td>
+              <td>&nbsp; BD: <strong *ngIf="BD_storage">{{ BD_storage.bd }}</strong></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>timeline</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="/" style="color: white;">Analítica</a></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>remove_red_eye</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="/admin/system/log" style="color: white;">LOG T.I</a></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>remove_red_eye</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="admin/system/log_usuario" style="color: white;">LOG
+                  USUARIO</a></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>public</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="https://pertec.com.bo" target="_blank"
+                  title="Sitio Web Pertec S.R.L" style="color: white;">
+                  Sitio Web Pertec S.R.L</a></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>memory</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="lab" style="color: white;">
+                  Laboratorio</a></td>
+            </tr>
+          </thead>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>cloud_off</mat-icon>
+              </td>
+              <td><a class="nav-link text-truncate" href="/sistema/documentacion/errores" style="color: white;">
+                  Doc. Excepciones</a></td>
+            </tr>
+          </thead>
+        </table>
+    </ul>
+  </div>
+</div>

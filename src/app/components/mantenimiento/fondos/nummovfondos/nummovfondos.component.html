@@ -1,0 +1,103 @@
+<div class="p-2">
+  <div class="overlay"></div>
+  <div class="mb-3 mat-elevation-z8">
+    <div class="row headTittle">
+      <div class="col-lg">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>Buscador Numeración </mat-label>
+          <input type="text" matInput [formControl]="myControl" (keyup)="applyFilter($event)" placeholder="Codigo"
+            #input>
+        </mat-form-field>
+      </div>
+      <div class="col-md text-center">
+        <h3>Numeración de Movimientos de Fondos</h3>
+      </div>
+      <div class="col-sm">
+        <button mat-button color="primary" (click)="openDialog()" style="float: right;">
+          <i class="fa fa-plus"></i> Crear Numeración</button>
+      </div>
+
+      <div class="col-md-1 text-right">
+        <mat-icon color="primary">arrow_drop_down</mat-icon>
+        <mat-icon color="primary">close</mat-icon>
+      </div>
+    </div>
+  </div>
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+  <div class="row">
+    <div class="col-lg">
+      <div class="team p-2 bg-white scrollmenu">
+        <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8">
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> Código</th>
+              <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+              <th mat-header-cell *matHeaderCellDef style="text-align: left;"> Descripción</th>
+              <td mat-cell *matCellDef="let element" style="text-align: left;"> {{ element.descripcion }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nroactual">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Nro. Actual </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.nroactual }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="horareg">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Hora Reg </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.horareg }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechareg">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Fecha Reg </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">
+                {{ element.fechareg | date:'yyyy/MM/dd' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="usuarioreg">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Usuario Reg </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.usuarioreg }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="codunidad">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Cod. Unidad </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codunidad }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descUnidad">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Desc. Unidad </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.descUnidad }} </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="accion">
+              <th mat-header-cell *matHeaderCellDef>Acción</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button1 [matMenuTriggerFor]="menu">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true" style="color: #093070;"></i>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="editar(element);">
+                    <span><i class="fa fa-pen"></i> Editar</span>
+                  </button>
+                  <button mat-menu-item (click)="eliminar(element);">
+                    <span><i class="fa fa-trash"></i> Eliminar</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator #paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

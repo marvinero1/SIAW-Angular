@@ -1,0 +1,184 @@
+<!-- <form class="form-inline ml-3" [formGroup]="searchForm" *ngIf="false">
+    <div class="input-group input-group-sm">
+        <input
+            class="form-control form-control-navbar"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+        />
+        <div class="input-group-append">
+            <button class="btn btn-navbar" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+</form> -->
+
+<div class="col">
+  <div class="row">
+    <!--<div class="col">
+            <a class="nav-link" (click)="onToggleMenuSidebar()" role="button" style="text-align: center;">
+                <i class="fas fa-bars" style="font-size: 1.3rem;"></i>
+            </a>
+        </div> -->
+    <div class="col">
+      <div class="row">
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <a mat-button class="nav-link" style="padding-top: 11px;" (click)="guardarRutaLOG('inicio','/');">
+              <span>🏠 Inicio</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-archivo></app-archivo>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-herramientas></app-herramientas>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-mantenimiento></app-mantenimiento>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-reportes></app-reportes>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-ayuda></app-ayuda>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-ventanas></app-ventanas>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" style="font-size: 0.95rem;">
+              <span>Historial <mat-icon style="padding-block-start: 7px;">keyboard_arrow_down</mat-icon></span>
+            </a>
+
+            <mat-menu #mantenimiento="matMenu">
+              <button mat-menu-item (click)="goBack();">
+                <i class="fa fa-arrow-left"></i>&nbsp; Ventana Anterior
+              </button>
+              <div>
+                <hr>
+                <ul class="list-group">
+                  <li class="list-group-item fila" *ngFor="let log_rutas of log_ruta | orderBy: 'id'"
+                    style="padding: 0.65rem 0.25rem !important;">
+                    <div class="row ">
+                      <div class="col-sm">
+                        <img src="assets/img/logo.png" alt="Pertec S.R.L Logo"
+                          style="width: 61%;height: 80%;display: block;margin: auto;border-radius: 11px;"
+                          class="logoRespomsive">
+                      </div>
+                      <div class="col-sm-8">
+                        <span class="row" style="text-transform: uppercase;">{{ log_rutas.ventana }}</span>
+                        <span class="row" (click)="rutaPATH(log_rutas.detalle);"
+                          style="cursor: pointer;color: dodgerblue;">
+                          <span class="ahover overflow-string">{{ log_rutas.detalle }}</span>
+                        </span>
+
+                        <span class="row" style="color: gray;">Hrs: {{ log_rutas.hora }}</span>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </mat-menu>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+          <!-- <app-messages></app-messages> -->
+          <app-notifications></app-notifications>
+          <!-- <app-language></app-language> -->
+          <app-user></app-user>
+          <!-- <li class="nav-item">
+                    <button class="nav-link" (click)="onToggleControlSidebar()">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </li> -->
+        </ul>
+      </div>
+
+      <div class="row" style="padding-left: 10px;">
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-inventario></app-menu-inventario>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-ventas></app-menu-ventas>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-cuentas-cobrar></app-menu-cuentas-cobrar>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-importaciones></app-menu-importaciones>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-contabilidad></app-menu-contabilidad>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-activos-fijos></app-menu-activos-fijos>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-planillas-personal></app-menu-planillas-personal>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-compras></app-menu-compras>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden">
+          <li class="nav-item">
+            <app-menu-fondos></app-menu-fondos>
+          </li>
+        </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden" style="float: right;">
+          <a class="nav-link" (click)="onToggleMenuSidebar()" role="button" style="text-align: center;color: #093070;">
+            <i class="fas fa-bars" style="font-size: 1.3rem;"></i>
+          </a>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

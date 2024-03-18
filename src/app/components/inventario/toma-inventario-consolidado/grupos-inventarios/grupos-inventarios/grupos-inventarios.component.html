@@ -1,0 +1,128 @@
+<div class="p-2">
+  <mat-card style="background-color: #f0f0f0;">
+    <mat-card-header>
+      <mat-card-title style="font-size: 0.8rem;">Grupo de Personas</mat-card-title>
+      <div class="col">
+        <div style="float: right;">
+          <mat-icon color="primary" (click)="close()">close</mat-icon>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content style="height: 50vh !important;">
+      <mat-tab-group style="height: 45.5vh !important;">
+        <mat-tab label="Crear Grupo"><br>
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()"
+            style="margin-bottom: 30px;">
+
+            <mat-label style="padding-right: 19px;padding-top: 9px;"><u>Grupo Nro</u></mat-label>
+            <input type="text" formControlName="nro" maxlength="6" required>
+
+            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Observación</u></mat-label>
+            <input type="text" formControlName="obs" maxlength="15"><br>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="!FormularioData.valid"
+              style="float: right;margin-top: 4px;">
+              <i class="fa fa-save"></i> Grabar
+            </button>
+          </form>
+        </mat-tab>
+
+        <mat-tab label="Ver Grupos">
+          <mat-accordion>
+            <ng-container *ngFor="let grupos of grupo">
+              <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                (click)="cargarIntegrantesGrupo(grupos.codigo)">
+                <!--<mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"> -->
+
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <strong>Grupo #</strong> {{ grupos.nro }}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <button mat-raised-button class="danger" (click)="eliminarGrupo(grupos.codigo)"><i
+                        class="fa fa-trash"></i></button>
+                    <!-- {{panelOpenState ? 'open' : 'closed'}} -->
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <p><strong><u>Integrantes</u></strong></p>
+                <ng-container *ngFor="let integrantes_grupos of integrantes_grupo">
+                  <div class="row">
+                    <div class="col-md-10">
+                      <span>{{ integrantes_grupos.codpersona }} - {{ integrantes_grupos.nomPersona }}</span>
+                    </div>
+
+                    <div class="col-md-2" style="float: right !important;">
+                      <button mat-mini-fab style="width: 20px;height: 20px;"
+                        (click)="eliminarGrupoPersona(integrantes_grupos);">
+                        <mat-icon style="font-size: 0.9rem;margin-block-start: 10px;">delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <p><strong><u>Observaciones</u></strong></p>
+                <p>{{ grupos.obs }}</p>
+
+                <button mat-raised-button class="success" (click)="catalogoPepersona(grupos.codigo)"><i
+                    class="fa fa-plus"></i></button>
+
+                <!-- <ng-container *ngIf="tabla">
+                  <div class="col">
+                    <table class="tg">
+                      <div class="col-lg">
+                        <div class="team p-2 scrollmenu">
+                          <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+                            <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
+                              class="mat-elevation-z8">
+
+                              <ng-container matColumnDef="codigo">
+                                <th mat-header-cell *matHeaderCellDef class="th1"> Codigo </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.persona.codigo }} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="nombre">
+                                <th mat-header-cell *matHeaderCellDef class="th1"> Nombre </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center;">
+                                  {{ element.persona.descrip }}
+                                </td>
+                              </ng-container>
+
+                              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                            <mat-paginator #paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons>
+                            </mat-paginator>
+
+                            <div style="float: left;">
+                              <button mat-raised-button class="secondary" (click)="catalogoPepersona()"><i
+                                  class="fa fa-plus"></i></button>
+                            </div>
+
+                            <div style="float: right;">
+                              <button mat-raised-button class="secondary" (click)="eliminar()"><i
+                                  class="fa fa-minus"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button mat-raised-button color="primary" style="float: right;margin-top: 4px;"
+                        (click)="agregarPersonas()">
+                        <i class="fa fa-save"></i> Agregar Persona
+                      </button>
+                    </table>
+                  </div>
+                </ng-container> -->
+              </mat-expansion-panel>
+            </ng-container>
+          </mat-accordion>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true"><br>
+  <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+</ngx-spinner>

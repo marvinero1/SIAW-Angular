@@ -1,0 +1,33 @@
+<div class="float-right d-none d-sm-block foo" style="font-size: 0.75rem;">
+  <span> Todos los Derechos Reservados &copy;
+    &nbsp;
+  </span><b>Version</b> {{ appVersion }}</div>
+
+<div class="row">
+  <div class="col">
+    <span class="pr-4">{{ session }} </span>|
+
+    <ng-container *ngIf="nombre_ventana">
+      <span class="pr-4">{{ nombre_ventana }} </span>
+    </ng-container>
+
+    <ng-container *ngIf="!nombre_ventana">
+      <span class="pr-4">S/N</span>
+    </ng-container>
+
+    <span class="pr-4">| {{ BD_storage.bd }} </span>|
+
+    <span class="pr-4"> {{ agencia_storage }} </span>|
+
+    <span class="pr-4">{{ tipo_cambio_dolar_moneda_base }} {{ tipo_cambio_dolar_dolar }} </span>|
+
+    <span class="pr-4"> Hoy es: {{ fecha_actual_format }}</span>
+
+  </div>
+  <!-- <div class="col">
+        <span>Copyright &copy; {{ currentYear }}</span>
+        <a href="https://www.pertec.com.bo" style="font-size: 0.75rem !important;margin: 0"
+            target="_blank" rel="noopener noreferrer">www.pertec.com.bo
+        </a>
+    </div> -->
+</div>

@@ -1,0 +1,20 @@
+<mat-card class="example-card p-2 text-center">
+  <mat-card-header style="display: block !important;margin: auto;">
+    <mat-card-title><strong>Tu Sesión Expiro</strong></mat-card-title>
+    <mat-card-title style="font-size: 4.5rem;">🕕</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>Estuviste mas de 15 min, sin actividad y se cerro tu sesion.</p>
+    <p>Favor vuelva a Iniciar Sesión</p>
+    <mat-divider></mat-divider>
+  </mat-card-content>
+
+  <mat-card-actions class="text-center" style="display: block;margin: auto;">
+    <button mat-flat-button color="warn" (click)="sessionExpired();">OK!</button>
+  </mat-card-actions>
+
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>

@@ -1,0 +1,138 @@
+<div class="p-2">
+    <h1 mat-dialog-title>Crear Empresa</h1>
+    <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+</div>
+
+<div mat-dialog-content>
+    <div class="container">
+        <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <div class="row mb-2">
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" formControlName="codigo" maxlength="2" required>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Nombre </mat-label>
+                        <input matInput type="text" formControlName="descripcion" maxlength="30" required>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>NIT </mat-label>
+                        <input matInput type="text" formControlName="nit" maxlength="15" required>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Actividad </mat-label>
+                        <input matInput type="text" formControlName="actividad" maxlength="50" required>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Dirección </mat-label>
+                        <input matInput type="text" formControlName="direccion" maxlength="30" required>
+                      </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Municipio </mat-label>
+                        <input matInput type="text" formControlName="municipio" maxlength="30">
+                      </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Inicio</mat-label>
+                        <mat-select formControlName="iniciogestion">
+                            <mat-option value="1">Enero</mat-option>
+                            <mat-option value="2">Febrero</mat-option>
+                            <mat-option value="3">Marzo</mat-option>
+                            <mat-option value="4">Abril</mat-option>
+                            <mat-option value="5">Mayo</mat-option>
+                            <mat-option value="6">Junio</mat-option>
+                            <mat-option value="7">Julio</mat-option>
+                            <mat-option value="8">Agosto</mat-option>
+                            <mat-option value="9">Septiembre</mat-option>
+                            <mat-option value="10">Octubre</mat-option>
+                            <mat-option value="11">Noviembre</mat-option>
+                            <mat-option value="12">Diciembre</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Fin</mat-label>
+                            <mat-select formControlName="fingestion">
+                                <mat-option value="1">Enero</mat-option>
+                                <mat-option value="2">Febrero</mat-option>
+                                <mat-option value="3">Marzo</mat-option>
+                                <mat-option value="4">Abril</mat-option>
+                                <mat-option value="5">Mayo</mat-option>
+                                <mat-option value="6">Junio</mat-option>
+                                <mat-option value="7">Julio</mat-option>
+                                <mat-option value="8">Agosto</mat-option>
+                                <mat-option value="9">Septiembre</mat-option>
+                                <mat-option value="10">Octubre</mat-option>
+                                <mat-option value="11">Noviembre</mat-option>
+                                <mat-option value="12">Diciembre</mat-option>
+                            </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Plan de Cuentas</mat-label>
+                        <mat-select formControlName="plancuenta">
+                            <mat-option *ngFor="let cnplancuentas of cnplancuenta" [value]="cnplancuentas.codigo">
+                                {{ cnplancuentas.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Moneda Base</mat-label>
+                        <mat-select formControlName="moneda">
+                            <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                                {{ monedas.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Agencia Local</mat-label>
+                        <mat-select formControlName="codalmacen">
+                            <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                                {{ almacens.codigo }} - {{ almacens.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i class="fa fa-save"></i> Guardar</button>
+            </div>
+        </form>
+        <button mat-button (click)="onNoClick();"><i class="fa fa-arrow-left"></i> Atras</button>
+    </div>
+</div>

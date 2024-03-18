@@ -1,0 +1,70 @@
+    .col{
+        margin: 1px;
+    }
+    mat-icon {
+        font-size: 1.1rem !important;
+    }
+
+    .form-control-sm{
+        height: calc(1.6rem + 0px) !important;
+    }
+
+    // Tabla SCSS
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+        
+    th, td, .th, .td {
+        text-align: center !important;
+        border: 0.5px solid black;
+        /* padding: 8px; */
+    }
+        
+    .mat-mdc-row:nth-child(odd) {
+        background-color: #80808017;
+    }
+
+    .mat-mdc-header-row, .mat-header-row{
+        position: sticky;
+        top: 0;
+        background-color: #ffc107;
+        min-height: 25px !important;
+    }
+
+    .mat-row, .mat-header-row, .mat-footer-row{
+        width: 100%;
+        display: table-row !important;
+    }
+
+    mat-row, mat-header-row, mat-footer-row{
+        width: 100%;
+        display: table-row !important;
+    }
+
+    .mat-row, .mat-footer-row{
+        min-height: 25px !important;
+    }
+
+    .input-group-text, .form-control-sm {
+        font-size: 0.75rem;
+    }
+
+    .input-group-text {
+        background-color: transparent;
+        color: black;
+    }
+
+    .btn-outline-secondary:hover {
+        color: #fff !important;
+        background-color: #093070;
+        border-color: #093070;
+    }
+
+    .mat-mdc-table .mdc-data-table__row{
+        height: 27px !important;
+    }
+
+    mat-tab-group{
+        font-size: 0.7rem !important;
+    }

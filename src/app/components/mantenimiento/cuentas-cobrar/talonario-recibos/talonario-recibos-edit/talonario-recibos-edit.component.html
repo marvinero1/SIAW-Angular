@@ -1,0 +1,84 @@
+<div class="p-2">
+  <h1 mat-dialog-title>Editar Talonario de Recibos {{ talon_edit.codigo }}</h1>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <form class="example-form" [formGroup]="FormularioDataEdit" (ngSubmit)="submitData()">
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field color="accent" class="example-full-small" style="display: inline;">
+            <mat-label>Fecha</mat-label>
+            <input matInput formControlName="Fecha" [(ngModel)]="talon_edit.fecha" [matDatepicker]="picker2">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2 color="primary"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Del </mat-label>
+            <input type="number" min="0" step="1" (input)="onInputChange1($event.target.value)" matInput
+              formControlName="TalDel" [(ngModel)]="talon_edit.talDel" required>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Al </mat-label>
+            <input type="number" min="0" step="1" (input)="onInputChange2($event.target.value)" matInput
+              formControlName="TalAl" [(ngModel)]="talon_edit.talAl" required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Número Actual </mat-label>
+            <input type="number" min="0" step="1" (input)="onInputChange($event.target.value)" matInput
+              formControlName="nroactual" [(ngModel)]="talon_edit.nroactual" required>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md">
+          <div class="input-group">
+            <ng-container>
+              <input style="background-color: transparent; color: black; border: 1px solid #959595;"
+               type="text" class="form-control form-control-sm" formControlName="codvendedor"
+              placeholder="Vendedor" [(ngModel)]="talon_edit.codvendedor" (blur)="onLeaveVendedor($event)">
+            </ng-container>
+        
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
+                style="border-color: #093070;"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline" style="display: inline;">
+            <mat-label>Descripción </mat-label>
+            <input type="text" matInput formControlName="descripcion" maxlength="20"
+              [(ngModel)]="talon_edit.descripcion" required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mat-dialog-actions" mat-dialog-actions>
+        <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
+
+        <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit"><i
+            class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

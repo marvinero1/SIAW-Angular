@@ -1,0 +1,466 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material'as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$adminlte-primary: mat.define-palette(mat.$indigo-palette);
+$adminlte-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$adminlte-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
+  accent: $adminlte-accent,
+  warn: $adminlte-warn,
+)));
+
+[_nghost-wmk-c219] {
+  display: list-item !important;
+}
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($adminlte-theme);
+@import '~handsontable/dist/handsontable.full.css';
+
+/* You can add global styles to this file, and also import other style files */
+// @import '~bootstrap/scss/bootstrap';
+
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap';
+
+@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+@import '~admin-lte/plugins/fontawesome-free/css/all.min.css';
+@import '~admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css';
+@import '~admin-lte/dist/css/adminlte.min.css';
+
+@import 'ngx-toastr/toastr';
+
+body {
+  width: 100vw;
+  height: 100vh;
+}
+
+.btn{
+  padding: 0rem 0.75rem !important;
+  font-size: 0.75rem !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+tr,
+i {
+  font-size: 0.72rem !important;
+}
+
+p,
+span,
+sup,
+td,
+.badge {
+  font-size: 0.718rem !important;
+}
+
+input::placeholder {
+  font-size: 0.72rem !important;
+  opacity: 1;
+  /* Firefox */
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.content {
+  padding: 0 0.5rem;
+}
+
+.success {
+  color: green !important;
+}
+
+.warning {
+  color: rgb(200, 200, 5) !important;
+}
+
+.danger {
+  color: rgb(255, 41, 41) !important;
+}
+
+.blank {
+  color: rgb(70, 67, 67) !important;
+}
+
+// Sidebar menu animation
+// Needed for open/close menu animation for menus with child nodes
+.nav .nav-item:not(.menu-open)>.ng-trigger-openClose,
+.nav .nav-item>.ng-trigger-openClose.ng-animating {
+  overflow: hidden;
+  display: block;
+  padding-right: 1.5rem !important;
+}
+
+// Override original AdminLTE transform
+.nav-sidebar .menu-is-opening>.nav-link i.right,
+.nav-sidebar .menu-is-opening>.nav-link svg.right,
+.nav-sidebar .menu-open>.nav-link i.right,
+.nav-sidebar .menu-open>.nav-link svg.right {
+  transform: none;
+}
+
+.mat-mdc-menu-item {
+  min-height: 30px !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.content-wrapper {
+  background-color: white !important;
+}
+
+.sidebar {
+  padding-right: 1.5rem !important;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  --mdc-protected-button-container-color: #093070 !important;
+}
+
+.mat-sort-header-arrow {
+  color: whitesmoke !important;
+}
+
+.mat-mdc-checkbox.mat-accent {
+  --mdc-checkbox-selected-checkmark-color: #ffc107 !important;
+  --mdc-checkbox-selected-icon-color: #093070 !important;
+  --mdc-checkbox-selected-focus-icon-color: #ffc107 !important;
+  --mdc-checkbox-selected-hover-icon-color: #093070 !important;
+  --mdc-checkbox-selected-pressed-icon-color: #093070 !important;
+}
+
+// .login-page, .register-page{
+//     background-image: url('assets/img/opcion2Bk.jpg') !important;
+//     background-repeat: no-repeat;
+//     background-position: center center;
+//     background-size: cover;
+// }
+
+.coorporativo-snackbar {
+  background: #093070;
+  --mdc-snackbar-container-color: 093070 !important;
+  color: white;
+}
+
+.coorporativo-snackbar button {
+  background-color: #fbd800;
+  color: black;
+  border: none;
+}
+
+.navbar-warning {
+  background-color: #fbd800 !important;
+  color: black;
+  border: none;
+}
+
+.red-snackbar {
+  background: #F44336;
+  color: white;
+}
+
+.red-snackbar button {
+  background-color: #F44336;
+  color: white !important;
+  border: none;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: white !important;
+}
+
+// ACA
+.sidebar-mini .main-sidebar .nav-link,
+.sidebar-mini-md .main-sidebar .nav-link,
+.sidebar-mini-xs .main-sidebar .nav-link {
+  width: calc(250px - 0.5rem * 2) !important;
+}
+
+
+@media (min-width: 992px) {
+  .logoRespomsive {
+    width: 25%;
+  }
+
+  .sidebar-mini.sidebar-collapse .main-sidebar,
+  .sidebar-mini.sidebar-collapse .main-sidebar::before {
+    width: 0rem !important; //aumentar el valor para aparezca por la izquierda el menu
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar-mini.sidebar-collapse .content-wrapper,
+  .sidebar-mini.sidebar-collapse .main-footer,
+  .sidebar-mini.sidebar-collapse .main-header {
+    margin-left: 0rem !important; //aumentar el valor para aparezca por la izquierda el menu
+  }
+}
+
+.mat-mdc-option {
+  min-height: 30px !important;
+}
+
+.mat-mdc-card-header {
+  display: flex !important;
+  padding: 16px 8px 0 !important;
+}
+
+.mat-card-title, mat-card-title, mat-card-subtitle, .mat-card-subtitle{
+  font-size: 0.8rem !important;
+}
+// .mat-mdc-select-panel-above .mdc-menu-surface.mat-mdc-select-panel, .mdc-menu-surface.mat-mdc-select-panel{
+//     background-color: #fbd800 !important;
+// }
+
+.mat-mdc-paginator .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 3px !important;
+}
+
+.main-footer {
+  position: sticky !important;
+  padding: 0px 0px 0px 0px;
+  // height: calc(1.3rem + 0px) !important;
+  bottom: 0;
+  // width: 100%;
+}
+
+// .wrapper .content-wrapper {
+//   margin-bottom: 2.5px !important;
+//   padding-bottom: 2.5px !important;
+// }
+
+.mdc-text-field .mdc-floating-label {
+  font-size: 0.70rem !important;
+
+}
+
+.mdc-text-field {
+  overflow: inherit !important;
+}
+
+.mat-mdc-paginator-container {
+  font-size: 0.75rem;
+}
+
+.form-control-sm {
+  height: calc(1.5rem + 0px) !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-text-field__input {
+  font-size: 0.7rem !important;
+}
+
+.mat-mdc-text-field-wrapper {
+  height: calc(1.8rem + 0px) !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 9px;
+  /* padding-bottom: 26px;*/
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-text-field__input {
+  padding-top: 7px !important;
+}
+
+.mat-mdc-checkbox {
+  font-size: 0.72rem !important;
+}
+
+//label flotante de los inputs
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  top: 13px !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+  --mat-mdc-form-field-label-transform: translateY(-20.75px) scale(var(--mat-mdc-form-field-floating-label-scale, 0.75)) !important;
+}
+
+.mat-datepicker-toggle-active {
+  color: #093070 !important;
+}
+
+.mat-mdc-icon-button svg {
+  margin-bottom: 25px !important;
+}
+
+.mdc-icon-button {
+  font-size: 5px !important;
+}
+
+mat-icon, .mat-icon{
+  cursor: pointer !important;
+}
+
+mat-icon-button1 .mat-icon-button1 .mat-mdc-icon-button .mat-mdc-icon-button.mat-mdc-button-base {
+  width: 0px !important;
+  height: 0px !important;
+  border-radius: 50%;
+  flex-shrink: 0;
+  text-align: center;
+  color: var(--mdc-icon-button-icon-color, inherit);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.mat-mdc-dialog-container .mdc-dialog__content {
+  font-size: 0.7rem !important;
+  padding: 7px 10px 7px 10px !important;
+}
+
+.mat-label,
+mat-label,
+input,
+.input .select,
+select {
+  font-size: 0.718rem !important;
+}
+
+.input-readonly {
+    &::placeholder {
+        color: red; // Cambia el color del texto del placeholder a rojo
+    }
+}
+
+.input{
+    &::placeholder {
+        color: red; // Cambia el color del texto del placeholder a rojo
+    }
+}
+
+input,
+select, textarea {
+  font-size: 0.7rem !important;
+}
+
+.input::placeholder {
+  color: red;
+  opacity: 1; /* Firefox */
+}
+
+
+
+.mat-mdc-button.mat-mdc-button-base,
+.mat-mdc-raised-button.mat-mdc-button-base,
+.mat-mdc-unelevated-button.mat-mdc-button-base,
+.mat-mdc-outlined-button.mat-mdc-button-base {
+  height: 26px !important;
+}
+
+.mat-mdc-slide-toggle.mat-accent{
+  font-size: 0.7rem !important;
+    --mdc-switch-selected-focus-state-layer-color: #093070;
+    --mdc-switch-selected-handle-color: #093070;
+    --mdc-switch-selected-hover-state-layer-color: #093070;
+    --mdc-switch-selected-pressed-state-layer-color: #fbd800;
+    --mdc-switch-selected-focus-handle-color: #093070;
+    --mdc-switch-selected-hover-handle-color: #093070;
+    --mdc-switch-selected-pressed-handle-color: #fbd800;
+    --mdc-switch-selected-focus-track-color: #fbd800;
+    --mdc-switch-selected-hover-track-color: #fbd800;
+    --mdc-switch-selected-pressed-track-color: #093070;
+    --mdc-switch-selected-track-color: #fbd800;
+}
+
+.input, input, matInput, .matInput, textarea{
+  text-transform: uppercase !important;
+}
+
+.headTittle{
+  padding: 20px 20px 10px 20px !important;
+}
+
+.mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell{
+  // position: sticky;
+  // top: 0;
+}
+
+.mdc-list-item.mdc-list-item--with-one-line .mdc-list-item__end{
+  display: none !important;
+}
+
+.mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix{
+  padding-top: 10px !important;
+  padding-bottom: 0px !important;
+}
+
+.mat-mdc-icon-button.mat-mdc-button-base{
+  padding: 0px !important; 
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background-color: transparent !important;
+}
+
+.mat-mdc-menu-item:hover:not([disabled]), .mat-mdc-menu-item.cdk-program-focused:not([disabled]), .mat-mdc-menu-item.cdk-keyboard-focused:not([disabled]), .mat-mdc-menu-item-highlighted:not([disabled]){
+  background-color: #fbd800 !important;
+}
+
+.disable-backdrop-click .cdk-overlay-backdrop.cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
+  pointer-events: none;
+}
+
+
+
+//hottable
+.handsontable .wtBorder.corner{
+  background-color:#ffc107 !important;
+}
+
+.handsontable .wtBorder.current{
+  background-color:#ffc107 !important;
+}
+
+.handsontable .htDimmed{
+  color: black;
+}
+
+::ng-deep .bg-yellow .mat-dialog-container{
+ --mdc-dialog-container-color: #ffffc0 !important;
+}
+
+.my-custom-row-class{
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 0.7rem !important;
+  padding: 3px 1px 1px 1px !important;  
+}
+

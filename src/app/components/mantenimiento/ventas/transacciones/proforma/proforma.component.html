@@ -1,0 +1,1796 @@
+<div class="content" style="background-color:#CEFFFF !important;">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="divTable">
+        <div class="input-group-append text-center" style="float: left;">
+          <!-- BOTONES -->
+          <div class="input-group-append">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Aprobar</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="limpiar();">
+              <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente &&
+              id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''">
+              <span><i class="fa fa-clone" aria-hidden="true" style="color: #ffc107;"></i> Transferir</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+              <span> <i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i> Validar</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="modalVerificarCreditoDisponible();">
+              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Verificar Crédito
+                Disponible</span>
+            </button>
+          </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="pt-1">
+            <h3><strong><u>PROFORMA</u></strong></h3>
+          </div>
+          <!-- BOTONES FIN -->
+        </div>
+
+
+        <div class="input-group-append text-center" style="float: right;">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()">
+            <i class="fa fa-th blue" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-inbox blue" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <mat-icon class="red">photo_size_select_small</mat-icon>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button" [disabled]="!codigo_cliente"
+            (click)="estadoPagoClientes();">
+            <mat-icon class="blue">photo_size_select_small</mat-icon>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-inbox blue" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-question-circle black" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-inbox red" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-window-restore blue" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-calculator blue" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <mat-icon class="yellow"> monetization_on</mat-icon>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-user black" aria-hidden="true"></i>
+          </button>
+          <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <i class="fa fa-clone green" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content">
+    <!-- cabecera -->
+    <form class="example-form" [formGroup]="FormularioData">
+      <div class="mat-elevation-z2 row">
+        <!-- primeraColumna -->
+        <div class="col-md">
+          <div class="row">
+            <div class="col-md-7" style="padding-right: 0px;padding-left: 6.5px;">
+              <div class="input-group">
+                <div class="input-group-">
+                  <span class="input-group-text form-control-sm"
+                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID Tipo </u></span>
+                </div>
+
+                <ng-container>
+                  <input type="text" class="form-control form-control-sm" formControlName="id"
+                    [(ngModel)]="cod_id_tipo_modal_id" [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo"
+                    (blur)="onLeaveIDTipo($event)" style="margin-left: 16px;">
+                </ng-container>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                    style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;">
+              <div class="input-group">
+                <input type="text" class="form-control form-control-sm" formControlName="numeroid"
+                  [(ngModel)]="id_proforma_numero_id" [readonly]="true">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
+              ngModel="{{fecha_actual | date:'dd/MM/yyyy'}}" [readOnly]="true">
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+              ngModel="{{fecha_actual | date:'dd/MM/yyyy'}}" [readOnly]="true" formControlName="fecha_inicial">
+            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+              formControlName="hora_inicial" ngModel="{{fecha_actual | date:'hh:mm'}}" [readOnly]="true">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-">
+                  <span class="input-group-text form-control-sm"
+                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Almacen </u></span>
+                </div>
+
+                <ng-container>
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario"
+                    formControlName="codalmacen" id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)"
+                    style="margin-left: 6px;">
+                </ng-container>
+
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen();"
+                    style="border-color: #093070;" matTooltip="Buscar Almacen"><i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+
+              <div class="input-group">
+                <div class="input-group-">
+                  <span class="input-group-text form-control-sm"
+                    style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                    <u> Vendedor </u></span>
+                </div>
+
+                <ng-container>
+                  <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
+                    formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente_modal"
+                    [(ngModel)]="cod_vendedor_cliente" [(ngModel)]="vendedor_cliente_catalogo_real"
+                    [class.is-invalid]="f.codvendedor.invalid && (f.codvendedor.dirty || f.codvendedor.touched)"
+                    (blur)="onLeaveVendedor($event)">
+                </ng-container>
+
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
+                    style="border-color: #093070;" matTooltip="Buscar Vendedor"><i class="fa fa-search"></i>
+                  </button>
+                  <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback" style="display: block;">
+                    <mat-icon>info</mat-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Preparación </u></span>
+            </div>
+            <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;" [(ngModel)]="preparacion"
+              formControlName="preparacion" required>
+              <mat-option value="NORMAL">NORMAL</mat-option>
+              <mat-option value="URGENTE">URGENTE</mat-option>
+              <mat-option value=FINAL>FINAL</mat-option>
+              <mat-option value="URGENTE PROVINCIAS">URGENTE PROVINCIAS</mat-option>
+              <mat-option value="POR COMISIONISTA">POR COMISIONISTA</mat-option>
+              <mat-option value="CAJA CERRADA RECOGE CLIENTE">CAJA CERRADA RECOGE CLIENTE</mat-option>
+            </mat-select>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Tipo Cliente </u></span>
+            </div>
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente"
+              [readOnly]="true">
+          </div>
+        </div>
+
+        <!-- segundaColumna -->
+        <div class="col col-lg-4">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm" style="border: 0 !important;"><u>Venta Cliente en
+                  Oficina</u></span>
+            </div>
+            <div class="input-group-prepend">
+              <div class="input-group-text" style="border: 0;">
+                <input type="checkbox" [checked]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Ventas</u> </span>
+            </div>
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo"
+                (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta" formControlName="preciovta">
+            </ng-container>
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary form-control-sm" style="border-color: #093070;"
+                (click)="modalPrecioVenta();"> <i class="fa fa-search"></i>
+              </a>
+              <a class="btn btn-outline-primary form-control-sm" style="border-color: #093070;"
+                (click)="aplicarPrecioVenta(cod_precio_venta_modal_codigo)"><i class="fa fa-cog"></i> Aplicar
+              </a>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 3px 0px 25px;border: 0 !important;"><u>Desct. Especiales</u> </span>
+            </div>
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal_codigo"
+                id="inputCatalogoDesctEspecial" formControlName="descuentos">
+            </ng-container>
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                (click)="modalDescuentoEspecial();">
+                <i class="fa fa-search"></i>
+              </a>
+              <a class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                (click)="aplicarDesctEspc(cod_descuento_modal_codigo);"><i class="fa fa-cog"></i> Aplicar
+              </a>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback" style="display: block;">
+              <mat-icon>info</mat-icon>
+            </div>
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 8px 4px 0px 48px !important;border: 0 !important;"><u>Tipo de Pago</u></span>
+            </div>
+            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
+              formControlName="tipopago"
+              [class.is-invalid]="f.tipopago.invalid && (f.tipopago.dirty || f.tipopago.touched)" required>
+              <mat-option [value]=0>CREDITO</mat-option>
+              <mat-option [value]=1>CONTADO</mat-option>
+            </mat-select>
+          </div>
+
+          <ng-container *ngIf="tipopago === '1'">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 16px;border: 0 !important;"><u>Es Contra Entrega</u></span>
+              </div>
+              <div class="input-group-prepend">
+                <div class="input-group-text" style="border: 0 !important;">
+                  <input [checked]="es_contra_entrega" type="checkbox" formControlName="contra_entrega">
+                </div>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 3px 0px 0px;border: 0 !important;"><u>Estado Contra Entrega</u> </span>
+              </div>
+              <select class="custom-select1 form-control-sm" formControlName="estado_contra_entrega">
+                <option value="YA CANCELO">YA CANCELO</option>
+                <option value="POR CANCELAR">POR CANCELAR</option>
+              </select>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- terceraColumna -->
+        <div class="col col-lg-4" style="float: right;">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 9px 0px 0px 18px;border: 0 !important;"><u>Cod. Cliente</u></span>
+            </div>
+            <input type="text" class="form-control cliente form-control-sm" formControlName="codcliente"
+              [(ngModel)]="codigo_cliente" style="margin-left: 6.5px;" id="inputCatalogoCliente"
+              placeholder="COD. CLIENTE">
+            <div class="input-group-append">
+              <span class="input-group-text form-control-sm" (click)="modalClientes();"
+                style="cursor: pointer; border: 1;">
+                <i class="fa fa-search" aria-hidden="true" style="color: #093070;"></i>
+              </span>
+              <span class="input-group-text form-control-sm" (click)="mandarCodCliente(codigo_cliente);"
+                style="cursor: pointer; border: 1;">
+                <i class="fa fa-eye" aria-hidden="true" style="color: #093070;"></i>
+              </span>
+            </div>
+            <div class="input-group-append">
+              <button class="input-group-text form-control-sm" type="button" [disabled]="!codigo_cliente"
+                (click)="modalClientesInfo('900ms', '900ms');">
+                <i class="fa fa-info-circle" aria-hidden="true" style="color: #093070;"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 9px 8px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
+            </div>
+            <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
+                formControlName="razon_social" [(ngModel)]="razon_social" readonly>
+            </ng-container>
+
+            <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
+                formControlName="razon_social" [(ngModel)]="razon_social" readonly>
+            </ng-container>
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                [disabled]="razon_social !== 'SIN NOMBRE'" (click)="guardarNombreCliente();"><i class="fa fa-save"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 7px 5px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
+            </div>
+
+            <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_comercial_razon_social"
+                formControlName="nomcliente">
+            </ng-container>
+
+            <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_comercial_razon_social"
+                formControlName="nomcliente" readonly>
+            </ng-container>
+
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 9px 3px 2px 42px;border: 0 !important;"><u>Doc. Id. </u></span>
+            </div>
+
+            <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+              [(ngModel)]="tipo_doc_cliente">
+              <mat-option *ngFor="let documento_identidads of documento_identidad"
+                [value]="documento_identidads.codigoclasificador">
+                {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+            </mat-select>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 3px 0px 55px;border: 0 !important;"><u>N.I.T. </u></span>
+              <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
+                [(ngModel)]="nit_cliente" style="margin-left: 3px;" [class.is-invalid]="f.nit.invalid &&
+                (f.nit.dirty || f.nit.touched)" (paste)="onPaste($event)" required>
+              <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+            </div>
+
+            <div class="col-sm">
+              <container-element [ngSwitch]="tipo_doc_cliente">
+                <ng-container *ngSwitchCase="1">
+                  <input type="text" class="form-control form-control-sm" value="CI - CEDULA DE IDENTIDAD"
+                    style="font-size: 0.55rem !important;width: 100%;" disabled>
+                </ng-container>
+                <ng-container *ngSwitchCase="2">
+                  <input type="text" class="form-control form-control-sm"
+                    value="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO" style="width: 100%;font-size: 0.55rem !important;"
+                    disabled>
+                </ng-container>
+                <ng-container *ngSwitchCase="3">
+                  <input type="text" class="form-control form-control-sm" value="PAS - PASAPORTE"
+                    style="font-size: 0.55rem !important;width: 100%;" disabled>
+                </ng-container>
+                <ng-container *ngSwitchCase="4">
+                  <input type="text" class="form-control form-control-sm" value="OD - OTRO DOCUMENTO DE IDENTIDAD"
+                    style="font-size: 0.55rem !important;width: 100%;" disabled>
+                </ng-container>
+                <ng-container *ngSwitchCase="5">
+                  <input type="text" class="form-control form-control-sm"
+                    value="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" style="width: 100%;font-size: 0.55rem !important;"
+                    disabled>
+                </ng-container>
+              </container-element>
+            </div>
+
+            <input type="text" class="form-control-sm" formControlName="complemento_ci" [(ngModel)]="complemento_ci"
+              style="width: 10%;">
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;"><u
+                  (click)="setEmailDefault();" style="cursor: pointer;">Email </u></span>
+            </div>
+            <ng-container *ngIf="!email_cliente">
+              <input type="email" class="form-control form-control-sm" formControlName="email" style="margin-left: 4px;"
+                style="margin-left: 2px;" placeholder="CORREO ELECTRONICO" [(ngModel)]="email">
+            </ng-container>
+
+            <ng-container *ngIf="email_cliente">
+              <input type="email" class="form-control form-control-sm" formControlName="email"
+                [(ngModel)]="email_cliente" style="margin-left: 2px;">
+            </ng-container>
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                (click)="guardarCorreo();" [disabled]="!email_cliente"><i class="fa fa-save"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 9px 3px 0px 32px;border: 0 !important;"><u>Whatsapp </u></span>
+            </div>
+
+            <input type="text" class="form-control form-control-sm" formControlName="celular" style="margin-left: 2px;"
+              [(ngModel)]="whatsapp_cliente">
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" formControlName="codmoneda"
+                [(ngModel)]="moneda_get_catalogo" placeholder="Moneda">
+            </ng-container>
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary form-control-sm" type="button" (click)="modalCatalogoMoneda();"
+                style="border-color: #093070;"><i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="tipo_cambio_moneda_catalogo"
+              formControlName="tdc" readOnly="true" style="text-align: left !important;">
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- finCabezera -->
+
+    <!-- InicioTabla -->
+    <div class="row">
+      <div class="col">
+        <mat-tab-group style="height: 38vh !important; overflow-y: scroll;overflow-x: scroll;max-height: 40vh;">
+          <mat-tab label="Detalle del Pedido">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+              style="padding: 0 1px 0 19px !important;" multiTemplateDataRows matSort>
+              <!-- accion Column -->
+              <!-- <ng-container matColumnDef="accion">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> x </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center !important; padding: 0 0px 0 0px !important;color:
+                  red;"></td>
+              </ng-container> -->
+
+              <!-- orden Column -->
+              <ng-container matColumnDef="orden">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Orden </th>
+                <td mat-cell *matCellDef="let element"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ orden_creciente }} </td>
+              </ng-container>
+
+              <!-- Item Column -->
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef (click)="modalCatalogoProductos()"
+                  style="text-align: center !important;cursor: pointer;">
+                  <i class="fa fa-plus" style="text-align: center !important;cursor: pointer;"></i>&nbsp;<u>Item</u>
+                </th>
+                <td mat-cell *matCellDef="let element" class="td">
+                  <div (click)="itemDataAll(element.coditem)" style="cursor: pointer;">
+                    {{ element.coditem }}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Descripcion Column -->
+              <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef style="width: 30%;text-align: left !important;"> Descripción </th>
+                <td mat-cell *matCellDef="let element" style="width: 30%;"> {{ element.descripcion }} </td>
+              </ng-container>
+
+              <!-- Medida Column -->
+              <ng-container matColumnDef="medida">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Medida </th>
+                <td mat-cell *matCellDef="let element" class="medida"
+                  style="text-align: center !important;padding: 0 0px 0 5px;"> {{ element.medida }} </td>
+              </ng-container>
+
+              <!-- Unidad Column -->
+              <ng-container matColumnDef="unidad">
+                <th mat-header-cell *matHeaderCellDef> Ud </th>
+                <td mat-cell *matCellDef="let element"> {{ element.udm }} </td>
+              </ng-container>
+
+              <!-- iva Column -->
+              <ng-container matColumnDef="iva">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> %IVA </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center !important;"> {{ element.porceniva }}
+                </td>
+              </ng-container>
+
+              <!-- pedido Column -->
+              <ng-container matColumnDef="pedido">
+                <th mat-header-cell *matHeaderCellDef> Pedido </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                  <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
+                    placeholder="{{ element.cantidad_pedida }}" (click)="copiarCantidad(element)" min="0">
+                </td>
+              </ng-container>
+
+              <!-- cantidad Column -->
+              <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> Cantidad </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                  <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
+                    (click)="cambiarBoolValorTotal();">
+                </td>
+              </ng-container>
+
+              <!-- sld Column -->
+              <ng-container matColumnDef="sld">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> % SLD</th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                  {{ element.porcen_mercaderia | number:'2.2-2'}}
+                </td>
+              </ng-container>
+
+              <!-- TP Column -->
+              <ng-container matColumnDef="tp">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> TP </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="number" class="pedido" placeholder="{{ element.codtarifa }}" min="0">
+                </td>
+              </ng-container>
+
+              <!-- DE Column -->
+              <ng-container matColumnDef="de">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> DE </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="number" class="pedido" placeholder="{{ element.coddescuento }}" min="0"
+                    [readOnly]="true">
+                </td>
+              </ng-container>
+
+              <!-- PUL Column -->
+              <ng-container matColumnDef="pul">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PUL </th>
+                <td mat-cell *matCellDef="let element"> {{ element.preciolista }} </td>
+              </ng-container>
+
+              <!-- NIV Column -->
+              <ng-container matColumnDef="niv">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> NIV </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element.niveldesc }}
+                </td>
+              </ng-container>
+
+              <!-- % Column -->
+              <ng-container matColumnDef="porcentaje" style="width: 5%;text-align: right;">
+                <th mat-header-cell *matHeaderCellDef> % </th>
+                <td mat-cell *matCellDef="let element"> {{ element.porcendesc | number:'2.2-2' }} </td>
+              </ng-container>
+
+              <!-- PD Column -->
+              <ng-container matColumnDef="pd">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PD </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element.preciodesc }}
+                </td>
+              </ng-container>
+
+              <!-- PU Column -->
+              <ng-container matColumnDef="pu">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PU </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                  {{ element.precioneto | number:'2.2-2' }} </td>
+              </ng-container>
+
+              <ng-container>
+                <!-- total Column -->
+                <ng-container matColumnDef="total" *ngIf="total_desct_precio === false; else totaldescprecio">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: right;">
+                    {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }}
+                    <!-- {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }} -->
+                  </td>
+                </ng-container>
+              </ng-container>
+              <ng-template #totaldescprecio>
+                <!-- total Column Al aplicar precio/descuento-->
+                <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: right;">
+                    {{ element.total }}
+                  </td>
+                </ng-container>
+              </ng-template>
+
+              <!-- <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right;"> X </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right;"> z </td>
+              </ng-container> -->
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </table>
+          </mat-tab>
+          <mat-tab label="Negativos"></mat-tab>
+          <mat-tab label="Limites Maximo de Ventas"></mat-tab>
+          <mat-tab label="Resultado de Validacion">
+            <table mat-table [dataSource]="dataSource_validacion" class="mat-elevation-z8" multiTemplateDataRows
+              matSort>
+
+              <!-- orden Column -->
+              <ng-container matColumnDef="orden">
+                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Orden </th>
+                <td mat-cell *matCellDef="let element"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ orden_creciente }} </td>
+              </ng-container>
+
+              <!-- Item Column -->
+              <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef class="th" (click)="modalCatalogoProductos()">
+                  <i class="fa fa-plus" style="font-size: 0.6rem !important;"></i>&nbsp;<u>Item</u>
+                </th>
+                <td mat-cell *matCellDef="let element" class="td">
+                  <!-- <input type="text" id="inputSaldosF9" value="{{ element.coditem }}"> -->
+                  {{ element.coditem }}
+                </td>
+              </ng-container>
+
+              <!-- Descripcion Column -->
+              <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Descripción </th>
+                <td mat-cell *matCellDef="let element" style="width: 30%;"> {{ element.descripcion }} </td>
+              </ng-container>
+
+              <!-- Medida Column -->
+              <ng-container matColumnDef="medida">
+                <th mat-header-cell *matHeaderCellDef> Medida </th>
+                <td mat-cell *matCellDef="let element"> {{ element.medida }} </td>
+              </ng-container>
+
+              <!-- Unidad Column -->
+              <ng-container matColumnDef="unidad">
+                <th mat-header-cell *matHeaderCellDef> Unidad </th>
+                <td mat-cell *matCellDef="let element"> {{ element.ud }} </td>
+              </ng-container>
+
+              <!-- iva Column -->
+              <ng-container matColumnDef="iva">
+                <th mat-header-cell *matHeaderCellDef> IVA </th>
+                <td mat-cell *matCellDef="let element"> {{ element.porcenIV }} </td>
+              </ng-container>
+
+              <!-- pedido Column -->
+              <ng-container matColumnDef="pedido">
+                <th mat-header-cell *matHeaderCellDef class="right1"> Pedido </th>
+                <td mat-cell *matCellDef="let element" class="right1">
+                  <input matInput type="number" class="right1" [(ngModel)]="element.pedido">
+                </td>
+              </ng-container>
+
+              <!-- cantidad Column -->
+              <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="text" class="pedido" [(ngModel)]="element.cantidad"
+                    placeholder="{{ element.cantidad }}">
+                </td>
+              </ng-container>
+
+              <!-- sld Column -->
+              <ng-container matColumnDef="sld">
+                <th mat-header-cell *matHeaderCellDef> % </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="text" class="pedido" [(ngModel)]="element.porcen_mercaderia"
+                    placeholder="{{ element.porcen_mercaderia}}"> aaA
+                </td>
+              </ng-container>
+
+              <!-- TP Column -->
+              <ng-container matColumnDef="tp">
+                <th mat-header-cell *matHeaderCellDef> TP </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="text" class="pedido" placeholder="{{ element.tp }}">
+                </td>
+              </ng-container>
+
+              <!-- DE Column -->
+              <ng-container matColumnDef="de">
+                <th mat-header-cell *matHeaderCellDef> DE </th>
+                <td mat-cell *matCellDef="let element">
+                  <input matInput type="text" class="pedido" placeholder="{{ element.de }}">
+                </td>
+              </ng-container>
+
+              <!-- PUL Column -->
+              <ng-container matColumnDef="pul">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> PUL </th>
+                <td mat-cell *matCellDef="let element" class="right1" style="text-align: right !important;">
+                  {{ element.pul }} </td>
+              </ng-container>
+
+              <!-- NIV Column -->
+              <ng-container matColumnDef="niv">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> NIV </th>
+                <td mat-cell *matCellDef="let element" style="text-align: center !important;"> {{ element.ni }} </td>
+              </ng-container>
+
+              <!-- % Column -->
+              <ng-container matColumnDef="porcentaje">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> % </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element.porcentaje }}
+                </td>
+              </ng-container>
+
+              <!-- PD Column -->
+              <ng-container matColumnDef="pd">
+                <th mat-header-cell *matHeaderCellDef> PD </th>
+                <td mat-cell *matCellDef="let element"> {{ element.pd }} </td>
+              </ng-container>
+
+              <!-- PU Column -->
+              <ng-container matColumnDef="pu">
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> PU </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element.pu }} </td>
+              </ng-container>
+
+              <!-- total Column -->
+              <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef class="th"> Total </th>
+                <td mat-cell *matCellDef="let element" class="td"> {{ element.total }} </td>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </table>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+    <!-- FinTabla -->
+
+    <div>
+      <!-- inicioPiePagina -->
+      <div class="row" style="height: 37vh !important;">
+        <div class="col-md-10">
+          <mat-tab-group style="border-style: ridge;padding: 1px;height: 99% !important;">
+            <mat-tab label="Datos">
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 8px;border: 0 !important;"><u>Medio Transporte</u></span>
+                          </div>
+                          <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
+                            [(ngModel)]="transporte" formControlName="transporte" required
+                            [class.is-invalid]="f.transporte.invalid && (f.transporte.dirty || f.transporte.touched)">
+                            <option selected>Elija... </option>
+                            <option value="FLOTA">FLOTA</option>
+                            <option value="TRANSPORTADORA">TRANSPORTADORA</option>
+                            <option value="CAMION PERTEC">CAMION PERTEC</option>
+                            <option value="RECOGE CLIENTE">RECOGE CLIENTE</option>
+                            <option value="LLEVA VENDEDOR">LLEVA VENDEDOR</option>
+                            <option value="TAXI">TAXI</option>
+                            <option value="CAMION">CAMION</option>
+                            <option value="OTRO">OTRO</option>
+                          </select>
+                          <div *ngIf="submitted && f.transporte.invalid" class="invalid-feedback"
+                            style="display: block;">
+                            <mat-icon>info</mat-icon>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Nombre
+                                Transporte</u></span>
+                          </div>
+                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                            formControlName="nombre_transporte" [(ngModel)]="medio_transporte">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 8px;border: 0 !important;"><u>Flete Pagado Por</u></span>
+                          </div>
+                          <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
+                            formControlName="fletepor" [(ngModel)]="fletepor">
+                            <option selected>Elija...</option>
+                            <option value="OTROS">OTROS</option>
+                            <option value="CLIENTE">CLIENTE</option>
+                            <option value="PERTEC POR COBRAR">PERTEC POR COBRAR</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>T. Entrega</u></span>
+                          </div>
+                          <input type="text" class="form-control form-control-sm"
+                            style="margin-left: 5px;background-color: #ffff00;color: black;" placeholder="0.00"
+                            formControlName="tipoentrega" [(ngModel)]="tipoentrega">
+
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-primary form-control-sm" type="button"
+                              style="border-color: #093070;"><i class="fa fa-cog"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">Kgr.</span>
+                          </div>
+                          <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
+                            placeholder="0.00" formControlName="peso" [(ngModel)]="peso" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 0px 0px 0px 61px;border: 0 !important;"><u>Latitud</u></span>
+                          </div>
+                          <span style="padding-top: 5px;padding-left: 14px;">{{ latitud_cliente }}</span>
+                          <input type="text" [(ngModel)]="latitud_cliente" formControlName="latitud" hidden>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Longitud</u></span>
+                          </div>
+                          <span style="padding-top: 5px;padding-left: 14px;">{{ longitud_cliente }}</span>
+                          <input type="text" [(ngModel)]="longitud_cliente" formControlName="longitud" hidden>
+                        </div>
+                      </div>
+
+                      <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
+                        <mat-icon> my_location</mat-icon>
+                      </a>
+
+                      <div class="col-md-4">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Ubicación</u></span>
+
+                          <ng-container *ngIf="central_ubicacion && central_ubicacion === undefined " ; else
+                            central_ubicacion1>
+                            <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
+                              formControlName="ubicacion" placeholder="LOCAL" value="local" [readonly]="true">
+                          </ng-container>
+
+                          <ng-template #central_ubicacion1>
+                            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                              formControlName="ubicacion" [readonly]="true">
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="height: calc(2.3rem + 5px) !important;padding: 10px 0px 0px 48px;border: 0 !important;">
+                              <u>Dirección</u></span>
+                          </div>
+                          <textarea class="form-control" [ngModel]="direccion" rows="1" id="inputCatalogoDireccion"
+                            style="font-size: 0.79rem !important;margin-left: 6px;"
+                            [(ngModel)]="codigo_cliente_catalogo_direccion" formControlName="direccion"
+                            readonly></textarea>
+
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-primary form-control-sm" type="button"
+                              (click)="modalClientesDireccion(codigo_cliente);"
+                              style="border-color: #093070;height: calc(2.3rem + 5px) !important;">
+                              <i class="fa fa-cog"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
+                              padding: 10px 0px 0px 32px;border: 0 !important;"><u>Observación</u></span>
+                          </div>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                            style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 4px;border: 0 !important;"><u>Orden de Compra</u></span>
+                          </div>
+                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                            [readOnly]="true" formControlName="odc">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </mat-tab>
+
+            <mat-tab label="Anticipo Ventas Contado"><br>
+              <div class="row">
+                <form class="example-form" [formGroup]="FormularioData">
+                  <div class="col-md">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group">
+                          <mat-checkbox class="example-margin" formControlName="pago_contado_anticipado"
+                            (click)="enabledPagoFormaAnticipada(true);"></mat-checkbox>
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 5px;border: 0 !important;"><u>El Pago se
+                                Realiza de Forma Anticipada</u></span>
+                          </div>
+                        </div>
+
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                              <u>Total Anticipo Aplicado</u></span>
+                          </div>
+                          <input type="number" class="form-control form-control-sm" style="margin-left: 5px;
+                          width: 15% !important;text-align: right;" formControlName="monto_anticipo"
+                            placeholder="0.00">
+                        </div><br>
+                        <div style="text-align: center;">
+                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                            (click)="modalAnticiposProforma();" [disabled]="!anticipo_button"
+                            style="border-color: #ffc107;"><i class="fa fa-archive"></i> Asignar Anticipo
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Cliente Real - Referencial"><br>
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group-prepend text-center p-2">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                            <u>El Cliente Referencia-Real que realiza el pedido es:</u></span>
+                        </div>
+                        <div style="display:  -webkit-box;flex-direction:column;">
+                          <input type="text" class="form-control form-control-sm"
+                            style="margin-left: 5px;width: 15% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
+                            formControlName="cliente_real" readonly>
+                          <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                            [(ngModel)]="razon_social" [(ngModel)]="nombre_cliente_catalogo_real" readonly> -->
+                          <span>{{ nombre_cliente_catalogo_real }}</span>
+                        </div><br>
+                        <div>
+                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                            style="float: left;margin-left: 5px;" [disabled]="!codigo_cliente"
+                            (click)="definirClienteReferencia(codigo_cliente, cliente_casual);">
+                            <i class="fa fa-cog"></i> Definir Cliente Referencia
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </mat-tab>
+
+            <mat-tab label="Descuentos de Linea de Solicitud"><br>
+              <div class="row">
+                <div class="col-md">
+                  <div class="row p-2">
+                    <form class="example-form" [formGroup]="FormularioData">
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm" style="margin-block-start: 8px;">
+                              <u>Habilitar Descuentos de Línea
+                                Ségun Solicitud</u>
+                            </span>
+
+                            <mat-checkbox [(ngModel)]="habilitar_desct_sgn_solicitud"
+                              formControlName="desclinea_segun_solicitud">
+                            </mat-checkbox>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID de Tipo</u></span>
+                          </div>
+                          <mat-select *ngFor="let desct_linea_id_tipos of desct_linea_id_tipo"
+                            style="margin-left: 5px;border: 1px solid black; width: 81% !important;"
+                            [(ngModel)]="id_solicitud_desct" formControlName="idsoldesctos">
+                            <mat-option value="desct_linea_id_tipos.codigo">
+                              {{ desct_linea_id_tipos.codigo }} -
+                              {{ desct_linea_id_tipos.descripcion }}
+                            </mat-option>
+                          </mat-select>
+                        </div><br>
+
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;">
+                          <i class="fa fa-archive"></i> Solicitud Descuentos de Nivel
+                        </button> Realizar Ventana?
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Complementar Proforma">
+              <div class="row">
+                <div class="col-md-12">
+                  <form class="example-form" [formGroup]="FormularioData">
+                    <div class="row">
+                      <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 5px;border: 0 !important;">
+                              <u>Complementar Proforma</u></span>
+                          </div>
+                          <mat-checkbox class="example-margin" [formControl]="disableSelect">
+                          </mat-checkbox>
+                        </div>
+                        <mat-form-field>
+                          <mat-label>Eliga una Opción</mat-label>
+                          <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf">
+                            <mat-option value="0">1. Dimediado - Precio Mayorista Para Cumplir
+                              Monto Minimo
+                            </mat-option>
+                            <mat-option value="1">2. Para Cumplir Monto Minimo Para Aplicar
+                              Descuento Extra
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-8">
+                        <div class="col-md-6">
+                          <div class="input-group">
+                            <select [disabled]="!disableSelect.value" formControlName="idpf_complemento"
+                              (ngModel)="idpf_complemento_view">
+                              <option value="option1">Option 1</option>
+                              <option value="option2">Option 2</option>
+                              <option value="option3">Option 3</option>
+                            </select>
+
+                            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                              formControlName="nroidpf_complemento" (ngModel)="nroidpf_complemento_view"
+                              [disabled]="!disableSelect.value">
+
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-primary form-control-sm" type="button"
+                                style="border-color: #ffc107;" (click)="buscadorIDComplementarProforma(idpf_complemento_view,
+                              nroidpf_complemento_view);">
+                                <i class="fa fa-search"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                <u>Fecha Aut Proforma</u></span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" placeholder="0.00" disabled>
+                          </div>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                <u>SubTotal Proforma</u></span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" style="margin-left: 7px;"
+                              placeholder="0.00" disabled>
+                          </div>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                <u>Total Proforma</u></span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" style="margin-left: 28px;"
+                              placeholder="0.00" disabled>
+
+                            <input type="text" class="form-control form-control-sm" style="width: 10%;"
+                              placeholder="0.00" disabled>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Ultimas Proformas">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows
+                style="height: 12rem !important;text-align: center !important; padding: 0px 0px 0px 0px !important">
+
+                <!-- COD PROFORMA Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                </ng-container>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="numero_id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Numero ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                </ng-container>
+
+                <!-- Cod. Cliente Column -->
+                <ng-container matColumnDef="cod_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="cliente_real">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="nombre_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
+                  <td mat-cell *matCellDef="let element" class="center1">EMPRO METAL</td>
+                </ng-container>
+
+                <!-- NIT Column -->
+                <ng-container matColumnDef="nit">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
+                  <td mat-cell *matCellDef="let element" class="center1">3823337020</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
+                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
+                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
+                </ng-container>
+
+
+                <!-- Aprobada Column -->
+                <ng-container matColumnDef="aprobada">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Aprobada </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <!-- Transferida Column -->
+                <ng-container matColumnDef="transferida">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns_ultimas_proformas"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns_ultimas_proformas;"></mat-row>
+              </table>
+
+            </mat-tab>
+
+            <mat-tab label="Ultimas Ventas Item 23 Dias">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows
+                style="height: 12rem !important;text-align: center !important; padding: 0px 0px 0px 0px !important">
+
+                <!-- COD PROFORMA Column -->
+                <ng-container matColumnDef="codproforma">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Prof </th>
+                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                </ng-container>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                </ng-container>
+
+                <!-- Numero I Column -->
+                <ng-container matColumnDef="numero_id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> # ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Column -->
+                <ng-container matColumnDef="cod_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="cod_cliente_real">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="nom_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
+                  <td mat-cell *matCellDef="let element" class="center1">EMPRO METAL</td>
+                </ng-container>
+
+                <!-- NIT Column -->
+                <ng-container matColumnDef="nit">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
+                  <td mat-cell *matCellDef="let element" class="center1">3823337020</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
+                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
+                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
+                </ng-container>
+
+                <!-- Cantidad Column -->
+                <ng-container matColumnDef="cantidad">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 500 </td>
+                </ng-container>
+
+                <!-- Moneda Column -->
+                <ng-container matColumnDef="moneda">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Moneda </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> BS </td>
+                </ng-container>
+
+                <!-- Aprobada Column -->
+                <ng-container matColumnDef="aprobada">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Aprobada </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <!-- Transferida Column -->
+                <ng-container matColumnDef="transferida">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns_venta_23_dias"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns_venta_23_dias;"></mat-row>
+              </table>
+            </mat-tab>
+
+            <mat-tab label="Precios - Descuento Especial">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows>
+
+                <!-- COD PROFORMA Column -->
+                <ng-container matColumnDef="codproforma">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Prof </th>
+                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                </ng-container>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                </ng-container>
+
+                <!-- Numero I Column -->
+                <ng-container matColumnDef="numero_id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> # ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Column -->
+                <ng-container matColumnDef="cod_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="cod_cliente_real">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Real Column -->
+                <ng-container matColumnDef="nom_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
+                  <td mat-cell *matCellDef="let element" class="center1">EMPRO METAL</td>
+                </ng-container>
+
+                <!-- NIT Column -->
+                <ng-container matColumnDef="nit">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
+                  <td mat-cell *matCellDef="let element" class="center1">3823337020</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
+                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="total">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
+                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                </ng-container>
+
+                <!-- Total Column -->
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
+                </ng-container>
+
+                <!-- Cantidad Column -->
+                <ng-container matColumnDef="cantidad">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 500 </td>
+                </ng-container>
+
+                <!-- Moneda Column -->
+                <ng-container matColumnDef="moneda">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Moneda </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> BS </td>
+                </ng-container>
+
+                <!-- Aprobada Column -->
+                <ng-container matColumnDef="aprobada">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Aprobada </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <!-- Transferida Column -->
+                <ng-container matColumnDef="transferida">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <input type="checkbox">
+                  </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns_precios_desct"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns_precios_desct;"></mat-row>
+              </table>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> Aplicar Desc. Especial S/Tipo Precio
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <i class="fa fa-eraser"></i> Borrar Desc.
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <i class="fa fa-inbox red" aria-hidden="true"></i> Validar Empaque Desc. Espc.
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <i class="fa fa-comments" aria-hidden="true"></i> Sugerir Cantidad Desc. Especial
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <i class="fa fa-check"></i> Aplicar a Todos
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.724rem !important;">
+                    <mat-icon class="green">restore_page</mat-icon> Restaurar Todos
+                  </button>
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ff8c00;font-size: 0.724rem !important;">
+                    <i class="fa fa-tags" aria-hidden="true"></i> Dividir Items Para Cumplir Emp Caj Cerrada
+                  </button>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Descuentos de Nivel">
+              <div class="row p-2">
+                <div class="col-md">
+                  <form class="example-form" [formGroup]="FormularioData">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm"
+                          style="margin-left: 15px;border: 0 !important;"><u>Aplicar Desct. de Nivel
+                            Actuales del Cliente</u></span>
+                      </div>
+                      <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" style="width: 18%;"
+                        formControlName="niveles_descuento">
+                        <option value="ACTUAL" selected>ACTUAL</option>
+                        <option value="ANTERIOR">ANTERIOR</option>
+                      </select>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 116px;border: 0 !important;">
+                          <u>Precio Principal del Pedido</u></span>
+                      </div>
+                      <input type="text" style="margin-left: 6px;">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;">
+                          <i class="fa fa-check"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 129px;border: 0 !important;">
+                          <u>Tipo Descuento de Nivel</u></span>
+                      </div>
+
+                      <select style="margin-left: 5px;">
+                        <option value="C">C : DESC PROM MARZO 2024</option>
+                      </select>&nbsp;
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;" [disabled]="!codigo_cliente">
+                          <i class="fa fa-cog"> Aplicar Descuento</i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+
+        <!-- inicioTotales -->
+        <div class="col-md-2">
+          <div>
+            <form class="example-form" [formGroup]="FormularioData">
+              <div class="row">
+                <div class="col-md">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="display: block;border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub Total</u>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-md text-center">
+                  <span> {{ subtotal | number: '1.2-2' }} </span>&nbsp;
+                  <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
+                </div>
+
+                <div class="col-md">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                      (click)="modalSubTotal();">
+                      <mat-icon>monetization_on</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 5px 0px 0px 0px;display: block;border: 0 !important;"><u>Recargos</u></span>
+                  </div>
+                </div>
+                <div class="col-md text-center">
+                  <span>{{ recargos | number: '1.2-2' }} </span>&nbsp;
+                  <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
+                </div>
+                <div class="col-md">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                      (click)="modalDescuentoEspecial();">
+                      <mat-icon>monetization_on</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 5px 0px 0px 0px;display: block;border: 0 !important;"><u>Desct.</u></span>
+                  </div>
+                </div>
+                <div class="col-md text-center">
+                  <span> {{ des_extra | number: '1.2-2' }}</span>&nbsp;
+                  <input type="text" [(ngModel)]="des_extra" formControlName="des_extra" [hidden]="true">
+                </div>
+                <div class="col-md">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                      (click)="modalDescuentoEspecial();">
+                      <mat-icon>monetization_on</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 5px 0px 0px 0px;display: block;border: 0 !important;"><u>IVA</u></span>
+                  </div>
+                </div>
+                <div class="col-md text-center">
+                  <span>{{ iva | number: '1.2-2' }}</span>&nbsp;
+                  <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
+                </div>
+                <div class="col-md">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                      (click)="btnVerificarCreditoDisponible();">
+                      <mat-icon>monetization_on</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-1">
+                <div class="col-md">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 5px 0px 0px 0px;display: block;border: 0 !important;"><u>Total</u></span>
+                  </div>
+                </div>
+                <div class="col-md text-center">
+                  <span> {{ total | number: '1.2-2' }} </span>&nbsp;
+                  <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
+                </div>
+                <div class="col-md">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                      (click)="totabilizar();">
+                      <mat-icon>monetization_on</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+
+
+            <!-- BTN ABAJO TOTAL -->
+            <div class="text-center" style="text-align: center;">
+              <div>
+                <button mat-raised-button
+                  style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Aplicar Desc.
+                  Deposito</button>
+
+                <button mat-raised-button
+                  style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Quitar Desc.
+                  Deposito</button>
+              </div>
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
+                (click)="modalClienteEtiqueta(codigo_cliente);" [disabled]="!codigo_cliente">
+                <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
+              </button>
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <i class="fa fa-eraser"></i></button>
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <mat-icon class="green" style="margin-left: 10px;margin-right: 10px;"> layers</mat-icon>
+              </button>
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <mat-icon class="blue" style="margin-left: 10px;margin-right: 10px;"> layers</mat-icon>
+              </button>
+            </div>
+            <!-- FIN BTN ABAJO TOTAL -->
+          </div>
+        </div>
+        <!-- finTotales -->
+      </div>
+      <!-- finpiePagina -->
+
+
+      <div mat-dialog-footer>
+        <!-- Saldos -->
+        <div class="row pl-2">
+          <input type="text" class="inputsSaldos" value="311: {{ data_almacen_local.saldo | number:'2.2-2'}}"
+            style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
+          <ng-container *ngIf="almacenes_saldos">
+            <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
+              <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'2.2-2'"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
+              <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'2.2-2'"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
+              <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'2.2-2'"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
+              <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'2.2-2'"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
+              <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'2.2-2'"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!almacenes_saldos">
+
+          </ng-container>
+        </div>
+        <!-- finSaldos -->
+
+        <!-- Empaques -->
+        <div class="row">
+          <div class="col-sm">
+            <div class="input-group">
+              <span class="input-group-text form-control-sm">Empaques</span>
+
+              <ng-container *ngIf="!empaque_view; else empaque_view">
+                <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+              </ng-container>&nbsp;
+
+              <ng-template #empaque_view>
+                <div *ngFor="let empaquesItems of empaquesItem">
+                  <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                    ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <!-- finempaque -->
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="timer" [fullScreen]="true">
+  <br>
+  <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+</ngx-spinner>

@@ -1,0 +1,15 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Activos Fijos">
+  <span><i class="fa fa-cubes" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
+  <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item >Administración de Activos </a>
+  <a mat-menu-item >Mantenimiento Activo</a>
+  <a mat-menu-item >Revaluo de Activos</a>
+  <a mat-menu-item >Depreciación de Activos</a>
+  <a mat-menu-item >Depreciación de Activos Por Periodos</a>
+  <a mat-menu-item >Traslado de Activos</a>
+  <a mat-menu-item >Baja de Activos</a> 
+</mat-menu>
+

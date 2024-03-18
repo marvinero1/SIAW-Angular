@@ -1,0 +1,105 @@
+<section style="background-color: #f9f9f9;">
+  <div class="container-fluid">
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="timer" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;"><strong>Etiqueta Proforma</strong></mat-card-title>
+        </div>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <div class="container row">
+        <div class="col-md-4">
+          <span><strong>Proforma:</strong> {{ id_proforma_get }}-{{ numero_id_proforma }}</span>
+        </div>
+        <div class="col-md-8" style="text-align: end !important;">
+          <span>
+            <strong>Cliente:</strong> {{ cod_cliente_proforma }}
+          </span>&nbsp;|&nbsp;
+          <span>
+            <strong>Real:</strong> {{ cliente_real_proforma }}
+          </span>
+        </div>
+      </div>
+
+      <mat-tab-group style="background-color: #f9f9f9;">
+        <mat-tab label="Etiqueta">
+          <mat-card style="background-color: #f9f9f9; border: 1px #093070 solid;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <div class="nombre">
+                <strong>{{ nombre_cliente_get }}</strong>
+              </div>
+              <input type="text" [(ngModel)]="input" style="width: 100% !important;">
+              <div class="text-center">
+                <label>{{ data.representante }}</label>
+              </div>
+              <div>
+                <label>TEL.</label>
+                <input type="text" value="{{ data.telefono }}" readonly>
+              </div>
+              <div>
+                <label>CEL.</label>
+                <input type="text" value="{{ data.celular }}" readonly>
+              </div>
+
+              <div class="text-center">
+                <label>{{ data.ciudad }}</label>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Teléfonos de Contacto"><br>
+          <table>
+            <thead>
+              <tr>
+                <!-- <th>Tipo</th> -->
+                <th>Nro. Telefono</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td>{{ data.telefono }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+
+        <mat-tab label="Georeferencia"><br>
+          <div class="text-center">
+            <label>LATITUD: </label>
+            <label>{{ data.latitud_entrega }}</label>
+          </div>
+          <div class="text-center">
+            <label>LONGITUD: </label>
+            <label>{{ data.longitud_entrega }}</label>
+          </div>
+
+          <div class="text-center">
+            <a href="{{URL_maps}}" target="_blank"><i class="fa fa-map" aria-hidden="true"></i> VER EN MAPS</a>
+          </div>
+        </mat-tab>
+      </mat-tab-group><br>
+
+      <div class="row float-right" style="margin-bottom: 7px;padding-block-start: 5px !important;">
+        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="close();">
+          <span><i class="fa fa-times" aria-hidden="true" style="color: #ff0707;"></i> Cancelar</span>
+        </button>
+
+        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+          <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
+        </button><br>
+      </div>
+    </ng-container>
+  </div>
+</section>

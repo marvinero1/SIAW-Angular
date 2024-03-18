@@ -1,0 +1,58 @@
+<div style="background-color: #f0f0f0;">
+  <div class="p-2">
+    <h1 mat-dialog-title>Crear Numeración de Retiro Bancario</h1>
+    <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+  </div>
+
+  <div mat-dialog-content>
+    <div class="container">
+      <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="row mb-2">
+          <div class="col-md">
+            <mat-form-field appearance="outline" class="example-full-small">
+              <mat-label>Código </mat-label>
+              <input matInput type="text" formControlName="id" maxlength="5" required>
+            </mat-form-field>
+          </div>
+          <div class="col-md">
+            <mat-form-field appearance="outline" class="example-full-small">
+              <mat-label>Descripción </mat-label>
+              <input matInput type="text" formControlName="descripcion" maxlength="30" required>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-md">
+            <mat-form-field appearance="outline" class="example-full-small">
+              <mat-label>Número Actual </mat-label>
+              <input type="number" (input)="onInputChange($event.target.value)" min="0" step="1" matInput
+                formControlName="nroactual" [(ngModel)]="inputValue" required>
+            </mat-form-field>
+          </div>
+
+
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Unidad de Negocio</mat-label>
+              <mat-select formControlName="codunidad" required>
+                <mat-option *ngFor="let unidad of negocio" [value]="unidad.codigo">
+                  {{ unidad.codigo }} - {{ unidad.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+
+        </div>
+        <div class="mat-dialog-actions" mat-dialog-actions align="end">
+          <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
+
+          <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
+              class="fa fa-save"></i> Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

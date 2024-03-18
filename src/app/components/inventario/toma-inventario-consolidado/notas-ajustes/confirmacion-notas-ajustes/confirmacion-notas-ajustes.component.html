@@ -1,0 +1,16 @@
+<div>
+  <h1 mat-dialog-title>Confirmación</h1>
+  <div mat-dialog-content>
+    ¿Esta seguro que desea generar la nota de ajuste para este documento consolidado de toma de inventario?
+  </div>
+</div>
+
+<div mat-dialog-actions style="justify-content: center !important;">
+  <button mat-button mat-dialog-close class="example-label" (click)="onNoClick()"><i class="fa fa-close"></i>&nbsp;
+    No
+  </button>
+
+  <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="confirmado()"><i
+      class="fa fa-check"></i>&nbsp; Si
+  </button>
+</div>

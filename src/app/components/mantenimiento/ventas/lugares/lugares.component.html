@@ -1,0 +1,121 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;">Lugares</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-actions align="start">
+          <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" (click)="submitData();"><i
+              class="fa fa-save"></i> Grabar
+          </button>&nbsp;
+
+          <button mat-raised-button color="primary" [disabled]="!lugar_get.codigo" (click)="submitDataEdit()">
+            <i class="fa fa-pen"></i> Editar
+          </button>&nbsp;
+
+          <a mat-raised-button class="secondary" (click)="limpiar()"><i class="fa fa-eraser"></i>
+            Limpiar</a>&nbsp;
+
+          <a mat-raised-button class="danger" (click)="eliminar()"><i class="fa fa-trash"></i>
+            Eliminar</a>&nbsp;
+
+          <a mat-raised-button class="secondary" (click)="catalogoLugares();"><i class="fa fa-search"></i>
+            Catalogo Lugares</a>&nbsp;
+        </mat-card-actions>
+
+        <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+          <mat-card-content>
+            <div class="row">
+              <ng-container *ngIf="!lugar_get.codigo">
+                <mat-label style="padding-right: 50px;padding-top: 7px;"><u>Codigo</u></mat-label>
+                <input type="text" formControlName="codigo" [(ngModel)]="codigo" required>
+              </ng-container>
+              <ng-container *ngIf="lugar_get.codigo">
+                <mat-label style="padding-right: 50px;padding-top: 7px;"><u>Codigo</u></mat-label>
+                <span>{{ lugar_get.codigo }}</span>
+              </ng-container>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 27px;padding-top: 7px;"><u>Descripción</u></mat-label>
+              <input type="text" formControlName="descripcion" [(ngModel)]="lugar_get.descripcion" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 39px;padding-top: 7px;"><u>Direccion</u></mat-label>
+              <input type="text" formControlName="direccion" [(ngModel)]="lugar_get.direccion" required>
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 44px;padding-top: 7px;"><u>Persona</u>
+                </mat-label>
+                <input type="text" style="width: 5% !important;" formControlName="codpersona"
+                  [(ngModel)]="lugar_get.codpersona" [(ngModel)]="pepersona_catalogo.codigo" id="personaCatalogo"
+                  (blur)="onLeavePersona($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Persona" (click)="catalogoPersonas()">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+
+                <input type="text" formControlName="personaDescrip" [(ngModel)]="lugar_get.personaDescrip"
+                  [(ngModel)]="pepersona_catalogo.descrip" style="width: 17%;" [readOnly]="true">
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 10px;padding-top: 7px;"><u>Observaciones</u></mat-label>
+              <textarea cols="30" rows="5" formControlName="obs" [(ngModel)]="lugar_get.obs"></textarea>
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 61px;padding-top: 7px;"><u>Zona</u>
+                </mat-label>
+                <input type="text" style="width: 5% !important;" formControlName="codzona"
+                  [(ngModel)]="lugar_get.codzona" [(ngModel)]="vezona_catalogo.codigo" id="zonaCatalogo"
+                  (blur)="onLeaveZona($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Zona" (click)="catalogoZona()">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+                <input type="text" formControlName="zonaDescrip" style="width: 17%;" [(ngModel)]="lugar_get.zonaDescrip"
+                  [(ngModel)]="vezona_catalogo.descripcion" [readOnly]="true">
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 52px;padding-top: 7px;"><u>Latitud</u></mat-label>
+              <input type="text" formControlName="latitud" [(ngModel)]="lugar_get.latitud">
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 43px;padding-top: 7px;"><u>Longitud</u></mat-label>
+              <input type="text" formControlName="longitud" [(ngModel)]="lugar_get.longitud">
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 43px;padding-top: 7px;"><u>Puntear Georeferencia en Google
+                  Maps</u>
+              </mat-label>
+              <input type="checkbox" formControlName="puntear" [checked]="lugar_get.puntear">
+            </div>
+          </mat-card-content>
+        </form>
+      </mat-card>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+  </div>
+</section>

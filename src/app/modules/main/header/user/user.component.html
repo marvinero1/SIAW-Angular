@@ -1,0 +1,52 @@
+<pf-dropdown hide-arrow class="user-menu">
+    <div slot="button">
+        <a class="nav-link">
+            <!-- <pf-image
+                [src]="user.picture"
+                fallback-src="assets/img/default-profile.png"
+                class="user-image-small"
+                width="25"
+                height="25"
+                alt="User Image"
+                rounded
+            ></pf-image> -->
+            <i class="fa fa-user"></i>&nbsp;
+        </a>
+    </div>
+    <div slot="menu">
+        <li class="user-header bg-bckground">
+            <i class="fa fa-user" style="font-size: 3rem;"></i> 
+    
+            <p>
+                <span>{{ session }}</span>
+                <small>
+                    <span>{{ rol }}</span>
+                </small>
+            </p> 
+        </li> 
+        <!-- Menu Body -->
+        <!-- <li class="user-body">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <a [routerLink]="['/']">Followers</a>
+                </div>
+                <div class="col-4 text-center">
+                    <a [routerLink]="['/']">Sales</a>
+                </div>
+                <div class="col-4 text-center">
+                    <a [routerLink]="['/']">Friends</a>
+                </div>
+            </div>
+        </li> -->
+
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <a [routerLink]="['/profile']" class="btn btn-default btn-flat" style="font-size: 0.75rem;">
+                Mi Perfil
+            </a>
+            <a (click)="logout();" class="btn btn-default btn-flat float-right" style="font-size: 0.75rem;">
+                Salir
+            </a>
+        </li>
+    </div>
+</pf-dropdown>

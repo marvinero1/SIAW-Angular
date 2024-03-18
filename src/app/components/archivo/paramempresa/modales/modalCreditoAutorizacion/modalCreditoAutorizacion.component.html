@@ -1,0 +1,63 @@
+<div class="p-2 container">
+  <h1 mat-dialog-title><strong>Dias Extra para PP con Notas de Credito C/Autorización: </strong> {{ dataEmpresa }}</h1>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <div class="content p-3" style="border-style: groove;">
+      <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="row">
+          <mat-form-field appearance="outline">
+            <mat-label>Dias Extras</mat-label>
+            <input type="number" formControlName="dias" matInput maxlength="5" placeholder="0" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>% Venta Pagado</mat-label>
+            <input type="number" formControlName="porcen_pagado" matInput maxlength="25" placeholder="0" required>
+          </mat-form-field>
+
+          <div class="col">
+            <div class="mat-dialog-actions text-center" mat-dialog-actions>
+              <button mat-raised-button color="primary" [disabled]="!FormularioData.valid"
+              type="submit"><i class="fa fa-plus"></i> Añadir</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8" matSort>
+          <ng-container matColumnDef="dias">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Dias </th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.dias }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="porcen_pagado">
+            <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Porcentaje Pagado %</th>
+            <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.porcen_pagado }} %</td>
+          </ng-container>
+
+          <ng-container matColumnDef="accion">
+            <th mat-header-cell *matHeaderCellDef>Acción</th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button1 [matMenuTriggerFor]="menu">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="eliminar(element);">
+                  <span><i class="fa fa-trash"></i> Eliminar</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table><br>
+      </div>
+    </div><br>
+
+    <button mat-raised-button color="primary" (click)="onNoClick();" style="float: right;">
+      <i class="fa fa-times"></i>&nbsp; Cerrar</button>
+  </div>
+</div>

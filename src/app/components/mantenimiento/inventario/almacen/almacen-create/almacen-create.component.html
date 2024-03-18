@@ -1,0 +1,322 @@
+<div class="p-2">
+  <h3 mat-dialog-title>Crear Almacen</h3>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
+</div>
+
+<div class="p-2 mb-1 mat-elevation-z8">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="FormularioData"><br>
+      <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <ng-template matStepLabel>Datos de Creación Almacen</ng-template>
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Codigo</mat-label>
+              <input matInput type="number" placeholder="Codigo" formControlName="codigo" maxlength="5" required>
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Dirección</mat-label>
+              <input matInput placeholder="Dirección" formControlName="direccion" maxlength="45" required>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+              <input matInput type="number" placeholder="Telefono" formControlName="telefono" maxlength="10" required>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Correo Electronico</mat-label>
+              <input matInput type="email" placeholder="correo Electronico" formControlName="email" maxlength="30"
+                required>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Numero Patronal</mat-label>
+              <input matInput placeholder="Numero Patronal" formControlName="nropatronal" required>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Area</mat-label>
+              <mat-select formControlName="codarea">
+                <mat-option *ngFor="let adareas of adarea" [value]="adareas.codigo">
+                  {{ adareas.codigo }} - {{ adareas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Plan de % de participacion en ventas precio</mat-label>
+              <mat-select formControlName="codplanporcen">
+                <mat-option *ngFor="let planporcens of planporcen" [value]="planporcens.codigo">
+                  {{ planporcens.codigo }} - {{ planporcens.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="tienda">
+                <mat-option value="true">Tienda</mat-option>
+                <mat-option value="false">Agencia</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Numero de Personal</mat-label>
+              <input matInput placeholder="Numero de Personal" maxlength="3" formControlName="nropersonas">
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Ciudad</mat-label>
+              <mat-select formControlName="lugar">
+                <mat-option value="La Paz">La Paz</mat-option>
+                <mat-option value="Oruro">Oruro</mat-option>
+                <mat-option value="Potosi">Potosi</mat-option>
+                <mat-option value="Cochabamba">Cochabamba</mat-option>
+                <mat-option value="Sucre">Sucre</mat-option>
+                <mat-option value="Tarija">Tarija</mat-option>
+                <mat-option value="Santa Cruz">Santa Cruz</mat-option>
+                <mat-option value="Beni">Beni</mat-option>
+                <mat-option value="Pando">Pando</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Suc. Libro Compras</mat-label>
+              <input matInput placeholder="Libro Compras" maxlength="15">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Min. Sol. Urgente</mat-label>
+              <input matInput placeholder="Solicitud Urgente" formControlName="min_solurgente" maxlength="15">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Moneda Sol. Urgente</mat-label>
+              <mat-select formControlName="codmoneda_min_solurgente">
+                <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                  {{ monedas.codigo }} - {{ monedas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Latitud</mat-label>
+              <input matInput placeholder="Latitud" formControlName="latitud" maxlength="45">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Longitud</mat-label>
+              <input matInput placeholder="Longitud" formControlName="longitud" maxlength="45">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Actividad</mat-label>
+              <mat-select formControlName="actividad">
+                <mat-option value="Venta al por mayor de materiales de construcción,
+                  artículos de ferretería, equipo y materiales de fontanería y calefacción.">
+                  Venta al por mayor de materiales de construcción, artículos de ferretería, equipo y materiales de
+                  fontanería y calefacción.</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <input matInput placeholder="Descripción" formControlName="descripcion" maxlength="35" required>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <button mat-button (click)="onNoClick();" style="float: left;"> <i class="fa fa-arrow-left"></i> Atras</button>
+
+        <div style="float: right;">
+          <button mat-button color="primary" matStepperNext [disabled]="!FormularioData.valid">Siguiente <i
+              class="fa fa-arrow-right"></i></button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <!-- SegundoFormulario -->
+    <mat-step label="Extras"><br>
+      <form [formGroup]="FormularioData">
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Caja de MN</mat-label>
+              <mat-select formControlName="idcuenta_caja_mn">
+                <mat-option *ngFor="let fncuentas of fncuenta" [value]="fncuentas.id">
+                  {{ fncuentas.id }} - {{ fncuentas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Caja de ME</mat-label>
+              <mat-select formControlName="idcuenta_caja_me">
+                <mat-option *ngFor="let fncuentas of fncuenta" [value]="fncuentas.id">
+                  {{ fncuentas.id }} - {{ fncuentas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious> <i class="fa fa-arrow-left"></i> Atras</button>
+          <button mat-button color="primary" matStepperNext style="float: right;">Siguiente <i
+              class="fa fa-arrow-right"></i></button>
+        </div>
+      </form>
+    </mat-step>
+
+
+    <!-- TercerFormulario -->
+    <mat-step label="Parametros Estadistica"><br>
+      <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Estandar Rendimiento Kg.</mat-label>
+              <input matInput type="number" formControlName="pesoest_rendi" placeholder="Kg">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Porcentaje Minimo Rendimiento %</mat-label>
+              <input matInput type="number" formControlName="porcenmin_rendi" placeholder="%">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Minimo Rendimiento KG</mat-label>
+              <input matInput type="number" formControlName="pesomin_rendi" placeholder="Kg">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Estandar de Comisiones Kg.</mat-label>
+              <input matInput type="number" formControlName="pesoest" placeholder="Kg">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Porcentaje Minimo %</mat-label>
+              <input matInput type="number" formControlName="porcenmin" placeholder="%">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Peso Minimo de Ventas Comisiones KG</mat-label>
+              <input matInput type="number" formControlName="pesomin" placeholder="Kg">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Estandar de Venta</mat-label>
+              <input matInput type="number" formControlName="estandar" placeholder="0">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Moneda</mat-label>
+              <mat-select formControlName="monestandar">
+                <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                  {{ monedas.codigo }} - {{ monedas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Minimo de Venta</mat-label>
+              <input matInput type="number" formControlName="minimo" placeholder="0">
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field appearance="outline">
+              <mat-label>Moneda</mat-label>
+              <mat-select formControlName="moneda">
+                <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                  {{ monedas.codigo }} - {{ monedas.descripcion }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <mat-radio-group aria-label="Seleccione una opcion" formControlName="graficar">
+              <mat-label>Graficar Estadistica</mat-label><br>
+              <mat-radio-button value="true">SI</mat-radio-button>
+              <mat-radio-button value="false">NO</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="col">
+            <mat-radio-group aria-label="Seleccione una opcion" formControlName="analizar_rendimiento">
+              <mat-label>Analizar Rendimiento</mat-label><br>
+              <mat-radio-button value="true">SI</mat-radio-button>
+              <mat-radio-button value="false">NO</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div>
+          <button mat-button matStepperPrevious (click)="onNoClick();"> <i class="fa fa-arrow-left"></i> Atras</button>
+          <button mat-button color="primary" matStepperNext style="float: right;"><i class="fa fa-save"></i>
+            Guardar Formulario</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-stepper>
+</div>

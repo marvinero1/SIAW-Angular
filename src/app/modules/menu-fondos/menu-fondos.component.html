@@ -1,0 +1,63 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Fondos">
+  <span><i class="fa fa-credit-card" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
+  <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item [matMenuTriggerFor]="transacacciones_fondos">Transacciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="modificaciones_fondos">Modificaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_fondos">Operaciones</a>
+</mat-menu>
+
+<mat-menu #transacacciones_fondos="matMenu">
+  <a mat-menu-item >Cheque de Cliente</a>
+  <a mat-menu-item >Deposito Bancario</a>
+  <a mat-menu-item >Deposito de Cliente</a>
+  <a mat-menu-item >Emisión de Cheque</a>
+  <a mat-menu-item >Extractos Bancarios</a>
+  <a mat-menu-item >Libro Diario de Bancos</a>
+  <a mat-menu-item >Movimiento de Fondos</a>
+  <a mat-menu-item >Retiro Bancario</a>
+  <a mat-menu-item >Transferencia Bancaria</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item >Entrega Con Cargo por Rendir y Por Cobrar</a>
+  <a mat-menu-item >Devolución de Deudor</a>
+  <a mat-menu-item >Pago a Deudor</a>
+  <a mat-menu-item >Reposición de Efectivo</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item >Flete Envio de Mercaderia</a>
+  <a mat-menu-item >Pago Flete Envio de Mercaderia</a>
+  <a mat-menu-item >Devolución Fletes de Mercaderia</a>
+  <a mat-menu-item >Enlazar Extractos</a>
+</mat-menu>
+
+<mat-menu #modificaciones_fondos="matMenu">
+  <a mat-menu-item >Cheque de Cliente</a>
+  <a mat-menu-item >Deposito Bancario</a>
+  <a mat-menu-item >Deposito de Cliente</a>
+  <a mat-menu-item >Emisión de Cheque</a>
+  <a mat-menu-item >Extractos Bancarios</a>
+  <a mat-menu-item >Libro Diario de Bancos</a>
+  <a mat-menu-item >Movimiento de Fondos</a>
+  <a mat-menu-item >Retiro Bancario</a>
+  <a mat-menu-item >Transferencia Bancaria</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item >Entrega Con Cargo por Rendir y Por Cobrar</a>
+  <a mat-menu-item >Devolución de Deudor</a>
+  <a mat-menu-item >Pago a Deudor</a>
+  <a mat-menu-item >Reposición de Efectivo</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item >Flete Envio de Mercaderia</a>
+  <a mat-menu-item >Pago Flete Envio de Mercaderia</a>
+  <a mat-menu-item >Devolución Fletes de Mercaderia</a>
+  <a mat-menu-item >Enlazar Extractos</a>
+</mat-menu>
+
+<mat-menu #operaciones_fondos="matMenu">
+  <a mat-menu-item >Rendición de Entrega</a>
+</mat-menu>
+
+
+
+
+

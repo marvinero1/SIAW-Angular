@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Validar</h1>
+<div mat-dialog-content>
+  ¿Esta seguro de actualizar el precio?
+  <strong>Item:</strong> {{ get_item.item }} con el <strong>precio:</strong> {{ get_item.precio }}
+</div>
+
+<div mat-dialog-actions style="justify-content: center !important;">
+
+  <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="confirmado()"><i
+      class="fa fa-save"></i>&nbsp; Si</button>
+
+  <button mat-button mat-dialog-close color="warn" class="example-label" (click)="onNoClick()"><i
+      class="fa fa-close"></i>&nbsp;
+    No</button>
+</div>

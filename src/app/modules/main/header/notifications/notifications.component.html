@@ -1,0 +1,36 @@
+<pf-dropdown hide-arrow>
+    <div slot="button">
+        <a class="nav-link">
+            <i class="far fa-bell"></i>
+            <span class="badge badge-success navbar-badge" style="font-size: 0.65rem !important;">15</span>
+        </a>
+    </div>
+    <div slot="menu">
+        <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+            <i class="fas fa-envelope mr-2"></i> 4 nuevos mensajes
+            <span class="float-right text-muted text-sm">3 no leidos</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+            <i class="fas fa-users mr-2"></i> 8 tickets
+            <span class="float-right text-muted text-sm">12 asignadas</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+            <i class="fas fa-file mr-2"></i> 3 reportes
+            <span class="float-right text-muted text-sm">2 dias</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="/" class="dropdown-item dropdown-footer">Ver Todas las Notificaciones</a>
+    </div>
+</pf-dropdown>
+
+<ng-template #notification>
+    <a href="#" class="dropdown-item">
+        <i class="fas fa-envelope mr-2"></i> 4 new messages
+        <span class="float-right text-muted text-sm">3 mins</span>
+    </a>
+    <div class="dropdown-divider"></div>
+</ng-template>

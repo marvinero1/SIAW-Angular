@@ -1,0 +1,98 @@
+// Tabla SCSS
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th{
+    font-size: 0.8rem;
+    text-align: left !important;
+  }
+
+  td, .td, .medida {
+    text-align: left !important;
+
+    }
+    
+  .mat-mdc-row:nth-child(odd) {
+    background-color: #80808017;
+  }
+
+  .mat-mdc-header-row, .mat-header-row{
+    position: sticky;
+    top: 0;
+    background-color: #fbd800;
+    min-height: 25px !important;
+  }
+
+  .mat-row, .mat-header-row, .mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+  }
+
+  mat-row, mat-header-row, mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+  }
+
+  .mat-row, .mat-footer-row{
+    min-height: 25px !important;
+  }
+
+  .custom-select1 {
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .input-group>.custom-file, .input-group>.custom-select1, .input-group>.form-control, .input-group>.form-control-plaintext{
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0; 
+  }
+
+  .cliente{
+    text-transform: uppercase;
+  }
+
+  .inputsSaldos::placeholder {
+    color:#fbd800;
+    opacity: 1; /* Firefox */
+  }
+
+  .inputsSaldos{
+    height: calc(1.2rem + 0px) !important;
+    font-size: 0.8rem !important;
+  }
+
+  .pedido{
+    background-color: #80808017;
+    color: black !important;
+    border: 0;
+    width: 100%;
+    margin: auto;
+  }
+
+  .pedido::placeholder {
+    color: black;
+    opacity: 1; /* Firefox */
+  }
+
+  // .form-control-sm{
+  //   padding: 0.2rem 0.8rem !important;
+  // }
+
+  .wrapper .content-wrapper{
+    background-color: #CEFFFF !important;
+  }

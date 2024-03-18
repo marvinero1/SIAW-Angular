@@ -1,0 +1,94 @@
+<section style="background-color: #ffe0c0;">
+  <div class="container-fluid">
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;">Estado de Pagos del Cliente</mat-card-title>
+        </div>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
+
+
+      <div class="row">
+        <div class="col-md-2">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span> <i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
+          </button>
+        </div>
+
+        <div class="col-md-4">
+          <mat-label style="padding-right: 5px;"><u>Hasta Fecha</u></mat-label>
+          <input type="date">
+        </div>
+
+        <div class="col-md-6">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span>
+              <mat-icon style="color: #ffc107;height: 16px !important;width: 21px !important;overflow: hidden !important;
+                font-size: 19px !important;">
+                refresh
+              </mat-icon>Refrescar
+            </span>
+          </button>
+          <span><strong>Número de Urgentes esta semana: </strong></span>
+        </div>
+      </div>
+
+      <mat-tab-group style="background-color: #ffe0c0;">
+        <mat-tab label="Pagos">
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Cheques Pendientes"><br>
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Anticipos"><br>
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="row">
+        <div class="col-md-5">
+          <span><u>Total Seleccionado</u></span>
+          <input type="text" style="width: 40% !important;">
+
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span> <i class="fa fa-cogs" aria-hidden="true" style="color: #ffc107;"></i> Calcular</span>
+          </button>
+        </div>
+
+        <div class="col-md-3" style="text-align: end !important;">
+          <span><u>Total Adeudado</u></span>
+          <input type="text" style="width: 55% !important;">
+        </div>
+
+        <div class="col-md-4" style="text-align: end !important;">
+          <span><u>Credito</u></span>
+          <input type="text">
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>

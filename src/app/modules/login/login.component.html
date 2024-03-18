@@ -1,0 +1,221 @@
+<div class="content" style="height: 100%;">
+  <div class="row" style="height: 100%;">
+    <div class="col-md-6 right">
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content login_content-login">
+            <img src="assets/img/logo.png" alt="Logo Pertec S.R.L" width="130px;" height="130px;"
+              style="display:block;margin: auto;">
+            <!-- <h5 class="login-box-msg">Ingresa tus datos</h5><br> -->
+            <div>
+              <div class="clearfix"></div>
+              <div class="h1">SIAW</div>
+              <div class="h1">Pertec S.R.L | Maestros en Pernos</div>
+            </div>
+
+            <!-- /.login-card-body IP Y SERVIDORES -->
+            <div *ngIf="ip_servidores">
+              <form [formGroup]="serverForm" (ngSubmit)="loginByAuth()">
+                <div class="input-group ">
+                  <mat-form-field appearance="outline" class="login_input">
+                    <mat-icon matPrefix style="padding: 8px 8px 8px 8px !important;margin-bottom: 16px !important;">
+                      vpn_lock</mat-icon>
+                    <mat-select class="select1" placeholder="Area a conectar" formControlName="agencia"
+                      style="padding-top: 7px !important;">
+                      <mat-option value="410"><i class="fa fa-building"></i>&nbsp; Oficina 410</mat-option>
+                      <mat-option value="311"><i class="fa fa-building"></i>&nbsp; Of. Central 310
+                        <strong>30.5</strong></mat-option>
+                      <mat-option value="310"><i class="fa fa-building"></i>&nbsp; Of. Central 310
+                        <strong>30.6</strong></mat-option>
+                      <mat-option value="810"><i class="fa fa-building"></i>&nbsp; Oficina 810</mat-option>
+                      <mat-option value="Loc"><i class="fa fa-globe"></i>&nbsp; <strong>Maquina Rodri</strong>
+                      </mat-option>
+                      <mat-option value="841">
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;AG 841
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <button mat-raised-button color="primary" class="loginbutton" [disabled]="!serverForm.valid"
+                      type="submit">
+                      <mat-icon style="color: gray;">input</mat-icon> Ingresar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- /.login-card-body IP Y SERVIDORES -->
+
+            <!-- bases de datos -->
+            <div *ngIf="!bd_datos">
+              <form [formGroup]="BDForm1">
+                <!-- /.Servidores -->
+                <div class="input-group ">
+                  <mat-form-field appearance="outline" class="login_inputs"
+                    style="height: calc(3.5rem + 5px) !important;">
+                    <mat-icon matPrefix style="padding: 0px 8px 0px 8px !important;margin-bottom: 20px !important;">
+                      domain</mat-icon>
+                    <mat-select placeholder="Base de Datos" formControlName="bd" style="padding-top: 7px !important;"
+                      required>
+                      <mat-option *ngFor="let agenciass of agencias" [value]="agenciass.codigo">
+                        <strong>{{ agenciass.codigo }}</strong>- {{ agenciass.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </form>
+
+
+              <form [formGroup]="BDForm" (ngSubmit)="loginByAuth()" autocomplete="off">
+                <div class="input-group ">
+                  <mat-form-field appearance="outline" class="login_inputs"
+                    style="height: calc(3.5rem + 5px) !important;">
+                    <mat-label style="font-weight: 100 !important;"> Usuario </mat-label>
+                    <mat-icon matPrefix style="padding: 0px 8px 0px 8px !important;margin-bottom: 20px !important">book
+                    </mat-icon>
+                    <input matInput formControlName="login" type="text" style="padding-top: 8px;"
+                      placeholder="Nombre de Usuario" autocomplete="off" id="usernameInput" #usernameInput required />
+                  </mat-form-field>
+                </div>
+
+
+                <div class="input-group ">
+                  <mat-form-field appearance="outline" class="login_inputs"
+                    style="height: calc(3.5rem + 5px) !important;">
+                    <mat-label style="font-weight: 100 !important;"> Contraseña </mat-label>
+                    <mat-icon matPrefix style="padding: 0px 8px 0px 8px !important;margin-bottom: 20px !important">lock
+                    </mat-icon>
+                    <input matInput formControlName="password" type="password" style="padding-top: 8px;"
+                      placeholder="Contraseña" autocomplete="off" id="passwordInput" #passwordInput required />
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-md text-center">
+                  <div class="icheck-primary">
+                    <input type="checkbox" id="remember" />
+                    <label for="remember"> Recuerdame </label>
+                  </div>
+                </div> -->
+
+                <div class="row">
+                  <div class="col">
+                    <button mat-raised-button color="primary" class="loginbutton" [disabled]="!BDForm1.valid"
+                      type="submit">
+                      <mat-icon style="color: gray;">input</mat-icon> Ingresar
+                    </button>
+                  </div>
+                </div><br>
+
+                <p class=" text-center">
+                  <a [routerLink]="['/forgot-password']">Olvide mi contraseña</a>
+                </p>
+              </form>
+            </div><br>
+            <!-- bases de datos -->
+
+            <button mat-raised-button class="button-85" role="button" style="width: 100%;"
+              (click)="transformacionTecnologica();">
+              <mat-icon style="color: whitesmoke;">important_devices</mat-icon>
+              &nbsp; Transformación Digital
+            </button>
+
+            <div class="separator">
+              <div><br>
+                <p>{{ anio }} Pertec S.R.L | Maestros en Pernos. <br>
+                  &copy; Todos los Derechos Reservados.</p>
+              </div>
+            </div>
+            <!-- <form [formGroup]="loginForm" (ngSubmit)="loginByAuth()" *ngIf="login_box">
+            <div>
+              <div class="input-group mb-2">
+                <mat-form-field appearance="outline">
+                  <mat-label style="font-weight: 100 !important;"> Usuario </mat-label>
+                  <mat-icon matPrefix>book</mat-icon>
+                  <input matInput formControlName="usuario" type="text" placeholder="Nombre de Usuario" required/>
+                </mat-form-field>
+              </div>
+
+              <div class="input-group mb-2">
+                <mat-form-field appearance="outline">
+                  <mat-label style="font-weight: 100 !important;"> Contraseña </mat-label>
+                  <mat-icon matPrefix>lock</mat-icon>
+                  <input matInput formControlName="password" type="password" placeholder="Contraseña" required/>
+                </mat-form-field>
+              </div>
+            </div>                     
+
+            <div class="col-md">
+              <div class="icheck-primary">
+                <input type="checkbox" id="remember" />
+                <label for="remember"> Recuerdame </label>
+              </div>
+            </div> -->
+
+            <!-- <div class="row">
+              <div class="col">
+                <div *ngIf="ip_servidores == false">
+                <button mat-raised-button color="primary" class="loginbutton" [disabled]="!loginForm.valid"
+                  type="submit"><i class="fa fa-arrow-right"></i> Ingresar</button>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- <div class="row">
+              <div class="col">
+                <div *ngIf="ip_servidores == true">
+                <button mat-raised-button color="primary" class="loginbutton" [disabled]="!loginForm.valid"
+                  (click)="verificarUsuario()"><i class="fa fa-arrow-right"></i> Ingresar Verificar</button>
+                </div>
+              </div>
+            </div>
+          </form> -->
+
+            <!-- <button mat-raised-button color="primary" class="loginbutton" ><i class="fa fa-arrow-right"></i>STORAGE</button> -->
+
+            <!-- <button mat-raised-button color="primary" class="loginbutton" (click)="obtenerStorage()"><i class="fa fa-arrow-right"></i>ver STORAGE</button> -->
+
+            <!-- <button mat-raised-button color="danger" class="loginbutton" (click)="logout()"><i class="fa fa-close"></i> Logout</button> -->
+
+
+            <!-- <div class="social-auth-links text-center mb-3">
+                <pf-button
+                    class="mb-2"
+                    [block]="true"
+                    [loading]="isFacebookLoading"
+                    [disabled]="isAuthLoading || isGoogleLoading"
+                    (click)="loginByFacebook()"
+                >
+                    <i class="fab fa-facebook mr-2"></i>
+                    Sign in using Facebook
+                </pf-button>
+                <pf-button
+                    [block]="true"
+                    [loading]="isGoogleLoading"
+                    [disabled]="isAuthLoading || isFacebookLoading"
+                    theme="danger"
+                    (click)="loginByGoogle()"
+                >
+                    <i class="fab fa-google mr-2"></i>
+                    Sign in using Google+
+                </pf-button>
+            </div> -->
+
+            <!-- <p class="mb-0">
+              <a [routerLink]="['/register']" class="text-center">
+                Register a new membership
+              </a>
+            </p> -->
+            <!-- /.login-card-body EMAIL Y PASSWORD -->
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6" id="bg-cover-login">
+      <div class="bgImgCoverPages"></div>
+    </div>
+  </div>
+</div>

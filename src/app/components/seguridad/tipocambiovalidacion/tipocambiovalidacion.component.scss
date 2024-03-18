@@ -1,0 +1,35 @@
+.mat-mdc-dialog-container .mdc-dialog__surface{
+  background-color: whitesmoke;
+}
+.mat-mdc-dialog-surface{
+  border-radius:3% 3% !important;
+}
+h1{
+  text-align: center;
+}
+.mat-mdc-form-field{
+  width: 100% !important;
+}
+table {
+  text-align: center !important;
+  width: 100%;
+}
+th.mat-header-cell{
+  text-align: center !important;
+}
+td, th{
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+.mat-sort-header-container{
+  justify-content: center !important;
+}
+.mat-mdc-header-row{
+  background: #093070;
+}
+.mat-mdc-table .mdc-data-table__row{
+  height: calc(1.6rem + 0px) !important;
+}
+.mat-mdc-table .mdc-data-table__header-row{
+  height: calc(2rem + 0px) !important;
+}

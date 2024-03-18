@@ -1,0 +1,67 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="overlay"></div>
+    <div class="p-2 mb-2 mat-elevation-z8">
+      <div class="row">
+        <div class="col-md headTittle">
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="buscadorTipoCambio()">
+            <input type="date" matInput formControlName="fecha" required>
+            <button mat-button matSuffix mat-stroked-button aria-label="search" type="submit">
+              <i class="fa fa-search"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="col-md text-center headTittle">
+          <h3>Tipo de Cambio</h3>
+        </div>
+
+        <div class="col-md text-right headTittle">
+          <mat-icon color="primary">arrow_drop_down</mat-icon>
+          <mat-icon color="primary">close</mat-icon>
+          <!-- Condicion si no tiene datos de tabla tipocambio habilitarse -->
+          <ng-template [ngIf]="habilitar_boton">
+            <button mat-button color="primary" (click)="openDialog('900ms', '900ms')" style="float: right;">
+              <i class="fa fa-plus"></i> Crear Tipo de Cambio</button><br>
+          </ng-template>
+        </div>
+      </div>
+      <span style="font-size: 0.8rem;">Los datos de la tabla es del dia actual
+        {{ fecha_actual | date:'dd/MM/yyyy' }}</span>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <div class="row">
+      <div class="col">
+        <div class="team p-2 bg-white scrollmenu">
+          <table class="table table-striped" style="width: 100% !important;">
+            <thead class="thead-inverse" style="background: #093070 !important;">
+              <tr>
+                <th>Moneda Base</th>
+                <th>Moneda</th>
+                <th>Factor</th>
+                <th>Fecha Reg</th>
+                <th>Usuario Reg</th>
+                <th>Codigo Almacen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tipo_cambios of tipo_cambio">
+                <td>{{ tipo_cambios.monedabase }}</td>
+                <td>{{ tipo_cambios.moneda }}</td>
+                <td>{{ tipo_cambios.factor | number:'1.1-5'  }}</td>
+                <td>{{ tipo_cambios.fecha | date:'dd/MM/yyyy' }}</td>
+                <td>{{ tipo_cambios.usuarioreg }}</td>
+                <td>{{ tipo_cambios.codalmacen }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

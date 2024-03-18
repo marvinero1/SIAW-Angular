@@ -1,0 +1,365 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" style="font-size: 0.95rem;">
+  <span>Mantenimiento <mat-icon style="padding-block-start: 7px;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="activos_fijos"
+    (click)="toggleMenu(menuTrigger);">Activos
+    Fijos</a>
+  <button mat-menu-item [matMenuTriggerFor]="administracion">Administración</button>
+  <button mat-menu-item [matMenuTriggerFor]="compras">Compras</button>
+  <button mat-menu-item [matMenuTriggerFor]="conta_costos">Contabilidad y Costos</button>
+  <button mat-menu-item [matMenuTriggerFor]="cuentas_cobrar">Cuentas por Cobrar</button>
+  <button mat-menu-item [matMenuTriggerFor]="costeos">Costeo</button>
+  <button mat-menu-item [matMenuTriggerFor]="fondos">Fondos</button>
+  <button mat-menu-item [matMenuTriggerFor]="importaciones">Importaciones</button>
+  <button mat-menu-item [matMenuTriggerFor]="inventarios">Inventario</button>
+  <button mat-menu-item [matMenuTriggerFor]="personal">Personal</button>
+  <button mat-menu-item [matMenuTriggerFor]="seguridad">Seguridad</button>
+  <button mat-menu-item [matMenuTriggerFor]="ventas">Ventas</button>
+  <button mat-menu-item [matMenuTriggerFor]="pbx">PBX</button>
+  <button mat-menu-item [matMenuTriggerFor]="siat">SIAT</button>
+</mat-menu>
+
+<mat-menu #activos_fijos="matMenu">
+  <a mat-menu-item>Tipo Activo</a>
+  <a mat-menu-item>Aseguradora</a>
+  <a mat-menu-item>Seguro</a>
+  <a mat-menu-item>Razones de Baja</a>
+</mat-menu>
+
+<mat-menu #administracion="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('area','/admin/mante/area');">Areas ✅</a>
+  <a mat-menu-item>Administrar Evaluaciones</a>
+  <a mat-menu-item>Contactos</a>
+  <a mat-menu-item (click)="guardarRutaLOG('departamentoPais','/admin/mante/departamentoPais');">Departamentos del Pais
+    ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('empresa','/admin/mante/empresa');">Empresas ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('IDProformaUsuario','/administracion/mantenimiento/idproformausuario')">ID
+    Proformas Por Usuario ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('localidades','/administracion/mantenimiento/localidades');">Localidades
+    ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('moneda','/admin/mante/moneda');">Moneda ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('provinciasDepartamentoPais','/admin/mante/provinciasDepartamentoPais');">Provincias de un
+    Departamento ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('periodosSistema','mantenimiento/administracion/periodos-sistema');">Periodos
+    del Sistema ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('tarifaPermitidaUsuario','mantenimiento/administracion/tarifa-permitida-usuario');">Tarifas
+    Permitidas por Usuario ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tipocambio','/admin/mante/tipocambio');">Tipo de Cambio ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('unidadNegocio','/admin/mante/unidadNegocio');">Unidades de Negocio ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('unidadNegocio','/administracion/mantenimiento/vehiculo');">Vehículo ✅</a>
+  <a mat-menu-item>Campos Definidos por el Usuario</a>
+</mat-menu>
+
+<mat-menu #compras="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('Compradores','/mantenimiento/compras/compradores');">Compradores
+    🟡</a>
+
+  <a mat-menu-item>Conceptos de Compra</a>
+  <a mat-menu-item>Proveedores</a>
+  <a mat-menu-item>Plan de Pago Proveedores</a>
+
+  <a mat-menu-item (click)="guardarRutaLOG('numComprasMenores','/mantenimiento/compras/numComprasMenores');">
+    Numeración de Compras ✅</a>
+
+  <a mat-menu-item (click)="guardarRutaLOG('numPago','/mantenimiento/compras/numeracionPago');">Numeración de Pagos
+    🟡</a>
+
+  <a mat-menu-item (click)="guardarRutaLOG('numProvisionCompra','/mantenimiento/compras/numProvisionCompra');">
+    Numeración de Provisiones ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('percepcionesRetenciones','/mantenimiento/compras/percepcionesRetenciones');">
+    Percepciones / Retenciones ✅</a>
+</mat-menu>
+
+<mat-menu #conta_costos="matMenu">
+  <a mat-menu-item>Cuenta</a>
+  <a mat-menu-item (click)="guardarRutaLOG('plancuenta','/mantenimiento/contabilidad/plancuenta');">
+    Plan de Cuentas ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('numComprobantes','/mantenimiento/contabilidad/numComprobantes');">
+    Numeración de Comprobantes ✅</a>
+  <a mat-menu-item>Comprobante Modelo</a>
+  <a mat-menu-item>Tipo de Gasto</a>
+  <a mat-menu-item>Periodo Presupuesto</a>
+  <a mat-menu-item>Centro de Costo</a>
+  <a mat-menu-item (click)="guardarRutaLOG('sucursal','/mantenimiento/contabilidad/sucursal');">
+    Sucursales 🟡</a>
+  <a mat-menu-item>Tipos de Comprobantes</a>
+  <a mat-menu-item [matMenuTriggerFor]="estados_financieros">Estados Financieros</a>
+  <a mat-menu-item [matMenuTriggerFor]="ayuda_configuracion">Ayuda de Configuración</a>
+  <a mat-menu-item>Auxiliares de Mixtos</a>
+</mat-menu>
+
+<mat-menu #estados_financieros="matMenu">
+  <a mat-menu-item>Balance General</a>
+  <a mat-menu-item>Estado de Resultado</a>
+</mat-menu>
+
+<mat-menu #ayuda_configuracion="matMenu">
+  <a mat-menu-item>Clientes</a>
+</mat-menu>
+
+<mat-menu #cuentas_cobrar="matMenu">
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionAnticipo','/mantenimiento/cuentasCobrar/numeracionAnticipacionCliente');">Numeración
+    de Anticipo ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionCobranza','/mantenimiento/cuentasCobrar/numeracionCobranza');">Numeración de
+    Cobranza ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numDevAnticipo','/mantenimiento/cuentasCobrar/numeracionDevolucionAnticipos');">Numeración
+    de Devolución de Anticipos
+    ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numPagoMora','/mantenimiento/cuentasCobrar/numeracionDesctPagoMora');">Numeración de
+    Pagos de Mora ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('talonarioRecibo','/mantenimiento/cuentasCobrar/numeracionTalonarioRecibos');">Talonarios de
+    Recibos ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tipoPago','/mantenimiento/cuentasCobrar/numeracionTipoPago');">Tipo de
+    Pago ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('tipoAjuste','/mantenimiento/cuentasCobrar/numeracionTipoAjuste');">Tipo de
+    Ajustes ✅</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numDesctMora','/mantenimiento/cuentasCobrar/numeracionDesctMora');">Numeración de
+    Descuentos
+    por Mora ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numDesctVarios','/mantenimiento/cuentasCobrar/numeracionDescVariosDirectos');">Numeración
+    de
+    Descuentos Varios Directos ✅</a>
+</mat-menu>
+
+<mat-menu #costeos="matMenu">
+  <a mat-menu-item>Conversiones</a>
+  <a mat-menu-item>Conjuntos</a>
+  <a mat-menu-item>Productos Iguales</a>
+</mat-menu>
+
+<mat-menu #fondos="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('bancos','/mantenimiento/fondos/bancos');">Bancos ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('cuentasBancarias','/mantenimiento/fondos/cuentasBancarias');">Cuentas
+    Bancarias 🟡 2doV</a>
+  <a mat-menu-item (click)="guardarRutaLOG('cuentasEfectivo','/mantenimiento/fondos/cuentasEfectivo');">Cuentas
+    de
+    Efectivo ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('deudores','/mantenimiento/fondos/deudores');">Deudores 🟡 2doV</a>
+  <a mat-menu-item (click)="guardarRutaLOG('deudoresCompuestos','mantenimiento/fondos/deudoresCompuestos');">Deudores
+    Compuestos ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionChequeClient','/mantenimiento/fondos/numeracionChequeClient');">Numeración de
+    Cheques de Clientes ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionDepoBancario','/mantenimiento/fondos/numeracionDepoBancario');">Numeración de
+    Depositos ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionDepoCliente','/mantenimiento/fondos/numeracionDepoCliente');">Numeración de
+    Depositos de Clientes ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionDevoDeudor','/mantenimiento/fondos/numeracionDevoDeudor');">Numeración de
+    Devoluciones de Deudor ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionEntregaCargo','/mantenimiento/fondos/numeracionEntregaCargo');">Numeración de
+    Entregas con cargo ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionMonFondos','/mantenimiento/fondos/numeracionMonFondos');">Numeración de
+    Movimientos de Fondos ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionPagoDeudor','/mantenimiento/fondos/numeracionPagoDeudor');">Numeración de Pagos a
+    Deudor ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionReposicion','/mantenimiento/fondos/numeracionReposicion');">Numeración de
+    Reposiciones ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionRetiroBancario','/mantenimiento/fondos/numeracionRetiroBancario');">Numeración de
+    Retiros ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionTransferencias','/mantenimiento/fondos/numeracionTransferencias');">Numeración de
+    Transferencias ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('chequeras','mantenimiento/fondos/numeracionLibroBancos');">Numeración Libro
+    de Bancos ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('chequeras','mantenimiento/fondos/numeracionChequeClient');">Chequeras ✅</a>
+</mat-menu>
+
+<mat-menu #importaciones="matMenu">
+  <a mat-menu-item>Competencia</a>
+  <a mat-menu-item>Tiempos</a>
+  <a mat-menu-item [matMenuTriggerFor]="numeracion_importaciones">Numeración</a>
+</mat-menu>
+
+<mat-menu #numeracion_importaciones="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('imporPedidos','/mantenimiento/importaciones/numeracion/pedidos');">Pedidos
+    ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('imporProformas','/mantenimiento/importaciones/numeracion/proformas');">Proformas ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('imporOrdenCompra','/mantenimiento/importaciones/numeracion/ordenCompra');">Ordenes de
+    Compra ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('imporEmbarque','/mantenimiento/importaciones/numeracion/embarque');">Embarques ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('imporRecepcion','/mantenimiento/importaciones/numeracion/recepcion');">Recepciones ✅</a>
+</mat-menu>
+
+<mat-menu #inventarios="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('almacen','/admin/mante/almacen');">Almacen ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('item','/mantenimiento/inventario/item');">Item ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('lineaItem','/mantenimiento/inventario/lineaItem');">Lineas de Items ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('grupoLinea','/mantenimiento/inventario/grupoLinea');">Grupos de Lineas ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('grupoLineaDescuentos','/mantenimiento/inventario/grupoLineaDescuentos');">Grupos de Lineas
+    para Descuentos ✅</a>
+  <a mat-menu-item>Grupo de Items Ventas</a>
+  <a mat-menu-item>Sub-Grupos de Items Ventas</a>
+  <a mat-menu-item (click)="guardarRutaLOG('rosca','/mantenimiento/inventario/rosca');">Rosca ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('resistencia','/mantenimiento/inventario/resistencia');">Tipos de
+    Resistencias ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('terminacion','/mantenimiento/inventario/terminacion');">Terminación ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('unidadMedida','/mantenimiento/inventario/unidadMedida');">Unidad de Medida
+    ✅</a>
+  <a mat-menu-item>Lista de Stock</a>
+  <a mat-menu-item>Lista de Empaques</a>
+  <a mat-menu-item>Lista Stock Maximo Minimo</a>
+  <a mat-menu-item>Matriz</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('conceptoMovimientoMercaderia','/mantenimiento/inventario/conceptoMovimientoMercaderia');">Concepto
+    de Movimiento de Mercaderia ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('conceptoPedidoMercaderia','/mantenimiento/inventario/conceptoPedidoMercaderia');">Numeración
+    de Pedidos de Mercaderia ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionconocimientoCarga','/mantenimiento/inventario/numeracionconocimientoCarga');">Numeración
+    de Conocimiento de Carga ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numNotasMovimiento','/mantenimiento/inventario/numNotasMovimiento');">Numeración de Notas
+    de Movimiento ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionSolicitudUrgente','/mantenimiento/inventario/numeracionSolicitudUrgente');">Numeración
+    de Solicitud Urgente ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('numeracionInventarioFisico','/mantenimiento/inventario/numeracionInventarioFisico');">Numeración
+    de Inventario Físico ✅</a>
+</mat-menu>
+
+<mat-menu #personal="matMenu">
+  <a mat-menu-item>AFP's</a>
+  <a mat-menu-item>Cargo</a>
+  <a mat-menu-item>Numeración de Finiquitos</a>
+  <a mat-menu-item>Persona</a>
+  <a mat-menu-item>Plan de Comisión Mayoristas</a>
+  <a mat-menu-item>Plan de Porcentajes</a>
+  <a mat-menu-item>Rangos Bonos de Antiguedad</a>
+  <a mat-menu-item>Rangos Dias de Vacación</a>
+  <a mat-menu-item>Rango % Comisión</a>
+  <a mat-menu-item>Tipos de Bonos</a>
+  <a mat-menu-item>Tipos de Contratación</a>
+  <a mat-menu-item>Tipos de Descuento</a>
+  <a mat-menu-item>Tipos de Vacaciones</a>
+  <a mat-menu-item>Tramo Calculo Comisión</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item [matMenuTriggerFor]="personal_afip">AFIP</a>
+  <a mat-menu-item [matMenuTriggerFor]="personal_anses">ANSES</a>
+  <a mat-menu-item>Calificación Profesional</a>
+  <a mat-menu-item>Conceptos</a>
+  <a mat-menu-item>Obra Social</a>
+  <a mat-menu-item>Sindicato</a>
+  <a mat-menu-item>Tipos de Liquidación</a>
+  <a mat-menu-item>Regimen de Jubilación</a>
+  <a mat-menu-item>Categorias</a>
+  <a mat-menu-item [matMenuTriggerFor]="personal_formulas">Formulas</a>
+  <a mat-menu-item>Operadores</a>
+  <a mat-menu-item>Federaciones</a>
+</mat-menu>
+
+<mat-menu #personal_afip="matMenu">
+  <a mat-menu-item>Actividades</a>
+  <a mat-menu-item>Condición Laboral</a>
+  <a mat-menu-item>Localidad - Provincia</a>
+  <a mat-menu-item>Madalidad Contrato</a>
+  <a mat-menu-item>Obras Sociales</a>
+  <a mat-menu-item>Situación Revista</a>
+</mat-menu>
+
+<mat-menu #personal_anses="matMenu">
+  <a mat-menu-item>Códigos de Baja</a>
+  <a mat-menu-item>Escolaridad</a>
+  <a mat-menu-item>Estado Civil</a>
+  <a mat-menu-item>Lugar de Emision</a>
+  <a mat-menu-item>Nacionalidad</a>
+  <a mat-menu-item>Parentescos</a>
+  <a mat-menu-item>Tipos de Documento</a>
+</mat-menu>
+
+<mat-menu #personal_formulas="matMenu">
+  <a mat-menu-item>Tareas</a>
+  <a mat-menu-item>Actividades</a>
+</mat-menu>
+
+<mat-menu #seguridad="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('accesos','/mantenimiento/rolAcesso/accesos');">Roles ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('usuarios','/admin/mante/usuarios');">Usuarios ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('permisosEspeciales','/mantenimiento/seguridad/permisosEspeciales');">Permisos Especiales
+    ✅</a>
+  <a mat-menu-item>Administrar Permisos Especiales</a>
+</mat-menu>
+
+<mat-menu #ventas="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('cliente','/mantenimiento/ventas/cliente');">Cliente ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('clienteIguales','/mantenimiento/ventas/clienteIguales');">Clientes Iguales
+    ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('descuentosEspecial','/mantenimiento/ventas/descuentosEspeciales');">Descuentos
+    Especiales ✅</a>
+
+
+  <a mat-menu-item>Descuentos para todo el documento</a>
+  <a mat-menu-item>Dosificación</a>
+  <a mat-menu-item>Grupos de Clientes</a>
+  <a mat-menu-item>Grupos de Control Cliente Competencia</a>
+  <a mat-menu-item>Hojas de Impresión</a>
+  <a mat-menu-item>Items Especiales</a>
+  <a mat-menu-item>Listas de Precios</a>
+
+
+  <a mat-menu-item (click)="guardarRutaLOG('lugares','/mantenimiento/ventas/lugares');">Lugares ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('niveldesc','/mantenimiento/ventas/nivelesDescuentos');">Niveles de
+    Descuentos ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('lugares','/mantenimiento/ventas/numTipoDocumentoVenta');">
+    Numeración de Documentos ✅</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('ObservHojaRuta','/mantenimiento/ventas/observacionesHojaRuta');">Observaciones Hoja de
+    Ruta ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('Plan Pago Clientes','/mantenimiento/ventas/planPagoClientes');">Plan de
+    Pagos Clientes 🟡</a>
+  <a mat-menu-item (click)="guardarRutaLOG('Punto Venta','/mantenimiento/ventas/puntoVenta');">Puntos de Venta ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('NumSolDesct','/mantenimiento/ventas/numSolicitudMercaderia');">
+    Tipos de Solicitudes de Descuento 🟡</a>
+  <!-- <a mat-menu-item>Rango de % de descuento PP en notas de credito ⚠️</a> -->
+  <a mat-menu-item (click)="guardarRutaLOG('Recargos Documentos','/mantenimiento/ventas/recargoDocumento');">Recargos
+    para
+    Documento ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('rubros','/mantenimiento/ventas/rubro');">Rubros ✅</a>
+  <a mat-menu-item>Rutas de Visitas</a>
+  <a mat-menu-item (click)="guardarRutaLOG('Tipos de Credito','/mantenimiento/ventas/tiposCreditos');">
+    Tipos de Creditos ✅</a>
+  <a mat-menu-item (click)="guardarRutaLOG('Vendedor','/mantenimiento/ventas/vendedores');"> Vendedor </a>
+</mat-menu>
+
+<mat-menu #pbx="matMenu">
+  <a mat-menu-item>Internos</a>
+  <a mat-menu-item>Lineas</a>
+</mat-menu>
+
+<mat-menu #siat="matMenu">
+  <a mat-menu-item>Generar Codigos CUIS-CUFD</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('parametrosFacturacion','/mantenimiento/siat/parametrosFacturacionSIAT');">Parametros
+    Facturación SIAT ✅</a>
+  <a mat-menu-item>Servicios Sincronización Datos</a>
+  <a mat-menu-item>Activar Fuera de Linea</a>
+</mat-menu>

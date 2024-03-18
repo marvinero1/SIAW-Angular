@@ -1,0 +1,15 @@
+table{
+    width: 100%;
+    text-align: center;
+    margin: auto;
+}
+.mat-mdc-dialog-container .mdc-dialog__surface{
+background-color: #ffffc0 !important;
+}
+
+.mat-dialog-container {
+background-color: #ffffc0 !important;
+}
+::ng-deep .bg-yellow .mat-dialog-container{
+ --mdc-dialog-container-color: #ffffc0 !important;
+}

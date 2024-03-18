@@ -1,0 +1,308 @@
+<section class="content" style="background-color: #f9f9f9;">
+  <div class="container-fluid">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title style="padding: 9px 0px 0px 0px;">Almacen</mat-card-title>
+        <div class="col-md text-right">
+          <mat-icon color="primary">arrow_drop_down</mat-icon>
+          <mat-icon color="primary">close</mat-icon>
+        </div>
+      </mat-card-header>
+
+      <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+        [fullScreen]="true"><br>
+        <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+      </ngx-spinner>
+
+      <div>
+        <mat-card-actions align="start">
+          <button mat-raised-button color="primary" (click)="submitData()" [disabled]="!FormularioData.valid"><i
+              class="fa fa-save"></i>
+            Grabar
+          </button>&nbsp;
+
+          <ng-container *ngIf="almacen_catalogo_id">
+            <button mat-raised-button color="primary" (click)="submitDataEdit()"><i class="fa fa-pen"></i>
+              Editar
+            </button>&nbsp;
+          </ng-container>
+
+          <ng-container *ngIf="!almacen_catalogo_id">
+            <button mat-raised-button color="primary" disabled="true"><i class="fa fa-pen"></i>
+              Editar
+            </button>&nbsp;
+          </ng-container>
+
+          <button mat-raised-button class="secondary" (click)="limpiar()"><i class="fa fa-eraser"></i>
+            Limpiar</button>&nbsp;
+
+          <button mat-raised-button class="danger"><i class="fa fa-trash"></i>
+            Eliminar</button>
+
+          <div class="col-md-3">
+            <a mat-button color="primary" (click)="modalAlmacen()" style="float: right;">
+              <i class="fa fa-search"></i> Catalogo Almacenes</a>
+          </div>
+        </mat-card-actions>
+
+        <mat-card-content>
+          <mat-tab-group>
+            <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+              <mat-tab label="Almacen">
+                <div class="col md">
+                  <ng-container *ngIf="almacen_catalogo_id">
+                    <mat-label style="padding-right: 102px;padding-top: 5px;"><u>Codigo</u></mat-label>
+                    <span>{{ almacen_catalogo_id }}</span>
+                    <input matInput type="number" min="0" step="1" formControlName="codigo" maxlength="5"
+                      [(ngModel)]="almacen_catalogo_id" hidden>
+
+                  </ng-container>
+
+                  <ng-container *ngIf="!almacen_catalogo_id">
+                    <div class="row">
+                      <mat-label style="padding-right: 102px;padding-top: 5px;"><u>Codigo</u></mat-label>
+                      <input matInput type="number" min="0" step="1" formControlName="codigo" maxlength="5" required>
+                    </div>
+                  </ng-container>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 78px;padding-top: 5px;"><u>Descripción</u></mat-label>
+                    <input matInput type="text" formControlName="descripcion" maxlength="35"
+                      [(ngModel)]="data_almacen.descripcion" required>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 90px;padding-top: 5px;"><u>Direccion</u></mat-label>
+                    <input matInput type="text" formControlName="direccion" [(ngModel)]="data_almacen.direccion"
+                      required>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 95px;padding-top: 5px;"><u>Telefono</u></mat-label>
+                    <input matInput type="text" formControlName="telefono" maxlength="10"
+                      [(ngModel)]="data_almacen.telefono" required>
+                  </div>
+                  <!-- <div class="row">
+                    <mat-label style="padding-right: 119px;padding-top: 5px;"><u>Fax</u></mat-label>
+                    <input matInput type="text">
+                  </div> -->
+
+                  <div class="row">
+                    <mat-label style="padding-right: 106px;padding-top: 5px;"><u>E-mail</u></mat-label>
+                    <input matInput type="email" formControlName="email" maxlength="30" [(ngModel)]="data_almacen.email"
+                      required>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 71px;padding-top: 5px;"><u>Nro. Patronal</u></mat-label>
+                    <input matInput type="text" min="0" step="1" formControlName="nropatronal"
+                      [(ngModel)]="data_almacen.nropatronal" required>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 114px;padding-top: 7px;"><u>Area</u></mat-label>
+                    <select formControlName="codarea" style="width: 12% !important;" [(ngModel)]="data_almacen.codarea">
+                      <option *ngFor="let adareas of adarea" [value]="adareas.codigo">
+                        {{ adareas.codigo }} - {{ adareas.descripcion }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 5px;padding-top: 5px;width: 11%;"><u>
+                        Plan de % participacion en ventas Precio</u></mat-label>
+                    <select formControlName="codplanporcen" [(ngModel)]="data_almacen.codplanporcen">
+                      <option *ngFor="let planporcens of planporcen" [value]="planporcens.codigo">
+                        {{ planporcens.codigo }} - {{ planporcens.descripcion }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 102px;padding-top: 5px;"><u>Tipo</u></mat-label>
+                    <input type="checkbox" formControlName="tienda" value="true" [checked]="data_almacen.tienda"
+                      [(ngModel)]="data_almacen.tienda"><span>&nbsp;
+                      Tienda</span> &nbsp;
+                    <input type="checkbox" formControlName="tienda" value="false" [checked]="!data_almacen.tienda"
+                      [(ngModel)]="data_almacen.tienda"><span>&nbsp; Almacen</span>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 30px;padding-top: 5px;"><u>Numero de Personas</u></mat-label>
+                    <input type="number" min="0" step="1" maxlength="3" style="width: 6.1% !important;"
+                      formControlName="nropersonas" [(ngModel)]="data_almacen.nropersonas">
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 109px;padding-top: 5px;"><u>Lugar</u></mat-label>
+                    <select formControlName="lugar" style="width: 12% !important;" [(ngModel)]="data_almacen.lugar">
+                      <option value="LA PAZ">LA PAZ</option>
+                      <option value="ORURO">ORURO</option>
+                      <option value="POTOSI">POTOSI</option>
+                      <option value="COCHABAMBA">COCHABAMBA</option>
+                      <option value="SUCRE">SUCRE</option>
+                      <option value="TARIJA">TARIJA</option>
+                      <option value="SANTA CRUZ">SANTA CRUZ</option>
+                      <option value="BENI">BENI</option>
+                      <option value="PANDO">PANDO</option>
+                    </select>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 37px;padding-top: 5px;"><u>Suc. Libro Compras</u></mat-label>
+                    <input type="text" formControlName="sucursallc" [(ngModel)]="data_almacen.sucursallc">
+                  </div>
+
+                  <div class="row">
+                    <div class="input-group">
+                      <mat-label style="padding-right: 49px;padding-top: 5px;"><u>Min. Sol. Urgente</u></mat-label>
+                      <input type="number" style="width: 6.1% !important;" formControlName="min_solurgente" min="0"
+                        [(ngModel)]="data_almacen.min_solurgente" required>
+
+
+                      <select formControlName="moneda" style="width: 6% !important;" [(ngModel)]="data_almacen.moneda">
+                        <option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.codigo }} - {{ monedas.descripcion }}
+                        </option>
+                      </select>
+                      <span></span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 5px;padding-top: 5px;"><u>Latitud</u></mat-label>
+                    <input type="text" formControlName="latitud" [(ngModel)]="data_almacen.latitud">
+
+                    <mat-label style="padding-right: 5px;padding-top: 5px;"><u>Longitud</u></mat-label>
+                    <input type="text" formControlName="longitud" [(ngModel)]="data_almacen.longitud">
+                  </div>
+                </div>
+              </mat-tab>
+
+
+              <mat-tab label="Extras"><br>
+                <div class="col-md">
+                  <div class="row" style="text-align: center;margin: auto;display: block;">
+                    <button mat-raised-button color="primary" (click)="stock(data_almacen);"
+                      [disabled]="!almacen_catalogo_id"><i class="fa fa-cogs"></i>
+                      Stock</button>&nbsp;&nbsp;
+
+                    <button mat-raised-button color="primary" (click)="solicitudesUrgentes(data_almacen);"
+                      [disabled]="!almacen_catalogo_id"><i class="fa fa-cogs"></i> Solc.
+                      Urgentes</button>&nbsp;&nbsp;
+
+                    <button mat-raised-button color="primary" (click)="reservas(data_almacen);"
+                      [disabled]="!almacen_catalogo_id"><i class="fa fa-cogs"></i>
+                      Reservas</button>&nbsp;&nbsp;
+                  </div><br>
+
+
+                  <div class="row" style="text-align: center;margin: auto;display: block;">
+                    <div class="col">
+
+                      <mat-label>Caja de MN</mat-label>
+                      <select formControlName="idcuenta_caja_mn" [(ngModel)]="data_almacen.idcuenta_caja_mn">
+                        <option *ngFor="let fncuentas of fncuenta" [value]="fncuentas.id">
+                          {{ fncuentas.id }} - {{ fncuentas.descripcion }}
+                        </option>
+                      </select>
+
+
+                      <mat-label>Caja de ME</mat-label>
+                      <select formControlName="idcuenta_caja_me" [(ngModel)]="data_almacen.idcuenta_caja_me">
+                        <option *ngFor="let fncuentas of fncuenta" [value]="fncuentas.id">
+                          {{ fncuentas.id }} - {{ fncuentas.descripcion }}
+                        </option>
+                      </select>
+
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+
+
+              <mat-tab label="Parametros Estadistica">
+                <div class="col-md">
+                  <div class="row">
+                    <mat-label style="padding-right: 40px;padding-top: 5px;"><u>Peso Estandar Rendimiento</u>
+                    </mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="pesoest_rendi"
+                      [(ngModel)]="data_almacen.pesoest_rendi"><span>Kg</span>
+                  </div>
+                  <div class="row">
+                    <mat-label style="padding-right: 20px;padding-top: 5px;"><u>Porcentaje Minimo Rendimiento</u>
+                    </mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="porcenmin_rendi"
+                      [(ngModel)]="data_almacen.porcenmin_rendi"><span>%</span>
+                  </div>
+                  <div class="row">
+                    <mat-label style="padding-right:49px;padding-top: 5px;"><u>Peso Minimo Rendimiento</u></mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="pesomin_rendi"
+                      [(ngModel)]="data_almacen.pesomin_rendi"><span>Kg</span>
+                  </div><br>
+                </div>
+
+                <div class="col-md">
+                  <div class="row">
+                    <mat-label style="padding-right: 30px;padding-top: 5px;"><u>Peso Estandar de
+                        Comisiones</u></mat-label>
+                    <input type="number" min="0" formControlName="pesoest"
+                      [(ngModel)]="data_almacen.pesoest"><span>Kg</span>
+                  </div>
+                  <div class="row">
+                    <mat-label style="padding-right: 89px;padding-top: 5px;"><u>Porcentaje Minimo</u>
+                    </mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="porcenmin"
+                      [(ngModel)]="data_almacen.porcenmin"><span>%</span>
+                  </div>
+                  <div class="row">
+                    <mat-label style="padding-right: 6px;padding-top: 5px;"><u>Peso Minimo de Venta
+                        Comisiones</u>
+                    </mat-label>
+                    <input type="number" min="0" formControlName="pesomin"
+                      [(ngModel)]="data_almacen.pesomin"><span>Kg</span>
+                  </div><br>
+                </div>
+
+                <div class="col-md">
+                  <div class="row">
+                    <mat-label style="padding-right: 28px;padding-top: 5px;"><u>Estandar de Venta</u>
+                    </mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="estandar"
+                      [(ngModel)]="data_almacen.estandar">
+                  </div>
+                  <div class="row">
+                    <mat-label style="padding-right: 37px;padding-top: 5px;"><u>Minimo de Venta</u>
+                    </mat-label>
+                    <input type="number" min="0" placeholder="0.00" formControlName="minimo"
+                      [(ngModel)]="data_almacen.minimo">
+                  </div><br>
+                </div>
+
+                <div class="col-md">
+                  <div class="row">
+                    <mat-label style="padding-right: 37px;padding-top: 5px;"><u>Graficar Estadistica</u>
+                    </mat-label>
+                    <input type="checkbox" value="true" formControlName="graficar" [checked]="data_almacen.graficar">SI
+                    &nbsp;
+                    <input type="checkbox" value="false" formControlName="graficar"
+                      [checked]="!data_almacen.graficar">NO
+                  </div>
+
+                  <div class="row">
+                    <mat-label style="padding-right: 27px;padding-top: 5px;"><u>Analizar Rendimiento</u>
+                    </mat-label>
+                    <input type="checkbox" value="true" formControlName="analizar_rendimiento"
+                      [checked]="data_almacen.analizar_rendimiento">SI &nbsp;
+                    <input type="checkbox" value="false" formControlName="analizar_rendimiento"
+                      [checked]="!data_almacen.analizar_rendimiento">NO
+                  </div>
+                </div>
+              </mat-tab>
+            </form>
+          </mat-tab-group>
+        </mat-card-content>
+      </div>
+    </mat-card>
+  </div>
+</section>

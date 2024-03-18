@@ -1,0 +1,117 @@
+<section class="content p-2">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10 text-left">
+        <mat-card-title style="font-size: 0.8rem;"><strong>Saldo {{ info }} </strong></mat-card-title>
+
+      </div>
+      <div class="col-md-2 text-right">
+        <mat-icon color="primary" (click)="onNoClick();">close</mat-icon>
+      </div>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <button mat-button (click)="getStockItem();"><i class="fa fa-eye"></i> Ver</button><br>
+
+    <!-- stock item seleccionado -->
+    <span><strong>Item: </strong> {{ item_stock }}</span>
+    <div>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ALMACEN</th>
+            <th style="text-align: right !important;">CANTIDAD</th>
+            <th>UDM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stocks of stock">
+            <td>{{ stocks.codalmacen }}</td>
+            <td style="text-align: right !important;">{{ stocks.cantidad | number: '1.2-2' }}</td>
+            <td>{{ stocks.udm }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+
+    <!-- stock item conjunto segunda posicion  -->
+    <ng-container *ngIf="stock_segundo_item">
+      <span><strong>Componentes del Item</strong></span>
+      <div>
+        <span><strong>{{ info_segundo_item }}</strong></span>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>ALMACEN</th>
+              <th style="text-align: right !important;">CANTIDAD</th>
+              <th>UDM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock_segundo_items of stock_segundo_item">
+              <td>{{ stock_segundo_items.codalmacen }}</td>
+
+              <td style="text-align: right !important;">{{ stock_segundo_items.cantidad | number: '1.2-2' }}</td>
+
+              <td>{{ stock_segundo_items.udm }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+    <hr>
+
+    <!-- stock item conjunto tercera posicion  -->
+    <ng-container *ngIf="stock_tercer_lugar">
+      <div>
+        <span><strong>{{ info_tercer_lugar }}</strong></span>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>ALMACEN</th>
+              <th style="text-align: right !important;">CANTIDAD</th>
+              <th>UDM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock_tercer_lugars of stock_tercer_lugar">
+              <td>{{ stock_tercer_lugars.codalmacen }}</td>
+              <td style="text-align: right !important;">{{ stock_tercer_lugars.cantidad | number: '1.2-2' }}</td>
+              <td>{{ stock_tercer_lugars.udm }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+    <hr>
+
+    <!-- stock item conjunto cuarta posicion  -->
+    <ng-container *ngIf="stock_cuarto_lugar">
+      <div>
+        <span><strong>{{ info_cuarto_lugar }}</strong></span>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>ALMACEN</th>
+              <th style="text-align: right !important;">CANTIDAD</th>
+              <th>UDM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let stock_cuarto_lugars of stock_cuarto_lugar">
+              <td>{{ stock_cuarto_lugars.codalmacen }}</td>
+              <td style="text-align: right !important;">{{ stock_cuarto_lugars.cantidad | number: '1.2-2' }}</td>
+              <td>{{ stock_cuarto_lugars.udm }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <hr>
+    </ng-container>
+  </div>
+</section>

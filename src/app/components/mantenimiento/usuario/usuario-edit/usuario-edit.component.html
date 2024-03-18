@@ -1,0 +1,75 @@
+<div class="p-2">
+  <h1 mat-dialog-title>Editar Usuario: {{ usuario_edit.login }}</h1>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <form class="example-form" [formGroup]="FormularioDataEdit" (ngSubmit)="submitData()">
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width">
+            <mat-label>Usuario </mat-label>
+            <input matInput type="text" [(ngModel)]="usuario_edit.login" formControlName="login" required>
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field class="example-full-width">
+            <mat-label>Contraseña </mat-label>
+            <input type="password" matInput formControlName="password">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Persona</mat-label>
+            <mat-select [(ngModel)]="usuario_edit.$id" formControlName="persona">
+              <mat-option *ngFor="let pepersonas of pepersona" [value]="pepersonas.$id">
+                {{ pepersonas.$id }} - {{ pepersonas.nombre1 }} {{ pepersonas.nombre2 }}, {{ pepersonas.apellido1 }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Vencimiento </mat-label>
+            <input matInput [matDatepicker]="picker" required [(ngModel)]="usuario_edit.vencimiento "
+              formControlName="vencimiento">
+            <mat-hint>YYYY/MM/DD</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Activo</mat-label>
+            <mat-select [(ngModel)]="usuario_edit.activo" formControlName="activo">
+              <mat-option value="true">SI</mat-option>
+              <mat-option value="false">NO</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Roles</mat-label>
+            <mat-select [(ngModel)]="usuario_edit.codrol" formControlName="codrol">
+              <mat-option *ngFor="let serols of serol" [value]="serols.codigo">
+                {{ serols.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mat-dialog-actions" mat-dialog-actions>
+        <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
+        <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit"><i
+            class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

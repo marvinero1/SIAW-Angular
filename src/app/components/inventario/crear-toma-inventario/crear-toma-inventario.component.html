@@ -1,0 +1,98 @@
+<div class="p-2">
+  <mat-card style="background-color: #f0f0f0;">
+    <mat-card-header class="mb-1">
+      <mat-card-title style="font-size: 0.8rem;">Crear Toma de Inventario</mat-card-title>
+      <!-- <mat-card-subtitle>End</mat-card-subtitle> -->
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="row">
+        <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+          <tr>
+            <th class="tg-0lax">
+              <div class="input-group">
+                <mat-label style="padding-right: 59px;padding-top: 3px;"><u>ID</u></mat-label>
+                <input type="text" style="width: 56% !important;" formControlName="id" [ngModel]="inventario_get.id"
+                  (blur)="onLeaveIDInventario($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalInventario();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="ID Inventario">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </th>
+            <th class="tg-0lax">
+              <input type="text" [(ngModel)]="num_mas_mas" formControlName="numeroid">
+            </th>
+          </tr>
+
+          <tr>
+            <td class="tg-0lax">
+              <mat-label style="padding-right: 2px;"><u>Fecha Desde</u></mat-label>
+              <input type="date" style="width: 70%;" formControlName="fechainicio">
+            </td>
+            <td class="tg-0lax">
+              <mat-label style="padding-right: 2px;"><u>Hasta</u></mat-label>
+              <input type="date" style="width: 78%;" formControlName="fechafin">
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tg-0lax">
+              <div class="input-group">
+                <mat-label style="padding-right: 27px;padding-top: 7px;"><u>Almacen</u></mat-label>
+                <input type="text" style="width: 56% !important;" [(ngModel)]="almacen_get.codigo"
+                  formControlName="codalmacen" (blur)="onLeaveAlmacen($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Almacen">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td class="tg-0lax">
+              <div>{{ almacen_get.descripcion }}</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tg-0lax">
+              <div class="input-group">
+                <mat-label style="padding-right: 4px;padding-top: 7px;"><u>Responsable</u></mat-label>
+                <input type="text" style="width: 56% !important;" formControlName="codpersona"
+                  [(ngModel)]="persona_get.codigo" (blur)="onLeaveResponsable($event)">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalPersona();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Responsable">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td class="tg-0lax">
+              <div>{{ persona_get.descrip }}</div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="tg-0lax">
+              <mat-label style="padding-right: 7px;padding-top: 7px;"><u>Observacion</u></mat-label>
+              <input type="text" style="width: 69% !important;" formControlName="obs">
+            </td>
+          </tr>
+
+          <mat-card-actions align="end">
+            <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit">
+              <i class="fa fa-save"></i> &nbsp;Crear Inventario
+            </button>
+          </mat-card-actions>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

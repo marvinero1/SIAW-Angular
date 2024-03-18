@@ -1,0 +1,59 @@
+<div class="p-2">
+  <h1 mat-dialog-title>Editar Numeración de Comprobante {{ numcomprob_edit.id }}</h1>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <form class="example-form" [formGroup]="FormularioDataEdit" (ngSubmit)="submitData()">
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Descripción </mat-label>
+            <input type="text" matInput formControlName="descripcion" maxlength="30"
+              [(ngModel)]="numcomprob_edit.descripcion" required>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Número Actual </mat-label>
+            <input type="number" min="0" step="1" (input)="onInputChange($event.target.value)" matInput
+              formControlName="nroactual" [(ngModel)]="numcomprob_edit.nroactual" required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field color="accent">
+            <mat-label>Valido Desde</mat-label>
+            <input matInput formControlName="desde" [(ngModel)]="numcomprob_edit.desde" [matDatepicker]="picker21">
+            <mat-datepicker-toggle matIconSuffix [for]="picker21"></mat-datepicker-toggle>
+            <mat-datepicker #picker21 color="primary"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field color="accent">
+            <mat-label>Valido Hasta</mat-label>
+            <input matInput formControlName="hasta" [(ngModel)]="numcomprob_edit.hasta" [matDatepicker]="picker2">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2 color="primary"></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+      <div class="mat-dialog-actions" mat-dialog-actions>
+        <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
+
+        <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit"><i
+            class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

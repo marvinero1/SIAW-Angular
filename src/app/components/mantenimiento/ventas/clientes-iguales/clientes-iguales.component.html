@@ -1,0 +1,134 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;">Cliente Iguales (Mismo Cliente Diferentes Códigos)</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="col-lg">
+            <mat-form-field class="example-full-width" appearance="outline" style="width: 12.5%;">
+              <mat-label>Buscador Cod. Cliente </mat-label>
+              <input type="text" matInput [formControl]="myControl" (keyup)="applyFilter($event)" placeholder="Codigo"
+                #input>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-lg">
+              <div class="team p-2 bg-white scrollmenu">
+                <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+                  <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8"
+                    style=" position: sticky;
+                  top: 0;">
+                    <ng-container matColumnDef="codcliente_a">
+                      <th mat-header-cell *matHeaderCellDef> Cliente A </th>
+                      <td mat-cell *matCellDef="let element">{{ element.codcliente_a }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="razonsocial_a">
+                      <th mat-header-cell *matHeaderCellDef> Razon Social A</th>
+                      <td mat-cell *matCellDef="let element">{{ element.razonsocial_a }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="codcliente_b">
+                      <th mat-header-cell *matHeaderCellDef> Cliente B</th>
+                      <td mat-cell *matCellDef="let element">{{ element.codcliente_b }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="razonsocial_b">
+                      <th mat-header-cell *matHeaderCellDef> Razon Social B </th>
+                      <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.razonsocial_b }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="accion">
+                      <th mat-header-cell *matHeaderCellDef>Acción</th>
+                      <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button1 [matMenuTriggerFor]="menu">
+                          <i class="fa fa-ellipsis-v" aria-hidden="true" style="color: #093070;"></i>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                          <button mat-menu-item (click)="eliminar(element);">
+                            <span><i class="fa fa-trash"></i> Eliminar</span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                  <mat-paginator #paginator [pageSizeOptions]="[10, 15, 25]" showFirstLastButtons></mat-paginator>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Cliente A</u></mat-label>
+                <input type="text" style="width: 10% !important;" formControlName="codcliente_a"
+                  [(ngModel)]="codigo_cliente_catalogo.codigo" id="clienteA" (blur)="onLeave($event,
+                  'clienteA')" required>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalClientes()"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Cliente">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+                <span>{{ codigo_cliente_catalogo_nombreA }}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 4px;padding-top: 7px;"><u>Cliente B</u>
+                </mat-label>
+                <input type="text" style="width: 10% !important;" formControlName="codcliente_b"
+                  [(ngModel)]="codigo_cliente_catalogo_2.codigo" id="clienteB" (blur)="onLeave($event, 'clienteB')"
+                  required>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalClientesB();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+                <span>{{ codigo_cliente_catalogo_nombreB }}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 6px;padding-top: 7px;"><u>Almacen</u>
+                </mat-label>
+                <input type="number" style="width: 10% !important;" formControlName="codalmacen"
+                  [(ngModel)]="cod_almacen_cliente.codigo" (blur)="onLeaveAlmacen($event)" id="almacen" min="0" step="1"
+                  required>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+                <span>{{ almacen_descripcion }}</span>
+              </div>
+            </div>
+
+            <mat-card-actions>
+              <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
+                  class="fa fa-plus"></i> Adicionar</button>
+            </mat-card-actions>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+  </div>
+</section>

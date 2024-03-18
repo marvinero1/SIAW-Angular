@@ -1,0 +1,41 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header>
+          <mat-card-title><strong>Niveles de Descuento</strong> </mat-card-title>
+          <div class="col">
+            <div style="float: right;">
+              <mat-icon color="primary" (click)="close()">close</mat-icon>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+          <mat-card-content>
+            <div class="row">
+              <mat-label style="padding-right: 28.6px;padding-top: 7px;"><u>Codigo</u></mat-label>
+              <input type="text" formControlName="codigo" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Descripción</u></mat-label>
+              <input type="text" formControlName="descripcion" required>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button mat-raised-button color="primary" [disabled]="!FormularioData.valid">
+              <i class="fa fa-save"></i> Grabar
+            </button>
+          </mat-card-actions>
+        </form>
+      </mat-card>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+  </div>
+</section>

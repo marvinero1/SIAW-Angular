@@ -1,0 +1,53 @@
+.th1{
+  text-align: right;
+  color: #fff; 
+}
+
+.th2{
+  text-align: left;
+  color: #fff; 
+}
+
+td{
+  text-align: center;
+}
+
+.mat-mdc-table .mdc-data-table__header-row{
+  height: calc(1.7rem + 0px) !important;
+}
+
+.mat-mdc-table .mdc-data-table__row{
+  height: calc(0rem + 0px) !important;
+}
+
+.mat-mdc-table .mdc-data-table__row{
+  height: calc(1.7rem + 0px) !important;
+}
+
+.mdc-data-table__cell, .mdc-data-table__header-cell {
+  padding: 0 0px 0 12px;
+}
+
+.mat-mdc-header-row, .mat-header-row{
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+  background-color: #093070;
+}
+
+.mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell{
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+}
+
+input{
+  border-color: transparent;
+  width: 65%;
+}
+
+.mat-paginator-sticky {
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+}

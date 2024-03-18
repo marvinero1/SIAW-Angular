@@ -1,0 +1,161 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #ffffc0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title>Apertura/Cierre de Módulos</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <mat-card-actions align="start">
+            <button mat-raised-button color="primary" (click)="nuevoPeriodo();"><i class="fa fa-plus"></i>
+              Nuevo</button>
+          </mat-card-actions>
+
+          <div class="row">
+            <div class="col-md-2">
+              <span><u>Periodos de Control</u></span>
+              <mat-card>
+                <mat-card-content>
+                  <div class="table-responsive" style="height: 46vh !important;">
+                    <table class="table">
+                      <thead>
+                        <tr style="background-color: #f0f0f0;" class="tr1 text-center">
+                          <th scope="col">AÑO - MES</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <mat-selection-list [multiple]="false" [disableRipple]="true" style="text-align: center;">
+                          <mat-list-option *ngFor="let fecha_aperturas of fecha_apertura"
+                            (click)="seleccionarFila(fecha_aperturas)">{{ fecha_aperturas.ano }} -
+                            {{ fecha_aperturas.descripcion }}
+                            <hr style="margin-top: 0rem !important;margin-bottom: 0rem !important;">
+                          </mat-list-option>
+                        </mat-selection-list>
+                      </tbody>
+                    </table>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+
+            <div class="col-md-3">
+              <div class="row">
+                <div class="col">
+                  <span><u>Módulos</u></span><br>
+                  <span><strong>Mes y Año: {{ mes }}-{{ anio }}</strong></span>
+                  <!-- <div class="row mb-2"><br>
+                    <div class="col-md">
+                      <input type="checkbox">
+                      <span>&nbsp; Todos</span>
+                    </div>
+                  </div> -->
+                  <button mat-button mat-raised-button class="success mdc-button" (click)="guardarCambios();"
+                    style="float: right;">
+                    <mat-icon>refresh</mat-icon>Actualizar Cambios
+                  </button>
+                </div>
+              </div><br>
+
+              <table class="tg1">
+                <thead>
+                  <ng-container *ngIf="data_check === true">
+                    <tr *ngFor="let detalleComparacion of detalle_comparacion">
+                      <td style="text-align: left !important;">
+                        <input type="text" [value]="detalleComparacion.codigo">
+                        <input type="text" [value]="detalleComparacion.sistema">
+                        <input type="checkbox" [checked]="detalleComparacion.check"
+                          (change)="onCheckboxChange(detalleComparacion)">
+                        {{ detalleComparacion.descripcion }}
+                      </td>
+                    </tr>
+                  </ng-container>
+
+                  <!-- <ng-container *ngIf="data_check === false">
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="1" [(ngModel)]="administracion"> ADMINISTRACION
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="2"> INVENTARIOS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="3"> VENTAS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="4"> CTAS POR COBRAR
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="5"> CONTABILIDAD
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="6"> ACTIVOS FIJOS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="7"> COSTOS Y COSTEO
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="8"> IMPORTACIONES
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="9"> PERSONAL Y PLANILLAS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="10"> SEGURIDAD
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="11"> COMPRAS
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="text-align: left !important;">
+                        <input type="checkbox" value="12"> FONDOS
+                      </td>
+                    </tr>
+                  </ng-container> -->
+
+                  <ng-container *ngIf="data_check === false">
+                    <tr *ngFor="let detalleComparacion of modulos">
+                      <td style="text-align: left !important;">
+                        <input type="text" [value]="detalleComparacion.codigo">
+                        <input type="text" [value]="ultimoElementoCodigo + 1">
+                        <input type="checkbox" [checked]="detalleComparacion.check"
+                          (change)="onCheckboxChange(detalleComparacion)">
+                        {{ detalleComparacion.descripcion }}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+  <br>
+  <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+</ngx-spinner>

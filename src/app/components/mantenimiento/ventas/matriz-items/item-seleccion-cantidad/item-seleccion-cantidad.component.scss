@@ -1,0 +1,13 @@
+.content, .mat-mdc-dialog-container .mdc-dialog__surface{
+  background-color: #ffe0c0 !important;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface{
+  background-color: #ffe0c0;
+  height: 100% !important;
+}
+
+.form-control-sm{
+  height: calc(1.5rem + 0px) !important;
+  padding: 0.0rem 0.5em !important;  
+}

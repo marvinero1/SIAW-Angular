@@ -1,0 +1,59 @@
+<div class="p-2">
+  <h1 mat-dialog-title>Crear Autorización Especial</h1>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <div class="row mb-2">
+      <div class="col-md">
+        <mat-label>Empresa </mat-label>
+        <input matInput type="text" [(ngModel)]="empresa.nombre" disabled>
+      </div>
+    </div>
+    <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 34px;"><u>Servicio</u></mat-label>
+          <input type="text" matInput [ngModel]="permiso_edit.nivel" formControlName="nivel">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 12px;"><u>Contraseña</u></mat-label>
+          <input type="password" matInput formControlName="password" maxlength="6" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 7px;"><u>Vencimiento</u></mat-label>
+          <input type="date" [(ngModel)]="permiso_edit.vencimiento" formControlName="vencimiento" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 33px;"><u>Persona</u></mat-label>
+          <input type="text" matInput [ngModel]="cod_persona_service" formControlName="codpersona" required>
+          <i class="fa fa-search" (click)="modalPersona();"></i>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col">
+          <mat-label style="padding-right: 2px;"><u>Responsable</u></mat-label>
+          <input type="text" matInput [(ngModel)]="permiso_edit.obs" formControlName="obs" maxlength="50" required>
+        </div>
+      </div>
+
+      <div class="mat-dialog-actions" mat-dialog-actions>
+        <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
+
+        <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
+            class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

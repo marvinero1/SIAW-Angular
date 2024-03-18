@@ -1,0 +1,110 @@
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { ApiService } from '@services/api.service';
+import { IDProforma } from '@services/modelos/objetos';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable } from 'rxjs';
+import { ServicioCatalogoProformasService } from '../sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
+
+@Component({
+  selector: 'app-catalogo-proformas',
+  templateUrl: './catalogo-proformas.component.html',
+  styleUrls: ['./catalogo-proformas.component.scss']
+})
+export class CatalogoProformasComponent implements OnInit {
+
+  @HostListener("document:keydown.enter", []) unloadHandler() {
+    this.mandarProforma();
+  };
+
+  @HostListener('dblclick') onDoubleClicked2() {
+    this.mandarProforma();
+  };
+
+  proforma_get: any = [];
+  proforma_view: any = [];
+  userConn: string;
+  usuario: string;
+
+  displayedColumns = ['codigo', 'descripcion'];
+
+  dataSource = new MatTableDataSource<IDProforma>();
+  dataSourceWithPageSize = new MatTableDataSource();
+
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+
+  myControlCodigo = new FormControl<string | IDProforma>('');
+  myControlDescripcion = new FormControl<string | IDProforma>('');
+
+  options: IDProforma[] = [];
+  filteredOptions: Observable<IDProforma[]>;
+
+  constructor(public dialogRef: MatDialogRef<CatalogoProformasComponent>, private api: ApiService, private spinner: NgxSpinnerService,
+    public servicioCatalogoProformas: ServicioCatalogoProformasService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+  }
+
+  ngOnInit() {
+    this.getProforma();
+  }
+
+  private _filter(name: string): IDProforma[] {
+    const filterValue = name.toLowerCase();
+
+    return this.options.filter(option => option.id.toString().includes(filterValue));
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource.filter);
+  }
+
+  displayFn(user: IDProforma): any {
+    return user && user.id ? user.id : '';
+  }
+
+  getProforma() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
+      .subscribe({
+        next: (datav) => {
+          this.proforma_get = datav;
+          console.log(this.proforma_get);
+
+          this.dataSource = new MatTableDataSource(this.proforma_get);
+          this.dataSource.paginator = this.paginator;
+          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getProformabyId(precio_venta) {
+    this.proforma_view = precio_venta;
+    console.log(precio_venta);
+  }
+
+  mandarProforma() {
+    this.servicioCatalogoProformas.disparadorDeIDProforma.emit({
+      proforma: this.proforma_view,
+    });
+    this.close();
+  }
+
+  close() {
+    this.dialogRef.close();
+  }
+
+}

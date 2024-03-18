@@ -1,0 +1,186 @@
+<section class="content">
+  <mat-card style="background-color: #ffe0c0;">
+    <mat-card-header class="mb-1">
+      <div class="row" style="width: 100% !important;">
+        <div class="col-md-3">
+          <button mat-raised-button color="primary"><i class="fa fa-check"></i> OK </button>&nbsp;
+          <button mat-raised-button class="danger" (click)="close()"><i class="fa fa-times"></i> Cancelar </button>
+        </div>
+        <div class="col-md-7">
+
+          <input type="text" class="input_dark" matInput [(ngModel)]="item_obtenido.codigo" disabled>
+          <input type="text" class="input_dark" matInput [(ngModel)]="item_obtenido.descLinea" disabled>
+          <input type="text" class="input_dark" matInput [(ngModel)]="item_obtenido.medida" disabled>
+
+        </div>
+
+        <div class="col-md-2">
+          <div style="float: right;">
+            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Cantidad</u></mat-label>
+            <input type="text" style="width: 50% !important;" required>
+          </div>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <div class="row p-3">
+
+    </div>
+
+
+    <!-- <div class="row">
+      <div class="col-md-9 float-left">
+        <span style="color: black;background-color: #80808030;margin-left: 9px;">
+          <strong>Item Seleccionado:</strong> {{ value }}
+          |<strong>Descripcion:</strong> {{ item_obtenido.descripcion }}
+          |<strong> Medida:</strong> {{ item_obtenido.medida }}
+          |<strong> Reserva:</strong> {{ item_obtenido.porcen_maximo }}
+        </span>
+      </div>
+
+      <div class="col-md-3">
+        <ng-container *ngIf="cantidad > 0">
+          <button mat-raised-button color="primary" (click)="mandarItem(value);" style="width: 100% !important;">
+            <i class="fa fa-cart-plus"></i> Confirmar
+          </button>
+        </ng-container>
+      </div>
+    </div> -->
+
+
+
+
+
+    <div class="row">
+      <div class="col">
+        <mat-dialog-content class="dialog-matriz">
+          <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
+            <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8" matSort>
+
+              <ng-container matColumnDef="a">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element" style="text-align: center">
+                  {{ element.a }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="b">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.b);" [ngClass]="{'active': isActiveCell(i, 'b')}"> {{ element.b }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="c">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.c);" [ngClass]="{'active': isActiveCell(i, 'c')}">
+                  {{ element.c }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="d">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.d);" [ngClass]="{'active': isActiveCell(i, 'd')}">
+                  {{ element.d }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="e">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.e);" [ngClass]="{'active': isActiveCell(i, 'e')}">
+                  {{ element.e }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="f">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.f);" [ngClass]="{'active': isActiveCell(i, 'f')}">
+                  {{ element.f }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="g">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.g);" [ngClass]="{'active': isActiveCell(i, 'g')}">
+                  {{ element.g }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="h">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.h);" [ngClass]="{'active': isActiveCell(i, 'h')}">
+                  {{ element.h }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="i">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.i);" [ngClass]="{'active': isActiveCell(i, 'i')}">
+                  {{ element.i }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="j">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.j);" [ngClass]="{'active': isActiveCell(i, 'j')}">
+                  {{ element.j }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="k">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.k);" [ngClass]="{'active': isActiveCell(i, 'k')}">
+                  {{ element.k }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="l">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.l);" [ngClass]="{'active': isActiveCell(i, 'l')}">
+                  {{ element.l }} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="m">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element; let i = index" style="text-align: center;"
+                  (click)="getinMatrizByID(element.m);" [ngClass]="{'active': isActiveCell(i, 'm')}">
+                  {{ element.m }} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table><br><br>
+          </div>
+        </mat-dialog-content>
+
+        <div mat-dialog-footer>
+          <div class="row p-2">
+            <div class="input-group">
+              <mat-label style="padding-right: 5px;padding-top: 7px;"><u># Hoja</u></mat-label>
+              <input type="text" style="width: 10% !important;" [(ngModel)]="num_hoja">
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="button" (click)="buscadorHoja();"
+                  style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                  matTooltip="Buscar Inventario">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </mat-card>
+</section>

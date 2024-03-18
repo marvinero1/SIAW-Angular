@@ -1,0 +1,104 @@
+<section>
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header>
+          <mat-card-title>Recargos</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="row mb-1">
+            <div class="col-md-9">
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" (click)="submitData();">
+                  <i class="fa fa-save"></i> Guardar</button>&nbsp;
+
+                <a mat-raised-button color="secondary" [disabled]="!recargo_get_service.codigo" (click)="editar();"><i
+                    class="fa fa-pen"></i> Editar</a>&nbsp;
+
+                <a mat-raised-button class="secondary" (click)="limpiar();"><i class="fa fa-eraser"></i>
+                  Limpiar</a>&nbsp;
+
+                <button mat-raised-button class="danger" (click)="eliminar(recargo_get_service.codigo);"><i
+                    class="fa fa-trash"></i>
+                  Eliminar</button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <a mat-button color="primary" (click)="openDialog('500ms', '700ms')" style="float: right;">
+                <i class="fa fa-search"></i> Buscar Recargo</a>
+            </div>
+          </div>
+          <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <div class="row">
+              <ng-container *ngIf="!recargo_get_service.codigo">
+                <mat-label style="padding-right: 30px;padding-top: 7px;"><u>Código</u></mat-label>
+                <input type="number" formControlName="codigo" min="0" required>
+              </ng-container>
+
+              <ng-container *ngIf="recargo_get_service.codigo">
+                <mat-label style="padding-right: 30px;padding-top: 7px;"><u>Código</u></mat-label>
+                <input type="number" formControlName="codigo" [(ngModel)]="recargo_get_service.codigo" hidden="true">
+                <span>{{ recargo_get_service.codigo }}</span>
+              </ng-container>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 7px;padding-top: 7px;"><u>Descripción</u></mat-label>
+              <input type="text" formControlName="descripcion" [(ngModel)]="recargo_get_service.descripcion" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 6px;padding-top: 7px;"><u>Desc. Corta</u></mat-label>
+              <input type="text" formControlName="descorta" [(ngModel)]="recargo_get_service.descorta" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 45px;padding-top: 7px;"><u>Tipo</u></mat-label>
+              <mat-checkbox class="example-margin" formControlName="montopor"
+                [(ngModel)]="recargo_get_service.montopor">
+                Monto
+              </mat-checkbox>
+
+              <mat-checkbox class="example-margin" [(ngModel)]="recargo_get_service.porcentaje">
+                Porcentaje
+              </mat-checkbox>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 13px;padding-top: 7px;"><u>Porcentaje</u></mat-label>
+              <input type="number" class="example-margin" formControlName="porcentaje" min="0"
+                [(ngModel)]="recargo_get_service.porcentaje" [disabled]="monto">&nbsp; %
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 36px;padding-top: 7px;"><u>Monto</u></mat-label>
+              <input type="number" class="example-margin" formControlName="monto" min="0"
+                [(ngModel)]="recargo_get_service.monto" [disabled]="porcentaje">
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 26px;padding-top: 7px;"><u>Moneda</u>
+                </mat-label>
+                <select formControlName="moneda" [(ngModel)]="recargo_get_service.moneda">
+                  <option *ngFor="let moneda_gets of moneda_get" [value]="moneda_gets.codigo">
+                    {{ moneda_gets.codigo }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- <mat-checkbox class="example-margin" formControlName="modificable" 
+                [(checked)]="recargo_get_service.modificable"> 
+              </mat-checkbox> -->
+              <mat-slide-toggle class="example-margin" [(ngModel)]="recargo_get_service.modificable"
+                formControlName="modificable" [checked]="recargo_get_service.modificable"> Modificable
+              </mat-slide-toggle>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,12 @@
+.mat-mdc-form-field{
+    width: inherit !important;
+}
+
+.mat-dialog-actions{
+    float: right;
+}
+
+.mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix{
+    padding-top: 10px !important;
+     padding-bottom: 0px !important;
+}

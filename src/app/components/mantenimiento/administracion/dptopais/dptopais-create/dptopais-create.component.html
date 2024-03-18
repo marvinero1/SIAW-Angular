@@ -1,0 +1,26 @@
+<div class="text-center" style="background-color: #f0ffff;">
+  <h1 mat-dialog-title>Crear Departamento</h1>
+
+  <div mat-dialog-content>
+    <div class="container">
+      <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="col-md">
+          <mat-label style="padding-right: 10px;"><u>Código</u></mat-label>
+          <input matInput type="text" formControlName="codigo" maxlength="3" required>
+        </div>
+
+        <div class="col-md">
+          <mat-label style="padding-right: 4px;"><u>Nombre</u></mat-label>
+          <input matInput type="text" formControlName="nombre" maxlength="15" required>
+        </div>
+
+        <div class="mat-dialog-actions" mat-dialog-actions>
+          <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
+          <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
+              class="fa fa-save"></i> Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

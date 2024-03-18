@@ -1,0 +1,35 @@
+<div class="p-2">
+  <div class="row">
+    <h1 mat-dialog-title><strong>Editar Resistencia con Codigo:</strong></h1>
+    <p mat-dialog-title>{{resistencia_edit.codigo}}</p>
+  </div>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+</div>
+
+<div mat-dialog-content>
+  <div class="container">
+    <form class="example-form" [formGroup]="FormularioDataEdit" (ngSubmit)="submitData()">
+      <div class="row mb-2">
+        <!-- <div class="col-md">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Código </mat-label>
+            <input matInput type="text" [(ngModel)]="resistencia_edit.codigo" formControlName="codigo" maxlength="6" required>
+          </mat-form-field>
+        </div> -->
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Descripción</mat-label>
+            <input matInput type="text" [(ngModel)]="resistencia_edit.descripcion" formControlName="descripcion" maxlength="50" required>
+          </mat-form-field>
+        </div>
+      </div>
+  
+      <div class="mat-dialog-actions" mat-dialog-actions>
+          <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit"><i class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>
+
+    <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
+  </div>
+</div>
+

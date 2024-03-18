@@ -1,0 +1,212 @@
+<div>
+  <h1 mat-dialog-title>Crear Item</h1>
+  <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+</div>
+
+<div mat-dialog-content>
+  <mat-tab-group preserveContent>
+    <mat-tab label="Datos"><br>
+      <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Codigo</mat-label>
+            <input matInput type="text" formControlName="codigo" maxlength="8" required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Caracteristica Primaria </mat-label>
+            <input matInput type="text" formControlName="descripcion" maxlength="50" required>
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Descripción Corta</mat-label>
+            <input type="text" matInput formControlName="descripcorta" maxlength="12" required>
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Descripción Abreviada</mat-label>
+            <input type="text" matInput formControlName="descripabr" maxlength="7" required>
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Caracteristica Secundaria</mat-label>
+            <input type="text" matInput formControlName="medida" maxlength="50">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Unidad Base</mat-label>
+            <mat-select formControlName="unidad">
+              <mat-option *ngFor="let inudemeds of inudemed" [value]="inudemeds.codigo">
+                {{ inudemeds.codigo }} - {{ inudemeds.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Rosca</mat-label>
+            <mat-select formControlName="rosca">
+              <mat-option *ngFor="let roscas of rosca" [value]="roscas.codigo">
+              {{ roscas.codigo }} - {{ roscas.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Terminación</mat-label>
+            <mat-select formControlName="terminacion">
+              <mat-option *ngFor="let interminacions of interminacion" [value]="interminacions.codigo">
+              {{ interminacions.codigo }} - {{ interminacions.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Resistencia</mat-label>
+            <mat-select formControlName="codresistencia">
+              <mat-option *ngFor="let inresistencias of inresistencia" [value]="inresistencias.codigo">
+              {{ inresistencias.codigo }} - {{ inresistencias.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> 
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Peso Kg * Decimal</mat-label>
+              <input type="number" matInput formControlName="peso">
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" formControlName="kit" value="true">
+                Conjunto</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Clasificación ABC</mat-label>
+            <mat-select formControlName="clasificacion">
+              <mat-option value="A">A</mat-option>
+              <mat-option value="B">B</mat-option>
+              <mat-option value="C">C</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Linea</mat-label>
+            <mat-select formControlName="codlinea">
+              <mat-option *ngFor="let inlineas of inlinea" [value]="inlineas.codigo">
+              {{ inlineas.codigo }} - {{ inlineas.descripcion }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>            
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estadocv">
+              <mat-option value="1">Venta y Compra</mat-option>
+              <mat-option value="2">Solo Venta</mat-option>
+              <mat-option value="3">Solo Compra</mat-option>
+              <mat-option value="4">Inactivo</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <hr><br>
+
+      <div class="row">
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" formControlName="enlinea" value="true">
+                El Item Se Encuentra en Linea</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" value="true" formControlName="reservastock">
+                El Item Reserva Stocks Para Tiendas</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" value="true" formControlName="usar_en_movimiento">
+                Usar en Notas de Movimiento</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" value="true" formControlName="controla_negativo">
+                Controlar Saldos Negativos</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+        <div class="col">
+          <ng-container>
+            <section class="example-section" style="text-align: center !important;">
+              <mat-checkbox class="example-margin" value="true" formControlName="paga_comision">
+               Paga Comisión</mat-checkbox>
+            </section>
+          </ng-container>
+        </div>
+      </div><br>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field appearance="outline">
+            <mat-label>Código de Barras</mat-label>
+              <input matInput type="text" formControlName="codigobarra">
+          </mat-form-field>
+        </div>
+      </div>
+    
+      <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
+      <div class="mat-dialog-actions" mat-dialog-actions>
+        <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit">
+          <i class="fa fa-save"></i> Guardar</button>
+      </div>
+    </form>  
+    </mat-tab>
+  </mat-tab-group>
+</div>
+

@@ -1,0 +1,49 @@
+<div class="p-2">
+  <mat-card style="background-color: #ffe0c0;">
+    <mat-card-header class="mb-1">
+      <mat-card-title style="font-size: 0.8rem;">Actualizar Stock Actual</mat-card-title>
+      <!-- <mat-card-subtitle>End</mat-card-subtitle> -->
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="row">
+          <tr>
+            <td class="tg-0lax">
+              <div class="input-group">
+                <mat-label style="padding-right: 3px;padding-top: 7px;"><u>Almacen</u></mat-label>
+                <input type="text" style="width: 60% !important;" [(ngModel)]="almacen_get.codigo"
+                  formControlName="codalmacen" disabled>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Almacen">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td class="tg-0lax">
+              <div>{{ almacen_get.descripcion }}</div>
+            </td>
+          </tr>
+        </div>
+        <div class="row">
+          <tr>
+            <td class="tg-0lax">
+              <div class="input-group">
+                <mat-label style="padding-right: 6px;padding-top: 7px;"><u>A Fecha</u></mat-label>
+                <input type="date" formControlName="fecha" required>
+              </div>
+            </td>
+          </tr>
+        </div>
+        <mat-card-actions align="start">
+          <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit">
+            <i class="fa fa-cog"></i> &nbsp;Generar
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

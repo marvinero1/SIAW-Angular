@@ -1,0 +1,47 @@
+// .input-group{
+//     width: 64%;
+// }
+
+.mat-mdc-header-row{
+    background: #093070;
+}
+
+th{
+    text-align: center;
+    color: #fff; 
+}
+
+td{
+    text-align: center;
+    cursor: pointer;
+}
+
+.mat-mdc-form-field{
+    flex-direction: inherit !important;
+}
+
+.mat-mdc-table .mdc-data-table__header-row {
+    height: 21px;
+}
+
+.mat-mdc-table .mdc-data-table__row{
+    height: calc(1.6rem + 0px) !important;
+}
+
+.mat-mdc-form-field{
+    width: 100% !important;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: #fff;
+}
+
+::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    border-radius: 4px;
+    padding: 0.75em 0.75em 0 0.75em;
+    border: 1px solid #f94747;
+}
+
+span{
+    color: #093070 !important;
+}

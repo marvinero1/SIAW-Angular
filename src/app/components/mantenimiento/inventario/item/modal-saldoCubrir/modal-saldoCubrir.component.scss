@@ -1,0 +1,26 @@
+.mat-mdc-form-field{
+    width: inherit !important;
+}
+
+.mat-dialog-actions{
+    float: right;
+}
+.mat-mdc-header-row{
+    background: #093070;
+}
+td{
+    text-align: center;
+}
+th, mat-sort-header{
+    color: white;
+    text-align: center !important;
+}
+.mat-mdc-table .mdc-data-table__header-row{
+    height: calc(1.6rem + 0px) !important;
+}
+.mat-mdc-table .mdc-data-table__row{
+    height: calc(0rem + 0px) !important;
+}
+span{
+    color: #093070 !important;
+}

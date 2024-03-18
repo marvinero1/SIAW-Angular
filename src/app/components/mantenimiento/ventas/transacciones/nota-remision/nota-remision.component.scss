@@ -1,0 +1,120 @@
+.input-group-text, .form-control-sm {
+    font-size: 0.75rem;
+}
+.input-group-text {
+    background-color: transparent;
+    color: black;
+}
+.btn-outline-secondary:hover {
+    color: #fff !important;
+    background-color: #093070;
+    border-color: #093070;
+}
+
+.inputsSaldos{
+    width: 10%;
+    background-color: black;
+    color: #ffc107;
+    height: 40%;
+    cursor: pointer;
+}
+
+mat-icon {
+    font-size: 1.1rem !important;
+}
+
+.form-control-sm{
+    height: calc(1.6rem + 0px) !important;
+  }
+  
+mat-tab-group{
+    font-size: 0.8rem;
+}
+
+mat-mdc-tab, mdc-tab {
+    height: 34px;
+    min-width: 62px !important;
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+}
+
+.green {color: green;}
+.yellow {color: #ffc107;}
+.red {color: red;}
+.blue {color: blue;}
+.brown {color: brown;}
+.black {color: black;}
+.green:hover, .yellow:hover, .red:hover, .blue:hover, .brown:hover, .black:hover {color: #fff;}
+
+
+// Tabla SCSS
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+    
+th, td, .th, .td {
+    text-align: center !important;
+    /* padding: 8px; */
+}
+
+.mat-mdc-row:nth-child(odd) {
+    background-color: #80808017;
+}
+
+.mat-mdc-header-row, .mat-header-row{
+    position: sticky;
+    top: 0;
+    background-color: #ffc107;
+    min-height: 25px !important;
+}
+
+.mat-row, .mat-header-row, .mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+}
+
+mat-row, mat-header-row, mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+}
+
+.mat-row, .mat-footer-row{
+    min-height: 25px !important;
+}
+
+.custom-select1 {
+    display: inline-block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: middle;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.075);
+    -webkit-appearance: none;
+    appearance: none;
+}
+.input-group>.custom-file, .input-group>.custom-select1, .input-group>.form-control, .input-group>.form-control-plaintext{
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0; 
+}
+
+.cliente{
+    text-transform: uppercase;
+}
+
+.inputsSaldos::placeholder {
+    color: #ffc107;
+    opacity: 1; /* Firefox */
+}
+
+.inputsSaldos{
+    height: calc(1.2rem + 0px) !important;
+}

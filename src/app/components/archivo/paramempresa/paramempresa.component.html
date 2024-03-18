@@ -1,0 +1,2070 @@
+<div class="p-2">
+  <div class="overlay"></div>
+  <div class="p-4 mb-3 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md text-center">
+        <h3>Parametros Empresa</h3>
+      </div>
+      <div class="col-md" *ngIf="empresa">
+        <p><strong>Empresa: &nbsp;</strong>{{ empresa.codigo }}</p>
+        <p><strong>Descripción: &nbsp;</strong>{{ empresa.descripcion }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team p-2 scrollmenu">
+        <mat-tab-group dynamicHeight [color]="'primary'">
+          <!-- inicio Generales -->
+          <mat-tab label="Generales" style="color: white;"><br>
+            <div class="content">
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <!-- seccionHIDE -->
+                <input type="text" formControlName="codempresa" [ngModel]="parametros.codempresa" hidden>
+                <input type="text" formControlName="diascomplementarias" [ngModel]="parametros.diascomplementarias"
+                  hidden>
+                <input type="text" formControlName="maxcomplementarias" [ngModel]="parametros.maxcomplementarias"
+                  hidden>
+                <!-- seccionEndHIDE -->
+
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>I.V.A %</mat-label>
+                      <input type="number" matInput placeholder="0.00 %" formControlName="iva"
+                        [ngModel]="parametros.iva " required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>RC-I.V.A %</mat-label>
+                      <input type="number" matInput placeholder="0.00 %" formControlName="rciva"
+                        [ngModel]="parametros.rciva" ngModel required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>I.T %</mat-label>
+                      <input type="number" matInput placeholder="0.00 %" formControlName="it" [ngModel]="parametros.it"
+                        ngModel required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field appearance="fill" appearance="outline">
+                      <mat-label>Moneda Base</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.acmonedaajuste"
+                        formControlName="acmonedaajuste">
+                        <!-- <mat-option><strong>Valor Actual: </strong>{{ parametros.monedae }}</mat-option> -->
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Frase</mat-label>
+                      <input matInput type="text" placeholder="Frase" [ngModel]="parametros.frase"
+                        formControlName="frase">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Dias Complementarios</mat-label>
+                      <input matInput type="number" placeholder="Dias" [ngModel]="parametros.diascomplementarias"
+                        formControlName="diascomplementarias">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Dias de Proceso</mat-label>
+                      <input matInput type="number" placeholder="+/- Dias" formControlName="diasproceso"
+                        [ngModel]="parametros.diasproceso">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-lg text-center">
+                    <!-- <section class="example-section">
+                      <mat-checkbox class="example-margin">Activar Cierres Diarios</mat-checkbox>
+                    </section> -->
+                    <ng-container *ngIf="parametros.cierres_diarios == true">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="cierres_diarios" value="true" checked>
+                          Activar Cierres Diarios</mat-checkbox>
+                      </section>
+                    </ng-container>
+                    <ng-container *ngIf="parametros.cierres_diarios == false">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="cierres_diarios" value="false">Activar
+                          Cierres Diarios</mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div>
+                </div><br>
+
+                <!-- segundaParte -->
+                <div class="content p-3" style="border-style: groove;">
+                  <div class="row">
+                    <div class="col-md">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Impresion Facturas Lineas Superiores</mat-label>
+                        <mat-select matNativeControl [ngModel]="parametros.fact_lineas_arriba"
+                          formControlName="fact_lineas_arriba">
+                          <mat-option><strong>Valor Actual: </strong> {{ parametros.fact_lineas_arriba }}</mat-option>
+                          <mat-option value="0">0</mat-option>
+                          <mat-option value="1">1</mat-option>
+                          <mat-option value="2">2</mat-option>
+                          <mat-option value="3">3</mat-option>
+                          <mat-option value="4">4</mat-option>
+                          <mat-option value="5">5</mat-option>
+                          <mat-option value="6">6</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Servidor Opcional</mat-label>
+                        <input matInput formControlName="servidor_opcional" [ngModel]="parametros.servidor_opcional">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md">
+                      <mat-form-field appearance="fill" appearance="outline">
+                        <mat-label>Inicio de Rutas </mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="fecha_inicio_rutas"
+                          [ngModel]="parametros.fecha_inicio_rutas">
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>BD Opcional</mat-label>
+                        <input matInput type="text" formControlName="bd_opcional" [ngModel]="parametros.bd_opcional">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md text-center">
+                      <ng-container *ngIf="parametros.obliga_remito == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="obliga_remito" value="true" checked>
+                            Obliga a generar remito</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.obliga_remito == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="obliga_remito" value="false">Obliga a
+                            generar remito</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div><br>
+                <!-- FinSegundaParte -->
+
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          <!-- Fin Generales -->
+
+          <!-- inicio Cierres -->
+          <mat-tab label="Cierres"><br>
+            <div class="content">
+              <div class="row">
+                <div class="col text-center">
+                  <p><strong>*Nota: </strong> Dias despues desde principio de mes para cerrar el mes anterior.</p>
+                </div><br>
+              </div>
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Administración</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.dias_cierre_01"
+                        formControlName="dias_cierre_01">
+                        <mat-option [value]="parametros.dias_cierre_01"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_01 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Costeo y Costeo</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_07"
+                        formControlName="dias_cierre_07">
+                        <mat-option [value]="parametros.dias_cierre_07"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_07 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Inventarios</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_02"
+                        formControlName="dias_cierre_02">
+                        <mat-option [value]="parametros.dias_cierre_02"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_02 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Importaciones</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_08"
+                        formControlName="dias_cierre_08">
+                        <mat-option [value]="parametros.dias_cierre_08"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_08 }}</mat-option>
+                        <mat-option value="2">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Ventas</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_03"
+                        formControlName="dias_cierre_03">
+                        <mat-option [value]="parametros.dias_cierre_03"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_03 }}</mat-option>
+                        <mat-option value="2">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Personal y Planillas</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_09"
+                        formControlName="dias_cierre_09">
+                        <mat-option [value]="parametros.dias_cierre_09"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_09 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Cuentas por Cobrar</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_04"
+                        formControlName="dias_cierre_04">
+                        <mat-option [value]="parametros.dias_cierre_04"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_04 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Seguridad</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_10"
+                        formControlName="dias_cierre_10">
+                        <mat-option [value]="parametros.dias_cierre_10"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_10 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Contabilidad</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_05"
+                        formControlName="dias_cierre_05">
+                        <mat-option [value]="parametros.dias_cierre_05"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_05 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Compras</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_11"
+                        formControlName="dias_cierre_11">
+                        <mat-option [value]="parametros.dias_cierre_11"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_11 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Activos Fijos</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_06"
+                        formControlName="dias_cierre_06">
+                        <mat-option [value]="parametros.dias_cierre_06"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_06 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline" style="width: 70% !important;">
+                      <mat-label>Módulo de Fondos</mat-label>
+                      <mat-select matNativeControl placeholder="Dias" [ngModel]="parametros.dias_cierre_12"
+                        formControlName="dias_cierre_12">
+                        <mat-option [value]="parametros.dias_cierre_12"><strong>Valor Actual: </strong>
+                          {{ parametros.dias_cierre_12 }}</mat-option>
+                        <mat-option value="1">1</mat-option>
+                        <mat-option value="2">2</mat-option>
+                        <mat-option value="3">3</mat-option>
+                        <mat-option value="4">4</mat-option>
+                        <mat-option value="5">5</mat-option>
+                        <mat-option value="6">6</mat-option>
+                        <mat-option value="7">7</mat-option>
+                        <mat-option value="8">8</mat-option>
+                        <mat-option value="9">9</mat-option>
+                        <mat-option value="10">10</mat-option>
+                        <mat-option value="11">11</mat-option>
+                        <mat-option value="12">12</mat-option>
+                        <mat-option value="13">13</mat-option>
+                        <mat-option value="14">14</mat-option>
+                        <mat-option value="15">15</mat-option>
+                        <mat-option value="16">16</mat-option>
+                        <mat-option value="17">17</mat-option>
+                        <mat-option value="18">18</mat-option>
+                        <mat-option value="19">19</mat-option>
+                        <mat-option value="20">20</mat-option>
+                        <mat-option value="21">21</mat-option>
+                        <mat-option value="22">22</mat-option>
+                        <mat-option value="23">23</mat-option>
+                        <mat-option value="24">24</mat-option>
+                        <mat-option value="25">25</mat-option>
+                        <mat-option value="26">26</mat-option>
+                        <mat-option value="27">27</mat-option>
+                        <mat-option value="28">28</mat-option>
+                        <mat-option value="29">29</mat-option>
+                        <mat-option value="30">30</mat-option>
+                        <mat-option value="31">31</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </form>
+              <p><strong>Nota: </strong> Si indica 0 dias no se cerrara el modulo.</p>
+            </div>
+          </mat-tab>
+          <!-- Fin Cierres -->
+
+          <!-- Inicio Planillas I -->
+          <mat-tab label="Planillas I"><br>
+            <div class="content">
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <div class="row">
+                  <div class="col-md content">
+                    <p><strong>Para Planilla de Haberes:</strong></p>
+                    <div>
+                      <mat-form-field class="example-full-width" style="width: 75% !important;" appearance="outline">
+                        <mat-label>Sueldo Minimo Nacional</mat-label>
+                        <input matInput type="number" placeholder="0.00" formControlName="minnacional"
+                          [ngModel]="parametros.minnacional">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" style="width: 25% !important;padding-left: 10px;">
+                        <mat-label>Moneda</mat-label>
+                        <mat-select [ngModel]="parametros.monminnal" formControlName="monminnal">
+                          <mat-option><strong>Valor Actual: </strong>{{ parametros.monminnal }}</mat-option>
+                          <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                            {{ monedas.descripcion }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div>
+                      <mat-form-field class="example-full-width" style="width: 75% !important;" appearance="outline">
+                        <mat-label>Minimo No Imponible</mat-label>
+                        <input matInput type="number" formControlName="minnoimponible"
+                          [ngModel]="parametros.minnoimponible" placeholder="0.00">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" style="width: 25% !important;padding-left: 10px;">
+                        <mat-label>Moneda</mat-label>
+                        <mat-select [ngModel]="parametros.monminnoimpo" formControlName="monminnoimpo">
+                          <mat-option><strong>Valor Actual: </strong>{{ parametros.monminnal }}</mat-option>
+                          <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                            {{ monedas.descripcion }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div>
+                      <mat-form-field class="example-full-width" style="width: 75% !important;" appearance="outline">
+                        <mat-label>Regimen Complementario</mat-label>
+                        <input matInput type="number" formControlName="regcomple" [ngModel]="parametros.regcomple"
+                          placeholder="0.00">
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" style="width: 25% !important;padding-left: 10px;">
+                        <mat-label>Moneda</mat-label>
+                        <mat-select [ngModel]="parametros.monregcomple" formControlName="monregcomple">
+                          <mat-option><strong>Valor Actual: </strong>{{ parametros.monregcomple }}</mat-option>
+                          <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                            {{ monedas.descripcion }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>AFP</mat-label>
+                        <input matInput type="text" formControlName="afp" [ngModel]="parametros.afp" placeholder="%">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Prima Riesgo Comun</mat-label>
+                        <input matInput type="text" formControlName="riesgocomun" [ngModel]="parametros.riesgocomun"
+                          placeholder="%">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Aporte Voluntario</mat-label>
+                        <input matInput type="text" formControlName="aportevoluntario"
+                          [ngModel]="parametros.aportevoluntario" placeholder="%">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Comisión AFP</mat-label>
+                        <input matInput type="text" formControlName="comisionafp" [ngModel]="parametros.comisionafp"
+                          placeholder="%">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Riesgo Profesional</mat-label>
+                        <input matInput type="text" formControlName="riesgoprof" [ngModel]="parametros.riesgoprof"
+                          placeholder="%">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>PNSV</mat-label>
+                        <input matInput type="text" formControlName="pnsv" [ngModel]="parametros.pnsv" placeholder="%">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-md content">
+                    <p><strong>Para Planilla de Haberes:</strong></p>
+                    <div class="col">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Factor 4 Sábados</mat-label>
+                        <input matInput type="number" formControlName="cuatrosabados"
+                          [ngModel]="parametros.cuatrosabados" placeholder="0.00">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Factor 5 Sábados</mat-label>
+                        <input matInput type="number" formControlName="cincosabados" [ngModel]="parametros.cincosabados"
+                          placeholder="0.00">
+                      </mat-form-field>
+                    </div>
+
+                    <p><strong>Para Aguinaldos:</strong></p>
+                    <div class="col">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Promedio Sueldos</mat-label>
+                        <input matInput type="number" formControlName="prommesessueldo"
+                          [ngModel]="parametros.prommesessueldo" placeholder="Meses">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Promedio Comisiones</mat-label>
+                        <input matInput type="number" formControlName="prommesescomision"
+                          [ngModel]="parametros.prommesescomision" placeholder="Meses">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Dias Comerciales</mat-label>
+                        <input matInput type="number" formControlName="diascomerciales"
+                          [ngModel]="parametros.diascomerciales" placeholder="Dias">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Horas Mes</mat-label>
+                        <input matInput type="number" formControlName="horasmes" [ngModel]="parametros.horasmes"
+                          placeholder="Hrs.">
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Horas Dias</mat-label>
+                        <input matInput type="number" formControlName="horasdia" [ngModel]="parametros.horasdia"
+                          placeholder="Hrs.">
+                      </mat-form-field>
+
+                      <section class="example-section">
+                        <ng-container *ngIf="parametros.valida_salariomin == true">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" formControlName="valida_salariomin" value="true"
+                              checked>Valida Salario Minimo Nacional</mat-checkbox>
+                          </section>
+                        </ng-container>
+                        <ng-container *ngIf="parametros.valida_salariomin == false">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" formControlName="valida_salariomin" value="false">
+                              Valida Salario Minimo Nacional</mat-checkbox>
+                          </section>
+                        </ng-container>
+                      </section>
+
+                      <section class="example-section">
+                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion == true">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin"
+                              formControlName="bono_rendimiento_pymes_segun_evaluacion" value="true" checked>Bono
+                              Rendimiento Pymes Segun Evaluación</mat-checkbox>
+                          </section>
+                        </ng-container>
+                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion == false">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin"
+                              formControlName="bono_rendimiento_pymes_segun_evaluacion" value="false">Bono Rendimiento
+                              Pymes Segun Evaluación</mat-checkbox>
+                          </section>
+                        </ng-container>
+                      </section>
+
+                      <div class="mat-dialog-actions" mat-dialog-actions>
+                        <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i>
+                          Guardar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          <!-- Fin Planillas I -->
+
+          <!-- Inicio Planillas II -->
+          <mat-tab label="Planillas II"><br>
+            <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+              (ngSubmit)="submitDataUpdateParamEmpresa()">
+              <div class="content">
+                <p><strong>Aporte Solidario Nacional: </strong></p>
+                <div class="row p-2">
+                  <p>a: 1er Rango Total Ganado Mayor a: &nbsp;</p>
+                  <input class="input-planillas2" type="number" formControlName="topemonto_asn1"
+                    [ngModel]="parametros.topemonto_asn1" placeholder="0.00">
+                  <p>Aporte:</p>&nbsp;
+                  <input class="input-planillas2" type="number" formControlName="porcentaje_asn1"
+                    [ngModel]="parametros.porcentaje_asn1" placeholder="%">%
+                </div><br>
+
+                <div class="row p-2">
+                  <p>a: 2do Rango Total Ganado Mayor a: &nbsp;</p>
+                  <input class="input-planillas2" type="number" formControlName="topemonto_asn2"
+                    [ngModel]="parametros.topemonto_asn2" placeholder="0.00">
+                  <p>Aporte:</p>&nbsp;
+                  <input class="input-planillas2" type="number" formControlName="porcentaje_asn2"
+                    [ngModel]="parametros.porcentaje_asn2" placeholder="%"> %
+                </div><br>
+
+                <div class="row p-2">
+                  <p>a: 3er Rango Total Ganado Mayor a: &nbsp;</p>
+                  <input class="input-planillas2" type="number" formControlName="topemonto_asn3"
+                    [ngModel]="parametros.topemonto_asn3" placeholder="0.00">
+                  <p>Aporte:</p>&nbsp;
+                  <input class="input-planillas2" type="number" formControlName="porcentaje_asn3"
+                    [ngModel]="parametros.porcentaje_asn3" placeholder="%">%
+                </div><br>
+              </div>
+
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </mat-tab>
+          <!-- Fin Planillas I -->
+
+          <!-- Inicio Inventarios -->
+          <mat-tab label="Inventarios"><br>
+            <div class="content">
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="fill" appearance="outline">
+                      <mat-label>Precio Impresión Ajustes</mat-label>
+                      <mat-select [ngModel]="parametros.codtarifaajuste" formControlName="codtarifaajuste">
+                        <mat-option><strong>Valor Actual: </strong>{{ parametros.codtarifaajuste }}</mat-option>
+                        <mat-option *ngFor="let intarifas of intarifa" [value]="intarifas.codigo">
+                          {{ intarifas.codigo }} - {{ intarifas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nombre Caracteristica Principal</mat-label>
+                      <input matInput type="text" [ngModel]="parametros.ctsc1_descripcion"
+                        formControlName="ctsc1_descripcion">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nombre Caracteristica Secundaria</mat-label>
+                      <input matInput type="text" [ngModel]="parametros.ctsc2_descripcion"
+                        formControlName="ctsc2_descripcion">
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="fill" appearance="outline">
+                      <mat-label>Moneda de Costeos</mat-label>
+                      <mat-select [ngModel]="parametros.codmoneda_costeo" formControlName="codmoneda_costeo">
+                        <mat-option><strong>Valor Actual: </strong>{{ parametros.codmoneda_costeo }}</mat-option>
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <ng-container *ngIf="parametros.negativos == true">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="negativos" value="true" checked>Permitir
+                          Saldos Negativos</mat-checkbox>
+                      </section>
+                    </ng-container>
+                    <ng-container *ngIf="parametros.negativos == false">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="negativos" value="false">Permitir Saldos
+                          Negativos</mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div>
+                  <div class="col">
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.stock_seguridad == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="stock_seguridad" value="true" checked>
+                            Controlar Stock de Reserva</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.stock_seguridad == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="stock_seguridad" value="false">Controlar
+                            Stock de Reserva</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+                  </div>
+                </div>
+
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          <!-- Fin Inventarios -->
+
+          <!-- Inicio Contabilidad -->
+          <mat-tab label="Contabilidad"><br>
+            <div class="col-md content">
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta Credito Fiscal</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.ctacredfiscal" formControlName="ctacredfiscal">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta Debito Fiscal</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.ctadebfiscal" formControlName="ctadebfiscal">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta de Ajuste ME</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.codcuentaajustes"
+                        formControlName="codcuentaajustes">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta de Ajuste MN</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.codcuentaajustesmn"
+                        formControlName="codcuentaajustesmn">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta de Utilidad</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.codctautilidad"
+                        formControlName="codctautilidad">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Cuenta de Perdidas</mat-label>
+                      <mat-select matNativeControl [ngModel]="parametros.codctaperdida" formControlName="codctaperdida">
+                        <mat-option *ngFor="let cncuentas of cncuenta" [value]="cncuentas.codigo">
+                          {{ cncuentas.codigo }} - {{ cncuentas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <!-- las opciones con imputable como true no son elegibles. -->
+
+                    <!-- <mat-form-field>
+                      <mat-label>Choose an option</mat-label>
+                      <mat-select [disabled]="disableSelect.value">
+                        <mat-option value="option1">Option 1</mat-option>
+                        <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+                        <mat-option value="option3">Option 3</mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+
+                    <div class="row p-2">
+                      <p>I.U.E: &nbsp;</p>
+                      <input class="input-planillas2" type="number" [ngModel]="parametros.iue" formControlName="iue"
+                        placeholder="0.00">
+                      <p>%</p>&nbsp;
+                    </div>
+                  </div>
+
+                  <div class="col-md">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda Extranjera</mat-label>
+                      <mat-select [ngModel]="parametros.monedae" formControlName="monedae" required>
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <div class="row">
+                      <div class="col-md">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Resp.Libro de Compras C.I</mat-label>
+                          <input matInput type="text" placeholder="Resp.Libro de Compras C.I"
+                            [ngModel]="parametros.resp_lc_ci" formControlName="resp_lc_ci">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Nombre</mat-label>
+                          <input matInput type="text" placeholder="Nombre" [ngModel]="parametros.resp_lc_nombre"
+                            formControlName="resp_lc_nombre">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Resp.Libro de Ventas C.I</mat-label>
+                          <input matInput type="text" placeholder="Resp.Libro de Ventas C.I"
+                            [ngModel]="parametros.resp_lv_ci" formControlName="resp_lv_ci">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Nombre</mat-label>
+                          <input matInput type="text" placeholder="Nombre" [ngModel]="parametros.resp_lv_nombre"
+                            formControlName="resp_lv_nombre">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Ciudad para Reportes</mat-label>
+                        <input matInput type="text" placeholder="Ciudad" [ngModel]="parametros.ciudad_reportes_conta"
+                          formControlName="ciudad_reportes_conta">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Monto R.N.D 10.001011</mat-label>
+                        <input matInput type="text" placeholder="en MN" [ngModel]="parametros.monto_rnd100011"
+                          formControlName="monto_rnd100011">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Monto en MN Limite Ventas Facturas Sin Nombre y Sin NIT</mat-label>
+                        <input matInput type="number" placeholder="0000.00"
+                          [ngModel]="parametros.monto_maximo_facturas_sin_nombre"
+                          formControlName="monto_maximo_facturas_sin_nombre">
+                      </mat-form-field>
+                    </div>
+                    <div class="mat-dialog-actions" mat-dialog-actions>
+                      <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i>
+                        Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          <!-- Fin Contabilidad -->
+
+          <!-- Inicio Ventas -->
+          <mat-tab label="Ventas"><br>
+            <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+              (ngSubmit)="submitDataUpdateParamEmpresa()">
+              <div class="content">
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Maximo de Proformas Complementarias</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.maxcomplementarias"
+                        formControlName="maxcomplementarias" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Maximo de Proformas Complementarias Sin Descuento</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.maxcomplementarias_sindesc"
+                        formControlName="maxcomplementarias_sindesc" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nro Maximo de NIT's Alternativos</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.nronombrenit" formControlName="nronombrenit"
+                        placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nro Maximo de Proformas Urgentes a la semana</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.maxurgentes" formControlName="maxurgentes"
+                        placeholder="0">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nro Maximo de Pedidos Urgentes al Dia</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.maxurgentes_dia"
+                        formControlName="maxurgentes_dia" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Nro Maximo de Items en Proforma Urgente</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.maxitemurgentes"
+                        formControlName="maxitemurgentes" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Dias minimos para deshabilitar un NIT Alternativo</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.duracion_habilitado"
+                        formControlName="duracion_habilitado" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Alterar sobre dosificación al limite del vencimiento</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.dias_alerta_dosificacion"
+                        formControlName="dias_alerta_dosificacion" placeholder="0">
+                    </mat-form-field>
+                  </div>
+                </div><br>
+
+                <div class="content p-3" style="border-style: groove;">
+                  <div class="row">
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Dias Extras Para la Cancelación de Pronto Pago</mat-label>
+                        <input matInput type="number" [ngModel]="parametros.diasextrapp" formControlName="diasextrapp"
+                          placeholder="0">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Dias Principio de Mes Aplicando Reversiones</mat-label>
+                        <input matInput type="number" [ngModel]="parametros.dias_igualacion"
+                          formControlName="dias_igualacion" placeholder="0">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Maximo de Dias Pronto Pago Cliente</mat-label>
+                        <input matInput type="number" [ngModel]="parametros.maxdiaspp" formControlName="maxdiaspp"
+                          placeholder="0">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md">
+                      <mat-form-field class="example-full-width" appearance="outline">
+                        <mat-label>Dias Pronto Pago Cliente por Defecto</mat-label>
+                        <input matInput type="number" [ngModel]="parametros.estandardiaspp"
+                          formControlName="estandardiaspp" placeholder="0">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md">
+                      <!-- aca poner select veplanpago -->
+                      <mat-form-field appearance="outline">
+                        <mat-label>Plan de Pagos para Reversiones</mat-label>
+                        <mat-select [ngModel]="parametros.codplanpago_reversion"
+                          formControlName="codplanpago_reversion">
+                          <mat-option *ngFor="let planpagos of planpago" [value]="planpagos.codigo">
+                            {{ planpagos.codigo }} - {{ planpagos.descripcion }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div><br>
+                  <div class="row">
+                    <div class="col-md">
+                      <ng-container *ngIf="parametros.factura_imprime_labels == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="factura_imprime_labels" value="true"
+                            checked>En Factura Pre-Impresas Imprimir Toda Cabecera</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="factura_imprime_labels" value="false">En
+                            Factura Pre-Impresas Imprimir Toda Cabecera</mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <!-- <section class="example-section">
+                        <mat-checkbox class="example-margin">En Factura Pre-Impresas Imprimir Toda Cabecera</mat-checkbox>
+                      </section> -->
+                    </div>
+                    <div class="col-md">
+                      <input type="file" directory webkitdirectory>
+                      <!-- captar la ruta relativa -->
+                    </div>
+                  </div>
+                </div>
+              </div><br>
+
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </mat-tab>
+          <!-- Fin Ventas -->
+
+          <!-- Inicio Ventas II -->
+          <mat-tab label="Ventas II"><br>
+            <div class="content">
+              <div class="row">
+                <div class="col-md">
+                  <button mat-raised-button color="primary" style="width: 100%;height: 56px !important;"
+                    (click)="openDialogMinimoComplementarias(empresa.codigo);">
+                    Minimos de Complementarias</button>
+                </div>
+                <div class="col-md">
+                  <button mat-raised-button color="primary" style="width: 100%;height: 56px !important;"
+                    (click)="openDialogCreditoConAutorizacion(empresa.codigo);">
+                    Dias Extras para PP con Notas de Credito C/Autorización</button>
+                </div>
+                <div class="col-md">
+                  <button mat-raised-button color="primary" style="width: 100%;height: 56px !important;"
+                    (click)="openDialogPreciosFacturacion(empresa.codigo);">
+                    Precios Permitidos Facturacion</button>
+                </div>
+              </div><br>
+
+              <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+                (ngSubmit)="submitDataUpdateParamEmpresa()">
+                <div class="row">
+                  <div class="col">
+                    <div>
+                      <ng-container *ngIf="parametros.proforma_reserva == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="proforma_reserva" value="true" checked>
+                            Las Proformas Autorizadas Reservan Mercaderia.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.proforma_reserva == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="proforma_reserva" value="false">
+                            Las Proformas Autorizadas Reservan Mercaderia.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+
+                    <div>
+                      <ng-container *ngIf="parametros.rev_automaticas == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="rev_automaticas" value="true" checked>
+                            Revertir Automaticamente los Pronto Pago Excedidos.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.rev_automaticas == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="rev_automaticas" value="false">
+                            Revertir Automaticamente los Pronto Pago Excedidos.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+
+                    <div>
+                      <ng-container *ngIf="parametros.clientevendedor == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="clientevendedor" value="true" checked>
+                            Controlar que el Cliente sea atendido por su propio vendedor.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="clientevendedor" value="false">Controlar
+                            que el Cliente sea atendido por su propio vendedor.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+
+                    <div>
+                      <ng-container *ngIf="parametros.forzar_etiqueta == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="forzar_etiqueta" value="true" checked>
+                            Obligar a llenar Etiqueta de Cliente en Proformas.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.forzar_etiqueta == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="forzar_etiqueta" value="false">Obligar a
+                            llenar Etiqueta de Cliente en Proformas.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div>
+                      <ng-container *ngIf="parametros.permitir_items_repetidos == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="permitir_items_repetidos" value="true"
+                            checked>Permitir Items Repetidos.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="permitir_items_repetidos" value="false">
+                            Permitir Items Repetidos.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <section class="example-section">
+                      <div>
+                        <ng-container *ngIf="parametros.cambiar_credito_morosos == true">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" formControlName="cambiar_credito_morosos" value="true"
+                              checked>
+                              Revertir Credito de Clientes Morosos que no son empresas y clientes sin comprar en:
+                            </mat-checkbox>
+                          </section>
+                        </ng-container>
+                        <ng-container *ngIf="parametros.cambiar_credito_morosos == false">
+                          <section class="example-section">
+                            <mat-checkbox class="example-margin" formControlName="cambiar_credito_morosos"
+                              value="false">
+                              Revertir Credito de Clientes Morosos que no son empresas y clientes sin comprar en:
+                            </mat-checkbox>
+                          </section>
+                        </ng-container>
+                        <input class="input-planillas2" type="number" [ngModel]="parametros.dias_sin_compra"
+                          formControlName="dias_sin_compra" placeholder="Dias">
+                      </div>
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.valida_cobertura == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="true" checked>
+                            Validar Cobertura en Cumplimiento de Objetivos por Vendedor. </mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.valida_cobertura == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="false">
+                            Validar Cobertura en Cumplimiento de Objetivos por Vendedor. </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.valida_cobertura == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="true" checked>
+                            Generar Hoja de Rutas Diarias.</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.valida_cobertura == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="false">
+                            Generar Hoja de Rutas Diarias. </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+
+                    <div class="row p-2">
+                      <p>Limite de Dias de Mora para seguir Aprobando Proformas &nbsp;</p>
+                      <input class="input-planillas2" type="number"
+                        [ngModel]="parametros.dias_mora_limite_revertir_credito"
+                        formControlName="dias_mora_limite_revertir_credito" placeholder="0.00">&nbsp;
+                    </div>
+
+                    <div class="row p-2">
+                      <p>Limite de Notas de Remisión de Reversión por Cliente que no estan canceladas, para seguir
+                        Aprobando
+                        Proformas &nbsp;</p>
+                      <input class="input-planillas2" type="number" [ngModel]="parametros.nro_reversiones_pendientes"
+                        formControlName="nro_reversiones_pendientes" placeholder="0.00">&nbsp;
+                    </div>
+                  </div>
+                </div>
+                <div class="row text-center">
+                  <div class="col">
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="distribuir_desc_extra_en_factura"
+                            value="true" checked>
+                            Distribuir Descuentos Extras en Facturas
+                            <span><strong>Pro-rateo del total del descuento extra en la proforma</strong></span>
+                            Si distribuye quiere decir que pro-ratea el total de descuentos
+                            extras en funcion al porcentaje que representa al total del item respecto del subtotal.
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="distribuir_desc_extra_en_factura"
+                            value="false">
+                            Distribuir Descuentos Extras en Facturas
+                            <span><strong>Pro-rateo del total del descuento extra en la proforma</strong></span>
+                            Si distribuye quiere decir que pro-ratea el total de descuentos
+                            extras en funcion al porcentaje que representa al total del item respecto del subtotal.
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+                  </div>
+                </div>
+
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+          <!-- Fin Ventas II -->
+
+          <!-- Inicio Ventas III -->
+          <mat-tab label="Ventas III"><br>
+            <div class="content">
+            </div>
+          </mat-tab>
+          <!-- Fin Ventas III -->
+
+          <!-- Inicio Contabilización -->
+          <mat-tab label="Contabilización"><br>
+            <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+              (ngSubmit)="submitDataUpdateParamEmpresa()">
+              <div class="content">
+                <p><strong>Preguntar si desea contabilizar en</strong></p>
+                <div class="row" style="border-style: groove;">
+                  <div class="col-md">
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_ventascontado == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_ventascontado" value="true"
+                            checked>Ventas al Contado</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_ventascontado == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_ventascontado" value="false">
+                            Ventas al Contado</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_ventascredito == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_ventascredito" value="true"
+                            checked>Ventas a Credito</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_ventascredito == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_ventascredito" value="false">
+                            Ventas a Credito</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_cobranza == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_cobranza" value="true"
+                            checked>Cobranzas</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_cobranza == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_cobranza" value="false">
+                            Cobranzas</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_notamov == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_notamov" value="true" checked>
+                            Nota de Movimiento</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_notamov == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_notamov" value="false">Nota de
+                            Movimiento</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="col-md">
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_depositos == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_depositos" value="true"
+                            checked>Depositos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_depositos == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_depositos" value="false">
+                            Depositos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_retiros == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_retiros" value="true" checked>
+                            Retiros</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_retiros == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_retiros" value="false">Retiros
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_movfondos == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_movfondos" value="true"
+                            checked>Movimiento de Fondos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_movfondos == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_movfondos" value="false">
+                            Movimiento de Fondos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_cheques == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_cheques" value="true" checked>
+                            Cheques</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_cheques == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_cheques" value="false">Cheques
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_transferencias == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_transferencias" value="true"
+                            checked>Transferencia</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_transferencias == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_transferencias" value="false">
+                            Transferencia</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="col-md">
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_compras == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_compras" value="true" checked>
+                            Compras</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_compras == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_compras" value="false">Compras
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_pagos == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_pagos" value="true" checked>
+                            Pagos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_pagos == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_pagos" value="false">Pagos
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="col-md">
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_trasladoaf == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_trasladoaf" value="true"
+                            checked>Traslado de Activos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_trasladoaf == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_trasladoaf" value="false">
+                            Traslado de Activos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                    <div class="col">
+                      <ng-container *ngIf="parametros.preg_cont_bajaaf == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_bajaaf" value="true" checked>
+                            Bajas de Activos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.preg_cont_bajaaf == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="preg_cont_bajaaf" value="false">Bajas de
+                            Activos</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="row p-2">
+                  <div class="col-md">
+                    <p>% Aporte AFP &nbsp;</p>
+                    <input class="input-planillas2" type="number" [ngModel]="parametros.porcentaje_afp"
+                      formControlName="porcentaje_afp" placeholder="0.00 %"><br>
+                    <hr>
+                    <p>% Aporte CNS &nbsp;</p>
+                    <input class="input-planillas2" type="number" [ngModel]="parametros.porcentaje_cns"
+                      formControlName="porcentaje_cns" placeholder="0.00 %"><br>
+                    <hr>
+                    <p>% Aporte FONVIS &nbsp;</p>
+                    <input class="input-planillas2" type="number" [ngModel]="parametros.porcentaje_fonvis"
+                      formControlName="porcentaje_fonvis" placeholder="0.00 %"><br>
+                    <hr>
+                    <p>% Aporte INFOCAL &nbsp;</p>
+                    <input class="input-planillas2" type="number" [ngModel]="parametros.porcentaje_infocal"
+                      formControlName="porcentaje_infocal" placeholder="0.00 %"><br>
+                  </div>
+                </div><br>
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </div>
+            </form>
+          </mat-tab>
+          <!-- Fin Contabilización -->
+
+          <!-- Inicio Liquidación Sueldos -->
+          <mat-tab label="Liquidación de Sueldos"><br>
+            <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+              (ngSubmit)="submitDataUpdateParamEmpresa()">
+              <div class="content">
+                <div class="row">
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Porcentaje de Comisión Por Ventas</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.porcencomventas"
+                        formControlName="porcencomventas" placeholder="%">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Porcentaje de Comisión Por Cobranzas</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.porcencomcbzas"
+                        formControlName="porcencomcbzas" placeholder="%">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md">
+                    <mat-form-field class="example-full-width" appearance="outline">
+                      <mat-label>Minimo Garantizado</mat-label>
+                      <input matInput type="number" [ngModel]="parametros.mingarantizado"
+                        formControlName="mingarantizado" placeholder="0.00">
+                    </mat-form-field>
+                  </div>
+                </div>
+                <section class="example-section">
+                  <ng-container *ngIf="parametros.comnoviajantes == true">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="comnoviajantes" value="true" checked>
+                        Calcular Comision Personal NO Viajantes</mat-checkbox>
+                    </section>
+                  </ng-container>
+                  <ng-container *ngIf="parametros.comnoviajantes == false">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="comnoviajantes" value="false">Calcular
+                        Comision Personal NO Viajantes</mat-checkbox>
+                    </section>
+                  </ng-container>
+                </section>
+
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </div>
+            </form>
+          </mat-tab>
+          <!-- Fin Liquidación Sueldos -->
+
+          <!-- Inicio CRM -->
+          <mat-tab label="CRM"><br>
+            <form class="example-form" [formGroup]="FormularioDataParamEmpresa"
+              (ngSubmit)="submitDataUpdateParamEmpresa()">
+              <div class="content">
+                <div class="row" style="width: 60%;">
+                  <div class="col">
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_mora == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_mora" value="true" checked>Dias
+                            de Mora: </mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_mora == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_mora" value="false">Dias de Mora:
+                          </mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <input class="input_right" matInput type="number" [ngModel]="parametros.crm_ta_diasmora"
+                        formControlName="crm_ta_diasmora" placeholder="0">
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_sinventa == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_sinventa" value="true" checked>
+                            Dias sin Ventas: </mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_sinventa == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_sinventa" value="false">Dias sin
+                            Ventas: </mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <input class="input_right" matInput type="number" [ngModel]="parametros.crm_ta_diassinventa"
+                        formControlName="crm_ta_diassinventa" placeholder="0">
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_sinvisita == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_sinvisita" value="true" checked>
+                            Dias sin Visita: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_sinvisita == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_sinvisita" value="false">Dias sin
+                            Visita: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <input class="input_right" matInput type="number" [ngModel]="parametros.crm_ta_diassinvisita"
+                        formControlName="crm_ta_diassinvisita" placeholder="0">
+                    </section>
+
+
+                    <section class="example-section row">
+                      <ng-container *ngIf="parametros.crm_ta_despacho == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_despacho" value="true" checked>
+                            Dias de Despacho: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_despacho == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_despacho" value="false">Dias de
+                            Despacho: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <input matInput type="number" [ngModel]="parametros.crm_ta_diasdespacho"
+                        formControlName="crm_ta_diasdespacho" placeholder="0">&nbsp;
+
+
+                      <p class="input_right"><strong>Hra. Limite Aut.</strong></p>
+                      <input matInput type="number" placeholder="0"
+                        [ngModel]="parametros.crm_ta_diasdespacho_horalimite"
+                        formControlName="crm_ta_diasdespacho_horalimite" style="width: 23%;">
+                    </section>
+
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento" value="true"
+                            checked>Vencimientos de Pronto Pago: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento" value="false">
+                            Vencimientos de Pronto Pago: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_cumpleanios == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_cumpleanios" value="true"
+                            checked>Cumpleaños de Clientes: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_cumpleanios == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_cumpleanios" value="false">
+                            Cumpleaños de Clientes: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                    </section>
+
+                    <section class="example-section">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias == true">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento_dias" value="true"
+                            checked>Aviso de Vencimiento: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias == false">
+                        <section class="example-section">
+                          <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento_dias" value="false">
+                            Aviso de Vencimiento: &nbsp;</mat-checkbox>
+                        </section>
+                      </ng-container>
+
+                      <input class="input_right" matInput type="number" placeholder="0">
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </mat-tab>
+          <!-- Fin CRM -->
+
+          <!-- Inicio Compras -->
+          <mat-tab label="Compras"><br>
+            <div class="content text-center">
+              <div class="row">
+                <section class="example-section">
+                  <mat-checkbox class="example-margin">Permitir Registrar Compras a Credito </mat-checkbox>
+                </section>
+
+                <section class="example-section">
+                  <mat-checkbox class="example-margin">Permitir Distribuir Gastos de una Compra a Distintos Centros de
+                    Costo </mat-checkbox>
+                </section>
+              </div>
+            </div>
+          </mat-tab>
+          <!-- Fin Compras -->
+
+          <!-- Inicio Consolidacion -->
+          <mat-tab label="Consolidación"><br>
+            <div class="content">
+              <div class="col-md">
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permitir Exportar Datos por Agencia</mat-checkbox>
+                  </section>
+                </div>
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permitir Importar Datos de Agencia</mat-checkbox>
+                  </section>
+                </div>
+                <hr>
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permitir Exportar Datos por Vendedor</mat-checkbox>
+                  </section>
+                </div>
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permite Importar Datos por Vendedor</mat-checkbox>
+                  </section>
+                </div>
+                <hr>
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permite Exportar Datos por Cliente</mat-checkbox>
+                  </section>
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permite Importar Datos por Cliente</mat-checkbox>
+                  </section>
+                </div>
+                <hr>
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Permite Actualizar Datos de Personal</mat-checkbox>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <!-- Fin Consolidacion -->
+
+          <!-- Inicio Importaciones -->
+          <mat-tab label="Importaciones"><br>
+            <div class="content">
+              <div class="col-md">
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Realizar Nota de Ingreso Automatica de Compras</mat-checkbox>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <!-- Fin Importaciones -->
+
+          <!-- Inicio Solo Portatiles -->
+          <mat-tab label="Solo Portatiles"><br>
+            <div class="content">
+              <div class="col-md">
+                <div class="col">
+                  <section class="example-section">
+                    <mat-checkbox class="example-margin">Validar Información de Base de Datos Actualizada</mat-checkbox>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <!-- Fin Importaciones -->
+
+          <!-- Inicio Certificado Digital -->
+          <mat-tab label="Certificado Digital"><br>
+            <div class="content">
+              <div class="row">
+
+              </div>
+            </div>
+          </mat-tab>
+          <!-- Fin Certificado Digita -->
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

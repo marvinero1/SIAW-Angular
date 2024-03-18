@@ -1,0 +1,51 @@
+<div style="background-color: #f0f0f0;">
+  <div class="p-2">
+    <h1 mat-dialog-title>Crear Tipos de Credito</h1>
+    <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
+  </div>
+
+  <div mat-dialog-content>
+    <div class="container">
+      <div class="row mb-2">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="example-full-small">
+            <mat-label>Código </mat-label>
+            <input matInput type="text" [(ngModel)]="credito_edit_codigo" disabled="true">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+        <div class="row">
+          <div class="col-md">
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Descripción </mat-label>
+              <input type="text" matInput formControlName="descripcion" maxlength="50"
+                [(ngModel)]="credito_edit.descripcion" required>
+            </mat-form-field>
+          </div>
+          <div class="col-md">
+            <mat-form-field appearance="outline" class="example-full-width">
+              <mat-label>Duración Dias</mat-label>
+              <input type="number" matInput [(ngModel)]="credito_edit.duracion" formControlName="duracion" min="0"
+                step="1" (input)="onInputChange($event.target.value)" required>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-md">
+            <input type="checkbox" formControlName="es_fijo" [(ngModel)]="credito_edit.es_fijo">&nbsp;&nbsp;
+            <mat-label>Es credito Fijo </mat-label>
+          </div>
+        </div>
+
+        <div class="mat-dialog-actions" mat-dialog-actions>
+          <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
+          <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
+              class="fa fa-save"></i> Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

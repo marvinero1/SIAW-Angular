@@ -1,0 +1,99 @@
+<div class="p-2">
+  <div class="overlay"></div>
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="p-2">
+        <mat-card style="background-color: #f0f0f0;">
+          <mat-card-header class="mb-1">
+            <mat-card-title style="font-size: 0.8rem;"><strong> Definir Precio Item</strong></mat-card-title>
+            <!-- <mat-card-subtitle>End</mat-card-subtitle> -->
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row">
+              <form [formGroup]="FormularioData" (ngSubmit)="validarPrecioConfirmacion()">
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group">
+                      <mat-label style="padding-right: 47px;padding-top: 3px;"><u>Item</u></mat-label>
+                      <input type="text" style="width: 59% !important;" formControlName="item"
+                        [(ngModel)]="codigo_item_catalogo.codigo" (blur)="onLeaveItem($event)">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" (click)="modalItem();"
+                          style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                          matTooltip="Buscar Item">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="tg-0lax">
+                    <div>
+                      {{ codigo_item_catalogo.descripcion }}
+                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group">
+                      <mat-label style="padding-right: 8px;padding-top: 3px;"><u>Precio Tipo</u></mat-label>
+                      <input type="text" style="width: 59% !important;" [(ngModel)]="cod_precio_venta_modal.codigo"
+                        formControlName="codtarifa" (blur)="onLeaveTarifa($event)">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" (click)="modalPrecioTipo();"
+                          style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                          matTooltip="Precios">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="tg-0lax">
+                    <div>{{ cod_precio_venta_modal.descripcion }}</div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <td class="tg-0lax">
+                    <mat-label style="padding-right: 2px;"><u>Precio Actual</u></mat-label>
+                    {{ precio_actual.precio | number: '1.5-5'}}
+                  </td>
+                  <td class="tg-0lax">
+                    {{ precio_actual.monedaBase }}
+                  </td>
+                </tr>
+
+                <hr>
+
+                <tr>
+                  <td class="tg-0lax">
+                    <mat-label style="padding-right: 0px;padding-top: 7px;"><u>Precio Nuevo</u></mat-label>
+                    <input type="number" formControlName="precio" style="width: 70% !important;" min="0" [step]="0.00">
+                  </td>
+                </tr>
+
+                <mat-card-actions align="start">
+
+                  <button mat-raised-button color="primary" type="submit" [disabled]="!FormularioData.valid">
+                    <i class="fa fa-cog"></i> &nbsp;Cambiar
+                  </button>
+                </mat-card-actions>
+              </form>&nbsp;
+
+              <button mat-raised-button color="secondary" (click)="getPrecio();">
+                <i class="fa fa-retweet" aria-hidden="true"></i>&nbsp;Refrescar
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

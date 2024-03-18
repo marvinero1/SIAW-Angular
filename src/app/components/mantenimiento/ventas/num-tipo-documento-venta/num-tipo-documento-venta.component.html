@@ -1,0 +1,140 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;">Numeración de Tipos de Documento de Ventas</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-actions align="start">
+
+          <ng-container *ngIf="documento_get_catalogo_id">
+            <button mat-raised-button color="primary" disabled><i class="fa fa-save"></i> Grabar</button>&nbsp;
+          </ng-container>
+          <ng-container *ngIf="!documento_get_catalogo_id">
+            <button mat-raised-button color="primary" (click)="submitData();"><i class="fa fa-save"></i>
+              Grabar</button>&nbsp;
+          </ng-container>
+
+          <ng-container *ngIf="!documento_get_catalogo_id">
+            <button mat-raised-button color="primary" disabled><i class="fa fa-pen"></i> Editar</button>&nbsp;
+          </ng-container>
+          <ng-container *ngIf="documento_get_catalogo_id">
+            <button mat-raised-button color="primary" (click)="submitDataEdit();"><i class="fa fa-pen"></i>
+              Editar</button>&nbsp;
+          </ng-container>
+
+          <a mat-raised-button class="secondary" (click)="limpiar()"><i class="fa fa-eraser"></i>
+            Limpiar</a>&nbsp;
+
+          <a mat-raised-button class="danger" (click)="eliminar()"><i class="fa fa-trash"></i>
+            Eliminar</a>&nbsp;
+
+          <a mat-raised-button class="secondary" (click)="catalogoDocumentoVenta();"><i class="fa fa-search"></i>
+            Catalogo Documentos Venta</a>&nbsp;
+        </mat-card-actions>
+
+
+        <mat-card-content>
+          <form [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <div class="row">
+              <ng-container *ngIf="documento_get_catalogo_id">
+                <span>ID: {{ documento_get_catalogo_id }}</span>
+                <input type="text" formControlName="id" [(ngModel)]="doc_data_id.id" hidden>
+              </ng-container>
+
+              <ng-container *ngIf="!documento_get_catalogo_id">
+                <mat-label style="padding-right: 70px;padding-top: 5px;"><u>ID</u></mat-label>
+                <input type="text" formControlName="id" [(ngModel)]="doc_data_id.id" required>
+              </ng-container>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 22px;padding-top: 5px;"><u>Descripción</u></mat-label>
+              <input type="text" formControlName="descripcion" [(ngModel)]="doc_data_id.descripcion" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 6px;padding-top: 5px;"><u>Numero Actual</u></mat-label>
+              <input type="number" formControlName="nroactual" [(ngModel)]="doc_data_id.nroactual"
+                [(ngModel)]="inputValue" [min]="0" (input)="onInputChange($event.target.value)">
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 17px;padding-top: 5px;"><u>Documentos</u></mat-label>
+                <select style="width: 11.7%;" formControlName="tipodoc" [(ngModel)]="doc_data_id.tipodoc">
+                  <option value="1">FACTURA</option>
+                  <option value="2">PROFORMA</option>
+                  <option value="3">PEDIDO</option>
+                  <option value="4">NOTAS DE REMISION</option>
+                  <option value="5">DEVOLUCION</option>
+                  <option value="6">COTIZACION</option>
+                  <option value="7">NOTAS DE CREDITO</option>
+                  <option value="8">NOTAS DE DEBITO</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 30px;padding-top: 5px;"><u>Habilitado</u></mat-label>
+              <input type="checkbox" formControlName="habilitado" [(ngModel)]="doc_data_id.habilitado"
+                [checked]="doc_data_id.habilitado">&nbsp; &nbsp;
+              &nbsp;
+
+              <mat-label style="padding-right: 9px;padding-top: 5px;"><u>Mueve Mercaderia</u></mat-label>
+              <input type="checkbox" formControlName="descarga" [(ngModel)]="doc_data_id.descarga"
+                [checked]="doc_data_id.descarga">
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 3px;padding-top: 5px;"><u>Ud. de Negocio</u></mat-label>
+              <select formControlName="codunidad" [(ngModel)]="doc_data_id.codunidad" required>
+                <option *ngFor="let unidad_negocios of unidad_negocio" [value]="unidad_negocios.codigo">
+                  {{ unidad_negocios.codigo }} - {{ unidad_negocios.descripcion }}</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 4px;padding-top: 5px;"><u>Para Reversiones</u></mat-label>
+              <input type="checkbox" formControlName="reversion" [(ngModel)]="doc_data_id.reversion"
+                [checked]="doc_data_id.reversion">
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 60px;padding-top: 5px;"><u>Tipo</u></mat-label>
+              <select formControlName="tipo" [(ngModel)]="doc_data_id.tipo">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="H">H</option>
+                <option value="I">I</option>
+                <option value="J">J</option>
+                <option value="K">K</option>
+                <option value="L">L</option>
+                <option value="M">M</option>
+                <option value="N">N</option>
+                <option value="O">O</option>
+                <option value="P">P</option>
+                <option value="Q">Q</option>
+                <option value="R">R</option>
+                <option value="S">S</option>
+                <option value="T">T</option>
+                <option value="U">U</option>
+                <option value="V">V</option>
+                <option value="W">W</option>
+                <option value="X">X</option>
+                <option value="Y">Y</option>
+                <option value="Z">Z</option>
+              </select>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,72 @@
+<section class="content">
+  <div class="container-fluid"><br>
+    <div class="row">
+      <div class="col-md-9">
+        <mat-card-title style="font-size: 0.75rem;">Cantidad a Añadir</mat-card-title>
+      </div>
+      <div class="col-md-3 float-right">
+        <div class="text-right">
+          <mat-icon color="primary" (click)="close();">close</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-2">
+      <div class="row">
+        <div class="col-md-4">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedCantidad" (click)="cantidadHabilitar();">
+            Cantidad Fija </mat-slide-toggle>
+        </div>
+        <div class="col-md-8">
+          <input type="text" [disabled]="isCheckedEmpaque" [(ngModel)]="cantidad_input">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaque" (click)="empaqueHabilitar();">Empaque
+            Minimo </mat-slide-toggle>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="form-control-sm" style="margin-right: 5px;"><u>Precio de Ventas</u> </span>
+            </div>
+
+            <input type="text" [(ngModel)]="cod_precio_venta_modal_codigo" (blur)="onLeavePrecioVenta($event)"
+              [disabled]="isCheckedCantidad">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary form-control-sm" type="button"
+                style="border-color: #093070;padding: 5px;" (click)="modalPrecioVenta();"><i class="fa fa-search"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="form-control-sm" style="margin-right: 0px;"><u>Desct. Especiales</u> </span>
+            </div>
+
+            <input type="text" [(ngModel)]="cod_descuento_modal_codigo" [disabled]="isCheckedCantidad"
+              (blur)="onLeaveDesctEspecial($event)">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary form-control-sm" type="button"
+                style="border-color: #093070;padding: 5px;" (click)="modalDescuentoEspecial();">
+                <i class="fa fa-search"></i>
+              </a>
+            </div><br>
+          </div>
+        </div>
+      </div><br>
+
+      <div style="text-align: center;">
+        <!-- <button mat-raised-button color="warn" (click)="close();"><i class="fa fa-times"></i> Cancelar </button>&nbsp; -->
+        <button mat-raised-button color="primary" (click)="agregarItems();">
+          <i class="fa fa-cart-plus"></i> OK
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

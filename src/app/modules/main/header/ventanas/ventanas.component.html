@@ -1,0 +1,23 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" style="font-size: 0.95rem;">
+  <span>Ventanas <mat-icon style="padding-block-start: 7px;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <ul class="list-group">
+    <li class="list-group-item fila" *ngFor="let arras of arrays" style="padding: 0.65rem 0.25rem !important;">
+      <div class="row ">
+        <div class="col-sm">
+          <img src="assets/img/logo.png" alt="Pertec S.R.L Logo"
+            style="width: 61%;height: 80%;display: block;margin: auto;border-radius: 11px;" class="logoRespomsive">
+        </div>
+
+        <div class="col-sm-8">
+          <span class="row" style="text-transform: uppercase;">{{ arras.ventana }}</span>
+          <span class="row" style="cursor: pointer;color: dodgerblue;">
+            <span class="ahover overflow-string">{{ arras.ruta }}</span>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</mat-menu>

@@ -1,0 +1,260 @@
+<div class="p-2" style="font-size: 0.8rem;">
+  <div class="p-2 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md tittle">
+        <span>INFORMACION DEL CLIENTE</span>
+      </div>
+      <div class="col-md" style="text-align: right;">
+        <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>CLIENTE</span>
+            <span>{{ info_completo.codcliente }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>RAZON SOCIAL</span>
+            <span matListItemLine>{{ info_completo.razonsocial }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>N.I.T</span>
+            <span>{{ info_completo.nit }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>EMAIL</span>
+            <span>{{ info_completo.email }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CASILLA</span>
+            {{ info_completo.casilla }}
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>VENDEDOR</span>
+            {{ info_completo.codvendedor }}
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CASUAL</span>
+            <span>{{ info_completo.casual }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div class="col-md-6">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>HABILITADO</span>
+            <span matListItemLine>{{ info_completo.habilitado }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>FECHA APERTURA</span>
+            <span>{{ info_completo.fapertura | date:'yyyy/MM/dd' }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>OBS</span>
+            {{ info_completo.obs }}
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>TIPO</span>
+            {{ info_completo.tipo }}
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>GARANTIAS</span>
+            {{ info_completo.garantia }}
+          </mat-list-item>
+          <mat-list-item style="display: table-row-group;">
+            <span matListItemTitle>{{ info_completo.cliente_pertec }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>CASA MATRIZ CREDITOS</span>
+            <span matListItemLine>{{ casa_matriz.casA_MATRIZ_CREDITOS }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CLIENTE MISMO N.I.T</span>
+            <span matListItemLine>{{ casa_matriz.clienteS_MISMO_NIT }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CREDITO:</span>
+            <span>{{ casa_matriz.credito }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CREDITO DISPONIBLE</span>
+            <span>{{ casa_matriz.creditO_DISPONIBLE }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>ANTICIPOS Y COBRANZAS NO DISTRIBUIDAS</span>
+            <span>{{ anticipos.anticipoS_COBRANZAS_NO_DISTRIBUIDAS }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <span matListItemTitle><strong>TIENDAS</strong></span>
+          <mat-list-item>
+            <span matListItemTitle>DIRECCION PRINCIPAL</span>
+            <span matListItemLine>{{ tiendas.direccion }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>TELEFONO</span>
+            <span matListItemLine>{{ tiendas.telefono }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CELULAR 1</span>
+            <span matListItemLine> {{ tiendas.celular }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CELULAR 2</span>
+            <span matListItemLine> {{ tiendas.celular_2 }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CELULAR 3</span>
+            <span matListItemLine> {{ tiendas.celular_3 }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>WHATSAPP</span>
+            <span matListItemLine> {{ tiendas.celular_whatsapp }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>EMAIL</span>
+            <span matListItemLine>{{ tiendas.email }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>OBS</span>
+            <span matListItemLine>{{ tiendas.email }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>CENTRAL</span>
+            <ng-container *ngIf="tiendas.central === true; else cent">
+              <span matListItemLine>SI</span>
+            </ng-container>
+            <ng-template #cent>
+              <span matListItemLine>NO</span>
+            </ng-template>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </mat-list>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <span matListItemTitle><strong>TITULARES</strong></span>
+          <mat-list-item>
+            <span matListItemTitle>NOMBRE:</span>
+            <span matListItemLine>{{ titulares.nombre }} {{ titulares.apellido }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>TELEFONO</span>
+            <span matListItemLine>{{ titulares.telefono }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>EMAIL</span>
+            <span matListItemLine>{{ titulares.email }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>DIRECCION</span>
+            <span matListItemLine>{{ titulares.direccion }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>ULTIMO ENVIO POR</span>
+            <span matListItemLine>{{ envio_cliente.ultimO_ENVIO_POR }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>ULTIMAS COMPRAS</span>
+            <span matListItemLine>{{ ult_compras }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+
+
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>PROMOCION ESPECIAL</span>
+            <span matListItemLine>Monto Total: {{ prom_especial.monto_Total }}</span>
+            <span matListItemLine>Usado: {{ prom_especial.usado }}</span>
+            <span matListItemLine>Disponible: {{ prom_especial.disponible }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>CONDICIONES DE CLIENTE FINAL</span>
+            <span matListItemLine>Es Cliente Final:
+              {{ info_cliente_final.es_Client_Final }}
+            </span>
+            <span matListItemLine>Es Empresa: {{ info_cliente_final.es_Empresa }} </span>
+            <span matListItemLine>Controla Empaque Cerrado:
+              {{ info_cliente_final.controla_Empaque_Cerrado }}
+            </span>
+            <span matListItemLine>Controla Empaque Minimo:
+              {{ info_cliente_final.controla_Empaque_Minimo }}
+            </span>
+            <span matListItemLine>Controla Monto Minimo:
+              {{ info_cliente_final.controla_Monto_Minimo }}
+            </span>
+            <span matListItemLine>Controla Precios:
+              {{ info_cliente_final.controla_Precios }}
+            </span>
+            <span matListItemLine>Controla Rango Vta Medio Mayoreo:
+              {{ info_cliente_final.controla_Rango_Vta_Medio_Mayoreo }}
+            </span>
+            <span matListItemLine>Controla Rango Vta Minorista:
+              {{ info_cliente_final.controla_Rango_Vta_Minorista }}
+            </span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
+        <mat-list>
+          <mat-list-item>
+            <span matListItemTitle>OTRAS CONDICIONES DE VENTA</span>
+            <span matListItemLine>Tipo de Cliente: {{ otra_info_cliente.tipo_Cliente }}</span>
+            <span matListItemLine>Situación: {{ otra_info_cliente.situacion }}</span>
+            <span matListItemLine>Ventas Solo Pronto Pago: {{ otra_info_cliente.ventas_Solo_Pronto_Pago }}</span>
+            <span matListItemLine>Ventas Solo Contra Entrega: {{ otra_info_cliente.ventas_Solo_Contra_Entrega }} </span>
+            <span matListItemLine>Tipo Venta : {{ otra_info_cliente.tipo_Venta }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </div>
+</div>

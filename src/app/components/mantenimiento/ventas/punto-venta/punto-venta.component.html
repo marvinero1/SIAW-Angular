@@ -1,0 +1,101 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;">Punto de Venta</mat-card-title>
+        </mat-card-header>
+
+        <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+          [fullScreen]="true"><br>
+          <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+        </ngx-spinner>
+
+        <mat-card-content>
+          <div class="row mb-1">
+            <div class="col-md-9">
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" (click)="submitData();">
+                  <i class="fa fa-save"></i> Guardar</button>&nbsp;
+
+                <a mat-raised-button color="secondary" [disabled]="!FormularioData.valid" (click)="update();"><i
+                    class="fa fa-pen"></i>
+                  Editar</a>&nbsp;
+
+                <a mat-raised-button class="secondary" (click)="limpiar();"><i class="fa fa-eraser"></i>
+                  Limpiar</a>&nbsp;
+
+                <a mat-raised-button class="danger" (click)="eliminar();"><i class="fa fa-trash"></i>
+                  Eliminar</a>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <a mat-button color="primary" (click)="modalClientes()" style="float: right;">
+                <i class="fa fa-search"></i> Buscar Punto Venta</a>
+            </div>
+          </div>
+
+
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <div class="row">
+              <mat-label style="padding-right: 30px;padding-top: 7px;"><u>Código</u></mat-label>
+              <input type="number" pattern="\d*" maxlength="3" formControlName="codigo" min="0"
+                [(ngModel)]="cod_pto_venta.codigo" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 7px;padding-top: 7px;"><u>Descripción</u></mat-label>
+              <input type="text" formControlName="descripcion" [(ngModel)]="cod_pto_venta.descripcion" required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 7px;padding-top: 7px;"><u>Abreviación</u></mat-label>
+              <input type="text" formControlName="abreviacion" [(ngModel)]="cod_pto_venta.abreviacion" maxlength="5"
+                required>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 45px;padding-top: 7px;"><u>Tipo</u></mat-label>
+              <select style="width: 152px;" formControlName="tipo" [(ngModel)]="cod_pto_venta.tipo" required>
+                <option value="PROVINCIA">PROVINCIA</option>
+                <option value="CIUDAD">CIUDAD</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 16px;padding-top: 7px;"><u>Ubicación</u></mat-label>
+              <select style="width: 152px;" formControlName="ubicacion" [(ngModel)]="cod_pto_venta.ubicacion" required>
+                <option value="LOCAL">LOCAL</option>
+                <option value="INTERIOR">INTERIOR</option>
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="input-group">
+                <mat-label style="padding-right: 20px;padding-top: 7px;"><u>Provincia</u></mat-label>
+                <input type="text" style="width: 12% !important;" (blur)="onLeaveProvincia($event)"
+                  formControlName="codprovincia" [(ngModel)]="cod_pto_venta_provincia" id="procinciaCatalogo">
+
+                <div class="input-group-append">
+                  <a class="btn btn-outline-primary" type="button" (click)="catalogoProvincia()"
+                    style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                    matTooltip="Buscar Provincia">
+                    <i class="fa fa-search"></i>
+                  </a>
+                </div>
+
+                <span>&nbsp; {{ provincia_get.dato2 }} - {{ nombre_ciudad }}</span>
+              </div>
+            </div>
+
+            <div class="row">
+              <mat-label style="padding-right: 19px;padding-top: 7px;"><u>Permitido</u></mat-label>
+              <input type="checkbox" formControlName="permitido" [(ngModel)]="cod_pto_venta.permitido">
+            </div>
+          </form>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

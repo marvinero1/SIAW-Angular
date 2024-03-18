@@ -1,0 +1,950 @@
+<div class="content p-3">
+  <div class="overlay"></div>
+  <div class="p-4 mb-3 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md text-center">
+        <h3>Parametros De Usuario</h3>
+      </div>
+      <div class="col-md">
+        <p><strong>Usuario: &nbsp;</strong>DPD2</p> 
+      </div>
+    </div>
+  </div> 
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true"><br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header p-2">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="#generales" data-toggle="tab">Generales</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Contabilidad" data-toggle="tab">Contabilidad</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Saldos" data-toggle="tab">Saldos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Ventas" data-toggle="tab">Ventas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Compras" data-toggle="tab">Compras</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Inventario" data-toggle="tab">Inventario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#CuentasxCobrar" data-toggle="tab">Cuentas por Cobrar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#Fondos" data-toggle="tab">Fondos</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="tab-content">
+          <div class="active tab-pane" id="generales">
+            <!-- Post -->
+            <!-- <div class="post">
+              <div class="user-block">
+                <pf-image src="assets/img/default-profile.png" alt="user image" width="40" height="40" rounded>
+                </pf-image>
+                <span class="username">
+                  <a href="#">Jonathan Burke Jr.</a>
+                  <a href="#" class="float-right btn-tool">
+                    <i class="fas fa-times"></i>
+                  </a>
+                </span>
+                <span class="description">
+                  Shared publicly - 7:40 PM today
+                </span>
+              </div>
+
+              <p>
+                Lorem ipsum represents a long-held
+                tradition for designers, typographers
+                and the like. Some people hate it and
+                argue for its demise, but others ignore
+                the hate as they create awesome tools to
+                help create filler text for everyone
+                from bacon lovers to Charlie Sheen fans.
+              </p>
+
+              <p>
+                <a href="#" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i>
+                  Share</a>
+                <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i>
+                  Like</a>
+                <span class="float-right">
+                  <a href="#" class="link-black text-sm">
+                    <i class="far fa-comments mr-1"></i>
+                    Comments (5)
+                  </a>
+                </span>
+              </p>
+
+              <input class="form-control form-control-sm" type="text" placeholder="Type a comment" />
+            </div> -->
+            <!-- /.post -->
+
+            <!-- Post -->
+            <!-- <div class="post clearfix">
+              <div class="user-block">
+                <pf-image src="assets/img/default-profile.png" alt="User Image" width="40" height="40" rounded>
+                </pf-image>
+                <span class="username">
+                  <a href="#">Sarah Ross</a>
+                  <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
+                </span>
+                <span class="description">Sent you a message - 3 days
+                  ago</span>
+              </div>
+
+              <p>
+                Lorem ipsum represents a long-held
+                tradition for designers, typographers
+                and the like. Some people hate it and
+                argue for its demise, but others ignore
+                the hate as they create awesome tools to
+                help create filler text for everyone
+                from bacon lovers to Charlie Sheen fans.
+              </p>
+
+              <form class="form-horizontal">
+                <div class="input-group input-group-sm mb-0">
+                  <input
+                    class="form-control form-control-sm"
+                    placeholder="Response"/>
+
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-danger">
+                      Send
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div> -->
+
+            <!-- Post -->
+            <!-- <div class="post">
+              <div class="user-block">
+                <pf-image src="assets/img/default-profile.png" alt="User Image" width="40" height="40" rounded>
+                </pf-image>
+                <span class="username">
+                  <a href="#">Adam Jones</a>
+                  <a href="#" class="float-right btn-tool"><i class="fas fa-times"></i></a>
+                </span>
+                <span class="description">Posted 5 photos - 5 days ago</span>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-sm-6">
+                  <pf-image class="img-fluid" src="assets/img/default-profile.png" alt="Photo" width="376" height="376">
+                  </pf-image>
+                </div>
+
+                <div class="col-sm-6">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <pf-image class="img-fluid mb-3" src="assets/img/default-profile.png" alt="Photo" width="184"
+                        height="184"></pf-image>
+                      <pf-image class="img-fluid" src="assets/img/default-profile.png" alt="Photo" width="184"
+                        height="184"></pf-image>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <pf-image class="img-fluid mb-3" src="assets/img/default-profile.png" alt="Photo" width="184"
+                        height="184"></pf-image>
+                      <pf-image class="img-fluid" src="assets/img/default-profile.png" alt="Photo" width="184"
+                        height="184"></pf-image>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p>
+                <a href="#" class="link-black text-sm mr-2"><i class="fas fa-share mr-1"></i>
+                  Share</a>
+                <a href="#" class="link-black text-sm"><i class="far fa-thumbs-up mr-1"></i>
+                  Like</a>
+                <span class="float-right">
+                  <a href="#" class="link-black text-sm">
+                    <i class="far fa-comments mr-1"></i>
+                    Comments (5)
+                  </a>
+                </span>
+              </p>
+
+              <input class="form-control form-control-sm" type="text" placeholder="Type a comment" />
+            </div> -->
+            <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+              <div class="content">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Vendedor</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codvendedor" formControlName="codvendedor" required>
+                        <mat-option *ngFor="let vendedors of vendedor" [value]="vendedors.codigo">
+                          {{ vendedors.codigo }} - {{ vendedors.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codmoneda" formControlName="codmoneda" required>
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.codigo }} - {{ monedas.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmacen" formControlName="codalmacen" required>
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda de T de C</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codmonedatdc" formControlName="codmonedatdc">
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.codigo }} - {{ monedas.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <ng-container *ngIf="usuario_logueado.cumpleanios == true">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="cumpleanios" value="true">
+                          Permitir que el sistema le alerte de las personas que cumplen años.
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+
+                    <ng-container *ngIf="usuario_logueado.cumpleanios == false">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="cumpleanios" value="false">
+                          Permitir que el sistema le alerte de las personas que cumplen años.</mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div>
+                  <!-- <div class="col">
+                    <ng-container>
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="negativos" value="true">
+                          Permitir editar la carta de concilacion de estado de cuentas con los clientes.
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div> -->
+                </div>
+              </div>
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="tab-pane" id="Contabilidad">
+          <!--<div class="timeline timeline-inverse">
+              <div class="time-label">
+                <span class="bg-danger">
+                  10 Feb. 2014
+                </span>
+              </div>
+
+              <div>
+                <i class="fas fa-envelope bg-primary"></i>
+
+                <div class="timeline-item">
+                  <span class="time"><i class="far fa-clock"></i>
+                    12:05</span>
+
+                  <h3 class="timeline-header">
+                    <a href="#">Support Team</a>
+                    sent you an email
+                  </h3>
+
+                  <div class="timeline-body">
+                    Etsy doostang zoodles disqus
+                    groupon greplin oooj voxy
+                    zoodles, weebly ning heekya
+                    handango imeem plugg dopplr
+                    jibjab, movity jajah plickers
+                    sifteo edmodo ifttt zimbra.
+                    Babblely odeo kaboodle quora
+                    plaxo ideeli hulu weebly
+                    balihoo...
+                  </div>
+                  <div class="timeline-footer">
+                    <a href="#" class="btn btn-primary btn-sm">Read more</a>
+                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <i class="fas fa-user bg-info"></i>
+
+                <div class="timeline-item">
+                  <span class="time"><i class="far fa-clock"></i> 5
+                    mins ago</span>
+
+                  <h3 class="timeline-header border-0">
+                    <a href="#">Sarah Young</a>
+                    accepted your friend request
+                  </h3>
+                </div>
+              </div>
+
+              <div>
+                <i class="fas fa-comments bg-warning"></i>
+
+                <div class="timeline-item">
+                  <span class="time"><i class="far fa-clock"></i> 27
+                    mins ago</span>
+
+                  <h3 class="timeline-header">
+                    <a href="#">Jay White</a>
+                    commented on your post
+                  </h3>
+
+                  <div class="timeline-body">
+                    Take me to your leader!
+                    Switzerland is small and
+                    neutral! We are more like
+                    Germany, ambitious and
+                    misunderstood!
+                  </div>
+                  <div class="timeline-footer">
+                    <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="time-label">
+                <span class="bg-success">
+                  3 Jan. 2014
+                </span>
+              </div>
+
+              <div>
+                <i class="fas fa-camera bg-purple"></i>
+
+                <div class="timeline-item">
+                  <span class="time"><i class="far fa-clock"></i> 2
+                    days ago</span>
+
+                  <h3 class="timeline-header">
+                    <a href="#">Mina Lee</a>
+                    uploaded new photos
+                  </h3>
+
+                  <div class="timeline-body">
+                    <pf-image src="assets/img/default-profile.png" alt="..." width="0" height="0"></pf-image>
+                    <pf-image src="assets/img/default-profile.png" alt="..." width="0" height="0"></pf-image>
+                    <pf-image src="assets/img/default-profile.png" alt="..." width="0" height="0"></pf-image>
+                    <pf-image src="assets/img/default-profile.png" alt="..." width="0" height="0"></pf-image>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <i class="far fa-clock bg-gray"></i>
+              </div>
+            </div> -->
+            <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+              <div class="content">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID Comprobante</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Tipo Comprobante</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codtipo" formControlName="codtipo">
+                        <mat-option *ngFor="let tipo_comprobantes of tipo_comprobante" [value]="tipo_comprobantes.codigo">
+                          {{ tipo_comprobantes.codigo }} - {{ tipo_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="col">
+                  <ng-container *ngIf="usuario_logueado.mostrar_alertas_cta_automatica == true">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="mostrar_alertas_cta_automatica" value="true">
+                        Mostrar alertas de contabilidad automatica.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                  <ng-container *ngIf="usuario_logueado.mostrar_alertas_cta_automatica == false">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="mostrar_alertas_cta_automatica" value="false">
+                        Mostrar alertas de contabilidad automatica.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                </div>
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="tab-pane" id="Saldos">
+            <!-- <form class="form-horizontal">
+              <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="inputName" placeholder="Name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputName2" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputName2" placeholder="Name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
+
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-danger">Submit</button>
+                </div>
+              </div>
+            </form> -->
+            
+            <div class="content">
+              <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen 1</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmsald1" formControlName="codalmsald1">
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen 2</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmsald2" formControlName="codalmsald2">
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen 3</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmsald3" formControlName="codalmsald3">
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen 4</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmsald4" formControlName="codalmsald4">
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen 5</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmsald5" formControlName="codalmsald5">
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="mat-dialog-actions" mat-dialog-actions>
+                    <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="tab-pane" id="Ventas">
+            <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+              <div class="content">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID COBRANZA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID PROFORMA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID REMISION</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID FACTURA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>PRECIO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>DESCUENTO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>CUENTA CAJA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div><hr>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID REMITOS</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>CLIENTE POR DEFECTO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID NOTA CREDITO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col">
+                    <ng-container *ngIf="usuario_logueado.alerta_nr_sin_fact == true">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="alerta_nr_sin_fact" value="true">
+                          ALERTA SOBRE NOTAS DE REMISION SIN FACTURAR 
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+                    <ng-container *ngIf="usuario_logueado.alerta_nr_sin_fact == false">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="alerta_nr_sin_fact" value="false">
+                          ALERTA SOBRE NOTAS DE REMISION SIN FACTURAR 
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div>
+
+                  <div class="col">
+                    <ng-container *ngIf="usuario_logueado.habilitar_boton_grabar == true">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="habilitar_boton_grabar" value="true">
+                          HABILITAR BOTON GRABAR EN PROFORMAS Y COTIZACIONES
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+                    <ng-container *ngIf="usuario_logueado.habilitar_boton_grabar == false">
+                      <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="habilitar_boton_grabar" value="false">
+                          HABILITAR BOTON GRABAR EN PROFORMAS Y COTIZACIONES
+                        </mat-checkbox>
+                      </section>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="tab-pane" id="Compras">
+            <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+              <div class="content">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>COMPRADOR</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Moneda</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codmoneda" formControlName="codmoneda" required>
+                        <mat-option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                          {{ monedas.codigo }} - {{ monedas.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Almacen</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codalmacen" formControlName="codalmacen" required>
+                        <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
+                          {{ almacens.codigo }} - {{ almacens.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID PEDIDO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID PROFORMA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID ORDEN DE COMPRA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID EMBARQUE</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID RECEPCION</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID TIPO DE COMPRA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID DE PAGO</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID TIPO PROVISION</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>PROVEEDOR SIN FACTURA</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option *ngFor="let id_comprobantes of id_comprobante" [value]="id_comprobantes.codigo">
+                          {{ id_comprobantes.id }} - {{ id_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </div>
+
+
+          <div class="tab-pane" id="Inventario">
+            <div class="content">
+              <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+                <div class="row">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>ID Movimiento</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idmovimiento" formControlName="idmovimiento">
+                        <mat-option *ngFor="let tipo_movimientos of tipo_movimiento" [value]="tipo_movimientos.codigo">
+                          {{ tipo_movimientos.id }} - {{ tipo_movimientos.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Ver Catalogo de Item en Estado</mat-label>
+                      <mat-select matNativeControl [ngModel]="usuario_logueado.catalogo_items_estado" formControlName="catalogo_items_estado">
+                        <mat-option><strong>Valor Actual:</strong> {{ usuario_logueado.catalogo_items_estado }}</mat-option>
+                        <mat-option value="1">Venta y Compra</mat-option>
+                        <mat-option value="2">Solo Venta</mat-option>
+                        <mat-option value="3">Solo Compra</mat-option>
+                        <mat-option value="4">Inactivo</mat-option>
+                        <mat-option value="5">Todos</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>  
+
+                <div class="mat-dialog-actions" mat-dialog-actions>
+                  <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+                </div> 
+              </form>          
+            </div>
+          </div>
+
+          <div class="tab-pane" id="CuentasxCobrar">
+            <form class="example-form" [formGroup]="FormularioDataParamUsuario" (ngSubmit)="submitDataUpdateParamUsuario()">
+              <div class="row">
+                <div class="col-md">
+                  <mat-form-field appearance="outline">
+                    <mat-label style="font-weight: 100 !important;">Dias que avisa antes de fin de mes.</mat-label>
+                    <input matInput formControlName="email" type="text" placeholder="Dias" required/>
+                  </mat-form-field>
+                </div>
+                <div class="col-md">
+                  <ng-container *ngIf="usuario_logueado.alerta_cheque_cliente == true">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="alerta_cheque_cliente" value="true">
+                        Alertar de cheques de clientes con fecha de pago vencida.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                  <ng-container *ngIf="usuario_logueado.alerta_cheque_cliente == false">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="alerta_cheque_cliente" value="false">
+                        Alertar de cheques de clientes con fecha de pago vencida.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                </div>
+                <div class="col-md">
+                  <ng-container *ngIf="usuario_logueado.avisar_sindistribuir == true">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="avisar_sindistribuir" value="true">
+                        Avisa de cuentas sin distribuir.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                  <ng-container *ngIf="usuario_logueado.avisar_sindistribuir == false">
+                    <section class="example-section">
+                      <mat-checkbox class="example-margin" formControlName="avisar_sindistribuir" value="false">
+                        Avisa de cuentas sin distribuir.
+                      </mat-checkbox>
+                    </section>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="row">
+                <div class="p-2" style="border-style: groove; width: 100%;">
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Talonario por defecto para registro de cobranza</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.idcomprobante" formControlName="idcomprobante">
+                        <mat-option>NINGUNO</mat-option>
+                        <mat-option>TALONARIO ASIGNADO AL VENDEDOR</mat-option>
+                        <mat-option>TALONARIO ASIGNADO AL USUARIO</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Talonario</mat-label>
+                      <mat-select [ngModel]="usuario_logueado.codtipo" formControlName="codtipo">
+                        <mat-option *ngFor="let tipo_comprobantes of tipo_comprobante" [value]="tipo_comprobantes.codigo">
+                          {{ tipo_comprobantes.codigo }} - {{ tipo_comprobantes.descripcion }}   
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div><br>
+              <div class="mat-dialog-actions" mat-dialog-actions>
+                <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+              </div>
+            </form>
+          </div>
+
+
+
+          <div class="tab-pane" id="Fondos">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

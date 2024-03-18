@@ -1,0 +1,229 @@
+<section class="content">
+  <div class="container-fluid">
+    <mat-card style="background-color: #f0f0f0;">
+      <mat-card-header class="mb-1">
+        <mat-card-title style="font-size: 0.8rem;">Deudores - Cuentas Contables</mat-card-title>
+      </mat-card-header>
+
+      <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+        [fullScreen]="true">
+        <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+      </ngx-spinner>
+
+      <mat-card-content>
+        <button mat-button color="primary">
+          <i class="fa fa-save"></i> Guardar
+        </button>
+
+        <div class="row">
+          <div class="col">
+            <div class="input-group">
+              <mat-label style="padding-right: 20px;padding-top: 7px;"><u>Cuenta Por Rendir MN</u></mat-label>
+              <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+              <div class="input-group-append">
+                <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                  style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                  matTooltip="Buscar Provincia">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+
+              <span>&nbsp; dsfdsfsdfsdfsfdsfds</span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <mat-label style="padding-right: 20px;padding-top: 7px;"><u>Auxiliar</u>
+              </mat-label>
+              <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+              <div class="input-group-append">
+                <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                  style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                  matTooltip="Buscar Provincia">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+
+              <span>&nbsp; </span>
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <mat-label style="padding-right: 20px;padding-top: 7px;"><u>C.c</u>
+              </mat-label>
+              <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+              <div class="input-group-append">
+                <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                  style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                  matTooltip="Buscar Provincia">
+                  <i class="fa fa-search"></i>
+                </a>
+              </div>
+
+              <span>&nbsp; dsfdsfsdfsdfsfdsfds</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 20px;padding-top: 7px;"><u>Cuenta Por Rendir ME</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 19px;padding-top: 7px;"><u>Cuenta Por Cobrar MN</u>
+            </mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 19px;padding-top: 7px;"><u>Cuenta Por Cobrar ME</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 23px;padding-top: 7px;"><u>Cuenta Por Pagar MN</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 24px;padding-top: 7px;"><u>Cuenta Por Pagar ME</u>
+            </mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 26px;padding-top: 7px;"><u>Cuenta Prestamo MN
+              </u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 26px;padding-top: 7px;"><u>Cuenta Prestamo ME</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 35px;padding-top: 7px;"><u>Cuenta Anticipo MN</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-group">
+            <mat-label style="padding-right: 35px;padding-top: 7px;"><u>Cuenta Anticipo ME</u></mat-label>
+            <input type="text" style="width: 12% !important;" formControlName="codprovincia">
+
+            <div class="input-group-append">
+              <a class="btn btn-outline-primary" type="button" (click)="cuentasContablesModal()"
+                style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                matTooltip="Buscar Provincia">
+                <i class="fa fa-search"></i>
+              </a>
+            </div>
+
+            <span>&nbsp; </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

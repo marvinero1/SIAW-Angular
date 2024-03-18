@@ -1,0 +1,189 @@
+<div class="p-2">
+  <mat-card>
+    <mat-card-header class="mb-1">
+      <mat-card-title style="font-size: 0.8rem;">
+        <strong><u>Parametros de Facturación</u></strong>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 47px;padding-top: 5px;"><u>Almacen</u></mat-label>
+                <input type="text" [(ngModel)]="para_facturacion.codalmacen" style="width: 25%;" readonly>
+              </td>
+
+              <td class="tg-0lax" style="float: right;width: 55%;">
+                <mat-label style="padding-right: 2px;"><u>Sucursal</u></mat-label>
+                <select [(ngModel)]="para_facturacion.codsucursal" disabled="true">
+                  <option *ngFor="let sucursals of sucursal" [value]="sucursals.codsucursal">
+                    {{sucursals.codsucursal}}
+                  </option>
+                </select>
+
+                <mat-label style="padding-right: 3px;"><u>Pto. de Venta</u></mat-label>
+                <input type="text" [(ngModel)]="para_facturacion.punto_vta" style="width: 11%;" [readonly]="true">
+
+
+                <mat-label style="padding-right: 2px;"><u>Cod. Sistema</u></mat-label>
+                <input type="text" matInput [(ngModel)]="para_facturacion.codsistema"
+                  style="width: 42%; background-color: black;color: #fbd800;" [readonly]="true">
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax" style="width: 19% !important;">
+                <mat-label style="padding-right: 45px;"><u>Empresa</u></mat-label>
+                <input type="text" matInput [(ngModel)]="para_facturacion.codempresa" [readonly]="true"
+                  style="width: 50%;">
+              </td>
+
+              <td class="tg-0lax">
+                <input type="text" matInput style="width: 100%;" [(ngModel)]="empresa.nombre" disabled>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 14px;"><u>Ambiente Fact.</u></mat-label>
+                <select style="width: 49.5%;" id="cars" name="cars" [(ngModel)]="para_facturacion.ambiente"
+                  disabled="true">
+                  <option [value]="1">PRODUCCION</option>
+                  <option [value]="0">PRUEBAS</option>
+                </select>
+              </td>
+              <td class="tg-0lax" style="width: 50%;"></td>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 5px;"><u>Modalidad de Facturación</u></mat-label>
+                <select style="float: inline-end" [(ngModel)]="para_facturacion.modalidad" disabled="true">
+                  <option [value]="1">ELECTRONICA EN LINEA</option>
+                  <option [value]="0">COMPUTARIZADA EN LINEA</option>
+                </select>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 25px;"><u>Tipo Emisión</u></mat-label>
+                <select style="width: 50%;" [(ngModel)]="para_facturacion.tipo_emision" disabled="true">
+                  <option *ngFor="let tipo_emisions of tipo_emision" [value]="tipo_emisions.codigoclasificador">
+                    {{ tipo_emisions.descripcion }}</option>
+                </select>
+              </td>
+              <td class="tg-0lax" style="width: 50%;"></td>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 5px;"><u>Tipo Factura</u></mat-label>
+                <select style="width: 75.5%;float: inline-end" [(ngModel)]="para_facturacion.tipo_factura"
+                  disabled="true">
+                  <option *ngFor="let facturas of factura" [value]="facturas.codigoclasificador">
+                    {{ facturas.descripcion }}</option>
+                </select>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 5px;"><u>Tipo Doc. Sector</u></mat-label>
+                <select [(ngModel)]="para_facturacion.tipo_doc_sector" disabled="true">
+                  <option *ngFor="let sectors of sector" [value]="sectors.codigoclasificador">{{ sectors.descripcion }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+      <div class="row">
+        <table class="tg" style="width: 100%;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <mat-label style="padding-right: 44px;"><u>Actividad</u></mat-label>
+                <select style="width: 89%;" [(ngModel)]="servicio_actividad" disabled="true">
+                  <option *ngFor="let actividads of actividad" [value]="actividads.codigocaeb">
+                    {{ actividads.codigocaeb }} - {{ actividads.descripcion }}</option>
+                </select>
+              </td>
+              <td class="tg-0lax">
+                <select style="width: 99.5%;" [(ngModel)]="servicio_actividad" disabled="true">
+                  <option *ngFor="let actividads of actividad" [value]="actividads.codigocaeb">
+                    {{ actividads.codigocaeb }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+
+      <div class="row">
+        <table class="tg" style="margin-left: 98px;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <input type="checkbox" [(ngModel)]="para_facturacion.servicio_internet_activo"
+                  [checked]="para_facturacion.servicio_internet_activo" (ngModelChange)="changeInternetActivo($event)">
+                <mat-label style="padding-right: 48px;"><u>&nbsp; Servicio de Internet Activo (En Linea)</u>
+                </mat-label>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+
+
+      <div class="row">
+        <table class="tg" style="margin-left: 98px;">
+          <thead>
+            <tr>
+              <td class="tg-0lax">
+                <input type="checkbox" [(ngModel)]="para_facturacion.servicio_sin_activo"
+                  [checked]="para_facturacion.servicio_sin_activo" (ngModelChange)="changeSINActivo($event)">
+                <mat-label style="padding-right: 48px;"><u>&nbsp; Servicio S.I.N Activo (En Linea SIN)</u></mat-label>
+              </td>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </mat-card-content>
+
+    <!-- <mat-card-actions align="end">
+      <button mat-button class="success" (click)="actualizarServicioInternet();">
+        <i class="fa fa-save"></i>&nbsp;Actualizar Servicio de Internet Activo
+      </button>
+
+      <button mat-button class="success" (click)="actualizarServicioSIN();">
+        <i class="fa fa-save"></i>&nbsp;Actualizar Servicio S.I.N Activo
+      </button>
+    </mat-card-actions> -->
+  </mat-card>
+</div>

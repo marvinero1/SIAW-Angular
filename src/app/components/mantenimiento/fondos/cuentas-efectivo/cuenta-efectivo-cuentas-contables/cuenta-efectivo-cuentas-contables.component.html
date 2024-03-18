@@ -1,0 +1,98 @@
+<section class="content">
+  <div class="container-fluid">
+    <mat-card style="background-color: #f0f0f0;">
+      <mat-card-header class="mb-1">
+        <mat-card-title style="font-size: 0.8rem;">Cuentas Efectivo - Cuentas Contables</mat-card-title>
+      </mat-card-header><br>
+
+      <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+        [fullScreen]="true"><br>
+        <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+      </ngx-spinner>
+
+      <mat-card-content>
+        <div class="row">
+          <div class="col">
+            <form class="example-form" [formGroup]="FormularioData">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Unidad de Negocio</mat-label>
+                    <mat-select formControlName="codunidad" required>
+                      <mat-option *ngFor="let unidads of unidad" [value]="unidads.codigo">
+                        {{ unidads.codigo }} - {{ unidads.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col">
+                  <input type="text" formControlName="idcuenta" [(ngModel)]="cuentas_efectivas_edit_id" hidden>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Almacen</mat-label>
+                    <mat-select formControlName="codalmacen" required>
+                      <mat-option *ngFor="let almacen_gets of almacen_get" [value]="almacen_gets.codigo">
+                        {{ almacen_gets.codigo }} - {{ almacen_gets.descripcion }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+
+            <div style="text-align: center !important;">
+              <button mat-button color="primary" (click)="verificarCuentasContables();"
+                [disabled]="!FormularioData.valid">
+                <i class="fa fa-eye"></i> Verificar Cuentas Contables
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+        <ng-container *ngIf="data_cuenta">
+          <div class="row"><br><br>
+            <div class="col">
+              <mat-form-field appearance="outline">
+                <mat-label>Cuentas Contables</mat-label>
+                <mat-select required>
+                  <mat-option *ngFor="let cncuenta_gets of cncuenta_get" [value]="cncuenta_gets.codigo">
+                    {{ cncuenta_gets.codigo }} - {{ cncuenta_gets.descripcion }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+              <mat-form-field appearance="outline">
+                <mat-label>Auxiliar</mat-label>
+                <mat-select required>
+                  <mat-option *ngFor="let cncuenta_gets of cncuenta_get" [value]="cncuenta_gets.codigo">
+                    {{ cncuenta_gets.codigo }} - {{ cncuenta_gets.descripcion }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>C.c.</mat-label>
+                <mat-select required>
+                  <mat-option *ngFor="let costos_gets of costos_get" [value]="costos_gets.codigo">
+                    {{ costos_gets.codigo }} - {{ costos_gets.descripcion }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
+
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

@@ -1,0 +1,583 @@
+<div class="p-2" style="background-color: #ffe0c0 !important;">
+  <div class="overlay"></div>
+  <div class="p-2 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md text-center">
+        <h3>Clientes</h3>
+
+        <div>
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();"
+            [disabled]="!FormularioData.valid">
+            <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
+          </button>
+
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="editarCliente();"
+            [disabled]="!FormularioData.valid">
+            <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Editar</span>
+          </button>
+
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="limpiar();">
+            <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
+          </button>
+
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+            (click)="eliminar(codigo_cliente_catalogo);" [disabled]="!codigo_cliente_catalogo">
+            <span><i class="fa fa-trash" aria-hidden="true" style="color: #ffc107;"></i> Eliminar</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md">
+        <button mat-button color="primary" (click)="modalClientes()" style="float: right;">
+          <i class="fa fa-search"></i> Buscar Cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team p-2 scrollmenu">
+        <mat-tab-group dynamicHeight [color]="'primary'">
+          <!-- Datos Cliente -->
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+            <mat-tab label="Datos Cliente"><br>
+              <div class="content">
+                <div class="row">
+                  <mat-label style="padding-right: 66px;"><u>Código</u></mat-label>
+                  <input type="text" matInput placeholder="Cod. Cliente" formControlName="codigo"
+                    [(ngModel)]="cliente_id.codigo" style="background-color: black;color: yellow;" required> &nbsp;
+
+                  <p style="color: red;">{{ cliente_matriz.resultado }}</p>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 6px;"><u>Nombre Comercial</u></mat-label>
+                  <input type="text" matInput formControlName="nombre_comercial"
+                    [(ngModel)]="cliente_id.nombre_comercial" required>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 35px;"><u>Razon Social</u></mat-label>
+                  <input type="text" matInput formControlName="razonsocial" [(ngModel)]="cliente_id.razonsocial"
+                    required>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 39px;"><u>Tipo Doc. ID</u></mat-label>
+                  <select [(ngModel)]="cliente_id.tipo_docid" formControlName="tipo_docid" style="width: 22.7%;"
+                    required>
+                    <option value="1">CI - CEDULA DE IDENTIDAD</option>
+                    <option value="2">CEX - CEDULA DE IDENTIDAD DE EXTRANJERO</option>
+                    <option value="3">PAS - PASAPORTE</option>
+                    <option value="4">OD - OTRO DOCUMENTO DE IDENTIDAD</option>
+                    <option value="5">NIT - NUMERO DE IDENTIFICACION TRIBUTARIA</option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 84px;"><u>NIT</u></mat-label>
+                  <input type="text" matInput placeholder="0000000" formControlName="nit" [(ngModel)]="cliente_id.nit"
+                    required>
+
+                  <mat-label><u>Complemento</u></mat-label>
+                  <input type="text" style="width: 79px;" matInput formControlName="complemento_ci"
+                    [(ngModel)]="cliente_id.complemento_ci">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 28px;"><u>Plan de Pagos</u></mat-label>
+                  <select style="width: 303px;" [(ngModel)]="codplanpago_get" formControlName="codplanpago">
+                    <option *ngFor="let planpagos of planpago" [value]="planpagos.codigo">
+                      {{ planpagos.codigo }} - {{ planpagos.descripcion }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <div class="input-group">
+                    <mat-label style="padding-right: 65px;"><u>Rubro</u></mat-label>
+                    <input type="text" style="margin-left: 6px;" [(ngModel)]="rubro_recibido.codigo"
+                      [(ngModel)]="codrubro_get" formControlName="codrubro" [readonly]="true">
+
+                    <button class="btn btn-outline-primary form-control-sm" type="button"
+                      (click)="openDialogCatalogo();" style="border-color: #093070;padding: 0.2em 0.75rem;">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 68px;"><u>Casilla</u></mat-label>
+                  <input type="text" matInput formControlName="casilla" [(ngModel)]="cliente_id.casilla" required>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 70px;"><u>E-mail</u></mat-label>
+                  <input type="text" matInput placeholder="@.com.bo" formControlName="email"
+                    [(ngModel)]="cliente_id.email" required>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 26px;"><u>Observaciones</u> </mat-label>
+                  <textarea cols="47" rows="3" formControlName="obs" [(ngModel)]="cliente_id.obs"></textarea>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 24px;"><u>Fecha Apertura</u> </mat-label>
+                  <input type="date" matInput placeholder="yyyy/mm/dd" formControlName="fapertura"
+                    [(ngModel)]="cliente_id.fapertura">
+
+                  <div class="input-group">
+                    <mat-label style="padding-right: 70px;"><u>Zona</u></mat-label>
+                    <div class="input-group-append">
+                      <input type="text" matInput class="form-control form-control-sm" style="margin-left: 6px;"
+                        [(ngModel)]="zona_recibido_codigo" [(ngModel)]="cliente_id.codzona" formControlName="codzona"
+                        [readonly]="true">
+
+                      <button class="btn btn-outline-primary form-control-sm" type="button"
+                        style="border-color: #093070;padding: 0.2em 0.75rem;" (click)="modalCatalogoZonas();">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-group-prepend">
+                    <mat-label><u>Este Cliente es una Empresa</u></mat-label>
+                  </div>
+                  <mat-checkbox class="example-margin" [(ngModel)]="cliente_id.es_empresa" formControlName="es_empresa">
+                  </mat-checkbox>
+                </div>
+
+                <div class="row">
+                  <div class="input-group-prepend">
+                    <mat-label>
+                      <u>Este cliente forma parte del grupo CIAL. Cuya casa matriz es: </u>&nbsp;&nbsp;&nbsp;
+                    </mat-label>
+                    <mat-slide-toggle color="primary" [(ngModel)]="isChecked"></mat-slide-toggle>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-group-prepend">
+                    <mat-label><u>Este cliente es CASUAL</u></mat-label>
+                    <mat-checkbox class="example-margin" [(checked)]="cliente_id.casual" disabled></mat-checkbox>
+
+                    <ng-container *ngIf="!cliente_id.casual">
+                      <button class="btn btn-outline-primary form-control-sm" type="button"
+                        style="border-color: #093070;font-size: 0.75rem;" [disabled]="!cliente_id.nit"
+                        (click)="modificarClienteFinalCasualFalse()">
+                        <i class="fa fa-cog"></i> Modificar A Casual
+                      </button>
+                    </ng-container>
+
+                    <ng-container *ngIf="cliente_id.casual">
+                      <button class="btn btn-outline-primary form-control-sm" type="button"
+                        style="border-color: #093070;font-size: 0.75rem;" [disabled]="!cliente_id.nit"
+                        (click)="modificarClienteFinalCasual()">
+                        <i class="fa fa-cog"></i> Modificar a FINAL
+                      </button>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Datos de Venta -->
+            <mat-tab label="Datos de Venta"><br>
+              <div class="content">
+                <div class="row">
+                  <mat-label style="padding-right: 9px;"><u>Limite de Credito</u></mat-label>
+                  <input type="text" style="width: 134px;" value="0" disabled><span>Bs.</span>
+
+                  <mat-label style="padding-left: 9px;padding-right: 2px;"><u>Credito Disponible</u></mat-label>
+                  <input type="text" style="width: 54px;" value="0" disabled><span style="padding-top: 5px;">Bs.</span>
+                </div>
+
+                <div class="row">
+                  <div class="input-group">
+                    <mat-label style="padding-right: 47px;"><u>Vendedor</u></mat-label>
+                    <select formControlName="codvendedor" [(ngModel)]="cliente_id.codvendedor" style="width:23.3%">
+                      <option *ngFor="let vendedors of vendedor" [value]="vendedors.codigo">
+                        {{ vendedors.codigo }} - {{ vendedors.descripcion }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 16px;"><u>Vend. Asignado</u></mat-label>
+                  <input type="text" matInput placeholder="Vendedor Asignado" formControlName="codvendedor"
+                    [(ngModel)]="cliente_id.codvendedor" style="width:23.3%" disabled>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 47px;"><u>Garantias</u></mat-label>
+                  <input type="text" matInput placeholder="Garantia" formControlName="garantia"
+                    [(ngModel)]="cliente_id.garantia" style="width: 310px;">
+                </div>
+
+                <div class="row">
+                  <div class="input-group-prepend">
+                    <mat-label style="padding-right: 35px;"><u>Habilitado</u></mat-label>
+                  </div>
+                  <mat-checkbox class="example-margin" [(ngModel)]="cliente_id.habilitado" formControlName="habilitado">
+                  </mat-checkbox>
+
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 23px;"><u>Tipo de Venta</u></mat-label>
+                  <input type="text" style="width: 23.7%;" matInput [(ngModel)]="cliente_id.tipoventa"
+                    formControlName="tipoventa" disabled>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 3px;"><u>Moneda de Venta</u></mat-label>
+                  <select [(ngModel)]="cliente_id.moneda" formControlName="moneda" style="width: 164px;">
+                    <option *ngFor="let monedas of moneda" [value]="monedas.codigo">
+                      {{ monedas.codigo }} - {{ monedas.descripcion }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 16px;"><u>Tipo de Cliente</u></mat-label>
+                  <select [(ngModel)]="cliente_id.tipo" formControlName="tipo" style="width: 164px;">
+                    <option value="NORMAL">NORMAL</option>
+                    <option value="PAGA PUNTUALMENTE">PAGA PUNTUALMENTE</option>
+                    <option value="MOROSO">MOROSO</option>
+                    <option value="TRASLADADO">TRASLADADO</option>
+                    <option value="COMPETENCIA">COMPETENCIA</option>
+                    <option value="V. B. PRESIDENCIA">V. B. PRESIDENCIA</option>
+                    <option value="PROHIBIDA LA VENTA">PROHIBIDA LA VENTA</option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 30px;padding-right: 29px;"><u>Clasificación</u>
+                  </mat-label>
+                  <select [(ngModel)]="cliente_id.clasificacion" formControlName="clasificacion">
+                    <option value="AAA">AAA</option>
+                    <option value="AA">AA</option>
+                    <option value="A">A</option>
+                    <option value="BBB">BBB</option>
+                    <option value="BB">BB</option>
+                    <option value="B">B</option>
+                    <option value="CCC">CCC</option>
+                    <option value="CC">CC</option>
+                    <option value="C">C</option>
+                    <option value="CSC">CSC</option>
+                    <option value="D">D</option>
+                    <option value="I">I</option>
+                    <option value="EEE">EEE</option>
+                    <option value="EE">EE</option>
+                    <option value="E">E</option>
+                    <option value="Z">Z</option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 55px;"><u>Cartera</u></mat-label>
+                  <input type="text" matInput placeholder="Cartera" [(ngModel)]="cliente_id.cartera"
+                    formControlName="cartera">
+                </div>
+
+                <div class="row">
+                  <div class="input-group-prepend">
+                    <mat-label><u>Es Cliente Pertec</u></mat-label>
+                  </div>
+                  <mat-checkbox class="example-margin" formControlName="cliente_pertec"
+                    [(ngModel)]="cliente_id.cliente_pertec">
+                  </mat-checkbox>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Controles -->
+            <mat-tab label="Controles" style="color: white;"><br>
+              <div class="content">
+                <div class="row">
+                  <mat-label><u>Maximo de Nombres de Facturación Habilitados</u></mat-label>
+                  <input formControlName="max_nits" [(ngModel)]="cliente_id.max_nits" disabled>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <mat-label><u>Controla Venta de Empaques Cerrados</u></mat-label>
+                    </div>
+                    <mat-checkbox class="example-margin" formControlName="controla_empaque_cerrado"
+                      [(ngModel)]="cliente_id.controla_empaque_cerrado"></mat-checkbox>
+                  </div>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <mat-label style="padding-right: 43px;"><u>Controla Restricción de Precios</u></mat-label>
+                    </div>
+                    <mat-checkbox class="example-margin" formControlName="controla_precios"
+                      [(ngModel)]="cliente_id.controla_precios"></mat-checkbox>
+                  </div>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <mat-label style="padding-right: 60px;"><u>Controlar Maximos de Venta</u></mat-label>
+                    </div>
+                    <mat-checkbox class="example-margin" formControlName="controla_maximo"
+                      [(ngModel)]="cliente_id.controla_maximo"></mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Estado/Situación</mat-label>
+                    <input type="text" matInput formControlName="situacion" [(ngModel)]="cliente_id.situacion" disabled>
+                  </mat-form-field>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <mat-label style="padding-right: 58px;"><u>Solo Compra a Pronto Pago</u></mat-label>
+                    </div>
+                    <mat-checkbox class="example-margin" formControlName="solo_pp" [(ngModel)]="cliente_id.solo_pp">
+                    </mat-checkbox>
+                  </div>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <mat-label style="padding-right: 52px;"><u>Solo Compra Contra Entrega</u></mat-label>
+                    </div>
+                    <mat-checkbox class="example-margin" formControlName="contra_entrega"
+                      [(ngModel)]="cliente_id.contra_entrega"></mat-checkbox>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 10px;"><u>Visitas Por Mes</u></mat-label>
+                  <input type="text" matInput formControlName="visitas_x_mes" [(ngModel)]="cliente_id.visitas_x_mes"
+                    disabled>
+                </div>
+
+                <div class="row">
+                  <mat-label><u>Maximo de Venta</u></mat-label>
+                  <input type="text" matInput formControlName="maximo_vta" [(ngModel)]="cliente_id.maximo_vta" disabled>
+                </div>
+              </div>
+            </mat-tab>
+
+            <!-- Datos Titular Rep. Legal -->
+            <mat-tab label="Datos Titular Rep. Legal" style="color: white;"><br>
+              <div class="content">
+                <div class="row">
+                  <mat-label style="padding-right: 44px;"><u>Nro. Poder</u></mat-label>
+                  <input type="text" matInput formControlName="nropoder" [(ngModel)]="cliente_id.nropoder">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 11px;"><u>Nombre Contrato</u></mat-label>
+                  <input type="text" matInput formControlName="nombre_contrato"
+                    [(ngModel)]="cliente_id.nombre_contrato">
+                </div>
+                <div class="row">
+                  <mat-label style="padding-right: 82px;"><u>C.I.</u></mat-label>
+                  <input type="text" matInput formControlName="nit_titular" [(ngModel)]="cliente_id.nit_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 63px;"><u>Ciudad</u></mat-label>
+                  <input type="text" matInput formControlName="ciudad_titular" [(ngModel)]="cliente_id.ciudad_titular">
+                </div>
+                <div class="row">
+                  <mat-label style="padding-right: 73px;"><u>Zona</u></mat-label>
+                  <input type="text" matInput formControlName="zona_titular" [(ngModel)]="cliente_id.zona_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 51px;"><u>Dirección</u></mat-label>
+                  <input type="text" matInput formControlName="direccion_titular"
+                    [(ngModel)]="cliente_id.direccion_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 27px;"><u>Ref. Dirección</u></mat-label>
+                  <input type="text" matInput formControlName="refdireccion_titular"
+                    [(ngModel)]="cliente_id.refdireccion_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 56px;"><u>Telefono</u></mat-label>
+                  <input type="text" matInput formControlName="telefono_titular"
+                    [(ngModel)]="cliente_id.telefono_titular">
+
+                  <mat-label style="padding-right: 14px;"><u>Celular</u></mat-label>
+                  <input type="text" matInput formControlName="celular_titular"
+                    [(ngModel)]="cliente_id.celular_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 65px;"><u>Latitud</u></mat-label>
+                  <input type="text" matInput formControlName="latitud_titular"
+                    [(ngModel)]="cliente_id.latitud_titular">
+
+                  <mat-label style="padding-right: 6px;"><u>Longitud</u></mat-label>
+                  <input type="text" matInput formControlName="longitud_titular"
+                    [(ngModel)]="cliente_id.longitud_titular">
+                </div>
+
+                <div class="row">
+                  <mat-label style="padding-right: 23px;"><u>Observaciones</u></mat-label>
+                  <textarea name="" id="" cols="25" rows="5" [(ngModel)]="cliente_id.obs_titular"
+                    formControlName="obs_titular"></textarea>
+                </div>
+              </div>
+            </mat-tab>
+          </form>
+
+
+
+
+
+          <!-- Dirección Principal -->
+          <mat-tab label="Dirección Principal" style="color: white;"><br>
+            <div class="content">
+              <!-- <form class="example-form" [formGroup]="FormularioDataParamEmpresa" (ngSubmit)="submitDataUpdateParamEmpresa()"> -->
+              <div class="row">
+                <div class="input-group">
+                  <mat-label style="padding-right: 10px;"><u>Punto de Venta</u></mat-label>
+                  <input type="text" placeholder="Punto de Venta" [(ngModel)]="cod_pto_venta.codigo"
+                    [(ngModel)]="cliente_vivienda.codptoventa" [readonly]="true">
+
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    (click)="modalCatalogoPuntoVenta();"
+                    style="border-color: #093070;padding: 0.1rem 0.75rem !important;">
+                    <i class="fa fa-search"></i>
+                  </button>
+
+                  <div class="input-group-prepend">
+                    <input type="text" matInput placeholder="Punto de Venta" [(ngModel)]="cod_pto_venta.descripcion"
+                      disabled>
+                  </div>
+                </div>
+                <div class="input-group-prepend" style="margin-left: 88px;">
+                  <input type="text" matInput [(ngModel)]="cod_pto_venta.codprovincia" disabled>
+                </div>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 40px;"><u>Dirección</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.direccion" style="width: 21%;" disabled>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 35px;"><u>Aclaración</u></mat-label>
+                <textarea matInput [(ngModel)]="cliente_vivienda.aclaracion_direccion" cols="43" rows="5"
+                  style="font-size: 0.8rem;"></textarea>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 35px;"><u>Teléfono 1</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.nomb_telf1" style="background-color: #b0e0e6;"
+                  disabled>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 35px;"><u>Teléfono 2</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.nomb_telf2" style="background-color: #b0e0e6;"
+                  disabled>
+              </div><br>
+
+              <div class="row">
+                <mat-label style="padding-right: 56px;"><u>Celular</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.celular" style="background-color: #fffacd;"
+                  disabled>
+
+                <input type="text" matInput style="background-color: #fffacd;" disabled>
+              </div>
+              <div class="row">
+                <mat-label style="padding-right: 46px;"><u>Celular 2</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.celular_2" style="background-color: #fffacd;"
+                  disabled>
+
+                <input type="text" matInput style="background-color: #fffacd;" disabled>
+              </div>
+              <div class="row">
+                <mat-label style="padding-right: 46px;"><u>Celular 3</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.celular_3" style="background-color: #fffacd;"
+                  disabled>
+
+                <input type="text" matInput style="background-color: #fffacd;" disabled>
+              </div>
+              <div class="row">
+                <mat-label style="padding-right: 41px;"><u>Whatsapp</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.nomb_whatsapp"
+                  style="background-color: #fffacd;" disabled>
+
+                <input type="text" matInput style="background-color: #fffacd;" disabled>
+              </div>
+              <div class="row">
+                <mat-label style="padding-right: 65px;"><u>Email</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.email">
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 59px;"><u>Latitud</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.latitud" disabled>&nbsp;
+
+                <mat-label style="padding-right: 5px;"><u>Longitud</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.longitud" disabled>
+              </div>
+              <div class="row">
+                <mat-label style="padding-right: 17px;"><u>Observaciones</u></mat-label>
+                <input type="text" matInput [(ngModel)]="cliente_vivienda.obs">
+              </div>
+              <!-- </form> -->
+            </div><br>
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="actualizarDatosTienda();" [disabled]="!FormularioData.valid">
+              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Actualizar
+                Datos Tienda Principal</span>
+            </button>
+          </mat-tab>
+
+          <!-- <mat-tab label="Ruta de Visita" style="color: white;"><br>
+            <div class="row">
+              <div class="col-md">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Frecuencia Ruta 1</mat-label>
+                  <input type="text" matInput [(ngModel)]="cliente_id.ruta" disabled>
+                </mat-form-field>
+              </div>
+              <div class="col-md">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Frecuencia Ruta 2</mat-label>
+                  <input type="text" matInput [(ngModel)]="cliente_id.ruta1" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row p-2">
+              <table>
+                <tr>
+                  <th>Ruta</th>
+                  <th>Nombre Ruta</th>
+                  <th>Semana</th>
+                  <th>Dia</th>
+                </tr>
+
+                <tr *ngFor="let rutas of ruta">
+                  <td>{{ rutas.codruta }}</td>
+                  <td>{{ rutas.descruta }}</td>
+                  <td>{{ rutas.semana }}</td>
+                  <td>{{ rutas.dia }}</td>
+                </tr>
+              </table>
+            </div>
+
+          </mat-tab> -->
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="p-2">
+  <div class="overlay"></div>
+  <div class="p-4 mb-3 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md">
+        <div class="input-group">
+          <ng-container>
+            <input type="text" class="form-control form-control-sm" placeholder="Usuario" [(ngModel)]="cod_usuario"
+              (blur)="onLeaveUsuario($event)">
+          </ng-container>
+
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalUsuario();"
+              style="border-color: #093070;"><i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md">
+        <div class="input-group">
+          <ng-container>
+            <input type="number" class="form-control form-control-sm" placeholder="Precio" min="0"
+              [(ngModel)]="precio_venta_codigo" (blur)="onLeavePrecioVenta($event)">
+          </ng-container>
+
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalCatalogoPrecio();"
+              style="border-color: #093070;"><i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+          <span><i class="fa fa-plus" aria-hidden="true" style="color: #ffc107;"></i> Adicionar</span>
+        </button>
+      </div>
+
+      <div class="col-md text-center">
+        <h3>Tarifas Permitidas por Usuario</h3>
+      </div>
+    </div>
+  </div>
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team p-2 bg-white scrollmenu">
+        <div class="col-lg-12 pr-lg-4" style="width: 100%;overflow-x: auto;">
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="usuario">
+              <th mat-header-cell *matHeaderCellDef> Usuario </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.usuario }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{ element.id }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tarifa">
+              <th mat-header-cell *matHeaderCellDef> Tarifa </th>
+              <td mat-cell *matCellDef="let element"> {{ element.codtarifa }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="accion">
+              <th mat-header-cell *matHeaderCellDef>Acción</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button1 [matMenuTriggerFor]="menu">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true" style="color: #093070;"></i>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="eliminar(element);">
+                    <span><i class="fa fa-trash"></i> Eliminar</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <mat-paginator #paginator [pageSizeOptions]="[15, 20, 25]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<section>
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #f0f0f0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;"><strong>Editar Recargo {{ recargo_edit.codigo }}</strong>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+
+          <div class="row">
+            <mat-label style="padding-right: 30px;padding-top: 7px;"><u>Código</u></mat-label>
+            <input type="number" [(ngModel)]="recargo_edit.codigo" disabled>
+          </div>
+
+          <div class="row">
+            <mat-label style="padding-right: 6px;padding-top: 7px;"><u>Descripción</u></mat-label>
+            <input type="text" [(ngModel)]="recargo_edit.descripcion" required>
+          </div>
+
+          <div class="row">
+            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Desc. Corta</u></mat-label>
+            <input type="text" [(ngModel)]="recargo_edit.descorta" required>
+          </div>
+
+          <div class="row">
+            <mat-label style="padding-right: 45px;padding-top: 7px;"><u>Tipo</u></mat-label>
+            <mat-checkbox class="example-margin" [(ngModel)]="monto">Monto</mat-checkbox>
+
+            <mat-checkbox class="example-margin" [(ngModel)]="porcentaje">Porcentaje
+            </mat-checkbox>
+          </div>
+
+          <div class="row">
+            <mat-label style="padding-right: 12px;padding-top: 7px;"><u>Porcentaje</u></mat-label>
+            <input type="number" class="example-margin" [(ngModel)]="recargo_edit.porcentaje" [disabled]="monto">&nbsp;
+            %
+          </div>
+
+          <div class="row">
+            <mat-label style="padding-right: 35px;padding-top: 7px;"><u>Monto</u></mat-label>
+            <input type="number" class="example-margin" [(ngModel)]="recargo_edit.monto" [disabled]="porcentaje">
+          </div>
+
+          <div class="row">
+            <div class="input-group">
+              <mat-label style="padding-right: 26px;padding-top: 7px;"><u>Moneda</u>
+              </mat-label>
+              <select [(ngModel)]="moneda">
+                <option *ngFor="let moneda_gets of moneda_get" [value]="moneda_gets.codigo"
+                  [(ngModel)]="recargo_edit.moneda">
+                  {{ moneda_gets.codigo }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <mat-checkbox class="example-margin" [(ngModel)]="recargo_edit.modificable"
+              [(checked)]="recargo_edit.modificable">Permitido</mat-checkbox>
+          </div>
+
+          <div class="mat-dialog-actions" mat-dialog-actions align="end">
+            <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
+            <button mat-raised-button color="primary" (click)="submitData()"><i class="fa fa-save"></i> Guardar
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

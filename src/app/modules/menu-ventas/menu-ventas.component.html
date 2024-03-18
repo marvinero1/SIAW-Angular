@@ -1,0 +1,75 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Ventas">
+  <span> <i class="fa fa-shopping-cart" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
+    <mat-icon style="padding-block-start: 8px;color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item [matMenuTriggerFor]="transacacciones_ventas">Transacciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_ventas">Operaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="modificaciones_ventas">Modificaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="despachos_ventas">Despachos</a>
+  <a mat-menu-item [matMenuTriggerFor]="solicitudes_ventas">Solicitudes</a>
+  <a mat-menu-item>Ver Datos Notas de Remisión</a>
+  <a mat-menu-item [matMenuTriggerFor]="autorizaciones_ventas">Autorizaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="censo_ventas">Censo</a>
+</mat-menu>
+
+<mat-menu #transacacciones_ventas="matMenu">
+  <a mat-menu-item>Cotización</a>
+  <a mat-menu-item (click)="guardarRutaLOG('proforma','/venta/transacciones/proforma');">Proforma</a>
+  <a mat-menu-item (click)="guardarRutaLOG('nota-remision','/venta/transacciones/nota-remision');">Notas de Remisión</a>
+  <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura','/venta/transacciones/nota-remision-factura');"
+    style="background-color: red !important;">Facturar Nota de Remisión(FEL)</a>
+  <a mat-menu-item>Emitir Notas de Debito de Notas de Remisión</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Facturación Mostrador Tiendas (FEL)</a>
+  <a mat-menu-item>Notas de Credito (FEL)</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Proforma (Liviana)</a>
+  <a mat-menu-item>Arreglar Facturas Sin CodControl</a>
+  <a mat-menu-item>Envio Paquete de Facturas al SIN</a>
+  <a mat-menu-item>Facturación Mostrador Fuera de Linea</a>
+</mat-menu>
+
+<mat-menu #operaciones_ventas="matMenu">
+  <a mat-menu-item>Aprobación de Proformas</a>
+  <a mat-menu-item>Desaprobación de Proformas</a>
+  <a mat-menu-item>Des. Complementar Proforma</a>
+  <a mat-menu-item>Verificación de Proformas</a>
+  <a mat-menu-item>Proformas Complementarias</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Otorgación de Creditos</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Modificar Lista de Precios</a>
+  <a mat-menu-item>Leer Lista de Precios de Excel</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Actualizar Fotos de Clientes</a>
+  <a mat-menu-item>Asignar Factura a Nota de Remisión</a>
+
+
+
+  <a mat-menu-item>Items Especiales Listas de Precios</a>
+  <a mat-menu-item>Modificar Plan de Pagos de Reversiones PP</a>
+  <a mat-menu-item>Re-aplicar descuentos por lineas anteriores</a>
+  <a mat-menu-item>Revertir Niveles de Descuentos 1ra Venta</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Cálculo de Ventas por Cliente por Mercaderia</a>
+  <a mat-menu-item>Cálculo de Ventas Semanales por Clientes</a>
+
+</mat-menu>
+
+<mat-menu #modificaciones_ventas="matMenu">
+</mat-menu>
+
+<mat-menu #despachos_ventas="matMenu">
+</mat-menu>
+
+<mat-menu #solicitudes_ventas="matMenu">
+</mat-menu>
+
+<mat-menu #autorizaciones_ventas="matMenu">
+</mat-menu>
+
+<mat-menu #censo_ventas="matMenu">
+</mat-menu>

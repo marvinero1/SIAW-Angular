@@ -1,0 +1,260 @@
+<section class="content">
+  <div class="container-fluid">
+    <ng-container *ngIf="toma_inventario">
+      <div class="p-2">
+        <mat-card style="background-color: #f0f0f0;">
+          <mat-card-header class="mb-1">
+            <mat-card-title style="font-size: 0.8rem;">Toma de Inventario Consolidado</mat-card-title>
+            <div class="col">
+              <div style="float: right;">
+                <mat-icon color="primary" (click)="minimizar();">arrow_drop_down</mat-icon>
+                <mat-icon color="primary" (click)="close();">close</mat-icon>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <table class="tg">
+              <tr>
+                <th class="tg-0lax">
+                  <div class="input-group">
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>ID</u></mat-label>
+                    <input type="text" style="width: 71% !important;" [(ngModel)]="inventario_catalogo.id"
+                      (blur)="onLeaveIDInventario($event)" required>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-primary" type="button" (click)="catalogoInventario()"
+                        style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+                        matTooltip="Buscar Inventario">
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </th>
+                <th class="tg-0lax">
+                  <input type="number" [(ngModel)]="numero_id" min="0" required>
+                </th>
+              </tr>
+            </table><br>
+
+            <button mat-raised-button color="primary" (click)="verificarExistenciaInventario()"><i
+                class="fa fa-check"></i>
+              OK</button>&nbsp;
+            <!-- <button mat-raised-button class="danger"><i class="fa fa-times"></i> Cancelar</button>&nbsp; -->
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </ng-container>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <ng-container *ngIf="inventario_fisico">
+      <div class="p-2">
+        <mat-card style="background-color: #f0f0f0;">
+          <mat-card-header class="mb-1">
+            <mat-card-title style="font-size: 0.8rem;">Inventario Fisico Consolidado</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-9">
+                <ng-container *ngIf="!periodoCerrado">
+                  <div class="mat-dialog-actions" mat-dialog-actions>
+                    <button mat-raised-button color="primary" [disabled]="!periodoCerrado"><i class="fa fa-save"></i>
+                      Guardar</button>
+                    <button mat-raised-button class="danger" [disabled]="!periodoCerrado"><i class="fa fa-trash"></i>
+                      Eliminar</button>
+                    <button mat-raised-button class="secondary" [disabled]="!periodoCerrado"><i
+                        class="fa fa-eraser"></i>
+                      Limpiar</button>
+                    <button mat-raised-button class="secondary" [disabled]="!periodoCerrado"><i class="fa fa-users"></i>
+                      Grupos</button>
+                    <button mat-raised-button class="secondary" [disabled]="!periodoCerrado"><i class="fa fa-cog"></i>
+                      Consolidar</button>
+                    <button mat-raised-button class="secondary" [disabled]="!periodoCerrado"><i class="fa fa-cog"></i>
+                      Saldos</button>
+                    <button mat-raised-button class="secondary" [disabled]="!periodoCerrado"><i class="fa fa-cog"></i>
+                      Generar Ajustes</button>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="periodoCerrado">
+                  <div class="mat-dialog-actions" mat-dialog-actions>
+                    <button mat-raised-button color="primary" (click)="guardar();" [disabled]="!estado_inventario"><i
+                        class="fa fa-save"></i>
+                      Guardar</button>
+                    <button mat-raised-button class="danger" (click)="eliminar();" [disabled]="!estado_inventario"><i
+                        class="fa fa-trash"></i>
+                      Eliminar</button>
+                    <button mat-raised-button class="secondary" (click)="limpiar();" [disabled]="!estado_inventario"><i
+                        class="fa fa-eraser"></i>
+                      Limpiar</button>
+                    <button mat-raised-button class="secondary" (click)="gruposInventario()"
+                      [disabled]="!estado_inventario"><i class="fa fa-users"></i>
+                      Grupos</button>
+                    <button mat-raised-button class="secondary" (click)="consolidar();"
+                      [disabled]="!estado_inventario"><i class="fa fa-cog"></i>
+                      Consolidar</button>
+                    <button mat-raised-button class="secondary" (click)="saldoInventario()"
+                      [disabled]="!estado_inventario"><i class="fa fa-cog"></i>
+                      Saldos</button>
+                    <button mat-raised-button class="secondary" (click)="notasAjustes();"
+                      [disabled]="!estado_inventario"><i class="fa fa-cog"></i>
+                      Generar Ajustes</button>
+                  </div>
+                </ng-container>
+              </div>
+
+              <div class="col-md-3">
+                <div style="float: right;">
+                  <ng-container *ngIf="estado_inventario">
+                    <span>Estado de Inventario: 🟢 Abierto</span>
+                  </ng-container>
+                  <ng-container *ngIf="!estado_inventario">
+                    <span>Estado de Inventario: 🔴 Cerrado</span>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <table class="tg">
+              <tr>
+                <th class="tg-0lax">
+                  <div class="input-group">
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>ID</u></mat-label>
+                    <input type="text" style="width: 91% !important;" [(ngModel)]="cabecera.id" disabled>
+                    <!-- <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="button" 
+                      style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;" matTooltip="Buscar Almacen">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div> -->
+                  </div>
+                </th>
+                <th class="tg-0lax">
+                  <input type="text" [(ngModel)]="cabecera.numeroid" disabled>
+                </th>
+              </tr>
+
+              <tr>
+                <th class="tg-0lax">
+                  <mat-label style="padding-right: 8px;"><u>Fecha Inicio</u></mat-label>
+                  <input type="text" style="width: 78.7%;" [(ngModel)]="cabecera.fechainicio" disabled>
+                </th>
+                <th class="tg-0lax">
+                  <mat-label style="padding-right: 2px;"><u>Fecha Fin</u></mat-label>
+                  <input type="text" style="width: 46%;" [(ngModel)]="cabecera.fechafin" disabled>
+                </th>
+              </tr>
+
+              <tr>
+                <th class="tg-0lax">
+                  <mat-label style="padding-right: 2px;"><u>Responsable</u></mat-label>
+                  <input type="text" style="width: 10%;" [(ngModel)]="cabecera.codpersona" disabled>
+                  <input type="text" style="width: 69%;" [(ngModel)]="cabecera.descpersona" disabled>
+                </th>
+
+                <th class="tg-0lax">
+                  <mat-label style="padding-right: 8px;"><u>Almacen</u></mat-label>
+                  <input type="text" style="width: 46%;" [(ngModel)]="cabecera.codalmacen" disabled>
+                </th>
+              </tr>
+
+              <tr>
+                <th class="tg-0laxs" style="width: 61% !important;">
+                  <mat-label style="padding-right: 4px;"><u>Observacion</u></mat-label>
+                  <input type="text" style="width: 79%;" [(ngModel)]="cabecera.obs" disabled>
+                </th>
+              </tr><br>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Buscador Item </mat-label>
+                    <input type="text" matInput [formControl]="myControl" (keyup)="applyFilter($event)"
+                      placeholder="Item" #input>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-8">
+                  <div style="float: right;">
+                    <button mat-raised-button class="secondary" (click)="refreshItems(cabecera.codigo);">
+                      <mat-icon style="color: rgb(76, 226, 34);">refresh</mat-icon>Items
+                    </button>&nbsp;
+
+                    <button mat-raised-button class="secondary" (click)="abrirPeriodoSistema();"><i class="fa fa-key"
+                        style="color: rgb(205, 205, 53);"></i>
+                      Abrir</button>&nbsp;
+
+                    <button mat-raised-button class="secondary" (click)="cerrarPeriodoSistema();"><i class="fa fa-times"
+                        style="color: red;"></i>
+                      Cerrar</button>
+                  </div>
+                </div>
+              </div>
+            </table>
+
+            <div class="row">
+              <div class="col-lg">
+                <div class="team bg-white scrollmenu">
+                  <div class="col-lg-12 pr-lg-4 " style="width: 100%;overflow-x: auto; height: 200px;">
+                    <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8"
+                      style="height: 44px !important;">
+
+                      <ng-container matColumnDef="item">
+                        <th mat-header-cell *matHeaderCellDef style="color: #fff;"> Item </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.coditem }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="descripcion">
+                        <th mat-header-cell *matHeaderCellDef style="color: #fff;"> Descripción </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.descripcion }}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="medida">
+                        <th mat-header-cell *matHeaderCellDef style="color: #fff;"> Medida </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.medida }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="unidad">
+                        <th mat-header-cell *matHeaderCellDef class="th1"> Unidad </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.udm }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef class="th1"> Cantidad </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right;">
+                          {{ element.cantreal  | number: '1.2-2' }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="cantidad_sistema">
+                        <th mat-header-cell *matHeaderCellDef class="th1"> Cantidad Sistema </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right;">
+                          {{ element.cantsist | number: '1.2-2' }} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="diferencia">
+                        <th mat-header-cell *matHeaderCellDef class="th1"> Diferencia </th>
+                        <td mat-cell *matCellDef="let element" style="text-align: right;">
+                          {{ element.dif  | number: '1.2-2'}} </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-footer>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 25, 50, 75]" showFirstLastButtons></mat-paginator>
+          </mat-card-footer>
+        </mat-card>
+      </div>
+    </ng-container>
+  </div>
+</section>

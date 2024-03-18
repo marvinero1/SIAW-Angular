@@ -1,0 +1,89 @@
+<div class="p-1">
+  <div class="title">Saldo Detallado de Item
+    <mat-icon color="primary" (click)="mandarTotalSaldo();" style="float: right;color: white;font-size: 20px;">close
+    </mat-icon>
+  </div>
+
+  <div class="mat-elevation-z8">
+    <div class="row text-center">
+      <div class="col-md-12" style="padding: 5px 0px 0px;">
+        <p><strong>Saldo de Item: </strong> &nbsp; {{ dataAgencias.cod_item }} </p>
+        <span><u>{{ letraSaldos }}</u></span>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group>
+    <mat-tab label="Detalle de Saldo">
+      <div class="row">
+        <div class="col-lg">
+          <div class="team bg-white scrollmenu">
+            <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
+              <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8" matSort>
+
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: left;">{{ element.descripcion }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="valor">
+                  <th mat-header-cell *matHeaderCellDef> Saldo Local </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                    {{ element.valor | number:'2.2-2'}}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Saldo Variable">
+
+      <div class="row">
+        <div class="col-lg">
+          <div class="team bg-white scrollmenu">
+            <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
+              <table mat-table [dataSource]="saldo_variable" multiTemplateDataRows class="mat-elevation-z8" matSort>
+
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef> Descripción </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: left;">{{ element.descripcion }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="valor">
+                  <th mat-header-cell *matHeaderCellDef> Saldo Local </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: left;">
+                    {{ element.valor | number:'2.2-2'}}
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <mat-card-footer>
+    <div class="row">
+      <div class="col">
+        <mat-label><u>&nbsp;Saldo de Agencia</u></mat-label>&nbsp;
+        <input type="text" value="{{infoAgenciaSaldo}}" readonly="true" style="width: 40%;text-align: right;">
+      </div>
+
+      <div class="col">
+        <mat-label><u>&nbsp;Saldo de Local</u></mat-label>&nbsp;
+        <input type="text" value="{{ saldoLocal | number:'2.2-2' }}" readonly="true"
+          style="width: 40%;text-align: right;">
+      </div>
+    </div>
+  </mat-card-footer>
+</div>

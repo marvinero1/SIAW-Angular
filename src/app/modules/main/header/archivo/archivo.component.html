@@ -1,0 +1,8 @@
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" style="font-size: 0.95rem;">
+  <span>Archivo <mat-icon style="padding-block-start: 7px;">keyboard_arrow_down</mat-icon></span>
+</a>
+
+<mat-menu #mantenimiento="matMenu">
+  <a mat-menu-item (click)="guardarRutaLOG('parametros_empresa','/archivo/parametros_empresa');">Parametros de la Empresa 🟡</a>
+  <a mat-menu-item>Crear Nueva Empresa</a>
+</mat-menu>  

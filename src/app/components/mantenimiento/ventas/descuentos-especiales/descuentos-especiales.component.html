@@ -1,0 +1,119 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="p-2">
+      <mat-card style="background-color: #ffffc0;">
+        <mat-card-header class="mb-1">
+          <mat-card-title style="font-size: 0.8rem;">Descuentos Especiales</mat-card-title>
+        </mat-card-header>
+
+        <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+          [fullScreen]="true">
+          <br>
+          <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+        </ngx-spinner>
+
+        <div>
+          <mat-card-actions align="start">
+            <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" (click)="submitData();"><i
+                class="fa fa-save"></i>
+              Grabar
+            </button>&nbsp;
+
+            <button mat-raised-button color="primary" [disabled]="!descuento.codigo" (click)="editar()"><i
+                class="fa fa-pen"></i>
+              Editar
+            </button>&nbsp;
+
+            <button mat-raised-button class="secondary" (click)="limpiar()"><i class="fa fa-eraser"></i>
+              Limpiar</button>&nbsp;
+
+            <button mat-raised-button class="danger" (click)="eliminar()"><i class="fa fa-trash"></i>
+              Eliminar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <button mat-raised-button class="secondary" (click)="modalDescuento();"><i class="fa fa-search"></i>
+              Buscador
+              Catalogo</button>
+          </mat-card-actions>
+          <form class="example-form" [formGroup]="FormularioData" [formGroup]="FormularioData"
+            (ngSubmit)="submitData()">
+            <mat-card-content>
+
+              <ng-container *ngIf="descuento_codigo">
+                <div class="row">
+                  <mat-label style="padding-right: 67px;padding-top: 7px;"><u>Codigo</u></mat-label>
+                  <span>{{ descuento.codigo }}</span>
+                  <input type="text" [(ngModel)]="descuento.codigo" formControlName="codigo" min="0" hidden>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="!descuento_codigo">
+                <div class="row">
+                  <mat-label style="padding-right: 67px;padding-top: 7px;"><u>Codigo</u></mat-label>
+                  <input type="number" [(ngModel)]="descuento.codigo" formControlName="codigo" min="0" step="1"
+                    required>
+                </div>
+              </ng-container>
+
+              <div class="row">
+                <mat-label style="padding-right: 48px;padding-top: 7px;"><u>Descipción</u></mat-label>
+                <input type="text" formControlName="descripcion" [(ngModel)]="descuento.descripcion" required>
+              </div>
+
+              <div class="row">
+                <div class="input-group">
+                  <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Lista de Empaques</u></mat-label>
+                  <select formControlName="moneda" formControlName="codempaque" [(ngModel)]="descuento.codempaque"
+                    style="width: 12.1%;" required>
+                    <option *ngFor="let empaque_gets of empaque_get" [value]="empaque_gets.codigo">
+                      {{ empaque_gets.codigo }} - {{ empaque_gets.descripcion }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 32px;padding-top: 7px;"><u>Monto Minimo</u></mat-label>
+                <input type="number" formControlName="monto" [(ngModel)]="descuento.monto" min="0" step="1" required>
+              </div>
+
+              <div class="row">
+                <div class="input-group">
+                  <mat-label style="padding-right: 62px;padding-top: 7px;"><u>Moneda</u>
+                  </mat-label>
+                  <select formControlName="moneda" [(ngModel)]="descuento.moneda" style="width: 12.1%;">
+                    <option *ngFor="let moneda_gets of moneda_get" [value]="moneda_gets.codigo">
+                      {{ moneda_gets.codigo }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row">
+                <mat-label style="padding-right: 35px;padding-top: 7px;"><u>Descuento %</u></mat-label>
+                <input type="number" formControlName="descuento" [(ngModel)]="descuento.descuento" min="0"
+                  step="1">&nbsp; %
+              </div>
+
+              <div class="row">
+                <input type="checkbox" style="padding-right: 30px;" formControlName="ultimos"
+                  [checked]="descuento.ultimos">
+                <mat-label style="padding-top: 7px;">&nbsp;<u>Permite menor empque si son las ultimas
+                    existencias</u></mat-label>
+              </div>
+            </mat-card-content>
+          </form>
+        </div><br>
+
+        <div>
+          <div class="p-3">
+            <button mat-raised-button color="primary" [disabled]="!descuento.codigo" (click)="preciosPermitidos();">
+              <mat-icon>add_circle_outline</mat-icon> Precios Permitidos
+            </button>&nbsp;
+
+            <button mat-raised-button color="primary" [disabled]="!descuento.codigo" (click)="lineasEspeciales();">
+              <mat-icon>add_circle_outline</mat-icon> Lineas Especiales
+            </button>&nbsp;
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</section>
