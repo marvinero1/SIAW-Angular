@@ -122,11 +122,11 @@
         </div>
 
         <mat-dialog-content class="dialog-matriz">
-          <ng-container *ngIf="validacion === false; else valid">
+          <ng-container *ngIf="!validacion; else valid">
             <hot-table id="example"></hot-table>
           </ng-container>
           <ng-template #valid>
-            <p>Para agregar items a la proforma, tienes que tener seleccionado: &nbsp;<strong>{{ message }}</strong></p>
+            <p>Para Agregar Items : &nbsp;<strong>{{ messages.join(', ') }}</strong></p>
           </ng-template>
         </mat-dialog-content>
 

@@ -71,7 +71,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   empaque_item_codigo: string;
   empaque_item_descripcion: string;
   empaque_descripcion_concat: string;
-  message: string;
+  messages: any = [];
   BD_storage: any;
   agencia: any;
   userConn: any;
@@ -110,6 +110,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   items_post: any = [];
   lista_hojas: any = [];
   elementoActual = this.lista_hojas[0];
+  item_seleccionados_catalogo_matriz: any = [];
 
   tarifa_get: any;
   descuento_get: any;
@@ -218,31 +219,48 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_5 = data.saldo5;
     });
+
+    //Items seleccionados
+    this.itemservice.disparadorDeItemsSeleccionados.subscribe(datav => {
+      console.log("Recibiendo Items Seleccionados Procesados Para el Carrito: ", datav);
+      this.item_seleccionados_catalogo_matriz = datav;
+      this.addItemArraySeleccion(this.item_seleccionados_catalogo_matriz);
+    });
+    //
+
+
+
+
+
+
+
+
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
 
+    // Realizamos todas las validaciones
     if (this.codmoneda_get === '') {
       this.validacion = true;
-      this.message = "SELECCIONE MONEDA";
-      this.toastr.error('¡NO HAY MONEDA SELECCIONADA!');
+      this.messages.push("SELECCIONE MONEDA");
     }
-
     if (this.codcliente_get === undefined || this.codcliente_get === '') {
       this.validacion = true;
-      this.message = "SELECCIONE CLIENTE";
-      this.toastr.error('¡NO HAY CLIENTE SELECCIONADO!');
+      this.messages.push("SELECCIONE CLIENTE EN PROFORMA");
     }
-
     if (this.codalmacen_get === '') {
       this.validacion = true;
-      this.message = "SELECCIONE ALMACEN";
-      this.toastr.error('¡NO HAY ALMACEN SELECCIONADO!');
+      this.messages.push("SELECCIONE ALMACEN");
     }
 
-    this.array_items_completo;
+    // Mostramos los mensajes de validación concatenados
+    if (this.validacion) {
+      this.toastr.error('¡' + this.messages.join(', ') + '!');
+    }
+
+    console.log(this.array_items_completo);
 
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
@@ -285,7 +303,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           //this.toastr.error('¡CELDA NO VALIDA!');
         },
         complete: () => {
-
         }
       })
   }
@@ -490,9 +507,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         switch (e.key) {
           case 'Enter':
             console.log("Hola lola ENTER");
-            //this.focusPedido();
+            // this.focusPedido();
             // this.focusPedido.nativeElement.focus();
-            //this.render.selectRootElement('#focusPedido').focus();
+            // this.render.selectRootElement('#focusPedido').focus();
             // this.input1.nativeElement.focus();
             // this.setFocus();
             self.focusPedido();
@@ -508,7 +525,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    hot.addHook('afterSelectionEnd', (r: number, c: number, r2: number, c2: number) => {
+    hot.addHook('afterSelectionEnd', () => {
       const selectedCoords = hot.getSelected();
       if (selectedCoords) {
         const [startRow, startCol] = selectedCoords[0];
@@ -522,7 +539,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       }
     });
 
-    hot.addHook('afterSelectionEndByProp', (c: number) => {
+    hot.addHook('afterSelectionEndByProp', () => {
       const selectedRanges = hot.getSelectedRange();
       // Verificar si se ha seleccionado algún rango
       if (selectedRanges && selectedRanges.length > 0) {
@@ -593,12 +610,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     if (existe) {
       console.log("El item ya existe en el array.");
-      this.toastr.warning('¡EL ITEM YA ESTA EN PEDIDO!');
+      //this.toastr.warning('¡EL ITEM YA ESTA EN PEDIDO!');
       return;
     }
 
     if (!this.item_valido) {
-      this.toastr.error('¡EL ITEM NO ESTA EN VENTA!');
+      console.log('¡EL ITEM NO ESTA EN VENTA!');
+      //this.toastr.error('¡EL ITEM NO ESTA EN VENTA!');
       return;
     }
 
@@ -615,10 +633,35 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     this.array_items_completo = this.array_items_seleccionados.concat(this.array_items_proforma_matriz);
 
-
-
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
     console.log(this.array_items_seleccionados, this.array_items_proforma_matriz);
+  }
+
+  addItemArraySeleccion(items) {
+    this.item_seleccionados_catalogo_matriz = items;
+
+    this.item_seleccionados_catalogo_matriz.forEach(element => {
+      console.log("ITEMS SELECCIONADOS AL CARRITO: " + element);
+    });
+
+    // const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
+    // this.array_items_seleccionados;
+
+    // let array = {
+    //   coditem: cleanText,
+    //   tarifa: this.tarifa_get,
+    //   descuento: this.descuento_get,
+    //   cantidad_pedida: this.pedido,
+    //   cantidad: this.cantidad === undefined ? this.pedido : this.cantidad,
+    //   opcion_nivel: "",
+    //   codalmacen: this.codalmacen_get,
+    //   codcliente: this.codcliente_get === undefined ? "0" : this.codcliente_get,
+    //   desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
+    //   codmoneda: this.codmoneda_get,
+    //   fecha: this.fecha_get,
+    // };
+
+    // console.log(array);
   }
 
   eliminarItemArrayPedido(item) {

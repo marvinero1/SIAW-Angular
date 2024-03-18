@@ -173,6 +173,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   item_seleccionados_catalogo_matriz_false: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar_catalogo: any = [];
+  id_tipo: any = [];
   usuarioLogueado: any = [];
   usuario_creado_save: any = [];
   data_almacen_local: any = [];
@@ -342,6 +343,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
     this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+
+    if (this.agencia_logueado === 'Loc') {
+      this.agencia_logueado = '311'
+    }
   }
 
   ngOnInit() {
@@ -391,19 +396,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.codigo_item_catalogo = data.item;
       this.cantidad_item_matriz = data.cantidad;
       //this.getEmpaqueItem(this.codigo_item_catalogo);
-    });
-    //
-
-    //Items seleccionados
-    this.itemservice.disparadorDeItemsSeleccionados.subscribe(data => {
-      console.log("Recibiendo Items Seleccionados Procesados: ", data);
-      this.item_seleccionados_catalogo_matriz = data;
-      this.item_seleccionados_catalogo_matriz_codigo = this.item_seleccionados_catalogo_matriz[0].coditem;
-      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
-      console.log(this.item_seleccionados_catalogo_matriz);
-
-      this.getAlmacenesSaldos();
-      this.itemDataAll(this.item_seleccionados_catalogo_matriz_codigo);
     });
     //
 
@@ -679,6 +671,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   itemDataAll(codigo) {
     this.getSaldoEmpaquePesoAlmacenLocal(codigo);
     this.getEmpaqueItem(codigo);
+    this.getSaldoItemSeleccionadoDetalle(codigo);
   }
 
   get f() {
@@ -1981,9 +1974,40 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   }
 
+  getSaldoItemSeleccionadoDetalle(item) {
+    let agencia_concat = "AG" + this.agencia_logueado;
 
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.id_tipo = datav;
+          console.log('data', this.id_tipo);
 
+          // this.letraSaldos = this.id_tipo[0].resp;
+          // this.saldo_variable = this.id_tipo[2];
 
+          // this.dataSource = new MatTableDataSource(this.id_tipo[1]);
+          // this.dataSource.paginator = this.paginator;
+          // this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+
+          // // LETRA
+          // this.id_tipo[1].forEach(element => {
+          //   if (element.descripcion === 'Total Saldo') {
+          //     this.saldoLocal = element.valor;
+          //   }
+          // });
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+
+        }
+      })
+  }
 
 
 

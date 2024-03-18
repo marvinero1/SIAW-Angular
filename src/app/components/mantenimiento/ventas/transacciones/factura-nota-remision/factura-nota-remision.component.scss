@@ -29,7 +29,7 @@
         position: sticky;
         top: 0;
         background-color: #ffc107;
-        min-height: 25px !important;
+        //min-height: 25px !important;
     }
 
     .mat-row, .mat-header-row, .mat-footer-row{
@@ -43,7 +43,7 @@
     }
 
     .mat-row, .mat-footer-row{
-        min-height: 25px !important;
+        //min-height: 25px !important;
     }
 
     .input-group-text, .form-control-sm {
@@ -62,9 +62,23 @@
     }
 
     .mat-mdc-table .mdc-data-table__row{
-        height: 27px !important;
+        //height: 27px !important;
     }
 
     mat-tab-group{
         font-size: 0.7rem !important;
     }
+
+::ng-deep {
+    .mat-mdc-tab-labels{
+        height: calc(1.3rem + 5px) !important;
+    }
+
+    .mdc-data-table__cell, .mdc-data-table__header-cell{
+        padding: 0px 1px 0px 19px !important;
+    }
+
+    .mat-mdc-tab.mdc-tab{
+        height: 26px !important;
+    }
+}

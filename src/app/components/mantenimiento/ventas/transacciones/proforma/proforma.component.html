@@ -512,7 +512,7 @@
                   <i class="fa fa-plus" style="text-align: center !important;cursor: pointer;"></i>&nbsp;<u>Item</u>
                 </th>
                 <td mat-cell *matCellDef="let element" class="td">
-                  <div (click)="itemDataAll(element.coditem)" style="cursor: pointer;">
+                  <div (click)="getSaldoItemSeleccionadoDetalle(element.coditem)" style="cursor: pointer;">
                     {{ element.coditem }}
                   </div>
                 </td>
@@ -566,7 +566,7 @@
               <ng-container matColumnDef="sld">
                 <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> % SLD</th>
                 <td mat-cell *matCellDef="let element" style="text-align: right !important;">
-                  {{ element.porcen_mercaderia | number:'2.2-2'}}
+                  {{ element.porcen_mercaderia | number:'1.2-2'}}
                 </td>
               </ng-container>
 
@@ -603,7 +603,7 @@
               <!-- % Column -->
               <ng-container matColumnDef="porcentaje" style="width: 5%;text-align: right;">
                 <th mat-header-cell *matHeaderCellDef> % </th>
-                <td mat-cell *matCellDef="let element"> {{ element.porcendesc | number:'2.2-2' }} </td>
+                <td mat-cell *matCellDef="let element"> {{ element.porcendesc | number:'1.2-2' }} </td>
               </ng-container>
 
               <!-- PD Column -->
@@ -617,7 +617,7 @@
               <ng-container matColumnDef="pu">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PU </th>
                 <td mat-cell *matCellDef="let element" style="text-align: right !important;">
-                  {{ element.precioneto | number:'2.2-2' }} </td>
+                  {{ element.precioneto | number:'1.5-5' }} </td>
               </ng-container>
 
               <ng-container>
@@ -719,7 +719,7 @@
                 <th mat-header-cell *matHeaderCellDef> % </th>
                 <td mat-cell *matCellDef="let element">
                   <input matInput type="text" class="pedido" [(ngModel)]="element.porcen_mercaderia"
-                    placeholder="{{ element.porcen_mercaderia}}"> aaA
+                    placeholder="{{ element.porcen_mercaderia}}">
                 </td>
               </ng-container>
 
@@ -1195,7 +1195,6 @@
                               placeholder="0.00" disabled>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </form>
@@ -1282,7 +1281,6 @@
                 <mat-header-row *matHeaderRowDef="displayedColumns_ultimas_proformas"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns_ultimas_proformas;"></mat-row>
               </table>
-
             </mat-tab>
 
             <mat-tab label="Ultimas Ventas Item 23 Dias">
@@ -1596,7 +1594,7 @@
                 <div class="col-md">
                   <div class="input-group-append">
                     <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                      (click)="modalSubTotal();">
+                      [disabled]="total === 0" (click)="modalSubTotal();">
                       <mat-icon>monetization_on</mat-icon>
                     </button>
                   </div>
@@ -1618,6 +1616,7 @@
                   <div class="input-group-append">
                     <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
                       (click)="modalDescuentoEspecial();">
+                      <!-- [disabled]="total === 0" -->
                       <mat-icon>monetization_on</mat-icon>
                     </button>
                   </div>
@@ -1790,7 +1789,7 @@
     </div>
   </div>
 </div>
-<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="timer" [fullScreen]="true">
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
   <br>
   <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
 </ngx-spinner>
