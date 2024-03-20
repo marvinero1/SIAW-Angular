@@ -99,9 +99,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.tarifa_get_unico = datav;
-          this.tarifa_get_unico_copied = this.tarifa_get_unico.slice();
-          this.cod_precio_venta_modal_first = this.tarifa_get_unico_copied.shift();
-          this.cod_precio_venta_modal_codigo = this.cod_precio_venta_modal_first.codigo;
+          //console.log(this.tarifa_get_unico);
         },
 
         error: (err: any) => {
@@ -113,17 +111,13 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   getDescuentos() {
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/vedescuento";
 
     return this.api.getAll('/venta/mant/vedescuento/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.descuentos_get = datav;
           //console.log(this.descuentos_get);
-
-          this.descuentos_get_copied = this.descuentos_get.slice();
-          this.first_descuentos_get = this.descuentos_get_copied.shift();
-          this.cod_descuento_modal_codigo = this.first_descuentos_get.codigo;
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -184,8 +178,6 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       event.target.value = entero;
     }
   }
-
-
 
   agregarItems() {
     if (this.isCheckedCantidad) {

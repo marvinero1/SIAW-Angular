@@ -3,7 +3,7 @@
     <div class="p-2">
       <hr>
       <ng-container *ngIf="validacion;else valid">
-        <p>Para ver credito disponible seleccione: &nbsp;<strong>{{ message }}</strong></p>
+        <p>Para Ver Credito Disponible : &nbsp;<strong>{{ message.join(', ') }}</strong></p>
       </ng-container>
       <ng-template #valid>
         <div style="text-align: center !important;">

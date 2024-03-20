@@ -300,6 +300,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          this.data_almacen_local.saldo = 0;
           //this.toastr.error('¡CELDA NO VALIDA!');
         },
         complete: () => {

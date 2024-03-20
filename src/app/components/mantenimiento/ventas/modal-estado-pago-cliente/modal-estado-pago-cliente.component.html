@@ -27,7 +27,7 @@
 
         <div class="col-md-4">
           <mat-label style="padding-right: 5px;"><u>Hasta Fecha</u></mat-label>
-          <input type="date">
+          <input type="date" [(ngModel)]="fecha_actual1">
         </div>
 
         <div class="col-md-6">
@@ -39,7 +39,7 @@
               </mat-icon>Refrescar
             </span>
           </button>
-          <span><strong>Número de Urgentes esta semana: </strong></span>
+          <span>&nbsp;<strong>Número de Urgentes esta semana: 0</strong></span>
         </div>
       </div>
 
@@ -47,23 +47,209 @@
         <mat-tab label="Pagos">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows
+                style="height: 12rem !important;text-align: center !important; padding: 0px 0px 0px 0px !important">
 
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                </ng-container>
+
+                <!-- Número Column -->
+                <ng-container matColumnDef="numero">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Número </th>
+                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
+                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Column -->
+                <ng-container matColumnDef="cod_cliente">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Venta Contado Column -->
+                <ng-container matColumnDef="para_venta_contado">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Venta Contado</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Monto Column -->
+                <ng-container matColumnDef="monto">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Monto</th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 0.00</td>
+                </ng-container>
+
+                <!-- Monto Pagado Column -->
+                <ng-container matColumnDef="monto_pagado">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Monto Pagado </th>
+                  <td mat-cell *matCellDef="let element" class="center1">0.00</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="#C">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
+                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                </ng-container>
+
+                <!-- Vencimiento Column -->
+                <ng-container matColumnDef="vencimiento">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Vencimiento </th>
+                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                </ng-container>
+
+                <!-- Saldo Deudor Column -->
+                <ng-container matColumnDef="saldo_deudor">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Saldo Deudor </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
+                </ng-container>
+
+                <!-- Acumulado Column -->
+                <ng-container matColumnDef="acumulado">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Acumulado </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 500 </td>
+                </ng-container>
+
+                <!-- Monto Column -->
+                <ng-container matColumnDef="monto">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Monto </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 0.00 </td>
+                </ng-container>
+
+                <!-- Dias Column -->
+                <ng-container matColumnDef="dias">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Dias </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 25 </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </table>
             </mat-card-content>
           </mat-card>
         </mat-tab>
 
-        <mat-tab label="Cheques Pendientes"><br>
+        <mat-tab label="Cheques Pendientes">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows
+                style="height: 12rem !important;text-align: center !important; padding: 0px 0px 0px 0px !important">
 
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                </ng-container>
+
+                <!-- Número Column -->
+                <ng-container matColumnDef="numero">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Número </th>
+                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="recibo">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Recibo </th>
+                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                </ng-container>
+
+                <!-- Cod. Cliente Column -->
+                <ng-container matColumnDef="banco">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Banco </th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Venta Contado Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Monto Column -->
+                <ng-container matColumnDef="fecha_pago">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha Pago</th>
+                  <td mat-cell *matCellDef="let element" class="center1"> 0.00</td>
+                </ng-container>
+
+                <!-- Monto Pagado Column -->
+                <ng-container matColumnDef="monto">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Monto </th>
+                  <td mat-cell *matCellDef="let element" class="center1">0.00</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="restante">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Restante </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                </ng-container>
+
+                <!-- Vencimiento Column -->
+                <ng-container matColumnDef="observacion">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Observación </th>
+                  <td mat-cell *matCellDef="let element" class="center1">......... </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumnsCheques"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsCheques;"></mat-row>
+              </table>
             </mat-card-content>
           </mat-card>
         </mat-tab>
 
-        <mat-tab label="Anticipos"><br>
+        <mat-tab label="Anticipos">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+                multiTemplateDataRows
+                style="height: 12rem !important;text-align: center !important; padding: 0px 0px 0px 0px !important">
 
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
+                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                </ng-container>
+
+                <!-- Número Column -->
+                <ng-container matColumnDef="numero">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Número </th>
+                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="recibo">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Recibo </th>
+                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                </ng-container>
+
+                <!-- Venta Contado Column -->
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Fecha</th>
+                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                </ng-container>
+
+                <!-- Monto Pagado Column -->
+                <ng-container matColumnDef="monto">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Monto </th>
+                  <td mat-cell *matCellDef="let element" class="center1">0.00</td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="restante">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Restante </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumnsAnticipos"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumnsAnticipos;"></mat-row>
+              </table>
             </mat-card-content>
           </mat-card>
         </mat-tab>

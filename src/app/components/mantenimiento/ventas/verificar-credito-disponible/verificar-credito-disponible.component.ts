@@ -32,7 +32,7 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
   profApro_text: string;
   profApAgs_text: string;
   profAct_text: string;
-  message: string;
+  message: string[] = [];
 
   constructor(public log_module: LogService, public dialogRef: MatDialogRef<VerificarCreditoDisponibleComponent>,
     private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService, public _snackBar: MatSnackBar,
@@ -56,25 +56,30 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
     this.getCreditoDisponible();
 
     if (this.cod_cliente_proforma == undefined || this.cod_cliente_proforma == "") {
-      this.toastr.error('SELECCIONE CLIENTE ⚠️');
+      // this.toastr.error('SELECCIONE CLIENTE ⚠️');
       this.validacion = true;
-      return this.message = "SELECCIONE CLIENTE"
+      this.message.push("SELECCIONE CLIENTE");
     }
     if (this.cod_moneda_proforma == undefined || this.cod_moneda_proforma == "") {
-      this.toastr.error('SELECCIONE MONEDA ⚠️');
+      // this.toastr.error('SELECCIONE MONEDA ⚠️');
       this.validacion = true;
-      return this.message = "SELECCIONE MONEDA"
+      this.message.push("SELECCIONE MONEDA");
     }
     if (this.totalProf == undefined || this.totalProf == 0) {
-      this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
+      // this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
       this.validacion = true;
-      return this.message = "EL TOTAL ES 0 O NO HAY TOTAL"
+      this.message.push("EL TOTAL TIENE QUE SER DISTINTO A 0");
     }
     if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma == "CONTADO") {
-      this.toastr.error('SELECCIONE TIPO DE PAGO EN LA PROFORMA ⚠️');
+      // this.toastr.error('SELECCIONE TIPO DE PAGO EN LA PROFORMA ⚠️');
       this.validacion = true;
-      return this.message = "SELECCIONE TIPO DE PAGO EN LA PROFORMA"
+      this.message.push("EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CREDITO");
     }
+
+    // Mostramos los mensajes de validación concatenados
+    // if (this.validacion) {
+    //   this.toastr.error('¡' + this.message.join(', ') + '!');
+    // }
   }
 
   getCreditoDisponible() {

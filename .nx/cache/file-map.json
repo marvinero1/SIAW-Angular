@@ -129,7 +129,7 @@
       },
       {
         "file": ".gitignore",
-        "hash": "12570503718625674927"
+        "hash": "5300990306366453596"
       },
       {
         "file": ".htaccess",
@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "18018075032248119"
+        "hash": "7317737792424343178"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "5289205018636178056"
+        "hash": "12295137682748479381"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "319479170727598122"
+        "hash": "9458016525599163096"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -4373,7 +4373,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "1934865835695484867"
+        "hash": "6008461541340340858"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
@@ -4389,7 +4389,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "12168664760452493176"
+        "hash": "14624735285362834500"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4489,11 +4489,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
-        "hash": "5700551771957859150"
+        "hash": "16910825100187617584"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.scss",
-        "hash": "3244421341483603138"
+        "hash": "3275534042297945738"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.spec.ts",
@@ -4501,7 +4501,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.ts",
-        "hash": "15079361580280220885"
+        "hash": "2243917498504234063"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.html",
@@ -4633,7 +4633,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.html",
-        "hash": "820469251502612075"
+        "hash": "13558083714549611709"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.scss",
@@ -4645,7 +4645,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.ts",
-        "hash": "916284226345219541"
+        "hash": "17555190469707239785"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service.spec.ts",
@@ -5145,11 +5145,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "55797209738817744"
+        "hash": "3135124353307780160"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "7816339153380010847"
+        "hash": "15218111848883052832"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5157,7 +5157,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "17946653873887909955"
+        "hash": "15320446062988738327"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5185,7 +5185,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.html",
-        "hash": "9293289573838034035"
+        "hash": "18287257631557716484"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.scss",
@@ -5197,7 +5197,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.ts",
-        "hash": "12475667673665959535"
+        "hash": "10793418650236495648"
       },
       {
         "file": "src/app/components/menu-item/menu-item.animations.ts",
@@ -6077,7 +6077,7 @@
       },
       {
         "file": "src/app/services/interceptor.ts",
-        "hash": "2081655187543595267"
+        "hash": "5334603316406738562"
       },
       {
         "file": "src/app/services/log-service.service.spec.ts",

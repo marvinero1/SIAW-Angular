@@ -18,6 +18,9 @@ export class ModalTransfeProformaComponent implements OnInit {
   id_numero_id_proforma: any = [];
   cotizaciones: any = [];
 
+  proforma_get: any = [];
+  cotizaciones_get: any = [];
+
   id_proformas: any;
   numero_id_proformas: any;
   id_cotizaciones: any;
@@ -52,6 +55,9 @@ export class ModalTransfeProformaComponent implements OnInit {
       this.id_cotizaciones = data.cotizacion.id;
     });
     //
+
+    this.getProforma();
+    this.getCotizaciones();
   }
 
   transferirProforma() {
@@ -138,6 +144,76 @@ export class ModalTransfeProformaComponent implements OnInit {
     this.servicioTransfeProformaCotizacion.disparadorDeCotizacionTransferir.emit({
       cotizacion_transferir: cotizacion_get,
     });
+  }
+
+  onLeaveIDProformas(event: any) {
+    console.log(this.proforma_get);
+    const inputValue = event.target.value;
+
+    let cadena = inputValue.toString();
+    console.log(cadena);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.proforma_get.some(objeto => objeto.id === cadena.toUpperCase());
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = cadena;
+    }
+  }
+
+  getProforma() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET - /venta/mant/venumeracion/catalogo/ 2";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
+      .subscribe({
+        next: (datav) => {
+          this.proforma_get = datav;
+          console.log(this.proforma_get);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getCotizaciones() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogo/  6";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "6")
+      .subscribe({
+        next: (datav) => {
+          this.cotizaciones_get = datav;
+          console.log(this.cotizaciones_get);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveIDCotizaciones(event: any) {
+    console.log(this.cotizaciones_get);
+    const inputValue = event.target.value;
+
+    let cadena = inputValue.toString();
+    console.log(cadena);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.cotizaciones_get.some(objeto => objeto.id === cadena.toUpperCase());
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = cadena;
+    }
   }
 
   modalCatalogoProformas(): void {

@@ -24,7 +24,8 @@
         </div>
         <div class="col-md-8">
           <div class="input-group">
-            <input type="text" [disabled]="isCheckedCotizaciones" [(ngModel)]="id_proformas" style="width: 30%;">
+            <input type="text" [disabled]="isCheckedCotizaciones" [(ngModel)]="id_proformas"
+              (blur)="onLeaveIDProformas($event)" style="width: 30%;">
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="isCheckedCotizaciones"
@@ -45,7 +46,8 @@
         </div>
         <div class="col-md-8">
           <div class="input-group">
-            <input type="text" [disabled]="isCheckedProformas" [(ngModel)]="id_cotizaciones" style="width: 30%;">
+            <input type="text" [disabled]="isCheckedProformas" [(ngModel)]="id_cotizaciones"
+              (blur)="onLeaveIDCotizaciones($event)" style="width: 30%;">
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="isCheckedProformas"

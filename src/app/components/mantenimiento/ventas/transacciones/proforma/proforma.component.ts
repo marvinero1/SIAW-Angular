@@ -252,6 +252,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   public idpf_complemento_view: any;
   public nroidpf_complemento_view: any;
+  public input_complemento_view: any;
 
   public moneda_get_catalogo: any;
   public moneda_get_array: any = [];
@@ -403,7 +404,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
+      //ACA LLEGA EL ITEM 
       //this.getEmpaqueItem(this.codigo_item_catalogo);
+
+
+
     });
     //
 
@@ -527,6 +532,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getTipoDocumentoIdentidadProforma();
     this.getDescuento();
     this.tablaInicializada();
+    this.getIDScomplementarProforma();
   }
 
   tablaInicializada() {
@@ -1881,9 +1887,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
 
-    this.cod_id_tipo_modal_id = proforma.cabecera.id;
-    this.id_proforma_numero_id = proforma.cabecera.numeroid;
-    this.fecha_actual = proforma.cabecera.fecha;
+    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
+    this.id_proforma_numero_id = this.id_proforma_numero_id;
+    this.fecha_actual = this.fecha_actual;
+    // this.fecha_actual = proforma.cabecera.fecha;
     this.almacn_parame_usuario = proforma.cabecera.codalmacen;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
     this.codigo_cliente = proforma.cabecera.codcliente;
@@ -1923,12 +1930,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
     this.preparacion = proforma.cabecera.preparacion;
-    this.subtotal = proforma.cabecera.subtotal;
-    this.recargos = proforma.cabecera.recargos;
-    this.des_extra = proforma.cabecera.descuentos;
-    this.iva = proforma.cabecera.iva;
-    this.total = proforma.cabecera.total;
-
+    this.subtotal = 0;
+    this.recargos = 0;
+    this.des_extra = 0;
+    this.iva = 0;
+    this.total = 0;
 
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
 
@@ -1971,7 +1977,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   buscadorIDComplementarProforma(complemento_id, complemento_numero_id) {
-
+    console.log(complemento_id, complemento_numero_id);
   }
 
   getSaldoItemSeleccionadoDetalle(item) {
@@ -2009,7 +2015,25 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  ids_complementar_proforma: any = [];
 
+  getIDScomplementarProforma() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + 2)
+      .subscribe({
+        next: (datav) => {
+          this.ids_complementar_proforma = datav;
+          console.log('data', this.ids_complementar_proforma);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+
+        }
+      })
+  }
 
 
 

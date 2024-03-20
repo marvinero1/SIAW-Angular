@@ -286,7 +286,7 @@
             </mat-select>
           </div>
 
-          <ng-container *ngIf="tipopago === '1'">
+          <ng-container *ngIf="tipopago === 1">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm"
@@ -1051,10 +1051,11 @@
                         <div style="display:  -webkit-box;flex-direction:column;">
                           <input type="text" class="form-control form-control-sm"
                             style="margin-left: 5px;width: 15% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
-                            formControlName="cliente_real" readonly>
+                            formControlName="cliente_real" [(ngModel)]="codigo_cliente" readonly>
                           <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
                             [(ngModel)]="razon_social" [(ngModel)]="nombre_cliente_catalogo_real" readonly> -->
                           <span>{{ nombre_cliente_catalogo_real }}</span>
+                          <!-- <span>{{  razon_social }}</span> -->
                         </div><br>
                         <div>
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1121,7 +1122,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <form class="example-form" [formGroup]="FormularioData">
-                    <div class="row">
+                    <div class="row"><br>
                       <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -1149,20 +1150,20 @@
                         <div class="col-md-6">
                           <div class="input-group">
                             <select [disabled]="!disableSelect.value" formControlName="idpf_complemento"
-                              (ngModel)="idpf_complemento_view">
-                              <option value="option1">Option 1</option>
-                              <option value="option2">Option 2</option>
-                              <option value="option3">Option 3</option>
+                              [(ngModel)]="idpf_complemento_view">
+                              <option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                                [value]="ids_complementar_proformas.id">{{ ids_complementar_proformas.id }} -
+                                {{ ids_complementar_proformas.descripcion}}</option>
                             </select>
 
                             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                              formControlName="nroidpf_complemento" (ngModel)="nroidpf_complemento_view"
+                              formControlName="nroidpf_complemento" [(ngModel)]="input_complemento_view"
                               [disabled]="!disableSelect.value">
 
                             <div class="input-group-append">
                               <button class="btn btn-outline-primary form-control-sm" type="button"
                                 style="border-color: #ffc107;" (click)="buscadorIDComplementarProforma(idpf_complemento_view,
-                              nroidpf_complemento_view);">
+                                input_complemento_view);">
                                 <i class="fa fa-search"></i>
                               </button>
                             </div>
