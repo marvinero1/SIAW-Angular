@@ -419,6 +419,7 @@ import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/tra
 import { CatalogoCotizacionComponent } from '@components/mantenimiento/ventas/transacciones/cotizacion/catalogo-cotizacion/catalogo-cotizacion.component';
 import { ModalEstadoPagoClienteComponent } from '@components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component';
 import { ModalSubTotalComponent } from '@components/mantenimiento/ventas/modal-sub-total/modal-sub-total.component';
+import { ModalRecargosComponent } from '@components/mantenimiento/ventas/modal-recargos/modal-recargos.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -497,7 +498,7 @@ registerPlugin(UndoRedo);
         NumRecepcionImportacionComponent, NumRecepcionImportacionCreateComponent, NumRecepcionImportacionEditComponent, SucursalComponent,
         SucursalEditComponent, SucursalCreateComponent, PlanCuentaComponent, PlanCuentaCreateComponent, PlanCuentaEditComponent,
         CuentaEfectivoCuentasContablesComponent, CuentasContablesComponent, CuentasCatalogoComponent, NumeracionComprobantesComponent,
-        NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent,
+        NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
         ModalEtiquetaComponent,
 

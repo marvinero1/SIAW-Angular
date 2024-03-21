@@ -19,22 +19,22 @@ import { RecargoServicioService } from '../service-recargo/recargo-servicio.serv
 })
 export class RecargoDocumentoCreateComponent implements OnInit {
 
-   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarPtoVenta();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarPtoVenta();
   };
 
-  recargos: any = []; 
-  recargo_view: any = []; 
-  data:[];
+  recargos: any = [];
+  recargo_view: any = [];
+  data: [];
   userConn: any;
-  
-  public codigo:string='';
 
-  displayedColumns = ['codigo','descripcion','descorta'];
+  public codigo: string = '';
+
+  displayedColumns = ['codigo', 'descripcion', 'descorta'];
 
   dataSource = new MatTableDataSource<veRecargo>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -45,17 +45,17 @@ export class RecargoDocumentoCreateComponent implements OnInit {
   options: veRecargo[] = [];
   filteredOptions: Observable<veRecargo[]>;
   myControlCodigo = new FormControl<string | veRecargo>('');
-  myControlDescripcion = new FormControl<string | veRecargo>('');  
+  myControlDescripcion = new FormControl<string | veRecargo>('');
 
-  nombre_ventana:string="abmverecargo.vb";
-  public ventana="Recargos"
-  public detalle="Recargos-delete";
-  public tipo="Recargos-DELETE";
+  nombre_ventana: string = "abmverecargo.vb";
+  public ventana = "Recargos"
+  public detalle = "Recargos-delete";
+  public tipo = "Recargos-DELETE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
     public servicioRecargo: RecargoServicioService, public dialogRef: MatDialogRef<RecargoDocumentoCreateComponent>,) {
-    
+
     this.mandarNombre();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -73,7 +73,7 @@ export class RecargoDocumentoCreateComponent implements OnInit {
     return this.options.filter(option => option.descripcion.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -83,51 +83,46 @@ export class RecargoDocumentoCreateComponent implements OnInit {
     return user && user.descripcion ? user.descripcion : '';
   }
 
-  getAllTipoCredito(){
+  getAllTipoCredito() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/mant/verubro/";
-    return this.api.getAll('/venta/mant/verecargo/'+this.userConn)
+    return this.api.getAll('/venta/mant/verecargo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.recargos = datav;
           console.log(this.recargos);
-          
+
           this.dataSource = new MatTableDataSource(this.recargos);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-
-          this.spinner.show();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
-  mandarPtoVenta(){
+
+  mandarPtoVenta() {
     this.servicioRecargo.disparadorDeRecargoDocumento.emit({
-      punto_venta:this.recargo_view,
+      punto_venta: this.recargo_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.recargo_view = element;
     console.log(this.recargo_view);
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
-  
-  close(){
+
+  close() {
     this.dialogRef.close();
   }
 }

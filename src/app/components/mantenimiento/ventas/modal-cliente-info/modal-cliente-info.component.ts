@@ -25,6 +25,7 @@ export class ModalClienteInfoComponent implements OnInit {
 
   userConn: any;
   usuario_logueado: any;
+  longitud_titulares: any;
   bd_logueado: any = [];
 
   constructor(public dialogRef: MatDialogRef<ModalClienteInfoComponent>,
@@ -48,20 +49,30 @@ export class ModalClienteInfoComponent implements OnInit {
     return this.api.getAll('/venta/transac/prgveclienteinfo/' + this.userConn + "/" + this.cod_cliente + "/" + this.bd_logueado.bd + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
+
           this.info_cliente_completo = datav;
+          console.log(this.info_cliente_completo);
+
           this.info_completo = this.info_cliente_completo.infoCliente;
           this.casa_matriz = this.info_cliente_completo.creditosCliente;
           this.anticipos = this.info_cliente_completo.antCobCliente;
           this.tiendas = this.info_cliente_completo.tiendasTitulCliente[0].tienda;
-          this.titulares = this.info_cliente_completo.tiendasTitulCliente[0].titular;
+          this.titulares = this.info_cliente_completo.tiendasTitulCliente[0].titular === undefined ? " " : this.info_cliente_completo.tiendasTitulCliente[0];
+
+          if (this.titulares && this.titulares.length > 0) {
+            this.longitud_titulares = this.titulares[0].length;
+          } else {
+            this.longitud_titulares = 0; // o cualquier otro valor predeterminado
+          }
+
           this.envio_cliente = this.info_cliente_completo.ulttEnvioCliente;
           this.ult_compras = this.info_cliente_completo.ultiCompCliente;
           this.prom_especial = this.info_cliente_completo.promEspCliente;
           this.info_cliente_final = this.info_cliente_completo.infClienteFinal;
           this.otra_info_cliente = this.info_cliente_completo.otrsCondCliente;
 
-          //proformas
 
+          //proformas
           console.log(this.info_cliente_completo.antCobCliente);
           console.log(this.info_cliente_completo.creditosCliente);
           console.log(this.info_cliente_completo.infClienteFinal);

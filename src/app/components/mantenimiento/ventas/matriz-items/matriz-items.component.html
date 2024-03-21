@@ -13,12 +13,12 @@
                 <i class="fa fa-search"></i>
               </button>
               <ng-container>
-                <a (click)="pasarHoja(izquierda);">
+                <a (click)="pasarHoja(izquierda, num_hoja);">
                   <mat-icon style="padding-block-start: 5px !important;">
                     keyboard_arrow_left
                   </mat-icon>
                 </a>
-                <a (click)="pasarHoja(derecha);">
+                <a (click)="pasarHoja(derecha, num_hoja);">
                   <mat-icon style="padding-block-start: 5px !important;">
                     keyboard_arrow_right
                   </mat-icon>
@@ -38,32 +38,44 @@
               <!-- <button mat-raised-button color="primary" (click)="focusMyInput();"><i class="fa fa-plus"></i>
                 Focus
               </button> -->
-              <mat-menu #menu="matMenu">
+              <mat-menu #menu="matMenu" xPosition="after">
                 <ng-container>
-                  <table>
+                  <table style="margin-left: 8px;">
                     <tr>
-                      <th>Item</th>
-                      <th>Pedido</th>
-                      <th>Cant.</th>
-                      <th>X</th>
+                      <th style="border: 1px solid #ffc107;">Item</th>
+                      <th style="border: 1px solid #ffc107;">Pedido</th>
+                      <th style="border: 1px solid #ffc107;">Cant.</th>
+                      <th style="border: 1px solid #ffc107;">
+                        <i class="fa fa-trash" aria-hidden="true" color="danger"
+                          style="font-size: 0.5rem; color: red;"></i>
+                      </th>
+                      <th style="padding-left: 10px;">
+                        <mat-icon color="primary" style="color: #ffc107;">close</mat-icon>
+                      </th>
                     </tr>
+
                     <tbody *ngFor="let array_items_seleccionadoss of array_items_completo">
                       <tr>
-                        <td>{{ array_items_seleccionadoss.coditem }}</td>
-                        <td>{{ array_items_seleccionadoss.cantidad_pedida }}</td>
-                        <td>{{ array_items_seleccionadoss.cantidad }}</td>
+                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.coditem }}</td>
+                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.cantidad_pedida }}</td>
+                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.cantidad }}</td>
                         <td>
-                          <mat-icon color="danger"
+                          <i class="fa fa-trash" aria-hidden="true" color="danger"
                             (click)="eliminarItemArrayPedido(array_items_seleccionadoss.coditem);"
-                            style="font-size: 0.5rem; color: red;padding-block-start: 8px;">close
-                          </mat-icon>
+                            style="font-size: 0.5rem; color: red;"></i>
                         </td>
                       </tr>
                     </tbody>
                   </table>
                 </ng-container>
-                <button mat-raised-button color="success" mat-menu-item (click)="mandarItem();"
-                  style="color: white !important;"><i class="fa fa-check"></i> Confirmar</button>
+                <div style="text-align: center;display: block;margin: auto;">
+                  <!-- BOTON CONFIRMAR -->
+                  <button mat-raised-button class="btn btn-outline-secondary form-control-sm"
+                    (click)="mandarItemaProforma();" style="width: 100%;height: calc(1.8rem + 0px) !important;">
+                    <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
+                      <strong> Confirmar</strong></span>
+                  </button>
+                </div>
               </mat-menu>
             </div>
 
@@ -104,19 +116,6 @@
                 <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7"
                   min="0" style="width:100%;" placeholder="{{pedido}}">
               </mat-form-field>
-
-              <!-- <mat-label>Pedido &nbsp;</mat-label>
-              <input type="number" matInput #focusCantidad id="focusCantidad" maxlength="7" min="0" [(ngModel)]="pedido"
-                style="width:18%;"> -->
-
-              <!-- <mat-label>Cantidad &nbsp;</mat-label>
-              <input type="number" matInput id="focusPedido" maxlength="7" min="0"
-                [(ngModel)]="cantidad" style="width:18%;" #focusPedido placeholder="{{pedido}}"
-                required> -->
-
-              <!-- <input type="text" #input1>
-                <br><br>
-                <button type="button" (click)="setFocus()">Set Focus</button>-->
             </div>
           </div>
         </div>

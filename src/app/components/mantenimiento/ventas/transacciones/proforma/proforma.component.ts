@@ -39,6 +39,7 @@ import { PermisosEspecialesParametrosComponent } from '@components/seguridad/per
 import { ServicioTransfeAProformaService } from '../../modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalEstadoPagoClienteComponent } from '../../modal-estado-pago-cliente/modal-estado-pago-cliente.component';
 import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
+import { ModalRecargosComponent } from '../../modal-recargos/modal-recargos.component';
 
 @Component({
   selector: 'app-proforma',
@@ -406,7 +407,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
       //ACA LLEGA EL ITEM 
       //this.getEmpaqueItem(this.codigo_item_catalogo);
-
+      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_sin_procesar);
 
 
     });
@@ -1744,7 +1745,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     console.log("ENTRO A LA FUNCION SACAR TOTAL");
     this.veproforma = [this.FormularioData.value];
-    this.veproforma1 = this.item_seleccionados_catalogo_matriz;
+    // this.veproforma1 = this.item_seleccionados_catalogo_matriz;
+    this.veproforma1 = this.item_seleccionados_catalogo_matriz_sin_procesar;
     this.veproforma_valida = {};
     this.veproforma_anticipo = {};
     this.vedesextraprof = {};
@@ -1757,8 +1759,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       "br": 0,
       "iva": this.iva
     }];
-
-
 
     console.log(this.veproforma, this.veproforma1, this.veproforma_valida, this.veproforma_anticipo,
       this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
@@ -2150,7 +2150,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: "",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: this.item_seleccionados_catalogo_matriz_sin_procesar
+        items: this.item_seleccionados_catalogo_matriz_sin_procesar,
+        descuento_nivel: this.desct_nivel_actual,
       }
     });
   }
@@ -2300,8 +2301,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
-
+  modalRecargos() {
+    this.dialog.open(ModalRecargosComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        cod_cliente: this.codigo_cliente,
+        cod_almacen: this.almacn_parame_usuario,
+        cod_moneda: this.moneda_get_catalogo,
+        desc_linea: this.habilitar_desct_sgn_solicitud,
+        items: this.item_seleccionados_catalogo_matriz,
+        fecha: this.fecha_actual
+      },
+    });
+  }
 
 }

@@ -152,10 +152,6 @@
 
 
 ::ng-deep {
-  // .mat-mdc-tab .mdc-tab__text-label {
-  //   margin-bottom: 20px !important;
-  // }
-
   .mat-mdc-tab-labels{
     height: calc(1.3rem + 0px) !important;
   }
@@ -163,10 +159,6 @@
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 1px 0px 19px !important;
   }
-
-  // .mdc-data-table__cell, .mdc-data-table__header-cell{
-  //   padding: 0px 0px 0px 0px !important;
-  // }
 
   .mdc-tab{
     padding-right: 15px;
@@ -180,13 +172,28 @@
     font-size: 80%;
     color: #dc3545;
   }
-  .mat-mdc-tab-body-content{
-    height: 12rem !important;
-  }
   
   .mat-mdc-tab.mdc-tab{
     height: 20px !important;
+    padding-right: 13px !important;
+    padding-left: 13px !important;
   }
+  
+  .mdc-tab{
+    min-width: 79px !important;  
+  }
+  
+  // .mat-mdc-tab .mdc-tab__text-label {
+  //   margin-bottom: 20px !important;
+  // }
+
+  // .mdc-data-table__cell, .mdc-data-table__header-cell{
+  //   padding: 0px 0px 0px 0px !important;
+  // }
+
+  // .mat-mdc-tab-body-content{
+  //   height: 12rem !important;
+  // }
 
   // .mat-mdc-tab .mdc-tab__content{
   //   height: 105px !important;

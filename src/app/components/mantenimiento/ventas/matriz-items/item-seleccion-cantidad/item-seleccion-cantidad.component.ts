@@ -50,7 +50,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   codmoneda_get: any;
 
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ItemSeleccionCantidadComponent>,
-    public itemservice: ItemServiceService, public dialogRefMatriz: MatDialogRef<MatrizItemsComponent>, private spinner: NgxSpinnerService,
+    public itemservice: ItemServiceService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public dataItemSeleccionados: any, public servicioPrecioVenta: ServicioprecioventaService,
     @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
@@ -180,47 +180,26 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   }
 
   agregarItems() {
-    if (this.isCheckedCantidad) {
-      let a = this.dataItemSeleccionados_get.map((elemento) => {
-        return {
-          cantidad: this.cantidad_input,
-          cantidad_pedida: this.cantidad_input,
-          codalmacen: this.codalmacen_get,
-          codcliente: this.codcliente_get,
-          coditem: elemento,
-          codmoneda: this.codmoneda_get,
-          desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
-          descuento: this.descuento_get,
-          fecha: this.fecha_get,
-          opcion_nivel: "",
-          tarifa: this.tarifa_get,
-        }
-      })
-      this.mandarItemFalse(a);
-    } else {
-      console.log("hola lola en false para cantidad")
-      let b = this.dataItemSeleccionados_get.map((elemento) => {
-        return {
-          cantidad: 0,
-          cantidad_pedida: 0,
-          codalmacen: this.codalmacen_get,
-          codcliente: this.codcliente_get,
-          coditem: elemento,
-          codmoneda: this.codmoneda_get,
-          desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
-          descuento: this.cod_descuento_modal_codigo,
-          fecha: this.fecha_get,
-          opcion_nivel: "",
-          tarifa: this.cod_precio_venta_modal_codigo,
-        }
-      })
-      this.mandarItem(b);
-    }
-  }
+    let a = this.dataItemSeleccionados_get.map((elemento) => {
+      return {
+        coditem: elemento,
+        tarifa: this.tarifa_get,
+        descuento: this.descuento_get,
+        cantidad_pedida: this.cantidad_input,
+        cantidad: this.cantidad_input,
+        codcliente: this.codcliente_get,
+        opcion_nivel: "ACTUAL",
+        codalmacen: this.codalmacen_get,
+        desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
+        codmoneda: this.codmoneda_get,
+        fecha: this.fecha_get,
+      }
+    });
 
-  mandarItem(array) {
+    console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(a));
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/true", array)
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn, a)
       .subscribe({
         next: (datav) => {
           this.items_post = datav;
@@ -236,46 +215,15 @@ export class ItemSeleccionCantidadComponent implements OnInit {
           console.log(err, errorMessage);
         },
         complete: () => {
-          this.enviarItemsAlServicio(this.items_post, array);
+          this.enviarItemsAlServicio(this.items_post);
           this.dialogRef.close();
-          this.dialogRefMatriz.close();
-          this.num_hoja = 0;
+          // this.num_hoja = 0;
         }
       })
   }
 
-  mandarItemFalse(array) {
-    console.log(array);
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/false", array)
-      .subscribe({
-        next: (datav) => {
-          this.items_post = datav;
-          console.log('data', datav);
-
-          this.spinner.show();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
-
-        error: (err) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          this.enviarItemsAlServicio(this.items_post, array);
-          this.dialogRef.close();
-          this.dialogRefMatriz.close();
-          this.num_hoja = 0;
-        }
-      })
-  }
-
-  enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    this.itemservice.enviarItems(items);
-
-    this.itemservice.enviarItemsSinProcesar(items_sin_proceso);
+  enviarItemsAlServicio(items: any[]) {
+    this.itemservice.enviarItemsDeSeleccionAMatriz(items);
   }
 
   modalPrecioVenta(): void {

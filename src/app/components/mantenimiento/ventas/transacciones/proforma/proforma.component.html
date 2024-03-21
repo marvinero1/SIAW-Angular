@@ -1616,7 +1616,7 @@
                 <div class="col-md">
                   <div class="input-group-append">
                     <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                      (click)="modalDescuentoEspecial();">
+                      (click)="modalRecargos();">
                       <!-- [disabled]="total === 0" -->
                       <mat-icon>monetization_on</mat-icon>
                     </button>
@@ -1707,10 +1707,12 @@
                 <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
               </button>
 
-              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+              min-width: 45px !important;">
                 <i class="fa fa-eraser"></i></button>
 
-              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+              padding: 0 11px 0 11px;">
                 <mat-icon class="green" style="margin-left: 10px;margin-right: 10px;"> layers</mat-icon>
               </button>
 
@@ -1759,15 +1761,23 @@
                 (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
             </ng-container>
           </ng-container>
-          <ng-container *ngIf="!almacenes_saldos">
 
-          </ng-container>
+          <ng-container *ngIf="!almacenes_saldos"> </ng-container>
+
+
+        </div>
+        <div style="float: right !important;margin-right: 22px !important;">
+          <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
+            (click)="modalClienteEtiqueta(codigo_cliente);">
+            <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Solicitar
+            Urgente
+          </button>
         </div>
         <!-- finSaldos -->
 
         <!-- Empaques -->
-        <div class="row">
-          <div class="col-sm">
+        <div class="row ">
+          <div class="col-md">
             <div class="input-group">
               <span class="input-group-text form-control-sm">Empaques</span>
 
