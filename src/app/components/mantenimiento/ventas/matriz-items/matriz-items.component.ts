@@ -60,7 +60,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   FormularioBusqueda: FormGroup
   dataform: any = '';
-  num_hoja: number;
+  num_hoja: any;
   cantidad: number;
   pedido: number;
   pedidoInicial: number;
