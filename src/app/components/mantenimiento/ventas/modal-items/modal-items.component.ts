@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,7 +15,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: './modal-items.component.html',
   styleUrls: ['./modal-items.component.scss']
 })
-export class ModalItemsComponent implements OnInit {
+export class ModalItemsComponent implements OnInit, AfterViewInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarItem(this.item_view);
@@ -33,13 +33,17 @@ export class ModalItemsComponent implements OnInit {
   empaquesItem: any = [];
   item_view: any = [];
   BD_storage: any = [];
+  descuento_nivel_get: any = [];
   itemParaTabla: any = [];
+  messages: string[] = [];
   array_items_proforma_matriz: any = [];
   array_items_proforma_matriz_concat: any = [];
 
   userConn: any;
   value: any;
+  usuario_logueado: string = "";
   btn_confirmar: boolean = false;
+  validacion: boolean = false;
 
   displayedColumns = ['codigo', 'descripcion', 'medida'];
 
@@ -69,30 +73,35 @@ export class ModalItemsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
-    @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public itemss: any) {
+    @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public itemss: any,
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-
-    if (this.BD_storage.bd === 'PE') {
-      this.BD_storage.bd = '311'
-    }
+    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    // if (this.BD_storage.bd === 'PE') {
+    //   this.BD_storage.bd = '311'
+    // }
 
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
-    this.codcliente_get = codcliente.codcliente === undefined ? "0" : this.codcliente_get;
+    this.codcliente_get = codcliente.codcliente;
     this.codalmacen_get = codalmacen.codalmacen;
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
     this.array_items_proforma_matriz = itemss.itemss;
+    this.descuento_nivel_get = descuento_nivel.descuento_nivel;
 
-    console.log("TARIFA: " + this.tarifa_get,
+    console.log(
+      "COD CLIENTE: " + this.codcliente_get,
+      "TARIFA: " + this.tarifa_get,
       "DESCT: " + this.descuento_get,
       "CODALM: " + this.codalmacen_get,
       "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
       "FECHA: " + this.fecha_get,
       "CODMONEDA: " + this.codmoneda_get,
+      "DESCT. NIVEL: " + this.descuento_nivel_get,
     );
 
     console.log(this.array_items_proforma_matriz);
@@ -100,6 +109,30 @@ export class ModalItemsComponent implements OnInit {
 
   ngOnInit() {
     this.getCatalogoItems();
+  }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+
+    // Realizamos todas las validaciones
+    if (this.codmoneda_get === '') {
+      this.validacion = true;
+      this.messages.push("SELECCIONE MONEDA");
+    }
+    if (this.codcliente_get === undefined || this.codcliente_get === 0) {
+      this.validacion = true;
+      this.messages.push("SELECCIONE CLIENTE EN PROFORMA");
+    }
+    if (this.codalmacen_get === '') {
+      this.validacion = true;
+      this.messages.push("SELECCIONE ALMACEN");
+    }
+
+    // Mostramos los mensajes de validación concatenados
+    if (this.validacion) {
+      this.toastr.error('¡' + this.messages.join(', ') + '!');
+    }
   }
 
   applyFilter(event: Event) {
@@ -207,7 +240,6 @@ export class ModalItemsComponent implements OnInit {
   }
 
   mandarItem(item_codigo) {
-
     let dataItem: any = {
       coditem: item_codigo,
       tarifa: this.tarifa_get,
@@ -224,7 +256,7 @@ export class ModalItemsComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getItemMatriz_Anadir";
     return this.api.getAll(
-      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.BD_storage.bd + "/" + "ANTERIOR" + "/" + this.codmoneda_get + "/" + this.fecha_get)
+      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/311/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
       .subscribe({
         next: (datav) => {
           this.itemParaTabla = datav;

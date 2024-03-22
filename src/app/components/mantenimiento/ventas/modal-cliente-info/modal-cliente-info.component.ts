@@ -22,6 +22,8 @@ export class ModalClienteInfoComponent implements OnInit {
   info_cliente_final: any = [];
   info_completo: any = [];
   otra_info_cliente: any = [];
+  proformas_no_aprobadas_no_anuladas: any = [];
+  proformas_no_aprobadas_no_anuladas_dataINF: any = [];
 
   userConn: any;
   usuario_logueado: any;
@@ -53,11 +55,18 @@ export class ModalClienteInfoComponent implements OnInit {
           this.info_cliente_completo = datav;
           console.log(this.info_cliente_completo);
 
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+
           this.info_completo = this.info_cliente_completo.infoCliente;
           this.casa_matriz = this.info_cliente_completo.creditosCliente;
           this.anticipos = this.info_cliente_completo.antCobCliente;
           this.tiendas = this.info_cliente_completo.tiendasTitulCliente[0].tienda;
-          this.titulares = this.info_cliente_completo.tiendasTitulCliente[0].titular === undefined ? " " : this.info_cliente_completo.tiendasTitulCliente[0];
+          this.titulares = this.info_cliente_completo.tiendasTitulCliente[0].titular === null ? " " : this.info_cliente_completo.tiendasTitulCliente[0];
 
           if (this.titulares && this.titulares.length > 0) {
             this.longitud_titulares = this.titulares[0].length;
@@ -70,6 +79,9 @@ export class ModalClienteInfoComponent implements OnInit {
           this.prom_especial = this.info_cliente_completo.promEspCliente;
           this.info_cliente_final = this.info_cliente_completo.infClienteFinal;
           this.otra_info_cliente = this.info_cliente_completo.otrsCondCliente;
+          this.proformas_no_aprobadas_no_anuladas = this.info_cliente_completo.profnoApronoAnuCliente;
+          this.proformas_no_aprobadas_no_anuladas_dataINF = this.info_cliente_completo.profnoApronoAnuCliente.dataInf[0];
+
 
 
           //proformas
@@ -85,12 +97,7 @@ export class ModalClienteInfoComponent implements OnInit {
           console.log(this.info_cliente_completo.tiendasTitulCliente);
           console.log(this.info_cliente_completo.ultiCompCliente);
           console.log(this.info_cliente_completo.ulttEnvioCliente);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
+        }
       })
   }
 

@@ -18,19 +18,27 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ModalRecargosComponent implements OnInit {
 
   recargo_get_service: any = [];
-  userConn: any;
-  displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto', 'moneda'];
+  tablaRecargos: any = [];
+  array_de_recargos: any = [];
+  BD_storage: any = [];
 
+  porcen: number;
+  mont: number;
+  moneda: any;
+  confirmacion_get_recargo: any;
+
+  userConn: any;
+  displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto', 'moneda', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-
-  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public dialogRef: MatDialogRef<ModalRecargosComponent>, public log_module: LogService, private toastr: ToastrService,
-    private _formBuilder: FormBuilder, private datePipe: DatePipe, public servicioRecargo: RecargoServicioService) {
+  constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
+    public dialogRef: MatDialogRef<ModalRecargosComponent>, private toastr: ToastrService,
+    public servicioRecargo: RecargoServicioService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
   }
 
@@ -38,16 +46,57 @@ export class ModalRecargosComponent implements OnInit {
     this.servicioRecargo.disparadorDeRecargoDocumento.subscribe(data => {
       console.log("Recibiendo Recargo: ", data);
       this.recargo_get_service = data.punto_venta;
+
+      if (this.recargo_get_service.montopor != true) {
+        this.porcen = 0.00;
+        this.mont = 0;
+        this.moneda
+      } else {
+        this.porcen = 0;
+        this.mont = this.recargo_get_service.monto;
+        this.moneda = this.recargo_get_service.moneda;
+      }
     });
   }
 
   anadirRecargo() {
+    let a = {
+      codigo: this.recargo_get_service.codigo,
+      descripcion: this.recargo_get_service.descripcion,
+      porcentaje: this.porcen,
+      monto: this.mont,
+      moneda: this.recargo_get_service.moneda,
+    }
 
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
+    return this.api.getAll('/venta/transac/veproforma/validaAddRecargo/' + this.userConn + "/" + this.recargo_get_service.codigo + "/" + this.BD_storage.bd)
+      .subscribe({
+        next: (datav) => {
+          this.confirmacion_get_recargo = datav;
+          console.log(this.confirmacion_get_recargo);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          if (this.confirmacion_get_recargo === true) {
+            this.array_de_recargos.push(a);
+            this.dataSource = new MatTableDataSource(this.array_de_recargos);
+            console.log(this.array_de_recargos);
+          } else {
+            window.confirm(this.confirmacion_get_recargo.resp)
+          }
+        }
+      })
   }
 
+  eliminarRecargo(codigo) {
+    console.log(codigo);
+    this.array_de_recargos = this.array_de_recargos.filter(item => item.codigo !== codigo);
+    console.log(this.array_de_recargos);
 
-  eliminarRecargo() {
-
+    this.dataSource = new MatTableDataSource(this.array_de_recargos);
   }
 
   modalCatalogoRecargos(): void {

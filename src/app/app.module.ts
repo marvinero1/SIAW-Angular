@@ -420,6 +420,7 @@ import { CatalogoCotizacionComponent } from '@components/mantenimiento/ventas/tr
 import { ModalEstadoPagoClienteComponent } from '@components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component';
 import { ModalSubTotalComponent } from '@components/mantenimiento/ventas/modal-sub-total/modal-sub-total.component';
 import { ModalRecargosComponent } from '@components/mantenimiento/ventas/modal-recargos/modal-recargos.component';
+import { ModalDesctExtrasComponent } from '@components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -462,7 +463,7 @@ registerPlugin(UndoRedo);
         ParametrosFacturacionSIATComponent, CrearTomaInventarioComponent, TomaInventarioConsolidadoComponent, CatalogoInventarioComponent,
         PrecioItemComponent, ActualizarPrecioItemComponent, ActualizarStockActualComponent, ExportarImportarSaldosComponent,
         GruposInventariosComponent, SaldosInventarioConsolidadoComponent, CatalogoPersonaComponent, CambiarPasswordComponent,
-        ConsolidarInventarioComponent, PermisosEspecialesParametrosComponent, CatalogoClientesIgualesComponent,
+        ConsolidarInventarioComponent, PermisosEspecialesParametrosComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent,
         ValidarPrecioItemComponent, ValidarPermisoItemComponent, PermisoEspecialPasswordComponent, ModalZonaComponent,
         ParametroUsuarioComponent, NotasAjustesComponent, CatalogoNotasMovimientoComponent, CatalogoMovimientoMercaderiaComponent,
         ValidarComponent, RegistrarInventarioGrupoComponent, ConfirmacionNotasAjustesComponent, CatalogoPuntoVentaComponent,

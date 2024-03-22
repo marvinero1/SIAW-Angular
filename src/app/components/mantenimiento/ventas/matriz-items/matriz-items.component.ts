@@ -724,7 +724,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn, a)
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado, a)
       .subscribe({
         next: (datav) => {
           this.items_post = datav;
@@ -773,7 +773,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    this.itemservice.enviarItems(items);
+    this.itemservice.enviarItemsDeSeleccionAMatriz(items);
 
     this.itemservice.enviarItemsSinProcesar(items_sin_proceso);
   }

@@ -38,6 +38,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   userConn: any;
   usuarioLogueado: any;
+  BD_storage: any;
 
   items_post: any = [];
 
@@ -62,6 +63,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
@@ -199,7 +201,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(a));
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn, a)
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, a)
       .subscribe({
         next: (datav) => {
           this.items_post = datav;

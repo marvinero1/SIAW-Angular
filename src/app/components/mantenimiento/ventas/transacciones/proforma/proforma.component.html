@@ -1595,7 +1595,8 @@
                 <div class="col-md">
                   <div class="input-group-append">
                     <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                      [disabled]="total === 0" (click)="modalSubTotal();">
+                      (click)="modalSubTotal();">
+                      <!-- [disabled]="total === 0"  -->
                       <mat-icon>monetization_on</mat-icon>
                     </button>
                   </div>
@@ -1703,12 +1704,13 @@
               </div>
 
               <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-                (click)="modalClienteEtiqueta(codigo_cliente);" [disabled]="!codigo_cliente">
+                (click)="modalClienteEtiqueta(codigo_cliente);">
+                <!-- [disabled]="!codigo_cliente" -->
                 <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
               </button>
 
               <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              min-width: 45px !important;">
+              min-width: 45px !important;" (click)="limpiarEtiqueta();">
                 <i class="fa fa-eraser"></i></button>
 
               <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;

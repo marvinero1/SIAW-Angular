@@ -105,6 +105,25 @@
 
     <div class="row">
       <div class="col-md">
+        <mat-list *ngIf="proformas_no_aprobadas_no_anuladas_dataINF">
+          <span matListItemTitle><strong>PROFORMAS NO APROBADAS NO ANULADAS</strong></span>
+          <mat-list-item>
+            <span> {{ proformas_no_aprobadas_no_anuladas_dataINF.dataInf }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>Total: &nbsp;</span>
+            <span>{{ proformas_no_aprobadas_no_anuladas.total }}</span>
+          </mat-list-item>
+          <mat-list-item>
+            <span matListItemTitle>Credito Disponible Real: &nbsp;</span>
+            <span>{{ proformas_no_aprobadas_no_anuladas.creditO_DISP_REAL }}</span>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="row">
+      <div class="col-md">
         <mat-list>
           <span matListItemTitle><strong>TIENDAS</strong></span>
           <mat-list-item>
@@ -192,14 +211,16 @@
         </mat-list>
       </div>
     </div>
+
     <mat-divider></mat-divider>
+
     <div class="row">
       <div class="col-md">
-
         <mat-list>
           <span matListItemTitle><strong>ULTIMAS COMPRAS</strong></span>
-          <mat-list-item>
-            <span>{{ ult_compras }}</span>
+          <mat-list-item *ngFor="let ult_comprass of ult_compras">
+            <span>{{ ult_comprass.id }} - {{ ult_comprass.codigo }} - {{ ult_comprass.numeroid }} -
+              {{ ult_comprass.tipo }} - {{ ult_comprass.fecha }}</span>
           </mat-list-item>
         </mat-list>
       </div>
@@ -223,7 +244,9 @@
         </mat-list>
       </div>
     </div>
+
     <mat-divider></mat-divider>
+
     <div class="row">
       <div class="col-md">
         <mat-list>

@@ -5,24 +5,21 @@
 
   <div class="p-1 mat-elevation-z8">
     <div class="row p-2">
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
-        <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>OK</span>
+      <button mat-raised-button (click)="close();" class="btn btn-outline-secondary form-control-sm mr-1">
+        <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; OK</span>
       </button>
 
       <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="anadirRecargo();">
         <span><i class="fa fa-plus" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; Añadir </span>
       </button>
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="eliminarRecargo();">
-        <span><i class="fa fa-minus" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; Eliminar</span>
-      </button>
 
       <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></button>
     </div><br>
 
     <div class="row">
       <div class="col-md">
-        <span style="margin-right: 20px;"><u>Código</u></span>
+        <span style="margin-right: 21px;"><u>Código</u></span>
         <input type="text" style="width: 10% !important;" [(ngModel)]="recargo_get_service.codigo" [readOnly]="true">
 
         <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
@@ -35,15 +32,16 @@
 
     <div class="row">
       <div class="col-md">
-        <span><u>Porcentaje</u></span>
-        <input type="text">
+        <span style="margin-right: 3px;"><u>Porcentaje</u></span>
+        <input type="text" [(ngModel)]="porcen" readonly><span><strong>&nbsp; %</strong></span>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md">
-        <span style="margin-right: 24px;"><u>Monto</u></span>
-        <input type="text">
+        <span style="margin-right: 26px;"><u>Monto</u></span>
+        <input type="text" [value]="mont | number:'1.2-2' ">
+        <span style="margin-left: 7px;">{{ recargo_get_service.moneda }}</span>
       </div>
     </div>
   </div>
@@ -55,27 +53,37 @@
           <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
             <ng-container matColumnDef="codigo" class="ag-theme-alpine">
               <th mat-header-cell *matHeaderCellDef> Código </th>
-              <td mat-cell *matCellDef="let element"> </td>
+              <td mat-cell *matCellDef="let element" style="text-align: center !important;">{{ element.codigo }}</td>
             </ng-container>
 
             <ng-container matColumnDef="descripcion">
               <th mat-header-cell *matHeaderCellDef> Descripción </th>
-              <td mat-cell *matCellDef="let element"> </td>
+              <td mat-cell *matCellDef="let element">{{ element.descripcion }}</td>
             </ng-container>
 
             <ng-container matColumnDef="porcen">
               <th mat-header-cell *matHeaderCellDef> % </th>
-              <td mat-cell *matCellDef="let element"> </td>
+              <td mat-cell *matCellDef="let element">{{ element.porcentaje}}</td>
             </ng-container>
 
             <ng-container matColumnDef="monto">
               <th mat-header-cell *matHeaderCellDef> Monto </th>
-              <td mat-cell *matCellDef="let element"> </td>
+              <td mat-cell *matCellDef="let element">{{ element.monto | number:'1.2-2' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="moneda">
               <th mat-header-cell *matHeaderCellDef> Moneda </th>
-              <td mat-cell *matCellDef="let element"> </td>
+              <td mat-cell *matCellDef="let element">{{ element.moneda }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="accion">
+              <th mat-header-cell *matHeaderCellDef> Accion </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="eliminarRecargo(element.codigo);">
+                  <span><i class="fa fa-minus" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; Eliminar</span>
+                </button>
+              </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

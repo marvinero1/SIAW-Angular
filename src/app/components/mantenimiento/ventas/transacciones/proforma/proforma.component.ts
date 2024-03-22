@@ -40,6 +40,7 @@ import { ServicioTransfeAProformaService } from '../../modal-transfe-proforma/se
 import { ModalEstadoPagoClienteComponent } from '../../modal-estado-pago-cliente/modal-estado-pago-cliente.component';
 import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
 import { ModalRecargosComponent } from '../../modal-recargos/modal-recargos.component';
+import { ModalDesctExtrasComponent } from '../../modal-desct-extras/modal-desct-extras.component';
 
 @Component({
   selector: 'app-proforma',
@@ -408,21 +409,41 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       //ACA LLEGA EL ITEM 
       //this.getEmpaqueItem(this.codigo_item_catalogo);
       this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_sin_procesar);
-
-
     });
     //
 
+    //ItemSeleccionMultiple
+    this.itemservice.disparadorDeItemsSeleccionadosAProforma.subscribe(data => {
+      console.log("Recibiendo Item Selecionado Multiple: ", data);
+      // this.item_seleccionados_catalogo_matriz_sin_procesar = data;
+      // ACA LLEGA EL ITEM 
+      // this.getEmpaqueItem(this.codigo_item_catalogo);
+      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_sin_procesar);
+    });
+    //
+
+
+
+    //CATALOGO F4 ITEMS
+    //ItemElejidoCatalogoF4SinProcesar
+    this.itemservice.disparadorDeItemsSeleccionados.subscribe(data => {
+      console.log("Recibiendo Item Sin Procesar De Catalogo F4: ", data);
+      //this.item_seleccionados_catalogo_matriz_sin_procesar = data;
+      //this.getEmpaqueItem(this.codigo_item_catalogo);
+
+      this.dataSource = new MatTableDataSource(data);
+    });
+    //
     //ItemSinProcesarCatalogo
     this.itemservice.disparadorDeItemsCatalogo.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar de Catalogo: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo = data;
-
       //concatenar el array de la matriz con el del catalogo, asi todos los pedidos llegan al mismo array
       console.log(this.item_seleccionados_catalogo_matriz);//aca el item solito que se eligio en el catalogo
       this.infoItemTotalSubTotal(this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo);
     });
     //
+    //FIN CATALOGO F4 ITMES
 
     //ItemProcesarSubTotal
     this.itemservice.disparadorDeItemsSeleccionadosProcesadosdelSubTotal.subscribe(data => {
@@ -440,8 +461,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.servicioCliente.disparadorDeClientes.subscribe(data => {
       console.log("Recibiendo Cliente: ", data);
       this.codigo_cliente_catalogo = data.cliente.codigo;
-      this.codigo_cliente_catalogo_direccion = data.direccion;
-      console.log(this.codigo_cliente_catalogo_direccion);
 
       this.getClientByID(this.codigo_cliente_catalogo);
       this.getDireccionCentral(this.codigo_cliente_catalogo);
@@ -700,7 +719,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   infoItemTotalSubTotal(array) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/false", array)
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, array)
       .subscribe({
         next: (datav) => {
           console.log('data', datav);
@@ -1012,12 +1031,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.whatsapp_cliente = this.cliente.vivienda.celular;
           this.latitud_cliente = this.cliente.vivienda.latitud;
           this.longitud_cliente = this.cliente.vivienda.longitud;
-          this.central_ubicacion = this.cliente.vivienda.central
+          this.central_ubicacion = this.cliente.vivienda.central;
 
-          this.obs = this.cliente.vivienda.obs
-
-
-          console.log(this.latitud_cliente, this.longitud_cliente);
+          this.obs = this.cliente.vivienda.obs;
         },
 
         error: (err: any) => {
@@ -1162,7 +1178,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.direccion_central = datav;
           this.direccion_central_input = this.direccion_central.direccion;
-          console.log(this.direccion_central);
+          //console.log(this.direccion_central);
         },
 
         error: (err: any) => {
@@ -2131,9 +2147,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   modalDescuentoEspecial(): void {
-    this.dialog.open(ModalDescuentosComponent, {
+    this.dialog.open(ModalDesctExtrasComponent, {
       width: 'auto',
       height: 'auto',
+      data: {
+        precio_venta: this.cod_precio_venta_modal_codigo,
+      }
     });
   }
 
@@ -2169,7 +2188,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: "",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        itemss: this.item_seleccionados_catalogo_matriz_sin_procesar
+        itemss: this.item_seleccionados_catalogo_matriz_sin_procesar,
+        descuento_nivel: this.desct_nivel_actual,
       },
     });
   }
@@ -2265,6 +2285,25 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         id_sol_desct: this.id_solicitud_desct,
         nro_id_sol_desct: this.numero_id_solicitud_desct,
         cliente_real: this.codigo_cliente_catalogo_real === undefined ? this.codigo_cliente : this.codigo_cliente_catalogo_real,
+      },
+    });
+  }
+
+  limpiarEtiqueta() {
+    this.toastr.success("Etiqueta Limpiada");
+
+    this.dialog.open(ModalEtiquetaComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: {
+        cod_cliente: 0,
+        id_proforma: "",
+        numero_id: "",
+        nom_cliente: "",
+        desc_linea: "",
+        id_sol_desct: "",
+        nro_id_sol_desct: "",
+        cliente_real: "",
       },
     });
   }
