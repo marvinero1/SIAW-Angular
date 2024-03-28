@@ -193,7 +193,8 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Preparación </u></span>
             </div>
             <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;" [(ngModel)]="preparacion"
-              formControlName="preparacion" required>
+              formControlName="preparacion" [class.is-invalid]="f.preparacion.invalid && (f.preparacion.dirty ||
+              f.preparacion.touched)" required>
               <mat-option value="NORMAL">NORMAL</mat-option>
               <mat-option value="URGENTE">URGENTE</mat-option>
               <mat-option value=FINAL>FINAL</mat-option>
@@ -491,18 +492,19 @@
           <mat-tab label="Detalle del Pedido">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
               style="padding: 0 1px 0 19px !important;" multiTemplateDataRows matSort>
-              <!-- accion Column -->
-              <!-- <ng-container matColumnDef="accion">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> x </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center !important; padding: 0 0px 0 0px !important;color:
-                  red;"></td>
-              </ng-container> -->
 
               <!-- orden Column -->
               <ng-container matColumnDef="orden">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Orden </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ orden_creciente }} </td>
+                <th mat-header-cell *matHeaderCellDef
+                  style="padding: 0 0px 0 0px !important;text-align: center !important;"> Orden
+                </th>
+                <td mat-cell *matCellDef="let element" class="td"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+                  <span style="width: 50%; float: left;"><i class="fa fa-trash"
+                      style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer"
+                      (click)="eliminarItemTabla(element.coditem);"></i></span>
+                  <span style="width: 50%; float: right;"> {{ orden_creciente + 1}} </span>
+                </td>
               </ng-container>
 
               <!-- Item Column -->
@@ -861,12 +863,12 @@
                               style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>T. Entrega</u></span>
                           </div>
                           <input type="text" class="form-control form-control-sm"
-                            style="margin-left: 5px;background-color: #ffff00;color: black;" placeholder="0.00"
+                            style="margin-left: 5px;background-color: #ffff00;color: black;" placeholder="ENTREGAR"
                             formControlName="tipoentrega" [(ngModel)]="tipoentrega">
 
                           <div class="input-group-append">
                             <button class="btn btn-outline-primary form-control-sm" type="button"
-                              style="border-color: #093070;"><i class="fa fa-cog"></i>
+                              style="border-color: #093070;" (click)="mandarEntregar()"><i class="fa fa-cog"></i>
                             </button>
                           </div>
                         </div>

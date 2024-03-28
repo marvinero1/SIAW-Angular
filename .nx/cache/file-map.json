@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "6919366993225014654"
+        "hash": "16419590721192505182"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "15669338947943620189"
+        "hash": "7479951740618848327"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "3877755854355423141"
+        "hash": "2787986941297846625"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -4289,11 +4289,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.html",
-        "hash": "7302599205493767184"
+        "hash": "9509317905633247362"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.scss",
-        "hash": "11115872785796863257"
+        "hash": "12436366191961916872"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.spec.ts",
@@ -4301,7 +4301,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.ts",
-        "hash": "9191507120412553845"
+        "hash": "9757003522000734371"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/precios-permitido-desct/precios-permitido-desct.component.html",
@@ -4373,7 +4373,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "17014682980694929817"
+        "hash": "16533137790185599943"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
@@ -4389,7 +4389,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "2722715610541764916"
+        "hash": "7883502020784788799"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -5185,7 +5185,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "12748284739460204879"
+        "hash": "2068147580232499965"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5197,7 +5197,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13699766083616439379"
+        "hash": "16621671780711144096"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

@@ -6,7 +6,6 @@ import { ModalDescuentosComponent } from '../../descuentos-especiales/modal-desc
 import { DescuentoService } from '../../serviciodescuento/descuento.service';
 import { ServicioprecioventaService } from '../../servicioprecioventa/servicioprecioventa.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
-import { MatrizItemsComponent } from '../matriz-items.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -30,6 +29,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   dataItemSeleccionados_get: any = [];
   cod_descuento_modal: any = [];
   cod_precio_venta_modal: any = [];
+  array_items_completo: [];
 
   cantidad_input: number;
 
@@ -50,6 +50,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   fecha_get: any;
   codmoneda_get: any;
   desct_nivel_get: any;
+  items_get_carrito: [];
+  tamanio_carrito: any;
 
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ItemSeleccionCantidadComponent>,
     public itemservice: ItemServiceService, private spinner: NgxSpinnerService,
@@ -58,7 +60,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService,
-    @Inject(MAT_DIALOG_DATA) public desct_nivel: any) {
+    @Inject(MAT_DIALOG_DATA) public desct_nivel: any, @Inject(MAT_DIALOG_DATA) public items: any) {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
@@ -75,6 +77,10 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
     this.desct_nivel_get = desct_nivel.desct_nivel;
+    this.items_get_carrito = items.items;
+    this.tamanio_carrito = this.items_get_carrito.length;
+
+    console.log("Items de carrito: " + JSON.stringify(this.items_get_carrito), "Tamanio: " + this.tamanio_carrito)
   }
 
   ngOnInit() {
@@ -85,7 +91,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
       console.log("Recibiendo Descuento: ", data);
       this.cod_descuento_modal = data.descuento;
-      this.cod_descuento_modal_codigo = this.cod_descuento_modal.codigo
+      this.cod_descuento_modal_codigo = this.cod_descuento_modal.codigo;
+      this.cod_precio_venta_modal_codigo = data.precio_sugerido;
     });
     // findescuentos
 
@@ -93,7 +100,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
-      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo
+      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
+      this.cod_descuento_modal_codigo = data.precio_sugerido;
     });
     // fin_precio_venta
   }
@@ -185,7 +193,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   }
 
   agregarItems() {
-    let a = this.dataItemSeleccionados_get.map((elemento) => {
+    let a;
+    const nuevosItems: [] = this.dataItemSeleccionados_get.map((elemento) => {
       return {
         coditem: elemento,
         tarifa: this.tarifa_get,
@@ -198,16 +207,23 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
-      }
+      };
     });
 
-    console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(a));
+    console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(nuevosItems));
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, a)
+    const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+
+    this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, nuevosItems)
       .subscribe({
         next: (datav) => {
-          this.items_post = datav;
+          if (this.tamanio_carrito > 0) {
+            console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+            a = this.items_post.concat(datav, this.items_get_carrito);
+          } else {
+            console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+            a = this.items_post = datav;
+          }
           console.log('data', datav);
 
           this.spinner.show();
@@ -215,17 +231,19 @@ export class ItemSeleccionCantidadComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-
         error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => {
-          this.enviarItemsAlServicio(this.items_post);
+          // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
+          this.enviarItemsAlServicio(a);
           this.dialogRef.close();
           // this.num_hoja = 0;
         }
-      })
+      });
   }
+
+
 
   enviarItemsAlServicio(items: any[]) {
     this.itemservice.enviarItemsDeSeleccionAMatriz(items);

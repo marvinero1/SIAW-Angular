@@ -25,6 +25,8 @@ export class ModalDescuentosComponent implements OnInit {
 
   descuentos_get: any = [];
   public descuento_view: any = [];
+
+  usuario_logueado: any;
   userConn: any;
 
   displayedColumns = ['codigo', 'descripcion'];
@@ -45,6 +47,7 @@ export class ModalDescuentosComponent implements OnInit {
     public servicioDescuento: DescuentoService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
   }
 
   ngOnInit() {
@@ -85,12 +88,28 @@ export class ModalDescuentosComponent implements OnInit {
   getDescuentobyId(element) {
     this.descuento_view = element;
     console.log(element);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getSugerenciaTarfromDesc/";
+    return this.api.getAll('/venta/transac/veproforma/getSugerenciaTarfromDesc/' + this.userConn + "/" + element.codigo + "/" + this.usuario_logueado)
+      .subscribe({
+        next: (datav) => {
+          this.descuentos_get = datav;
+          console.log(this.descuentos_get);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   mandarDescuento() {
     this.servicioDescuento.disparadorDeDescuentos.emit({
       descuento: this.descuento_view,
+      precio_sugerido: this.descuentos_get.codTarifa,
     });
+
     this.close();
   }
 

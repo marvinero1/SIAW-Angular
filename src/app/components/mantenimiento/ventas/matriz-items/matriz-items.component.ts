@@ -986,6 +986,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         desct_nivel: this.descuento_nivel_get,
+        items: this.array_items_completo,
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
       },
     });
