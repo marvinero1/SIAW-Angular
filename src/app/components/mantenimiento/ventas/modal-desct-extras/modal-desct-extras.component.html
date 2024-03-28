@@ -9,28 +9,32 @@
         <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; OK</span>
       </button>
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="anadirDescuento();">
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
         <span><i class="fa fa-plus" aria-hidden="true" style="color: #ffc107;"></i>&nbsp; Añadir </span>
       </button>
 
       <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></button>
-    </div><br>
+    </div>
 
     <div class="row">
       <div class="col-md">
         <span style="margin-right: 25px;"><u>Precio</u></span>
-        <input type="text" style="width: 15% !important;" [(ngModel)]="precio_venta_prof" [disabled]="true">
+        <input type="text" style="width: 15% !important;" [disabled]="true">
       </div>
     </div>
 
     <div class="row">
       <div class="col-md">
         <span style="margin-right: 21px;"><u>Código</u></span>
-        <input type="text" style="width: 15% !important;" [readOnly]="true">
+        <select matNativeControl>
+          <option value="" selected></option>
+          <option *ngFor="let descuento_segun_tarifas of descuento_segun_tarifa">
+            {{ descuento_segun_tarifas.codigo }} - {{ descuento_segun_tarifas.descripcion }}
+          </option>
+        </select>
 
-        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
-          <span> <i class="fa fa-search" aria-hidden="true" style="color: #2015e2e1;"></i> </span>
-        </button>
+
+
         <span></span>
       </div>
     </div>

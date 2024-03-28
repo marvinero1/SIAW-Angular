@@ -100,7 +100,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   almacenes_saldos: any = [];
   empaquesItem: any = [];
   data_almacen_local: any = [];
-  array_items_seleccionados: any = [];
+  array_items_seleccionado: any = [];
   array_items_proforma_matriz: any = [];
   array_items_seleccionados_length: number = 0;
   array_items_completo: any = [];
@@ -176,10 +176,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
       "FECHA: " + this.fecha_get,
       "CODMONEDA: " + this.codmoneda_get,
+      "DESC NIVEL: " + this.descuento_nivel_get,
     );
 
-    console.log(this.num_hoja);
-
+    //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
 
     if (this.num_hoja === undefined || this.num_hoja === 0) {
@@ -219,7 +219,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     });
 
     //Items seleccionados
-    this.itemservice.disparadorDeItemsSeleccionadosAProforma.subscribe(datav => {
+    this.itemservice.disparadorDeItemsSeleccionadosAMatriz.subscribe(datav => {
       console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
       this.item_seleccionados_catalogo_matriz = datav;
 
@@ -241,7 +241,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //
 
     this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length;
-    this.array_items_seleccionados_length = this.array_items_seleccionados.length;
+    this.array_items_seleccionados_length = this.array_items_seleccionado.length;
 
     console.log(this.tamanio_lista_item_pedido, this.array_items_seleccionados_length);
 
@@ -264,6 +264,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     if (this.codalmacen_get === '') {
       this.validacion = true;
       this.messages.push("SELECCIONE ALMACEN");
+    }
+    if (this.descuento_nivel_get === undefined) {
+      this.validacion = true;
+      this.messages.push("SELECCIONE NIVEL DE DESCT.");
     }
 
     // Mostramos los mensajes de validación concatenados
@@ -614,20 +618,22 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
 
-    this.array_items_seleccionados;
+    this.array_items_seleccionado;
     let array = {
       coditem: cleanText,
       tarifa: this.tarifa_get,
       descuento: this.descuento_get,
       cantidad_pedida: this.pedido,
       cantidad: this.cantidad === undefined ? this.pedido : this.cantidad,
-      opcion_nivel: "",
+      opcion_nivel: "ACTUAL",
       codalmacen: this.codalmacen_get,
       codcliente: this.codcliente_get === undefined ? "0" : this.codcliente_get,
       desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
     };
+
+    //ARRAY DE 1 ITEM SELECCIONADO
     console.log(array);
 
     let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
@@ -655,31 +661,44 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.array_items_seleccionados_length === undefined) {
-      this.array_items_seleccionados.push(array);
-    }
+    // //CUANDO NO HAY NADA EN EL CARRITO Y ES EL PRIMER ITEM SE AGREGA ACA,
+    // //Y SI YA TIENE ITEMS SE TIENEN QUE IR AGREGANDO AL ARRAY SIN BORRARSE
+    // if (this.array_items_seleccionados_length === undefined) {
+
+    //UNA VEZ QUE EL ITEM PASA LAS VALIDACIONES SE AGREGA AL ARRAY array_items_seleccionado
+
+    // }
     // else {
     //   this.array_items_proforma_matriz.push(array);
     // }
 
+    this.array_items_seleccionado.push(array);
+
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM
-    this.array_items_completo = this.array_items_seleccionados.concat(this.array_items_proforma_matriz);
+    //this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
+
+    //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
+    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple,
+      this.array_items_proforma_matriz);
+
 
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-    console.log("ITEM SELECCIONADO UNITARIO:" + JSON.stringify(this.array_items_seleccionados), "ITEM'S SELECCION MULTIPLE:" + JSON.stringify(this.array_items_proforma_matriz));
-    console.log("ARRAY CONCATENADO: " + this.array_items_completo);
+
+    console.log("ITEM SELECCIONADO UNITARIO:" + JSON.stringify(this.array_items_seleccionado), "ITEM'S SELECCION MULTIPLE:" + JSON.stringify(this.array_items_proforma_matriz));
+    //console.log("ARRAY CONCATENADO: " + JSON.stringify(this.array_items_completo));
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
-    this.item_seleccionados_catalogo_matriz = items_seleccionados_seleccion;
-
     //aca se agregan los items de seleccion multiple al carrito ya mapeado
     this.array_items_completo_multiple = items_seleccionados_seleccion;
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
-    this.array_items_completo = this.array_items_seleccionados.concat(this.array_items_completo_multiple);
+    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
+
+    //si el carrito ya tiene items concatenarlo a la nueva carga de items
+
 
     //aca se pone el numerito que indica el total de los items que hay en el carrito
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
@@ -690,18 +709,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  eliminarItemArrayPedido(item) {
-    console.log("Item a eliminar:", item);
-    this.array_items_completo = this.array_items_completo.filter(i => i.coditem !== item);
-    this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-    this.array_items_proforma_matriz = this.array_items_proforma_matriz.filter(i => i.coditem !== item);
-    this.array_items_seleccionados = this.array_items_seleccionados.filter(i => i.coditem !== item);
-  }
+
+
+
+
 
   mandarItemaProforma() {
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
+    console.log(this.array_items_completo);
+
 
     let a = this.array_items_completo.map((elemento) => {
       console.log(elemento);
@@ -736,54 +754,51 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         },
         complete: () => {
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
-          this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
+          this.enviarItemsAlServicio(this.items_post.concat(this.array_items_proforma_matriz), this.array_items_completo);
           this.dialogRef.close();
           this.num_hoja = 0;
         }
       })
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    this.itemservice.enviarItemsDeSeleccionAMatriz(items);
+    console.log("Items del carrito disque procesados: " + items);
+    console.log("Items del carrito sin procesar: " + items_sin_proceso);
 
+    this.itemservice.enviarItemCompletoAProforma(items);
     this.itemservice.enviarItemsSinProcesar(items_sin_proceso);
   }
+
+  eliminarItemArrayPedido(item) {
+    console.log("Item a eliminar:", item);
+    this.array_items_completo = this.array_items_completo.filter(i => i.coditem !== item);
+    this.tamanio_lista_item_pedido = this.array_items_completo.length;
+
+    this.array_items_proforma_matriz = this.array_items_proforma_matriz.filter(i => i.coditem !== item);
+    this.array_items_seleccionado = this.array_items_seleccionado.filter(i => i.coditem !== item);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   limpiarMatriz() {
     this.data_almacen_local = [];
     this.item_obtenido = [];
     this.empaquesItem = [];
     this.almacenes_saldos = [];
-    this.array_items_seleccionados = [];
+    this.array_items_seleccionado = [];
     this.array_items_completo = [];
 
     this.item_set = "";
@@ -970,6 +985,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
+        desct_nivel: this.descuento_nivel_get,
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
       },
     });

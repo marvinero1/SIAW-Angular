@@ -9,6 +9,7 @@ import { RecargoServicioService } from '../recargo-documento/service-recargo/rec
 import { DatePipe } from '@angular/common';
 import { FormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { RecargoToProformaService } from './recargo-to-proforma-services/recargo-to-proforma.service';
 
 @Component({
   selector: 'app-modal-recargos',
@@ -35,7 +36,7 @@ export class ModalRecargosComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalRecargosComponent>, private toastr: ToastrService,
-    public servicioRecargo: RecargoServicioService) {
+    public servicioRecargo: RecargoServicioService, public servicio_recargo_proforma: RecargoToProformaService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
@@ -79,16 +80,34 @@ export class ModalRecargosComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
+
         complete: () => {
           if (this.confirmacion_get_recargo === true) {
-            this.array_de_recargos.push(a);
-            this.dataSource = new MatTableDataSource(this.array_de_recargos);
-            console.log(this.array_de_recargos);
+            const existe = this.array_de_recargos.find(item => item.codigo === a.codigo);
+            if (!existe) {
+              this.array_de_recargos.push(a);
+              this.dataSource = new MatTableDataSource(this.array_de_recargos);
+              console.log(this.array_de_recargos);
+            } else {
+              this.toastr.error('El Recargo ya esta agregado');
+            }
           } else {
             window.confirm(this.confirmacion_get_recargo.resp)
           }
         }
       })
+  }
+
+  sendArrayRecargos() {
+    let a = this.array_de_recargos.length;
+    if (a > 0) {
+      this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.emit({
+        recargo_array: this.array_de_recargos,
+      });
+      this.close();
+    } else {
+      this.toastr.warning("No hay Recargos seleccionados");
+    }
   }
 
   eliminarRecargo(codigo) {

@@ -10,8 +10,9 @@ export class ItemServiceService {
   @Output() disparadorDeItemsSeleccionados: EventEmitter<any[]> = new EventEmitter();
   @Output() disparadorDeItemsSeleccionadosSinProcesar: EventEmitter<any[]> = new EventEmitter();
   @Output() disparadorDeItemsSeleccionadosProcesadosdelSubTotal: EventEmitter<any[]> = new EventEmitter();
-  @Output() disparadorDeItemsSeleccionadosAProforma: EventEmitter<any[]> = new EventEmitter();
-
+  @Output() disparadorDeItemsYaMapeadosAProforma: EventEmitter<any[]> = new EventEmitter();
+  @Output() disparadorDeItemsYaMapeadosAProformaF4: EventEmitter<any[]> = new EventEmitter();
+  @Output() disparadorDeItemsSeleccionadosAMatriz: EventEmitter<any[]> = new EventEmitter();
 
   constructor() {
 
@@ -34,6 +35,14 @@ export class ItemServiceService {
   }
 
   enviarItemsDeSeleccionAMatriz(items: any[]) {
-    this.disparadorDeItemsSeleccionadosAProforma.emit(items);
+    this.disparadorDeItemsSeleccionadosAMatriz.emit(items);
+  }
+
+  enviarItemCompletoAProforma(items: any[]) {
+    this.disparadorDeItemsYaMapeadosAProforma.emit(items);
+  }
+
+  enviarItemCompletoAProformaF4(items: any[]) {
+    this.disparadorDeItemsYaMapeadosAProformaF4.emit(items);
   }
 }

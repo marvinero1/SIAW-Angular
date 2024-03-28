@@ -42,6 +42,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   userConn: any;
   value: any;
   usuario_logueado: string = "";
+  agencia: any;
   btn_confirmar: boolean = false;
   validacion: boolean = false;
 
@@ -79,9 +80,11 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    // if (this.BD_storage.bd === 'PE') {
-    //   this.BD_storage.bd = '311'
-    // }
+    this.agencia = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+
+    if (this.agencia === 'Loc') {
+      this.agencia = '311'
+    }
 
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
@@ -90,7 +93,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
-    this.array_items_proforma_matriz = itemss.itemss;
+    //this.array_items_proforma_matriz = itemss.itemss;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
 
     console.log(
@@ -103,8 +106,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
       "CODMONEDA: " + this.codmoneda_get,
       "DESCT. NIVEL: " + this.descuento_nivel_get,
     );
-
-    console.log(this.array_items_proforma_matriz);
   }
 
   ngOnInit() {
@@ -112,7 +113,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
 
     // Realizamos todas las validaciones
@@ -127,6 +127,10 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     if (this.codalmacen_get === '') {
       this.validacion = true;
       this.messages.push("SELECCIONE ALMACEN");
+    }
+    if (this.descuento_nivel_get === undefined) {
+      this.validacion = true;
+      this.messages.push("SELECCIONE NIVEL DE DESCT.");
     }
 
     // Mostramos los mensajes de validación concatenados
@@ -178,10 +182,10 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   }
 
   getinMatrizByID(value) {
-    console.log(value);
+    console.log(value.codigo);
 
-    this.item_view = value;
-    const cleanText = value.replace(/\s+/g, "").trim();
+    this.item_view = value.codigo;
+    const cleanText = this.item_view.replace(/\s+/g, "").trim();
 
     this.value = cleanText.toUpperCase();
     console.log(this.value);
@@ -240,23 +244,27 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   }
 
   mandarItem(item_codigo) {
+    console.log(item_codigo);
+
     let dataItem: any = {
       coditem: item_codigo,
       tarifa: this.tarifa_get,
       descuento: this.descuento_get,
       cantidad_pedida: 0,
       cantidad: 0,
-      opcion_nivel: "",
+      opcion_nivel: this.descuento_nivel_get,
       codalmacen: this.codalmacen_get,
-      codcliente: this.codcliente_get === undefined ? "0" : this.codcliente_get,
+      codcliente: this.codcliente_get,
       desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
     };
 
+    console.log(dataItem);
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getItemMatriz_Anadir";
     return this.api.getAll(
-      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/311/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
+      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
       .subscribe({
         next: (datav) => {
           this.itemParaTabla = datav;
@@ -268,54 +276,19 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
         },
 
         complete: () => {
-          this.array_items_proforma_matriz.push(dataItem);
-          this.array_items_proforma_matriz_concat = this.array_items_proforma_matriz;
-          this.enviarItemsAlServicio([this.itemParaTabla], this.array_items_proforma_matriz_concat);
+          // this.array_items_proforma_matriz.push(dataItem);
+          // this.array_items_proforma_matriz_concat = this.array_items_proforma_matriz;
+          this.enviarItemsAlServicio(this.itemParaTabla, dataItem);
           this.close();
         }
       })
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    this.servicioItem.enviarItems(items);
+    this.servicioItem.enviarItemCompletoAProformaF4(items);
 
     this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
   }
-
-  // mandarItem(item_view){
-  //   console.log(item_view);
-
-  //   this.servicioItem.disparadorDeItems.emit({
-  //     item:item_view.codigo,
-  //     cantidad: 0,
-  //     pedido:0,
-  //   });
-
-  //  this.close();
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   close() {
     this.dialogRef.close();

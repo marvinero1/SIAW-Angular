@@ -220,7 +220,7 @@
           <span matListItemTitle><strong>ULTIMAS COMPRAS</strong></span>
           <mat-list-item *ngFor="let ult_comprass of ult_compras">
             <span>{{ ult_comprass.id }} - {{ ult_comprass.codigo }} - {{ ult_comprass.numeroid }} -
-              {{ ult_comprass.tipo }} - {{ ult_comprass.fecha }}</span>
+              {{ ult_comprass.tipo }} - {{ ult_comprass.fecha | date: 'dd/MM/yyyy' }}</span>
           </mat-list-item>
         </mat-list>
       </div>

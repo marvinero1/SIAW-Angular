@@ -1,6 +1,7 @@
 .mat-mdc-list-base{
     --mdc-list-list-item-two-line-container-height: 48px !important;
 }
+
 .tittle{
     text-align: center;
     color: black;
@@ -10,5 +11,9 @@
 ::ng-deep {
     .mat-mdc-list-base{
         --mdc-list-list-item-one-line-container-height: 20px !important;
+    }
+    
+    .mdc-list-item--with-two-lines .mdc-list-item__primary-text, .mdc-list-item--with-three-lines .mdc-list-item__primary-text{
+        margin-bottom: -25px !important;
     }
 }

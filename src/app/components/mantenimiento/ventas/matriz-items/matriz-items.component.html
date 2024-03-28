@@ -54,14 +54,31 @@
                       </th>
                     </tr>
 
-                    <tbody *ngFor="let array_items_seleccionadoss of array_items_completo">
-                      <tr>
-                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.coditem }}</td>
-                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.cantidad_pedida }}</td>
-                        <td style="border: 1px solid #ffc107;">{{ array_items_seleccionadoss.cantidad }}</td>
+                    <tbody>
+                      <tr *ngFor="let array_items_completos of array_items_completo">
+                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
+                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
+                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
                         <td>
                           <i class="fa fa-trash" aria-hidden="true" color="danger"
-                            (click)="eliminarItemArrayPedido(array_items_seleccionadoss.coditem);"
+                            (click)="eliminarItemArrayPedido(array_items_completos.coditem);"
+                            style="font-size: 0.5rem; color: red;"></i>
+                        </td>
+                      </tr>
+
+                      <hr>
+
+                      <span>Items ya en carrito</span>
+                      <tr *ngFor="let array_items_proforma_matrizs of array_items_proforma_matriz">
+                        <td style="border: 1px solid #ffc107;">
+                          {{ array_items_proforma_matrizs.coditem }}</td>
+                        <td style="border: 1px solid #ffc107;">
+                          {{ array_items_proforma_matrizs.cantidad_pedida }}</td>
+                        <td style="border: 1px solid #ffc107;">
+                          {{ array_items_proforma_matrizs.cantidad }}</td>
+                        <td>
+                          <i class="fa fa-trash" aria-hidden="true" color="danger"
+                            (click)="eliminarItemArrayPedido(array_items_proforma_matrizs.coditem);"
                             style="font-size: 0.5rem; color: red;"></i>
                         </td>
                       </tr>

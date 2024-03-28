@@ -41,6 +41,7 @@ import { ModalEstadoPagoClienteComponent } from '../../modal-estado-pago-cliente
 import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
 import { ModalRecargosComponent } from '../../modal-recargos/modal-recargos.component';
 import { ModalDesctExtrasComponent } from '../../modal-desct-extras/modal-desct-extras.component';
+import { RecargoToProformaService } from '../../modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service';
 
 @Component({
   selector: 'app-proforma',
@@ -169,12 +170,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   arr: any[] = [];
   itemTabla: any = [];
   cliente_create: any = [];
+
   item_seleccionados_catalogo_matriz: any = [];
   item_seleccionados_catalogo_matriz_codigo: any;
   item_seleccionados_catalogo_matriz_copied = [];
   item_seleccionados_catalogo_matriz_false: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar_catalogo: any = [];
+  array_items_carrito_y_f4_catalogo: any = [];
+
   id_tipo: any = [];
   usuarioLogueado: any = [];
   usuario_creado_save: any = [];
@@ -297,6 +301,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   proforma_transferida: any = [];
   cotizacion_transferida: any = [];
+  recargo_de_recargos: any = [];
 
   valorPredeterminadoPreparacion = "NORMAL";
   valorPredeterminadoTipoPago = "CONTADO";
@@ -335,7 +340,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private renderer: Renderer2,
     private _formBuilder: FormBuilder, public servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
     private toastr: ToastrService, private spinner: NgxSpinnerService, public log_module: LogService, public saldoItemServices: SaldoItemMatrizService,
-    public _snackBar: MatSnackBar, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService) {
+    public _snackBar: MatSnackBar, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
+    public servicio_recargo_proforma: RecargoToProformaService) {
 
     this.FormularioData = this.createForm();
 
@@ -402,54 +408,74 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
-    //ItemSinProcesar
+
+
+
+
+
+
+
+
+
+
+    //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
+    this.itemservice.disparadorDeItemsYaMapeadosAProforma.subscribe(data_carrito => {
+      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
+      this.array_items_carrito_y_f4_catalogo = data_carrito
+      this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
+
+
+      console.log("ARRAY COMPLETO DE MATRIZ Y F4: " + this.array_items_carrito_y_f4_catalogo);
+
+      //ACA SE DIBUJA LA TABLA CON LA INFO DEL CARRITO DE COMPRAS YA CON LOS ITEM TRABAJADOS EN EL BACKEND
+      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+    });
+    //
+
+    //Item Sin Procesar DEL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
-      //ACA LLEGA EL ITEM 
-      //this.getEmpaqueItem(this.codigo_item_catalogo);
-      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_sin_procesar);
     });
     //
-
-    //ItemSeleccionMultiple
-    this.itemservice.disparadorDeItemsSeleccionadosAProforma.subscribe(data => {
-      console.log("Recibiendo Item Selecionado Multiple: ", data);
-      // this.item_seleccionados_catalogo_matriz_sin_procesar = data;
-      // ACA LLEGA EL ITEM 
-      // this.getEmpaqueItem(this.codigo_item_catalogo);
-      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_sin_procesar);
-    });
-    //
-
-
 
     //CATALOGO F4 ITEMS
-    //ItemElejidoCatalogoF4SinProcesar
-    this.itemservice.disparadorDeItemsSeleccionados.subscribe(data => {
-      console.log("Recibiendo Item Sin Procesar De Catalogo F4: ", data);
-      //this.item_seleccionados_catalogo_matriz_sin_procesar = data;
-      //this.getEmpaqueItem(this.codigo_item_catalogo);
+    //ItemElejidoCatalogoF4Procesados
+    this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.subscribe(data => {
+      console.log("Recibiendo Item Procesados De Catalogo F4: ", data);
+      this.item_seleccionados_catalogo_matriz = data;
+      this.array_items_carrito_y_f4_catalogo.push(this.item_seleccionados_catalogo_matriz);
 
-      this.dataSource = new MatTableDataSource(data);
+      console.log("ARRAY COMPLETO DE MATRIZ Y F4: " + this.array_items_carrito_y_f4_catalogo);
+
+      //ACA SE DIBUJA LA TABLA CON LA INFO DEL CARRITO DE COMPRAS YA CON LOS ITEM TRABAJADOS EN EL BACKEND
+      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
     });
     //
-    //ItemSinProcesarCatalogo
+
+    //ItemSinProcesarCatalogoF4
     this.itemservice.disparadorDeItemsCatalogo.subscribe(data => {
-      console.log("Recibiendo Item Sin Procesar de Catalogo: ", data);
+      console.log("Recibiendo Item Sin Procesar de Catalogo F4: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo = data;
-      //concatenar el array de la matriz con el del catalogo, asi todos los pedidos llegan al mismo array
-      console.log(this.item_seleccionados_catalogo_matriz);//aca el item solito que se eligio en el catalogo
-      this.infoItemTotalSubTotal(this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo);
     });
-    //
     //FIN CATALOGO F4 ITMES
+
+
+
+
+
+
+
+
+
+
+
 
     //ItemProcesarSubTotal
     this.itemservice.disparadorDeItemsSeleccionadosProcesadosdelSubTotal.subscribe(data => {
-      console.log("Recibiendo Item Procesados del SubTotal: ", data);
-      this.item_seleccionados_catalogo_matriz = data;
-      this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
+      console.log("Recibiendo Item Procesados del SubTotal: ", data.concat(this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo));
+      // this.item_seleccionados_catalogo_matriz = data.concat(this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo);
+      // this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
 
       // //concatenar el array de la matriz con el del catalogo, asi todos los pedidos llegan al mismo array
       // console.log(this.item_seleccionados_catalogo_matriz);//aca el item solito que se eligio en el catalogo
@@ -511,6 +537,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
+
     //SALDOS ITEM PIE DE PAGINA
     this.saldoItemServices.disparadorDeSaldoAlm1.subscribe(data => {
       console.log("Recibiendo Saldo Total: ", data);
@@ -537,6 +564,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.saldo_modal_total_5 = data.saldo5;
     });
     //FIN SALDOS ITEM PIE DE PAGINA
+
+
+    //RECARGOS
+    this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.subscribe(data => {
+      console.log("Recibiendo Recargo: ", data);
+      this.recargo_de_recargos = data;
+    });
+    //FIN DE RECARGOS
   }
 
   ngAfterViewInit() {
@@ -1766,7 +1801,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.veproforma_valida = {};
     this.veproforma_anticipo = {};
     this.vedesextraprof = {};
-    this.verecargoprof = {};
+    this.verecargoprof = this.recargo_de_recargos;
     this.veproforma_iva = [{
       "codproforma": 0,
       "porceniva": 0,
@@ -2105,6 +2140,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+
+
+
+
+
+
+
   modalTipoID(): void {
     this.dialog.open(ModalIdtipoComponent, {
       width: 'auto',
@@ -2150,9 +2192,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalDesctExtrasComponent, {
       width: 'auto',
       height: 'auto',
-      data: {
-        precio_venta: this.cod_precio_venta_modal_codigo,
-      }
     });
   }
 
@@ -2169,7 +2208,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: "",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: this.item_seleccionados_catalogo_matriz_sin_procesar,
+        items: this.array_items_carrito_y_f4_catalogo,
         descuento_nivel: this.desct_nivel_actual,
       }
     });
@@ -2188,7 +2227,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: "",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        itemss: this.item_seleccionados_catalogo_matriz_sin_procesar,
+        //itemss: this.item_seleccionados_catalogo_matriz_sin_procesar,
         descuento_nivel: this.desct_nivel_actual,
       },
     });

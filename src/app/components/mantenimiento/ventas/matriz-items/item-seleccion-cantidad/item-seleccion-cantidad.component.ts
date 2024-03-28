@@ -49,6 +49,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   desc_linea_seg_solicitud_get: any;
   fecha_get: any;
   codmoneda_get: any;
+  desct_nivel_get: any;
 
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ItemSeleccionCantidadComponent>,
     public itemservice: ItemServiceService, private spinner: NgxSpinnerService,
@@ -56,7 +57,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
-    @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService) {
+    @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService,
+    @Inject(MAT_DIALOG_DATA) public desct_nivel: any) {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
@@ -72,6 +74,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
+    this.desct_nivel_get = desct_nivel.desct_nivel;
   }
 
   ngOnInit() {
@@ -190,7 +193,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         cantidad_pedida: this.cantidad_input,
         cantidad: this.cantidad_input,
         codcliente: this.codcliente_get,
-        opcion_nivel: "ACTUAL",
+        opcion_nivel: this.desct_nivel_get,
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
