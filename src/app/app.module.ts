@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
-import { LocationStrategy } from '@angular/common';
+import { LocationStrategy, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 import { AppRoutingModule } from '@/app-routing.module';
@@ -589,7 +589,7 @@ registerPlugin(UndoRedo);
     ],
 
     providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
-        MenuSidebarComponent, LoginComponent, BnNgIdleService, ModalGenerarAutorizacionComponent, TomaInventarioConsolidadoComponent,
+        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent, TomaInventarioConsolidadoComponent,
 
         { provide: ServiceRefreshItemsService },
         { provide: LOCALE_ID, useValue: 'es-BO' },

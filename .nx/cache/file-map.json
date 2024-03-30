@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "16419590721192505182"
+        "hash": "6088370997881962562"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "7479951740618848327"
+        "hash": "10438974318909383852"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "2787986941297846625"
+        "hash": "7564332348982603799"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -333,7 +333,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "5713548880861770759"
+        "hash": "6730441476099992582"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4617,7 +4617,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.html",
-        "hash": "4900904231367931309"
+        "hash": "5358658979584034961"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.scss",
@@ -4629,7 +4629,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.ts",
-        "hash": "15415479082476655199"
+        "hash": "12957691181348614270"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.spec.ts",
@@ -4933,7 +4933,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento-create/recargo-documento-create.component.ts",
-        "hash": "15991094648745738217"
+        "hash": "16640762473107400583"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento-edit/recargo-documento-edit.component.html",
@@ -5185,7 +5185,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "2068147580232499965"
+        "hash": "10662295602937944636"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5197,7 +5197,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "16621671780711144096"
+        "hash": "2752183981144871282"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

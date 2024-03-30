@@ -122,7 +122,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
-              ngModel="{{fecha_actual | date:'dd/MM/yyyy'}}" [readOnly]="true">
+              ngModel="{{fecha_actual | date:'dd-MM-yyyy'}}" [readOnly]="true">
           </div>
 
           <div class="input-group">
@@ -131,7 +131,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              ngModel="{{fecha_actual | date:'dd/MM/yyyy'}}" [readOnly]="true" formControlName="fecha_inicial">
+              ngModel="{{fecha_actual | date:'dd-MM-yyyy'}}" [readOnly]="true" formControlName="fecha_inicial">
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
               formControlName="hora_inicial" ngModel="{{fecha_actual | date:'hh:mm'}}" [readOnly]="true">
           </div>
@@ -353,7 +353,7 @@
 
             <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
               <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
-                formControlName="razon_social" [(ngModel)]="razon_social" readonly>
+                value="{{ razon_social }}" [(ngModel)]="razon_social" formControlName="razon_social" readonly>
             </ng-container>
 
             <div class="input-group-append">
@@ -897,7 +897,7 @@
                               style="padding: 0px 0px 0px 61px;border: 0 !important;"><u>Latitud</u></span>
                           </div>
                           <span style="padding-top: 5px;padding-left: 14px;">{{ latitud_cliente }}</span>
-                          <input type="text" [(ngModel)]="latitud_cliente" formControlName="latitud" hidden>
+                          <input type="text" [(ngModel)]="latitud_cliente" formControlName="latitud_entrega" hidden>
                         </div>
                       </div>
                       <div class="col-md-3">
@@ -907,7 +907,7 @@
                               style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Longitud</u></span>
                           </div>
                           <span style="padding-top: 5px;padding-left: 14px;">{{ longitud_cliente }}</span>
-                          <input type="text" [(ngModel)]="longitud_cliente" formControlName="longitud" hidden>
+                          <input type="text" [(ngModel)]="longitud_cliente" formControlName="longitud_entrega" hidden>
                         </div>
                       </div>
 
@@ -1052,12 +1052,9 @@
                         </div>
                         <div style="display:  -webkit-box;flex-direction:column;">
                           <input type="text" class="form-control form-control-sm"
-                            style="margin-left: 5px;width: 15% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
-                            formControlName="cliente_real" [(ngModel)]="codigo_cliente" readonly>
-                          <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                            [(ngModel)]="razon_social" [(ngModel)]="nombre_cliente_catalogo_real" readonly> -->
-                          <span>{{ nombre_cliente_catalogo_real }}</span>
-                          <!-- <span>{{  razon_social }}</span> -->
+                            style="margin-left: 5px;width: 20% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
+                            formControlName="codcliente_real">
+                          <span> {{ nombre_cliente_catalogo_real }}</span>
                         </div><br>
                         <div>
                           <button class="btn btn-outline-primary form-control-sm" type="button"

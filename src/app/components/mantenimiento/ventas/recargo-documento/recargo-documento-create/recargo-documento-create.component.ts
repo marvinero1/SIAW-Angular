@@ -105,7 +105,7 @@ export class RecargoDocumentoCreateComponent implements OnInit {
 
   mandarPtoVenta() {
     this.servicioRecargo.disparadorDeRecargoDocumento.emit({
-      punto_venta: this.recargo_view,
+      recargo: this.recargo_view,
     });
 
     this.close();
