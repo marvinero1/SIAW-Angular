@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "6088370997881962562"
+        "hash": "5370298172617796843"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "10438974318909383852"
+        "hash": "13710588316595931594"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "7564332348982603799"
+        "hash": "17534151767301989616"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -333,7 +333,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "6730441476099992582"
+        "hash": "1403199850488385040"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4373,11 +4373,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "16533137790185599943"
+        "hash": "16054622179322430266"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "13711997502637838683"
+        "hash": "4901848709310457222"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4389,7 +4389,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "7883502020784788799"
+        "hash": "3671814640964073934"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4569,11 +4569,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.html",
-        "hash": "5135707971681860687"
+        "hash": "18206508211596789065"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.scss",
-        "hash": "7840632738435139382"
+        "hash": "9247878347255740490"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.spec.ts",
@@ -4581,7 +4581,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.ts",
-        "hash": "7856280904316311538"
+        "hash": "1772109591515949831"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-password/modal-password.component.html",
@@ -4685,7 +4685,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.ts",
-        "hash": "17555190469707239785"
+        "hash": "6964467852982472028"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service.spec.ts",
@@ -5185,7 +5185,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "10662295602937944636"
+        "hash": "3909819663243818501"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5197,7 +5197,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "2752183981144871282"
+        "hash": "316337071277854023"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5222,6 +5222,22 @@
       {
         "file": "src/app/components/mantenimiento/ventas/vendedores/vendedores.component.ts",
         "hash": "13582902526127332779"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/ventana-validaciones/ventana-validaciones.component.html",
+        "hash": "3480639733951581774"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/ventana-validaciones/ventana-validaciones.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/ventana-validaciones/ventana-validaciones.component.spec.ts",
+        "hash": "15040577115300915933"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/ventana-validaciones/ventana-validaciones.component.ts",
+        "hash": "12954029548492607517"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.html",

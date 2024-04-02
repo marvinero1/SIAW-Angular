@@ -42,6 +42,8 @@ import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.co
 import { ModalRecargosComponent } from '../../modal-recargos/modal-recargos.component';
 import { ModalDesctExtrasComponent } from '../../modal-desct-extras/modal-desct-extras.component';
 import { RecargoToProformaService } from '../../modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service';
+import { fastCall } from 'handsontable/helpers';
+import { VentanaValidacionesComponent } from '../../ventana-validaciones/ventana-validaciones.component';
 
 @Component({
   selector: 'app-proforma',
@@ -252,6 +254,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public total_desct_precio: boolean = false;
   public anticipo_button: boolean;
   public cliente_casual: boolean;
+  public total_X_PU: boolean = false;
   public disableSelect = new FormControl(false);
   public habilitar_desct_sgn_solicitud: boolean;
   public empaque_view = false;
@@ -302,6 +305,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   proforma_transferida: any = [];
   cotizacion_transferida: any = [];
   recargo_de_recargos: any = [];
+  messages: any = [];
 
   valorPredeterminadoPreparacion = "NORMAL";
   valorPredeterminadoTipoPago = "CONTADO";
@@ -507,8 +511,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.cliente_catalogo_real = data.cliente;
       this.codigo_cliente_catalogo_real = data.cliente.codigo;
       this.nombre_cliente_catalogo_real = data.cliente.nombre;
-      this.vendedor_cliente_catalogo_real = data.cliente.codvendedor;
-
+      //this.vendedor_cliente_catalogo_real = data.cliente.codvendedor;
+      this.cod_vendedor_cliente = data.cliente.codvendedor;
       console.log(this.codigo_cliente_catalogo_real);
     });
     //
@@ -636,16 +640,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       nit: [this.dataform.nit, Validators.compose([Validators.required])],
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
-      fecha: [this.dataform.fecha, Validators.compose([Validators.required]), this.datePipe.transform(this.dataform.fecha, "yyyy-MM-dd")],
+      fecha: ["2024-02-16"],
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
-      //
       descuentos: [this.dataform.descuentos, Validators.compose([Validators.required])],
       tipopago: [this.dataform.tipopago, Validators.compose([Validators.required])],
       transporte: [this.dataform.transporte, Validators.compose([Validators.required])],
       tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
-
-
+      preparacion: [this.dataform.preparacion, Validators.compose([Validators.required])],
+      fecha_inicial: ["2024-02-16"],
       tdc: [this.dataform.tdc],
       anulada: [false],
       aprobada: [false],
@@ -655,7 +658,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       fecha_confirmada: [null],
       hora_confirmada: [null],
       hora_inicial: [hour],
-      fecha_inicial: [this.dataform.fecha, Validators.compose([Validators.required]), this.datePipe.transform(this.dataform.fecha, "yyyy-MM-dd")],
       usuarioaut: [null],
       confirmada: [false],
       impresa: [false],
@@ -666,7 +668,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       obs2: [null],
       fletepor: [this.dataform.fletepor],
       direccion: [this.dataform.direccion],
-      preparacion: ['NORMAL', Validators.required],
       tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega],
       peso: [this.dataform.peso],
       codcliente_real: [this.dataform.cliente_real === null ? this.codigo_cliente : this.dataform.cliente_real],
@@ -687,9 +688,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       nombre_transporte: [this.dataform.nombre_transporte],
       odc: [this.dataform.odc === null ? " " : this.dataform.odc],
 
-      desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? false : true], //Descuentos de Linea de Solicitud
+
+      desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
       idsoldesctos: [this.dataform.idsoldesctos === undefined ? "" : this.dataform.idsoldesctos], //Descuentos de Linea de Solicitud
-      //nroidsoldesctos: [this.dataform.nroidsoldesctos === null ? 0 : this.dataform.nroidsoldesctos], //Descuentos de Linea de Solicitud
+      nroidsoldesctos: [this.dataform.nroidsoldesctos === null ? 0 : this.dataform.nroidsoldesctos], //Descuentos de Linea de Solicitud
 
 
       idanticipo: [""], //anticipo Ventas
@@ -698,10 +700,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       pago_contado_anticipado: [false], //anticipo Ventas
 
 
-      tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
-      idpf_complemento: [this.dataform.idpf_complemento === undefined ? 0 : this.dataform.idpf_complemento], //aca es para complemento de proforma
-      nroidpf_complemento: [this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento], //aca es para complemento de proforma
-      codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : this.dataform.codcomplementaria], //aca es para complemento de proforma
+      tipo_complementopf: [this.dataform.tipo_complementopf === null ? 0 : this.dataform.tipo_complementopf], //aca es para complemento de proforma
+      idpf_complemento: [this.dataform.idpf_complemento === null ? 0 : this.dataform.idpf_complemento], //aca es para complemento de proforma
+      nroidpf_complemento: [this.dataform.nroidpf_complemento === null ? 0 : this.dataform.nroidpf_complemento], //aca es para complemento de proforma
+      codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVISAR
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -712,7 +714,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       niveles_descuento: [this.dataform.niveles_descuento === undefined ? 'ACTUAL' : this.dataform.niveles_descuento], //niveles de descuento
       // no hay mas en esta seccion xD
 
-
       subtotal: [this.dataform.subtotal], //TOTALES
       recargos: [this.dataform.recargos], //TOTALES
       //des_extra: [this.dataform.des_extra], //TOTALES
@@ -720,8 +721,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       total: [this.dataform.total], //TOTALES
       porceniva: [0],
 
-
-      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
+      fechareg: ["2024-02-16"],
       horareg: [hora_actual_complete],
       hora: [hora_actual_complete],
       usuarioreg: [usuario_logueado],
@@ -750,85 +750,135 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(data);
 
     total_proforma_concat = {
-      veproforma: {
-        "id": "PYM01",
-        "numeroid": 2477,
-        "codalmacen": 311,
-        "codcliente": "303119",
-        "nomcliente": "ARMINDA CHOQUE CORONADO DE PORTUGAL",
-        "nit": "12492433",
-        "codvendedor": 31201,
-        "codmoneda": "BS",
-        "fecha": "2024-02-16",
-        "tdc": 1,
-        "tipopago": 0,
-        "subtotal": 148.21,
-        "descuentos": 0,
-        "recargos": 0,
-        "total": 129.17,
-        "anulada": false,
-        "transporte": "CAMION PERTEC",
-        "fletepor": "OTROS",
-        "direccion": "AV. CAPITAN VICTOR USTARIZ ENTRE C/C.W. CEVALLOS (CERCADO - CBBA - PCBA)",
-        "aprobada": false,
-        "paraaprobar": false,
-        "transferida": false,
-        "fechaaut": null,
-        "codcomplementaria": 0,
-        "obs": "---",
-        "obs2": null,
-        "horareg": "09:22",
-        "fechareg": "2024-02-16",
-        "usuarioreg": "DPD3",
-        "preparacion": "NORMAL",
-        "iva": 0,
-        "horaaut": "09:23",
-        "tipoentrega": "ENTREGAR",
-        "porceniva": 0,
-        "odc": "",
-        "peso": 34.23575,
-        "impresa": false,
-        "etiqueta_impresa": false,
-        "fecha_inicial": "2024-02-16",
-        "hora_inicial": "09:22",
-        "usuarioaut": null,
-        "confirmada": false,
-        "fecha_confirmada": null,
-        "hora_confirmada": null,
-        "contra_entrega": true,
-        "idanticipo": "",
-        "numeroidanticipo": 0,
-        "monto_anticipo": 0,
-        "pago_contado_anticipado": false,
-        "codcliente_real": "303119",
-        "venta_cliente_oficina": false,
-        "estado_contra_entrega": "POR CANCELAR",
-        "nombre_transporte": "CAMION PERTEC",
-        "desclinea_segun_solicitud": false,
-        "idsoldesctos": "",
-        "nroidsoldesctos": 0,
-        "latitud_entrega": "-17.396827",
-        "longitud_entrega": "-66.189689",
-        "hora": "09:22",
-        "ubicacion": "LOCAL",
-        "es_sol_urgente": false,
-        "niveles_descuento": "ACTUAL",
-        "idpf_complemento": "", //aca es para complemento de proforma
-        "nroidpf_complemento": 0, //aca es para complemento de proforma
-        "complemento_ci": "",
-        "tipo_venta": 0,
-        "tipo_docid": 1,
-        "email": "facturasventas@pertec.com.bo",
-        "tipo_complementopf": 0
-      },
+      // veproforma: {
+      //   "id": "PYM01",
+      //   "numeroid": 2477,
+      //   "codalmacen": 311,
+      //   "codcliente": "303119",
+      //   "nomcliente": "ARMINDA CHOQUE CORONADO DE PORTUGAL",
+      //   "nit": "12492433",
+      //   "codvendedor": 31201,
+      //   "codmoneda": "BS",
+      //   "fecha": "2024-02-16",
+      //   "tdc": 1,
+      //   "tipopago": 0,
+      //   "subtotal": 148.21,
+      //   "descuentos": 0,
+      //   "recargos": 0,
+      //   "total": 129.17,
+      //   "anulada": false,
+      //   "transporte": "CAMION PERTEC",
+      //   "fletepor": "OTROS",
+      //   "direccion": "AV. CAPITAN VICTOR USTARIZ ENTRE C/C.W. CEVALLOS (CERCADO - CBBA - PCBA)",
+      //   "aprobada": false,
+      //   "paraaprobar": false,
+      //   "transferida": false,
+      //   "fechaaut": null,
+      //   "codcomplementaria": 0,
+      //   "obs": "---",
+      //   "obs2": null,
+      //   "horareg": "09:22",
+      //   "fechareg": "2024-02-16",
+      //   "usuarioreg": "DPD3",
+      //   "preparacion": "NORMAL",
+      //   "iva": 0,
+      //   "horaaut": "09:23",
+      //   "tipoentrega": "ENTREGAR",
+      //   "porceniva": 0,
+      //   "odc": "",
+      //   "peso": 34.23575,
+      //   "impresa": false,
+      //   "etiqueta_impresa": false,
+      //   "fecha_inicial": "2024-02-16",
+      //   "hora_inicial": "09:22",
+      //   "usuarioaut": null,
+      //   "confirmada": false,
+      //   "fecha_confirmada": null,
+      //   "hora_confirmada": null,
+      //   "contra_entrega": true,
+      //   "idanticipo": "",
+      //   "numeroidanticipo": 0,
+      //   "monto_anticipo": 0,
+      //   "pago_contado_anticipado": false,
+      //   "codcliente_real": "303119",
+      //   "venta_cliente_oficina": false,
+      //   "estado_contra_entrega": "POR CANCELAR",
+      //   "nombre_transporte": "CAMION PERTEC",
+      //   "desclinea_segun_solicitud": false,
+      //   "idsoldesctos": "",
+      //   "nroidsoldesctos": 0,
+      //   "latitud_entrega": "-17.396827",
+      //   "longitud_entrega": "-66.189689",
+      //   "hora": "09:22",
+      //   "ubicacion": "LOCAL",
+      //   "es_sol_urgente": false,
+      //   "niveles_descuento": "ACTUAL",
+      //   "idpf_complemento": "", //aca es para complemento de proforma
+      //   "nroidpf_complemento": 0, //aca es para complemento de proforma
+      //   "complemento_ci": "",
+      //   "tipo_venta": 0,
+      //   "tipo_docid": 1,
+      //   "email": "facturasventas@pertec.com.bo",
+      //   "tipo_complementopf": 0
+      // },
 
-
-      //veproforma: this.FormularioData.value,
-      veproforma1: this.veproforma1,
-      veproforma_valida: [this.veproforma_valida],
-      veproforma_anticipo: [this.veproforma_anticipo],
-      vedesextraprof: [this.vedesextraprof],
-
+      veproforma: data,
+      veproforma1: this.array_items_carrito_y_f4_catalogo,
+      veproforma_valida: [
+        {
+          "codproforma": 0,
+          "codcontrol": "00001",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 102,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        },
+        {
+          "codproforma": 0,
+          "codcontrol": "00002",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 0,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        },
+        {
+          "codproforma": 0,
+          "codcontrol": "00003",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 0,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        }
+      ],
+      veproforma_anticipo: [],
+      vedesextraprof: [],
       verecargoprof: [{
         "codproforma": 0,
         "codrecargo": 0,
@@ -838,14 +888,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         "montodoc": 0,
         "codcobranza": 0
       }],
-
       veproforma_iva: this.veproforma_iva,
     }
 
     if (this.FormularioData.valid) {
       console.log("DATOS VALIDADOS");
 
-      let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
+      let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/guardarProforma/";
       return this.api.create("/venta/transac/veproforma/guardarProforma/" + this.userConn + "/" + this.cod_id_tipo_modal_id + "/" + this.BD_storage.bd, total_proforma_concat)
         .subscribe({
           next: (datav) => {
@@ -855,6 +904,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             setTimeout(() => {
               this.spinner.hide();
             }, 1500);
+            window.location.reload();
           },
 
           error: (err) => {
@@ -1092,14 +1142,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-  cambiarBoolValorTotal() {
-    this.total_desct_precio = false;
-  }
-
-  copiarCantidad(element: any) {
-    this.total_desct_precio = false;
-    element.cantidad = element.cantidad_pedida;
-  }
 
   aplicarPrecioVenta(value) {
     this.item_seleccionados_catalogo_matriz_copied = this.item_seleccionados_catalogo_matriz.slice();
@@ -1495,6 +1537,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.total = 0;
 
     this.almacenes_saldos = [];
+    this.array_items_carrito_y_f4_catalogo = [];
     this.item_seleccionados_catalogo_matriz_sin_procesar = [];
     this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo = [];
 
@@ -1650,6 +1693,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         "email": "facturasventas@pertec.com.bo",
         "tipo_complementopf": 0
       },
+
       "veproforma1": [
         {
           "codproforma": 0,
@@ -1765,7 +1809,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           "clave_servicio": ""
         }
       ],
-      "veproforma_anticipo": [],
+      "veproforma_anticipo": [
+      ],
       "vedesextraprof": [
         {
           "codproforma": 0,
@@ -1795,7 +1840,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           "codanticipo": 0
         }
       ],
-      "verecargoprof": [],
+      "verecargoprof": [
+
+      ],
       "veproforma_iva": [
         {
           "codproforma": 0,
@@ -1808,23 +1855,30 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       ]
     }
 
-    // let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /actualizarCorreoCliente --Update";
-    // return this.api.create('/venta/transac/veproforma/totabilizarProf/' + this.userConn + "/" + this.BD_storage.bd + "/" + "false/" + "1", a)
-    //   .subscribe({
-    //     next: (datav) => {
-    //       console.log(datav);
-    //       this.item_seleccionados_catalogo_matriz = datav.detalleProf
-    //       this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
-    //     },
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /actualizarCorreoCliente --Update";
+    return this.api.create('/venta/transac/veproforma/totabilizarProf/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + 'false' + "/" + "1" + "/" + "ACTUAL", a)
+      .subscribe({
+        next: (datav) => {
+          console.log("TOTABILIZAR HARDCODIADO: ", datav);
+          this.item_seleccionados_catalogo_matriz = datav.detalleProf;
+          this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
 
-    //     error: (err: any) => {
-    //       console.log(err, errorMessage);
-    //       this.toastr.error('! Ingrese un correo valido ! 📧');
-    //     },
-    //     complete: () => {
+          this.total = datav.totales.total;
+          this.subtotal = datav.totales.subtotal;
+          this.recargos = datav.totales.recargo;
+          this.des_extra = datav.totales.descuento;
+          this.iva = datav.totales.iva;
+          this.peso = datav.totales.peso;
+        },
 
-    //     }
-    //   })
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE TOTALIZO ! HARDCODIADO Xd Xd');
+        },
+        complete: () => {
+
+        }
+      })
   }
 
   onPaste(event: any) {
@@ -1833,18 +1887,49 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     alert("EVENTO BLOQUEADO, NO PEGAR");
   }
 
+
+
+  cambiarBoolValorTotal() {
+    this.total_desct_precio = false;
+    this.total_X_PU = true;
+  }
+
+  copiarCantidad(element: any) {
+    console.log(element);
+
+    this.total_desct_precio = true;
+    element.cantidad = element.cantidad_pedida;
+  }
+
   recalcularPedidoXPU(cantidad, preciolista) {
     console.log(cantidad, preciolista);
   }
 
-  calcularTotalPedidoCantidad(newValue: number, preciolista: number, input: number) {
+  calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, preciolista: number) {
+    // todo despues del if ya que si no siempre esta escuchando los eventos
+    if (cantidad_pedida !== undefined && preciolista !== undefined && cantidad !== undefined) {
+      if (this.total_X_PU === true) {
+        return cantidad * preciolista;
+      } else {
+        // console.log(input);
+        let cantidadPedida = cantidad_pedida;
+        // Realizar cálculos solo si los valores no son undefined
+        //console.log(cantidadPedida, preciolista);
+        return cantidadPedida * preciolista;
+      }
+    } else {
+      return 0; // O algún otro valor predeterminado
+    }
+  }
+
+  calcularTotalPedidoXPU(newValue: number, preciolista: number) {
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (newValue !== undefined && preciolista !== undefined) {
       // console.log(input);
-      let cantidadPedida = newValue;
+      let pedido = newValue;
       // Realizar cálculos solo si los valores no son undefined
       //console.log(cantidadPedida, preciolista);
-      return cantidadPedida * preciolista;
+      return pedido * preciolista;
     } else {
       return 0; // O algún otro valor predeterminado
     }
@@ -1914,17 +1999,68 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   totabilizar() {
     let total_proforma_concat: any = [];
     let item_procesados_en_total: any = [];
-
+    let veproforma_valida: [{
+      "codproforma": 0,
+      "codcontrol": "00001",
+      "nroitems": 3,
+      "nit": "12492433",
+      "subtotal": 148.21,
+      "descuentos": 19.04,
+      "recargos": 0,
+      "total": 129.17,
+      "valido": "SI",
+      "observacion": "Sin Observacion",
+      "obsdetalle": "",
+      "codservicio": 102,
+      "datoa": "",
+      "datob": "",
+      "clave_servicio": ""
+    },
+      {
+        "codproforma": 0,
+        "codcontrol": "00002",
+        "nroitems": 3,
+        "nit": "12492433",
+        "subtotal": 148.21,
+        "descuentos": 19.04,
+        "recargos": 0,
+        "total": 129.17,
+        "valido": "SI",
+        "observacion": "Sin Observacion",
+        "obsdetalle": "",
+        "codservicio": 0,
+        "datoa": "",
+        "datob": "",
+        "clave_servicio": ""
+      },
+      {
+        "codproforma": 0,
+        "codcontrol": "00003",
+        "nroitems": 3,
+        "nit": "12492433",
+        "subtotal": 148.21,
+        "descuentos": 19.04,
+        "recargos": 0,
+        "total": 129.17,
+        "valido": "SI",
+        "observacion": "Sin Observacion",
+        "obsdetalle": "",
+        "codservicio": 0,
+        "datoa": "",
+        "datob": "",
+        "clave_servicio": ""
+      }
+    ];
     console.log("ENTRO A LA FUNCION SACAR TOTAL");
     this.veproforma = [this.FormularioData.value];
     // this.veproforma1 = this.item_seleccionados_catalogo_matriz;
 
     //ACA PONER A LA TABLA DEL DATA SOURCE SI SE MODIFICA LA CANTIDFAD O EL PEDIDO
-    this.veproforma1 = this.item_seleccionados_catalogo_matriz_sin_procesar;
-
-    this.veproforma_valida = {};
-    this.veproforma_anticipo = {};
-    this.vedesextraprof = {};
+    //this.veproforma1 = this.item_seleccionados_catalogo_matriz_sin_procesar;
+    this.veproforma1 = this.array_items_carrito_y_f4_catalogo;
+    this.veproforma_valida = veproforma_valida;
+    this.veproforma_anticipo = [];
+    this.vedesextraprof = [];
     this.verecargoprof = this.recargo_de_recargos.recargo_array;
     this.veproforma_iva = [{
       "codproforma": 0,
@@ -2015,16 +2151,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       veproforma: this.FormularioData.value,
       veproforma1: this.veproforma1,
       veproforma_valida: [this.veproforma_valida],
-      veproforma_anticipo: [this.veproforma_anticipo],
-
-      vedesextraprof: [this.vedesextraprof],
-      verecargoprof: this.recargo_de_recargos.recargo_array,
-
-      veproforma_iva: this.veproforma_iva,
+      veproforma_anticipo: [],
+      vedesextraprof: [],
+      verecargoprof: [],
+      veproforma_iva: [],
     }
 
     console.log(total_proforma_concat);
-
 
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
     return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + 'false' + "/" + "1" + "/" + "ACTUAL", total_proforma_concat)
@@ -2118,7 +2251,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
     this.veproforma1 = proforma.detalle;
 
-    this.dataSource = new MatTableDataSource(proforma.detalle);
+
+    //la cabecera asignada a this.veproforma para totalizar y grabar
+    this.veproforma = proforma.cabecera
+    //el cuerpo del detalle asignado al carrito
+    this.array_items_carrito_y_f4_catalogo = proforma.detalle
+
+    //this.dataSource = new MatTableDataSource(proforma.detalle);
+    // se dibuja los items al detalle de la proforma
+    this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
   }
 
   imprimir_cotizacion_transferida(cotizacion) {
@@ -2330,6 +2471,56 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   modalMatrizProductos(): void {
+    // Realizamos todas las validaciones
+    if (this.moneda_get_catalogo === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE MONEDA",
+        }
+      });
+      return; // Detenemos la ejecución de la función si la validación falla
+    }
+
+    if (this.codigo_cliente === undefined || this.codigo_cliente === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE CLIENTE EN PROFORMA",
+        }
+      });
+      return;
+    }
+
+    if (this.almacn_parame_usuario === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE ALMACEN",
+        }
+      });
+      return;
+    }
+
+    if (this.desct_nivel_actual === undefined) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE NIVEL DE DESCT.",
+        }
+      });
+      return;
+    }
+
+    // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsComponent, {
       width: 'auto',
       height: 'auto',
@@ -2347,6 +2538,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+
+
+
 
   modalCatalogoProductos(): void {
     this.dialog.open(ModalItemsComponent, {

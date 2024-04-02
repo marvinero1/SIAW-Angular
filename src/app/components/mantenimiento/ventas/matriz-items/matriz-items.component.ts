@@ -11,6 +11,7 @@ import { ItemSeleccionCantidadComponent } from './item-seleccion-cantidad/item-s
 import { ServicioF9Service } from './stock-actual-f9/servicio-f9.service';
 import { DatePipe } from '@angular/common';
 import Handsontable from 'handsontable';
+import { VentanaValidacionesComponent } from '../ventana-validaciones/ventana-validaciones.component';
 
 @Component({
   selector: 'app-matriz-items',
@@ -134,6 +135,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     public itemservice: ItemServiceService, public renderer: Renderer2,
     private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
     public serviciof9: ServicioF9Service, private datePipe: DatePipe,
+
     @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
@@ -252,23 +254,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
 
-    // Realizamos todas las validaciones
-    if (this.codmoneda_get === '') {
-      this.validacion = true;
-      this.messages.push("SELECCIONE MONEDA");
-    }
-    if (this.codcliente_get === undefined || this.codcliente_get === '') {
-      this.validacion = true;
-      this.messages.push("SELECCIONE CLIENTE EN PROFORMA");
-    }
-    if (this.codalmacen_get === '') {
-      this.validacion = true;
-      this.messages.push("SELECCIONE ALMACEN");
-    }
-    if (this.descuento_nivel_get === undefined) {
-      this.validacion = true;
-      this.messages.push("SELECCIONE NIVEL DE DESCT.");
-    }
 
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {

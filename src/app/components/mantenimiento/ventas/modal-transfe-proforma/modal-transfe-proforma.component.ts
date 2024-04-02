@@ -68,14 +68,20 @@ export class ModalTransfeProformaComponent implements OnInit {
         next: (datav) => {
           this.transferir_get = datav;
           console.log(this.transferir_get);
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+          const a = window.confirm("¿ Esta Seguro de Transferir a la Proforma Actual ?, Se reemplazara el contenido de la proforma actual!");
 
-          this.transferirProformaAProforma(this.transferir_get);
-          this.spinner.show();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-          this.close();
+          if (a) {
+            this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+
+            this.transferirProformaAProforma(this.transferir_get);
+            this.spinner.show();
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+            this.close();
+          } else {
+            this.toastr.error('! TCANCELADO ! ❌');
+          }
         },
         error: (err: any) => {
           console.log(err, errorMessage);

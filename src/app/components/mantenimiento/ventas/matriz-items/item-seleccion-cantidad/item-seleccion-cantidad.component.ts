@@ -194,11 +194,12 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   agregarItems() {
     let a;
+
     const nuevosItems: [] = this.dataItemSeleccionados_get.map((elemento) => {
       return {
         coditem: elemento,
-        tarifa: this.tarifa_get,
-        descuento: this.descuento_get,
+        tarifa: this.cod_precio_venta_modal_codigo, //cod_precio_venta_modal_codigo
+        descuento: this.cod_descuento_modal_codigo, //cod_descuento_modal_codigo
         cantidad_pedida: this.cantidad_input,
         cantidad: this.cantidad_input,
         codcliente: this.codcliente_get,
@@ -211,36 +212,75 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     });
 
     console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(nuevosItems));
-
     const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
 
-    this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, nuevosItems)
-      .subscribe({
-        next: (datav) => {
-          if (this.tamanio_carrito > 0) {
-            console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-            a = this.items_post.concat(datav, this.items_get_carrito);
-          } else {
-            console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-            a = this.items_post = datav;
-          }
-          console.log('data', datav);
 
-          this.spinner.show();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
-          this.enviarItemsAlServicio(a);
-          this.dialogRef.close();
-          // this.num_hoja = 0;
-        }
-      });
+
+
+    if (!this.isCheckedCantidad) {
+      console.log("check de empaque minimo activo");
+      this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+        .subscribe({
+          next: (datav) => {
+            if (this.tamanio_carrito > 0) {
+              console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+              a = this.items_post.concat(datav, this.items_get_carrito);
+            } else {
+              console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+              a = this.items_post = datav;
+            }
+            console.log('data', datav);
+
+            this.spinner.show();
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
+          error: (err) => {
+            console.log(err, errorMessage);
+          },
+          complete: () => {
+            // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
+            this.enviarItemsAlServicio(a);
+            this.dialogRef.close();
+            // this.num_hoja = 0;
+          }
+        });
+    } else {
+      console.log("SOLO CANTIDAD");
+      this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, nuevosItems)
+        .subscribe({
+          next: (datav) => {
+            if (this.tamanio_carrito > 0) {
+              console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+              a = this.items_post.concat(datav, this.items_get_carrito);
+            } else {
+              console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+              a = this.items_post = datav;
+            }
+            console.log('data', datav);
+
+            this.spinner.show();
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
+          error: (err) => {
+            console.log(err, errorMessage);
+          },
+          complete: () => {
+            // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
+            this.enviarItemsAlServicio(a);
+            this.dialogRef.close();
+            // this.num_hoja = 0;
+          }
+        });
+    }
+
+
+
+
+
   }
 
 

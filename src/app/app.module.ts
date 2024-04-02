@@ -4,7 +4,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { LocationStrategy, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
-
 import { AppRoutingModule } from '@/app-routing.module';
 import { AppComponent } from './app.component';
 import { MainComponent } from '@modules/main/main.component';
@@ -94,12 +93,13 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PortalModule } from '@angular/cdk/portal';
-
+import { AuthGuard } from '@guards/auth.guard';
 import { Interceptor } from '@services/interceptor';
+import { NonAuthGuard } from '@guards/non-auth.guard';
+
+
 import { RefreshPasswordComponent } from '@modules/refresh-password/refresh-password.component';
 import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
-import { AuthGuard } from '@guards/auth.guard';
-import { NonAuthGuard } from '@guards/non-auth.guard';
 import { PageNotFoundComponent } from '@pages/errors/page-not-found/page-not-found.component';
 import { HerramientasComponent } from '@modules/main/header/herramientas/herramientas.component';
 import { ReportesComponent } from '@modules/main/header/reportes/reportes.component';
@@ -270,18 +270,54 @@ import { RubroEditComponent } from '@components/mantenimiento/rubro/rubro-edit/r
 import { ServiceRefreshItemsService } from '@components/inventario/toma-inventario-consolidado/services-refresh-item/service-refresh-items.service';
 import { VentanasComponent } from '@modules/main/header/ventanas/ventanas.component';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
+import { CuentasEfectivoComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivo.component';
+import { CuentasEfectivoCreateComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivo-create/cuentas-efectivo-create.component';
+import { CuentasEfectivosEditComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivos-edit/cuentas-efectivos-edit.component';
+import { DeudoresComponent } from '@components/mantenimiento/fondos/deudores/deudores.component';
+import { DeudoresEditComponent } from '@components/mantenimiento/fondos/deudores/deudores-edit/deudores-edit.component';
+import { DeudoresCreateComponent } from '@components/mantenimiento/fondos/deudores/deudores-create/deudores-create.component';
+import { PercepcionesretencionesComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones.component';
+import { PercepcionesretencionesCreateComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones-create/percepcionesretenciones-create.component';
+import { PercepcionesretencionesEditComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones-edit/percepcionesretenciones-edit.component';
+import { ObserHojaRutaEditComponent } from '@components/mantenimiento/ventas/observaciones-hoja-ruta/obser-hoja-ruta-edit/obser-hoja-ruta-edit.component';
+import { DeudoresCompuestosComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-compuestos.component';
+import { CuentasBancariasComponent } from '@components/mantenimiento/fondos/cuentas-bancarias/cuentas-bancarias.component';
+import { NumeracionAnticipoComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo.component';
+import { NumeracionAnticipoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo-create/numeracion-anticipo-create.component';
+import { NumeracionAnticipoEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo-edit/numeracion-anticipo-edit.component';
+import { NumeracionCobranzaComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza.component';
+import { NumeracionCobranzaCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza-create/numeracion-cobranza-create.component';
+import { NumeracionCobranzaEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza-edit/numeracion-cobranza-edit.component';
+import { NumeracionDevolucionAnticiposComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devolucion-anticipos.component';
+import { NumeracionDevoclucionAnticipoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devoclucion-anticipo-create/numeracion-devoclucion-anticipo-create.component';
+import { NumeracionDevoclucionAnticipoEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devoclucion-anticipo-edit/numeracion-devoclucion-anticipo-edit.component';
+import { NumeracionPagosMoraComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora.component';
+import { NumeracionPagosMoraCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora-create/numeracion-pagos-mora-create.component';
+import { NumeracionPagosMoraEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora-edit/numeracion-pagos-mora-edit.component';
+import { NumeracionTipoAjusteComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste.component';
+import { NumeracionTipoAjusteCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste-create/numeracion-tipo-ajuste-create.component';
+import { NumeracionTipoAjusteEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste-edit/numeracion-tipo-ajuste-edit.component';
+import { NumeracionDescuentoPorMoraComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora.component';
+import { NumeracionDescuentoPorMoraCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora-create/numeracion-descuento-por-mora-create.component';
+import { NumeracionDescuentoPorMoraEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora-edit/numeracion-descuento-por-mora-edit.component';
+import { NumeracionDesctVariosDirectosComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos.component';
+import { NumeracionDesctVariosDirectosCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos-create/numeracion-desct-varios-directos-create.component';
+import { NumeracionDesctVariosDirectosEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos-edit/numeracion-desct-varios-directos-edit.component';
+import { NumeracionDePagoComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago.component';
+import { NumeracionDePagoCreateComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago-create/numeracion-de-pago-create.component';
+import { NumeracionDePagoEditComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago-edit/numeracion-de-pago-edit.component';
+import { NumcomprasmenoresComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores.component';
+import { NumcomprasmenoresCreateComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores-create/numcomprasmenores-create.component';
+import { NumcomprasmenoresEditComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores-edit/numcomprasmenores-edit.component';
+import { NumprovisioncompraEditComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra-edit/numprovisioncompra-edit.component';
+import { NumprovisioncompraCreateComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra-create/numprovisioncompra-create.component';
+import { NumprovisioncompraComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra.component';
 import { NumeraciontransferenciasComponent } from '@components/mantenimiento/fondos/numeraciontransferencias/numeraciontransferencias.component';
 import { NumeraciontransferenciasCreateComponent } from '@components/mantenimiento/fondos/numeraciontransferencias/numeraciontransferencias-create/numeraciontransferencias-create.component';
 import { NumeraciontransferenciasEditComponent } from '@components/mantenimiento/fondos/numeraciontransferencias/numeraciontransferencias-edit/numeraciontransferencias-edit.component';
 import { NumretirobancarioComponent } from '@components/mantenimiento/fondos/numretirobancario/numretirobancario.component';
 import { NumretirobancarioCreateComponent } from '@components/mantenimiento/fondos/numretirobancario/numretirobancario-create/numretirobancario-create.component';
 import { NumretirobancarioEditComponent } from '@components/mantenimiento/fondos/numretirobancario/numretirobancario-edit/numretirobancario-edit.component';
-
-
-
-
-import localeEs from '@angular/common/locales/es';
-import es from '@angular/common/locales/es';
 import { NumreposicionComponent } from '@components/mantenimiento/fondos/numreposicion/numreposicion.component';
 import { NumreposicionCreateComponent } from '@components/mantenimiento/fondos/numreposicion/numreposicion-create/numreposicion-create.component';
 import { NumreposicionEditComponent } from '@components/mantenimiento/fondos/numreposicion/numreposicion-edit/numreposicion-edit.component';
@@ -309,65 +345,6 @@ import { NumchequesclientesCreateComponent } from '@components/mantenimiento/fon
 import { NumlibrosbancosComponent } from '@components/mantenimiento/fondos/numlibrosbancos/numlibrosbancos.component';
 import { NumlibrosbancosEditComponent } from '@components/mantenimiento/fondos/numlibrosbancos/numlibrosbancos-edit/numlibrosbancos-edit.component';
 import { NumlibrosbancosCreateComponent } from '@components/mantenimiento/fondos/numlibrosbancos/numlibrosbancos-create/numlibrosbancos-create.component';
-import { CuentasEfectivoComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivo.component';
-import { CuentasEfectivoCreateComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivo-create/cuentas-efectivo-create.component';
-import { CuentasEfectivosEditComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivos-edit/cuentas-efectivos-edit.component';
-import { DeudoresComponent } from '@components/mantenimiento/fondos/deudores/deudores.component';
-import { DeudoresEditComponent } from '@components/mantenimiento/fondos/deudores/deudores-edit/deudores-edit.component';
-import { DeudoresCreateComponent } from '@components/mantenimiento/fondos/deudores/deudores-create/deudores-create.component';
-import { NumcomprasmenoresComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores.component';
-import { NumcomprasmenoresCreateComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores-create/numcomprasmenores-create.component';
-import { NumcomprasmenoresEditComponent } from '@components/mantenimiento/compras/numcomprasmenores/numcomprasmenores-edit/numcomprasmenores-edit.component';
-import { NumprovisioncompraEditComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra-edit/numprovisioncompra-edit.component';
-import { NumprovisioncompraCreateComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra-create/numprovisioncompra-create.component';
-import { NumprovisioncompraComponent } from '@components/mantenimiento/compras/numprovisioncompra/numprovisioncompra.component';
-import { PercepcionesretencionesComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones.component';
-import { PercepcionesretencionesCreateComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones-create/percepcionesretenciones-create.component';
-import { PercepcionesretencionesEditComponent } from '@components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones-edit/percepcionesretenciones-edit.component';
-import { ObserHojaRutaEditComponent } from '@components/mantenimiento/ventas/observaciones-hoja-ruta/obser-hoja-ruta-edit/obser-hoja-ruta-edit.component';
-import { DeudoresCompuestosComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-compuestos.component';
-import { CuentasBancariasComponent } from '@components/mantenimiento/fondos/cuentas-bancarias/cuentas-bancarias.component';
-import { NumeracionAnticipoComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo.component';
-import { NumeracionAnticipoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo-create/numeracion-anticipo-create.component';
-import { NumeracionAnticipoEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo-edit/numeracion-anticipo-edit.component';
-import { NumeracionCobranzaComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza.component';
-import { NumeracionCobranzaCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza-create/numeracion-cobranza-create.component';
-import { NumeracionCobranzaEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza-edit/numeracion-cobranza-edit.component';
-import { NumeracionDevolucionAnticiposComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devolucion-anticipos.component';
-import { NumeracionDevoclucionAnticipoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devoclucion-anticipo-create/numeracion-devoclucion-anticipo-create.component';
-import { NumeracionDevoclucionAnticipoEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devoclucion-anticipo-edit/numeracion-devoclucion-anticipo-edit.component';
-import { NumeracionPagosMoraComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora.component';
-import { NumeracionPagosMoraCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora-create/numeracion-pagos-mora-create.component';
-import { NumeracionPagosMoraEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora-edit/numeracion-pagos-mora-edit.component';
-import { TalonarioRecibosComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos.component';
-import { TalonarioRecibosCreateComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos-create/talonario-recibos-create.component';
-import { TalonarioRecibosEditComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos-edit/talonario-recibos-edit.component';
-import { TipoPagoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago-create/tipo-pago-create.component';
-import { TipoPagoEditComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago-edit/tipo-pago-edit.component';
-import { NumeracionTipoAjusteComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste.component';
-import { NumeracionTipoAjusteCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste-create/numeracion-tipo-ajuste-create.component';
-import { NumeracionTipoAjusteEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste-edit/numeracion-tipo-ajuste-edit.component';
-import { NumeracionDescuentoPorMoraComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora.component';
-import { NumeracionDescuentoPorMoraCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora-create/numeracion-descuento-por-mora-create.component';
-import { NumeracionDescuentoPorMoraEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora-edit/numeracion-descuento-por-mora-edit.component';
-import { NumeracionDesctVariosDirectosComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos.component';
-import { NumeracionDesctVariosDirectosCreateComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos-create/numeracion-desct-varios-directos-create.component';
-import { NumeracionDesctVariosDirectosEditComponent } from '@components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos-edit/numeracion-desct-varios-directos-edit.component';
-import { NumeracionDePagoComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago.component';
-import { NumeracionDePagoCreateComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago-create/numeracion-de-pago-create.component';
-import { NumeracionDePagoEditComponent } from '@components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago-edit/numeracion-de-pago-edit.component';
-import { CompradoresComponent } from '@components/mantenimiento/compras/compradores/compradores.component';
-import { BancoEditComponent } from '@components/mantenimiento/fondos/banco/banco-edit/banco-edit.component';
-import { DeudoresCompCreateComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-comp-create/deudores-comp-create.component';
-import { DeudoresCompEditComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-comp-edit/deudores-comp-edit.component';
-import { DeudoresIntegrantesComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-integrantes/deudores-integrantes.component';
-import { DeudoresCatalogoComponent } from '@components/mantenimiento/fondos/deudores/deudores-catalogo/deudores-catalogo.component';
-import { TipoPagoComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago.component';
-import { NumTipoDocumentoVentaComponent } from '@components/mantenimiento/ventas/num-tipo-documento-venta/num-tipo-documento-venta.component';
-import { SolicitudesDescuentoComponent } from '@components/mantenimiento/ventas/solicitudes-descuento/solicitudes-descuento.component';
-import { CatalogoDocumentoVentaComponent } from '@components/mantenimiento/ventas/num-tipo-documento-venta/catalogo-documento-venta/catalogo-documento-venta.component';
-import { TipoconocimientocargaEditComponent } from '@components/mantenimiento/inventario/tipoconocimientocarga/tipoconocimientocarga-edit/tipoconocimientocarga-edit.component';
-import { TipoinventarioEditComponent } from '@components/mantenimiento/inventario/tipoinventario/tipoinventario-edit/tipoinventario-edit.component';
 import { NumsolicitudurgenteEditComponent } from '@components/mantenimiento/inventario/numsolicitudurgente/numsolicitudurgente-edit/numsolicitudurgente-edit.component';
 import { NumPedidosImportacionComponent } from '@components/mantenimiento/importaciones/numeracion/num-pedidos-importacion/num-pedidos-importacion.component';
 import { NumPedidosImportacionCreateComponent } from '@components/mantenimiento/importaciones/numeracion/num-pedidos-importacion/num-pedidos-importacion-create/num-pedidos-importacion-create.component';
@@ -384,6 +361,28 @@ import { NumEmbarqueImportacionEditComponent } from '@components/mantenimiento/i
 import { NumRecepcionImportacionComponent } from '@components/mantenimiento/importaciones/numeracion/num-recepcion-importacion/num-recepcion-importacion.component';
 import { NumRecepcionImportacionCreateComponent } from '@components/mantenimiento/importaciones/numeracion/num-recepcion-importacion/num-recepcion-importacion-create/num-recepcion-importacion-create.component';
 import { NumRecepcionImportacionEditComponent } from '@components/mantenimiento/importaciones/numeracion/num-recepcion-importacion/num-recepcion-importacion-edit/num-recepcion-importacion-edit.component';
+import { NumTipoDocumentoVentaComponent } from '@components/mantenimiento/ventas/num-tipo-documento-venta/num-tipo-documento-venta.component';
+import { NumeracionComprobantesEditComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes-edit/numeracion-comprobantes-edit.component';
+import { NumeracionComprobantesCreateComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes-create/numeracion-comprobantes-create.component';
+import { NumeracionComprobantesComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component';
+
+
+import { TalonarioRecibosComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos.component';
+import { TalonarioRecibosCreateComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos-create/talonario-recibos-create.component';
+import { TalonarioRecibosEditComponent } from '@components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos-edit/talonario-recibos-edit.component';
+import { TipoPagoCreateComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago-create/tipo-pago-create.component';
+import { TipoPagoEditComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago-edit/tipo-pago-edit.component';
+import { CompradoresComponent } from '@components/mantenimiento/compras/compradores/compradores.component';
+import { BancoEditComponent } from '@components/mantenimiento/fondos/banco/banco-edit/banco-edit.component';
+import { DeudoresCompCreateComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-comp-create/deudores-comp-create.component';
+import { DeudoresCompEditComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-comp-edit/deudores-comp-edit.component';
+import { DeudoresIntegrantesComponent } from '@components/mantenimiento/fondos/deudores-compuestos/deudores-integrantes/deudores-integrantes.component';
+import { DeudoresCatalogoComponent } from '@components/mantenimiento/fondos/deudores/deudores-catalogo/deudores-catalogo.component';
+import { TipoPagoComponent } from '@components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago.component';
+import { SolicitudesDescuentoComponent } from '@components/mantenimiento/ventas/solicitudes-descuento/solicitudes-descuento.component';
+import { CatalogoDocumentoVentaComponent } from '@components/mantenimiento/ventas/num-tipo-documento-venta/catalogo-documento-venta/catalogo-documento-venta.component';
+import { TipoconocimientocargaEditComponent } from '@components/mantenimiento/inventario/tipoconocimientocarga/tipoconocimientocarga-edit/tipoconocimientocarga-edit.component';
+import { TipoinventarioEditComponent } from '@components/mantenimiento/inventario/tipoinventario/tipoinventario-edit/tipoinventario-edit.component';
 import { SucursalCreateComponent } from '@components/mantenimiento/contabilidad/sucursal/sucursal-create/sucursal-create.component';
 import { SucursalEditComponent } from '@components/mantenimiento/contabilidad/sucursal/sucursal-edit/sucursal-edit.component';
 import { SucursalComponent } from '@components/mantenimiento/contabilidad/sucursal/sucursal.component';
@@ -393,21 +392,8 @@ import { PlanCuentaEditComponent } from '@components/mantenimiento/contabilidad/
 import { CuentaEfectivoCuentasContablesComponent } from '@components/mantenimiento/fondos/cuentas-efectivo/cuenta-efectivo-cuentas-contables/cuenta-efectivo-cuentas-contables.component';
 import { CuentasContablesComponent } from '@components/mantenimiento/fondos/deudores/cuentas-contables/cuentas-contables.component';
 import { CuentasCatalogoComponent } from '@components/mantenimiento/fondos/deudores/cuentas-catalogo/cuentas-catalogo.component';
-import { NumeracionComprobantesEditComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes-edit/numeracion-comprobantes-edit.component';
-import { NumeracionComprobantesCreateComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes-create/numeracion-comprobantes-create.component';
-import { NumeracionComprobantesComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component';
-
-import Handsontable from 'handsontable/base';
-
-import {
-    registerCellType,
-    NumericCellType,
-} from 'handsontable/cellTypes';
-
-import {
-    registerPlugin,
-    UndoRedo,
-} from 'handsontable/plugins';
+import { registerCellType, NumericCellType } from 'handsontable/cellTypes';
+import { registerPlugin, UndoRedo } from 'handsontable/plugins';
 import { StockActualF9Component } from '@components/mantenimiento/ventas/matriz-items/stock-actual-f9/stock-actual-f9.component';
 import { MonedaCatalogoComponent } from '@components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component';
 import { VerificarCreditoDisponibleComponent } from '@components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component';
@@ -421,6 +407,11 @@ import { ModalEstadoPagoClienteComponent } from '@components/mantenimiento/venta
 import { ModalSubTotalComponent } from '@components/mantenimiento/ventas/modal-sub-total/modal-sub-total.component';
 import { ModalRecargosComponent } from '@components/mantenimiento/ventas/modal-recargos/modal-recargos.component';
 import { ModalDesctExtrasComponent } from '@components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component';
+import { VentanaValidacionesComponent } from '@components/mantenimiento/ventas/ventana-validaciones/ventana-validaciones.component';
+
+// import Handsontable from 'handsontable/base';
+import localeEs from '@angular/common/locales/es';
+import es from '@angular/common/locales/es';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -430,7 +421,7 @@ registerPlugin(UndoRedo);
 @NgModule({
     declarations: [
         AppComponent, VentanasComponent, MainComponent, LoginComponent, HeaderComponent, FooterComponent, MenuSidebarComponent, BlankComponent,
-        ProfileComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
+        ProfileComponent, VentanaValidacionesComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
         ForgotPasswordComponent, RecoverPasswordComponent, LanguageComponent, MainMenuComponent, SubMenuComponent, MenuItemComponent,
         ControlSidebarComponent, SidebarSearchComponent, MenuImportacionesComponent, UsuarioComponent, UsuarioCreateComponent, BancoEditComponent,
         UsuarioEditComponent, UsuarioDeleteComponent, MonedaComponent, AlmacenComponent, AreaComponent, EmpresaComponent,
@@ -502,9 +493,6 @@ registerPlugin(UndoRedo);
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
         ModalEtiquetaComponent,
-
-
-
 
 
 

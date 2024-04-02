@@ -122,7 +122,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
-              ngModel="{{fecha_actual | date:'dd-MM-yyyy'}}" [readOnly]="true">
+              ngModel="{{fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true">
           </div>
 
           <div class="input-group">
@@ -131,7 +131,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              ngModel="{{fecha_actual | date:'dd-MM-yyyy'}}" [readOnly]="true" formControlName="fecha_inicial">
+              ngModel="{{fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true" formControlName="fecha_inicial">
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
               formControlName="hora_inicial" ngModel="{{fecha_actual | date:'hh:mm'}}" [readOnly]="true">
           </div>
@@ -170,7 +170,7 @@
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
                     formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente_modal"
-                    [(ngModel)]="cod_vendedor_cliente" [(ngModel)]="vendedor_cliente_catalogo_real"
+                    [(ngModel)]="cod_vendedor_cliente"
                     [class.is-invalid]="f.codvendedor.invalid && (f.codvendedor.dirty || f.codvendedor.touched)"
                     (blur)="onLeaveVendedor($event)">
                 </ng-container>
@@ -193,8 +193,8 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Preparación </u></span>
             </div>
             <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;" [(ngModel)]="preparacion"
-              formControlName="preparacion" [class.is-invalid]="f.preparacion.invalid && (f.preparacion.dirty ||
-              f.preparacion.touched)" required>
+              formControlName="preparacion" required
+              [ngClass]="{'is-invalid': f.preparacion.invalid && (f.preparacion.dirty || f.preparacion.touched)}">
               <mat-option value="NORMAL">NORMAL</mat-option>
               <mat-option value="URGENTE">URGENTE</mat-option>
               <mat-option value=FINAL>FINAL</mat-option>
@@ -202,6 +202,9 @@
               <mat-option value="POR COMISIONISTA">POR COMISIONISTA</mat-option>
               <mat-option value="CAJA CERRADA RECOGE CLIENTE">CAJA CERRADA RECOGE CLIENTE</mat-option>
             </mat-select>
+            <div *ngIf="submitted && f.preparacion.invalid" class="invalid-feedback" style="display: block;">
+              <mat-icon>info</mat-icon>
+            </div>
           </div>
 
           <div class="input-group">
@@ -272,12 +275,18 @@
           </div>
 
           <div class="input-group">
-            <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback" style="display: block;">
-              <mat-icon>info</mat-icon>
-            </div>
+
             <div class="input-group-prepend">
+
               <span class="input-group-text form-control-sm"
-                style="padding: 8px 4px 0px 48px !important;border: 0 !important;"><u>Tipo de Pago</u></span>
+                style="padding: 8px 4px 0px 48px !important;border: 0 !important;">
+                <u>
+                  Tipo de Pago
+                  <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback" style="display: block;"
+                    style="margin-right: 15px !important;">
+                    <mat-icon>info</mat-icon>
+                  </div>
+                </u></span>
             </div>
             <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
               formControlName="tipopago"
@@ -624,20 +633,22 @@
 
               <ng-container>
                 <!-- total Column -->
-                <ng-container matColumnDef="total" *ngIf="total_desct_precio === false; else totaldescprecio">
-                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total </th>
+                <ng-container matColumnDef="total" *ngIf="total_desct_precio === false; else total_X_PU">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total Normal </th>
                   <td mat-cell *matCellDef="let element" style="text-align: right;">
-                    {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }}
+                    {{ calcularTotalCantidadXPU(element.cantidad_pedida, element.cantidad, element.preciolista) | number:'1.2-2' }}
                     <!-- {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }} -->
                   </td>
                 </ng-container>
               </ng-container>
-              <ng-template #totaldescprecio>
+
+
+              <ng-template #total_X_PU>
                 <!-- total Column Al aplicar precio/descuento-->
                 <ng-container matColumnDef="total">
-                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total </th>
+                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total Pedido Modificado </th>
                   <td mat-cell *matCellDef="let element" style="text-align: right;">
-                    {{ element.total }}
+                    {{ calcularTotalPedidoXPU(element.cantidad, element.preciolista) | number:'1.2-2' }}
                   </td>
                 </ng-container>
               </ng-template>
@@ -831,7 +842,13 @@
                                 Transporte</u></span>
                           </div>
                           <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                            formControlName="nombre_transporte" [(ngModel)]="medio_transporte">
+                            formControlName="nombre_transporte" [(ngModel)]="medio_transporte" [class.is-invalid]="f.nombre_transporte.invalid && (f.nombre_transporte.dirty ||
+                            f.nombre_transporte.touched)">
+
+                          <div *ngIf="submitted && f.nombre_transporte.invalid" class="invalid-feedback"
+                            style="display: block;">
+                            <mat-icon>info</mat-icon>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -848,14 +865,19 @@
                               style="padding: 10px 0px 0px 8px;border: 0 !important;"><u>Flete Pagado Por</u></span>
                           </div>
                           <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
-                            formControlName="fletepor" [(ngModel)]="fletepor">
+                            formControlName="fletepor" [(ngModel)]="fletepor" required
+                            [class.is-invalid]="f.fletepor.invalid && (f.fletepor.dirty || f.fletepor.touched)">
                             <option selected>Elija...</option>
                             <option value="OTROS">OTROS</option>
                             <option value="CLIENTE">CLIENTE</option>
                             <option value="PERTEC POR COBRAR">PERTEC POR COBRAR</option>
                           </select>
+                          <div *ngIf="submitted && f.fletepor.invalid" class="invalid-feedback" style="display: block;">
+                            <mat-icon>info</mat-icon>
+                          </div>
                         </div>
                       </div>
+
                       <div class="col-md-4">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -1103,6 +1125,7 @@
                               {{ desct_linea_id_tipos.codigo }} -
                               {{ desct_linea_id_tipos.descripcion }}
                             </mat-option>
+                            <input type="text" formControlName="nroidsoldesctos">
                           </mat-select>
                         </div><br>
 

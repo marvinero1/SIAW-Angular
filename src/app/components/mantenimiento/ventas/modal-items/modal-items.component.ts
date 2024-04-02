@@ -1,15 +1,14 @@
-import { Component, HostListener, Inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatRow } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { Item } from '@services/modelos/objetos';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
-
 @Component({
   selector: 'app-modal-items',
   templateUrl: './modal-items.component.html',
@@ -68,6 +67,9 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   desc_linea_seg_solicitud_get: any;
   fecha_get: any;
   codmoneda_get: any;
+  @ViewChildren('rowElement') rowElements: QueryList<ElementRef>;
+  private selectedIndexSubject = new BehaviorSubject<number>(0);
+  selectedIndex$ = this.selectedIndexSubject.asObservable();
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalItemsComponent>, private toastr: ToastrService,
     private servicioItem: ItemServiceService, private datePipe: DatePipe,
@@ -112,8 +114,16 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.getCatalogoItems();
   }
 
+
+
   ngAfterViewInit(): void {
     //Add 'implements AfterViewInit' to the class.
+    this.selectedIndex$.subscribe(index => {
+      const rowElement = this.rowElements.toArray()[index];
+      if (rowElement) {
+        rowElement.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
 
     // Realizamos todas las validaciones
     if (this.codmoneda_get === '') {
@@ -137,6 +147,19 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     if (this.validacion) {
       this.toastr.error('¡' + this.messages.join(', ') + '!');
     }
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    const dataLength = this.dataSource.data.length; // Obtener la longitud de los datos
+    if (event.key === 'ArrowDown') {
+      this.selectedIndexSubject.next((this.selectedIndexSubject.value + 1) % dataLength);
+    } else if (event.key === 'ArrowUp') {
+      this.selectedIndexSubject.next((this.selectedIndexSubject.value - 1 + dataLength) % dataLength);
+    }
+  }
+
+  selectRow(index: number) {
+    this.selectedIndexSubject.next(index);
   }
 
   applyFilter(event: Event) {

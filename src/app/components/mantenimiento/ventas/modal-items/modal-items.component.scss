@@ -35,8 +35,16 @@ td{
 
 .mdc-data-table__cell:hover::selection { background: #093070; color: white; }
 
-.mdc-data-table__cell:checked,
+
+
+::ng-deep {
+    .mat-mdc-table .mdc-data-table__row{
+        .mdc-data-table__cell:checked,
 .mdc-data-table__cell:hover {
   background-color: #093070;
   box-shadow: 0 0 10px 100px #093070 inset;color: white;
+}
+    }
+
+
 }
