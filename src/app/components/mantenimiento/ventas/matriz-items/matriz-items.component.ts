@@ -636,7 +636,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     }
 
     if (!this.item_valido) {
-      console.log('¡EL ITEM NO ESTA EN VENTA!');
+      console.log('¡EL ITEM NO ESTA EN VENTA!', this.item_valido);
       //this.toastr.error('¡EL ITEM NO ESTA EN VENTA!');
       return;
     }

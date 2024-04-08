@@ -205,19 +205,20 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         codcliente: this.codcliente_get,
         opcion_nivel: this.desct_nivel_get,
         codalmacen: this.codalmacen_get,
-        desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
+        desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
       };
     });
 
     console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(nuevosItems));
-    const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
 
 
 
 
     if (!this.isCheckedCantidad) {
+      const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
+
       console.log("check de empaque minimo activo");
       this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
         .subscribe({
@@ -248,6 +249,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         });
     } else {
       console.log("SOLO CANTIDAD");
+      const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+
       this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, nuevosItems)
         .subscribe({
           next: (datav) => {

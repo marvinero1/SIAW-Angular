@@ -16,6 +16,7 @@ export class ModalSubTotalComponent implements OnInit {
   BD_storage: any = [];
   desglose: any = [];
   userConn: any;
+  usuario_logueado: any;
 
   items_carrito: any[] = [];
   cliente: any;
@@ -23,12 +24,13 @@ export class ModalSubTotalComponent implements OnInit {
   moneda: any;
   desclinea: any;
   fecha_proforma: any;
+  descuento_nivel_get: any;
   fecha_actual = new Date();
 
   constructor(public dialogRef: MatDialogRef<ModalSubTotalComponent>, private toastr: ToastrService,
     private api: ApiService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
     public itemservice: ItemServiceService,
-    @Inject(MAT_DIALOG_DATA) public items: any,
+    @Inject(MAT_DIALOG_DATA) public items: any, @Inject(MAT_DIALOG_DATA) public descuento_nivel: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
     @Inject(MAT_DIALOG_DATA) public cod_almacen: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
@@ -37,13 +39,15 @@ export class ModalSubTotalComponent implements OnInit {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.items_carrito = items.items;
     this.cliente = cod_cliente.cod_cliente;
     this.almacen = cod_almacen.cod_almacen;
     this.moneda = cod_moneda.cod_moneda;
     this.desclinea = desc_linea.desc_linea;
-    this.fecha_proforma = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
+    this.descuento_nivel_get = descuento_nivel.descuento_nivel;
+    this.fecha_proforma = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
     console.log(this.items_carrito, this.cliente, this.almacen, this.moneda, this.desclinea, this.fecha_proforma);
   }
@@ -59,23 +63,22 @@ export class ModalSubTotalComponent implements OnInit {
       descuento: item.coddescuento,
       cantidad_pedida: item.cantidad_pedida,
       cantidad: item.cantidad,
-      codcliente: "",
-      opcion_nivel: "",
-      codalmacen: 0,
-      desc_linea_seg_solicitud: "",
-      codmoneda: "",
-      fecha: new Date().toISOString()
+      codcliente: this.cliente,
+      opcion_nivel: this.descuento_nivel_get,
+      codalmacen: this.almacen,
+      desc_linea_seg_solicitud: this.desclinea === undefined ? "false" : "true",
+      codmoneda: this.moneda,
+      fecha: this.fecha_proforma,
     }));
 
     console.log(arrayTransformado);
-
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/mant/adarea/";
-    return this.api.create("/venta/transac/veproforma/versubTotal/" + this.userConn, arrayTransformado)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/versubTotal/";
+    return this.api.create("/venta/transac/veproforma/versubTotal/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado, arrayTransformado)
       .subscribe({
         next: (datav) => {
           this.sub_totabilizar_post = datav;
           this.desglose = datav.desgloce;
-          console.log(this.desglose);
+          console.log(datav);
 
           this.spinner.show();
           setTimeout(() => {

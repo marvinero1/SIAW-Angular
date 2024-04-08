@@ -41,6 +41,7 @@ export class AnticiposProformaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public tipoPago: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,

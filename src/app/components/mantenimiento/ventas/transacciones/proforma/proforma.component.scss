@@ -182,6 +182,10 @@
   .mdc-tab{
     min-width: 79px !important;  
   }
+
+  // label:not(.form-check-label):not(.custom-file-label) {
+  //   font-weight: 100;
+  // }
   
   // .mat-mdc-tab .mdc-tab__text-label {
   //   margin-bottom: 20px !important;
@@ -207,3 +211,27 @@
 .center1{
   text-align: center !important;
 }
+
+
+
+
+
+.mat-column-negativos {
+  /* Aplica bordes solo en los lados derecho e izquierdo */
+  border-left: 0.001px solid #ff8000;
+  border-right: 0.001px solid #ff8000;
+}
+
+/* Opcional: para eliminar los bordes superior e inferior del encabezado de la columna */
+.mat-header-cell, .mat-column-negativos {
+  border-top: none;
+  border-bottom: none;
+}
+
+
+
+
+
+
+
+

@@ -5,10 +5,11 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 })
 export class DescuentoService {
 
-  @Output() disparadorDeDescuentos:EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDeDescuentos: EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDeDescuentosDelModalTotalDescuentos: EventEmitter<any> = new EventEmitter();
 
-  constructor() { 
-    
+  constructor() {
+
   }
 
 }

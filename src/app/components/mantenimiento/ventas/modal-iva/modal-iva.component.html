@@ -1,0 +1,38 @@
+<div class="p-1" style="">
+  <div class="tittle">
+    <span> Alicuotas de IVA </span>
+  </div>
+
+  <div class="p-1 mat-elevation-z8">
+    <div class="row">
+      <div class="col-md">
+
+        <table class="default" style="background-color: #f1f1f1;">
+          <thead>
+            <tr>
+              <th>%</th>
+              <th>Total</th>
+              <th>% B/R</th>
+              <th>Bon / Rec </th>
+              <th>IVA</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let tabla_iva_get_proforma of tabla_iva_get_proformas">
+              <td> {{ tabla_iva_get_proforma.porceniva }} </td>
+              <td> {{ tabla_iva_get_proforma.total | number:'1.2-2' }} </td>
+              <td> {{ tabla_iva_get_proforma.porcenbr }} </td>
+              <td> {{ tabla_iva_get_proforma.br }} </td>
+              <td> {{ tabla_iva_get_proforma.iva }} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row p-2" style="text-align: center;display: block;">
+      <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i>Cerrar</button>
+    </div>
+  </div>
+</div>

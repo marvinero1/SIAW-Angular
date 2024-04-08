@@ -233,7 +233,7 @@ import { DescuentosEspecialesComponent } from '@components/mantenimiento/ventas/
 import { CatalogoLugarComponent } from '@components/mantenimiento/ventas/lugares/catalogo-lugar/catalogo-lugar.component';
 import { LugaresComponent } from '@components/mantenimiento/ventas/lugares/lugares.component';
 import { MatrizItemsComponent } from '@components/mantenimiento/ventas/matriz-items/matriz-items.component';
-import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component';
+import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component';
 import { ModalClienteInfoComponent } from '@components/mantenimiento/ventas/modal-cliente-info/modal-cliente-info.component';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
 import { ModalDescuentosComponent } from '@components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component';
@@ -412,6 +412,8 @@ import { VentanaValidacionesComponent } from '@components/mantenimiento/ventas/v
 // import Handsontable from 'handsontable/base';
 import localeEs from '@angular/common/locales/es';
 import es from '@angular/common/locales/es';
+import { ModalIvaComponent } from '@components/mantenimiento/ventas/modal-iva/modal-iva.component';
+import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -492,7 +494,7 @@ registerPlugin(UndoRedo);
         CuentaEfectivoCuentasContablesComponent, CuentasContablesComponent, CuentasCatalogoComponent, NumeracionComprobantesComponent,
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
-        ModalEtiquetaComponent,
+        ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent,
 
 
 

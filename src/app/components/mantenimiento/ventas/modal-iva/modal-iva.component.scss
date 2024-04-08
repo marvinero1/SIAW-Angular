@@ -1,0 +1,12 @@
+
+::ng-deep {
+    .mat-mdc-dialog-container .mdc-dialog__surface{
+        background-color: #f3f3f3 !important;
+    }
+}
+
+table, th, td {
+    padding: 5px !important;
+    border: 1px solid;
+    text-align: center !important;
+}

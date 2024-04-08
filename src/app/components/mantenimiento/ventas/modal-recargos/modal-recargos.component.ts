@@ -7,8 +7,6 @@ import { ToastrService } from 'ngx-toastr';
 import { RecargoServicioService } from '../recargo-documento/service-recargo/recargo-servicio.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { RecargoToProformaService } from './recargo-to-proforma-services/recargo-to-proforma.service';
-import { DecimalPipe } from '@angular/common';
-
 @Component({
   selector: 'app-modal-recargos',
   templateUrl: './modal-recargos.component.html',
@@ -16,6 +14,7 @@ import { DecimalPipe } from '@angular/common';
 })
 export class ModalRecargosComponent implements OnInit {
 
+  recargos_ya_en_array: any = [];
   recargo_get_service: any = [];
   tablaRecargos: any = [];
   array_de_recargos: any = [];
@@ -25,9 +24,8 @@ export class ModalRecargosComponent implements OnInit {
   mont: number;
   moneda: any;
   confirmacion_get_recargo: any;
-  recargos_ya_en_array: any = [];
-  recargos_ya_en_array_tamanio: number;
 
+  recargos_ya_en_array_tamanio: any;
 
   userConn: any;
   displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto', 'moneda', 'accion'];
@@ -38,17 +36,16 @@ export class ModalRecargosComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalRecargosComponent>, private toastr: ToastrService,
     public servicioRecargo: RecargoServicioService, public servicio_recargo_proforma: RecargoToProformaService,
-    private _decimalPipe: DecimalPipe,
-    @Inject(MAT_DIALOG_DATA) public recargos: any,) {
+    @Inject(MAT_DIALOG_DATA) public recargos: any,
+    @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
     this.recargos_ya_en_array = recargos.recargos;
-    this.recargos_ya_en_array_tamanio = this.recargos_ya_en_array.length;
+    this.recargos_ya_en_array_tamanio = tamanio_recargos.tamanio_recargos;
 
-    console.log(this.recargos_ya_en_array);
-
+    console.log("Array de Recargos q vienen de proforma: " + recargos.recargos, "Tamanio Array: " + this.recargos_ya_en_array_tamanio);
   }
 
   ngOnInit() {
@@ -67,7 +64,11 @@ export class ModalRecargosComponent implements OnInit {
         this.moneda = this.recargo_get_service.moneda;
       }
     });
-    this.dataSource = new MatTableDataSource(this.recargos_ya_en_array.recargo_array);
+
+    if (this.recargos_ya_en_array_tamanio > 0) {
+      this.array_de_recargos = this.recargos_ya_en_array;
+      this.dataSource = new MatTableDataSource(this.recargos_ya_en_array);
+    }
   }
 
   anadirRecargo() {
@@ -77,52 +78,60 @@ export class ModalRecargosComponent implements OnInit {
       porcentaje: this.porcen,
       monto: this.mont,
       moneda: this.recargo_get_service.moneda,
-    }
+    };
 
+    this.dataSource = new MatTableDataSource(this.recargo_get_service);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
     return this.api.getAll('/venta/transac/veproforma/validaAddRecargo/' + this.userConn + "/" + this.recargo_get_service.codigo + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
+          console.log('data', datav); //este valor simplemente es un true que valida si se puede agregar
           this.confirmacion_get_recargo = datav;
-          console.log(this.confirmacion_get_recargo);
+          const existe_en_array = this.array_de_recargos.some(item => item.codigo === a.codigo);
+          console.log(existe_en_array);
+
+          if (this.confirmacion_get_recargo) {
+            if (existe_en_array) {
+              this.toastr.warning("EL RECARGO YA ESTA AGREGADO")
+            } else {
+              if (this.recargos_ya_en_array_tamanio > 0) {
+                console.log("HAY RECARGOS EN EL ARRAY LA CARGA SE CONCATENA");
+                // Usar concat y asignar el resultado a array_de_recargos
+                this.array_de_recargos = this.array_de_recargos.concat(a);
+              } else {
+                console.log("NO HAY RECARGOS EN EL ARRAY LA CARGA NO SE CONCATENA");
+                // Usar push para agregar el elemento directamente al array
+                this.array_de_recargos.push(a);
+              }
+            }
+          }
+
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
+          console.log(this.array_de_recargos);
         },
 
         error: (err: any) => {
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
           console.log(err, errorMessage);
         },
 
         complete: () => {
-          if (this.confirmacion_get_recargo) {
-            const existe = this.array_de_recargos.some(item => item.codigo === a.codigo);
-            //const existe_en_array = this.recargos_ya_en_array.some(item => item.codigo === a.codigo);
-
-            if (!existe) {
-
-              this.array_de_recargos.push(a);
-
-              this.array_de_recargos.concat(a, this.recargos_ya_en_array.recargo_array);
-
-              this.dataSource = new MatTableDataSource(this.array_de_recargos);
-              console.log(this.array_de_recargos);
-            } else {
-              this.toastr.error('El Recargo ya está agregado');
-            }
-          } else {
-            window.confirm(this.confirmacion_get_recargo.resp);
-          }
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
         }
       })
   }
 
   sendArrayRecargos() {
     let a = this.array_de_recargos.length;
+
     if (a > 0) {
       this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.emit({
         recargo_array: this.array_de_recargos,
       });
+      this.toastr.success("¡ RECARGOS AGREGADOS EXITOSAMENTE !");
       this.close();
     } else {
-      this.toastr.warning("No hay Recargos seleccionados");
+      this.toastr.warning("¡ NO HAY RECARGO SELECCIONADO !");
     }
   }
 

@@ -23,7 +23,7 @@ import { MatrizItemsComponent } from '../../matriz-items/matriz-items.component'
 import { ModalItemsComponent } from '../../modal-items/modal-items.component';
 import { ModalClienteComponent } from '../../modal-cliente/modal-cliente.component';
 import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-cliente-info.component';
-import { ModalClienteDireccionComponent } from '../../modal-cliente-direccion/modal-cliente-direccion.component';
+import { ModalClienteDireccionComponent } from '../../modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 

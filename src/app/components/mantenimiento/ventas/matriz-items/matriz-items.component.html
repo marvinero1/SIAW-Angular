@@ -25,7 +25,8 @@
                 </a>
               </ng-container>
 
-              <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" id="seleccion">
+              <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();"
+                [disabled]="!item_valido" id="seleccion">
                 <i class="fa fa-plus"></i> Selección
               </button>&nbsp;
 
