@@ -24,25 +24,27 @@
           <tbody>
             <tr>
               <th scope="row">Monto.........................................</th>
-              <td>{{ sub_totabilizar_post.a | number:'2.2-2' }}</td>
+              <td>{{ sub_totabilizar_post.a | number:'1.2-2' }}</td>
             </tr>
             <tr>
               <th scope="row">( - ) Descuento por NIvel Linea</th>
-              <td>{{ sub_totabilizar_post.b | number:'2.2-2' }}</td>
+              <td>{{ sub_totabilizar_post.b | number:'1.2-2' }}</td>
             </tr>
-            <hr style="background-color: #fbd800;">
+
+            <hr style="background-color: #d2b600;">
+
             <tr>
               <th scope="row"></th>
-              <td>{{ sub_totabilizar_post.c | number:'2.2-2' }}</td>
+              <td>{{ sub_totabilizar_post.c | number:'1.2-2' }}</td>
             </tr>
             <tr>
               <th scope="row">( - ) Descuentos Especiales</th>
-              <td>{{ sub_totabilizar_post.d | number:'2.2-2' }}</td>
+              <td>{{ sub_totabilizar_post.d | number:'1.2-2' }}</td>
             </tr>
             <tr>
               <th scope="row">Desglose</th>
               <td>
-                <div style="background-color: black;color: #fbd800;width: 100%;height: 6rem;max-height: 10rem;">
+                <div style="background-color: black;color: #d2b600e7;width: 100%;height: 6rem;max-height: 10rem;">
                   <p *ngFor="let item of desglose">
                     Total: {{ item.total }} <br>
                     Descuento: {{ item.descuento }}
@@ -50,12 +52,12 @@
                 </div>
               </td>
             </tr>
-            <hr style="background-color: #fbd800;">
+            <hr style="background-color: #d2b600;">
 
             <tr>
               <th scope="row">Sub Total</th>
               <td>
-                {{ sub_totabilizar_post.e | number:'2.2-2' }}
+                {{ sub_totabilizar_post.e | number:'1.2-2' }}
               </td>
             </tr>
           </tbody>

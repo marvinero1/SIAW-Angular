@@ -5,6 +5,8 @@ import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
+import { SubTotalService } from './sub-total-service/sub-total.service';
+
 @Component({
   selector: 'app-modal-sub-total',
   templateUrl: './modal-sub-total.component.html',
@@ -29,8 +31,9 @@ export class ModalSubTotalComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalSubTotalComponent>, private toastr: ToastrService,
     private api: ApiService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
-    public itemservice: ItemServiceService,
-    @Inject(MAT_DIALOG_DATA) public items: any, @Inject(MAT_DIALOG_DATA) public descuento_nivel: any,
+    public itemservice: ItemServiceService, public subtotal_service: SubTotalService,
+    @Inject(MAT_DIALOG_DATA) public items: any,
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
     @Inject(MAT_DIALOG_DATA) public cod_almacen: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
@@ -57,6 +60,7 @@ export class ModalSubTotalComponent implements OnInit {
   }
 
   sacarSubTotal() {
+    this.spinner.show();
     const arrayTransformado = this.items_carrito.map(item => ({
       coditem: item.coditem,
       tarifa: item.codtarifa,
@@ -80,7 +84,10 @@ export class ModalSubTotalComponent implements OnInit {
           this.desglose = datav.desgloce;
           console.log(datav);
 
-          this.spinner.show();
+          this.subtotal_service.disparadorDeSubTotal.emit({
+            subtotal: this.sub_totabilizar_post.subtotal,
+          });
+
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -89,6 +96,9 @@ export class ModalSubTotalComponent implements OnInit {
         error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE TOTALIZO !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
         },
         complete: () => {
           this.mandarArrayItemSubTotal(this.sub_totabilizar_post.resul);

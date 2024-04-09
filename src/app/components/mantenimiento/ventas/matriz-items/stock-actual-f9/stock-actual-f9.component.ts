@@ -46,7 +46,6 @@ export class StockActualF9Component implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   getStockItem() {

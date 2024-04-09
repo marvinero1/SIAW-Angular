@@ -16,7 +16,7 @@ th{
     color: #fff; 
 }
 td{
-    text-align: left;
+    text-align: center;
     cursor: pointer;
 }
 .mat-mdc-table .mdc-data-table__row{
@@ -34,11 +34,4 @@ td{
 td:hover {
     background-color:  #093070;
     color: white;
-}
-
-
-::ng-deep {
-    .mat-mdc-dialog-container .mdc-dialog__surface{
-        background-color: #ffffc0 !important;
-    }
 }

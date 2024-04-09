@@ -152,8 +152,14 @@
 
 
 ::ng-deep {
+  .wrapper .content-wrapper{
+    background-color:#CEFFFF !important;
+  }
   .mat-mdc-tab-labels{
     height: calc(1.3rem + 0px) !important;
+  }
+  .mat-mdc-tab-body{
+    height: 12rem !important;
   }
 
   .mdc-data-table__cell, .mdc-data-table__header-cell{
@@ -181,6 +187,10 @@
   
   .mdc-tab{
     min-width: 79px !important;  
+  }
+
+  .mat-mdc-tab-body-content{
+    overflow: hidden;
   }
 
   // label:not(.form-check-label):not(.custom-file-label) {
@@ -227,11 +237,5 @@
   border-top: none;
   border-bottom: none;
 }
-
-
-
-
-
-
 
 

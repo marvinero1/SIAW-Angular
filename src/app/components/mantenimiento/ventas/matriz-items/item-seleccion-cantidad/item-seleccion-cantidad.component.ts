@@ -7,7 +7,6 @@ import { DescuentoService } from '../../serviciodescuento/descuento.service';
 import { ServicioprecioventaService } from '../../servicioprecioventa/servicioprecioventa.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 @Component({
   selector: 'app-item-seleccion-cantidad',
   templateUrl: './item-seleccion-cantidad.component.html',
@@ -18,6 +17,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   cod_precio_venta_modal_codigo: number;
   cod_descuento_modal_codigo: number;
   num_hoja: number;
+  cantidad_input: number;
 
   tarifa_get_unico: any = [];
   descuentos_get: any = [];
@@ -30,8 +30,6 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   cod_descuento_modal: any = [];
   cod_precio_venta_modal: any = [];
   array_items_completo: [];
-
-  cantidad_input: number;
 
   isCheckedCantidad: boolean = true;
   isCheckedEmpaque: boolean = false;
@@ -199,7 +197,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       return {
         coditem: elemento,
         tarifa: this.cod_precio_venta_modal_codigo, //cod_precio_venta_modal_codigo
-        descuento: this.cod_descuento_modal_codigo, //cod_descuento_modal_codigo
+        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, //cod_descuento_modal_codigo
         cantidad_pedida: this.cantidad_input,
         cantidad: this.cantidad_input,
         codcliente: this.codcliente_get,
@@ -211,15 +209,12 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       };
     });
 
-    console.log("Items para enviar a /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/: " + JSON.stringify(nuevosItems));
-
-
-
+    console.log("Items para enviar a /venta/transac/veproforma/getCantfromEmpaque/ O getItemMatriz_AnadirbyGroup : " + JSON.stringify(nuevosItems));
 
     if (!this.isCheckedCantidad) {
       const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
 
-      console.log("check de empaque minimo activo");
+      console.log("CHECK DE PRECIO Y DESCT ACTIVADO");
       this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
         .subscribe({
           next: (datav) => {
@@ -279,14 +274,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
           }
         });
     }
-
-
-
-
-
   }
-
-
 
   enviarItemsAlServicio(items: any[]) {
     this.itemservice.enviarItemsDeSeleccionAMatriz(items);

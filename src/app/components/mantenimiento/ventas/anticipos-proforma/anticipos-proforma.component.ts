@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -6,13 +5,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-anticipos-proforma',
   templateUrl: './anticipos-proforma.component.html',
   styleUrls: ['./anticipos-proforma.component.scss']
 })
 export class AnticiposProformaComponent implements OnInit {
+
+  anticipos_asignados_table: any = [];
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -22,7 +22,11 @@ export class AnticiposProformaComponent implements OnInit {
   nit_get: any;
   validacion: boolean = false;
   vendedor_get: any;
+  id_get: any;
+  numero_id_get: any;
   message: string;
+  userConn: any;
+  usuarioLogueado: any;
 
   nombre_ventana: string = "docininvconsol.vb";
   public ventana = "Toma de Inventario Consolidado"
@@ -38,7 +42,6 @@ export class AnticiposProformaComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
@@ -47,6 +50,11 @@ export class AnticiposProformaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,
     @Inject(MAT_DIALOG_DATA) public vendedor: any) {
 
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+
+    this.id_get = id.id;
+    this.numero_id_get = numero_id.numero_id;
     this.cod_cliente_proforma = cod_cliente.cod_cliente;
     this.cod_moneda_proforma = cod_moneda.cod_moneda;
     this.totalProf = totalProf.totalProf;
@@ -71,17 +79,52 @@ export class AnticiposProformaComponent implements OnInit {
       this.validacion = true;
       return this.message = "SELECCIONE MONEDA"
     }
-    if (this.totalProf == undefined || this.totalProf == 0) {
-      this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
-      this.validacion = true;
-      return this.message = "EL TOTAL ES 0 O NO HAY TOTAL"
-    }
+    // if (this.totalProf == undefined || this.totalProf == 0) {
+    //   this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
+    //   this.validacion = true;
+    //   return this.message = "EL TOTAL ES 0 O NO HAY TOTAL"
+    // }
     if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma == "CREDITO") {
       this.toastr.error('SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA"
     }
+
+    this.anticiposAsignadosInicioCargaTabla();
   }
+
+  anticiposAsignadosInicioCargaTabla() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/";
+    return this.api.getAll('/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/' + this.userConn + "/" + this.id_get + "/" + this.numero_id_get)
+      .subscribe({
+        next: (datav) => {
+          this.anticipos_asignados_table = datav;
+          console.log('data', this.anticipos_asignados_table);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  validarAsignacionAnticipo() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/";
+    return this.api.getAll('/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/' + this.userConn + "/" + this.cod_moneda_proforma + "/" + this.numero_id_get)
+      .subscribe({
+        next: (datav) => {
+          this.anticipos_asignados_table = datav;
+          console.log('data', this.anticipos_asignados_table);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
 
 
   close() {

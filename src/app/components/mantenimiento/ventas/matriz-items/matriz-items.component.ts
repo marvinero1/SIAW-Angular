@@ -11,8 +11,6 @@ import { ItemSeleccionCantidadComponent } from './item-seleccion-cantidad/item-s
 import { ServicioF9Service } from './stock-actual-f9/servicio-f9.service';
 import { DatePipe } from '@angular/common';
 import Handsontable from 'handsontable';
-import { VentanaValidacionesComponent } from '../ventana-validaciones/ventana-validaciones.component';
-
 @Component({
   selector: 'app-matriz-items',
   templateUrl: './matriz-items.component.html',
@@ -242,19 +240,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // });
     //
 
-    this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length;
+    //this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length; //aca pone la longitud del carrito con los items concatenados del detalle de la proforma
     this.array_items_seleccionados_length = this.array_items_seleccionado.length;
-
     console.log(this.tamanio_lista_item_pedido, this.array_items_seleccionados_length);
-
-
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-
-
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {
       this.toastr.error('¡' + this.messages.join(', ') + '!');
@@ -265,7 +258,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
     console.log(`Elemento Enfocado: ${nombre_input}`);
-
     //this.myInputField.nativeElement.focus();
     this.focusMyInput();
   }
@@ -583,22 +575,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.focusPedido1.nativeElement.focus();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   addItemArray() {
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
@@ -610,9 +586,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       descuento: this.descuento_get,
       cantidad_pedida: this.pedido,
       cantidad: this.cantidad === undefined ? this.pedido : this.cantidad,
-      opcion_nivel: "ACTUAL",
+      opcion_nivel: this.desc_linea_seg_solicitud_get,
       codalmacen: this.codalmacen_get,
-      codcliente: this.codcliente_get === undefined ? "0" : this.codcliente_get,
+      codcliente: this.codcliente_get,
       desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
@@ -663,16 +639,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
-    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple,
-      this.array_items_proforma_matriz);
-
+    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple, this.array_items_proforma_matriz);
 
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-
     console.log("ITEM SELECCIONADO UNITARIO:" + JSON.stringify(this.array_items_seleccionado), "ITEM'S SELECCION MULTIPLE:" + JSON.stringify(this.array_items_proforma_matriz));
-    //console.log("ARRAY CONCATENADO: " + JSON.stringify(this.array_items_completo));
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
@@ -683,32 +655,20 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
 
     //si el carrito ya tiene items concatenarlo a la nueva carga de items
-
-
     //aca se pone el numerito que indica el total de los items que hay en el carrito
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
-
 
     // this.item_seleccionados_catalogo_matriz.forEach(element => {
     //   console.log("ITEMS DEL CARRO BTN CONFRIMAR: " + JSON.stringify(element));
     // });
   }
 
-
-
-
-
-
-
   mandarItemaProforma() {
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
     console.log(this.array_items_completo);
 
-
     let a = this.array_items_completo.map((elemento) => {
-      console.log(elemento);
-      // console.log(elemento.niveldesc);
       return {
         coditem: elemento.coditem,
         tarifa: this.tarifa_get,
@@ -716,14 +676,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
         codcliente: this.codcliente_get,
-        opcion_nivel: elemento.niveldesc === undefined ? "ACTUAL" : "ANTERIOR",
+        opcion_nivel: this.descuento_nivel_get,
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
       }
     });
-
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
@@ -731,7 +690,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.items_post = datav;
-          console.log("BOTON CONFIRMAR DEL CARRITO INFO: ", datav);
+          console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
         },
 
         error: (err) => {
@@ -762,21 +721,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.array_items_proforma_matriz = this.array_items_proforma_matriz.filter(i => i.coditem !== item);
     this.array_items_seleccionado = this.array_items_seleccionado.filter(i => i.coditem !== item);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   limpiarMatriz() {
     this.data_almacen_local = [];

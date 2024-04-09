@@ -254,6 +254,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public selected: string = "Credito";
   public tipopago: any;
   public preparacion: any;
+  public complementopf: any;
 
   public disable_input_create: boolean;
   public isDisabled: boolean = true;
@@ -467,7 +468,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.subscribe(data => {
       console.log("Recibiendo Item Procesados De Catalogo F4: ", data);
       this.item_seleccionados_catalogo_matriz = data;
-      this.array_items_carrito_y_f4_catalogo.push(this.item_seleccionados_catalogo_matriz);
+
+      if (this.item_seleccionados_catalogo_matriz.length > 0) {
+        this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
+      } else {
+        this.array_items_carrito_y_f4_catalogo.push(this.item_seleccionados_catalogo_matriz);
+      }
 
       console.log("ARRAY COMPLETO DE MATRIZ Y F4: " + this.array_items_carrito_y_f4_catalogo);
 
@@ -649,7 +655,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }));
 
     this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_false);
-
     let validacion = [{
       codControl: '',
       descripcion: '',
@@ -665,11 +670,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }]
 
     this.dataSource_validacion = new MatTableDataSource(validacion);
-
-
-
-
-
   }
 
   createForm(): FormGroup {
@@ -953,42 +953,44 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     console.log(total_proforma_concat);
 
+    if (this.total === 0.00) {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      return;
+    }
+
     if (this.FormularioData.valid) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
-      let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/guardarProforma/";
-      return this.api.create("/venta/transac/veproforma/guardarProforma/" + this.userConn + "/" + this.cod_id_tipo_modal_id + "/" + this.BD_storage.bd, total_proforma_concat)
-        .subscribe({
-          next: (datav) => {
-            this.toastr.info("FORMULARIO CORRECTO ✅");
-            this.totabilizar_post = datav;
-            console.log(this.totabilizar_post);
+      const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage.bd}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+      this.api.create(url, total_proforma_concat).subscribe({
+        next: (datav) => {
+          this.toastr.info("FORMULARIO CORRECTO ✅");
+          this.totabilizar_post = datav;
+          console.log(this.totabilizar_post);
 
-            window.location.reload();
-          },
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
 
-          error: (err) => {
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-
-            console.log(err, errorMessage);
-            this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-          },
-          complete: () => { }
-        })
+          //window.location.reload();
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
     } else {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
     }
+
   }
 
   // infoItemTotalSubTotal(array) {
@@ -1730,6 +1732,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   pedidoChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
     this.total_desct_precio = true;
     element.cantidad = element.cantidad_pedida;
 
@@ -1740,6 +1748,38 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(this.dataSource.filteredData);
 
     //guardar en el carrito ya modificado, para enviar a totalizar
+    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+  }
+
+  TPChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
+    // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
+    element.codtarifa = Number(newValue);
+
+    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+    console.log(this.dataSource.filteredData);
+
+    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+  }
+
+  DEChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
+    // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+    element.coddescuento = Number(newValue);
+
+    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+    console.log(this.dataSource.filteredData);
+
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
   }
 
@@ -1765,6 +1805,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   calcularTotalPedidoXPU(newValue: number, preciolista: number) {
+
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (newValue !== undefined && preciolista !== undefined) {
       // console.log(input);
@@ -1839,176 +1880,42 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   totabilizar() {
-    this.spinner.show();
-
     let total_proforma_concat: any = [];
     let item_procesados_en_total: any = [];
 
-    let veproforma_valida: [
-      {
-        "codproforma": 0,
-        "codcontrol": "00001",
-        "nroitems": 3,
-        "nit": "12492433",
-        "subtotal": 148.21,
-        "descuentos": 19.04,
-        "recargos": 0,
-        "total": 129.17,
-        "valido": "SI",
-        "observacion": "Sin Observacion",
-        "obsdetalle": "",
-        "codservicio": 102,
-        "datoa": "",
-        "datob": "",
-        "clave_servicio": ""
-      },
-      {
-        "codproforma": 0,
-        "codcontrol": "00002",
-        "nroitems": 3,
-        "nit": "12492433",
-        "subtotal": 148.21,
-        "descuentos": 19.04,
-        "recargos": 0,
-        "total": 129.17,
-        "valido": "SI",
-        "observacion": "Sin Observacion",
-        "obsdetalle": "",
-        "codservicio": 0,
-        "datoa": "",
-        "datob": "",
-        "clave_servicio": ""
-      },
-      {
-        "codproforma": 0,
-        "codcontrol": "00003",
-        "nroitems": 3,
-        "nit": "12492433",
-        "subtotal": 148.21,
-        "descuentos": 19.04,
-        "recargos": 0,
-        "total": 129.17,
-        "valido": "SI",
-        "observacion": "Sin Observacion",
-        "obsdetalle": "",
-        "codservicio": 0,
-        "datoa": "",
-        "datob": "",
-        "clave_servicio": ""
-      }
-    ];
+    console.log(this.disableSelect.value); //valor del check en el mat-tab complementar proforma
 
-    console.log("ENTRO A LA FUNCION SACAR TOTAL");
-    console.log(this.recargo_de_recargos);
-
-    this.veproforma = [this.FormularioData.value];
-    // this.veproforma1 = this.item_seleccionados_catalogo_matriz;
-
-    //ACA PONER A LA TABLA DEL DATA SOURCE SI SE MODIFICA LA CANTIDFAD O EL PEDIDO
-    //this.veproforma1 = this.item_seleccionados_catalogo_matriz_sin_procesar;
-    this.veproforma1 = this.array_items_carrito_y_f4_catalogo;
-    this.veproforma_valida = veproforma_valida;
-    this.veproforma_anticipo = [];
-    this.vedesextraprof = [];
-    this.verecargoprof = this.recargo_de_recargos;
-    this.veproforma_iva = [{
-      "codproforma": this.id_proforma_numero_id,
-      "porceniva": 0,
-      "total": 0,
-      "porcenbr": 0,
-      "br": 0,
-      "iva": 0
-    }];
-
-    console.log(this.veproforma, this.veproforma1, this.veproforma_valida, this.veproforma_anticipo,
-      this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-
-    //total_proforma_concat = this.veproforma.concat(this.veproforma1);
-    total_proforma_concat = {
-      // veproforma: {
-      //   "id": "PYM01",
-      //   "numeroid": 2477,
-      //   "codalmacen": 311,
-      //   "codcliente": "303119",
-      //   "nomcliente": "ARMINDA CHOQUE CORONADO DE PORTUGAL",
-      //   "nit": "12492433",
-      //   "codvendedor": 31201,
-      //   "codmoneda": "BS",
-      //   "fecha": "2024-02-16",
-      //   "tdc": 1,
-      //   "tipopago": 0,
-      //   "subtotal": 148.21,
-      //   "descuentos": 0,
-      //   "recargos": 0,
-      //   "total": 129.17,
-      //   "anulada": false,
-      //   "transporte": "CAMION PERTEC",
-      //   "fletepor": "OTROS",
-      //   "direccion": "AV. CAPITAN VICTOR USTARIZ ENTRE C/C.W. CEVALLOS (CERCADO - CBBA - PCBA)",
-      //   "aprobada": false,
-      //   "paraaprobar": false,
-      //   "transferida": false,
-      //   "fechaaut": null,
-      //   "codcomplementaria": 0,
-      //   "obs": "---",
-      //   "obs2": null,
-      //   "horareg": "09:22",
-      //   "fechareg": "2024-02-16",
-      //   "usuarioreg": "DPD3",
-      //   "preparacion": "NORMAL",
-      //   "iva": 0,
-      //   "horaaut": "09:23",
-      //   "tipoentrega": "ENTREGAR",
-      //   "porceniva": 0,
-      //   "odc": "",
-      //   "peso": 34.23575,
-      //   "impresa": false,
-      //   "etiqueta_impresa": false,
-      //   "fecha_inicial": "2024-02-16",
-      //   "hora_inicial": "09:22",
-      //   "usuarioaut": null,
-      //   "confirmada": false,
-      //   "fecha_confirmada": null,
-      //   "hora_confirmada": null,
-      //   "contra_entrega": true,
-      //   "idanticipo": "",
-      //   "numeroidanticipo": 0,
-      //   "monto_anticipo": 0,
-      //   "pago_contado_anticipado": false,
-      //   "codcliente_real": "303119",
-      //   "venta_cliente_oficina": false,
-      //   "estado_contra_entrega": "POR CANCELAR",
-      //   "nombre_transporte": "CAMION PERTEC",
-      //   "desclinea_segun_solicitud": false,
-      //   "idsoldesctos": "",
-      //   "nroidsoldesctos": 0,
-      //   "latitud_entrega": "-17.396827",
-      //   "longitud_entrega": "-66.189689",
-      //   "hora": "09:22",
-      //   "ubicacion": "LOCAL",
-      //   "es_sol_urgente": false,
-      //   "niveles_descuento": "ACTUAL",
-      //   "idpf_complemento": "", //aca es para complemento de proforma
-      //   "nroidpf_complemento": 0, //aca es para complemento de proforma
-      //   "complemento_ci": "",
-      //   "tipo_venta": 0,
-      //   "tipo_docid": 1,
-      //   "email": "facturasventas@pertec.com.bo",
-      //   "tipo_complementopf": 0
-      // },
-      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
-      veproforma1: this.veproforma1,
-      veproforma_valida: [this.veproforma_valida],
-      veproforma_anticipo: [],
-      vedesextraprof: [],
-      verecargoprof: this.recargo_de_recargos,
-      veproforma_iva: this.veproforma_iva,
+    if (this.disableSelect.value === false) {
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
     }
 
-    console.log(total_proforma_concat);
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+    }
+
+    if (this.habilitar_desct_sgn_solicitud === undefined) {
+      this.habilitar_desct_sgn_solicitud = false;
+    }
+
+    this.spinner.show();
+    total_proforma_concat = {
+      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
+      veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
+      veproforma_valida: [],
+      veproforma_anticipo: [],
+      vedesextraprof: [],
+      verecargoprof: this.recargo_de_recargos, //array de recargos
+      veproforma_iva: this.veproforma_iva, //array de iva
+    }
+
+    console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
+      this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
+    console.log("Array de Carrito a Totaliza:" + total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
 
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
-    return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + 'false' + "/" + "1" + "/" + "ACTUAL", total_proforma_concat)
+    return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
       .subscribe({
         next: (datav) => {
           this.totabilizar_post = datav;
@@ -2097,6 +2004,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
     this.veproforma1 = proforma.detalle;
+    this.cod_descuento_total = proforma.descuentos;
 
     //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = proforma.cabecera
@@ -2200,11 +2108,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
+
+
+
+
+
+
+
+
 
 
 
@@ -2296,7 +2210,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return; // Detenemos la ejecución de la función si la validación falla
     }
 
-    if (this.codigo_cliente === undefined || this.codigo_cliente === '') {
+    if (this.codigo_cliente === undefined || this.codigo_cliente === '' || this.razon_social === undefined || this.razon_social === '') {
       this.dialog.open(VentanaValidacionesComponent, {
         width: 'auto',
         height: 'auto',
@@ -2342,7 +2256,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         descuento: this.cod_descuento_modal_codigo,
         codcliente: this.codigo_cliente,
         codalmacen: this.almacn_parame_usuario,
-        desc_linea_seg_solicitud: "",
+        desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === undefined ? "false" : "true",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         items: this.array_items_carrito_y_f4_catalogo,
@@ -2488,41 +2402,42 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // codcliente
     // tipopago === contado
     // total != 0
-    if (this.codigo_cliente === '' && this.codigo_cliente === undefined) {
-      this.dialog.open(VentanaValidacionesComponent, {
-        width: 'auto',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          message: "INGRESE CODIGO DE USUARIO EN PROFORMA",
-        }
-      });
-      return;
-    }
 
-    if (this.tipopago === '' || this.tipopago === "CREDITO" || this.tipopago === undefined) {
-      this.dialog.open(VentanaValidacionesComponent, {
-        width: 'auto',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
-        }
-      });
-      return;
-    }
+    // if (this.codigo_cliente === '' && this.codigo_cliente === undefined) {
+    //   this.dialog.open(VentanaValidacionesComponent, {
+    //     width: 'auto',
+    //     height: 'auto',
+    //     disableClose: true,
+    //     data: {
+    //       message: "INGRESE CODIGO DE USUARIO EN PROFORMA",
+    //     }
+    //   });
+    //   return;
+    // }
 
-    if (this.total === 0) {
-      this.dialog.open(VentanaValidacionesComponent, {
-        width: 'auto',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          message: "EL TOTAL TIENE QUE SER DISTINTO A 0",
-        }
-      });
-      return;
-    }
+    // if (this.tipopago === '' || this.tipopago === "CREDITO" || this.tipopago === undefined) {
+    //   this.dialog.open(VentanaValidacionesComponent, {
+    //     width: 'auto',
+    //     height: 'auto',
+    //     disableClose: true,
+    //     data: {
+    //       message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
+    //     }
+    //   });
+    //   return;
+    // }
+
+    // if (this.total === 0) {
+    //   this.dialog.open(VentanaValidacionesComponent, {
+    //     width: 'auto',
+    //     height: 'auto',
+    //     disableClose: true,
+    //     data: {
+    //       message: "EL TOTAL TIENE QUE SER DISTINTO A 0",
+    //     }
+    //   });
+    //   return;
+    // }
 
 
     this.dialog.open(AnticiposProformaComponent, {
