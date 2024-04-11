@@ -513,7 +513,7 @@
     <!-- InicioTabla -->
     <div class="row">
       <div class="col">
-        <mat-tab-group style="height: 36.5vh !important; overflow-y: scroll;overflow-x: scroll;max-height: 38vh;">
+        <mat-tab-group style="height: 39vh !important; max-height: 39vh;" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
               style="padding: 0 1px 0 19px !important;" matSort>
@@ -535,24 +535,29 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-orden"
                   style="padding: 0 0px 0 0px !important;text-align: center !important;"> Orden </th>
                 <td mat-cell *matCellDef="let element; let i = index" class="td" class="mat-column-orden"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  <span style="width: 50%; float: left;"><i class="fa fa-trash"
+                  style="text-align: center !important; padding: 0px 0px 0px 0px !important">
+                  <span style="width: 50%; float: left;">
+                    <i class="fa fa-trash"
                       style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer"
-                      (click)="eliminarItemTabla(i);"></i></span>
-                  {{ i + 1 }}
+                      (click)="eliminarItemTabla(i);"></i>
+                  </span>
+
                   <!-- Mostrar el valor del índice más 1 para obtener el valor de orden_creciente -->
+                  {{ i + 1 }}
                 </td>
               </ng-container>
 
               <tr mat-row *ngFor="let item of array_items_carrito_y_f4_catalogo; let i = index">
                 <!-- Otras columnas de tu tabla -->
                 <td mat-cell *matCellDef="let element" class="td"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+                  style="text-align: center !important; padding: 0px 0px 0px 0px !important">
                   <span style="width: 50%; float: left;"><i class="fa fa-trash"
                       style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer"
-                      (click)="eliminarItemTabla(i);"></i></span>
-                  {{ i + 1 }}
+                      (click)="eliminarItemTabla(i);"></i>
+                  </span>
+
                   <!-- Mostrar el valor del índice más 1 para obtener el valor de orden_creciente -->
+                  {{ i + 1 }}
                 </td>
               </tr>
 
@@ -571,8 +576,12 @@
 
               <!-- Descripcion Column -->
               <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef style="width: 30%;text-align: left !important;"> Descripción </th>
-                <td mat-cell *matCellDef="let element" style="width: 30%;"> {{ element.descripcion }} </td>
+                <th mat-header-cell *matHeaderCellDef
+                  style="width: 40%;text-align: left !important;padding: 0px 0px 0px 0px;"> Descripción
+                </th>
+                <td mat-cell *matCellDef="let element"
+                  style="width: 40%;text-align: left !important;padding: 0px 0px 0px 0px;">
+                  {{ element.descripcion }} </td>
               </ng-container>
 
               <!-- Medida Column -->
@@ -598,7 +607,7 @@
               <!-- pedido Column -->
               <ng-container matColumnDef="pedido">
                 <th mat-header-cell *matHeaderCellDef> Pedido </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;padding: 0px 0px 0px 0px;">
                   <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
                     min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
                 </td>
@@ -606,8 +615,8 @@
 
               <!-- cantidad Column -->
               <ng-container matColumnDef="cantidad">
-                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> Cantidad </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;padding: 0px 0px 0px 0px;">
                   <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
                     (input)="cantidadChangeMatrix(element, $event.target.value);">
                 </td>
@@ -615,7 +624,8 @@
 
               <!-- sld Column -->
               <ng-container matColumnDef="sld">
-                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> % SLD</th>
+                <th mat-header-cell *matHeaderCellDef style="text-align: right !important;"> %
+                  SLD</th>
                 <td mat-cell *matCellDef="let element" style="text-align: right !important;">
                   {{ element.porcen_mercaderia | number:'1.2-2'}}
                 </td>
@@ -623,8 +633,9 @@
 
               <!-- TP Column -->
               <ng-container matColumnDef="tp">
-                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> TP </th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> TP
+                </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" placeholder="{{ element.codtarifa }}"
                     (input)="TPChangeMatrix(element, $event.target.value)" min="0">
                 </td>
@@ -632,8 +643,9 @@
 
               <!-- DE Column -->
               <ng-container matColumnDef="de">
-                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> DE </th>
-                <td mat-cell *matCellDef="let element">
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> DE
+                </th>
+                <td mat-cell *matCellDef="let element" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" placeholder="{{ element.coddescuento }}"
                     (input)="DEChangeMatrix(element, $event.target.value)" min="0" [readOnly]="true">
                 </td>
@@ -641,8 +653,9 @@
 
               <!-- PUL Column -->
               <ng-container matColumnDef="pul">
-                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PUL </th>
-                <td mat-cell *matCellDef="let element"> {{ element.preciolista }} </td>
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right !important;"> PUL </th>
+                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                  {{ element.preciolista }} </td>
               </ng-container>
 
               <!-- NIV Column -->
@@ -654,29 +667,32 @@
 
               <!-- % Column -->
               <ng-container matColumnDef="porcentaje">
-                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> % </th>
+                <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center !important;"> % </th>
                 <td mat-cell *matCellDef="let element"> {{ element.porcendesc | number:'1.5-5' }} </td>
               </ng-container>
 
               <!-- PD Column -->
               <ng-container matColumnDef="pd">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PD </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element.preciodesc }}
+                <td mat-cell *matCellDef="let element"
+                  style="text-align: right !important;padding: 0px 0px 0px 0px !important"> {{ element.preciodesc }}
                 </td>
               </ng-container>
 
               <!-- PU Column -->
               <ng-container matColumnDef="pu">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PU </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                <td mat-cell *matCellDef="let element"
+                  style="text-align: right !important;padding: 0px 0px 0px 0px !important">
                   {{ element.precioneto | number:'1.5-5' }} </td>
               </ng-container>
 
               <ng-container>
                 <!-- total Column -->
                 <ng-container matColumnDef="total" *ngIf="total_desct_precio === false; else total_X_PU">
-                  <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total </th>
-                  <td mat-cell *matCellDef="let element" style="text-align: right;">
+                  <th mat-header-cell *matHeaderCellDef style="text-align: right;padding: 0px 0px 0px 0px !important">
+                    Total </th>
+                  <td mat-cell *matCellDef="let element" style="text-align: right;padding: 0px 0px 0px 0px !important;">
                     {{ calcularTotalCantidadXPU(element.cantidad_pedida, element.cantidad, element.precioneto) | number:'1.5-5' }}
                     <!-- {{ calcularTotalCantidadXPU(element.cantidad_pedida, element.cantidad, element.preciolista) | number:'1.2-2' }} -->
                     <!-- {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }} -->
@@ -733,8 +749,7 @@
               <!-- Cod. Item Conjunto Column -->
               <ng-container matColumnDef="coditem_suelto">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Cod. Item
-                  Suelto</th>
+                  style="padding: 0 0px 0 0px !important"> Cod. Item Suelto</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coditem_suelto }}
                 </td>
@@ -751,7 +766,7 @@
               <!-- Cod. Item Conjunto Column -->
               <ng-container matColumnDef="descitem">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Descripcion - Medida
+                  style="padding: 0 0px 0 0px !important"> Descripción - Medida
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.descitem }}</td>
@@ -760,63 +775,73 @@
               <!-- Cantidad Column -->
               <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Cantidad </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad }}</td>
+                  style="padding: 0 0px 0 0px !important"> Cant. </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad | number: '1.2-2' }}</td>
               </ng-container>
 
               <!-- Cantidad Pedida en Conjunto Column -->
               <ng-container matColumnDef="cantidad_conjunto">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Cantidad Pedida en
+                  style="padding: 0 0px 0 0px !important"> Cant. Pedida en
                   Conjunto </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad_conjunto }}
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad_conjunto | number: '1.2-2' }}
                 </td>
+              </ng-container>
+
+              <!-- CSaldo Real Column -->
+              <ng-container matColumnDef="saldo_sin_descontar_reservas">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Saldo Real </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important;">
+                  {{ element.saldo_sin_descontar_reservas | number: '1.2-2'}}</td>
               </ng-container>
 
               <!-- Cantidad Pedida en Suelto Column -->
               <ng-container matColumnDef="cantidad_suelta">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Cantidad Pedida en Suelto
+                  style="padding: 0 0px 0 0px !important"> Cant. Pedida en Suelto
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad_suelta }}
-                </td>
-              </ng-container>
-
-              <!-- CSaldo Real Column -->
-              <ng-container matColumnDef="saldo_descontando_reservas">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important"> Saldo Real </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">{{ element.saldo_descontando_reservas }}</td>
+                  !important">{{ element.cantidad_suelta | number: '1.2-2' }}
+                </td>
               </ng-container>
 
               <!-- Cantidad Reserva Conjunto Column -->
               <ng-container matColumnDef="cantidad_reservada_para_cjtos">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important">Cantidad Reserva Conjunto
+                  style="padding: 0 0px 0 0px !important">Cant. Reserva Conjunto
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">{{ element.cantidad_reservada_para_cjtos }}</td>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important;">
+                  {{ element.cantidad_reservada_para_cjtos | number: '1.2-2'}}</td>
               </ng-container>
 
               <!-- Cantidad Reserva Conjunto Column -->
-              <ng-container matColumnDef="saldo_sin_descontar_reservas">
+              <ng-container matColumnDef="saldo_descontando_reservas">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important">Saldo Para Venta Suelta
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">{{ element.saldo_sin_descontar_reservas }}</td>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important;">
+                  {{ element.saldo_descontando_reservas | number: '1.2-2'}}</td>
               </ng-container>
 
               <!-- Observacion Column -->
               <ng-container matColumnDef="obs">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important">Observaciones </th>
+                  style="padding: 0 0px 0 0px !important">Obs </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.obs }}</td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+                  <ng-container *ngIf="element.obs === 'Genera Negativo'; else obs1 ">
+                    <strong style="color: red;">{{ element.obs }}</strong>
+                  </ng-container>
+                  <ng-template #obs1>
+                    <strong style="color: green;">{{ element.obs }}</strong>
+                  </ng-template>
+                </td>
               </ng-container>
 
               <mat-header-row *matHeaderRowDef="displayedColumnsNegativos"></mat-header-row>
@@ -842,101 +867,115 @@
             <table mat-table [dataSource]="dataSourceLimiteMaximoVentas" class="mat-elevation-z8" matSort>
               <!-- Código Item  Column -->
               <ng-container matColumnDef="codigo">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Código Item </th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas"> Item </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codigo }}</td>
               </ng-container>
 
               <!-- Descripcion Medida Column -->
               <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Descripción Medida </th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas"> Descripción Medida </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.descripcion }}</td>
               </ng-container>
 
               <!-- Cantidad Aprobada Anterior Column -->
               <ng-container matColumnDef="cantidad_pf_anterior">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Aprobada Anterior
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Aprobada Anterior
                 </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center !important; padding: 0 0px 0 0px
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
                   !important">{{ element.cantidad_pf_anterior }}</td>
               </ng-container>
 
               <!-- Cantidad Actual Column -->
               <ng-container matColumnDef="cantidad">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Actual
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Actual
                 </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad }}</td>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad  }}</td>
               </ng-container>
 
               <!-- Cantidad Total Column -->
               <ng-container matColumnDef="cantidad_pf_total">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Total</th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Total</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  {{ element.cantidad_pf_total }}
+                  {{ element.cantidad_pf_total  }}
                 </td>
               </ng-container>
 
               <!-- % de Venta Column -->
               <ng-container matColumnDef="porcen_venta">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">% de Venta</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.porcen_venta }}</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">% de Venta</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.porcen_venta }}</td>
               </ng-container>
 
               <!-- Codigo Descuento Especial Column -->
               <ng-container matColumnDef="cod_desct_esp">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Codigo Descuento Especial
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cod. Descuento Especial
                 </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coddescuento }}</td>
               </ng-container>
 
               <!-- Precio Column -->
               <ng-container matColumnDef="precio">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Precio</th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Precio</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
               </ng-container>
 
               <!-- Saldo Column -->
               <ng-container matColumnDef="saldo">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Saldo</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.saldo }}</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Saldo</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.saldo  }}</td>
               </ng-container>
 
               <!-- % Max. Ventas Column -->
               <ng-container matColumnDef="porcen_maximo">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">% Max. Ventas</th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">% Max. Ventas</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.porcen_maximo }}
                 </td>
               </ng-container>
 
               <!-- Cantidad Max. Ventas Column -->
               <ng-container matColumnDef="cantidad_max_venta">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Max. Ventas</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Max. Ventas</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad_permitida_seg_porcen }}</td>
               </ng-container>
 
               <!-- Empaque Column -->
               <ng-container matColumnDef="empaque_precio">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Empaque Seg/Precio</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.empaque_precio }}
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Empaque Seg/Precio</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.empaque_precio }}
                 </td>
               </ng-container>
 
               <!-- Observaciones Column -->
               <ng-container matColumnDef="obs">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Observaciones</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.obs }}</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Obs</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" [ngSwitch]="element.obs">
+                  <ng-container *ngSwitchCase="'Cumple'">
+                    <strong style="color: green;">{{ element.obs }}</strong>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'No hay Saldo!!!'">
+                    <strong style="color: red;">{{ element.obs }}</strong>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                      (click)="modalDetalleObservaciones(element.obs);">
+                      <span><i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i> Ver Detalles
+                        Obs.</span>
+                    </button>
+                  </ng-container>
+                </td>
               </ng-container>
+
 
               <mat-header-row *matHeaderRowDef="displayedColumnsLimiteMaximoVentas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumnsLimiteMaximoVentas;"></mat-row>
@@ -973,74 +1012,81 @@
 
               <!-- orden Column -->
               <ng-container matColumnDef="codControl">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;">
-                  Código Control </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> 00068 </td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
+                  Cod. </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ element.Codigo }} </td>
               </ng-container>
 
               <!-- descripcion Column -->
-              <ng-container matColumnDef="descripcion">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;">
+              <ng-container matColumnDef="descripcion" style="width: 200px !important;">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
                   Descripción </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  VALIDAR NO MEZLCAR DESCUENTOS ESPECIALES </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion" style="text-align: left !important; 
+                padding: 0 0px 0 0px !important;">{{ element.Descripcion }}</td>
               </ng-container>
 
               <!-- valido Column -->
               <ng-container matColumnDef="valido">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Valido </th>
-                <td mat-cell *matCellDef="let element"
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Valido </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important;color:rgb(202, 6, 6)">
-                  <strong>NO</strong></td>
+                  <ng-container *ngIf="element.Valido === 'SI'; else validoo">
+                    <strong style="color:green">SI</strong>
+                  </ng-container>
+                  <ng-template #validoo>
+                    <strong style="color:red">NO</strong>
+                  </ng-template>
+                </td>
               </ng-container>
 
               <!-- cod_servicio Column -->
               <ng-container matColumnDef="cod_servicio">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Código Servicio </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">140</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Cod. Servicio </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.CodServicio }}</td>
               </ng-container>
 
               <!-- Descuento Servicio Column -->
               <ng-container matColumnDef="desct_servicio">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Descuento Servicio </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Desc. Servicio </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DescServicio }}
+                </td>
               </ng-container>
 
               <!-- Dato A Column -->
               <ng-container matColumnDef="datoA">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;"> Dato
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato
                   A </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">300800 </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DatoA }} </td>
               </ng-container>
 
               <!-- Dato B Column -->
               <ng-container matColumnDef="datoB">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;"> Dato
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato
                   B </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">DES/NIV NO APLICA </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DatoB}}</td>
               </ng-container>
 
               <!-- Clave Servicio Column -->
               <ng-container matColumnDef="clave_servicio">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Clave Servicio</th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">Clave Servicio</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.ClaveServicio }}
+                </td>
               </ng-container>
 
               <!-- Resolver Column -->
               <ng-container matColumnDef="resolver">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
                   Resolver</th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                    (click)="resolverValidacion();">
+                    (click)="resolverValidacionEnValidar(element.DatoA, element.DatoB, element.DescServicio, element.CodServicio);">
                     <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i> Resolver</span>
                   </button>
                 </td>
@@ -1048,12 +1094,12 @@
 
               <!-- Detalle Obs. Column -->
               <ng-container matColumnDef="detalle_observacion">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
                   Detalle Obs.</th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                    (click)="modalDetalleObservaciones();">
+                    (click)="modalDetalleObservaciones(element.obs);">
                     <span><i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i>
                       Ver Detalles Obs.</span>
                   </button>
@@ -1062,9 +1108,9 @@
 
               <!-- Validar Column -->
               <ng-container matColumnDef="validar">
-                <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important;text-align: center;">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
                   Validar</th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
                     <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
@@ -1101,7 +1147,7 @@
       <!-- inicioPiePagina -->
       <div class="row">
         <div class="col-md-10">
-          <mat-tab-group style="border-style: ridge;padding: 1px;">
+          <mat-tab-group style="border-style: ridge;padding: 1px;overflow-y: hidden;overflow-x: hidden;">
             <mat-tab label="Datos">
               <form class="example-form" [formGroup]="FormularioData">
                 <div class="row">
@@ -1122,7 +1168,7 @@
                           <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                             [(ngModel)]="transporte" formControlName="transporte"
                             [class.is-invalid]="f.transporte.invalid && (f.transporte.dirty || f.transporte.touched)">
-                            <option selected>Elija... </option>
+                            <!-- <option selected>Elija... </option> -->
                             <option value="FLOTA">FLOTA</option>
                             <option value="TRANSPORTADORA">TRANSPORTADORA</option>
                             <option value="CAMION PERTEC">CAMION PERTEC</option>
@@ -1173,7 +1219,7 @@
                           <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                             formControlName="fletepor" [(ngModel)]="fletepor"
                             [class.is-invalid]="f.fletepor.invalid && (f.fletepor.dirty || f.fletepor.touched)">
-                            <option selected>Elija...</option>
+                            <!-- <option selected>Elija...</option> -->
                             <option value="OTROS">OTROS</option>
                             <option value="CLIENTE">CLIENTE</option>
                             <option value="PERTEC POR COBRAR">PERTEC POR COBRAR</option>
@@ -2112,7 +2158,8 @@
     </div>
   </div>
 </div>
-<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
   <br>
   <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
 </ngx-spinner>

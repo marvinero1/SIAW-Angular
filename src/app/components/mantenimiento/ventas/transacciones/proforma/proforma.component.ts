@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -46,6 +46,7 @@ import { VentanaValidacionesComponent } from '../../ventana-validaciones/ventana
 import { ModalIvaComponent } from '../../modal-iva/modal-iva.component';
 import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-total.service';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-proforma',
@@ -126,6 +127,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -318,24 +320,35 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   valorPredeterminadoPreparacion = "NORMAL";
   valorPredeterminadoTipoPago = "CONTADO";
 
+  //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
+  public validacion_post: any = [];
+  public validacion_post_negativos: any = [];
+  public validacion_post_max_ventas: any = [];
+  public valor_formulario: any = [];
+
+  public valor_formulario_copied_map_all: any = {};
+  public valor_formulario_negativos: any = {};
+  public valor_formulario_max_venta: any = {};
+
+  public negativos_validacion: any = [];
+  public maximo_validacion: any = [];
+
+  // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'pedido',
     'cantidad', 'sld', 'tp', 'de', 'pul', 'niv', 'porcentaje', 'pd', 'pu', 'total'];
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
-    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_descontando_reservas',
-    'saldo_sin_descontar_reservas', 'cantidad_reservada_para_cjtos', 'obs'];
+    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
+    'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
 
   displayedColumnsLimiteMaximoVentas = ['codigo', 'descripcion', 'cantidad_pf_anterior', 'cantidad', 'saldo',
     'porcen_venta', 'cod_desct_esp', 'saldo', 'porcen_maximo', 'cantidad_max_venta', 'empaque_precio', 'obs']
 
-
-
-
-
-
   displayedColumns_validacion = ['codControl', 'descripcion', 'valido', 'cod_servicio', 'desct_servicio', 'datoA',
     'datoB', 'clave_servicio', 'resolver', 'detalle_observacion', 'validar'];
+  //FIN TABS DEL DETALLE PROFORMA
 
+  //TABS DEL FOOTER PROFORMA
   displayedColumns_ultimas_proformas = ['id', 'numero_id', 'cod_cliente', 'cliente_real',
     'nombre_cliente', 'nit', 'fecha', 'total', 'item', 'aprobada', 'transferida']
 
@@ -344,12 +357,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   displayedColumns_precios_desct = ['codproforma', 'id', 'numero_id', 'cod_cliente', 'cod_cliente_real', 'nom_cliente',
     'nit', 'fecha', 'total', 'item', 'cantidad', 'moneda', 'aprobada', 'transferida'];
+  //TABS DEL FOOTER PROFORMA
+
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
-
-  dataSource_validacion = new MatTableDataSource();
-  dataSourceWithPageSize_validacion = new MatTableDataSource();
 
   dataSource__venta_23_dias = new MatTableDataSource();
   dataSourceWithPageSize__venta_23_dias = new MatTableDataSource();
@@ -362,6 +374,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   dataSourceLimiteMaximoVentas = new MatTableDataSource();
   dataSourceWithPageSize_LimiteMaximoVentas = new MatTableDataSource();
+
+  dataSource_validacion = new MatTableDataSource();
+  dataSourceWithPageSize_validacion = new MatTableDataSource();
 
   constructor(public dialog: MatDialog, private api: ApiService, public itemservice: ItemServiceService,
     public servicioCliente: ServicioclienteService, public almacenservice: ServicioalmacenService,
@@ -468,6 +483,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
+      this.total = 0.00;
+      this.subtotal = 0.00;
     });
     //
 
@@ -2071,31 +2088,19 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-  public validacion_post: any = [];
-  public validacion_post_negativos: any = [];
-  public validacion_post_max_ventas: any = [];
-  public valor_formulario: any = [];
 
-  public valor_formulario_copied_map_all: any = {};
-  public valor_formulario_negativos: any = {};
-  public valor_formulario_max_venta: any = {};
-
-
-  public negativos_validacion: any = [];
-  public maximo_validacion: any = [];
 
 
   validarProformaAll() {
+    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
     // 00058 - VALIDAR LIMITE MAXIMO DE VENTA SEGÚN PORCENTAJES
     // 00060 - VALIDAR SALDOS NEGATIVOS
     // VACIO - TODOS LOS CONTROLES
 
     this.valor_formulario = [this.FormularioData.value];
-    //this.valor_formulario_copied_map = this.valor_formulario.slice();
-
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
-    let b = this.valor_formulario.map((element: any) => {
+    this.valor_formulario.map((element: any) => {
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
         id: element.id.toString() || '',
@@ -2273,8 +2278,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     console.log(proforma_validar);
-    this.spinner.show();
-
+    // this.spinner.show();
     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
@@ -2283,36 +2287,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.toastr.info("VALIDACION CORRECTA ✅");
         this.validacion_post = datav;
         console.log(this.validacion_post);
-        //console.log(this.validacion_post[56].Dtnegativos);
 
-        //negativos
-        // this.validacion_post.forEach(element => {
-        //   if (element.Dtnegativos.length > 0) {
-        //     this.negativos_validacion.push(element.Dtnegativos);
-        //   }
-        // });
-
-        // console.log("Array de Validacion Negativo: ", this.negativos_validacion);
-        // const n: any = this.negativos_validacion[0]
-        // console.log("Array de Validacion Negativo, Posicion 0: ", n);
-
-        // this.dataSource_negativos = new MatTableDataSource(n);
-        //fin negativos
-
-
-        //maximoVentas
-        // this.validacion_post.forEach(element => {
-        //   if (element.Dtnocumplen.length > 0) {
-        //     this.maximo_validacion.push(element.Dtnocumplen);
-        //   }
-        // });
-
-        // console.log("Array de Validacion Maximos: ", this.maximo_validacion);
-        // const m: any = this.maximo_validacion[0]
-        // console.log("Array de Validacion Maximos, Posicion 0: ", m);
-
-        // this.dataSourceLimiteMaximoVentas = new MatTableDataSource(m);
-        //fin maximoVentas
+        this.abrirTabPorLabel("Resultado de Validacion");
+        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
 
         setTimeout(() => {
           this.spinner.hide();
@@ -2326,8 +2303,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }, 1500);
       },
       complete: () => {
-
-
         setTimeout(() => {
           this.spinner.hide();
         }, 1500);
@@ -2341,7 +2316,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
-    let b = this.valor_formulario.map((element: any) => {
+    this.valor_formulario.map((element: any) => {
       return this.valor_formulario_negativos = {
         coddocumento: 0,
         id: element.id.toString() || '',
@@ -2405,86 +2380,96 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     });
 
-    console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
-    let proforma_validar = {
-      datosDocVta: this.valor_formulario_negativos,
-      detalleAnticipos: [{
-        codproforma: 0,
-        codanticipo: 0,
-        docanticipo: "string",
-        id_anticipo: "string",
-        nroid_anticipo: 0,
-        monto: 0,
-        tdc: 0,
-        codmoneda: "string",
-        fechareg: "2024-04-10T13:43:37.707Z",
-        usuarioreg: "string",
-        horareg: "string"
-      }],
-      detalleDescuentos: [{
-        coddesextra: 0,
-        descrip: "string",
-        porcen: 0,
-        montodoc: 0,
-        codcobranza: 0,
-        codcobranza_contado: 0,
-        codanticipo: 0
-      }],
-      detalleEtiqueta: [{
-        codigo: 0,
-        id: "string",
-        numeroid: 0,
-        codcliente: "string",
-        linea1: "string",
-        linea2: "string",
-        representante: "string",
-        telefono: "string",
-        celular: "string",
-        ciudad: "string",
-        latitud_entrega: "string",
-        longitud_entrega: "string"
-      }],
-      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: [{
-        codrecargo: 0,
-        descrip: "string",
-        porcen: 0,
-        monto: 0,
-        moneda: "string",
-        montodoc: 0,
-        codcobranza: 0
-      }],
-    }
+    // boolean que verifica que el formulario este con sus data llenada
+    this.submitted = true;
+    if (this.FormularioData.valid) {
+      this.spinner.show();
+      console.log("DATOS VALIDADOS");
+      console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
 
-    console.log(proforma_validar);
-    //this.spinner.show();
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-    this.api.create(url, proforma_validar).subscribe({
-      next: (datav) => {
-        this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
-        this.validacion_post_negativos = datav[0].Dtnegativos;
-        console.log(this.validacion_post_negativos);
-
-        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      complete: () => {
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
+      let proforma_validar = {
+        datosDocVta: this.valor_formulario_negativos,
+        detalleAnticipos: [{
+          codproforma: 0,
+          codanticipo: 0,
+          docanticipo: "string",
+          id_anticipo: "string",
+          nroid_anticipo: 0,
+          monto: 0,
+          tdc: 0,
+          codmoneda: "string",
+          fechareg: "2024-04-10T13:43:37.707Z",
+          usuarioreg: "string",
+          horareg: "string"
+        }],
+        detalleDescuentos: [{
+          coddesextra: 0,
+          descrip: "string",
+          porcen: 0,
+          montodoc: 0,
+          codcobranza: 0,
+          codcobranza_contado: 0,
+          codanticipo: 0
+        }],
+        detalleEtiqueta: [{
+          codigo: 0,
+          id: "string",
+          numeroid: 0,
+          codcliente: "string",
+          linea1: "string",
+          linea2: "string",
+          representante: "string",
+          telefono: "string",
+          celular: "string",
+          ciudad: "string",
+          latitud_entrega: "string",
+          longitud_entrega: "string"
+        }],
+        detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+        detalleRecargos: [{
+          codrecargo: 0,
+          descrip: "string",
+          porcen: 0,
+          monto: 0,
+          moneda: "string",
+          montodoc: 0,
+          codcobranza: 0
+        }],
       }
-    });
+
+      console.log(proforma_validar);
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+          this.validacion_post_negativos = datav[0].Dtnegativos;
+          this.abrirTabPorLabel("Negativos");
+          console.log(this.validacion_post_negativos);
+
+          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
   }
 
   validarProformaSoloMaximoVenta() {
@@ -2493,7 +2478,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
-    let b = this.valor_formulario.map((element: any) => {
+    this.valor_formulario.map((element: any) => {
       return this.validacion_post_max_ventas = {
         coddocumento: 0,
         id: element.id.toString() || '',
@@ -2557,92 +2542,107 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     });
 
-    console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
-    let proforma_validar = {
-      datosDocVta: this.validacion_post_max_ventas,
-      detalleAnticipos: [{
-        codproforma: 0,
-        codanticipo: 0,
-        docanticipo: "string",
-        id_anticipo: "string",
-        nroid_anticipo: 0,
-        monto: 0,
-        tdc: 0,
-        codmoneda: "string",
-        fechareg: "2024-04-10T13:43:37.707Z",
-        usuarioreg: "string",
-        horareg: "string"
-      }],
-      detalleDescuentos: [{
-        coddesextra: 0,
-        descrip: "string",
-        porcen: 0,
-        montodoc: 0,
-        codcobranza: 0,
-        codcobranza_contado: 0,
-        codanticipo: 0
-      }],
-      detalleEtiqueta: [{
-        codigo: 0,
-        id: "string",
-        numeroid: 0,
-        codcliente: "string",
-        linea1: "string",
-        linea2: "string",
-        representante: "string",
-        telefono: "string",
-        celular: "string",
-        ciudad: "string",
-        latitud_entrega: "string",
-        longitud_entrega: "string"
-      }],
-      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: [{
-        codrecargo: 0,
-        descrip: "string",
-        porcen: 0,
-        monto: 0,
-        moneda: "string",
-        montodoc: 0,
-        codcobranza: 0
-      }],
-    }
+    // boolean que verifica que el formulario este con sus data llenada
+    this.submitted = true;
 
-    console.log(proforma_validar);
-    //this.spinner.show();
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-    this.api.create(url, proforma_validar).subscribe({
-      next: (datav) => {
-        this.toastr.info("VALIDACION CORRECTA MAX VENTAS ✅");
-        this.validacion_post_max_ventas = datav[0].Dtnocumplen;
-        console.log(this.validacion_post_max_ventas);
-
-        this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      complete: () => {
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
+    if (this.FormularioData.valid) {
+      console.log("DATOS VALIDADOS");
+      this.spinner.show();
+      console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
+      let proforma_validar = {
+        datosDocVta: this.validacion_post_max_ventas,
+        detalleAnticipos: [{
+          codproforma: 0,
+          codanticipo: 0,
+          docanticipo: "string",
+          id_anticipo: "string",
+          nroid_anticipo: 0,
+          monto: 0,
+          tdc: 0,
+          codmoneda: "string",
+          fechareg: "2024-04-10T13:43:37.707Z",
+          usuarioreg: "string",
+          horareg: "string"
+        }],
+        detalleDescuentos: [{
+          coddesextra: 0,
+          descrip: "string",
+          porcen: 0,
+          montodoc: 0,
+          codcobranza: 0,
+          codcobranza_contado: 0,
+          codanticipo: 0
+        }],
+        detalleEtiqueta: [{
+          codigo: 0,
+          id: "string",
+          numeroid: 0,
+          codcliente: "string",
+          linea1: "string",
+          linea2: "string",
+          representante: "string",
+          telefono: "string",
+          celular: "string",
+          ciudad: "string",
+          latitud_entrega: "string",
+          longitud_entrega: "string"
+        }],
+        detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+        detalleRecargos: [{
+          codrecargo: 0,
+          descrip: "string",
+          porcen: 0,
+          monto: 0,
+          moneda: "string",
+          montodoc: 0,
+          codcobranza: 0
+        }],
       }
-    });
+
+      console.log(proforma_validar);
+
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          this.toastr.info("VALIDACION CORRECTA MAX VENTAS ✅");
+          this.validacion_post_max_ventas = datav[0].Dtnocumplen;
+          console.log(this.validacion_post_max_ventas);
+
+          this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
   }
 
 
 
-
-
+  abrirTabPorLabel(label: string) {
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
 
 
 
@@ -3186,13 +3186,36 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  modalDetalleObservaciones() {
+  resolverValidacionEnValidar(datoA, datoB, msj_validacion, cod_servicio) {
+    const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: {
+        dataA: datoA,
+        dataB: datoB,
+        dataPermiso: msj_validacion,
+        dataCodigoPermiso: cod_servicio,
+        //abrir: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      console.log(result);
+      if (result) {
+        //this.log_module.guardarLog(ventana, detalle, tipo);
+      } else {
+        this.toastr.error('! CANCELADO !');
+      }
+    });
+  }
+
+  modalDetalleObservaciones(obs) {
     console.log(this.tablaIva);
     this.dialog.open(ModalDetalleObserValidacionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
-      data: { tablaIva: this.tablaIva },
+      data: { obs_validacion: obs },
     });
   }
 }

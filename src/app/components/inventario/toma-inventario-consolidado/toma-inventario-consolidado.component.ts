@@ -550,5 +550,4 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
   close() {
     this.router.navigate(['/']);
   }
-
 }

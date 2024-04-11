@@ -234,9 +234,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // this.itemservice.disparadorDeItemsSeleccionadosAProforma.subscribe(datav => {
     //   console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
     //   this.item_seleccionados_catalogo_matriz = datav;
-
     //   this.item_seleccionados_catalogo_matriz;
-
     //   this.addItemArraySeleccion(this.item_seleccionados_catalogo_matriz);
     // });
     //
@@ -280,12 +278,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.getAlmacenesSaldos();
     this.getEmpaquePesoAlmacenLocal(cleanText);
     this.getSaldoItem(cleanText)
-    //this.mandarItemF9(cleanText);
   }
 
   getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.descuento_get + "/" + this.codalmacen_get + "/" + item + "/" + this.codalmacen_get + "/" + this.BD_storage.bd)
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + item + "/" + this.codalmacen_get + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
@@ -307,7 +304,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + "311" + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuario_logueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.codalmacen_get + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
@@ -331,62 +328,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         }
       })
   }
-
-  // tableSettings: any = {
-  //   rowHeaders: true,
-  //   enterBeginsEditing:false,
-  //   // colHeaders: true,
-  //   // viewportColumnRenderingOffset: 27,
-  //   // viewportRowRenderingOffset: 'auto',
-  //   // colWidths: 150,
-  //   // height: 450,
-  //   // allowInsertColumn: false,
-  //   // allowInsertRow: false,
-  //   // allowRemoveColumn: false,
-  //   // allowRemoveRow: false,
-  //   //autoWrapRow: true,
-  //   //autoWrapCol: true,
-  //   // stretchH: "all",
-  //   // width: 1000,
-  //   // height: 1000,
-  //   maxRows: 60,
-  //   manualRowResize: true,
-  //   manualColumnResize: true,
-  //   licenseKey: 'non-commercial-and-evaluation',
-  //   beforeKeyDown: function(e) {
-  //     console.log(e);
-  //     switch (e.key) { 
-  //       case 'Enter':
-  //         console.log("Hola lola ENTER");
-  //         break;
-  //       case 'F9':
-  //         console.log("Hola lola F9");
-  //       break;
-  //     }
-  //   },
-
-  //   afterChange: function (hotInstance, changes, source) {
-  //     console.log('CAMBIOS: ', hotInstance);
-  //     console.log('CAMBIOS: ', changes);
-  //     console.log('CAMBIOS: ', source);
-  //   },
-
-  //   colHeaders: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'],
-  //   manualRowMove: false,
-  //   manualColumnMove: false,
-  //   contextMenu: true,
-  //   filters: true,
-  //   dropdownMenu: true,
-  //   afterValidate: function (isValid, value, row, prop) {
-  //     if (value == false) {
-  //       console.log(value);
-  //       alert('Invalid');
-  //       //Value = isValid
-  //       // row = inserted invalid value
-  //       //prop = row index changed
-  //     }
-  //   },
-  // };
 
   getHoja() {
     console.log(this.num_hoja);
@@ -676,7 +617,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-    console.log("ITEM SELECCIONADO UNITARIO:" + JSON.stringify(this.array_items_seleccionado), "ITEM'S SELECCION MULTIPLE:" + JSON.stringify(this.array_items_proforma_matriz));
+    console.log("ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado, "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
@@ -730,7 +671,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         },
         complete: () => {
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
-          this.enviarItemsAlServicio(this.items_post.concat(this.array_items_proforma_matriz), this.array_items_completo);
+          if (this.array_items_proforma_matriz.length > 0) {
+            console.log("entro aca AA ");
+            this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
+          } else {
+            console.log("entro aca BB ");
+            this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
+          }
           this.dialogRef.close();
           this.num_hoja = 0;
         }
@@ -738,8 +685,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    console.log("Items del carrito disque procesados: " + items);
-    console.log("Items del carrito sin procesar: " + items_sin_proceso);
+    console.log("Items del carrito disque procesados: ", items);
+    console.log("Items del carrito sin procesar: ", items_sin_proceso);
 
     this.itemservice.enviarItemCompletoAProforma(items);
     this.itemservice.enviarItemsSinProcesar(items_sin_proceso);

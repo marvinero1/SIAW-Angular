@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "8808008173804581618"
+        "hash": "18310401310939492601"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "10307619087543154125"
+        "hash": "5755138564918128127"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "16068458490284256608"
+        "hash": "12571938123550650714"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -685,7 +685,7 @@
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/toma-inventario-consolidado.component.ts",
-        "hash": "14360013819602758733"
+        "hash": "7429345887321226816"
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/validar/validar.component.html",
@@ -4389,7 +4389,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "2272358340288033757"
+        "hash": "13590535465843822577"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4521,11 +4521,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "4093836744172372949"
+        "hash": "2114731170848597914"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
-        "hash": "3244421341483603138"
+        "hash": "2417586660932303726"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.spec.ts",
@@ -4533,7 +4533,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.ts",
-        "hash": "9819341599826185645"
+        "hash": "3755092097206042494"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
@@ -4781,7 +4781,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-zona/modal-zona.component.ts",
-        "hash": "6927901747799413840"
+        "hash": "15868272516984288566"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/niveles-descuentos/clasificacion-clientes/clasificacion-clientes.component.html",
@@ -5241,11 +5241,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "6926458321037621123"
+        "hash": "18134063770373626792"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "3091913286358224601"
+        "hash": "12860103798134157574"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5253,7 +5253,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "1792308785140199201"
+        "hash": "11769812182327012470"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5349,7 +5349,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.html",
-        "hash": "10195960864592106835"
+        "hash": "13794905728644562281"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.scss",
@@ -5361,7 +5361,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "4879041132988385248"
+        "hash": "3931717325619798663"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",
@@ -6353,7 +6353,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "3074139207039570980"
+        "hash": "9935098908011935203"
       },
       {
         "file": "src/test.ts",

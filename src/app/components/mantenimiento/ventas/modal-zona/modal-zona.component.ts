@@ -15,19 +15,19 @@ import { Observable } from 'rxjs';
 })
 export class ModalZonaComponent implements OnInit {
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarZona();
   };
-  
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarZona();
   };
-  
+
   vezona: any = [];
   zona_view: any = [];
   useConn: any;
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
   dataSource = new MatTableDataSource<Zona>();
   dataSourceWithPageSize = new MatTableDataSource();
 
@@ -38,10 +38,11 @@ export class ModalZonaComponent implements OnInit {
   filteredOptions: Observable<Zona[]>;
   myControlCodigo = new FormControl<string | Zona>('');
   myControlDescripcion = new FormControl<string | Zona>('');
-  
-  constructor(public dialogRef: MatDialogRef<ModalZonaComponent>, private api: ApiService, public servicioZona:ServiciozonaService) { 
+
+  constructor(public dialogRef: MatDialogRef<ModalZonaComponent>, private api: ApiService,
+    public servicioZona: ServiciozonaService) {
+
     this.useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
   }
 
   ngOnInit() {
@@ -54,7 +55,7 @@ export class ModalZonaComponent implements OnInit {
     return this.options.filter(option => option.codigo.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -64,40 +65,40 @@ export class ModalZonaComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getZona(){
+  getZona() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vezona/catalogo/'+this.useConn)
+    return this.api.getAll('/venta/mant/vezona/catalogo/' + this.useConn)
       .subscribe({
         next: (datav) => {
           this.vezona = datav;
           console.log('data', datav);
-          
+
           this.dataSource = new MatTableDataSource(this.vezona);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
-  mandarZona(){
+
+  mandarZona() {
     this.servicioZona.disparadorDeZonas.emit({
-      zona:this.zona_view,
+      zona: this.zona_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.zona_view = element;
     console.log(this.zona_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 

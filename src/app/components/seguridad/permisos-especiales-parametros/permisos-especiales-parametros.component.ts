@@ -232,7 +232,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
     @Inject(MAT_DIALOG_DATA) public dataCodigoPermiso: any,
-    @Inject(MAT_DIALOG_DATA) public abrir: any) {
+    @Inject(MAT_DIALOG_DATA) public abrir: any,) {
 
     this.dataA_get = this.dataA.dataA;
     this.data_inventario = this.dataPermiso.dataPermiso;
