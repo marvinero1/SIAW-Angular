@@ -36,20 +36,29 @@ export class ModalDesctExtrasComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalDesctExtrasComponent>, private toastr: ToastrService,
-    @Inject(MAT_DIALOG_DATA) public items: any, private spinner: NgxSpinnerService,
-    @Inject(MAT_DIALOG_DATA) public cabecera: any, public descuento_services: DescuentoService,
-    @Inject(MAT_DIALOG_DATA) public desct: any, @Inject(MAT_DIALOG_DATA) public contra_entrega: any) {
+    public descuento_services: DescuentoService, private spinner: NgxSpinnerService,
+    @Inject(MAT_DIALOG_DATA) public items: any,
+    @Inject(MAT_DIALOG_DATA) public cabecera: any,
+    @Inject(MAT_DIALOG_DATA) public desct: any,
+    @Inject(MAT_DIALOG_DATA) public contra_entrega: any) {
 
     this.items_de_proforma = items.items;
     this.cabecera_proforma = cabecera.cabecera;
-    this.array_de_descuentos = desct.desct;
     this.contra_entrega_get = contra_entrega.contra_entrega === undefined ? false : true;
+
+    this.array_de_descuentos = desct.desct.map((element) => {
+      return {
+        codigo: element.coddesextra,
+        porcentaje: element.porcen,
+      }
+    });
 
     this.dataSource = new MatTableDataSource(this.array_de_descuentos);
 
     console.log(this.contra_entrega_get);
     console.log("Cabecera de Proforma: " + JSON.stringify(this.cabecera_proforma),
-      "Items de la proforma: " + JSON.stringify(this.items_de_proforma), "Array de descuentos que ya estaban: " + this.array_de_descuentos_con_descuentos);
+      "Array de descuentos que ya estaban: " + JSON.stringify(this.array_de_descuentos));
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.agenciaLogueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
@@ -62,7 +71,6 @@ export class ModalDesctExtrasComponent implements OnInit {
   getPrecioInicial() {
     let array_post = {
       tabladetalle: this.items_de_proforma,
-
       dvta: this.cabecera_proforma,
     };
 

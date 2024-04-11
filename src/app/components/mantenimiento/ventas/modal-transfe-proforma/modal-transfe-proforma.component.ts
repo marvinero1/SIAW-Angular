@@ -25,6 +25,7 @@ export class ModalTransfeProformaComponent implements OnInit {
   numero_id_proformas: any;
   id_cotizaciones: any;
   numero_id_cotizaciones: any;
+  BD_storage: any;
   userConn: any;
 
   isCheckedProformas: boolean = true;
@@ -36,6 +37,7 @@ export class ModalTransfeProformaComponent implements OnInit {
     public servicioCatalogoProformas: ServicioCatalogoProformasService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService) {
 
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
@@ -61,9 +63,9 @@ export class ModalTransfeProformaComponent implements OnInit {
   }
 
   transferirProforma() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas)
+    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
@@ -72,7 +74,6 @@ export class ModalTransfeProformaComponent implements OnInit {
 
           if (a) {
             this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
-
             this.transferirProformaAProforma(this.transferir_get);
             this.spinner.show();
             setTimeout(() => {
@@ -94,9 +95,9 @@ export class ModalTransfeProformaComponent implements OnInit {
   }
 
   transferirCotizaciones() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosCotizacion/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones)
+    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;

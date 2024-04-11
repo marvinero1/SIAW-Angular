@@ -31,7 +31,6 @@
       <div class="col-md">
         <span style="margin-right: 22px;"><u>Código</u></span>
         <select matNativeControl (change)="infoDescuento($event.target.value)">
-          <option value="" selected></option>
           <option *ngFor="let descuento_segun_tarifas of descuento_segun_tarifa"
             [value]="descuento_segun_tarifas.codigo">
             {{ descuento_segun_tarifas.codigo }} - {{ descuento_segun_tarifas.descripcion }}

@@ -454,8 +454,26 @@ select, textarea {
   color: black;
 }
 
-::ng-deep .bg-yellow .mat-dialog-container{
- --mdc-dialog-container-color: #ffffc0 !important;
+
+
+::ng-deep{
+  .bg-yellow .mat-dialog-container{
+  --mdc-dialog-container-color: #ffffc0 !important;
+  }
+}
+
+
+
+.mat-tooltip {
+  font-size: 0.7rem !important;
+  background-color: #093070 !important;
+  color: #fbd800 !important;
+}
+
+.mat-tooltip.tooltip {
+  font-size: 0.7rem !important;
+  background-color: #093070 !important;
+  color:#fbd800 !important
 }
 
 .my-custom-row-class{

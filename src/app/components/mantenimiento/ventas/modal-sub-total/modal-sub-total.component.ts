@@ -84,9 +84,7 @@ export class ModalSubTotalComponent implements OnInit {
           this.desglose = datav.desgloce;
           console.log(datav);
 
-          this.subtotal_service.disparadorDeSubTotal.emit({
-            subtotal: this.sub_totabilizar_post.subtotal,
-          });
+
 
           setTimeout(() => {
             this.spinner.hide();
@@ -109,6 +107,10 @@ export class ModalSubTotalComponent implements OnInit {
   mandarArrayItemSubTotal(items) {
     console.log(items);
     this.itemservice.enviarItemsProcesadosSubTotal(items);
+
+    this.subtotal_service.disparadorDeSubTotal.emit({
+      subtotal: this.sub_totabilizar_post.e,
+    });
   }
 
   close() {

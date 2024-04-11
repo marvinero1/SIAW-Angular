@@ -381,7 +381,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   close(result: boolean) {
     this.dialogRef.close(result);
     let value = false;
-    console.log(value);
 
     return value;
   }

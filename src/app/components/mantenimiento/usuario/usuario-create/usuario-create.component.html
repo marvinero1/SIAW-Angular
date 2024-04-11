@@ -1,4 +1,4 @@
-<div class="p-2">
+<div>
   <h1 mat-dialog-title>Crear Usuario</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
 </div>
@@ -7,28 +7,28 @@
   <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
     <div class="row">
       <div class="col-md">
-        <mat-label style="padding-right: 70px;"><u>Usuario</u></mat-label>
+        <mat-label style="padding-right: 69px;"><u>Usuario</u></mat-label>
         <input matInput type="text" formControlName="login" required>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md">
-        <mat-label style="padding-right: 45px;"><u>Contraseña</u></mat-label>
+        <mat-label style="padding-right: 47px;"><u>Contraseña</u></mat-label>
         <input type="password" matInput formControlName="password" maxlength="10" required>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md">
-        <mat-label style="padding-right: 35px;"><u>Correo SIAW</u></mat-label>
+        <mat-label style="padding-right: 38px;"><u>Correo SIAW</u></mat-label>
         <input matInput type="email" formControlName="correo" required>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md">
-        <mat-label><u>Contraseña SIAW </u></mat-label>
+        <mat-label style="padding-right: 5px;"><u>Contraseña SIAW </u></mat-label>
         <input type="password" matInput formControlName="password_siaw" maxlength="10" required>
       </div>
     </div>
@@ -36,25 +36,25 @@
     <div class="row">
       <div class="col">
         <mat-label style="padding-right: 66px;"><u>Persona</u> </mat-label>
-        <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" (ngModel)="pepersona_get">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{option.nombre1}} - {{ option.apellido1 }}
-          </mat-option>
-        </mat-autocomplete>
+        <!-- <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" (ngModel)="pepersona_get"> -->
+
+        <select formControlName="persona">
+          <option *ngFor="let pepersonas of pepersona" [value]="pepersonas.codigo">
+            {{ pepersonas.codigo }} - {{ pepersonas.descrip }}</option>
+        </select>
       </div>
     </div>
 
     <div class="row">
       <div class="col">
-        <mat-label style="padding-right: 40px;"><u>Vencimiento</u> </mat-label>
+        <mat-label style="padding-right: 42px;"><u>Vencimiento</u> </mat-label>
         <input type="date" formControlName="vencimiento" required>
       </div>
     </div>
 
     <div class="row">
       <div class="col">
-        <mat-label style="padding-right: 80px;"><u>Activo</u> </mat-label>
+        <mat-label style="padding-right: 78px;"><u>Activo</u> </mat-label>
         <select formControlName="activo">
           <option value=true>SI</option>
           <option value=false>NO</option>
@@ -64,7 +64,7 @@
 
     <div class="row">
       <div class="col">
-        <mat-label style="padding-right: 83px;"><u>Roles</u></mat-label>
+        <mat-label style="padding-right: 81px;"><u>Roles</u></mat-label>
         <select formControlName="codrol">
           <option *ngFor="let serols of serol" [value]="serols.codigo">
             {{ serols.descripcion }}
@@ -74,9 +74,9 @@
     </div>
 
     <div class="mat-dialog-actions" mat-dialog-actions>
-      <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
-      <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" type="submit"><i
-          class="fa fa-save"></i> Guardar</button>
+      <button mat-raised-button color="primary" type="submit"><i class="fa fa-save"></i> Guardar</button>
+
+      <a mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</a>
     </div>
   </form>
 </div>

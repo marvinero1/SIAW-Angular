@@ -20,7 +20,8 @@
               id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''">
               <span><i class="fa fa-clone" aria-hidden="true" style="color: #ffc107;"></i> Transferir</span>
             </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="validarProformaAll();">
               <span> <i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i> Validar</span>
             </button>
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
@@ -38,26 +39,31 @@
 
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()">
+          <button class="btn btn-outline-secondary form-control-sm" matTooltip="Matriz Item" type="button"
+            (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-inbox blue" aria-hidden="true"></i>
+            <i class="fa fa-inbox gray" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Estado Mora"
+            matTooltipClass="custom-tooltip">
             <mat-icon class="red">photo_size_select_small</mat-icon>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" [disabled]="!codigo_cliente"
-            (click)="estadoPagoClientes();">
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Pagos Cliente"
+            matTooltipClass="custom-tooltip" [disabled]="!codigo_cliente" (click)="estadoPagoClientes();">
             <mat-icon class="blue">photo_size_select_small</mat-icon>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
+            matTooltipClass="custom-tooltip" (click)="validarProformaSoloNegativos();">
             <i class="fa fa-inbox blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-question-circle black" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+            matTooltip="Validar Empaques">
             <i class="fa fa-inbox red" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
@@ -180,7 +186,8 @@
 
                 <div class="input-group-append">
                   <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
-                    style="border-color: #093070;" matTooltip="Buscar Vendedor"><i class="fa fa-search"></i>
+                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
+                      class="fa fa-search"></i>
                   </button>
                   <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback" style="display: block;">
                     <mat-icon>info</mat-icon>
@@ -699,54 +706,55 @@
           </mat-tab>
 
           <mat-tab label="Negativos">
-            <table mat-table [dataSource]="dataSource_negativos" class="mat-elevation-z8" multiTemplateDataRows matSort>
+            <table mat-table [dataSource]="dataSource_negativos" class="mat-elevation-z8" matSort>
               <!-- kit Column -->
               <ng-container matColumnDef="kit">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Kit </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.kit }}</td>
               </ng-container>
 
               <!-- N° Parte Column -->
-              <ng-container matColumnDef="nro_parte">
+              <ng-container matColumnDef="nro_partes">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"> N° Parte</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.nro_partes }}</td>
               </ng-container>
 
               <!-- Cod. Item Conjunto Column -->
-              <ng-container matColumnDef="cod_item_conjunto">
+              <ng-container matColumnDef="coditem_cjto">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cod. Item Conjunto</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coditem_cjto }}</td>
               </ng-container>
 
               <!-- Cod. Item Conjunto Column -->
-              <ng-container matColumnDef="cod_item_suelto">
+              <ng-container matColumnDef="coditem_suelto">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cod. Item
                   Suelto</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coditem_suelto }}
+                </td>
               </ng-container>
 
               <!-- Cod. Item Conjunto Column -->
-              <ng-container matColumnDef="cod_item">
+              <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cod. Item</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codigo }}</td>
               </ng-container>
 
               <!-- Cod. Item Conjunto Column -->
-              <ng-container matColumnDef="descripcion_medida">
+              <ng-container matColumnDef="descitem">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Descripcion - Medida
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.descitem }}</td>
               </ng-container>
 
               <!-- Cantidad Column -->
@@ -754,7 +762,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cantidad </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad }}</td>
               </ng-container>
 
               <!-- Cantidad Pedida en Conjunto Column -->
@@ -763,42 +771,44 @@
                   style="padding: 0 0px 0 0px !important"> Cantidad Pedida en
                   Conjunto </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad_conjunto }}
+                </td>
               </ng-container>
 
               <!-- Cantidad Pedida en Suelto Column -->
-              <ng-container matColumnDef="cantidad_suelto">
+              <ng-container matColumnDef="cantidad_suelta">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cantidad Pedida en Suelto
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad_suelta }}
+                </td>
               </ng-container>
 
               <!-- CSaldo Real Column -->
-              <ng-container matColumnDef="saldo_real">
+              <ng-container matColumnDef="saldo_descontando_reservas">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Saldo Real </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.saldo_descontando_reservas }}</td>
               </ng-container>
 
               <!-- Cantidad Reserva Conjunto Column -->
-              <ng-container matColumnDef="cantidad_reserva_para_conjunto">
+              <ng-container matColumnDef="cantidad_reservada_para_cjtos">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important">Cantidad Reserva Conjunto
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad_reservada_para_cjtos }}</td>
               </ng-container>
 
               <!-- Cantidad Reserva Conjunto Column -->
-              <ng-container matColumnDef="saldo_para_venta_suelta">
+              <ng-container matColumnDef="saldo_sin_descontar_reservas">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important">Saldo Para Venta Suelta
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.saldo_sin_descontar_reservas }}</td>
               </ng-container>
 
               <!-- Observacion Column -->
@@ -806,7 +816,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important">Observaciones </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.obs }}</td>
               </ng-container>
 
               <mat-header-row *matHeaderRowDef="displayedColumnsNegativos"></mat-header-row>
@@ -829,49 +839,51 @@
           </mat-tab>
 
           <mat-tab label="Limites Maximo de Ventas">
-            <table mat-table [dataSource]="dataSource_negativos" class="mat-elevation-z8" multiTemplateDataRows matSort>
+            <table mat-table [dataSource]="dataSourceLimiteMaximoVentas" class="mat-elevation-z8" matSort>
               <!-- Código Item  Column -->
-              <ng-container matColumnDef="cod_item">
+              <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Código Item </th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codigo }}</td>
               </ng-container>
 
               <!-- Descripcion Medida Column -->
-              <ng-container matColumnDef="descrip_medida">
+              <ng-container matColumnDef="descripcion">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important"> Descripción Medida </th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.descripcion }}</td>
               </ng-container>
 
               <!-- Cantidad Aprobada Anterior Column -->
-              <ng-container matColumnDef="cantidad_aprobada_anterior">
+              <ng-container matColumnDef="cantidad_pf_anterior">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Aprobada Anterior
                 </th>
-                <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                <td mat-cell *matCellDef="let element" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ element.cantidad_pf_anterior }}</td>
               </ng-container>
 
               <!-- Cantidad Actual Column -->
-              <ng-container matColumnDef="cantidad_actual">
+              <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Actual
                 </th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.cantidad }}</td>
               </ng-container>
 
               <!-- Cantidad Total Column -->
-              <ng-container matColumnDef="cantidad_total">
+              <ng-container matColumnDef="cantidad_pf_total">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Cantidad Total</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+                  {{ element.cantidad_pf_total }}
+                </td>
               </ng-container>
 
               <!-- % de Venta Column -->
-              <ng-container matColumnDef="porcen_de_venta">
+              <ng-container matColumnDef="porcen_venta">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">% de Venta</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.porcen_venta }}</td>
               </ng-container>
 
               <!-- Codigo Descuento Especial Column -->
@@ -893,14 +905,15 @@
               <ng-container matColumnDef="saldo">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Saldo</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.saldo }}</td>
               </ng-container>
 
               <!-- % Max. Ventas Column -->
-              <ng-container matColumnDef="porcen_max_ventas">
+              <ng-container matColumnDef="porcen_maximo">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">% Max. Ventas</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.porcen_maximo }}
+                </td>
               </ng-container>
 
               <!-- Cantidad Max. Ventas Column -->
@@ -911,17 +924,18 @@
               </ng-container>
 
               <!-- Empaque Column -->
-              <ng-container matColumnDef="empaque">
+              <ng-container matColumnDef="empaque_precio">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Empaque Seg/Precio</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.empaque_precio }}
+                </td>
               </ng-container>
 
               <!-- Observaciones Column -->
               <ng-container matColumnDef="obs">
                 <th mat-header-cell *matHeaderCellDef style="padding: 0 0px 0 0px !important">Observaciones</th>
                 <td mat-cell *matCellDef="let element"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.obs }}</td>
               </ng-container>
 
               <mat-header-row *matHeaderRowDef="displayedColumnsLimiteMaximoVentas"></mat-header-row>
@@ -942,6 +956,13 @@
                 <mat-slide-toggle><span style="color:#fbd800 !important">Solo Items Si Sobren Pasan Limite Max. de
                     Venta</span>
                 </mat-slide-toggle>
+              </div>
+              <div class="col-md" style="float: right !important;">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                  (click)="validarProformaSoloMaximoVenta();" style="float: right !important;">
+                  <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Validar Porcentaje Vta
+                    Permitido</span>
+                </button>
               </div>
             </div>
           </mat-tab>
@@ -1415,11 +1436,10 @@
                           </mat-select>
                           <input type="text" formControlName="nroidsoldesctos" hidden="true">
                         </div><br>
-
-                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                        <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
                           style="border-color: #ffc107;">
                           <i class="fa fa-archive"></i> Solicitud Descuentos de Nivel
-                        </button> Realizar Ventana?
+                        </button> Realizar Ventana? -->
                       </div>
                     </form>
                   </div>
@@ -2029,7 +2049,7 @@
       <div mat-dialog-footer>
         <!-- Saldos -->
         <div class="row pl-2">
-          <input type="text" class="inputsSaldos" value="311: {{ data_almacen_local.saldo | number:'1.2-2'}}"
+          <input type="text" class="inputsSaldos" value="311: {{ saldoItem | number:'1.2-2'}}"
             style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
           <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>

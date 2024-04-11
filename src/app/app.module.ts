@@ -414,6 +414,7 @@ import localeEs from '@angular/common/locales/es';
 import es from '@angular/common/locales/es';
 import { ModalIvaComponent } from '@components/mantenimiento/ventas/modal-iva/modal-iva.component';
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { ConceptosmovimientosmercaderiaEditComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/conceptosmovimientosmercaderia-edit/conceptosmovimientosmercaderia-edit.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -426,7 +427,7 @@ registerPlugin(UndoRedo);
         ProfileComponent, VentanaValidacionesComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
         ForgotPasswordComponent, RecoverPasswordComponent, LanguageComponent, MainMenuComponent, SubMenuComponent, MenuItemComponent,
         ControlSidebarComponent, SidebarSearchComponent, MenuImportacionesComponent, UsuarioComponent, UsuarioCreateComponent, BancoEditComponent,
-        UsuarioEditComponent, UsuarioDeleteComponent, MonedaComponent, AlmacenComponent, AreaComponent, EmpresaComponent,
+        UsuarioEditComponent, UsuarioDeleteComponent, MonedaComponent, AlmacenComponent, AreaComponent, EmpresaComponent, ConceptosmovimientosmercaderiaEditComponent,
         AlmacenCreateComponent, AreaCreateComponent, EmpresaCreateComponent, MonedaCreateComponent, LocalidadesComponent,
         LocalidadesCreateComponent, LocalidadesEditComponent, IdProformaUsuarioComponent, ModalEstadoPagoClienteComponent,
         LaboratorioComponent, DialogDeleteComponent, AreaEditComponent, DptopaisComponent, ProvinciadptopaisComponent, DptopaisCreateComponent,

@@ -63,6 +63,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   cantidad: number;
   pedido: number;
   pedidoInicial: number;
+  saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
   validacion: boolean = false;
@@ -277,11 +278,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.validarItemParaVenta(cleanText);
     this.getEmpaqueItem(cleanText);
     this.getAlmacenesSaldos();
-    this.getSaldoEmpaquePesoAlmacenLocal(cleanText);
+    this.getEmpaquePesoAlmacenLocal(cleanText);
+    this.getSaldoItem(cleanText)
     //this.mandarItemF9(cleanText);
   }
 
-  getSaldoEmpaquePesoAlmacenLocal(item) {
+  getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.descuento_get + "/" + this.codalmacen_get + "/" + item + "/" + this.codalmacen_get + "/" + this.BD_storage.bd)
       .subscribe({
@@ -294,6 +296,36 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           console.log(err, errorMessage);
           this.data_almacen_local.saldo = 0;
           //this.toastr.error('¡CELDA NO VALIDA!');
+        },
+        complete: () => {
+        }
+      })
+  }
+
+  getSaldoItem(item) {
+    let agencia_concat = "AG" + this.agencia;
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + "311" + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuario_logueado)
+      .subscribe({
+        next: (datav) => {
+          this.id_tipo = datav;
+          console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
+          // this.letraSaldos = this.id_tipo[0].resp;
+          // this.saldo_variable = this.id_tipo[2];
+
+          // LETRA
+          this.id_tipo[1].forEach(element => {
+            if (element.descripcion === 'Total Saldo') {
+              this.saldoItem = element.valor;
+              console.log(this.saldoItem);
+            }
+          });
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
         },
         complete: () => {
         }
@@ -714,7 +746,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   eliminarItemArrayPedido(item) {
-    console.log("Item a eliminar:", item);
+    console.log("Item a Eliminar:", item);
     this.array_items_completo = this.array_items_completo.filter(i => i.coditem !== item);
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 

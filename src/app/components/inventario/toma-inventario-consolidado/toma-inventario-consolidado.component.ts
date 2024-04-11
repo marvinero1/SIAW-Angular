@@ -409,7 +409,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (!result) {
+      if (result) {
         return this.api.update('/inventario/oper/docininvconsol/updateAbiertoCerrado/' + this.userConn + "/" + this.cabecera.codigo + "/true", data)
           .subscribe({
             next: (datav) => {
@@ -456,7 +456,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (!result) {
+      if (result) {
         return this.api.update('/inventario/oper/docininvconsol/updateAbiertoCerrado/' + this.userConn + "/" + this.cabecera.codigo + "/false", data)
           .subscribe({
             next: (datav) => {

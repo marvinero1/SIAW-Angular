@@ -13,6 +13,7 @@ import { inConcepto } from '@services/modelos/objetos';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { ConceptosmovimientosmercaderiaEditComponent } from './conceptosmovimientosmercaderia-edit/conceptosmovimientosmercaderia-edit.component';
 
 @Component({
   selector: 'app-conceptosmovimientosmercaderia',
@@ -21,11 +22,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ConceptosmovimientosmercaderiaComponent implements OnInit {
 
-  concepto:any=[];
-  data:any=[];
-  userConn:any;
+  concepto: any = [];
+  data: any = [];
+  userConn: any;
 
-  displayedColumns = ['codigo','descripcion','factor','traspaso','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'factor', 'traspaso', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -36,13 +37,13 @@ export class ConceptosmovimientosmercaderiaComponent implements OnInit {
   filteredOptions: Observable<inConcepto[]>;
 
   nombre_ventana: string = "abminconcepto.vb";
-  public ventana="Numeración de Concepto de Notas de Movimiento de Mercaderia"
-  public detalle="numConceptoNotasMovimiento-create";
-  public tipo="Numeración de Concepto de Notas de Movimiento de Mercaderia-CREATE";
+  public ventana = "Numeración de Concepto de Notas de Movimiento de Mercaderia"
+  public detalle = "numConceptoNotasMovimiento-create";
+  public tipo = "Numeración de Concepto de Notas de Movimiento de Mercaderia-CREATE";
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     public _snackBar: MatSnackBar, public nombre_ventana_service: NombreVentanaService, private toastr: ToastrService,) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
@@ -52,12 +53,12 @@ export class ConceptosmovimientosmercaderiaComponent implements OnInit {
   }
 
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
-  getAllConcepto(){
+  getAllConcepto() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inconcepto/";
-    return this.api.getAll('/inventario/mant/inconcepto/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inconcepto/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.concepto = datav;
@@ -72,62 +73,65 @@ export class ConceptosmovimientosmercaderiaComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  openDialog(){
+  openDialog() {
     this.dialog.open(ConceptosmovimientosmercaderiaCreateComponent, {
       width: 'auto',
-      height:'auto'
+      height: 'auto'
     });
   }
 
-  editar(item){
-    this.dialog.open(ConceptosmovimientosmercaderiaCreateComponent, {
+  editar(item) {
+    this.dialog.open(ConceptosmovimientosmercaderiaEditComponent, {
       width: 'auto',
-      height:'auto'
+      height: 'auto',
+      data: {
+        nota_moviento: item,
+      }
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fntiporetiro/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fntiporetiro/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/inconcepto/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/inconcepto/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

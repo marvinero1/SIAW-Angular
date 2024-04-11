@@ -150,12 +150,12 @@
         <div mat-dialog-footer>
           <!-- Saldos -->
           <div class="row pl-4">
-            <ng-container *ngIf="data_almacen_local.saldo > 0; else saldo">
-              <input type="text" class="inputsSaldos" value="311: {{ data_almacen_local.saldo | number:'2.2-2'}}"
+            <ng-container *ngIf="saldoItem > 0; else saldo">
+              <input type="text" class="inputsSaldos" value="311: {{ saldoItem | number:'2.2-2'}}"
                 style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
             </ng-container>
             <ng-template #saldo>
-              <input type="text" class="inputsSaldos" value="311: {{ data_almacen_local.saldo | number:'2.2-2'}}"
+              <input type="text" class="inputsSaldos" value="311: {{ saldoItem | number:'2.2-2'}}"
                 style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
             </ng-template>
 

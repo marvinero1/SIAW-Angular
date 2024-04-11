@@ -45,6 +45,7 @@ import { RecargoToProformaService } from '../../modal-recargos/recargo-to-profor
 import { VentanaValidacionesComponent } from '../../ventana-validaciones/ventana-validaciones.component';
 import { ModalIvaComponent } from '../../modal-iva/modal-iva.component';
 import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-total.service';
 
 @Component({
   selector: 'app-proforma',
@@ -238,7 +239,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public medio_transporte: any;
   public fletepor: any;
   public tipoentrega: any;
-
+  public saldoItem: number;
   public desct_nivel_actual: any = "ACTUAL";
 
   public codigo_vendedor_catalogo: string;
@@ -255,7 +256,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public tipopago: any;
   public preparacion: any;
   public complementopf: any;
-
   public disable_input_create: boolean;
   public isDisabled: boolean = true;
   public total_desct_precio: boolean = false;
@@ -321,12 +321,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'pedido',
     'cantidad', 'sld', 'tp', 'de', 'pul', 'niv', 'porcentaje', 'pd', 'pu', 'total'];
 
-  displayedColumnsNegativos = ['kit', 'nro_parte', 'cod_item_conjunto', 'cod_item_suelto',
-    'cod_item', 'descripcion_medida', 'cantidad', 'cantidad_conjunto', 'cantidad_suelto', 'saldo_real',
-    'cantidad_reserva_para_conjunto', 'saldo_para_venta_suelta', 'obs'];
+  displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
+    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_descontando_reservas',
+    'saldo_sin_descontar_reservas', 'cantidad_reservada_para_cjtos', 'obs'];
 
-  displayedColumnsLimiteMaximoVentas = ['cod_item', 'descrip_medida', 'cantidad_aprobada_anterior', 'cantidad_actual',
-    'cantidad_total', 'porcen_de_venta', 'cod_desct_esp', 'saldo', 'porcen_max_ventas', 'cantidad_max_venta', 'empaque', 'obs']
+  displayedColumnsLimiteMaximoVentas = ['codigo', 'descripcion', 'cantidad_pf_anterior', 'cantidad', 'saldo',
+    'porcen_venta', 'cod_desct_esp', 'saldo', 'porcen_maximo', 'cantidad_max_venta', 'empaque_precio', 'obs']
+
+
+
+
+
 
   displayedColumns_validacion = ['codControl', 'descripcion', 'valido', 'cod_servicio', 'desct_servicio', 'datoA',
     'datoB', 'clave_servicio', 'resolver', 'detalle_observacion', 'validar'];
@@ -355,10 +360,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   dataSource_negativos = new MatTableDataSource();
   dataSourceWithPageSize_negativos = new MatTableDataSource();
 
+  dataSourceLimiteMaximoVentas = new MatTableDataSource();
+  dataSourceWithPageSize_LimiteMaximoVentas = new MatTableDataSource();
+
   constructor(public dialog: MatDialog, private api: ApiService, public itemservice: ItemServiceService,
     public servicioCliente: ServicioclienteService, public almacenservice: ServicioalmacenService,
     public serviciovendedor: VendedorService, public servicioTarifa: TarifaService, public servicioPrecioVenta: ServicioprecioventaService,
-    private datePipe: DatePipe, private serviciMoneda: MonedaServicioService,
+    private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, public subtotal_service: SubTotalService,
     private _formBuilder: FormBuilder, public servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
     private toastr: ToastrService, private spinner: NgxSpinnerService, public log_module: LogService, public saldoItemServices: SaldoItemMatrizService,
     public _snackBar: MatSnackBar, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
@@ -494,6 +502,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.ponerFocoEnInput();
     });
     //FIN CATALOGO F4 ITMES
+
+    //trae el subtotal de la ventana modal subtotal
+    this.subtotal_service.disparadorDeSubTotal.subscribe(data => {
+      console.log("Recibiendo SubTotal del Modal SubTotal: ", data);
+      this.subtotal = data.subtotal;
+    });
+    //fin del servicio de subtotal
+
+
 
 
 
@@ -781,6 +798,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getEmpaqueItem(codigo);
     this.getSaldoItemSeleccionadoDetalle(codigo);
     this.getAlmacenesSaldos();
+    this.getSaldoItem(codigo);
 
     this.saldo_modal_total_1 = "";
     this.saldo_modal_total_2 = "";
@@ -796,220 +814,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   get f() {
     return this.FormularioData.controls;
   }
-
-  submitData() {
-    let total_proforma_concat: any = [];
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
-      ...item,
-      cantaut: 0,
-      totalaut: 0,
-      obs: "",
-    }));
-
-    this.submitted = true;
-    let data = this.FormularioData.value;
-    console.log(data);
-
-    total_proforma_concat = {
-      // veproforma: {
-      //   "id": "PYM01",
-      //   "numeroid": 2477,
-      //   "codalmacen": 311,
-      //   "codcliente": "303119",
-      //   "nomcliente": "ARMINDA CHOQUE CORONADO DE PORTUGAL",
-      //   "nit": "12492433",
-      //   "codvendedor": 31201,
-      //   "codmoneda": "BS",
-      //   "fecha": "2024-02-16",
-      //   "tdc": 1,
-      //   "tipopago": 0,
-      //   "subtotal": 148.21,
-      //   "descuentos": 0,
-      //   "recargos": 0,
-      //   "total": 129.17,
-      //   "anulada": false,
-      //   "transporte": "CAMION PERTEC",
-      //   "fletepor": "OTROS",
-      //   "direccion": "AV. CAPITAN VICTOR USTARIZ ENTRE C/C.W. CEVALLOS (CERCADO - CBBA - PCBA)",
-      //   "aprobada": false,
-      //   "paraaprobar": false,
-      //   "transferida": false,
-      //   "fechaaut": null,
-      //   "codcomplementaria": 0,
-      //   "obs": "---",
-      //   "obs2": null,
-      //   "horareg": "09:22",
-      //   "fechareg": "2024-02-16",
-      //   "usuarioreg": "DPD3",
-      //   "preparacion": "NORMAL",
-      //   "iva": 0,
-      //   "horaaut": "09:23",
-      //   "tipoentrega": "ENTREGAR",
-      //   "porceniva": 0,
-      //   "odc": "",
-      //   "peso": 34.23575,
-      //   "impresa": false,
-      //   "etiqueta_impresa": false,
-      //   "fecha_inicial": "2024-02-16",
-      //   "hora_inicial": "09:22",
-      //   "usuarioaut": null,
-      //   "confirmada": false,
-      //   "fecha_confirmada": null,
-      //   "hora_confirmada": null,
-      //   "contra_entrega": true,
-      //   "idanticipo": "",
-      //   "numeroidanticipo": 0,
-      //   "monto_anticipo": 0,
-      //   "pago_contado_anticipado": false,
-      //   "codcliente_real": "303119",
-      //   "venta_cliente_oficina": false,
-      //   "estado_contra_entrega": "POR CANCELAR",
-      //   "nombre_transporte": "CAMION PERTEC",
-      //   "desclinea_segun_solicitud": false,
-      //   "idsoldesctos": "",
-      //   "nroidsoldesctos": 0,
-      //   "latitud_entrega": "-17.396827",
-      //   "longitud_entrega": "-66.189689",
-      //   "hora": "09:22",
-      //   "ubicacion": "LOCAL",
-      //   "es_sol_urgente": false,
-      //   "niveles_descuento": "ACTUAL",
-      //   "idpf_complemento": "", //aca es para complemento de proforma
-      //   "nroidpf_complemento": 0, //aca es para complemento de proforma
-      //   "complemento_ci": "",
-      //   "tipo_venta": 0,
-      //   "tipo_docid": 1,
-      //   "email": "facturasventas@pertec.com.bo",
-      //   "tipo_complementopf": 0
-      // },
-      veproforma: data,
-      veproforma1: this.array_items_carrito_y_f4_catalogo,
-      veproforma_valida: [
-        {
-          "codproforma": 0,
-          "codcontrol": "00001",
-          "nroitems": 3,
-          "nit": "12492433",
-          "subtotal": 148.21,
-          "descuentos": 19.04,
-          "recargos": 0,
-          "total": 129.17,
-          "valido": "SI",
-          "observacion": "Sin Observacion",
-          "obsdetalle": "",
-          "codservicio": 102,
-          "datoa": "",
-          "datob": "",
-          "clave_servicio": ""
-        },
-        {
-          "codproforma": 0,
-          "codcontrol": "00002",
-          "nroitems": 3,
-          "nit": "12492433",
-          "subtotal": 148.21,
-          "descuentos": 19.04,
-          "recargos": 0,
-          "total": 129.17,
-          "valido": "SI",
-          "observacion": "Sin Observacion",
-          "obsdetalle": "",
-          "codservicio": 0,
-          "datoa": "",
-          "datob": "",
-          "clave_servicio": ""
-        },
-        {
-          "codproforma": 0,
-          "codcontrol": "00003",
-          "nroitems": 3,
-          "nit": "12492433",
-          "subtotal": 148.21,
-          "descuentos": 19.04,
-          "recargos": 0,
-          "total": 129.17,
-          "valido": "SI",
-          "observacion": "Sin Observacion",
-          "obsdetalle": "",
-          "codservicio": 0,
-          "datoa": "",
-          "datob": "",
-          "clave_servicio": ""
-        }
-      ],
-      veproforma_anticipo: [],
-      vedesextraprof: [],
-      verecargoprof: [{
-        "codproforma": 0,
-        "codrecargo": 0,
-        "porcen": 0,
-        "monto": 0,
-        "moneda": "BS",
-        "montodoc": 0,
-        "codcobranza": 0
-      }],
-      veproforma_iva: this.veproforma_iva,
-    }
-
-    console.log(total_proforma_concat);
-
-    if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
-      return;
-    }
-
-    if (this.FormularioData.valid) {
-      console.log("DATOS VALIDADOS");
-      this.spinner.show();
-      const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage.bd}`;
-      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-      this.api.create(url, total_proforma_concat).subscribe({
-        next: (datav) => {
-          this.toastr.info("FORMULARIO CORRECTO ✅");
-          this.totabilizar_post = datav;
-          console.log(this.totabilizar_post);
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-
-          //window.location.reload();
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        }
-      });
-    } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
-      console.log("HAY QUE VALIDAR DATOS");
-    }
-
-  }
-
-  // infoItemTotalSubTotal(array) {
-  //   let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-  //   return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, array)
-  //     .subscribe({
-  //       next: (datav) => {
-  //         console.log('data', datav);
-  //         this.item_seleccionados_catalogo_matriz = datav
-  //         this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz);
-  //       },
-
-  //       error: (err) => {
-  //         console.log(err, errorMessage);
-  //       },
-  //       complete: () => {
-  //       }
-  //     })
-  // }
 
   getIdTipo() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/catalogoNumProf/";
@@ -1540,7 +1344,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   getSaldoEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/1" + "/2/" + item + "/" + "311" + "/" + this.BD_storage.bd)
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
@@ -1551,6 +1355,36 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           console.log(err, errorMessage);
         },
         complete: () => { }
+      })
+  }
+
+  getSaldoItem(item) {
+    let agencia_concat = "AG" + this.agencia_logueado;
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + "311" + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.id_tipo = datav;
+          console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
+          // this.letraSaldos = this.id_tipo[0].resp;
+          // this.saldo_variable = this.id_tipo[2];
+
+          // LETRA
+          this.id_tipo[1].forEach(element => {
+            if (element.descripcion === 'Total Saldo') {
+              this.saldoItem = element.valor;
+              console.log(this.saldoItem);
+            }
+          });
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
       })
   }
 
@@ -1879,77 +1713,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  totabilizar() {
-    let total_proforma_concat: any = [];
-    let item_procesados_en_total: any = [];
-
-    console.log(this.disableSelect.value); //valor del check en el mat-tab complementar proforma
-
-    if (this.disableSelect.value === false) {
-      this.complementopf = 0;
-    } else {
-      this.complementopf = 1;
-    }
-
-    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
-    }
-
-    if (this.habilitar_desct_sgn_solicitud === undefined) {
-      this.habilitar_desct_sgn_solicitud = false;
-    }
-
-    this.spinner.show();
-    total_proforma_concat = {
-      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
-      veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
-      veproforma_valida: [],
-      veproforma_anticipo: [],
-      vedesextraprof: [],
-      verecargoprof: this.recargo_de_recargos, //array de recargos
-      veproforma_iva: this.veproforma_iva, //array de iva
-    }
-
-    console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-      this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-    console.log("Array de Carrito a Totaliza:" + total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
-
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
-    return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
-      .subscribe({
-        next: (datav) => {
-          this.totabilizar_post = datav;
-          console.log(this.totabilizar_post);
-          this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
-
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.toastr.error('! NO SE TOTALIZO !');
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
-        complete: () => {
-          this.total = this.totabilizar_post.totales.total;
-          this.subtotal = this.totabilizar_post.totales.subtotal;
-          this.recargos = this.totabilizar_post.totales.recargo;
-          this.des_extra = this.totabilizar_post.totales.descuento;
-          this.iva = this.totabilizar_post.totales.iva;
-          this.peso = this.totabilizar_post.totales.peso;
-          item_procesados_en_total = this.totabilizar_post.detalleProf;
-          this.tablaIva = this.totabilizar_post.totales.tablaIva;
-
-          this.dataSource = new MatTableDataSource(item_procesados_en_total);
-        }
-      })
-  }
-
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
 
@@ -2111,6 +1874,794 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
+
+  submitData() {
+    let total_proforma_concat: any = [];
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
+      ...item,
+      cantaut: 0,
+      totalaut: 0,
+      obs: "",
+    }));
+
+    this.submitted = true;
+    let data = this.FormularioData.value;
+    console.log(data);
+
+    total_proforma_concat = {
+      veproforma: data,
+      veproforma1: this.array_items_carrito_y_f4_catalogo,
+      veproforma_valida: [
+        {
+          "codproforma": 0,
+          "codcontrol": "00001",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 102,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        },
+        {
+          "codproforma": 0,
+          "codcontrol": "00002",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 0,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        },
+        {
+          "codproforma": 0,
+          "codcontrol": "00003",
+          "nroitems": 3,
+          "nit": "12492433",
+          "subtotal": 148.21,
+          "descuentos": 19.04,
+          "recargos": 0,
+          "total": 129.17,
+          "valido": "SI",
+          "observacion": "Sin Observacion",
+          "obsdetalle": "",
+          "codservicio": 0,
+          "datoa": "",
+          "datob": "",
+          "clave_servicio": ""
+        }
+      ],
+      veproforma_anticipo: [],
+      vedesextraprof: [],
+      verecargoprof: [{
+        "codproforma": 0,
+        "codrecargo": 0,
+        "porcen": 0,
+        "monto": 0,
+        "moneda": "BS",
+        "montodoc": 0,
+        "codcobranza": 0
+      }],
+      veproforma_iva: this.veproforma_iva,
+    }
+
+    console.log(total_proforma_concat);
+
+    if (this.total === 0.00) {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      return;
+    }
+
+    if (this.FormularioData.valid) {
+      console.log("DATOS VALIDADOS");
+      this.spinner.show();
+      const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage.bd}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, total_proforma_concat).subscribe({
+        next: (datav) => {
+          this.toastr.info("FORMULARIO CORRECTO ✅");
+          this.totabilizar_post = datav;
+          console.log(this.totabilizar_post);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+
+          //window.location.reload();
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
+
+  }
+
+  totabilizar() {
+    let total_proforma_concat: any = [];
+    let item_procesados_en_total: any = [];
+
+    console.log(this.disableSelect.value); //valor del check en el mat-tab complementar proforma
+
+    if (this.disableSelect.value === false) {
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
+
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+    }
+
+    if (this.habilitar_desct_sgn_solicitud === undefined) {
+      this.habilitar_desct_sgn_solicitud = false;
+    }
+
+    this.spinner.show();
+    total_proforma_concat = {
+      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
+      veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
+      veproforma_valida: [],
+      veproforma_anticipo: [],
+      vedesextraprof: [],
+      verecargoprof: this.recargo_de_recargos, //array de recargos
+      veproforma_iva: this.veproforma_iva, //array de iva
+    }
+
+    console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
+      this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
+    console.log("Array de Carrito a Totaliza:" + total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
+    return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
+      .subscribe({
+        next: (datav) => {
+          this.totabilizar_post = datav;
+          console.log(this.totabilizar_post);
+          this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE TOTALIZO !');
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          this.total = this.totabilizar_post.totales.total;
+          this.subtotal = this.totabilizar_post.totales.subtotal;
+          this.recargos = this.totabilizar_post.totales.recargo;
+          this.des_extra = this.totabilizar_post.totales.descuento;
+          this.iva = this.totabilizar_post.totales.iva;
+          this.peso = this.totabilizar_post.totales.peso;
+          item_procesados_en_total = this.totabilizar_post.detalleProf;
+          this.tablaIva = this.totabilizar_post.totales.tablaIva;
+
+          this.dataSource = new MatTableDataSource(item_procesados_en_total);
+        }
+      })
+  }
+
+  public validacion_post: any = [];
+  public validacion_post_negativos: any = [];
+  public validacion_post_max_ventas: any = [];
+  public valor_formulario: any = [];
+
+  public valor_formulario_copied_map_all: any = {};
+  public valor_formulario_negativos: any = {};
+  public valor_formulario_max_venta: any = {};
+
+
+  public negativos_validacion: any = [];
+  public maximo_validacion: any = [];
+
+
+  validarProformaAll() {
+    // 00058 - VALIDAR LIMITE MAXIMO DE VENTA SEGÚN PORCENTAJES
+    // 00060 - VALIDAR SALDOS NEGATIVOS
+    // VACIO - TODOS LOS CONTROLES
+
+    this.valor_formulario = [this.FormularioData.value];
+    //this.valor_formulario_copied_map = this.valor_formulario.slice();
+
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    let b = this.valor_formulario.map((element: any) => {
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.preciovta?.toString() === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: "",
+        totdesctos_extras: 0,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    let a = {
+      "cliente_habilitado": "HABILITADO",
+      "codalmacen": "311",
+      "codcliente": "300012",
+      "codcliente_real": "300012",
+      "coddocumento": 0,
+      "codmoneda": "BS",
+      "codtarifadefecto": "1",
+      "codvendedor": "31101",
+      "contra_entrega": "SI",
+      "desclinea_segun_solicitud": false,
+      "desctoespecial": "0",
+      "direccion": "AV. PETROLERA N° 2586  ESQ. MONTERO S/ N (CERCADO - CBBA - PCBA)",
+      "estado_contra_entrega": "POR CANCELAR",
+      "estado_doc_vta": "NUEVO",
+      "fechadoc": "2024-02-22T10:23:00.362Z",
+      "fechalimite_dosificacion": "2024-02-22T10:23:00.362Z",
+      "fletepor": "OTROS",
+      "id": "PF309",
+      "idanticipo": "",
+      "idFC_complementaria": "",
+      "idpf_complemento": "",
+      "idpf_solurgente": "",
+      "idsol_nivel": "",
+      "latitud": "-17.418447",
+      "longitud": "-66.151686",
+      "monto_anticipo": 0,
+      "nitfactura": "8021631019",
+      "niveles_descuento": "ACTUAL",
+      "nombcliente": "ALVARO BENJAMIN MERINO VELARDE",
+      "nombre_transporte": "-",
+      "nomcliente_real": "ALVARO BENJAMIN MERINO VELARDE",
+      "noridanticipo": "0",
+      "noridpf_solurgente": "0",
+      "nroautorizacion": "",
+      "nrocaja": "",
+      "nrofactura": "0",
+      "nroidFC_complementaria": "0",
+      "nroidpf_complemento": "",
+      "nroidsol_nivel": "0",
+      "nroitems": 2,
+      "nroticket": "",
+      "numeroid": "42",
+      "pago_con_anticipo": false,
+      "preciovta": "1",
+      "preparacion": "NORMAL",
+      "subtotaldoc": 910.92,
+      "tipo_caja": "",
+      "tipo_cliente": "NORMAL",
+      "tipo_complemento": "",
+      "tipo_doc_id": "5",
+      "tipo_vta": "CREDITO",
+      "tipoentrega": "",
+      "totaldoc": 746.96,
+      "totdesctos_extras": 163.96,
+      "totrecargos": 0,
+      "transporte": "CAMION PERTEC",
+      "ubicacion": "LOCAL",
+      "version_codcontrol": "",
+      "vta_cliente_en_oficina": false
+    }
+
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleAnticipos: [{
+        codproforma: 0,
+        codanticipo: 0,
+        docanticipo: "string",
+        id_anticipo: "string",
+        nroid_anticipo: 0,
+        monto: 0,
+        tdc: 0,
+        codmoneda: "string",
+        fechareg: "2024-04-10T13:43:37.707Z",
+        usuarioreg: "string",
+        horareg: "string"
+      }],
+      detalleDescuentos: [{
+        coddesextra: 0,
+        descrip: "string",
+        porcen: 0,
+        montodoc: 0,
+        codcobranza: 0,
+        codcobranza_contado: 0,
+        codanticipo: 0
+      }],
+      detalleEtiqueta: [{
+        codigo: 0,
+        id: "string",
+        numeroid: 0,
+        codcliente: "string",
+        linea1: "string",
+        linea2: "string",
+        representante: "string",
+        telefono: "string",
+        celular: "string",
+        ciudad: "string",
+        latitud_entrega: "string",
+        longitud_entrega: "string"
+      }],
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: [{
+        codrecargo: 0,
+        descrip: "string",
+        porcen: 0,
+        monto: 0,
+        moneda: "string",
+        montodoc: 0,
+        codcobranza: 0
+      }],
+    }
+
+    console.log(proforma_validar);
+    this.spinner.show();
+
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        this.toastr.info("VALIDACION CORRECTA ✅");
+        this.validacion_post = datav;
+        console.log(this.validacion_post);
+        //console.log(this.validacion_post[56].Dtnegativos);
+
+        //negativos
+        // this.validacion_post.forEach(element => {
+        //   if (element.Dtnegativos.length > 0) {
+        //     this.negativos_validacion.push(element.Dtnegativos);
+        //   }
+        // });
+
+        // console.log("Array de Validacion Negativo: ", this.negativos_validacion);
+        // const n: any = this.negativos_validacion[0]
+        // console.log("Array de Validacion Negativo, Posicion 0: ", n);
+
+        // this.dataSource_negativos = new MatTableDataSource(n);
+        //fin negativos
+
+
+        //maximoVentas
+        // this.validacion_post.forEach(element => {
+        //   if (element.Dtnocumplen.length > 0) {
+        //     this.maximo_validacion.push(element.Dtnocumplen);
+        //   }
+        // });
+
+        // console.log("Array de Validacion Maximos: ", this.maximo_validacion);
+        // const m: any = this.maximo_validacion[0]
+        // console.log("Array de Validacion Maximos, Posicion 0: ", m);
+
+        // this.dataSourceLimiteMaximoVentas = new MatTableDataSource(m);
+        //fin maximoVentas
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE VALIDO, OCURRIO UN PROBLEMA !');
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      complete: () => {
+
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      }
+    });
+  }
+
+  validarProformaSoloNegativos() {
+    // 00060 - VALIDAR SALDOS NEGATIVOS
+    // VACIO - TODOS LOS CONTROLES
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    let b = this.valor_formulario.map((element: any) => {
+      return this.valor_formulario_negativos = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.preciovta?.toString() === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: "",
+        totdesctos_extras: 0,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_negativos,
+      detalleAnticipos: [{
+        codproforma: 0,
+        codanticipo: 0,
+        docanticipo: "string",
+        id_anticipo: "string",
+        nroid_anticipo: 0,
+        monto: 0,
+        tdc: 0,
+        codmoneda: "string",
+        fechareg: "2024-04-10T13:43:37.707Z",
+        usuarioreg: "string",
+        horareg: "string"
+      }],
+      detalleDescuentos: [{
+        coddesextra: 0,
+        descrip: "string",
+        porcen: 0,
+        montodoc: 0,
+        codcobranza: 0,
+        codcobranza_contado: 0,
+        codanticipo: 0
+      }],
+      detalleEtiqueta: [{
+        codigo: 0,
+        id: "string",
+        numeroid: 0,
+        codcliente: "string",
+        linea1: "string",
+        linea2: "string",
+        representante: "string",
+        telefono: "string",
+        celular: "string",
+        ciudad: "string",
+        latitud_entrega: "string",
+        longitud_entrega: "string"
+      }],
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: [{
+        codrecargo: 0,
+        descrip: "string",
+        porcen: 0,
+        monto: 0,
+        moneda: "string",
+        montodoc: 0,
+        codcobranza: 0
+      }],
+    }
+
+    console.log(proforma_validar);
+    //this.spinner.show();
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+        this.validacion_post_negativos = datav[0].Dtnegativos;
+        console.log(this.validacion_post_negativos);
+
+        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      }
+    });
+  }
+
+  validarProformaSoloMaximoVenta() {
+    // 00058 - VALIDAR MAXIMO DE VENTA
+    // VACIO - TODOS LOS CONTROLES
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    let b = this.valor_formulario.map((element: any) => {
+      return this.validacion_post_max_ventas = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.preciovta?.toString() === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: "",
+        totdesctos_extras: 0,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
+    let proforma_validar = {
+      datosDocVta: this.validacion_post_max_ventas,
+      detalleAnticipos: [{
+        codproforma: 0,
+        codanticipo: 0,
+        docanticipo: "string",
+        id_anticipo: "string",
+        nroid_anticipo: 0,
+        monto: 0,
+        tdc: 0,
+        codmoneda: "string",
+        fechareg: "2024-04-10T13:43:37.707Z",
+        usuarioreg: "string",
+        horareg: "string"
+      }],
+      detalleDescuentos: [{
+        coddesextra: 0,
+        descrip: "string",
+        porcen: 0,
+        montodoc: 0,
+        codcobranza: 0,
+        codcobranza_contado: 0,
+        codanticipo: 0
+      }],
+      detalleEtiqueta: [{
+        codigo: 0,
+        id: "string",
+        numeroid: 0,
+        codcliente: "string",
+        linea1: "string",
+        linea2: "string",
+        representante: "string",
+        telefono: "string",
+        celular: "string",
+        ciudad: "string",
+        latitud_entrega: "string",
+        longitud_entrega: "string"
+      }],
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: [{
+        codrecargo: 0,
+        descrip: "string",
+        porcen: 0,
+        monto: 0,
+        moneda: "string",
+        montodoc: 0,
+        codcobranza: 0
+      }],
+    }
+
+    console.log(proforma_validar);
+    //this.spinner.show();
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        this.toastr.info("VALIDACION CORRECTA MAX VENTAS ✅");
+        this.validacion_post_max_ventas = datav[0].Dtnocumplen;
+        console.log(this.validacion_post_max_ventas);
+
+        this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2554,10 +3105,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       data: {
-        items: this.array_items_carrito_y_f4_catalogo,
         cabecera: this.FormularioData.value,
         desct: this.cod_descuento_total,
-        contra_entrega: this.es_contra_entrega
+        contra_entrega: this.es_contra_entrega,
+        items: this.array_items_carrito_y_f4_catalogo,
       }
     });
   }
