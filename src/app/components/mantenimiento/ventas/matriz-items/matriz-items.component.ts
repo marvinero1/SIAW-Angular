@@ -644,8 +644,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
-        tarifa: this.tarifa_get,
-        descuento: this.descuento_get,
+        // tarifa: this.tarifa_get,
+        tarifa: elemento.tarifa,
+        descuento: elemento.descuento,
+
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
         codcliente: this.codcliente_get,

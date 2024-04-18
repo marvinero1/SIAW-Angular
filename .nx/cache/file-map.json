@@ -161,11 +161,11 @@
       },
       {
         "file": ".nx/cache/d/server-process.json",
-        "hash": "9656498833387829043"
+        "hash": "16762310592373751615"
       },
       {
         "file": ".nx/cache/file-map.json",
-        "hash": "14550725627330321151"
+        "hash": "11008224659455232971"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/project-graph.json",
-        "hash": "5945798802985439369"
+        "hash": "6115419420280861599"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -4393,7 +4393,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "13590535465843822577"
+        "hash": "1352773632295486845"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -5253,7 +5253,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "12116958682907538317"
+        "hash": "14898796427897025412"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5265,7 +5265,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "5807201090179649748"
+        "hash": "16448291313168032301"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

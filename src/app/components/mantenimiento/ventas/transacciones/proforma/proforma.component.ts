@@ -2307,7 +2307,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
-
           }
         })
     } else {
