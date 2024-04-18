@@ -5,7 +5,8 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 })
 export class ServicioprecioventaService {
 
-  @Output() disparadorDePrecioVenta:EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDePrecioVenta: EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDePrecioVentaDetalle: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 

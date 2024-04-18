@@ -84,32 +84,34 @@ input::placeholder {
   /* Firefox */
 }
 
-// ::-webkit-scrollbar {
-//   width: 0px;
-//   background: transparent;
-// }
+
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 2px;
+  width: 4.8px;
+  height: 3.2px;
 }
 
+//para colocarle background al scroll
 /* Track */
-::-webkit-scrollbar-track {
-  background: #093070; 
-}
+// ::-webkit-scrollbar-track {
+//   background: #093070; 
+// }
  
 /* Handle */
-::-webkit-scrollbar-thumb {
-  background: #093070;
-  width: 5px;
-  height: 2px;
-}
+// ::-webkit-scrollbar-thumb {
+//   background: #093070;
+//   width: 6px;
+//   height: 2px;
+// }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #fbd800; 
+::-webkit-scrollbar-thumb{
+  background-color: #fbd800;
+   border-radius: 5px;
 }
-
+::-webkit-scrollbar-thumb:hover {
+  background: #093070; 
+}
+//fin para colocarle background al scroll
 
 
 .content {

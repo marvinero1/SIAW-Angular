@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -12,7 +12,23 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './item-seleccion-cantidad.component.html',
   styleUrls: ['./item-seleccion-cantidad.component.scss']
 })
-export class ItemSeleccionCantidadComponent implements OnInit {
+export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
+
+  @HostListener("document:keydown.enter", []) unloadHandler() {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "cant_input":
+          this.agregarItems();
+          break;
+      }
+    }
+  };
+
+  @ViewChild("cant_input") myInputField: ElementRef;
 
   cod_precio_venta_modal_codigo: number;
   cod_descuento_modal_codigo: number;
@@ -102,6 +118,10 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       this.cod_descuento_modal_codigo = data.precio_sugerido;
     });
     // fin_precio_venta
+  }
+
+  ngAfterViewInit() {
+    this.myInputField.nativeElement.focus();
   }
 
   getTarifa() {

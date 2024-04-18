@@ -1,6 +1,6 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
@@ -26,6 +26,7 @@ export class ModalDescuentosComponent implements OnInit {
   descuentos_get: any = [];
   public descuento_view: any = [];
 
+  detalle_get: any;
   usuario_logueado: any;
   userConn: any;
 
@@ -44,7 +45,11 @@ export class ModalDescuentosComponent implements OnInit {
   filteredOptions: Observable<veDescuento[]>;
 
   constructor(public dialogRef: MatDialogRef<ModalDescuentosComponent>, private api: ApiService,
-    public servicioDescuento: DescuentoService) {
+    public servicioDescuento: DescuentoService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
+
+    if (this.detalle_get) {
+      this.detalle_get = detalle.detalle;
+    }
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -105,10 +110,17 @@ export class ModalDescuentosComponent implements OnInit {
   }
 
   mandarDescuento() {
-    this.servicioDescuento.disparadorDeDescuentos.emit({
-      descuento: this.descuento_view,
-      precio_sugerido: this.descuentos_get.codTarifa,
-    });
+    if (this.detalle_get === true) {
+      this.servicioDescuento.disparadorDeDescuentosDetalle.emit({
+        descuento: this.descuento_view,
+        precio_sugerido: this.descuentos_get.codTarifa,
+      });
+    } else {
+      this.servicioDescuento.disparadorDeDescuentos.emit({
+        descuento: this.descuento_view,
+        precio_sugerido: this.descuentos_get.codTarifa,
+      });
+    }
 
     this.close();
   }

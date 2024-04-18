@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -47,6 +47,8 @@ import { ModalIvaComponent } from '../../modal-iva/modal-iva.component';
 import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-total.service';
 import { MatTabGroup } from '@angular/material/tabs';
+import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta.service';
+
 
 @Component({
   selector: 'app-proforma',
@@ -87,6 +89,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           break;
         case "inputCatalogoDireccion":
           this.modalClientesDireccion(this.codigo_cliente_catalogo);
+          break;
+        case "inputCatalogoPrecioVentaDetalle":
+          this.modalPrecioVentaDetalle();
+          break;
+
+        case "inputCatalogoDescuentoEspecialDetalle":
+          this.modalDescuentoEspecialDetalle();
           break;
         case "":
           this.modalCatalogoProductos();
@@ -277,11 +286,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public moneda_get_array: any = [];
   public tipo_cambio_moneda_catalogo: any;
 
-  public subtotal: number = 0;
+  public subtotal: number = 0.00;
   public recargos: number = 0;
   public des_extra: number = 0;
   public iva: number = 0;
-  public total: number = 0;
+  public total: number = 0.00;
   public peso: number = 0;
 
   selectTPago: string = "Credito";
@@ -296,7 +305,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public vendedor_cliente_catalogo_real: string;
   public id_solicitud_desct: string;
   public numero_id_solicitud_desct: string;
-
+  public etiqueta_get_modal_etiqueta: [] = [];
 
   public codigo_item_catalogo: any = [];
   public cantidad_item_matriz: number;
@@ -319,6 +328,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   valorPredeterminadoPreparacion = "NORMAL";
   valorPredeterminadoTipoPago = "CONTADO";
+  selectedRowIndex: number = -1; // Inicialmente ninguna celda está seleccionada
+
+  elementoSeleccionadoPrecioVenta: any;
+  elementoSeleccionadoDescuento: any;
 
   //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
   public validacion_post: any = [];
@@ -378,6 +391,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   dataSource_validacion = new MatTableDataSource();
   dataSourceWithPageSize_validacion = new MatTableDataSource();
 
+  decimalPipe: any;
+
   constructor(public dialog: MatDialog, private api: ApiService, public itemservice: ItemServiceService,
     public servicioCliente: ServicioclienteService, public almacenservice: ServicioalmacenService,
     public serviciovendedor: VendedorService, public servicioTarifa: TarifaService, public servicioPrecioVenta: ServicioprecioventaService,
@@ -385,8 +400,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     private _formBuilder: FormBuilder, public servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
     private toastr: ToastrService, private spinner: NgxSpinnerService, public log_module: LogService, public saldoItemServices: SaldoItemMatrizService,
     public _snackBar: MatSnackBar, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
-    public servicio_recargo_proforma: RecargoToProformaService) {
+    public servicio_recargo_proforma: RecargoToProformaService, public servicioEtiqueta: EtiquetaService) {
 
+    this.decimalPipe = new DecimalPipe('en-US');
     this.FormularioData = this.createForm();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -408,7 +424,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
       this.cod_id_tipo_modal = data.id_tipo;
-      this.cod_id_tipo_modal_id = this.cod_id_tipo_modal.id
+      this.cod_id_tipo_modal_id = this.cod_id_tipo_modal.id;
+
+      //si se cambia el tipoID, los totales tambien se cambian
+      this.total = 0;
+      this.subtotal = 0.00;
     });
     //
 
@@ -416,6 +436,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
       this.almacn_parame_usuario = data.almacen.codigo;
+
+      //si se cambia de almacen, los totales tambien se cambian
+      this.total = 0;
+      this.subtotal = 0.00;
     });
     //
 
@@ -423,6 +447,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
       this.cod_vendedor_cliente_modal = data.vendedor;
+
+      //si se cambia de vendedor, los totales tambien se cambian
+      this.total = 0;
+      this.subtotal = 0.00;
     });
     //finvendedor
 
@@ -430,7 +458,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
-      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo
+      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
     });
     // fin_precio_venta
 
@@ -463,11 +491,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.subscribe(data_carrito => {
       console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
       this.array_items_carrito_y_f4_catalogo = data_carrito.concat(this.item_seleccionados_catalogo_matriz);
-      console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", JSON.stringify(this.array_items_carrito_y_f4_catalogo));
+      console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
 
-      for (let i = 0; i < this.array_items_carrito_y_f4_catalogo.length; i++) {
-        this.array_items_carrito_y_f4_catalogo[i].orden_creciente = i + 1;
-      }
+      // for (let i = 0; i < this.array_items_carrito_y_f4_catalogo.length; i++) {
+      //   this.array_items_carrito_y_f4_catalogo[i].orden_creciente = i + 1;
+      // }
 
       this.spinner.show();
       setTimeout(() => {
@@ -483,8 +511,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
-      this.total = 0.00;
-      this.subtotal = 0.00;
+      this.total = 0;
+      this.subtotal = 0;
     });
     //
 
@@ -527,7 +555,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //fin del servicio de subtotal
 
-
+    //Etiqueta
+    this.servicioEtiqueta.disparadorDeEtiqueta.subscribe(data => {
+      console.log("Recibiendo Etiqueta: ", data);
+      this.etiqueta_get_modal_etiqueta = data.etiqueta;
+    });
+    //fin Etiqueta
 
 
 
@@ -557,6 +590,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       this.getClientByID(this.codigo_cliente_catalogo);
       this.getDireccionCentral(this.codigo_cliente_catalogo);
+
+      //si se cambia de cliente, los totales tambien se cambian
+      this.total = 0;
+      this.subtotal = 0;
     });
     //
 
@@ -585,6 +622,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Moneda: ", data);
       this.moneda_get_catalogo = data.moneda;
       this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
+
+      //si se cambia la moneda, los totales tambien se cambian
+      this.total = 0;
+      this.subtotal = 0;
     });
     //
 
@@ -592,6 +633,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.servicioTransfeProformaCotizacion.disparadorDeProformaTransferir.subscribe(data => {
       console.log("Recibiendo Proforma Transferida: ", data);
       this.proforma_transferida = data.proforma_transferir;
+
       this.imprimir_proforma_tranferida(this.proforma_transferida);
     });
     //
@@ -640,6 +682,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log(this.recargos_ya_en_array_tamanio);
     });
     //FIN DE RECARGOS
+
   }
 
   ngAfterViewInit() {
@@ -724,6 +767,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
       fecha: [fecha_actual],
+
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: [this.dataform.descuentos, Validators.compose([Validators.required])],
@@ -734,7 +778,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       preparacion: [this.dataform.preparacion, Validators.compose([Validators.required])],
       tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega, Validators.compose([Validators.required])],
       fletepor: [this.dataform.fletepor, Validators.compose([Validators.required])],
-
 
       fecha_inicial: [fecha_actual],
       tdc: [this.dataform.tdc],
@@ -751,7 +794,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       impresa: [false],
       etiqueta_impresa: [false],
       es_sol_urgente: [false],
+
       //cliente_real: [this.dataform.cliente_real === null ? this.codigo_cliente : this.dataform.cliente_real],
+      //nomcliente_casual: [this.dataform.nomcliente_casual],
+      //razon_social: [this.dataform.razon_social],
+      //celular: [this.dataform.celular],
+
       obs: [this.dataform.obs],
       obs2: [""],
       direccion: [this.dataform.direccion],
@@ -759,18 +807,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       codcliente_real: [this.dataform.cliente_real === null ? this.codigo_cliente : this.dataform.cliente_real],
       latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
-
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
       email: [this.dataform.email],
       complemento_ci: [this.dataform.complemento_ci],
       venta_cliente_oficina: [this.dataform.venta_cliente_oficina === null ? false : true],
       tipo_venta: ['0', Validators.required],
-      //nomcliente_casual: [this.dataform.nomcliente_casual],
-      //razon_social: [this.dataform.razon_social],
       estado_contra_entrega: [this.dataform.estado_contra_entrega === null ? "" : ""],
       contra_entrega: [this.dataform.contra_entrega === null ? false : true],
-      //celular: [this.dataform.celular],
-
       odc: [this.razon_social],
 
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
@@ -825,7 +868,108 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   mandarEntregar() {
-    this.tipoentrega = "ENTREGAR"
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    this.submitted = true;
+    this.valor_formulario.map((element: any) => {
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: this.preparacion?.toString() || '',
+        contra_entrega: element.preciovta?.toString() === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: "",
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: "",
+        totdesctos_extras: 0,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    if (this.preparacion === undefined) {
+      this.preparacion = "NORMAL";
+    } else {
+      this.preparacion;
+    }
+
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      preparacion: this.preparacion,
+    }
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+
+    if (this.total != 0) {
+      //if (this.FormularioData.valid) {
+      console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
+      let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
+      return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage.bd, proforma_validar)
+        .subscribe({
+          next: (datav) => {
+            this.tipoentrega = datav.mensaje;
+            console.log(datav);
+          },
+
+          error: (err: any) => {
+            console.log(err, errorMessage);
+          },
+          complete: () => { }
+        })
+      //}
+    } else {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0");
+    }
+
   }
 
   get f() {
@@ -893,6 +1037,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   // onLeaveCodigoCliente(event: any) {
   //   this.renderer.selectRootElement('#input_id_email').focus();
   // }
+
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
 
   getAlmacen() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
@@ -1094,8 +1247,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
     this.total_desct_precio = true;
-    this.total = 0;
-    this.subtotal = 0;
+    this.total = 0.00;
+    this.subtotal = 0.00;
 
     const resultado: boolean = window.confirm("¿ DESEA TOTALIZAR LOS ITEM DE LA PROFORMA?, ESTA ACCION PUEDE TOMAR UN TIEMPO");
     if (resultado) {
@@ -1568,7 +1721,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     alert("EVENTO BLOQUEADO, NO PEGAR");
   }
 
+  selectRow(index: number) {
+    this.selectedRowIndex = index;
+  }
+
   cantidadChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
     this.total_desct_precio = false;
     this.total_X_PU = true;
 
@@ -1609,6 +1772,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.des_extra = 0;
     this.recargos = 0;
 
+    console.log(element);
+
     // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
     element.codtarifa = Number(newValue);
 
@@ -1617,6 +1782,60 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
   }
+
+
+
+  // Función que se llama cuando se hace clic en el input
+  inputClickedPrecioVenta(elemento: any) {
+    // Aquí puedes hacer lo que necesites con el elemento
+    console.log('Elemento seleccionado:', elemento);
+    this.elementoSeleccionadoPrecioVenta = elemento;
+
+    this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
+      console.log("Recibiendo Descuento: ", data);
+      this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
+    });
+  }
+
+  inputClickedDescuento(elemento: any) {
+    // Aquí puedes hacer lo que necesites con el elemento
+    console.log('Elemento seleccionado:', elemento);
+    this.elementoSeleccionadoDescuento = elemento;
+
+    this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
+      console.log("Recibiendo Precio de Venta: ", data);
+      this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   DEChangeMatrix(element: any, newValue: number) {
     this.total = 0;
@@ -1642,13 +1861,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (cantidad_pedida !== undefined && precioneto !== undefined && cantidad !== undefined) {
       if (this.total_X_PU === true) {
-        return cantidad * precioneto;
+        return this.formatNumber(cantidad * precioneto);
       } else {
         // console.log(input);
         let cantidadPedida = cantidad_pedida;
         // Realizar cálculos solo si los valores no son undefined
         //console.log(cantidadPedida, preciolista);
-        return cantidadPedida * precioneto;
+        return this.formatNumber(cantidadPedida * precioneto);
       }
     } else {
       return 0; // O algún otro valor predeterminado
@@ -1776,11 +1995,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
     this.preparacion = proforma.cabecera.preparacion;
-    this.subtotal = 0;
+    this.subtotal = proforma.cabecera.subtotal;
     this.recargos = 0;
-    this.des_extra = 0;
+    this.des_extra = proforma.cabecera.descuentos;
     this.iva = 0;
-    this.total = 0;
+    this.total = proforma.cabecera.total;
 
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
     this.veproforma1 = proforma.detalle;
@@ -2014,7 +2233,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
     }
-
   }
 
   totabilizar() {
@@ -2037,7 +2255,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.habilitar_desct_sgn_solicitud = false;
     }
 
-    this.spinner.show();
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
       veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
@@ -2052,51 +2269,72 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
     console.log("Array de Carrito a Totaliza:" + total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
 
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
-    return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
-      .subscribe({
-        next: (datav) => {
-          this.totabilizar_post = datav;
-          console.log(this.totabilizar_post);
-          this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+    if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
+      console.log("DATOS VALIDADOS");
+      this.spinner.show();
+      let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
+      return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
+        .subscribe({
+          next: (datav) => {
+            this.totabilizar_post = datav;
+            console.log(this.totabilizar_post);
+            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
 
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
+            console.log(this.array_items_carrito_y_f4_catalogo);
+            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.toastr.error('! NO SE TOTALIZO !');
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
 
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500);
-        },
-        complete: () => {
-          this.total = this.totabilizar_post.totales.total;
-          this.subtotal = this.totabilizar_post.totales.subtotal;
-          this.recargos = this.totabilizar_post.totales.recargo;
-          this.des_extra = this.totabilizar_post.totales.descuento;
-          this.iva = this.totabilizar_post.totales.iva;
-          this.peso = this.totabilizar_post.totales.peso;
-          item_procesados_en_total = this.totabilizar_post.detalleProf;
-          this.tablaIva = this.totabilizar_post.totales.tablaIva;
+          error: (err) => {
+            console.log(err, errorMessage);
+            this.toastr.error('! NO SE TOTALIZO !');
 
-          this.dataSource = new MatTableDataSource(item_procesados_en_total);
-        }
-      })
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
+          complete: () => {
+            this.total = this.totabilizar_post.totales?.total;
+            this.subtotal = this.totabilizar_post.totales?.subtotal;
+            this.recargos = this.totabilizar_post.totales?.recargo;
+            this.des_extra = this.totabilizar_post.totales?.descuento;
+            this.iva = this.totabilizar_post.totales?.iva;
+            this.peso = this.totabilizar_post.totales?.peso;
+            this.tablaIva = this.totabilizar_post.totales?.tablaIva;
+            item_procesados_en_total = this.totabilizar_post?.detalleProf;
+
+            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
+
+          }
+        })
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
   }
 
 
 
 
+
+
+
+
+
+  //VALIDACIONES
+  validacion_solo_validos: any = [];
+  validacion_no_validos: any = [];
+
+  toggleValidacionesAll: boolean = false;
+  toggleValidos: boolean = false;
+  toggleNoValidos: boolean = false;
+
   validarProformaAll() {
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
-    // 00058 - VALIDAR LIMITE MAXIMO DE VENTA SEGÚN PORCENTAJES
-    // 00060 - VALIDAR SALDOS NEGATIVOS
     // VACIO - TODOS LOS CONTROLES
-
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
@@ -2165,68 +2403,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
 
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-    let a = {
-      "cliente_habilitado": "HABILITADO",
-      "codalmacen": "311",
-      "codcliente": "300012",
-      "codcliente_real": "300012",
-      "coddocumento": 0,
-      "codmoneda": "BS",
-      "codtarifadefecto": "1",
-      "codvendedor": "31101",
-      "contra_entrega": "SI",
-      "desclinea_segun_solicitud": false,
-      "desctoespecial": "0",
-      "direccion": "AV. PETROLERA N° 2586  ESQ. MONTERO S/ N (CERCADO - CBBA - PCBA)",
-      "estado_contra_entrega": "POR CANCELAR",
-      "estado_doc_vta": "NUEVO",
-      "fechadoc": "2024-02-22T10:23:00.362Z",
-      "fechalimite_dosificacion": "2024-02-22T10:23:00.362Z",
-      "fletepor": "OTROS",
-      "id": "PF309",
-      "idanticipo": "",
-      "idFC_complementaria": "",
-      "idpf_complemento": "",
-      "idpf_solurgente": "",
-      "idsol_nivel": "",
-      "latitud": "-17.418447",
-      "longitud": "-66.151686",
-      "monto_anticipo": 0,
-      "nitfactura": "8021631019",
-      "niveles_descuento": "ACTUAL",
-      "nombcliente": "ALVARO BENJAMIN MERINO VELARDE",
-      "nombre_transporte": "-",
-      "nomcliente_real": "ALVARO BENJAMIN MERINO VELARDE",
-      "noridanticipo": "0",
-      "noridpf_solurgente": "0",
-      "nroautorizacion": "",
-      "nrocaja": "",
-      "nrofactura": "0",
-      "nroidFC_complementaria": "0",
-      "nroidpf_complemento": "",
-      "nroidsol_nivel": "0",
-      "nroitems": 2,
-      "nroticket": "",
-      "numeroid": "42",
-      "pago_con_anticipo": false,
-      "preciovta": "1",
-      "preparacion": "NORMAL",
-      "subtotaldoc": 910.92,
-      "tipo_caja": "",
-      "tipo_cliente": "NORMAL",
-      "tipo_complemento": "",
-      "tipo_doc_id": "5",
-      "tipo_vta": "CREDITO",
-      "tipoentrega": "",
-      "totaldoc": 746.96,
-      "totdesctos_extras": 163.96,
-      "totrecargos": 0,
-      "transporte": "CAMION PERTEC",
-      "ubicacion": "LOCAL",
-      "version_codcontrol": "",
-      "vta_cliente_en_oficina": false
-    }
-
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: [{
@@ -2251,20 +2427,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         codcobranza_contado: 0,
         codanticipo: 0
       }],
-      detalleEtiqueta: [{
-        codigo: 0,
-        id: "string",
-        numeroid: 0,
-        codcliente: "string",
-        linea1: "string",
-        linea2: "string",
-        representante: "string",
-        telefono: "string",
-        celular: "string",
-        ciudad: "string",
-        latitud_entrega: "string",
-        longitud_entrega: "string"
-      }],
+      detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: [{
         codrecargo: 0,
@@ -2276,40 +2439,106 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         codcobranza: 0
       }],
     }
+    let tamanio_array_etiqueta = proforma_validar.detalleEtiqueta[0].length === undefined ? 1 : 0;
+    console.log(proforma_validar, "Largo del array etiqueta: ", proforma_validar.detalleEtiqueta[0].length);
 
-    console.log(proforma_validar);
-    // this.spinner.show();
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+    this.spinner.show();
+    this.submitted = true;
 
-    this.api.create(url, proforma_validar).subscribe({
-      next: (datav) => {
-        this.toastr.info("VALIDACION CORRECTA ✅");
-        this.validacion_post = datav;
-        console.log(this.validacion_post);
+    if (this.FormularioData.valid && tamanio_array_etiqueta === 1) {
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
-        this.abrirTabPorLabel("Resultado de Validacion");
-        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          this.toastr.info("VALIDACION CORRECTA ✅");
+          this.validacion_post = datav;
+          console.log(this.validacion_post);
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE VALIDO, OCURRIO UN PROBLEMA !');
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      complete: () => {
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
+          this.abrirTabPorLabel("Resultado de Validacion");
+          this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+
+          this.toggleValidacionesAll = true;
+          this.toggleValidos = false;
+          this.toggleNoValidos = false;
+
+          // al traer todas las validaciones tambien se traen los negativos
+          this.validacion_post_negativos = datav[55].Dtnegativos;
+          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+
+          // maximo de ventas
+          this.validacion_post_max_ventas = datav[53].Dtnocumplen;
+          this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          this.abrirTabPorLabel("Resultado de Validacion");
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
+    } else {
+      if (!this.FormularioData.valid) {
+        this.toastr.info("VALIDACION ACTIVA 🚨");
+        console.log("HAY QUE VALIDAR DATOS");
+      } else {
+        this.toastr.info("¡FALTA GRABAR ETIQUETA!");
       }
-    });
+
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+    }
+
   }
 
+  validacionesTodosFilterToggle() {
+    this.toggleValidacionesAll = true;
+    this.toggleValidos = false;
+    this.toggleNoValidos = false;
+
+    this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+  }
+
+  validacionesValidosFilterToggle() {
+    this.toggleValidacionesAll = false;
+    this.toggleValidos = true;
+    this.toggleNoValidos = false;
+
+    this.validacion_solo_validos = this.validacion_post.filter((element) => {
+      return element.Valido === "SI";
+    });
+
+    this.dataSource_validacion = new MatTableDataSource(this.validacion_solo_validos);
+  }
+
+  validacionesNOValidosFilterToggle() {
+    this.toggleValidacionesAll = false;
+    this.toggleValidos = false;
+    this.toggleNoValidos = true;
+
+    this.validacion_no_validos = this.validacion_post.filter((element) => {
+      return element.Valido === "NO";
+    });
+
+    this.dataSource_validacion = new MatTableDataSource(this.validacion_no_validos);
+  }
+  // FIN VALIDACION ALL
+
+  // NEGATIVOS
   validarProformaSoloNegativos() {
     // 00060 - VALIDAR SALDOS NEGATIVOS
     // VACIO - TODOS LOS CONTROLES
@@ -2448,6 +2677,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.abrirTabPorLabel("Negativos");
           console.log(this.validacion_post_negativos);
 
+          this.toggleTodosNegativos = true;
+          this.toggleNegativos = false;
+          this.togglePositivos = false;
+
           this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
           setTimeout(() => {
             this.spinner.hide();
@@ -2472,6 +2705,47 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  validacion_post_negativos_filtrados_solo_negativos: any = [];
+  validacion_post_negativos_filtrados_solo_positivos: any = [];
+
+  toggleTodosNegativos: boolean = false;
+  toggleNegativos: boolean = false;
+  togglePositivos: boolean = false;
+
+  negativosTodosFilterToggle() {
+    this.toggleTodosNegativos = true;
+    this.toggleNegativos = false;
+    this.togglePositivos = false;
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+  }
+
+  negativosNegativosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = true;
+    this.togglePositivos = false;
+
+    this.validacion_post_negativos_filtrados_solo_negativos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Genera Negativo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_negativos);
+  }
+
+  negativosPositivosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = false;
+    this.togglePositivos = true;
+
+    this.validacion_post_negativos_filtrados_solo_positivos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Positivo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_positivos);
+  }
+  //FIN NEGATIVOS
+
+  // MAX VENTAS
   validarProformaSoloMaximoVenta() {
     // 00058 - VALIDAR MAXIMO DE VENTA
     // VACIO - TODOS LOS CONTROLES
@@ -2610,6 +2884,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.validacion_post_max_ventas = datav[0].Dtnocumplen;
           console.log(this.validacion_post_max_ventas);
 
+          this.toggleTodosMaximoVentas = true;
+          this.toggleMaximoVentaSobrepasan = false;
+          this.toggleMaximoVentasNoSobrepasan = false;
+
           this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           setTimeout(() => {
             this.spinner.hide();
@@ -2634,14 +2912,65 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  validacion_post_max_venta_filtrados_si_sobrepasa: any = [];
+  validacion_post_max_venta_filtrados_no_sobrepasa: any = [];
+
+  toggleTodosMaximoVentas: boolean = false;
+  toggleMaximoVentaSobrepasan: boolean = false;
+  toggleMaximoVentasNoSobrepasan: boolean = false;
+
+  maximoVentasAllFilterToggle() {
+    this.toggleTodosMaximoVentas = true;
+    this.toggleMaximoVentaSobrepasan = false;
+    this.toggleMaximoVentasNoSobrepasan = false;
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+  }
+
+  maxmoVentasNOSobrepasanFilterToggle() {
+    this.toggleTodosMaximoVentas = false;
+    this.toggleMaximoVentaSobrepasan = false;
+    this.toggleMaximoVentasNoSobrepasan = true;
+
+    this.validacion_post_max_venta_filtrados_no_sobrepasa = this.validacion_post_max_ventas.filter((element) => {
+      return element.obs === "Cumple";
+    });
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_venta_filtrados_no_sobrepasa);
+  }
+
+  maxmoVentasSISobrepasanFilterToggle() {
+    this.toggleTodosMaximoVentas = false;
+    this.toggleMaximoVentaSobrepasan = true;
+    this.toggleMaximoVentasNoSobrepasan = false;
+
+    this.validacion_post_max_venta_filtrados_si_sobrepasa = this.validacion_post_max_ventas.filter((element) => {
+      return element.obs != "Cumple";
+    });
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_venta_filtrados_si_sobrepasa);
+  }
+  // FIN MAX VENTAS
 
 
-  abrirTabPorLabel(label: string) {
-    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
-    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
-    if (index !== -1) {
-      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+
+
+  formatNumber(number: number): any {
+    // Formatear el número con el separador de miles como coma y el separador decimal como punto
+    return new Intl.NumberFormat('en-US').format(number);
+  }
+
+  convertToNumber(value: any): number {
+    if (value === undefined) {
+      return 0; // O cualquier valor predeterminado que desees
     }
+    return parseFloat(value.toString().replace(',', '.'));
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
   }
 
 
@@ -2692,10 +3021,43 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-  eliminarItemTabla(poscicion) {
-    console.log(poscicion);
 
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden !== poscicion);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  eliminarItemTabla(posicion, coditem) {
+    console.log(posicion, coditem);
+    // const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden_creciente !== posicion && i.coditem !== coditem);
+
+    const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
+    this.array_items_carrito_y_f4_catalogo = a;
+    // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
+    console.log(a);
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
   }
 
@@ -2737,6 +3099,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+      data: { detalle: false }
+    });
+  }
+
+  modalPrecioVentaDetalle(): void {
+    this.dialog.open(ModalPrecioVentaComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { detalle: true }
     });
   }
 
@@ -2744,6 +3116,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalDescuentosComponent, {
       width: 'auto',
       height: 'auto',
+      data: { detalle: false }
+    });
+  }
+
+  modalDescuentoEspecialDetalle(): void {
+    this.dialog.open(ModalDescuentosComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { detalle: true }
     });
   }
 
@@ -2990,7 +3371,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //   return;
     // }
 
-
     this.dialog.open(AnticiposProformaComponent, {
       width: 'auto',
       height: 'auto',
@@ -3005,6 +3385,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         vendedor: this.almacn_parame_usuario,
         id: this.id_tipo_view_get_codigo,
         numero_id: this.id_proforma_numero_id,
+        cod_cliente_real: this.cliente_catalogo_real,
       },
     });
   }
@@ -3045,7 +3426,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalRecargos() {
     let a = this.recargo_de_recargos.length;
-
     this.dialog.open(ModalRecargosComponent, {
       width: 'auto',
       height: 'auto',
@@ -3186,7 +3566,72 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  resolverValidacionEnValidar(datoA, datoB, msj_validacion, cod_servicio) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  array_original_de_validaciones_copied: any = [];
+  array_original_de_validaciones_validadas_OK: any = [];
+  array_original_de_validaciones_validadas_OK_mostrar: any = [];
+
+  resolverValidacionEnValidar(datoA, datoB, msj_validacion, cod_servicio, element) {
+    this.array_original_de_validaciones_copied = this.validacion_post;
+
+    this.array_original_de_validaciones_validadas_OK = this.array_original_de_validaciones_copied.filter((element) => {
+      return element.Valido === "NO";
+    });
+
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: 'auto',
       height: 'auto',
@@ -3195,27 +3640,91 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         dataB: datoB,
         dataPermiso: msj_validacion,
         dataCodigoPermiso: cod_servicio,
-        //abrir: true,
       },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
-      console.log(result);
       if (result) {
-        //this.log_module.guardarLog(ventana, detalle, tipo);
+        this.array_original_de_validaciones_validadas_OK_mostrar = this.array_original_de_validaciones_validadas_OK.filter(i => i.Codigo !== element.Codigo);
+        this.dataSource_validacion = new MatTableDataSource(this.array_original_de_validaciones_validadas_OK_mostrar);
+        console.log("Array de donde se ah tenido q eliminar", this.array_original_de_validaciones_validadas_OK_mostrar);
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.toastr.error('¡CANCELADO!');
       }
     });
   }
 
-  modalDetalleObservaciones(obs) {
-    console.log(this.tablaIva);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  modalDetalleObservaciones(obs, items_negativos, item_max_venta) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
-      data: { obs_validacion: obs },
+      data: {
+        obs_validacion: obs,
+        items: items_negativos,
+        item_max_venta: item_max_venta,
+      },
     });
   }
 }

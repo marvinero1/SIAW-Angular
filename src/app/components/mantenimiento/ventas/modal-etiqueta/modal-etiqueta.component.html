@@ -58,18 +58,20 @@
           </mat-card>
         </mat-tab>
 
-        <mat-tab label="Teléfonos de Contacto"><br>
-          <table>
+        <mat-tab label="Teléfonos de Contacto"> <br>
+          <table style="margin: auto;width: 100%;text-align: center;">
             <thead>
               <tr>
-                <!-- <th>Tipo</th> -->
-                <th>Nro. Telefono</th>
+                <th>Tipo</th>
+                <th>Nro. Teléfono</th>
+                <th>Pertenece a: </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td></td>
-                <td>{{ data.telefono }}</td>
+              <tr *ngFor="let datas of data.telefonos">
+                <td style="text-align:center;">{{ datas.tipo }}</td>
+                <td style="text-align:center;">{{ datas.telf }}</td>
+                <td style="text-align:center;">{{ datas.nomtelf}}</td>
               </tr>
             </tbody>
           </table>
@@ -96,7 +98,8 @@
           <span><i class="fa fa-times" aria-hidden="true" style="color: #ff0707;"></i> Cancelar</span>
         </button>
 
-        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+        <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+          (click)="enviarArrayToProforma();">
           <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
         </button><br>
       </div>

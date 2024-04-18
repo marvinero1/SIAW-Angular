@@ -7,7 +7,6 @@ import { ApiService } from '@services/api.service';
 import { vePuntoVenta } from '@services/modelos/objetos';
 import { Observable, map, startWith } from 'rxjs';
 import { PuntoventaService } from '../servicio-punto-venta/puntoventa.service';
-
 @Component({
   selector: 'app-catalogo-punto-venta',
   templateUrl: './catalogo-punto-venta.component.html',
@@ -15,22 +14,22 @@ import { PuntoventaService } from '../servicio-punto-venta/puntoventa.service';
 })
 export class CatalogoPuntoVentaComponent implements OnInit {
 
- @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarPtoVenta();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarPtoVenta();
   };
 
   pto_venta_get: any = [];
-  origen_get:string;
+  origen_get: string;
   destino_get: string;
   almacen_get: string;
   public pto_venta_view: any = [];
   userConn: string;
 
-  displayedColumns = ['codigo','descripcion','ubicacion'];
+  displayedColumns = ['codigo', 'descripcion', 'ubicacion'];
 
   dataSource = new MatTableDataSource<vePuntoVenta>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -44,16 +43,15 @@ export class CatalogoPuntoVentaComponent implements OnInit {
   myControlDescripcion = new FormControl<string | vePuntoVenta>('');
   myControlUbicacion = new FormControl<string | vePuntoVenta>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<CatalogoPuntoVentaComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoPuntoVentaComponent>,
     @Inject(MAT_DIALOG_DATA) public origen: any, @Inject(MAT_DIALOG_DATA) public destino: any,
-    public servicesPuntoVenta:PuntoventaService) {
+    public servicesPuntoVenta: PuntoventaService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getPtoVenta();
-    
+
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -77,7 +75,7 @@ export class CatalogoPuntoVentaComponent implements OnInit {
     return this.options.filter(option => option.descripcion.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -87,9 +85,9 @@ export class CatalogoPuntoVentaComponent implements OnInit {
     return user && user.descripcion ? user.descripcion : '';
   }
 
-  getPtoVenta(){
+  getPtoVenta() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/venta/mant/veptoventa/'+this.userConn)
+    return this.api.getAll('/venta/mant/veptoventa/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.pto_venta_get = datav;
@@ -99,28 +97,28 @@ export class CatalogoPuntoVentaComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarPtoVenta(){
+  mandarPtoVenta() {
     this.servicesPuntoVenta.disparadorDePuntosVenta.emit({
-      punto_venta:this.pto_venta_view,
+      punto_venta: this.pto_venta_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.pto_venta_view = element;
     console.log(this.pto_venta_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 

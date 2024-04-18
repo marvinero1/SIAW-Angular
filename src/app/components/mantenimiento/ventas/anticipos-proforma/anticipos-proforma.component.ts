@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,6 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 export class AnticiposProformaComponent implements OnInit {
 
   anticipos_asignados_table: any = [];
+  data_tabla_anticipos: any = [];
+
+  fecha_desde = new Date();
+  fecha_hasta = new Date();
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -24,9 +29,11 @@ export class AnticiposProformaComponent implements OnInit {
   vendedor_get: any;
   id_get: any;
   numero_id_get: any;
+  cod_cliente_real_get: any;
   message: string;
   userConn: any;
   usuarioLogueado: any;
+  BD_storage: any;
 
   nombre_ventana: string = "docininvconsol.vb";
   public ventana = "Toma de Inventario Consolidado"
@@ -34,10 +41,15 @@ export class AnticiposProformaComponent implements OnInit {
   public tipo = "ActualizarStock-CREATE";
 
   displayedColumns = ['doc', 'fecha', 'monto', 'usuario', 'hora', 'vendedor'];
-  displayedColumnsAnticipado = ['doc', 'cliente', 'vendedor', 'anulado', 'cliente', 'nit', 'vendedor', 'nombre', 'fecha'];
+
+  displayedColumnsAnticipado = ['doc', 'cliente', 'vendedor', 'anulado', 'cliente_real', 'nit',
+    'fecha', 'pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
+
+  dataSourceAnticipado = new MatTableDataSource();
+  dataSourceWithPageSizeAnticipado = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
@@ -48,10 +60,12 @@ export class AnticiposProformaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public tipoPago: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,
-    @Inject(MAT_DIALOG_DATA) public vendedor: any) {
+    @Inject(MAT_DIALOG_DATA) public vendedor: any, @Inject(MAT_DIALOG_DATA) public cod_cliente_real: any,
+    private datePipe: DatePipe) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
     this.id_get = id.id;
     this.numero_id_get = numero_id.numero_id;
@@ -62,10 +76,10 @@ export class AnticiposProformaComponent implements OnInit {
     this.nombre_cliente_get = nombre_cliente.nombre_cliente;
     this.nit_get = nit.nit;
     this.vendedor_get = vendedor.vendedor;
+    this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf, this.tipo_de_pago_proforma,
       this.nombre_cliente_get, this.nit_get, this.vendedor_get);
-
   }
 
   ngOnInit() {
@@ -74,6 +88,7 @@ export class AnticiposProformaComponent implements OnInit {
       this.validacion = true;
       return this.message = "SELECCIONE CLIENTE"
     }
+
     if (this.cod_moneda_proforma == undefined || this.cod_moneda_proforma == "") {
       this.toastr.error('SELECCIONE MONEDA ⚠️');
       this.validacion = true;
@@ -84,6 +99,7 @@ export class AnticiposProformaComponent implements OnInit {
     //   this.validacion = true;
     //   return this.message = "EL TOTAL ES 0 O NO HAY TOTAL"
     // }
+
     if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma == "CREDITO") {
       this.toastr.error('SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA ⚠️');
       this.validacion = true;
@@ -124,8 +140,28 @@ export class AnticiposProformaComponent implements OnInit {
         complete: () => { }
       })
   }
+  fecha_formateada1
+  fecha_formateada2
+  btnrefrescar_Anticipos() {
+    this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
+    this.fecha_formateada2 = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/";
+    return this.api.update('/venta/transac/prgveproforma_anticipo/btnrefrescar_Anticipos/' + this.userConn + "/" + this.cod_cliente_proforma + "/" + this.fecha_formateada1 + "/" + this.fecha_formateada2 + "/" + this.nit_get + "/" + this.cod_cliente_proforma + "/" + this.BD_storage.bd, [])
+      .subscribe({
+        next: (datav) => {
+          this.data_tabla_anticipos = datav;
+          console.log('data', this.data_tabla_anticipos);
 
+          this.dataSourceAnticipado = new MatTableDataSource(this.data_tabla_anticipos);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   close() {
     this.dialogRef.close();

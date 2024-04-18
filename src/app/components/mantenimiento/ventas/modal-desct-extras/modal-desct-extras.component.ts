@@ -50,6 +50,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       return {
         codigo: element.coddesextra,
         porcentaje: element.porcen,
+        descripcion: element.descripcion,
       }
     });
 

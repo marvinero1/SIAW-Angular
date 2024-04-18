@@ -5,323 +5,352 @@
       <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
     </ngx-spinner>
 
-    <ng-container>
-      <mat-card-header class="mb-1">
-        <div class="col-md-9">
-          <mat-card-title style="font-size: 0.75rem;">Anticipos de Proformas Contado</mat-card-title>
+    <mat-card-header class="mb-1">
+      <div class="col-md-9">
+        <mat-card-title style="font-size: 0.75rem;">Anticipos de Proformas Contado</mat-card-title>
+      </div>
+      <div class="col-md-3 float-right">
+        <div class="text-right">
+          <mat-icon color="primary" (click)="close();">close</mat-icon>
         </div>
-        <div class="col-md-3 float-right">
-          <div class="text-right">
-            <mat-icon color="primary" (click)="close();">close</mat-icon>
-          </div>
-        </div>
-      </mat-card-header>
+      </div>
+    </mat-card-header>
 
+    <ng-container *ngIf="validacion; else val">
+      <p>Para ver credito disponible seleccione: &nbsp;<strong>{{ message }}</strong></p>
+    </ng-container>
 
-      <ng-container *ngIf="validacion; else val">
-        <p>Para ver credito disponible seleccione: &nbsp;<strong>{{ message }}</strong></p>
-      </ng-container>
-      <ng-template #val>
-        <mat-tab-group style="background-color: #ffe0c0;">
-          <mat-tab label="{{ id_get }} - {{ numero_id_get }}">
-            <mat-card style="background-color: #ffe0c0;">
-              <mat-card-content style="padding: 0px 0px 0px 0px !important;">
-                <table class="tg">
-                  <tr>
-                    <th class="tg-0lax">
-                      <div class="input-group">
-                        <mat-label style="padding-right: 29px;padding-top: 5px;"><u>Cliente</u></mat-label>
-                        <input type="text" style="width: 25% !important;" [(ngModel)]="cod_cliente_proforma" readonly>
-                        <input type="text" style="width: 55% !important;" [(ngModel)]="nombre_cliente_get" readonly>
+    <ng-template #val>
+      <mat-tab-group style="background-color: #ffe0c0;">
+        <mat-tab label="{{ id_get }} - {{ numero_id_get }}">
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <table class="tg">
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group">
+                      <mat-label style="padding-right: 29px;padding-top: 5px;"><u>Cliente</u></mat-label>
+                      <input type="text" style="width: 25% !important;" [(ngModel)]="cod_cliente_proforma" readonly>
+                      <input type="text" style="width: 55% !important;" [(ngModel)]="nombre_cliente_get" readonly>
+                    </div>
+                  </th>
+                  <th class="tg-0lax">
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Proforma</u></mat-label>
+                    <input type="text" style="width: 35%;" [ngModel]="totalProf | number:'1.2-2'" readonly>
+                    {{ cod_moneda_proforma }}
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0lax">
+                    <mat-label style="padding-right: 8px;"><u>NIT Cliente</u></mat-label>
+                    <input type="text" style="width: 80%;" [(ngModel)]="nit_get" readonly>
+                  </th>
+                  <th class="tg-0lax">
+                    <mat-label style="padding-right: 9px;"><u>Vendedor Vta.</u></mat-label>
+                    <input type="text" style="width: 42%;" [(ngModel)]="vendedor_get" readonly>
+                  </th>
+                </tr>
+                <hr style="width: 165% !important;">
+
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group" style="width: 95% !important;">
+                      <div class="input-group-" style="padding-block-start: 7px;">
+                        <span class="form-control-sm" style="padding: 0px 3px 0px 0px;"><u>Anticipos Venta a
+                            Contado</u></span>
                       </div>
-                    </th>
-                    <th class="tg-0lax">
-                      <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Proforma</u></mat-label>
-                      <input type="text" style="width: 35%;" [ngModel]="totalProf | number:'1.2-2'" readonly>
-                      {{ cod_moneda_proforma }}
-                    </th>
-                  </tr>
-
-                  <tr>
-                    <th class="tg-0lax">
-                      <mat-label style="padding-right: 8px;"><u>NIT Cliente</u></mat-label>
-                      <input type="text" style="width: 80%;" [(ngModel)]="nit_get" readonly>
-                    </th>
-                    <th class="tg-0lax">
-                      <mat-label style="padding-right: 9px;"><u>Vendedor Vta.</u></mat-label>
-                      <input type="text" style="width: 42%;" [(ngModel)]="vendedor_get" readonly>
-                    </th>
-                  </tr>
-                  <hr style="width: 165% !important;">
-
-                  <tr>
-                    <th class="tg-0lax">
-                      <div class="input-group" style="width: 95% !important;">
-                        <div class="input-group-" style="padding-block-start: 7px;">
-                          <span class="form-control-sm" style="padding: 0px 3px 0px 0px;"><u>Anticipos Venta a
-                              Contado</u></span>
-                        </div>
-                        <ng-container>
-                          <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                            formControlName="codvendedor">
-                        </ng-container>
-
-                        <div class="input-group-append">
-                          <button class="btn btn-outline-primary form-control-sm" type="button"
-                            style="border-color: #093070;"><i class="fa fa-search"></i>
-                          </button>
-                        </div>
+                      <ng-container>
                         <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
                           formControlName="codvendedor">
+                      </ng-container>
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #093070;"><i class="fa fa-search"></i>
+                        </button>
                       </div>
-                    </th>
-                  </tr>
-
-                  <tr>
-                    <th class="tg-0laxs" style="width: 61% !important;">
-                      <mat-label style="padding-right: 66px;"><u>Monto Anticipo</u></mat-label>
-                      <input type="text" style="width: 28%;" readonly>
-                      <input type="text" style="width: 19.5%;" readonly>
-                      <input type="text" style="width: 19.5%;" readonly>
-                    </th>
-                  </tr>
-
-                  <tr>
-                    <th class="tg-0laxs">
-                      <mat-label style="padding-right: 63px;"><u>Monto Restante</u></mat-label>
-                      <input type="text" style="width: 67%;" readonly>
-                    </th>
-
-                    <th class="tg-0lax">
-                      <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
-                      <input type="text" style="width: 22%;" readonly>&nbsp;
-                      <i class="fa fa-cogs" style="color: #093070 !important;"></i>
-                    </th>
-                  </tr>
-
-                  <div class="row" style="width: 167%;">
-                    <div class="col-md-3" style="float: left;">
-                      <button mat-raised-button class="secondary">
-                        <i class="fa fa-plus" aria-hidden="true" style="color: rgb(76, 226, 34);"></i>
-                        Asignar Monto
-                      </button>&nbsp;
+                      <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
+                        formControlName="codvendedor">
                     </div>
-                    <div class="col-md-6" style="text-align: center;color:#3a32e0">
-                      <span><u>Debe Asignar el Monto Segun la Moneda del ANTICIPO</u></span>
-                    </div>
-                    <div class="col-md-3" style="text-align: right;">
-                      <button mat-raised-button class="secondary">
-                        <i class="fa fa-minus" style="color: rgb(237, 23, 16);"></i>
-                        Eliminar Monto</button>
-                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0laxs" style="width: 61% !important;">
+                    <mat-label style="padding-right: 66px;"><u>Monto Anticipo</u></mat-label>
+                    <input type="text" style="width: 28%;" readonly>
+                    <input type="text" style="width: 19.5%;" readonly>
+                    <input type="text" style="width: 19.5%;" readonly>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0laxs">
+                    <mat-label style="padding-right: 63px;"><u>Monto Restante</u></mat-label>
+                    <input type="text" style="width: 67%;" readonly>
+                  </th>
+
+                  <th class="tg-0lax">
+                    <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
+                    <input type="text" style="width: 22%;" readonly>&nbsp;
+                    <i class="fa fa-cogs" style="color: #093070 !important;"></i>
+                  </th>
+                </tr>
+
+                <div class="row" style="width: 167%;">
+                  <div class="col-md-3" style="float: left;">
+                    <button mat-raised-button class="secondary">
+                      <i class="fa fa-plus" aria-hidden="true" style="color: rgb(76, 226, 34);"></i>
+                      Asignar Monto
+                    </button>&nbsp;
                   </div>
-                </table>
-
-                <div class="row">
-                  <div class="col-lg">
-                    <div class="team scrollmenu">
-                      <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
-                        <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
-                          class="mat-elevation-z8" style="height: 44px !important;">
-
-                          <ng-container matColumnDef="doc">
-                            <th mat-header-cell *matHeaderCellDef> Doc Anticipado </th>
-                            <td mat-cell *matCellDef="let element"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="fecha">
-                            <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="monto">
-                            <th mat-header-cell *matHeaderCellDef> Monto </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: center;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="usuario">
-                            <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="hora">
-                            <th mat-header-cell *matHeaderCellDef> Hora Reg </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="vendedor">
-                            <th mat-header-cell *matHeaderCellDef> Vendedor </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        </table>
-
-                      </div>
-                    </div>
-                    <div style="float: right;text-align: end;">
-                      <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                      <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
-                    </div>
+                  <div class="col-md-6" style="text-align: center;color:#3a32e0">
+                    <span><u>Debe Asignar el Monto Segun la Moneda del ANTICIPO</u></span>
+                  </div>
+                  <div class="col-md-3" style="text-align: right;">
+                    <button mat-raised-button class="secondary">
+                      <i class="fa fa-minus" style="color: rgb(237, 23, 16);"></i>
+                      Eliminar Monto</button>
                   </div>
                 </div>
-              </mat-card-content>
-            </mat-card>
-          </mat-tab>
+              </table>
 
+              <div class="row">
+                <div class="col-lg">
+                  <div class="team scrollmenu">
+                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
+                      <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8"
+                        style="height: 44px !important;">
 
-          <mat-tab label="Anticipos Contado Pendientes"><br>
-            <mat-card style="background-color: #ffe0c0;">
-              <mat-card-content style="padding: 0px 0px 0px 0px !important;">
-                <table class="tg" style="width: 100% !important;">
-                  <tr>
-                    <th class="tg-0lax">
-                      <div class="input-group" style="width: 95% !important;">
-                        <div class="input-group-" style="padding-block-start: 6px;">
-                          <span style="padding-right: 128px;"><u>NIT</u></span>
-                        </div>
-                        <span>{{ nit_get }}</span>&nbsp;&nbsp;&nbsp;
-                        <span>{{ nombre_cliente_get }}</span>
-                      </div>
-                    </th>
-                  </tr>
-
-                  <tr>
-                    <th class="tg-0lax">
-                      <div class="input-group" style="width: 95% !important;">
-                        <div class="input-group-" style="padding-block-start: 6px;">
-                          <span class="form-control-sm" style="padding: 0px 3px 0px 0px;"><u>Anticipos
-                              Contado
-                              Cliente</u></span>
-                        </div>
-                        <ng-container>
-                          <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                            [(ngModel)]="cod_cliente_proforma" readonly>
+                        <ng-container matColumnDef="doc">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
+                          <td mat-cell *matCellDef="let element"> </td>
                         </ng-container>
-                      </div>
-                    </th>
-                  </tr>
 
-                  <tr>
-                    <th class="tg-0lax">
-                      <div class="input-group" style="width: 95% !important;">
-                        <div class="input-group-" style="padding-block-start: 6px;">
-                          <span style="padding-right: 81px;"><u>
-                              Cliente Real</u></span>
-                        </div>
+                        <ng-container matColumnDef="fecha">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Fecha </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                        </ng-container>
 
-                        <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                          [(ngModel)]="cod_cliente_proforma" style="width: 35%;" readonly>
-                      </div>
-                    </th>
-                  </tr>
+                        <ng-container matColumnDef="monto">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Monto </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                        </ng-container>
 
-                  <tr>
-                    <th class="tg-0lax">
-                      <mat-label style="padding-right: 5px;"><u>Desde</u></mat-label>
-                      <mat-form-field class="example-full-width" style="width: 35%;">
-                        <mat-label>Elija una Fecha</mat-label>
-                        <input matInput [matDatepicker]="picker">
-                        <mat-datepicker-toggle matIconSuffix [for]="picker">
-                          <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                      </mat-form-field>
+                        <ng-container matColumnDef="usuario">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Usuario </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                        </ng-container>
 
-                      <mat-label style="padding-right: 5px;"><u>Hasta</u></mat-label>
-                      <mat-form-field class="example-full-width" style="width: 35%;">
-                        <mat-label>Elija una Fecha</mat-label>
-                        <input matInput [matDatepicker]="picker1">
-                        <mat-datepicker-toggle matIconSuffix [for]="picker1">
-                          <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #picker1></mat-datepicker>
-                      </mat-form-field>
-                    </th>
-                  </tr>
+                        <ng-container matColumnDef="hora">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Hora Reg </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                        </ng-container>
 
+                        <ng-container matColumnDef="vendedor">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                        </ng-container>
 
-                  <div style="text-align: right;float: right;">
-                    <button class="btn btn-outline-primary form-control-sm" type="button"
-                      style="border-color: #093070;">
-                      <mat-icon style="height: 14px;font-size: 1.1rem !important;">refresh</mat-icon>
-                      Refrescar
-                    </button>
-                  </div>
-                </table>
-
-                <div class="row">
-                  <div class="col-lg">
-                    <div class="team scrollmenu">
-                      <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
-                        <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort
-                          class="mat-elevation-z8" style="height: 44px !important;">
-
-                          <ng-container matColumnDef="doc">
-                            <th mat-header-cell *matHeaderCellDef> Doc Anticipado </th>
-                            <td mat-cell *matCellDef="let element"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="cliente">
-                            <th mat-header-cell *matHeaderCellDef> Cliente </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="vendedor">
-                            <th mat-header-cell *matHeaderCellDef> Vendedor </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: center;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="anulado">
-                            <th mat-header-cell *matHeaderCellDef> Anulado </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="cliente">
-                            <th mat-header-cell *matHeaderCellDef> Cliente </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="nit">
-                            <th mat-header-cell *matHeaderCellDef>NIT</th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="vendedor">
-                            <th mat-header-cell *matHeaderCellDef>Vendedor</th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef>Nom Cliente NIT</th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-
-                          <ng-container matColumnDef="fecha">
-                            <th mat-header-cell *matHeaderCellDef>Fecha</th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;"> </td>
-                          </ng-container>
-                          <tr mat-header-row *matHeaderRowDef="displayedColumnsAnticipado"></tr>
-                          <tr mat-row *matRowDef="let row; columns: displayedColumnsAnticipado;"></tr>
-                        </table>
-
-                      </div>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
                     </div>
-                    <div style="float: right;text-align: end;">
-                      <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                      <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+                  </div>
+                  <div style="float: right;text-align: end;">
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
+                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <div style="float: right;text-align: end;">
+            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total</u></mat-label>
+            <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Anticipos Contado Pendientes"><br>
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+              <table class="tg" style="width: 100% !important;">
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group" style="width: 95% !important;">
+                      <div class="input-group-" style="padding-block-start: 6px;">
+                        <span style="padding-right: 128px;"><u>NIT</u></span>
+                      </div>
+                      <span>{{ nit_get }}</span>&nbsp;&nbsp;&nbsp;
+                      <span>{{ nombre_cliente_get }}</span>
+                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group" style="width: 95% !important;">
+                      <div class="input-group-" style="padding-block-start: 6px;">
+                        <span class="form-control-sm" style="padding: 0px 3px 0px 0px;"><u>Anticipos
+                            Contado
+                            Cliente</u></span>
+                      </div>
+                      <ng-container>
+                        <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
+                          [(ngModel)]="cod_cliente_proforma" readonly>
+                      </ng-container>
+                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0lax">
+                    <div class="input-group" style="width: 95% !important;">
+                      <div class="input-group-" style="padding-block-start: 6px;">
+                        <span style="padding-right: 81px;"><u>
+                            Cliente Real</u></span>
+                      </div>
+
+                      <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
+                        [(ngModel)]="cod_cliente_proforma" style="width: 35%;" readonly>
+                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="tg-0lax">
+                    <mat-label style="padding-right: 5px;"><u>Desde</u></mat-label>
+                    <mat-form-field class="example-full-width" style="width: 40%;">
+                      <mat-label>Elija una Fecha</mat-label>
+                      <input matInput [matDatepicker]="picker" [(ngModel)]="fecha_desde">
+                      <mat-datepicker-toggle matIconSuffix [for]="picker">
+                        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-label style="padding-right: 5px;"><u>Hasta</u></mat-label>
+                    <mat-form-field class="example-full-width" style="width: 40%;">
+                      <mat-label>Elija una Fecha</mat-label>
+                      <input matInput [matDatepicker]="picker1" [(ngModel)]="fecha_hasta">
+                      <mat-datepicker-toggle matIconSuffix [for]="picker1">
+                        <i class="fa fa-calendar-minus-o" aria-hidden="true"></i>
+                      </mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </th>
+                </tr>
+
+
+                <div style="text-align: right;float: right;">
+                  <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                    (click)="btnrefrescar_Anticipos();">
+                    <mat-icon style="height: 14px;font-size: 1.1rem !important;">refresh</mat-icon>
+                    Refrescar
+                  </button>
+                </div>
+              </table>
+
+              <div class="row">
+                <div class="col-lg">
+                  <div class="team scrollmenu">
+                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
+                      <table mat-table [dataSource]="dataSourceAnticipado" multiTemplateDataRows
+                        class="mat-elevation-z8" style="height: 44px !important;">
+
+                        <ng-container matColumnDef="doc">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
+                          <td mat-cell *matCellDef="let element">{{ element.codanticipo }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cliente">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Cliente </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codcliente }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="vendedor">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codvendedor }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="anulado">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Anulado </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.desc_anulado }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cliente_real">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Cliente Real</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">
+                            {{ element.codcliente_real }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nit">
+                          <th mat-header-cell *matHeaderCellDef class="white">NIT</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.nit }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fecha">
+                          <th mat-header-cell *matHeaderCellDef class="white">Fecha</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">
+                            {{ element.fecha | date:'yyyy/MM/dd'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="pvc">
+                          <th mat-header-cell *matHeaderCellDef class="white">PVC</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.pvc }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="moneda">
+                          <th mat-header-cell *matHeaderCellDef class="white">Moneda</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="monto">
+                          <th mat-header-cell *matHeaderCellDef class="white">Monto</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.monto }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="monto_rest">
+                          <th mat-header-cell *matHeaderCellDef class="white">Monto Rest</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.montorest}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="usuario_reg">
+                          <th mat-header-cell *matHeaderCellDef class="white">Usuario Reg</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.usuarioreg}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="hora_reg">
+                          <th mat-header-cell *matHeaderCellDef class="white">Hora Reg</th>
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.horareg }}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsAnticipado"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsAnticipado;"></tr>
+                      </table>
                     </div>
                   </div>
                 </div>
-              </mat-card-content>
-            </mat-card>
-          </mat-tab>
-        </mat-tab-group>
-      </ng-template>
+              </div>
+            </mat-card-content>
+          </mat-card>
 
-    </ng-container>
+          <div style="float: right;text-align: end;">
+            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Elegir Anticipos</u></mat-label>
+            <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
+    </ng-template>
   </div>
 </section>

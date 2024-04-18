@@ -580,7 +580,8 @@ registerPlugin(UndoRedo);
     ],
 
     providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
-        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent, TomaInventarioConsolidadoComponent,
+        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
+        TomaInventarioConsolidadoComponent,
 
         { provide: ServiceRefreshItemsService },
         { provide: LOCALE_ID, useValue: 'es-BO' },
