@@ -4677,7 +4677,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.ts",
-        "hash": "6272968133217893081"
+        "hash": "1554909922910444441"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.spec.ts",
@@ -5253,7 +5253,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "7019548934184614537"
+        "hash": "17260300512447354433"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

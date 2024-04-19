@@ -54,7 +54,7 @@ export class ModalRecargosComponent implements OnInit {
 
     this.recargos_ya_en_array = recargos.recargos;
 
-    this.recargos_ya_en_array = this.map_table = recargos.recargos.map(element => ({
+    this.map_table = [this.recargos_ya_en_array].map(element => ({
       codigo: element.codrecargo,
       descripcion: element.descrip,
       porcentaje: element.porcen,
@@ -103,15 +103,24 @@ export class ModalRecargosComponent implements OnInit {
   anadirRecargo() {
 
 
+
+
     let a = {
       codigo: this.recargo_get_service.codigo,
       descripcion: this.recargo_get_service.descripcion,
       porcentaje: this.porcen,
       monto: this.mont,
       moneda: this.recargo_get_service.moneda,
-    };
+    }
 
-    let tamanio = this.array_de_recargos.length;
+    // let a = {
+    //   codigo: this.recargo_get_service.codigo,
+    //   descripcion: this.recargo_get_service.descripcion,
+    //   porcentaje: this.porcen,
+    //   monto: this.mont,
+    //   moneda: this.recargo_get_service.moneda,
+    // };
+
     //this.dataSource = new MatTableDataSource(this.recargo_get_service);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddRecargo/"
@@ -121,7 +130,7 @@ export class ModalRecargosComponent implements OnInit {
           console.log('valor boolean del backend boolean', datav); //este valor simplemente es un true que valida si se puede agregar
           this.confirmacion_get_recargo = datav;
 
-          const existe_en_array = this.array_de_recargos.some(item => item.codigo === this.array_de_recargos.codigo);
+          const existe_en_array = this.recargos_ya_en_array.some(item => item.codigo === this.array_de_recargos.codigo);
           let tamanio = this.array_de_recargos.length;
           console.log("Existe en array?", existe_en_array);
 
@@ -130,52 +139,37 @@ export class ModalRecargosComponent implements OnInit {
               this.toastr.warning("EL RECARGO YA ESTA AGREGADO")
             } else {
               if (tamanio > 0) {
-                console.log("HAY RECARGO EN EL ARRAY LA CARGA SE CONCATENA");
                 // Concatenar el nuevo descuento con los descuentos existentes
-                this.recargos_array = this.recargos_ya_en_array.concat(this.recargo_get_service);
-
+                this.recargos_array = this.array_de_recargos = this.array_de_recargos.concat(a, this.recargos_ya_en_array);
+                console.log("HAY RECARGO EN EL ARRAY LA CARGA SE CONCATENA", this.recargo_get_service_map);
               } else {
-                console.log("NO HAY RECARGO EN EL ARRAY LA CARGA NO SE CONCATENA");
                 // Usar push para agregar el elemento directamente al array
-                this.recargos_array.push(this.recargo_get_service);
+                this.recargos_array = this.array_de_recargos.push(a);
+                console.log("NO HAY RECARGO EN EL ARRAY LA CARGA NO SE CONCATENA", this.recargo_get_service_map);
               }
             }
           }
 
-
-
-          // if (datav) {
-          //   if (existe_en_array) {
-          //     this.toastr.warning("EL RECARGO YA ESTA AGREGADO")
-          //   } else {
-          //     if (this.recargos_ya_en_array_tamanio > 0) {
-          //       console.log("HAY RECARGOS EN EL ARRAY LA CARGA SE CONCATENA");
-          //       // Usar concat y asignar el resultado a array_de_recargos
-          //       this.array_de_recargos = this.array_de_recargos.concat(this.recargos_ya_en_array);
-          //     } else {
-          //       console.log("NO HAY RECARGOS EN EL ARRAY LA CARGA NO SE CONCATENA");
-          //       // Usar push para agregar el elemento directamente al array
-          //       this.array_de_recargos.push(a);
-          //     }
-          //   }
-          // }
-
-          this.dataSource = new MatTableDataSource(this.recargos_array);
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
           console.log(this.array_de_recargos);
+          console.log(this.recargos_ya_en_array);
+          console.log(this.recargo_get_service_map);
+          console.log(this.recargos_array)
         },
 
         error: (err: any) => {
-          this.dataSource = new MatTableDataSource(this.recargos_array);
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
           console.log(err, errorMessage);
         },
 
         complete: () => {
-          this.dataSource = new MatTableDataSource(this.recargos_array);
+          this.dataSource = new MatTableDataSource(this.array_de_recargos);
         }
       })
   }
 
   sendArrayRecargos() {
+    console.log(this.recargos_array)
     this.recargo_get_service_map = [this.recargo_get_service].map(element => ({
       codproforma: 0,
       codrecargo: element.codigo,

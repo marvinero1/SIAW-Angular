@@ -2253,8 +2253,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   totabilizar() {
     let total_proforma_concat: any = [];
-    let item_procesados_en_total: any = [];
-
     console.log(this.disableSelect.value); //valor del check en el mat-tab complementar proforma
 
     if (this.disableSelect.value === false) {
@@ -2322,7 +2320,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             this.iva = this.totabilizar_post.totales?.iva;
             this.peso = this.totabilizar_post.totales?.peso;
             this.tablaIva = this.totabilizar_post.totales?.tablaIva;
-            item_procesados_en_total = this.totabilizar_post?.detalleProf;
+            const item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
             this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
