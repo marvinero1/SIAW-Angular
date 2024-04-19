@@ -4513,7 +4513,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "16598755131529522434"
+        "hash": "17939153918668312288"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
@@ -4525,7 +4525,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.ts",
-        "hash": "7479129267006277317"
+        "hash": "1849891903056134522"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
@@ -4677,7 +4677,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.ts",
-        "hash": "1554909922910444441"
+        "hash": "6728034646107607311"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.spec.ts",
@@ -5241,7 +5241,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "14898796427897025412"
+        "hash": "10581648892964660682"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5253,7 +5253,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "17260300512447354433"
+        "hash": "5951593754714282226"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

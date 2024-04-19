@@ -8,18 +8,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class ModalDetalleObserValidacionComponent implements OnInit {
 
   message: string = "";
-  items_get: any = [];
-  items_item_max_venta_get: any = [];
+  titulo: any = [];
+  obs_contenido_get: any = [];
 
   constructor(public dialogRef: MatDialogRef<ModalDetalleObserValidacionComponent>,
-    @Inject(MAT_DIALOG_DATA) public obs_validacion: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public item_max_venta: any) {
+    @Inject(MAT_DIALOG_DATA) public obs_titulo: any,
+    @Inject(MAT_DIALOG_DATA) public obs_contenido: any,) {
 
-    this.message = obs_validacion.obs_validacion;
-    this.items_get = items.items;
-    this.items_item_max_venta_get = item_max_venta.item_max_venta;
+    this.message = obs_titulo.obs_titulo;
+    this.obs_contenido_get = obs_contenido.obs_contenido;
 
-    console.log(this.message, this.items_get);
+    console.log(this.message, this.obs_contenido_get);
   }
 
   ngOnInit() {

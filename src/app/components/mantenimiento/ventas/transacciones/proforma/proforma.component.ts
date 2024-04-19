@@ -428,8 +428,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.cod_id_tipo_modal_id = this.cod_id_tipo_modal.id;
 
       //si se cambia el tipoID, los totales tambien se cambian
-      this.total = 0;
+      this.total = 0.00;
       this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //
 
@@ -439,8 +442,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.almacn_parame_usuario = data.almacen.codigo;
 
       //si se cambia de almacen, los totales tambien se cambian
-      this.total = 0;
+      this.total = 0.00;
       this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //
 
@@ -450,8 +456,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.cod_vendedor_cliente_modal = data.vendedor;
 
       //si se cambia de vendedor, los totales tambien se cambian
-      this.total = 0;
+      this.total = 0.00;
       this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //finvendedor
 
@@ -484,8 +493,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
-      this.total = 0;
-      this.subtotal = 0;
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //
 
@@ -589,8 +601,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.getDireccionCentral(this.codigo_cliente_catalogo);
 
       //si se cambia de cliente, los totales tambien se cambian
-      this.total = 0;
-      this.subtotal = 0;
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //
 
@@ -621,8 +636,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
 
       //si se cambia la moneda, los totales tambien se cambian
-      this.total = 0;
-      this.subtotal = 0;
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
     });
     //
 
@@ -670,7 +688,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //FIN SALDOS ITEM PIE DE PAGINA
 
-
     //disparador que trae los descuentos del ModalDesctExtrasComponent de los totales
     this.servicioDesctEspecial.disparadorDeDescuentosDelModalTotalDescuentos.subscribe(data => {
       console.log("Recibiendo Descuento De los Totales: ", data);
@@ -681,6 +698,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.des_extra = data.resultado_validacion.descuento;
       // this.array_de_descuentos_ya_agregados
       this.array_de_descuentos_ya_agregados = data.tabla_descuento;
+
+      this.array_de_descuentos_ya_agregados = data.resultado_validacion.tablaDescuentos
     });
     //finDisparador
 
@@ -688,17 +707,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.subscribe(data => {
       console.log("Recibiendo Recargo : ", data.recargo_array, data.resultado_validacion, data.resultado_validacion_tabla_recargos);
 
-      this.recargo_de_recargos = data.recargo_array;
+      console.log("array mapeado para concatenarlo a verecargoprof en el totalizar: ", data.resultado_validacion_tabla_recargos)
+      //this.recargo_de_recargos = data.recargo_array;
       this.recargos_ya_en_array_tamanio = data.recargo_array.length;
       this.total = data.resultado_validacion.total,
         this.peso = data.resultado_validacion.peso,
         this.subtotal = data.resultado_validacion.subtotal,
-        this.recargos = data.resultado_validacion.recargo
-      //this.recargo_de_recargos = data.resultado_validacion.tablaRecargos
-
+        this.recargos = data.resultado_validacion.recargo,
+        this.recargo_de_recargos = data.resultado_validacion_tabla_recargos
     });
     //FIN DE RECARGOS
-
   }
 
   ngAfterViewInit() {
@@ -2197,17 +2215,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
       ],
       veproforma_anticipo: [],
-      vedesextraprof: [],
-      verecargoprof: [{
-        "codproforma": 0,
-        "codrecargo": 0,
-        "porcen": 0,
-        "monto": 0,
-        "moneda": "BS",
-        "montodoc": 0,
-        "codcobranza": 0
-      }],
-      veproforma_iva: this.veproforma_iva,
+      vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
+      verecargoprof: this.recargo_de_recargos, //array de recargos,
+      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta, // array de etiqueta
+      veproforma_iva: this.veproforma_iva, //array de iva
     }
 
     console.log(total_proforma_concat);
@@ -2274,13 +2285,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
       veproforma_anticipo: [],
-      vedesextraprof: [],
+      vedesextraprof: this.array_de_descuentos_ya_agregados,
       verecargoprof: this.recargo_de_recargos, //array de recargos
       veproforma_iva: this.veproforma_iva, //array de iva
     }
 
     console.log(total_proforma_concat);
-
     console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
       this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
     console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
@@ -2331,9 +2341,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
-
-
-
 
 
 
@@ -2421,39 +2428,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
-      detalleAnticipos: [{
-        codproforma: 0,
-        codanticipo: 0,
-        docanticipo: "string",
-        id_anticipo: "string",
-        nroid_anticipo: 0,
-        monto: 0,
-        tdc: 0,
-        codmoneda: "string",
-        fechareg: "2024-04-10T13:43:37.707Z",
-        usuarioreg: "string",
-        horareg: "string"
-      }],
-      detalleDescuentos: [{
-        coddesextra: 0,
-        descrip: "string",
-        porcen: 0,
-        montodoc: 0,
-        codcobranza: 0,
-        codcobranza_contado: 0,
-        codanticipo: 0
-      }],
+      detalleAnticipos: [],
+      detalleDescuentos: [],
       detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: [{
-        codrecargo: 0,
-        descrip: "string",
-        porcen: 0,
-        monto: 0,
-        moneda: "string",
-        montodoc: 0,
-        codcobranza: 0
-      }],
+      detalleRecargos: [],
     }
     let tamanio_array_etiqueta = proforma_validar.detalleEtiqueta[0].length === undefined ? 1 : 0;
     console.log(proforma_validar, "Largo del array etiqueta: ", proforma_validar.detalleEtiqueta[0].length);
@@ -2634,52 +2613,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       let proforma_validar = {
         datosDocVta: this.valor_formulario_negativos,
-        detalleAnticipos: [{
-          codproforma: 0,
-          codanticipo: 0,
-          docanticipo: "string",
-          id_anticipo: "string",
-          nroid_anticipo: 0,
-          monto: 0,
-          tdc: 0,
-          codmoneda: "string",
-          fechareg: "2024-04-10T13:43:37.707Z",
-          usuarioreg: "string",
-          horareg: "string"
-        }],
-        detalleDescuentos: [{
-          coddesextra: 0,
-          descrip: "string",
-          porcen: 0,
-          montodoc: 0,
-          codcobranza: 0,
-          codcobranza_contado: 0,
-          codanticipo: 0
-        }],
-        detalleEtiqueta: [{
-          codigo: 0,
-          id: "string",
-          numeroid: 0,
-          codcliente: "string",
-          linea1: "string",
-          linea2: "string",
-          representante: "string",
-          telefono: "string",
-          celular: "string",
-          ciudad: "string",
-          latitud_entrega: "string",
-          longitud_entrega: "string"
-        }],
+        detalleAnticipos: [{}],
+        detalleDescuentos: [{}],
+        detalleEtiqueta: [{}],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [{
-          codrecargo: 0,
-          descrip: "string",
-          porcen: 0,
-          monto: 0,
-          moneda: "string",
-          montodoc: 0,
-          codcobranza: 0
-        }],
+        detalleRecargos: [{}],
       }
 
       console.log(proforma_validar);
@@ -2841,56 +2779,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
       let proforma_validar = {
         datosDocVta: this.validacion_post_max_ventas,
-        detalleAnticipos: [{
-          codproforma: 0,
-          codanticipo: 0,
-          docanticipo: "string",
-          id_anticipo: "string",
-          nroid_anticipo: 0,
-          monto: 0,
-          tdc: 0,
-          codmoneda: "string",
-          fechareg: "2024-04-10T13:43:37.707Z",
-          usuarioreg: "string",
-          horareg: "string"
-        }],
-        detalleDescuentos: [{
-          coddesextra: 0,
-          descrip: "string",
-          porcen: 0,
-          montodoc: 0,
-          codcobranza: 0,
-          codcobranza_contado: 0,
-          codanticipo: 0
-        }],
-        detalleEtiqueta: [{
-          codigo: 0,
-          id: "string",
-          numeroid: 0,
-          codcliente: "string",
-          linea1: "string",
-          linea2: "string",
-          representante: "string",
-          telefono: "string",
-          celular: "string",
-          ciudad: "string",
-          latitud_entrega: "string",
-          longitud_entrega: "string"
-        }],
+        detalleAnticipos: [{}],
+        detalleDescuentos: [{}],
+        detalleEtiqueta: [{}],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [{
-          codrecargo: 0,
-          descrip: "string",
-          porcen: 0,
-          monto: 0,
-          moneda: "string",
-          montodoc: 0,
-          codcobranza: 0
-        }],
+        detalleRecargos: [{}],
       }
 
       console.log(proforma_validar);
-
       const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
@@ -3457,7 +3353,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   modalDescuentosTotales(): void {
     if (this.codigo_cliente === undefined || this.codigo_cliente === '') {
       this.dialog.open(VentanaValidacionesComponent, {
@@ -3643,12 +3538,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-
-
-
-
-
-
   array_original_de_validaciones_copied: any = [];
   array_original_de_validaciones_validadas_OK: any = [];
   array_original_de_validaciones_validadas_OK_mostrar: any = [];
@@ -3682,20 +3571,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
-
-
-
-  modalDetalleObservaciones(obs, items_negativos, item_max_venta) {
+  modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
       data: {
-        obs_validacion: obs,
-        items: items_negativos,
-        item_max_venta: item_max_venta,
+        obs_titulo: obs,
+        obs_contenido: obsDetalle,
       },
     });
   }

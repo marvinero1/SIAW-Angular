@@ -654,7 +654,7 @@
               <!-- % Column -->
               <ng-container matColumnDef="porcentaje">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center !important;"> % </th>
-                <td mat-cell *matCellDef="let element"> {{ element?.porcendesc | number:'1.5,5' }} </td>
+                <td mat-cell *matCellDef="let element"> {{ element?.porcendesc | json }} </td>
               </ng-container>
 
               <!-- PD Column -->
@@ -821,6 +821,7 @@
                   <ng-template #obs1>
                     <strong style="color: green;">{{ element.obs }}</strong>
                   </ng-template>
+
                 </td>
               </ng-container>
 
@@ -952,9 +953,12 @@
                   <ng-container *ngSwitchCase="'No hay Saldo!!!'">
                     <strong style="color: red;">{{ element.obs }}</strong>
                   </ng-container>
+                  <ng-container *ngSwitchCase="'No cumple'">
+                    <strong style="color: red;">{{ element.obs }}</strong>
+                  </ng-container>
                   <ng-container *ngSwitchDefault>
                     <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                      (click)="modalDetalleObservaciones(element.obs, [], []);">
+                      (click)="modalDetalleObservaciones(element.obs, element.ObsDetalle );">
                       <span><i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i> Ver Detalles
                         Obs.</span>
                     </button>
@@ -1095,7 +1099,7 @@
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                     style="margin-block-start: 10px;margin-block-end: 10px;"
-                    (click)="modalDetalleObservaciones(element.Observacion, element.Dtnegativos, element.Dtnocumplen);">
+                    (click)="modalDetalleObservaciones(element.Observacion, element.ObsDetalle);">
                     <span><i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i>
                       Obs.</span>
                   </button>
@@ -1980,7 +1984,7 @@
                 </div>
               </div>
               <div class="col-md text-right">
-                <span>{{ recargos | number: '1.2-2' }} </span>&nbsp;
+                <span>{{ formatNumberTotalSub(recargos) }} </span>
                 <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
               </div>
               <div class="col-md" style="text-align: center !important;">
@@ -2000,7 +2004,7 @@
                 </div>
               </div>
               <div class="col-md text-right">
-                <span> {{ des_extra | number: '1.2-2' }}</span>&nbsp;
+                <span> {{ formatNumberTotalSub(des_extra) }}</span>
                 <input type="text" [(ngModel)]="des_extra" formControlName="des_extra" [hidden]="true">
               </div>
               <div class="col-md" style="text-align: center !important;">
@@ -2019,7 +2023,7 @@
                 </div>
               </div>
               <div class="col-md text-right">
-                <span>{{ iva | number: '1.2-2' }}</span>&nbsp;
+                <span>{{ formatNumberTotalSub(iva) }}</span>
                 <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
               </div>
               <div class="col-md" style="text-align: center !important;">
