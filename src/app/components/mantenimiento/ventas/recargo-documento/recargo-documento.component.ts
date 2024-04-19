@@ -19,8 +19,8 @@ export class RecargoDocumentoComponent implements OnInit {
   FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  
+  dataform: any = '';
+
   userConn: any;
   usuarioLogueado;
   moneda_get: any = [];
@@ -41,16 +41,16 @@ export class RecargoDocumentoComponent implements OnInit {
   porcentaje_set: any;
   monto_set: any;
   modificable: any;
-  
-  nombre_ventana:string="abmverecargo.vb";
-  public ventana="Recargos"
-  public detalle="Recargos-CREATE";
-  public tipo="Recargos-CREATE";
- 
+
+  nombre_ventana: string = "abmverecargo.vb";
+  public ventana = "Recargos"
+  public detalle = "Recargos-CREATE";
+  public tipo = "Recargos-CREATE";
+
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public dialogRef: MatDialogRef<RecargoDocumentoCreateComponent>, public log_module: LogService, private toastr: ToastrService,
-    private _formBuilder: FormBuilder, private datePipe: DatePipe, public servicioRecargo: RecargoServicioService){
-    
+    public dialogRef: MatDialogRef<RecargoDocumentoComponent>, public log_module: LogService, private toastr: ToastrService,
+    private _formBuilder: FormBuilder, private datePipe: DatePipe, public servicioRecargo: RecargoServicioService) {
+
     this.FormularioData = this.createForm();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -62,20 +62,20 @@ export class RecargoDocumentoComponent implements OnInit {
       console.log("Recibiendo Recargo: ", data);
       this.recargo_get_service = data.punto_venta;
     });
-    
+
     this.getAllmoneda();
   }
 
-  getAllmoneda(){
-    let errorMessage:string;
+  getAllmoneda() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/admoneda/catalogo/";
-    return this.api.getAll('/seg_adm/mant/admoneda/catalogo/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.moneda_get = datav;
           console.log(this.moneda_get);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -92,7 +92,7 @@ export class RecargoDocumentoComponent implements OnInit {
       codigo: [this.dataform.codigo, Validators.compose([Validators.maxLength(3), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])],
       descorta: [this.dataform.descorta, Validators.compose([Validators.required])],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
-      permitido:[this.dataform.permitido],
+      permitido: [this.dataform.permitido],
       modificable: [this.dataform.modificable],
       moneda: [this.dataform.moneda],
       monto: [this.dataform.monto],
@@ -101,7 +101,7 @@ export class RecargoDocumentoComponent implements OnInit {
 
       horareg: [hora_actual_complete],
       usuarioreg: [user],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
     });
   }
 
@@ -115,7 +115,7 @@ export class RecargoDocumentoComponent implements OnInit {
       codigo: [this.dataform.codigo, Validators.compose([Validators.maxLength(3), Validators.pattern(/^-?(0|[1-9]\d*)?$/)])],
       descorta: [this.dataform.descorta, Validators.compose([Validators.required])],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
-      permitido:[this.dataform.permitido],
+      permitido: [this.dataform.permitido],
       modificable: [this.dataform.modificable],
       moneda: [this.dataform.moneda],
       monto: [this.dataform.monto],
@@ -124,49 +124,56 @@ export class RecargoDocumentoComponent implements OnInit {
 
       horareg: [hora_actual_complete],
       usuarioreg: [user],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
     });
   }
 
   submitData() {
     const data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /venta/mant/verecargo/";
-    
-    return this.api.create("/venta/mant/verecargo/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/mant/verecargo/";
+
+    return this.api.create("/venta/mant/verecargo/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.recargo = datav;
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-          this.onNoClick();
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
           this.spinner.show();
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
           this.toastr.success('Guardado con Exito! 🎉');
-          location.reload();      
+          location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
         complete: () => { }
       })
   }
 
-  editar(){
+  editar() {
     const data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /venta/mant/verecargo/";
-    
-    return this.api.update("/venta/mant/verecargo/"+this.userConn+'/'+this.recargo_get_service.codigo, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/mant/verecargo/";
+
+    return this.api.update("/venta/mant/verecargo/" + this.userConn + '/' + this.recargo_get_service.codigo, data)
       .subscribe({
         next: (datav) => {
           this.recargo = datav;
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-     
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
-          location.reload();      
+          location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -177,43 +184,44 @@ export class RecargoDocumentoComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(RecargoDocumentoCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  eliminar(codigo): void{
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:  venta/mant/vetipocredito Delete";
+  eliminar(codigo): void {
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:  venta/mant/vetipocredito Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:this.recargo_get_service.codigo},
+      height: 'auto',
+      data: { dataUsuarioEdit: this.recargo_get_service.codigo },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/venta/mant/verecargo/'+this.userConn+"/"+codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/venta/mant/verecargo/' + this.userConn + "/" + codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
-      }});
+      }
+    });
   }
 
-  limpiar() { 
+  limpiar() {
     this.recargo_get_service.codigo = "";
     this.recargo_get_service.descripcion = "";
     this.recargo_get_service.descorta = "";
@@ -226,7 +234,5 @@ export class RecargoDocumentoComponent implements OnInit {
     this.recargo_get_service.porcentaje = "";
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+
 }

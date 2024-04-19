@@ -129,7 +129,7 @@
       },
       {
         "file": ".gitignore",
-        "hash": "14660601117954809192"
+        "hash": "689718296154564816"
       },
       {
         "file": ".htaccess",
@@ -158,14 +158,6 @@
       {
         "file": ".nvmrc",
         "hash": "11399832155531455651"
-      },
-      {
-        "file": ".nx/cache/d/server-process.json",
-        "hash": "16762310592373751615"
-      },
-      {
-        "file": ".nx/cache/file-map.json",
-        "hash": "11008224659455232971"
       },
       {
         "file": ".nx/cache/lockfile.hash",
@@ -210,10 +202,6 @@
       {
         "file": ".nx/cache/parsed-lock-file.json",
         "hash": "10116584811782291129"
-      },
-      {
-        "file": ".nx/cache/project-graph.json",
-        "hash": "6115419420280861599"
       },
       {
         "file": ".nx/cache/project-graph.json~057ed1f9",
@@ -4393,7 +4381,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "1352773632295486845"
+        "hash": "13447660706714295522"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4509,7 +4497,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.html",
-        "hash": "7188504594592545496"
+        "hash": "14129153349914167924"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.scss",
@@ -4521,7 +4509,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.ts",
-        "hash": "7602494601385163295"
+        "hash": "7119024558462625316"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
@@ -4689,7 +4677,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.ts",
-        "hash": "3648952096204550146"
+        "hash": "6272968133217893081"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.spec.ts",
@@ -5021,7 +5009,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento.component.html",
-        "hash": "7591172293552733770"
+        "hash": "12947700757131056388"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento.component.scss",
@@ -5033,7 +5021,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento.component.ts",
-        "hash": "15157904238793989081"
+        "hash": "7820997880845017317"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/service-recargo/recargo-servicio.service.spec.ts",
@@ -5265,7 +5253,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "16448291313168032301"
+        "hash": "7019548934184614537"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

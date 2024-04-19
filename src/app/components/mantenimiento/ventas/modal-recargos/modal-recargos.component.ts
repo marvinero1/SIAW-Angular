@@ -7,6 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import { RecargoServicioService } from '../recargo-documento/service-recargo/recargo-servicio.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { RecargoToProformaService } from './recargo-to-proforma-services/recargo-to-proforma.service';
+import { element } from 'protractor';
+import { MovimientomercaderiaService } from '../../inventario/conceptosmovimientosmercaderia/serviciomovimientomercaderia/movimientomercaderia.service';
 @Component({
   selector: 'app-modal-recargos',
   templateUrl: './modal-recargos.component.html',
@@ -18,13 +20,22 @@ export class ModalRecargosComponent implements OnInit {
   recargo_get_service: any = [];
   tablaRecargos: any = [];
   array_de_recargos: any = [];
+  resultado_validacion: any = [];
+  des_extra_del_total_get: any = [];
+  array_cabe_cuerpo_get: any = [];
   BD_storage: any = [];
+  recargos_array: any = []
 
   porcen: number;
   mont: number;
   moneda: any;
   confirmacion_get_recargo: any;
 
+  cabecera_proforma: any = [];
+  items_de_proforma: any = [];
+  map_table: any = [];
+  recargo_get_service_map: any = [];
+  cod_moneda_get: any
   recargos_ya_en_array_tamanio: any;
 
   userConn: any;
@@ -36,16 +47,34 @@ export class ModalRecargosComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalRecargosComponent>, private toastr: ToastrService,
     public servicioRecargo: RecargoServicioService, public servicio_recargo_proforma: RecargoToProformaService,
-    @Inject(MAT_DIALOG_DATA) public recargos: any,
+    @Inject(MAT_DIALOG_DATA) public recargos: any, @Inject(MAT_DIALOG_DATA) public des_extra_del_total: any,
+    @Inject(MAT_DIALOG_DATA) public array_cabe_cuerpo: any, @Inject(MAT_DIALOG_DATA) public cabecera: any,
+    @Inject(MAT_DIALOG_DATA) public items: any, @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
     @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any) {
+
+    this.recargos_ya_en_array = recargos.recargos;
+
+    this.recargos_ya_en_array = this.map_table = recargos.recargos.map(element => ({
+      codigo: element.codrecargo,
+      descripcion: element.descrip,
+      porcentaje: element.porcen,
+      monto: element.monto,
+      moneda: element.moneda
+    }))
+
+    this.cabecera_proforma = cabecera.cabecera;
+    this.items_de_proforma = items.items;
+    this.cod_moneda_get = cod_moneda.cod_moneda
+
+    this.des_extra_del_total_get = des_extra_del_total.des_extra_del_total;
+    this.array_cabe_cuerpo_get = array_cabe_cuerpo.array_cabe_cuerpo
+    console.log(this.array_cabe_cuerpo_get);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
-    this.recargos_ya_en_array = recargos.recargos;
     this.recargos_ya_en_array_tamanio = tamanio_recargos.tamanio_recargos;
-
-    console.log("Array de Recargos q vienen de proforma: " + recargos.recargos, "Tamanio Array: " + this.recargos_ya_en_array_tamanio);
+    console.log("Array de Recargos q vienen de proforma: ", this.recargos_ya_en_array, "Tamanio Array: " + this.recargos_ya_en_array_tamanio);
   }
 
   ngOnInit() {
@@ -54,13 +83,13 @@ export class ModalRecargosComponent implements OnInit {
       this.recargo_get_service = data.recargo;
 
       if (this.recargo_get_service.montopor != true) {
-        this.porcen = 0.00;
-        this.mont = 0;
-        this.moneda = this.recargo_get_service.moneda;
-      } else {
         this.porcen = this.recargo_get_service.porcentaje;
         this.mont = this.recargo_get_service.monto;
         //.transform(this.mont, '1.2-2');
+        this.moneda = this.recargo_get_service.moneda;
+      } else {
+        this.porcen = 0.00;
+        this.mont = data.recargo.monto;
         this.moneda = this.recargo_get_service.moneda;
       }
     });
@@ -72,6 +101,8 @@ export class ModalRecargosComponent implements OnInit {
   }
 
   anadirRecargo() {
+
+
     let a = {
       codigo: this.recargo_get_service.codigo,
       descripcion: this.recargo_get_service.descripcion,
@@ -80,60 +111,165 @@ export class ModalRecargosComponent implements OnInit {
       moneda: this.recargo_get_service.moneda,
     };
 
-    this.dataSource = new MatTableDataSource(this.recargo_get_service);
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
+    let tamanio = this.array_de_recargos.length;
+    //this.dataSource = new MatTableDataSource(this.recargo_get_service);
+
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddRecargo/"
     return this.api.getAll('/venta/transac/veproforma/validaAddRecargo/' + this.userConn + "/" + this.recargo_get_service.codigo + "/" + this.BD_storage.bd)
       .subscribe({
         next: (datav) => {
-          console.log('data', datav); //este valor simplemente es un true que valida si se puede agregar
+          console.log('valor boolean del backend boolean', datav); //este valor simplemente es un true que valida si se puede agregar
           this.confirmacion_get_recargo = datav;
-          const existe_en_array = this.array_de_recargos.some(item => item.codigo === a.codigo);
-          console.log(existe_en_array);
+
+          const existe_en_array = this.array_de_recargos.some(item => item.codigo === this.array_de_recargos.codigo);
+          let tamanio = this.array_de_recargos.length;
+          console.log("Existe en array?", existe_en_array);
 
           if (this.confirmacion_get_recargo) {
             if (existe_en_array) {
               this.toastr.warning("EL RECARGO YA ESTA AGREGADO")
             } else {
-              if (this.recargos_ya_en_array_tamanio > 0) {
-                console.log("HAY RECARGOS EN EL ARRAY LA CARGA SE CONCATENA");
-                // Usar concat y asignar el resultado a array_de_recargos
-                this.array_de_recargos = this.array_de_recargos.concat(a);
+              if (tamanio > 0) {
+                console.log("HAY RECARGO EN EL ARRAY LA CARGA SE CONCATENA");
+                // Concatenar el nuevo descuento con los descuentos existentes
+                this.recargos_array = this.recargos_ya_en_array.concat(this.recargo_get_service);
+
               } else {
-                console.log("NO HAY RECARGOS EN EL ARRAY LA CARGA NO SE CONCATENA");
+                console.log("NO HAY RECARGO EN EL ARRAY LA CARGA NO SE CONCATENA");
                 // Usar push para agregar el elemento directamente al array
-                this.array_de_recargos.push(a);
+                this.recargos_array.push(this.recargo_get_service);
               }
             }
           }
 
-          this.dataSource = new MatTableDataSource(this.array_de_recargos);
+
+
+          // if (datav) {
+          //   if (existe_en_array) {
+          //     this.toastr.warning("EL RECARGO YA ESTA AGREGADO")
+          //   } else {
+          //     if (this.recargos_ya_en_array_tamanio > 0) {
+          //       console.log("HAY RECARGOS EN EL ARRAY LA CARGA SE CONCATENA");
+          //       // Usar concat y asignar el resultado a array_de_recargos
+          //       this.array_de_recargos = this.array_de_recargos.concat(this.recargos_ya_en_array);
+          //     } else {
+          //       console.log("NO HAY RECARGOS EN EL ARRAY LA CARGA NO SE CONCATENA");
+          //       // Usar push para agregar el elemento directamente al array
+          //       this.array_de_recargos.push(a);
+          //     }
+          //   }
+          // }
+
+          this.dataSource = new MatTableDataSource(this.recargos_array);
           console.log(this.array_de_recargos);
         },
 
         error: (err: any) => {
-          this.dataSource = new MatTableDataSource(this.array_de_recargos);
+          this.dataSource = new MatTableDataSource(this.recargos_array);
           console.log(err, errorMessage);
         },
 
         complete: () => {
-          this.dataSource = new MatTableDataSource(this.array_de_recargos);
+          this.dataSource = new MatTableDataSource(this.recargos_array);
         }
       })
   }
 
   sendArrayRecargos() {
-    let a = this.array_de_recargos.length;
+    this.recargo_get_service_map = [this.recargo_get_service].map(element => ({
+      codproforma: 0,
+      codrecargo: element.codigo,
+      porcen: element.porcentaje,
+      monto: element.monto,
+      moneda: element.moneda,
+      montodoc: 0,
+      codcobranza: 0,
+      descrip: element.descripcion
+    }))
 
-    if (a > 0) {
-      this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.emit({
-        recargo_array: this.array_de_recargos,
-      });
-      this.toastr.success("¡ RECARGOS AGREGADOS EXITOSAMENTE !");
-      this.close();
-    } else {
-      this.toastr.warning("¡ NO HAY RECARGO SELECCIONADO !");
+    let total_proforma_concat = {
+      veproforma: this.cabecera_proforma, //este es el valor de todo el formulario de proforma
+      detalleItemsProf: this.items_de_proforma, //este es el carrito con las items
+      tablarecargos: this.recargo_get_service_map, //array de recargos ya mapeado
+      tabladescuentos: [{
+        "codproforma": 0,
+        "coddesextra": 0,
+        "porcen": 0,
+        "montodoc": 0,
+        "codcobranza": 0,
+        "codcobranza_contado": 0,
+        "codanticipo": 0,
+        "id": 0,
+        "aplicacion": "string",
+        "codmoneda": "string",
+        "descrip": "string",
+        "total_dist": 0,
+        "total_desc": 0,
+        "montorest": 0
+      }],
     }
+
+    console.log(total_proforma_concat);
+    //al darle al boton OK tiene consultar al backend validando los recargos y re calculando los total, subtotal.
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/recarcularRecargos/"
+    this.api.create('/venta/transac/veproforma/recarcularRecargos/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.des_extra_del_total_get, total_proforma_concat)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.resultado_validacion = datav;
+          this.servicioEnviarAProforma(datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      });
+
+    this.toastr.success("¡ RECARGOS AGREGADOS EXITOSAMENTE Y VALIDADO !");
+
+    this.close();
   }
+
+
+  servicioEnviarAProforma(datav) {
+    this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.emit({
+      recargo_array: this.recargos_array,
+      resultado_validacion: datav,
+      resultado_validacion_tabla_recargos: datav.tablaRecargos,
+    });
+    this.toastr.success("¡ RECARGOS AGREGADOS EXITOSAMENTE !");
+
+    this.close();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   eliminarRecargo(codigo) {
     console.log(codigo);

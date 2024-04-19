@@ -291,7 +291,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public des_extra: number = 0;
   public iva: number = 0;
   public total: number = 0.00;
-  public peso: number = 0;
+  public peso: number = 0.00;
 
   selectTPago: string = "Credito";
   selectedCountryControl = new FormControl(this.selectTPago);
@@ -325,6 +325,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   cotizacion_transferida: any = [];
   recargo_de_recargos: any = [];
   messages: any = [];
+  array_de_descuentos_ya_agregados: any = [];
 
   valorPredeterminadoPreparacion = "NORMAL";
   valorPredeterminadoTipoPago = "CONTADO";
@@ -335,9 +336,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
   public validacion_post: any = [];
+  public valor_formulario: any = [];
   public validacion_post_negativos: any = [];
   public validacion_post_max_ventas: any = [];
-  public valor_formulario: any = [];
 
   public valor_formulario_copied_map_all: any = {};
   public valor_formulario_negativos: any = {};
@@ -470,40 +471,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     // findescuentos
 
-    //disparador que trae los descuentos del ModalDesctExtrasComponent de los totales
-    this.servicioDesctEspecial.disparadorDeDescuentosDelModalTotalDescuentos.subscribe(data => {
-      console.log("Recibiendo Descuento De los Totales: ", data);
-      this.cod_descuento_total = data.desct_proforma;
-      //this.cod_descuento_modal_codigo = this.cod_descuento_modal.codigo;
-    });
-    //finDisparador
-
     //Item
     this.itemservice.disparadorDeItems.subscribe(data => {
       console.log("Recibiendo Item: ", data);
       this.codigo_item_catalogo = data.item;
       this.cantidad_item_matriz = data.cantidad;
       //this.getEmpaqueItem(this.codigo_item_catalogo);
-    });
-    //
-
-    //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
-    this.itemservice.disparadorDeItemsYaMapeadosAProforma.subscribe(data_carrito => {
-      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
-      this.array_items_carrito_y_f4_catalogo = data_carrito.concat(this.item_seleccionados_catalogo_matriz);
-      console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
-
-      // for (let i = 0; i < this.array_items_carrito_y_f4_catalogo.length; i++) {
-      //   this.array_items_carrito_y_f4_catalogo[i].orden_creciente = i + 1;
-      // }
-
-      this.spinner.show();
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-
-      // Actualizar la fuente de datos del MatTableDataSource después de modificar el orden_creciente
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
     });
     //
 
@@ -515,6 +488,30 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.subtotal = 0;
     });
     //
+
+    //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
+    this.itemservice.disparadorDeItemsYaMapeadosAProforma.subscribe(data_carrito => {
+      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
+      console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
+
+      if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+        // Si el array está vacío, simplemente agregamos los nuevos elementos
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+      } else {
+        // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(data_carrito);
+      }
+
+      this.spinner.show();
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+
+      // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
+      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+    });
+    //
+
 
     //CATALOGO F4 ITEMS
     //ItemElejidoCatalogoF4Procesados
@@ -673,13 +670,32 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //FIN SALDOS ITEM PIE DE PAGINA
 
+
+    //disparador que trae los descuentos del ModalDesctExtrasComponent de los totales
+    this.servicioDesctEspecial.disparadorDeDescuentosDelModalTotalDescuentos.subscribe(data => {
+      console.log("Recibiendo Descuento De los Totales: ", data);
+      this.cod_descuento_total = data.desct_proforma;
+      this.total = data.resultado_validacion.total;
+      this.subtotal = data.resultado_validacion.subtotal;
+      this.peso = data.resultado_validacion.peso;
+      this.des_extra = data.resultado_validacion.descuento;
+      // this.array_de_descuentos_ya_agregados
+      this.array_de_descuentos_ya_agregados = data.tabla_descuento;
+    });
+    //finDisparador
+
     //RECARGOS
     this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.subscribe(data => {
-      console.log("Recibiendo Recargo : ", data.recargo_array);
+      console.log("Recibiendo Recargo : ", data.recargo_array, data.resultado_validacion, data.resultado_validacion_tabla_recargos);
+
       this.recargo_de_recargos = data.recargo_array;
       this.recargos_ya_en_array_tamanio = data.recargo_array.length;
+      this.total = data.resultado_validacion.total,
+        this.peso = data.resultado_validacion.peso,
+        this.subtotal = data.resultado_validacion.subtotal,
+        this.recargos = data.resultado_validacion.recargo
+      //this.recargo_de_recargos = data.resultado_validacion.tablaRecargos
 
-      console.log(this.recargos_ya_en_array_tamanio);
     });
     //FIN DE RECARGOS
 
@@ -2265,9 +2281,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       veproforma_iva: this.veproforma_iva, //array de iva
     }
 
+    console.log(total_proforma_concat);
+
     console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
       this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-    console.log("Array de Carrito a Totaliza:" + total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
 
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
@@ -2307,6 +2325,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
+            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
           }
         })
     } else {
@@ -3430,11 +3449,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       height: 'auto',
       disableClose: true,
       data: {
+        cabecera: this.FormularioData.value,
+        items: this.array_items_carrito_y_f4_catalogo,
         recargos: this.recargo_de_recargos,
+        des_extra_del_total: this.des_extra,
+        cod_moneda: this.moneda_get_catalogo,
         tamanio_recargos: a,
       },
     });
   }
+
 
   modalDescuentosTotales(): void {
     if (this.codigo_cliente === undefined || this.codigo_cliente === '') {
@@ -3479,17 +3503,25 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.tipopago = 1;
     }
 
-    console.log(this.FormularioData.value);
-    this.dialog.open(ModalDesctExtrasComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: {
-        cabecera: this.FormularioData.value,
-        desct: this.cod_descuento_total,
-        contra_entrega: this.es_contra_entrega,
-        items: this.array_items_carrito_y_f4_catalogo,
-      }
-    });
+    this.submitted = true;
+    if (this.FormularioData.valid) {
+      this.dialog.open(ModalDesctExtrasComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: {
+          cabecera: this.FormularioData.value,
+          desct: this.cod_descuento_total,
+          contra_entrega: this.es_contra_entrega,
+          items: this.array_items_carrito_y_f4_catalogo,
+          recargos_del_total: this.recargos,
+          cod_moneda: this.moneda_get_catalogo,
+          recargos_array: this.recargo_de_recargos,
+          array_de_descuentos_ya_agregados_a_modal: this.array_de_descuentos_ya_agregados
+        }
+      });
+    } else {
+      this.toastr.error("VALIDACION ACTIVA 🚨");
+    }
   }
 
   modalIva() {
@@ -3538,7 +3570,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
   //FIN SECCION TOTALES
-
 
   //seccion mat-tab Resultado de Validacion
   resolverValidacion() {
@@ -3652,62 +3683,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

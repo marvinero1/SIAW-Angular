@@ -142,7 +142,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
 
     this.array_items_proforma_matriz = items.items;
-    console.log(this.array_items_proforma_matriz);
+
+    // si ya existen items en el detalle de la proforma todo se concatena a este array this.array_items_proforma_matriz
+    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz);
 
     this.pedidoInicial = 0;
     this.cantidad = this.pedido;
@@ -612,12 +614,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
-    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple, this.array_items_proforma_matriz);
+    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
 
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-    console.log("ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado, "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
+    console.log("array_items_completo", this.array_items_completo, "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
+      "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
@@ -645,9 +648,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       return {
         coditem: elemento.coditem,
         // tarifa: this.tarifa_get,
-        tarifa: elemento.tarifa,
-        descuento: elemento.descuento,
 
+        tarifa: elemento.tarifa === undefined ? this.tarifa_get : elemento.tarifa,
+        descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
         codcliente: this.codcliente_get,
@@ -687,7 +690,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    console.log("Items del carrito disque procesados: ", items);
+    console.log("Items del carrito PROCESADOS: ", items);
     console.log("Items del carrito sin procesar: ", items_sin_proceso);
 
     this.itemservice.enviarItemCompletoAProforma(items);
