@@ -4617,7 +4617,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-iva/modal-iva.component.html",
-        "hash": "3444996455773016633"
+        "hash": "13256015304087718514"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-iva/modal-iva.component.scss",
@@ -5241,11 +5241,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "10581648892964660682"
+        "hash": "16838157622911807870"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "8468175591719162638"
+        "hash": "15562705798882134342"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",

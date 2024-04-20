@@ -22,8 +22,8 @@
             <tr *ngFor="let tabla_iva_get_proforma of tabla_iva_get_proformas">
               <td> {{ tabla_iva_get_proforma.porceniva }} </td>
               <td> {{ tabla_iva_get_proforma.total | number:'1.2-2' }} </td>
-              <td> {{ tabla_iva_get_proforma.porcenbr }} </td>
-              <td> {{ tabla_iva_get_proforma.br }} </td>
+              <td> {{ tabla_iva_get_proforma.porcenbr | number:'1.2-2' }} </td>
+              <td> {{ tabla_iva_get_proforma.br | number:'1.2-2' }} </td>
               <td> {{ tabla_iva_get_proforma.iva }} </td>
             </tr>
           </tbody>

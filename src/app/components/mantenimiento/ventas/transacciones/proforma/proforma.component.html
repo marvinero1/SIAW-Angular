@@ -103,7 +103,8 @@
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" formControlName="id"
                     [(ngModel)]="cod_id_tipo_modal_id" [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo"
-                    (blur)="onLeaveIDTipo($event)" style="margin-left: 16px;">
+                    (blur)="onLeaveIDTipo($event)" style="margin-left: 16px;"
+                    [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
                 </ng-container>
                 <div class="input-group-append">
                   <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
@@ -146,12 +147,18 @@
               <div class="input-group">
                 <div class="input-group-">
                   <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Almacen </u></span>
+                    style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                    <u>
+                      <div *ngIf="submitted && f.codalmacen.invalid" class="invalid-feedback">
+                        <mat-icon>info</mat-icon>
+                      </div> Almacen
+                    </u>
+                  </span>
                 </div>
-
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario"
                     formControlName="codalmacen" id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)"
+                    [class.is-invalid]="f.codalmacen.invalid && (f.codalmacen.dirty || f.codalmacen.touched)"
                     style="margin-left: 6px;">
                 </ng-container>
 
@@ -163,19 +170,17 @@
               </div>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-6">
               <div class="input-group">
                 <div class="input-group-">
                   <span class="input-group-text form-control-sm"
                     style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                    <u>
-                      <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback" style="display: block;">
-                        <mat-icon>info</mat-icon>
-                      </div>
-                      Vendedor
-                    </u></span>
+                    <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback">
+                      <mat-icon style="height: 22px !important;">info</mat-icon>
+                    </div>
+                    <u>Vendedor</u>
+                  </span>
                 </div>
-
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
                     formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente_modal"
@@ -189,9 +194,6 @@
                     style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
                       class="fa fa-search"></i>
                   </button>
-                  <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback" style="display: block;">
-                    <mat-icon>info</mat-icon>
-                  </div>
                 </div>
               </div>
             </div>
@@ -199,22 +201,23 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Preparación</u></span>
+              <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                <div *ngIf="submitted && f.preparacion.invalid" class="invalid-feedback">
+                  <mat-icon style="height: 21px !important;">info</mat-icon>
+                </div>
+                <u>Preparación</u>
+              </span>
             </div>
             <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;" [(ngModel)]="preparacion"
               formControlName="preparacion"
               [ngClass]="{'is-invalid': f.preparacion.invalid && (f.preparacion.dirty || f.preparacion.touched)}">
               <mat-option value="NORMAL">NORMAL</mat-option>
               <mat-option value="URGENTE">URGENTE</mat-option>
-              <mat-option value=FINAL>FINAL</mat-option>
+              <mat-option value="FINAL">FINAL</mat-option>
               <mat-option value="URGENTE PROVINCIAS">URGENTE PROVINCIAS</mat-option>
               <mat-option value="POR COMISIONISTA">POR COMISIONISTA</mat-option>
               <mat-option value="CAJA CERRADA RECOGE CLIENTE">CAJA CERRADA RECOGE CLIENTE</mat-option>
             </mat-select>
-            <div *ngIf="submitted && f.preparacion.invalid" class="invalid-feedback" style="display: block;">
-              <mat-icon>info</mat-icon>
-            </div>
           </div>
 
           <div class="input-group">
@@ -285,17 +288,14 @@
           </div>
 
           <div class="input-group">
-
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 8px 4px 0px 48px !important;border: 0 !important;">
-                <u>
-                  Tipo de Pago
-                  <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback" style="display: block;"
-                    style="margin-right: 15px !important;">
-                    <mat-icon>info</mat-icon>
-                  </div>
-                </u></span>
+                <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback">
+                  <mat-icon>info</mat-icon>
+                </div>
+                <u> Tipo de Pago </u>
+              </span>
             </div>
             <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
               formControlName="tipopago"
@@ -335,12 +335,11 @@
         <div class="col col-lg-4" style="float: right;">
           <div class="input-group">
             <div class="input-group-prepend">
+              <div *ngIf="submitted && f.codcliente.invalid" class="invalid-feedback" style="display: block;">
+                <mat-icon>info</mat-icon>
+              </div>
               <span class="input-group-text form-control-sm" style="padding: 9px 0px 0px 18px;border: 0 !important;">
-                <u>
-                  <div *ngIf="submitted && f.codcliente.invalid" class="invalid-feedback" style="display: block;">
-                    <mat-icon>info</mat-icon>
-                  </div> Cod. Cliente
-                </u>
+                <u> Cod. Cliente </u>
               </span>
             </div>
             <input type="text" class="form-control cliente form-control-sm" formControlName="codcliente"
@@ -403,17 +402,22 @@
               <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_comercial_razon_social"
                 formControlName="nomcliente" readonly>
             </ng-container>
-
           </div>
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 9px 3px 2px 42px;border: 0 !important;"><u>Doc. Id. </u></span>
+              <div *ngIf="submitted && f.tipo_docid.invalid" class="invalid-feedback" style="display: block;">
+                <mat-icon>info</mat-icon>
+              </div>
+
+              <span class="input-group-text form-control-sm" style="padding: 9px 3px 2px 42px;border: 0 !important;">
+                <u>Doc. Id. </u>
+              </span>
             </div>
 
             <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
-              [(ngModel)]="tipo_doc_cliente">
+              [(ngModel)]="tipo_doc_cliente"
+              [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)">
               <mat-option *ngFor="let documento_identidads of documento_identidad"
                 [value]="documento_identidads.codigoclasificador">
                 {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
@@ -422,8 +426,12 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 3px 0px 55px;border: 0 !important;"><u>N.I.T. </u></span>
+              <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback" style="display: block;">
+                <mat-icon>info</mat-icon>
+              </div>
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;">
+                <u>N.I.T</u>
+              </span>
               <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
                 [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
                 [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
@@ -1158,18 +1166,16 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 8px;border: 0 !important;"><u>
-                                Medio Transporte
-                                <div *ngIf="submitted && f.transporte.invalid" class="invalid-feedback"
-                                  style="display: block;">
-                                  <mat-icon>info</mat-icon>
-                                </div>
-                              </u></span>
+                              style="padding: 10px 0px 0px 8px;border: 0 !important;">
+                              <div *ngIf="submitted && f.transporte.invalid" class="invalid-feedback">
+                                <mat-icon>info</mat-icon>
+                              </div>
+                              <u>Medio Transporte </u>
+                            </span>
                           </div>
                           <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                             [(ngModel)]="transporte" formControlName="transporte"
                             [class.is-invalid]="f.transporte.invalid && (f.transporte.dirty || f.transporte.touched)">
-                            <!-- <option selected>Elija... </option> -->
                             <option value="FLOTA">FLOTA</option>
                             <option value="TRANSPORTADORA">TRANSPORTADORA</option>
                             <option value="CAMION PERTEC">CAMION PERTEC</option>
@@ -1185,13 +1191,12 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>
-                                Nombre Transporte
-                                <div *ngIf="submitted && f.nombre_transporte.invalid" class="invalid-feedback"
-                                  style="display: block;">
-                                  <mat-icon>info</mat-icon>
-                                </div>
-                              </u></span>
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                              <div *ngIf="submitted && f.nombre_transporte.invalid" class="invalid-feedback">
+                                <mat-icon>info</mat-icon>
+                              </div>
+                              <u> Nombre Transporte </u>
+                            </span>
                           </div>
                           <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
                             formControlName="nombre_transporte" [(ngModel)]="medio_transporte"
@@ -1209,17 +1214,16 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 8px;border: 0 !important;"><u>Flete Pagado Por</u>
-                              <div *ngIf="submitted && f.fletepor.invalid" class="invalid-feedback"
-                                style="display: block;">
+                              style="padding: 10px 0px 0px 8px;border: 0 !important;">
+                              <div *ngIf="submitted && f.fletepor.invalid" class="invalid-feedback">
                                 <mat-icon>info</mat-icon>
                               </div>
+                              <u>Flete Pagado Por</u>
                             </span>
                           </div>
                           <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                             formControlName="fletepor" [(ngModel)]="fletepor"
                             [class.is-invalid]="f.fletepor.invalid && (f.fletepor.dirty || f.fletepor.touched)">
-                            <!-- <option selected>Elija...</option> -->
                             <option value="OTROS">OTROS</option>
                             <option value="CLIENTE">CLIENTE</option>
                             <option value="PERTEC POR COBRAR">PERTEC POR COBRAR</option>
@@ -1231,7 +1235,12 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>T. Entrega</u></span>
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                              <div *ngIf="submitted && f.tipoentrega.invalid" class="invalid-feedback">
+                                <mat-icon>info</mat-icon>
+                              </div>
+                              <u>T. Entrega</u>
+                            </span>
                           </div>
                           <!-- <input type="text" class="form-control form-control-sm"
                             style="margin-left: 5px;background-color: #ffff00;color: black;"
@@ -1242,10 +1251,6 @@
                             style="margin-left: 5px;background-color: #ffff00;color: black;"
                             formControlName="tipoentrega" [(ngModel)]="tipoentrega">
 
-                          <div *ngIf="submitted && f.tipoentrega.invalid" class="invalid-feedback"
-                            style="display: block;">
-                            <mat-icon>info</mat-icon>
-                          </div>
                           <div class="input-group-append">
                             <button class="btn btn-outline-primary form-control-sm" type="button"
                               style="border-color: #093070;" (click)="mandarEntregar()"><i class="fa fa-cog"></i>
