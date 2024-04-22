@@ -121,7 +121,7 @@
       },
       {
         "file": ".gitattributes",
-        "hash": "9191984770690401058"
+        "hash": "13326841776038177648"
       },
       {
         "file": ".github/FUNDING.yml",
@@ -129,7 +129,7 @@
       },
       {
         "file": ".gitignore",
-        "hash": "689718296154564816"
+        "hash": "4603032493676099401"
       },
       {
         "file": ".htaccess",
@@ -164,72 +164,8 @@
         "hash": "12751868811261698162"
       },
       {
-        "file": ".nx/cache/nx-console-project-graph/project-graph.html",
-        "hash": "17036869540637447991"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/3rdpartylicenses.txt",
-        "hash": "5667550289807473445"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/environment.js",
-        "hash": "5018250891076049163"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/favicon.ico",
-        "hash": "9303420814833116677"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/main.js",
-        "hash": "2941572060715680267"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/polyfills.js",
-        "hash": "7440361037364375494"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/runtime.js",
-        "hash": "9652903316845995179"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/styles.css",
-        "hash": "5562174198026097626"
-      },
-      {
-        "file": ".nx/cache/nx-console-project-graph/static/styles.js",
-        "hash": "13596360365094399219"
-      },
-      {
         "file": ".nx/cache/parsed-lock-file.json",
         "hash": "10116584811782291129"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~057ed1f9",
-        "hash": "16503892306010108053"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~358b6fac",
-        "hash": "13407685428938704968"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~776dc06d",
-        "hash": "16503892306010108053"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~ab16746a",
-        "hash": "16503892306010108053"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~b00bedc8",
-        "hash": "13407685428938704968"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~dc7bde8e",
-        "hash": "8776953861242975920"
-      },
-      {
-        "file": ".nx/cache/project-graph.json~ff4a049b",
-        "hash": "2645407700248126804"
       },
       {
         "file": ".prettierignore",
@@ -254,10 +190,6 @@
       {
         "file": "LICENCE",
         "hash": "8045958337098227323"
-      },
-      {
-        "file": "LICENSE",
-        "hash": "6757583305453176017"
       },
       {
         "file": "README.md",
@@ -4464,6 +4396,22 @@
         "hash": "11399262250897911977"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.html",
+        "hash": "1996202218619579658"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.scss",
+        "hash": "3430539653876371457"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.spec.ts",
+        "hash": "18090717021990082525"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.ts",
+        "hash": "18156698061295629097"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.html",
         "hash": "1996202218619579658"
       },
@@ -5253,7 +5201,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "5951593754714282226"
+        "hash": "5703995571663268081"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6374,6 +6322,10 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
+      },
+      {
+        "file": "files.txt",
+        "hash": "3244421341483603138"
       }
     ],
     "projectFileMap": {}

@@ -1345,6 +1345,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   mandarCodCliente(cod_cliente) {
+<<<<<<< HEAD
+    this.total = 0.00;
+    this.subtotal = 0.00;
+    
+=======
+>>>>>>> origin/main
     this.servicioCliente.disparadorDeClientes.emit({
       cliente: {
         codigo: cod_cliente,

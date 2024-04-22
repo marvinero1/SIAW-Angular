@@ -16,7 +16,7 @@ pids
 *.pid
 *.seed
 *.pid.lock
-
+* LFS 
 .nx/cache/file-map.json
 .nx/cache/d/server-process.json
 .nx/cache/project-graph.json
