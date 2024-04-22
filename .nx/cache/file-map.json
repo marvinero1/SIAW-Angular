@@ -861,7 +861,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component.html",
-        "hash": "2216717741186388512"
+        "hash": "3579872179765454069"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component.scss",
@@ -4109,7 +4109,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.html",
-        "hash": "13752769919179790864"
+        "hash": "6904025192761330953"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.scss",
@@ -4121,7 +4121,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.ts",
-        "hash": "7198844332906643781"
+        "hash": "4991195082416217863"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes/clientes.component.html",
@@ -4465,7 +4465,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
-        "hash": "2417586660932303726"
+        "hash": "6790147370841042340"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.spec.ts",
@@ -4701,11 +4701,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.html",
-        "hash": "3035423124987969978"
+        "hash": "5458576517686320215"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.scss",
-        "hash": "3430539653876371457"
+        "hash": "11423885386137617952"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.spec.ts",
@@ -4713,7 +4713,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.ts",
-        "hash": "12312510365973376407"
+        "hash": "9886154853058356164"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-zona/modal-zona.component.html",
@@ -5189,11 +5189,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "16838157622911807870"
+        "hash": "11257855135943950055"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "15562705798882134342"
+        "hash": "7182058179112463018"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5201,7 +5201,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "5703995571663268081"
+        "hash": "7476389955788680167"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5297,7 +5297,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.html",
-        "hash": "13794905728644562281"
+        "hash": "5461357512158592667"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.scss",
@@ -5309,7 +5309,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "3931717325619798663"
+        "hash": "15016890598622642874"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",
@@ -6326,6 +6326,10 @@
       {
         "file": "files.txt",
         "hash": "3244421341483603138"
+      },
+      {
+        "file": "LICENSE",
+        "hash": "6757583305453176017"
       }
     ],
     "projectFileMap": {}

@@ -87,18 +87,21 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.modalClientes();
           //this.enterCliente();
           break;
-        case "inputCatalogoDireccion":
-          this.modalClientesDireccion(this.codigo_cliente_catalogo);
-          break;
         case "inputCatalogoPrecioVentaDetalle":
           this.modalPrecioVentaDetalle();
           break;
-
+        case "inputMoneda":
+          this.modalCatalogoMoneda();
+          break;
         case "inputCatalogoDescuentoEspecialDetalle":
           this.modalDescuentoEspecialDetalle();
           break;
-        case "":
-          this.modalCatalogoProductos();
+        // case "":
+        //   this.modalCatalogoProductos();
+        //   break;
+
+        case "inputCatalogoDireccion":
+          this.modalClientesDireccion(this.codigo_cliente_catalogo);
           break;
       }
     }
@@ -433,6 +436,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -447,6 +451,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -461,6 +466,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //finvendedor
 
@@ -469,6 +475,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Precio de Venta: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
       this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
+
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.tipoentrega = "";
     });
     // fin_precio_venta
 
@@ -477,6 +487,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Descuento: ", data);
       this.cod_descuento_modal = data.descuento;
       this.cod_descuento_modal_codigo = this.cod_descuento_modal.codigo;
+
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.tipoentrega = "";
     });
     // findescuentos
 
@@ -498,6 +512,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -606,6 +621,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -641,6 +657,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.recargos = 0.00;
       this.des_extra = 0.00;
       this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -983,26 +1000,27 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
 
-    if (this.total != 0) {
-      //if (this.FormularioData.valid) {
-      console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
-      let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
-      return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage.bd, proforma_validar)
-        .subscribe({
-          next: (datav) => {
-            this.tipoentrega = datav.mensaje;
-            console.log(datav);
-          },
+    // if (this.total != 0) {
+    //if (this.FormularioData.valid) {
+    console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
+    return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage.bd, proforma_validar)
+      .subscribe({
+        next: (datav) => {
+          this.tipoentrega = datav.mensaje;
+          console.log(datav);
+        },
 
-          error: (err: any) => {
-            console.log(err, errorMessage);
-          },
-          complete: () => { }
-        })
-      //}
-    } else {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
-    }
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error("VALIDACION PARA T. ENTREGA")
+        },
+        complete: () => { }
+      })
+    //}
+    // } else {
+    //   this.toastr.error("EL TOTAL NO PUEDE SER 0");
+    // }
 
   }
 
@@ -1345,12 +1363,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   mandarCodCliente(cod_cliente) {
-<<<<<<< HEAD
     this.total = 0.00;
     this.subtotal = 0.00;
-    
-=======
->>>>>>> origin/main
     this.servicioCliente.disparadorDeClientes.emit({
       cliente: {
         codigo: cod_cliente,
@@ -2329,6 +2343,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             }, 1500);
           },
           complete: () => {
+            this.mandarEntregar();
+
             this.total = this.totabilizar_post.totales?.total;
             this.subtotal = this.totabilizar_post.totales?.subtotal;
             this.recargos = this.totabilizar_post.totales?.recargo;
@@ -3579,7 +3595,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
-      width: 'auto',
+      width: '400px',
       height: 'auto',
       disableClose: true,
       data: {

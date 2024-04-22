@@ -110,7 +110,7 @@ mat-row, mat-header-row, mat-footer-row{
 .pedido{
   text-align: right;
   background-color: #80808017;
-  color: black !important;
+  color: black;
   border: 0;
   width: 100%;
   margin: auto;
@@ -291,10 +291,10 @@ mat-row, mat-header-row, mat-footer-row{
   height: 195px !important;
 }
 
-.selected {
-  background-color: #093070; /* Cambiar el color de fondo cuando está seleccionada */
-  color: white !important;
-  cursor: pointer;
+.selected-row {
+  background-color: #093070; /* Color de fondo cuando se selecciona la fila */
+  color: white !important; /* Color de texto cuando se selecciona la fila */
+  cursor: pointer !important; /* Cambia el cursor al pasar sobre la fila */
 }
 
 

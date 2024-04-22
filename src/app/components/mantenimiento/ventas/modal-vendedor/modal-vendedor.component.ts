@@ -15,22 +15,22 @@ import { VendedorService } from '../serviciovendedor/vendedor.service';
 })
 export class ModalVendedorComponent implements OnInit {
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarVendedor();
   };
-    
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarVendedor();
-  }; 
-  
-  vendedor_get:any=[];
-  public vendedor_view:string;
+  };
 
-  public codigo:string='';
+  vendedor_get: any = [];
+  public vendedor_view: string;
+
+  public codigo: string = '';
   public nombre: string = '';
   userConn: string;
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<veVendedor>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -46,10 +46,10 @@ export class ModalVendedorComponent implements OnInit {
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalVendedorComponent>,
     private serviciVendedor: VendedorService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
+
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
     this.getVendedorCatalogo();
   }
@@ -60,7 +60,7 @@ export class ModalVendedorComponent implements OnInit {
     return this.options.filter(option => option.codigo.toString().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -70,20 +70,20 @@ export class ModalVendedorComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getVendedorCatalogo(){
-    let errorMessage:string;
+  getVendedorCatalogo() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --catalogoVendedor";
-    return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.vendedor_get = datav;
-          
+
           this.dataSource = new MatTableDataSource(this.vendedor_get);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => {
@@ -92,19 +92,38 @@ export class ModalVendedorComponent implements OnInit {
       })
   }
 
-  getveVendedorbyId(codigo){
+  getveVendedorbyId(codigo) {
     this.vendedor_view = codigo;
     console.log(codigo);
   }
 
-  mandarVendedor(){
+  mandarVendedor() {
     this.serviciVendedor.disparadorDeVendedores.emit({
-      vendedor:this.vendedor_view,
+      vendedor: this.vendedor_view,
     });
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
+  }
+  selectedRowIndex: number = -1;
+  selectRow(row) {
+    this.selectedRowIndex = row.codigo;
+    // Aquí puedes manejar la lógica de lo que quieres hacer cuando se selecciona una fila
+  }
+
+  handleKeyDown(event: KeyboardEvent, row) {
+    if (event.key === 'ArrowDown') {
+      const index = this.dataSource.data.findIndex(item => item.codigo === row.codigo);
+      if (index < this.dataSource.data.length - 1) {
+        this.selectRow(this.dataSource.data[index + 1]);
+      }
+    } else if (event.key === 'ArrowUp') {
+      const index = this.dataSource.data.findIndex(item => item.codigo === row.codigo);
+      if (index > 0) {
+        this.selectRow(this.dataSource.data[index - 1]);
+      }
+    }
   }
 }

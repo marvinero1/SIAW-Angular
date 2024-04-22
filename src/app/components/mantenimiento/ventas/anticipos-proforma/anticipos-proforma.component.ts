@@ -5,6 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-anticipos-proforma',
@@ -35,6 +36,9 @@ export class AnticiposProformaComponent implements OnInit {
   usuarioLogueado: any;
   BD_storage: any;
 
+  public fecha_formateada1;
+  public fecha_formateada2;
+
   nombre_ventana: string = "docininvconsol.vb";
   public ventana = "Toma de Inventario Consolidado"
   public detalle = "ActualizarStock-create";
@@ -55,7 +59,7 @@ export class AnticiposProformaComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
-    private api: ApiService, public _snackBar: MatSnackBar,
+    private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public tipoPago: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
@@ -140,8 +144,7 @@ export class AnticiposProformaComponent implements OnInit {
         complete: () => { }
       })
   }
-  fecha_formateada1
-  fecha_formateada2
+
   btnrefrescar_Anticipos() {
     this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     this.fecha_formateada2 = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
@@ -152,14 +155,25 @@ export class AnticiposProformaComponent implements OnInit {
         next: (datav) => {
           this.data_tabla_anticipos = datav;
           console.log('data', this.data_tabla_anticipos);
-
           this.dataSourceAnticipado = new MatTableDataSource(this.data_tabla_anticipos);
+
+          this.spinner.show();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
-        complete: () => { }
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
       })
   }
 

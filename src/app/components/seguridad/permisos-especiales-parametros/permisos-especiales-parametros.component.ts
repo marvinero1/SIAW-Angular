@@ -223,6 +223,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   permiso_recibido: any = [];
   autorizacion_recibida: any = [];
   persona_code: any = [];
+  motivo: string;
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,

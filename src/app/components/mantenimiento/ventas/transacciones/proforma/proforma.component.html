@@ -501,8 +501,8 @@
               [(ngModel)]="whatsapp_cliente">
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" formControlName="codmoneda"
-                [(ngModel)]="moneda_get_catalogo" placeholder="Moneda">
+              <input type="text" class="form-control form-control-sm" id="inputMoneda" formControlName="codmoneda"
+                [(ngModel)]="moneda_get_catalogo" placeholder="Moneda" readonly>
             </ng-container>
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button" (click)="modalCatalogoMoneda();"
@@ -555,24 +555,26 @@
               <!-- Item Column -->
               <ng-container matColumnDef="item">
                 <th mat-header-cell *matHeaderCellDef (click)="modalCatalogoProductos()"
-                  style="text-align: center !important;cursor: pointer;">
-                  <i class="fa fa-plus" style="text-align: center !important;cursor: pointer;"></i>&nbsp;<u>Item</u>
+                  style="text-align: center !important; cursor: pointer;">
+                  <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                 </th>
-                <td mat-cell *matCellDef="let element; let i = index" style="cursor: pointer !important;"
-                  [ngClass]="{'td': true, 'selected': selectedRowIndex === i}"
-                  (click)="itemDataAll(element?.coditem); selectRow(i)">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}">
                   <div>
                     {{ element?.coditem }}
                   </div>
-                  <!-- </td> -->
+                </td>
               </ng-container>
+
 
               <!-- Descripcion Column -->
               <ng-container matColumnDef="descripcion">
                 <th mat-header-cell *matHeaderCellDef
                   style="width: 40%;text-align: left !important;padding: 0px 0px 0px 0px;"> Descripción
                 </th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="width: 40%;text-align: left !important;padding: 0px 0px 0px 0px;">
                   {{ element?.descripcion }} </td>
               </ng-container>
@@ -580,27 +582,33 @@
               <!-- Medida Column -->
               <ng-container matColumnDef="medida">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Medida </th>
-                <td mat-cell *matCellDef="let element" class="medida"
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" class="medida"
                   style="text-align: center !important;padding: 0 0px 0 5px;"> {{ element?.medida }} </td>
               </ng-container>
 
               <!-- Unidad Column -->
               <ng-container matColumnDef="unidad">
                 <th mat-header-cell *matHeaderCellDef> Ud </th>
-                <td mat-cell *matCellDef="let element"> {{ element?.udm }} </td>
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"> {{ element?.udm }} </td>
               </ng-container>
 
               <!-- iva Column -->
               <ng-container matColumnDef="iva">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> %IVA </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center !important;"> {{ element?.porceniva }}
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
+                  {{ element?.porceniva }}
                 </td>
               </ng-container>
 
               <!-- pedido Column -->
               <ng-container matColumnDef="pedido">
                 <th mat-header-cell *matHeaderCellDef> Pedido </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;padding: 0px 0px 0px 0px;">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  style="text-align: right !important;padding: 0px 0px 0px 0px;">
                   <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
                     min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
                 </td>
@@ -609,7 +617,9 @@
               <!-- cantidad Column -->
               <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef> Cantidad </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;padding: 0px 0px 0px 0px;">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  style="text-align: right !important;padding: 0px 0px 0px 0px;">
                   <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
                     (input)="cantidadChangeMatrix(element, $event.target.value);">
                 </td>
@@ -618,7 +628,8 @@
               <!-- sld Column -->
               <ng-container matColumnDef="sld">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> % SLD</th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
                   {{ element?.porcen_mercaderia }}
                 </td>
               </ng-container>
@@ -627,7 +638,8 @@
               <ng-container matColumnDef="tp">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> TP
                 </th>
-                <td mat-cell *matCellDef="let element" style="padding: 0px 0px 0px 0px !important">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" placeholder="{{ element.codtarifa }}"
                     id="inputCatalogoPrecioVentaDetalle" (input)="TPChangeMatrix(element, $event.target.value)"
                     (click)="inputClickedPrecioVenta(element)" min="0">
@@ -638,7 +650,8 @@
               <ng-container matColumnDef="de">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> DE
                 </th>
-                <td mat-cell *matCellDef="let element" style="padding: 0px 0px 0px 0px !important">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" placeholder="{{ element.coddescuento }}"
                     id="inputCatalogoDescuentoEspecialDetalle" (input)="DEChangeMatrix(element, $event.target.value)"
                     min="0" (click)="inputClickedDescuento(element)">
@@ -648,27 +661,32 @@
               <!-- PUL Column -->
               <ng-container matColumnDef="pul">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right !important;"> PUL </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;">
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
                   {{ element?.preciolista }} </td>
               </ng-container>
 
               <!-- NIV Column -->
               <ng-container matColumnDef="niv">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> NIV </th>
-                <td mat-cell *matCellDef="let element" style="text-align: right !important;"> {{ element?.niveldesc }}
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
+                  {{ element?.niveldesc }}
                 </td>
               </ng-container>
 
               <!-- % Column -->
               <ng-container matColumnDef="porcentaje">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center !important;"> % </th>
-                <td mat-cell *matCellDef="let element"> {{ element?.porcendesc | json }} </td>
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"> {{ element?.porcendesc | json }} </td>
               </ng-container>
 
               <!-- PD Column -->
               <ng-container matColumnDef="pd">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PD </th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px !important">
                   {{ element?.preciodesc?.toString()?.replace(',', '.') }}
                 </td>
@@ -677,7 +695,8 @@
               <!-- PU Column -->
               <ng-container matColumnDef="pu">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PU </th>
-                <td mat-cell *matCellDef="let element"
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px !important">
                   {{ element?.precioneto?.toString().replace(',', '.') }} </td>
               </ng-container>
@@ -687,7 +706,9 @@
                 <ng-container matColumnDef="total">
                   <th mat-header-cell *matHeaderCellDef style="text-align: right;padding: 0px 0px 0px 0px !important">
                     Total </th>
-                  <td mat-cell *matCellDef="let element" style="text-align: right;padding: 0px 0px 0px 0px !important;">
+                  <td mat-cell *matCellDef="let element; let i = index"
+                    [ngClass]="{'selected-row': selectedRowIndex === i}"
+                    style="text-align: right;padding: 0px 0px 0px 0px !important;">
                     {{ calcularTotalCantidadXPU(element?.cantidad_pedida, element?.cantidad, element?.precioneto) }}
                     <!-- {{ calcularTotalCantidadXPU(element.cantidad_pedida, element.cantidad, element.preciolista) | number:'1.2-2' }} -->
                     <!-- {{ calcularTotalPedidoCantidad(element.cantidad_pedida, element.preciolista, 0) | number:'1.2-2' }} -->
@@ -698,7 +719,8 @@
               <!-- <ng-template #total_X_PU>
                 <ng-container matColumnDef="total">
                   <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total Pedido Modificado </th>
-                  <td mat-cell *matCellDef="let element" style="text-align: right;">
+                  <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right;">
                     AAABCV{{ calcularTotalPedidoXPU(element.cantidad, element.precioneto) | number:'1.5-5' }}
                   </td>
                 </ng-container>
