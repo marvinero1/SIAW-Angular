@@ -272,7 +272,7 @@
 
             <ng-container>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal_codigo"
-                id="inputCatalogoDesctEspecial" formControlName="descuentos">
+                id="inputCatalogoDesctEspecial" (blur)="onLeaveDescuentoEspecial($event)" formControlName="descuentos">
             </ng-container>
 
             <div class="input-group-append">
@@ -639,9 +639,9 @@
                 </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
-                  <input matInput type="number" class="pedido" placeholder="{{ element.codtarifa }}"
-                    id="inputCatalogoPrecioVentaDetalle" (input)="TPChangeMatrix(element, $event.target.value)"
-                    (click)="inputClickedPrecioVenta(element)" min="0">
+                  <input matInput type="number" class="pedido" placeholder="{{ element.codtarifa }}" min="0"
+                    id="inputCatalogoPrecioVentaDetalle" (blur)="onLeavePrecioVentaDetalle($event, element)"
+                    (input)="TPChangeMatrix(element, $event.target.value)" (click)="inputClickedPrecioVenta(element)">
                 </td>
               </ng-container>
 
@@ -651,9 +651,9 @@
                 </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
-                  <input matInput type="number" class="pedido" placeholder="{{ element.coddescuento }}"
-                    id="inputCatalogoDescuentoEspecialDetalle" (input)="DEChangeMatrix(element, $event.target.value)"
-                    min="0" (click)="inputClickedDescuento(element)">
+                  <input matInput type="number" class="pedido" placeholder="{{ element.coddescuento }}" min="0"
+                    id="inputCatalogoDescuentoEspecialDetalle" (blur)="onLeaveDescuentoEspecialDetalle($event, element)"
+                    (input)="DEChangeMatrix(element, $event.target.value)" (click)="inputClickedDescuento(element)">
                 </td>
               </ng-container>
 
@@ -714,7 +714,6 @@
                   </td>
                 </ng-container>
               </ng-container>
-
               <!-- <ng-template #total_X_PU>
                 <ng-container matColumnDef="total">
                   <th mat-header-cell *matHeaderCellDef style="text-align: right;"> Total Pedido Modificado </th>
@@ -724,7 +723,6 @@
                   </td>
                 </ng-container>
               </ng-template> -->
-
               <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </table><br>

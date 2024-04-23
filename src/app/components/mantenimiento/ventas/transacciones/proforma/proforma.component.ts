@@ -1226,43 +1226,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-  onLeavePrecioVenta(event: any) {
-    const inputValue = event.target.value;
-    let entero = Number(inputValue);
-
-    // Verificar si el valor ingresado está presente en los objetos del array
-    const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
-
-    if (!encontrado) {
-      // Si el valor no está en el array, dejar el campo vacío
-      event.target.value = '';
-      console.log("NO ENCONTRADO VALOR DE INPUT");
-    } else {
-      event.target.value = entero;
-    }
-  }
-
-  getDescuentos() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
-
-    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
-      .subscribe({
-        next: (datav) => {
-          this.descuentos_get = datav;
-          // this.descuentos_get_copied = this.descuentos_get.slice();
-          // this.descuentos_get_unico = this.descuentos_get_copied.shift();
-          // this.cod_descuento_modal_codigo = this.descuentos_get_unico.codigo;
-          // console.log(this.descuentos_get_unico);
-          this.cod_descuento_modal_codigo = 0;
-        },
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
   aplicarPrecioVenta(value) {
     this.item_seleccionados_catalogo_matriz_copied = this.array_items_carrito_y_f4_catalogo.slice();
     console.log("Entra a la funcion aplicarPrecioVenta", value);
@@ -1816,9 +1779,19 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
   }
 
+
+
+
+
+
+
+
+
+
+
+  //PRECIO VENTA DETALLE
   TPChangeMatrix(element: any, newValue: number) {
     console.log(element);
-
     // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
     // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
     element.codtarifa = Number(newValue);
@@ -1826,6 +1799,45 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
     console.log(this.dataSource.filteredData);
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+  }
+
+  onLeavePrecioVenta(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  onLeavePrecioVentaDetalle(event: any, elemento) {
+
+    console.log('Elemento seleccionado:', elemento);
+    this.elementoSeleccionadoPrecioVenta = elemento;
+
+    this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
+      console.log("Recibiendo Descuento: ", data);
+      this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
+    });
+
+    const inputValue = event.target.value;
+    let entero = Number(this.elementoSeleccionadoPrecioVenta.codtarifa);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
   }
 
   // // Función que se llama cuando se hace clic en el input
@@ -1839,6 +1851,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
     });
   }
+  //FIN PRECIO VENTA DETALLE
 
 
 
@@ -1876,31 +1889,111 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  //DESCUENTO ESPECIAL DETALLE
+  DEChangeMatrix(element: any, newValue: number) {
+    // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+    element.coddescuento = Number(newValue);
+    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+    console.log(this.dataSource.filteredData);
 
+    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
 
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+  }
 
+  getDescuentos() {
+    let errorMessage: string;
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
 
+    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.descuentos_get = datav;
+          // this.descuentos_get_copied = this.descuentos_get.slice();
+          // this.descuentos_get_unico = this.descuentos_get_copied.shift();
+          // this.cod_descuento_modal_codigo = this.descuentos_get_unico.codigo;
+          // console.log(this.descuentos_get_unico);
+          this.cod_descuento_modal_codigo = 0;
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
+  onLeaveDescuentoEspecial(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
 
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.descuentos_get.some(objeto => objeto.codigo === entero);
 
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
 
+  onLeaveDescuentoEspecialDetalle(event: any, element) {
+    console.log("Item seleccionado: ", element);
 
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCodAlmSlds/";
+    //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
 
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+      + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
+      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/311/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+          element.precioneto = Number(datav.precioneto);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
 
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      });
 
+    console.log('Elemento seleccionado:', element);
+    this.elementoSeleccionadoDescuento = element;
 
+    this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
+      console.log("Recibiendo Precio de Venta: ", data);
+      this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
+    });
 
+    //desde aca verifica que lo q se ingreso al input sea data que existe en el array de descuentos descuentos_get
+    const inputValue = event.target.value;
+    let entero = Number(this.elementoSeleccionadoDescuento.coddescuento);
 
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.descuentos_get.some(objeto => objeto.codigo === entero);
 
-
-
-
-
-
-
-
-
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
 
   inputClickedDescuento(elemento: any) {
     // Aquí puedes hacer lo que necesites con el elemento
@@ -1912,6 +2005,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
     });
   }
+  //FIN DESCUENTO ESPECIAL DETALLE
 
 
 
@@ -1942,21 +2036,19 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-  DEChangeMatrix(element: any, newValue: number) {
-    this.total = 0;
-    this.subtotal = 0;
-    this.iva = 0
-    this.des_extra = 0;
-    this.recargos = 0;
 
-    // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
-    element.coddescuento = Number(newValue);
 
-    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
 
-    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-  }
+
+
+
+
+
+
+
+
+
+
 
   recalcularPedidoXPU(cantidad, precioneto) {
     console.log(cantidad, precioneto);
@@ -2047,6 +2139,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       if (result) {
         this.tranferirProforma();
         this.log_module.guardarLog(ventana, detalle, tipo);
+
       } else {
         this.toastr.error('! CANCELADO !');
       }
@@ -2077,7 +2170,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.codigo_cliente = proforma.cabecera.codcliente_real;
     this.tipopago = proforma.cabecera.tipopago;
 
-
     this.transporte = proforma.cabecera.transporte;
     this.medio_transporte = proforma.cabecera.nombre_transporte;
     this.fletepor = proforma.cabecera.fletepor;
@@ -2097,7 +2189,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
     this.whatsapp_cliente = "0";
 
-
+    this.ubicacion_central = proforma.cabecera.ubicacion;
     this.preparacion = proforma.cabecera.preparacion;
     this.subtotal = proforma.cabecera.subtotal;
     this.recargos = 0;
@@ -2106,87 +2198,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.total = proforma.cabecera.total;
 
 
-
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
     this.veproforma1 = proforma.detalle;
     this.array_de_descuentos_ya_agregados = proforma.descuentos;
     //this.cod_descuento_total = proforma.descuentos;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = proforma.cabecera
     //el cuerpo del detalle asignado al carrito

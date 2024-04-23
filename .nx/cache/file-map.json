@@ -5201,7 +5201,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "3666515612947079741"
+        "hash": "2898714550933154689"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5213,7 +5213,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13671546427712553087"
+        "hash": "13813805573671938234"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5341,7 +5341,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.html",
-        "hash": "7231051439700472956"
+        "hash": "9395109169440008704"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.scss",
