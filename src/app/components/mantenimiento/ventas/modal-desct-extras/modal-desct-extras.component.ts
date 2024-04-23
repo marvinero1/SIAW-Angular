@@ -70,14 +70,13 @@ export class ModalDesctExtrasComponent implements OnInit {
 
     this.array_de_descuentos = this.map_table = array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal.map(element => ({
       codigo: element.coddesextra,
-      descripcion: element.descrip === "" ? element.descripcion : element.descrip,
+      descripcion: element.descripcion === undefined ? element.descrip : element.descripcion,
       porcentaje: element.porcen,
     }))
 
     this.dataSource = new MatTableDataSource(this.map_table);
     console.log(this.contra_entrega_get);
-    console.log("Cabecera de Proforma: ", JSON.stringify(this.cabecera_proforma),
-      "Array de descuentos que ya estaban: ", JSON.stringify(this.array_de_descuentos));
+    console.log("Array de descuentos que ya estaban: ", JSON.stringify(this.array_de_descuentos));
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;

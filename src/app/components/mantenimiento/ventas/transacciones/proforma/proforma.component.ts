@@ -478,6 +478,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       this.total = 0.00;
       this.subtotal = 0.00;
+      this.des_extra = 0.00;
       this.tipoentrega = "";
     });
     // fin_precio_venta
@@ -490,6 +491,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       this.total = 0.00;
       this.subtotal = 0.00;
+      this.des_extra = 0.00;
       this.tipoentrega = "";
     });
     // findescuentos
@@ -1139,15 +1141,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   getAlmacenParamUsuario() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getAlmacenUser/";
-    return this.api.getAll('/venta/transac/veproforma/getAlmacenUser/' + this.userConn + "/" + this.usuarioLogueado)
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getAlmacenUser/";
+    return this.api.getAll('/seg_adm/mant/adusparametros/getAlmacenUser/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.almacn_parame_usuario = datav;
           console.log('data', this.almacn_parame_usuario);
         },
-
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -1742,7 +1742,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       email_cliente_casual: this.email_cliente === undefined ? this.email : this.email_cliente,
       celular_cliente_casual: this.whatsapp_cliente,
       codalmacen: this.almacn_parame_usuario,
-      codvendedor: this.cod_vendedor_cliente_modal,
+      codvendedor: this.cod_vendedor_cliente,
 
       usuarioreg: usuario_logueado,
     };
@@ -1986,7 +1986,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       data: {
         dataA: codigo,
         dataB: id_numero_id,
-        dataPermiso: "122 - TRANSFERIR PROFORMA",
+        dataPermiso: "TRANSFERIR PROFORMA",
         dataCodigoPermiso: "122",
         //abrir: true,
       },

@@ -4357,7 +4357,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "13447660706714295522"
+        "hash": "4945020869854692012"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4501,7 +4501,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.ts",
-        "hash": "14555170145612458385"
+        "hash": "9897430195069458981"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
@@ -5233,7 +5233,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "11257855135943950055"
+        "hash": "3666515612947079741"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5245,7 +5245,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "1769974149284956564"
+        "hash": "17609663092697646269"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5341,7 +5341,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.html",
-        "hash": "5461357512158592667"
+        "hash": "7231051439700472956"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.scss",
@@ -5353,7 +5353,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "1545366057149239541"
+        "hash": "4483993886824545092"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",

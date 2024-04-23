@@ -435,11 +435,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           readOnly: true,
         },
         {
-          data: 'f',
-          type: 'text',
-          readOnly: true,
-        },
-        {
           data: 'g',
           type: 'text',
           readOnly: true,

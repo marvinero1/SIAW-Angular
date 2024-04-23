@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-permisos-especiales-parametros',
   templateUrl: './permisos-especiales-parametros.component.html',
@@ -17,7 +18,7 @@ import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion
 export class PermisosEspecialesParametrosComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
-    this.validarPost();
+    this.postPassword();
   };
 
   autorizacion: Autorizacion[] = [
@@ -204,6 +205,8 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   ];
 
   textControl: FormControl;
+  fecha_actual = new Date();
+  hora_actual = new Date();
 
   userConn: string;
   user_logueado: string;
@@ -226,7 +229,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   motivo: string;
 
   constructor(private api: ApiService, public dialog: MatDialog,
-    public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>,
+    public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
     public almacenservice: ServicioalmacenService,
@@ -276,21 +279,41 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       })
   }
 
-  validarPost() {
-    if (this.abrir_get === undefined) {
-      console.log("HOLA LOLA UNDEFINED");
-      this.postPassword();
-    } else {
-      this.postPasswordInventario();
-    }
-  }
+  // validarPost() {
+  //   if (this.abrir_get === undefined) {
+  //     console.log("HOLA LOLA UNDEFINED");
+  //     this.postPassword();
+  //   } else {
+  //     this.postPasswordInventario();
+  //   }
+  // }
 
   postPassword(): Promise<boolean> {
+    let hour = this.hora_actual.getHours();
+    let minuts = this.hora_actual.getMinutes();
+    let hora_actual_complete = hour + ":" + minuts;
+    let fecha_actual = new Date();
+
+    let a = {
+      servicio: this.data_inventario_code,
+      descServicio: this.data_inventario,
+      codpersona: this.persona_code,
+      password: this.contrasenia,
+      codempresa: this.BD_storage.bd,
+      dato_a: this.dataA_get,
+      dato_b: this.dataB_get,
+      fechareg: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+      horareg: hora_actual_complete,
+      usuario: this.user_logueado,
+      obs: this.motivo,
+      datos_documento: " "
+    };
+    console.log(a);
+
     return new Promise<boolean>((resolve, reject) => {
       // Verifica si la contrasenia ingresada es la correcta
-      let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgGenPass/verifPermisoEsp/";
-      this.api.create('/seg_adm/oper/prgGenPass/verifPermisoEsp/' + this.userConn + "/" + this.data_inventario_code + "/" + this.persona_code + "/"
-        + this.contrasenia + "/" + this.BD_storage.bd + "/" + this.dataA_get + "/" + this.dataB_get, null)
+      let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/oper/prgGenPass/verifPermisoEsp/";
+      this.api.create('/seg_adm/oper/prgGenPass/verifPermisoEsp/' + this.userConn, a)
         .subscribe({
           next: (datav) => {
             this.permiso_recibido = datav;
@@ -321,42 +344,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     });
   }
 
-  postPasswordInventario() {
-    let data;
-    let value: Boolean;
-    //Verifica si la contrasenia ingresada es la correctar
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgGenPass/verifPermisoEsp/"
-    return this.api.create('/seg_adm/oper/prgGenPass/verifPermisoEsp/' + this.userConn
-      + "/" + this.data_inventario_code +
-      this.data_servicio + "/" + this.persona_code + "/"
-      + this.contrasenia + "/" + this.BD_storage.bd + "/" + this.dataA_get + "/" + this.dataB_get, data)
-      .subscribe({
-        next: (datav) => {
-          this.permiso_recibido = datav;
-          console.log(this.permiso_recibido);
-          this.toastr.success(this.permiso_recibido.resp);
-
-          this.close(true);
-          value = true;
-
-          this._snackBar.open(this.permiso_recibido.resp, '✅', {
-            duration: 2000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-          });
-
-          return value;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-          this._snackBar.open('Contraseña Incorrecta', '❌', {
-            duration: 2000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-          });
-        },
-        complete: () => { }
-      })
-  }
 
   copyToClipboard(): void {
     let copia = "Codigo Servicio: " + this.data_servicio + "Dato A: " + this.data_autorizacionA + "Dato B: " + this.data_autorizacionB

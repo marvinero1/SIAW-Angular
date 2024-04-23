@@ -50,7 +50,6 @@
             matTooltipClass="custom-tooltip">
             <mat-icon class="red">photo_size_select_small</mat-icon>
           </button>
-
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Pagos Cliente"
             matTooltipClass="custom-tooltip" [disabled]="!codigo_cliente" (click)="estadoPagoClientes();">
             <mat-icon class="blue">photo_size_select_small</mat-icon>
@@ -159,12 +158,13 @@
                   <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario"
                     formControlName="codalmacen" id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)"
                     [class.is-invalid]="f.codalmacen.invalid && (f.codalmacen.dirty || f.codalmacen.touched)"
-                    style="margin-left: 6px;">
+                    style="margin-left: 6px;" readonly>
                 </ng-container>
 
                 <div class="input-group-append">
                   <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen();"
-                    style="border-color: #093070;" matTooltip="Buscar Almacen"><i class="fa fa-search"></i>
+                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
+                    [disabled]="true"><i class="fa fa-search"></i>
                   </button>
                 </div>
               </div>
@@ -183,8 +183,7 @@
                 </div>
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                    formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente_modal"
-                    [(ngModel)]="cod_vendedor_cliente"
+                    formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente"
                     [class.is-invalid]="f.codvendedor.invalid && (f.codvendedor.dirty || f.codvendedor.touched)"
                     (blur)="onLeaveVendedor($event)">
                 </ng-container>
