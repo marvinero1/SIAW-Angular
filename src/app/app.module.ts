@@ -213,7 +213,6 @@ import { SaldosInventarioConsolidadoComponent } from '@components/inventario/tom
 import { CatalogoPersonaComponent } from '@components/inventario/toma-inventario-consolidado/catalogo-persona/catalogo-persona.component';
 import { CambiarPasswordComponent } from '@modules/cambiar-password/cambiar-password.component';
 import { ConsolidarInventarioComponent } from '@components/inventario/toma-inventario-consolidado/consolidar-inventario/consolidar-inventario.component';
-import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ValidarPrecioItemComponent } from '@components/inventario/operaciones/precio-item/validar-precio-item/validar-precio-item.component';
 import { ValidarPermisoItemComponent } from '@components/inventario/operaciones/precio-item/validar-permiso-item/validar-permiso-item.component';
 import { PermisoEspecialPasswordComponent } from '@components/seguridad/permiso-especial-password/permiso-especial-password.component';
@@ -237,10 +236,8 @@ import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas
 import { ModalClienteInfoComponent } from '@components/mantenimiento/ventas/modal-cliente-info/modal-cliente-info.component';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
 import { ModalDescuentosComponent } from '@components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component';
-import { ModalGenerarAutorizacionComponent } from '@components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component';
 import { ModalIdtipoComponent } from '@components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
-import { ModalPasswordComponent } from '@components/mantenimiento/ventas/modal-password/modal-password.component';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
@@ -415,6 +412,9 @@ import es from '@angular/common/locales/es';
 import { ModalIvaComponent } from '@components/mantenimiento/ventas/modal-iva/modal-iva.component';
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { ConceptosmovimientosmercaderiaEditComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/conceptosmovimientosmercaderia-edit/conceptosmovimientosmercaderia-edit.component';
+import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
+import { ModalPasswordComponent } from '@components/seguridad/modal-password/modal-password.component';
+import { ModalGenerarAutorizacionComponent } from '@components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -445,8 +445,8 @@ registerPlugin(UndoRedo);
         ItemEditComponent, ModalPrecioControlComponent, ParametroUsuarioComponent, BancoComponent, MenuFondosComponent, MatrizItemsComponent,
         NumpedidomercaderiaEditComponent, RolesCreateComponent, RolesEditComponent, MenuInventarioComponent, CatalogoProformasComponent,
         MenuCuentasCobrarComponent, MenuContabilidadComponent, MenuActivosFijosComponent, MenuPlanillasPersonalComponent, NotaRemisionComponent,
-        HerramientasComponent, ReportesComponent, AyudaComponent, SesionExpiradaComponent, ModalVendedorComponent, ModalGenerarAutorizacionComponent,
-        FacturaNotaRemisionComponent, InterbancosComponent, ClientesComponent, ClientesIgualesComponent, ModalPasswordComponent,
+        HerramientasComponent, ReportesComponent, AyudaComponent, SesionExpiradaComponent, ModalVendedorComponent, ModalPasswordComponent,
+        FacturaNotaRemisionComponent, InterbancosComponent, ClientesComponent, ClientesIgualesComponent, PermisosEspecialesParametrosComponent,
         MenuComprasComponent, RefreshPasswordComponent, TransformacionDigitalComponent, PageNotFoundComponent, ModalClienteComponent,
         ModalClienteInfoComponent, ModalClienteDireccionComponent, DocumentationErrorsComponent, ModalAlmacenComponent,
         ModalPrecioVentaComponent, ModalDescuentosComponent, ModalItemsComponent, ModalIdtipoComponent, ModalSaldosComponent,
@@ -457,7 +457,7 @@ registerPlugin(UndoRedo);
         ParametrosFacturacionSIATComponent, CrearTomaInventarioComponent, TomaInventarioConsolidadoComponent, CatalogoInventarioComponent,
         PrecioItemComponent, ActualizarPrecioItemComponent, ActualizarStockActualComponent, ExportarImportarSaldosComponent,
         GruposInventariosComponent, SaldosInventarioConsolidadoComponent, CatalogoPersonaComponent, CambiarPasswordComponent,
-        ConsolidarInventarioComponent, PermisosEspecialesParametrosComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent,
+        ConsolidarInventarioComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent,
         ValidarPrecioItemComponent, ValidarPermisoItemComponent, PermisoEspecialPasswordComponent, ModalZonaComponent,
         ParametroUsuarioComponent, NotasAjustesComponent, CatalogoNotasMovimientoComponent, CatalogoMovimientoMercaderiaComponent,
         ValidarComponent, RegistrarInventarioGrupoComponent, ConfirmacionNotasAjustesComponent, CatalogoPuntoVentaComponent,
@@ -495,7 +495,7 @@ registerPlugin(UndoRedo);
         CuentaEfectivoCuentasContablesComponent, CuentasContablesComponent, CuentasCatalogoComponent, NumeracionComprobantesComponent,
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
-        ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent,
+        ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent,
 
 
 

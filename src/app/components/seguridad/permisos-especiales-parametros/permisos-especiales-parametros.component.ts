@@ -7,8 +7,8 @@ import { LogService } from '@services/log-service.service';
 import { Autorizacion } from '@services/modelos/objetos';
 import { ToastrService } from 'ngx-toastr';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ModalGenerarAutorizacionComponent } from '@components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
+import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
 @Component({
   selector: 'app-permisos-especiales-parametros',
   templateUrl: './permisos-especiales-parametros.component.html',
@@ -225,7 +225,8 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   persona_code: any = [];
   motivo: string;
 
-  constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>,
+  constructor(private api: ApiService, public dialog: MatDialog,
+    public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
     public almacenservice: ServicioalmacenService,
@@ -325,7 +326,8 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     let value: Boolean;
     //Verifica si la contrasenia ingresada es la correctar
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgGenPass/verifPermisoEsp/"
-    return this.api.create('/seg_adm/oper/prgGenPass/verifPermisoEsp/' + this.userConn + "/" + this.data_inventario_code +
+    return this.api.create('/seg_adm/oper/prgGenPass/verifPermisoEsp/' + this.userConn
+      + "/" + this.data_inventario_code +
       this.data_servicio + "/" + this.persona_code + "/"
       + this.contrasenia + "/" + this.BD_storage.bd + "/" + this.dataA_get + "/" + this.dataB_get, data)
       .subscribe({

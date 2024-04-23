@@ -1,0 +1,62 @@
+<div class="text-center" style="background-color: #c0ffc0;">
+  <h1 mat-dialog-title>Generar Autorización</h1>
+
+  <div mat-dialog-content>
+    <div class="container">
+      <div class="row">
+        <div class="col-md" style="font-size: 3.0rem;">
+          <img src="assets/img/llaves.png" alt="Llaves" width="70px;" height="70px;"
+            style="display:block;margin: auto;">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 7px;"><u>Servicio</u></mat-label>
+          <select [(ngModel)]="sevicio_select" required>
+            <option *ngFor="let autorizacions of autorizacion" [value]="autorizacions.codigo">
+              <strong>{{ autorizacions.codigo }}</strong> - {{ autorizacions.descripcion }}
+              <hr style="border-top: 1px solid #093070;margin-top: 0px !important;margin-bottom: 1px !important;">
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="input-group">
+          <mat-label style="padding-right: 5px; padding-left: 6px;padding-block-start: 5px;"><u>Almacen</u></mat-label>
+          <input type="text" matInput [(ngModel)]="cod_almacen_cliente.codigo" disabled required>
+
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
+              style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
+              matTooltip="Buscar Almacen">
+              <i class="fa fa-search"></i>
+            </button>
+            <div style="padding-top: 0.3rem;">{{ cod_almacen_cliente.descripcion }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 13px;"><u>Dato A</u></mat-label>
+          <input type="text" matInput style="width: 90%;" [(ngModel)]="datoA" maxlength="12" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md">
+          <mat-label style="padding-right: 13px;"><u>Dato B</u></mat-label>
+          <input type="text" matInput style="width: 90%;" [(ngModel)]="datoB" maxlength="12" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="mat-dialog-actions" mat-dialog-actions style="margin: auto;display: block;">
+      <button mat-raised-button class="success" (click)="modalPermisoEspecial();">
+        Generar <i class="fa fa-cog"></i></button>
+      <button mat-raised-button class="danger" (click)="close();"> Cancelar <i class="fa fa-times"></i></button>
+    </div>
+  </div>
+</div>

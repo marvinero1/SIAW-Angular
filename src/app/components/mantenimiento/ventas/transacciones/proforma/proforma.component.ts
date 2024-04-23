@@ -35,7 +35,6 @@ import { VerificarCreditoDisponibleComponent } from '../../verificar-credito-dis
 import { AnticiposProformaComponent } from '../../anticipos-proforma/anticipos-proforma.component';
 import { ModalEtiquetaComponent } from '../../modal-etiqueta/modal-etiqueta.component';
 import { ModalTransfeProformaComponent } from '../../modal-transfe-proforma/modal-transfe-proforma.component';
-import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ServicioTransfeAProformaService } from '../../modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalEstadoPagoClienteComponent } from '../../modal-estado-pago-cliente/modal-estado-pago-cliente.component';
 import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
@@ -48,6 +47,7 @@ import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-
 import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-total.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta.service';
+import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 
 
 @Component({
@@ -2033,7 +2033,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.fletepor = proforma.cabecera.fletepor;
     this.tipoentrega = proforma.cabecera.tipoentrega;
     this.peso = proforma.cabecera.peso;
-
+    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real
 
     this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
@@ -2055,9 +2055,87 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.iva = 0;
     this.total = proforma.cabecera.total;
 
+
+
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
     this.veproforma1 = proforma.detalle;
-    this.cod_descuento_total = proforma.descuentos;
+    this.array_de_descuentos_ya_agregados = proforma.descuentos;
+    //this.cod_descuento_total = proforma.descuentos;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = proforma.cabecera

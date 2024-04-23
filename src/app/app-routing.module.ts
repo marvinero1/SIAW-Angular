@@ -110,11 +110,12 @@ import { NumRecepcionImportacionComponent } from '@components/mantenimiento/impo
 import { SucursalComponent } from '@components/mantenimiento/contabilidad/sucursal/sucursal.component';
 import { PlanCuentaComponent } from '@components/mantenimiento/contabilidad/plan-cuenta/plan-cuenta.component';
 import { NumeracionComprobantesComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component';
+import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
 const routes: Routes = [
-    { 
+    {
         path: '',
         component: MainComponent,
         canActivate: [AuthGuard],
@@ -126,216 +127,221 @@ const routes: Routes = [
             },
             // mantenimiento
             {
-                path: 'admin/mante/almacen', 
+                path: 'admin/mante/almacen',
                 component: AlmacenComponent
             },
             {
                 path: 'admin/mante/area',
                 component: AreaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'administracion/mantenimiento/localidades',
                 component: LocalidadesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'administracion/mantenimiento/idproformausuario',
                 component: IdProformaUsuarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'administracion/mantenimiento/vehiculo',
                 component: VehiculoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
-            
+
             {
                 path: 'admin/mante/empresa',
                 component: EmpresaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/moneda',
                 component: MonedaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/usuarios',
                 component: UsuarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/departamentoPais',
                 component: DptopaisComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/provinciasDepartamentoPais',
                 component: ProvinciadptopaisComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/unidadNegocio',
                 component: UnidadnegocioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/mante/tipocambio',
                 component: TipocambioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/administracion/periodos-sistema',
                 component: PeriodosSistemaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/administracion/tarifa-permitida-usuario',
                 component: TarifaPermitidasUsuarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/seguridad/permisosEspeciales',
                 component: PermisosEspecialesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/item',
                 component: ItemComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/lineaItem',
                 component: LineaproductoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/grupoLinea',
                 component: GruposlineasComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/grupoLineaDescuentos',
                 component: GruposlineasdescuentosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/unidadMedida',
                 component: UnidadmedidaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/rosca',
                 component: RoscaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/terminacion',
                 component: TerminacionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/resistencia',
                 component: ResistenciaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/rubro',
                 component: RubroComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/conceptoMovimientoMercaderia',
                 component: ConceptosmovimientosmercaderiaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/conceptoPedidoMercaderia',
                 component: NumpedidomercaderiaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
                 //numeracionTipoPedidoMercaderia
             },
             {
                 path: 'mantenimiento/inventario/numeracionconocimientoCarga',
                 component: TipoconocimientocargaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/numNotasMovimiento',
                 component: NumnotasdemovimientoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/numeracionSolicitudUrgente',
                 component: NumsolicitudurgenteComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/inventario/numeracionInventarioFisico',
                 component: TipoinventarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/rolAcesso/accesos',
                 component: RolesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/cliente',
                 component: ClientesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/cliente_iguales',
                 component: ClientesIgualesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
 
             {
                 path: 'sistema/documentacion/errores',
                 component: DocumentationErrorsComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'sistema/consultas_externas/interbancos',
                 component: InterbancosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/siat/parametrosFacturacionSIAT',
                 component: ParametrosFacturacionSIATComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'mantenimiento/generar_autorizaciones_especiales',
+                component: PermisosEspecialesParametrosComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/inventarioFisico/inventario',
                 component: CrearTomaInventarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/inventarioFisico/tomaInventario',
                 component: TomaInventarioConsolidadoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/operaciones/definirPrecioItem',
                 component: PrecioItemComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/saldoInventario/actualizarStockActual',
                 component: ActualizarStockActualComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/ExportarImportarSaldos',
                 component: ExportarImportarSaldosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'inventario/inventarioFisico/RegistrarTomaInventarioGrupo',
                 component: RegistrarInventarioGrupoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
 
 
@@ -343,65 +349,65 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/ventas/puntoVenta',
                 component: PuntoVentaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/descuentosEspeciales',
                 component: DescuentosEspecialesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/nivelesDescuentos',
                 component: NivelesDescuentosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/lugares',
                 component: LugaresComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/clienteIguales',
                 component: ClientesIgualesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
-            
+
             {
                 path: 'mantenimiento/ventas/tiposCreditos',
                 component: TiposCreditoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/vendedores',
                 component: VendedoresComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/recargoDocumento',
                 component: RecargoDocumentoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/planPagoClientes',
                 component: PlanPagoClientesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/observacionesHojaRuta',
                 component: ObservacionesHojaRutaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/numTipoDocumentoVenta',
                 component: NumTipoDocumentoVentaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/ventas/numSolicitudMercaderia',
                 component: SolicitudesDescuentoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
-            
+
             //fin ventas
 
 
@@ -411,82 +417,82 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/fondos/bancos',
                 component: BancoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/cuentasBancarias',
                 component: CuentasBancariasComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionTransferencias',
                 component: NumeraciontransferenciasComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionRetiroBancario',
                 component: NumretirobancarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionReposicion',
                 component: NumreposicionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionPagoDeudor',
                 component: NumpagodeudorComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionMonFondos',
                 component: NummovfondosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionEntregaCargo',
                 component: NumentregascargoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionDevoDeudor',
                 component: NumdevolucionesdeudorComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionDepoCliente',
                 component: NumdepositosclienteComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionDepoBancario',
                 component: NumdepositosbancariosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionChequeClient',
                 component: NumchequesclientesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/numeracionLibroBancos',
                 component: NumlibrosbancosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/cuentasEfectivo',
                 component: CuentasEfectivoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/deudores',
                 component: DeudoresComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/fondos/deudoresCompuestos',
                 component: DeudoresCompuestosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             //Fondos Fin
 
@@ -496,47 +502,47 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionAnticipacionCliente',
                 component: NumeracionAnticipoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionCobranza',
                 component: NumeracionCobranzaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionDesctPagoMora',
                 component: NumeracionPagosMoraComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionDevolucionAnticipos',
                 component: NumeracionDevolucionAnticiposComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionTalonarioRecibos',
                 component: TalonarioRecibosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionTipoPago',
                 component: TipoPagoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionTipoAjuste',
                 component: NumeracionTipoAjusteComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionDesctMora',
                 component: NumeracionDescuentoPorMoraComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/cuentasCobrar/numeracionDescVariosDirectos',
                 component: NumeracionDesctVariosDirectosComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             //fin cuentas por cobrar
 
@@ -546,27 +552,27 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/importaciones/numeracion/pedidos',
                 component: NumPedidosImportacionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/importaciones/numeracion/proformas',
                 component: NumProformaImportacionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/importaciones/numeracion/ordenCompra',
                 component: NumOrdCompraComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/importaciones/numeracion/embarque',
                 component: NumEmbarqueImportacionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/importaciones/numeracion/recepcion',
                 component: NumRecepcionImportacionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             //fin mantenimiento/importaciones
 
@@ -577,27 +583,27 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/compras/compradores',
                 component: CompradoresComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/compras/numComprasMenores',
                 component: NumcomprasmenoresComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/compras/numeracionPago',
                 component: NumeracionDePagoComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/compras/numProvisionCompra',
                 component: NumprovisioncompraComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/compras/percepcionesRetenciones',
                 component: PercepcionesretencionesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             //fin mantenimiento/compras
 
@@ -611,17 +617,17 @@ const routes: Routes = [
             {
                 path: 'mantenimiento/contabilidad/sucursal',
                 component: SucursalComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/contabilidad/plancuenta',
                 component: PlanCuentaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'mantenimiento/contabilidad/numComprobantes',
                 component: NumeracionComprobantesComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
 
             // fin mantenimiento/contabilidad
@@ -631,53 +637,53 @@ const routes: Routes = [
 
 
 
-            
+
             {
                 path: 'usuario/parametros_usuarios',
                 component: ParametroUsuarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'archivo/parametros_empresa',
                 component: ParamempresaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'venta/transacciones/proforma',
                 component: ProformaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'venta/transacciones/nota-remision',
                 component: NotaRemisionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'venta/transacciones/nota-remision-factura',
                 component: FacturaNotaRemisionComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/system/log',
                 component: LogComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin/system/log_usuario',
                 component: LogUsuarioComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
-            
-            
 
-            
+
+
+
             // ventas
             {
                 path: 'venta/transacciones/proforma',
                 component: ProformaComponent,
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
-            
+
             // {
             //     path: 'blank',
             //     component: BlankComponent
@@ -693,18 +699,18 @@ const routes: Routes = [
             {
                 path: '',
                 component: DashboardComponent,
-                canActivate:[AuthGuard]
-            },  
+                canActivate: [AuthGuard]
+            },
             {
                 path: 'lab',
                 component: LaboratorioComponent
-            },  
+            },
         ]
     },
     {
         path: 'login',
         component: LoginComponent,
-        
+
     },
     {
         path: 'register',
@@ -727,11 +733,11 @@ const routes: Routes = [
     },
 
 
-    {path: '**', pathMatch:'full', component:PageNotFoundComponent}
+    { path: '**', pathMatch: 'full', component: PageNotFoundComponent }
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, {})],
     exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

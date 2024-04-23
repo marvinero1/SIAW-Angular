@@ -14,11 +14,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AnticiposProformaComponent implements OnInit {
 
+  public fecha_desde = new Date();
+  public fecha_hasta = new Date();
+
   anticipos_asignados_table: any = [];
   data_tabla_anticipos: any = [];
-
-  fecha_desde = new Date();
-  fecha_hasta = new Date();
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -35,11 +35,11 @@ export class AnticiposProformaComponent implements OnInit {
   userConn: any;
   usuarioLogueado: any;
   BD_storage: any;
+  nombre_ventana: string = "docininvconsol.vb";
 
   public fecha_formateada1;
   public fecha_formateada2;
 
-  nombre_ventana: string = "docininvconsol.vb";
   public ventana = "Toma de Inventario Consolidado"
   public detalle = "ActualizarStock-create";
   public tipo = "ActualizarStock-CREATE";

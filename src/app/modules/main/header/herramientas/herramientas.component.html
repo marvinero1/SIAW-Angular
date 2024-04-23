@@ -1,24 +1,26 @@
 <a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" style="font-size: 0.95rem;">
   <span>Herramientas <mat-icon style="padding-block-start: 7px;">keyboard_arrow_down</mat-icon></span>
 </a>
- 
+
 <mat-menu #mantenimiento="matMenu">
   <button mat-menu-item href="/admin/mante/area">Administrar Permisos Especiales</button>
-  <button mat-menu-item >Actualizar Información de Clientes</button>
-  <button mat-menu-item >Calculo de Precios</button>
-  <button mat-menu-item >Comentar Solicitud de Descuentos</button>
+  <button mat-menu-item>Actualizar Información de Clientes</button>
+  <button mat-menu-item>Calculo de Precios</button>
+  <button mat-menu-item>Comentar Solicitud de Descuentos</button>
   <button mat-menu-item [matMenuTriggerFor]="herramientas_datos">Datos</button>
   <button mat-menu-item [matMenuTriggerFor]="herramientas_etiquetas">Etiquetas</button>
   <button mat-menu-item [matMenuTriggerFor]="herramientas_exportar">Exportar a Otro Sistema</button>
   <button mat-menu-item [matMenuTriggerFor]="herramientas_datos_sia">Exportar/Importar Datos SIA</button>
-  <button mat-menu-item >Generar Autorización Especial</button>
-  <button mat-menu-item >Observacion/Aprobación de Solicitudes Varias</button>
-  <button mat-menu-item >Observacion/Aprobación de Solicitudes de Descuentos</button>
-  <button mat-menu-item >Registro de Cambios y Modificaciones</button>
-  <button mat-menu-item >Revertir Creditos Caducos</button>
-  <button mat-menu-item >Actualizar Saldos de Otra Agencia</button>
-  <button mat-menu-item >Abrir Archivos de Rutas</button>
-  <button mat-menu-item >Cambiar Placa de Camión</button>
+  <button mat-menu-item
+    (click)="guardarRutaLOG('ModalGenerarAutorizacionComponent', 'ModalGenerarAutorizacionComponent');">Generar
+    Autorización Especial ✅</button>
+  <button mat-menu-item>Observacion/Aprobación de Solicitudes Varias</button>
+  <button mat-menu-item>Observacion/Aprobación de Solicitudes de Descuentos</button>
+  <button mat-menu-item>Registro de Cambios y Modificaciones</button>
+  <button mat-menu-item>Revertir Creditos Caducos</button>
+  <button mat-menu-item>Actualizar Saldos de Otra Agencia</button>
+  <button mat-menu-item>Abrir Archivos de Rutas</button>
+  <button mat-menu-item>Cambiar Placa de Camión</button>
 </mat-menu>
 
 <!-- <mat-menu #herramientas_datos="matMenu">
@@ -62,4 +64,3 @@
   <a mat-menu-item>Items</a>
   <a mat-menu-item>Items Embarcados</a>
 </mat-menu>
-
