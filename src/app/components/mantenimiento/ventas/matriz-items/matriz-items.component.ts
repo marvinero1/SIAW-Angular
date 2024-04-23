@@ -653,6 +653,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
+
         fecha: this.fecha_get,
       }
     });

@@ -46,10 +46,8 @@ export class ModalDescuentosComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalDescuentosComponent>, private api: ApiService,
     public servicioDescuento: DescuentoService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
-
-    if (this.detalle_get) {
-      this.detalle_get = detalle.detalle;
-    }
+    this.detalle_get = detalle.detalle;
+    console.log(this.detalle_get, detalle.detalle);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -121,7 +119,6 @@ export class ModalDescuentosComponent implements OnInit {
         precio_sugerido: this.descuentos_get.codTarifa,
       });
     }
-
     this.close();
   }
 

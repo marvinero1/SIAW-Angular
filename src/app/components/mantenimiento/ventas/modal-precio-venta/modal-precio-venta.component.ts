@@ -45,12 +45,8 @@ export class ModalPrecioVentaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalPrecioVentaComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     public servicioPrecioVenta: ServicioprecioventaService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
-
-    if (this.detalle_get) {
-      this.detalle_get = detalle.detalle;
-    }
-
-    console.log(this.detalle_get);
+    this.detalle_get = detalle.detalle;
+    console.log(this.detalle_get, detalle.detalle);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -62,7 +58,6 @@ export class ModalPrecioVentaComponent implements OnInit {
 
   private _filter(name: string): inTarifa[] {
     const filterValue = name.toLowerCase();
-
     return this.options.filter(option => option.codigo.toString().includes(filterValue));
   }
 
@@ -78,7 +73,6 @@ export class ModalPrecioVentaComponent implements OnInit {
 
   getTarifa() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuario)
       .subscribe({
         next: (datav) => {

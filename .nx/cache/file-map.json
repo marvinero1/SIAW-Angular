@@ -4269,7 +4269,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.ts",
-        "hash": "15720910357978852456"
+        "hash": "18070044659534515282"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/precios-permitido-desct/precios-permitido-desct.component.html",
@@ -4357,7 +4357,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "4945020869854692012"
+        "hash": "12625247912810375747"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4560,22 +4560,6 @@
         "hash": "3711792033610857065"
       },
       {
-        "file": "src/app/components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component.html",
-        "hash": "9163192949302569161"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component.scss",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component.spec.ts",
-        "hash": "9661439255218908822"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-generar-autorizacion/modal-generar-autorizacion.component.ts",
-        "hash": "16458281055441069095"
-      },
-      {
         "file": "src/app/components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component.html",
         "hash": "8217976766812581865"
       },
@@ -4624,22 +4608,6 @@
         "hash": "2392182694145172828"
       },
       {
-        "file": "src/app/components/mantenimiento/ventas/modal-password/modal-password.component.html",
-        "hash": "4433899227392429338"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-password/modal-password.component.scss",
-        "hash": "10523035510869779914"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-password/modal-password.component.spec.ts",
-        "hash": "5223220897031697128"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-password/modal-password.component.ts",
-        "hash": "18157609883071741541"
-      },
-      {
         "file": "src/app/components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component.html",
         "hash": "6513050327668389834"
       },
@@ -4653,7 +4621,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component.ts",
-        "hash": "5977599881114217458"
+        "hash": "4456762596821821851"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.html",
@@ -5245,7 +5213,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "17609663092697646269"
+        "hash": "13671546427712553087"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5322,6 +5290,38 @@
       {
         "file": "src/app/components/menu-item/menu-item.component.ts",
         "hash": "12124624422616175544"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.html",
+        "hash": "1592951242205910347"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.spec.ts",
+        "hash": "9661439255218908822"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.ts",
+        "hash": "578458848562986705"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-password/modal-password.component.html",
+        "hash": "4433899227392429338"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-password/modal-password.component.scss",
+        "hash": "10523035510869779914"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-password/modal-password.component.spec.ts",
+        "hash": "5223220897031697128"
+      },
+      {
+        "file": "src/app/components/seguridad/modal-password/modal-password.component.ts",
+        "hash": "17787288039161179638"
       },
       {
         "file": "src/app/components/seguridad/permiso-especial-password/permiso-especial-password.component.html",
@@ -6366,18 +6366,6 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
-      },
-      {
-        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.ts",
-        "hash": "578458848562986705"
-      },
-      {
-        "file": "src/app/components/seguridad/modal-password/modal-password.component.ts",
-        "hash": "17787288039161179638"
-      },
-      {
-        "file": "src/app/components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component.html",
-        "hash": "1592951242205910347"
       }
     ],
     "projectFileMap": {}

@@ -1507,10 +1507,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   // MAT-TAB-GROUP RESULTADO DE VALIDACION
   getDetalleItemResultadoValidacion(item, tarifa, descuento, cantidad) {
-
     let data: any = [
-
-
     ];
 
     this.fecha_actual_empaque = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
@@ -1820,26 +1817,18 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   TPChangeMatrix(element: any, newValue: number) {
-    this.total = 0;
-    this.subtotal = 0;
-    this.iva = 0
-    this.des_extra = 0;
-    this.recargos = 0;
-
     console.log(element);
 
     // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
+    // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
     element.codtarifa = Number(newValue);
 
     // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
     console.log(this.dataSource.filteredData);
-
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
   }
 
-
-
-  // Función que se llama cuando se hace clic en el input
+  // // Función que se llama cuando se hace clic en el input
   inputClickedPrecioVenta(elemento: any) {
     // Aquí puedes hacer lo que necesites con el elemento
     console.log('Elemento seleccionado:', elemento);
@@ -1850,6 +1839,68 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
     });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   inputClickedDescuento(elemento: any) {
     // Aquí puedes hacer lo que necesites con el elemento
@@ -1929,7 +1980,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   calcularTotalPedidoXPU(newValue: number, preciolista: number) {
-
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (newValue !== undefined && preciolista !== undefined) {
       // console.log(input);
@@ -3059,9 +3109,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-
-
-
   eliminarItemTabla(posicion, coditem) {
     console.log(posicion, coditem);
     // const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden_creciente !== posicion && i.coditem !== coditem);
@@ -3116,6 +3163,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   modalPrecioVentaDetalle(): void {
+    console.log("F4 DEL CATALOGO PRECIO VENTA DETALLE");
     this.dialog.open(ModalPrecioVentaComponent, {
       width: 'auto',
       height: 'auto',
@@ -3133,6 +3181,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   modalDescuentoEspecialDetalle(): void {
+    console.log("F4 DEL CATALOGO DESCUENTO DETALLE");
     this.dialog.open(ModalDescuentosComponent, {
       width: 'auto',
       height: 'auto',
