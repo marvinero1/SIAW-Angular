@@ -4521,11 +4521,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
-        "hash": "16910825100187617584"
+        "hash": "1888131193169068710"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.scss",
-        "hash": "3275534042297945738"
+        "hash": "12539500840233342832"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.spec.ts",
@@ -4533,7 +4533,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.ts",
-        "hash": "2243917498504234063"
+        "hash": "1603075847100312169"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.html",
@@ -5201,11 +5201,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "2898714550933154689"
+        "hash": "17234786667744944195"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "7182058179112463018"
+        "hash": "14224074000552214971"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5213,7 +5213,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13813805573671938234"
+        "hash": "13925015924143885512"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5345,7 +5345,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.scss",
-        "hash": "3407405620371203034"
+        "hash": "5012357456195683235"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.spec.ts",
@@ -5353,7 +5353,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "4483993886824545092"
+        "hash": "18147860843237187043"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",

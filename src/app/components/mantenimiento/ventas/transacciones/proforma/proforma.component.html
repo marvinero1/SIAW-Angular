@@ -43,11 +43,12 @@
             (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
+            matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip">
             <i class="fa fa-inbox gray" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Estado Mora"
-            matTooltipClass="custom-tooltip">
+            matTooltipClass="custom-tooltip" (click)="estadoMoraValidacion()">
             <mat-icon class="red">photo_size_select_small</mat-icon>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Pagos Cliente"
@@ -62,7 +63,7 @@
             <i class="fa fa-question-circle black" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Validar Empaques">
+            matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()">
             <i class="fa fa-inbox red" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
@@ -77,7 +78,7 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="ponerFocoEnInput();">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="simularTab()">
             <i class="fa fa-clone green" aria-hidden="true"></i>
           </button>
         </div>
@@ -149,7 +150,8 @@
                     style="padding: 10px 0px 0px 0px;border: 0 !important;">
                     <u>
                       <div *ngIf="submitted && f.codalmacen.invalid" class="invalid-feedback">
-                        <mat-icon>info</mat-icon>
+                        <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Almacen">info
+                        </mat-icon>
                       </div> Almacen
                     </u>
                   </span>
@@ -176,7 +178,8 @@
                   <span class="input-group-text form-control-sm"
                     style="padding: 10px 0px 0px 0px;border: 0 !important;">
                     <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback">
-                      <mat-icon style="height: 22px !important;">info</mat-icon>
+                      <mat-icon style="height: 22px !important;" matTooltipClass="custom-tooltip"
+                        matTooltip="Validar Vendedor">info</mat-icon>
                     </div>
                     <u>Vendedor</u>
                   </span>
@@ -202,7 +205,8 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
                 <div *ngIf="submitted && f.preparacion.invalid" class="invalid-feedback">
-                  <mat-icon style="height: 21px !important;">info</mat-icon>
+                  <mat-icon style="height: 21px !important;" matTooltipClass="custom-tooltip"
+                    matTooltip="Validar Preparación">info</mat-icon>
                 </div>
                 <u>Preparación</u>
               </span>
@@ -291,7 +295,7 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 8px 4px 0px 48px !important;border: 0 !important;">
                 <div *ngIf="submitted && f.tipopago.invalid" class="invalid-feedback">
-                  <mat-icon>info</mat-icon>
+                  <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Tipo de Pago">info</mat-icon>
                 </div>
                 <u> Tipo de Pago </u>
               </span>
@@ -334,13 +338,14 @@
         <div class="col col-lg-4" style="float: right;">
           <div class="input-group">
             <div class="input-group-prepend">
-              <div *ngIf="submitted && f.codcliente.invalid" class="invalid-feedback" style="display: block;">
-                <mat-icon>info</mat-icon>
-              </div>
               <span class="input-group-text form-control-sm" style="padding: 9px 0px 0px 18px;border: 0 !important;">
+                <div *ngIf="submitted && f.codcliente.invalid" class="invalid-feedback" style="display: block;">
+                  <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Cliente">info</mat-icon>
+                </div>
                 <u> Cod. Cliente </u>
               </span>
             </div>
+
             <input type="text" class="form-control cliente form-control-sm" formControlName="codcliente"
               [(ngModel)]="codigo_cliente" style="margin-left: 6.5px;" id="inputCatalogoCliente"
               placeholder="COD. CLIENTE"
@@ -405,12 +410,11 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <div *ngIf="submitted && f.tipo_docid.invalid" class="invalid-feedback" style="display: block;">
-                <mat-icon>info</mat-icon>
-              </div>
-
               <span class="input-group-text form-control-sm" style="padding: 9px 3px 2px 42px;border: 0 !important;">
-                <u>Doc. Id. </u>
+                <div *ngIf="submitted && f.tipo_docid.invalid" class="invalid-feedback" style="display: block;">
+                  <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Doc Id">info</mat-icon>
+                </div>
+                <u> Doc. Id.</u>
               </span>
             </div>
 
@@ -425,12 +429,13 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback" style="display: block;">
-                <mat-icon>info</mat-icon>
-              </div>
               <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;">
-                <u>N.I.T</u>
+                <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback" style="display: block;">
+                  <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar NIT">info</mat-icon>
+                </div>
+                <u> N.I.T</u>
               </span>
+
               <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
                 [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
                 [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
@@ -523,7 +528,8 @@
         <mat-tab-group style="height: 40vh !important; max-height: 40vh;" class="miTabGroupDetalle" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
-              style="padding: 0 1px 0 19px !important;" matSort>
+              style="padding: 0 1px 0 19px !important;" id="tabla_detalle" matSort>
+
               <!-- orden Column -->
               <ng-container matColumnDef="orden">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-orden"
@@ -533,22 +539,22 @@
                   <span style="width: 50%; float: left;">
                     <i class="fa fa-trash"
                       style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer"
-                      (click)="eliminarItemTabla(i + 1, element?.coditem);"></i>
+                      (click)="eliminarItemTabla(i + 1, element?.coditem);">
+                    </i>
                   </span>
                   {{ i + 1 }}
                 </td>
               </ng-container>
 
               <!-- el numerito -->
-              <tr mat-row *ngFor="let item of array_items_carrito_y_f4_catalogo; let i = index">
+              <!-- <tr mat-row *ngFor="let item of array_items_carrito_y_f4_catalogo; let i = index">
                 <td mat-cell *matCellDef="let element" class="td"
                   style="text-align: center !important; padding: 0px 0px 0px 0px !important">
                   <span style="width: 50%; float: left;"><i class="fa fa-trash"
                       style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer"></i>
                   </span>
-                  {{ i + 1 }}
                 </td>
-              </tr>
+              </tr> -->
               <!-- fin orden column-->
 
               <!-- Item Column -->
@@ -557,7 +563,7 @@
                   style="text-align: center !important; cursor: pointer;">
                   <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                 </th>
-                <td mat-cell *matCellDef="let element; let i = index"
+                <td mat-cell *matCellDef="let element; let i = index" style="cursor:pointer;"
                   (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}">
                   <div>
@@ -565,7 +571,6 @@
                   </div>
                 </td>
               </ng-container>
-
 
               <!-- Descripcion Column -->
               <ng-container matColumnDef="descripcion">
@@ -792,7 +797,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cant. Pedida en
                   Conjunto </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: right !important; padding: 0 0px 0 0px
                   !important">{{ element.cantidad_conjunto | number: '1.2-2' }}
                 </td>
               </ng-container>
@@ -811,8 +816,9 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cant. Pedida en Suelto
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">{{ element.cantidad_suelta | number: '1.2-2' }}
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: right !important; padding: 0px 2px 0px 9px !important;">
+                  {{ element.cantidad_suelta | number: '1.2-2' }}
                 </td>
               </ng-container>
 
@@ -904,7 +910,7 @@
               <ng-container matColumnDef="cantidad">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Actual
                 </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
                   !important">{{ element.cantidad | number: '1.2-2' }}</td>
               </ng-container>
 
@@ -1187,7 +1193,8 @@
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 8px;border: 0 !important;">
                               <div *ngIf="submitted && f.transporte.invalid" class="invalid-feedback">
-                                <mat-icon>info</mat-icon>
+                                <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Transporte">info
+                                </mat-icon>
                               </div>
                               <u>Medio Transporte </u>
                             </span>
@@ -1212,7 +1219,8 @@
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
                               <div *ngIf="submitted && f.nombre_transporte.invalid" class="invalid-feedback">
-                                <mat-icon>info</mat-icon>
+                                <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Nombre Transporte">info
+                                </mat-icon>
                               </div>
                               <u> Nombre Transporte </u>
                             </span>
@@ -1235,7 +1243,8 @@
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 8px;border: 0 !important;">
                               <div *ngIf="submitted && f.fletepor.invalid" class="invalid-feedback">
-                                <mat-icon>info</mat-icon>
+                                <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Flete Por">info
+                                </mat-icon>
                               </div>
                               <u>Flete Pagado Por</u>
                             </span>
@@ -1256,7 +1265,8 @@
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
                               <div *ngIf="submitted && f.tipoentrega.invalid" class="invalid-feedback">
-                                <mat-icon>info</mat-icon>
+                                <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar T. Entrega">info
+                                </mat-icon>
                               </div>
                               <u>T. Entrega</u>
                             </span>

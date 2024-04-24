@@ -48,8 +48,6 @@ import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-tot
 import { MatTabGroup } from '@angular/material/tabs';
 import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta.service';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
-
-
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -376,7 +374,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     'nit', 'fecha', 'total', 'item', 'cantidad', 'moneda', 'aprobada', 'transferida'];
   //TABS DEL FOOTER PROFORMA
 
-
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
@@ -587,15 +584,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.etiqueta_get_modal_etiqueta = data.etiqueta;
     });
     //fin Etiqueta
-
-
-
-
-
-
-
-
-
 
     //ItemProcesarSubTotal
     this.itemservice.disparadorDeItemsSeleccionadosProcesadosdelSubTotal.subscribe(data => {
@@ -983,7 +971,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         nroidpf_complemento: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        fechalimite_dosificacion: "2030-04-10",
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -1015,7 +1003,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("VALIDACION PARA T. ENTREGA")
+          // this.toastr.error("VALIDACION PARA T. ENTREGA")
         },
         complete: () => { }
       })
@@ -1817,17 +1805,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   onLeavePrecioVentaDetalle(event: any, elemento) {
-
     console.log('Elemento seleccionado:', elemento);
     this.elementoSeleccionadoPrecioVenta = elemento;
 
-    this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
-      console.log("Recibiendo Descuento: ", data);
-      this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
-    });
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
 
     const inputValue = event.target.value;
     let entero = Number(this.elementoSeleccionadoPrecioVenta.codtarifa);
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
 
@@ -1837,6 +1822,42 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("NO ENCONTRADO VALOR DE INPUT");
     } else {
       event.target.value = entero;
+
+      console.log('Elemento seleccionado:', elemento);
+      this.elementoSeleccionadoDescuento = elemento;
+
+      this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
+        console.log("Recibiendo Descuento: ", data);
+        this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
+      });
+
+      //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
+      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+        + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
+        "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+        .subscribe({
+          next: (datav) => {
+            //this.almacenes_saldos = datav;
+            console.log("Total al cambio de DE en el detalle: ", datav);
+            // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+
+            elemento.preciolista = Number(datav.preciolista);
+            elemento.preciodesc = Number(datav.preciodesc);
+            elemento.precioneto = Number(datav.precioneto);
+            // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+            console.log(this.dataSource.filteredData);
+
+            this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+          },
+
+          error: (err: any) => {
+            console.log(err, errorMessage);
+          },
+          complete: () => {
+            //this.simularTab();
+          }
+        });
+
     }
   }
 
@@ -1946,38 +1967,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Item seleccionado: ", element);
 
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCodAlmSlds/";
-    //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
-
-    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
-      + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
-      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/311/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
-      .subscribe({
-        next: (datav) => {
-          //this.almacenes_saldos = datav;
-          console.log("Total al cambio de DE en el detalle: ", datav);
-          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
-          element.precioneto = Number(datav.precioneto);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-        }
-      });
-
-    console.log('Elemento seleccionado:', element);
-    this.elementoSeleccionadoDescuento = element;
-
-    this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
-      console.log("Recibiendo Precio de Venta: ", data);
-      this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
-    });
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
 
     //desde aca verifica que lo q se ingreso al input sea data que existe en el array de descuentos descuentos_get
     const inputValue = event.target.value;
@@ -1985,13 +1975,48 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.descuentos_get.some(objeto => objeto.codigo === entero);
-
     if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = 0;
       console.log("NO ENCONTRADO VALOR DE INPUT");
     } else {
       event.target.value = entero;
+
+      console.log('Elemento seleccionado:', element);
+      this.elementoSeleccionadoDescuento = element;
+
+      this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
+        console.log("Recibiendo Precio de Venta: ", data);
+        this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
+      });
+
+      //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
+      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+        + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
+        "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+        .subscribe({
+          next: (datav) => {
+            //this.almacenes_saldos = datav;
+            console.log("Total al cambio de DE en el detalle: ", datav);
+            // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+            element.preciolista = Number(datav.preciolista);
+            element.preciodesc = Number(datav.preciodesc);
+            element.precioneto = Number(datav.precioneto);
+            // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+            console.log(this.dataSource.filteredData);
+
+            this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+            this.simularTab();
+          },
+
+          error: (err: any) => {
+            console.log(err, errorMessage);
+            this.simularTab();
+          },
+          complete: () => {
+            this.simularTab();
+          }
+        });
     }
   }
 
@@ -2000,9 +2025,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log('Elemento seleccionado:', elemento);
     this.elementoSeleccionadoDescuento = elemento;
 
+
+
     this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
       this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
+
     });
   }
   //FIN DESCUENTO ESPECIAL DETALLE
@@ -2043,7 +2071,24 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  simularTab() {
+    const tabla = document.getElementById('tabla_detalle');
+    const inputs = tabla.querySelectorAll('input, select, textarea'); // Obtener todos los elementos interactivos dentro de la tabla
+    const currentInput = document.activeElement; // Obtener el elemento actualmente enfocado
 
+    // Encontrar el índice del elemento actualmente enfocado en la lista de elementos interactivos
+    const currentIndex = Array.from(inputs).findIndex(input => input === currentInput);
+
+    // Obtener el siguiente elemento en la lista o volver al primer elemento si estamos al final
+    const nextIndex = (currentIndex + 1) % inputs.length;
+    const nextInput = inputs[nextIndex];
+
+    // Verificar si el siguiente elemento es enfocable
+    if (nextInput && typeof (nextInput as HTMLElement).focus === 'function') {
+      // Enfocar el siguiente elemento
+      (nextInput as HTMLElement).focus();
+    }
+  }
 
 
 
@@ -3054,6 +3099,63 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  estadoMoraValidacion() {
+
+  }
+
+  empaquesCerradosValidacion() {
+
+  }
+
+  empaquesMinimosPrecioValidacion() {
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3125,7 +3227,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   eliminarItemTabla(posicion, coditem) {
-    console.log(posicion, coditem);
+    console.log(posicion);
     // const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden_creciente !== posicion && i.coditem !== coditem);
 
     const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
@@ -3479,6 +3581,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+      data: {
+        // descuento_nivel: this.desct_nivel_actual,
+        cod_cliente: this.codigo_cliente,
+        // cod_almacen: this.almacn_parame_usuario,
+        // cod_moneda: this.moneda_get_catalogo,
+        // desc_linea: this.habilitar_desct_sgn_solicitud,
+        // items: this.array_items_carrito_y_f4_catalogo,
+        // fecha: this.fecha_actual
+      },
     });
   }
 

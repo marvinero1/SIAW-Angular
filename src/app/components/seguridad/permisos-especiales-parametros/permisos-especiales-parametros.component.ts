@@ -7,9 +7,9 @@ import { LogService } from '@services/log-service.service';
 import { Autorizacion } from '@services/modelos/objetos';
 import { ToastrService } from 'ngx-toastr';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { DatePipe } from '@angular/common';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
-import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-permisos-especiales-parametros',
   templateUrl: './permisos-especiales-parametros.component.html',
@@ -237,7 +237,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
     @Inject(MAT_DIALOG_DATA) public dataCodigoPermiso: any,
-    @Inject(MAT_DIALOG_DATA) public abrir: any,) {
+    @Inject(MAT_DIALOG_DATA) public abrir: any) {
 
     this.dataA_get = this.dataA.dataA;
     this.data_inventario = this.dataPermiso.dataPermiso;
@@ -254,7 +254,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
     console.log(this.BD_storage.bd);
 
-    // this.data_servicio = this.dataInventario.dataInventario;
     this.data_text_area = this.autorizacion.find(x => x.codigo == this.data_servicio);
   }
 
@@ -279,20 +278,10 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       })
   }
 
-  // validarPost() {
-  //   if (this.abrir_get === undefined) {
-  //     console.log("HOLA LOLA UNDEFINED");
-  //     this.postPassword();
-  //   } else {
-  //     this.postPasswordInventario();
-  //   }
-  // }
-
   postPassword(): Promise<boolean> {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
-    let fecha_actual = new Date();
 
     let a = {
       servicio: this.data_inventario_code,
@@ -344,7 +333,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     });
   }
 
-
   copyToClipboard(): void {
     let copia = "Codigo Servicio: " + this.data_servicio + "Dato A: " + this.data_autorizacionA + "Dato B: " + this.data_autorizacionB
     // Se copia el texto del input al portapapeles
@@ -371,7 +359,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   close(result: boolean) {
     this.dialogRef.close(result);
     let value = false;
-
     return value;
   }
 }
