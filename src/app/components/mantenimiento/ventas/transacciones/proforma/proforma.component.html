@@ -37,7 +37,6 @@
           <!-- BOTONES FIN -->
         </div>
 
-
         <div class="input-group-append text-center" style="float: right;">
           <button class="btn btn-outline-secondary form-control-sm" matTooltip="Matriz Item" type="button"
             (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip">
@@ -845,7 +844,7 @@
               <!-- Observacion Column -->
               <ng-container matColumnDef="obs">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
-                  style="padding: 0 0px 0 0px !important">Obs </th>
+                  style="padding: 0 0px 0 0px !important">Obs. </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <ng-container *ngIf="element.obs === 'Genera Negativo'; else obs1 ">
@@ -978,7 +977,7 @@
 
               <!-- Observaciones Column -->
               <ng-container matColumnDef="obs">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Obs</th>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Obs.</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" [ngSwitch]="element.obs">
                   <ng-container *ngSwitchCase="'Cumple'">
                     <strong style="color: green;">{{ element.obs }}</strong>
@@ -1100,7 +1099,14 @@
               <ng-container matColumnDef="clave_servicio">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">Clave Servicio</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.ClaveServicio }}
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+
+                  <ng-container *ngIf="element.ClaveServicio === 'AUTORIZADO';else claveelse">
+                    <p style="color: green;"><strong>{{ element.ClaveServicio }}</strong></p>
+                  </ng-container>
+                  <ng-template #claveelse>
+                    <p>{{ element.ClaveServicio }}</p>
+                  </ng-template>
                 </td>
               </ng-container>
 
@@ -1177,8 +1183,8 @@
     </div>
     <!-- FinTabla -->
 
+    <!-- inicioPiePagina -->
     <div>
-      <!-- inicioPiePagina -->
       <div class="row">
         <div class="col-md-10">
           <mat-tab-group class="miTabGroupProformaFooter" style="border-style: ridge;padding: 1px;">
@@ -1363,8 +1369,8 @@
                           </div>
                           <textarea class="form-control" [ngModel]="direccion" rows="1" id="inputCatalogoDireccion"
                             style="font-size: 0.79rem !important;margin-left: 6px;"
-                            [(ngModel)]="codigo_cliente_catalogo_direccion" formControlName="direccion"
-                            readonly></textarea>
+                            [(ngModel)]="codigo_cliente_catalogo_direccion" formControlName="direccion" readonly>
+                          </textarea>
 
                           <div class="input-group-append">
                             <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -2123,7 +2129,6 @@
         </div>
         <!-- finTotales -->
       </div>
-      <!-- finpiePagina -->
 
       <div mat-dialog-footer>
         <!-- Saldos -->
@@ -2189,6 +2194,7 @@
         <!-- finempaque -->
       </div>
     </div>
+    <!-- finpiePagina -->
   </div>
 </div>
 

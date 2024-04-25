@@ -171,16 +171,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.codmoneda_get = codmoneda.codmoneda;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
 
-    console.log(
-      "CODCLIENTE" + this.codcliente_get,
-      "TARIFA: " + this.tarifa_get,
-      "DESCT: " + this.descuento_get,
-      "CODALM: " + this.codalmacen_get,
-      "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
-      "FECHA: " + this.fecha_get,
-      "CODMONEDA: " + this.codmoneda_get,
-      "DESC NIVEL: " + this.descuento_nivel_get,
-    );
+
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -192,6 +183,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    console.log(
+      "CODCLIENTE" + this.codcliente_get,
+      "TARIFA: " + this.tarifa_get,
+      "DESCT: " + this.descuento_get,
+      "CODALM: " + this.codalmacen_get,
+      "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
+      "FECHA: " + this.fecha_get,
+      "CODMONEDA: " + this.codmoneda_get,
+      "DESC NIVEL: " + this.descuento_nivel_get,
+    );
+
     this.dataItemsSeleccionadosMultiple = [];
     console.log(this.dataItemsSeleccionadosMultiple);
     // this.setFocus();
@@ -637,13 +639,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   mandarItemaProforma() {
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
-    console.log(this.array_items_completo);
+    console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
 
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
         // tarifa: this.tarifa_get,
-
         tarifa: elemento.tarifa === undefined ? this.tarifa_get : elemento.tarifa,
         descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
         cantidad_pedida: elemento.cantidad_pedida,
@@ -653,13 +654,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
-
         fecha: this.fecha_get,
       }
     });
     console.log(a);
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
     return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado, a)
       .subscribe({
         next: (datav) => {

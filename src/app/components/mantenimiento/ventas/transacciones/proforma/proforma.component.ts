@@ -275,7 +275,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public cliente_casual: boolean;
   public total_X_PU: boolean = false;
   public disableSelect = new FormControl(false);
-  public habilitar_desct_sgn_solicitud: boolean;
+  public habilitar_desct_sgn_solicitud: boolean = false;
   public empaque_view = false;
   public submitted = false;
 
@@ -420,6 +420,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getDesctLineaIDTipo();
+    this.tipopago = 1;
 
     //ID TIPO
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
@@ -440,7 +441,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
-      this.almacn_parame_usuario = data.almacen.codigo;
+      //this.almacn_parame_usuario = data.almacen.codigo;
 
       //si se cambia de almacen, los totales tambien se cambian
       this.total = 0.00;
@@ -812,7 +813,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: [this.dataform.descuentos, Validators.compose([Validators.required])],
-      tipopago: [this.dataform.tipopago === "CONTADO" ? 1 : 0, Validators.compose([Validators.required])],
+      tipopago: [this.dataform.tipopago === "CONTADO" ? 1 : 0, Validators.required],
       transporte: [this.dataform.transporte, Validators.compose([Validators.required])],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
       tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
@@ -2501,8 +2502,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(total_proforma_concat);
     console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
       this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
 
+    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -2656,7 +2657,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA ✅");
+          this.toastr.info("VALIDACION EN CURSO ⚙️");
           this.validacion_post = datav;
           console.log(this.validacion_post);
 
@@ -3227,10 +3228,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   eliminarItemTabla(posicion, coditem) {
-    console.log(posicion);
+    console.log(posicion, coditem);
     // const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden_creciente !== posicion && i.coditem !== coditem);
 
-    const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
+    //const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
+    const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+      // Condición para filtrar por coditem, coddescuento y codtarifa
+      return item.coditem !== coditem;
+    });
+
     this.array_items_carrito_y_f4_catalogo = a;
     // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
     console.log(a);
@@ -3366,7 +3372,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         descuento: this.cod_descuento_modal_codigo,
         codcliente: this.codigo_cliente,
         codalmacen: this.almacn_parame_usuario,
-        desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === undefined ? "false" : "true",
+        // ACA ES IMPORTANTE PASARLO A STRING, PORQ LA BD ESPERA STRING NO BOOLEAN habilitar_desct_sgn_solicitud
+        // ESTA VARIABLE ESTA EN EL TAB DESCUENTOS DE LINEA DE SOLICITUD
+        desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         items: this.array_items_carrito_y_f4_catalogo,
@@ -3813,16 +3821,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  array_original_de_validaciones_NO_VALIDAS: any = [];
+  array_original_de_validaciones_NO_VALIDAS_RESUELTAS: any = [];
+
+
+
+
   array_original_de_validaciones_copied: any = [];
   array_original_de_validaciones_validadas_OK: any = [];
   array_original_de_validaciones_validadas_OK_mostrar: any = [];
 
   resolverValidacionEnValidar(datoA, datoB, msj_validacion, cod_servicio, element) {
-    this.array_original_de_validaciones_copied = this.validacion_post;
-
-    this.array_original_de_validaciones_validadas_OK = this.array_original_de_validaciones_copied.filter((element) => {
-      return element.Valido === "NO";
-    });
+    //En este array ya estan filtrados las validaciones con observacion this.validacion_no_validos.
+    console.log(element, this.validacion_no_validos);
+    this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: 'auto',
@@ -3837,11 +3849,63 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        this.array_original_de_validaciones_validadas_OK_mostrar = this.array_original_de_validaciones_validadas_OK.filter(i => i.Codigo !== element.Codigo);
-        this.dataSource_validacion = new MatTableDataSource(this.array_original_de_validaciones_validadas_OK_mostrar);
-        console.log("Array de donde se ah tenido q eliminar", this.array_original_de_validaciones_validadas_OK_mostrar);
+        //let a = this.validacion_no_validos.filter(i => i.Codigo !== element.Codigo);
+
+        // Verificar si el elemento ya está presente en el array
+        const indice_NO_VALIDAS_RESUELTAS = this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.findIndex(item => item.Codigo === element.Codigo);
+
+        // Si el índice es -1, significa que el elemento no está en el array y se puede agregar
+        if (indice_NO_VALIDAS_RESUELTAS === -1) {
+          // Agregar el elemento seleccionado al array de NO VALIDAS PERO YA RESUELTAS 
+          this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
+        } else {
+          // El elemento ya está presente en el array
+          this.toastr.warning("EL Codigo" + element.Codigo + "ya se encuentra resuelto");
+          console.log('El elemento ya está presente en el array.');
+        }
+        // Filtrar los elementos de array1 que no están presentes en array2
+        const elementosDiferentes = this.validacion_no_validos.filter(item1 => !this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.find(item2 => item1.Codigo === item2.Codigo));
+
+        //UNA VEZ QUE ESTE APROBADO POR LA CONTRASEÑA, MAPEAR LA COPIA DEL ARRAY ORIGINAL
+        //(ORIGINAL)this.validacion_post, (COPIA)array_original_de_validaciones_copied 
+        //cambiando los valores de Valido NO a Valido SI y el valor de ClaveServicio a "AUTORIZADO" 
+        //en caso que se cancele colocar "NO AUTORIZADO",
+        //pero solo del elemento seleccionado no de cada item del array
+
+        // Encontrar el índice del elemento seleccionado en el array original
+        const indice = this.array_original_de_validaciones_copied.findIndex(item => item.Codigo === element.Codigo);
+        if (indice !== -1) {
+          // Crear una copia del array original
+          const nuevoArray = [...this.array_original_de_validaciones_copied];
+          // Reemplazar el elemento modificado en su posición original en el nuevo array
+          //nuevoArray[indice] = element;
+          nuevoArray[indice].ClaveServicio = "AUTORIZADO";
+          nuevoArray[indice].Valido = "SI";
+          // Actualizar el array original con el nuevo array que contiene el elemento modificado
+          this.array_original_de_validaciones_copied = nuevoArray;
+        }
+
+        this.dataSource_validacion = new MatTableDataSource(elementosDiferentes);
+
+
+        console.log(this.array_original_de_validaciones_copied);
+        console.log("Elemento Resuelto ya eliminado: ", elementosDiferentes);
+        console.log("Array de donde se ah tenido que eliminar: ", this.validacion_no_validos);
+        console.log("Array de donde se imprime solo las RESUELTAS: ", this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS);
       } else {
         this.toastr.error('¡CANCELADO!');
+        // Encontrar el índice del elemento seleccionado en el array original
+        const indice = this.array_original_de_validaciones_copied.findIndex(item => item.Codigo === element.Codigo);
+        if (indice !== -1) {
+          // Crear una copia del array original
+          const nuevoArray = [...this.array_original_de_validaciones_copied];
+          // Reemplazar el elemento modificado en su posición original en el nuevo array
+          //nuevoArray[indice] = element;
+          nuevoArray[indice].ClaveServicio = "NO AUTORIZADO";
+          nuevoArray[indice].Valido = "NO";
+          // Actualizar el array original con el nuevo array que contiene el elemento modificado
+          this.array_original_de_validaciones_copied = nuevoArray;
+        }
       }
     });
   }
