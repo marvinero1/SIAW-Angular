@@ -1609,7 +1609,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.tipo_doc_cliente = "";
     this.nit_cliente = "";
     this.email_cliente = " ";
-    this.tipopago = " ";
+    this.tipopago = 1;
 
     this.whatsapp_cliente = "";
     this.cod_vendedor_cliente = "";
@@ -3222,6 +3222,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       tblcbza_deposito: []
     }
 
+    this.spinner.show();
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
@@ -3232,9 +3233,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           console.log(datav);
 
 
+          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
 
-
-
+          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
 
           this.totabilizar();
           setTimeout(() => {

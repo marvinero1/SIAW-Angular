@@ -310,6 +310,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalPrecioVentaComponent, {
       width: 'auto',
       height: 'auto',
+      data: { detalle: false }
     });
   }
 
@@ -317,6 +318,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalDescuentosComponent, {
       width: 'auto',
       height: 'auto',
+      data: { detalle: false }
     });
   }
 

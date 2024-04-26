@@ -437,15 +437,17 @@
               </span>
 
               <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
-                [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
+                [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readOnly]="true"
                 [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
               <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
             </div>
 
             <div class="col-sm">
               <container-element [ngSwitch]="tipo_doc_cliente">
+                <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
+                <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
                 <ng-container *ngSwitchCase="1">
-                  <input type="text" class="form-control form-control-sm" value="CI - CEDULA DE IDENTIDAD"
+                  <input type="number" class="form-control form-control-sm" value="CI - CEDULA DE IDENTIDAD"
                     style="font-size: 0.55rem !important;width: 100%;" disabled>
                 </ng-container>
                 <ng-container *ngSwitchCase="2">
@@ -462,7 +464,7 @@
                     style="font-size: 0.55rem !important;width: 100%;" disabled>
                 </ng-container>
                 <ng-container *ngSwitchCase="5">
-                  <input type="text" class="form-control form-control-sm"
+                  <input type="number" class="form-control form-control-sm"
                     value="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" style="width: 100%;font-size: 0.55rem !important;"
                     disabled>
                 </ng-container>
@@ -614,21 +616,20 @@
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
-                  <ng-container *ngIf="element?.cumple === true; else cumpleElse">
-                    <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
-                      min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
-                  </ng-container>
+                  <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
+                    min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
 
-                  <ng-template #cumpleElse>
+                  <ng-container *ngIf="element?.cumpleEmp === true">
                     <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
                       min="0" (input)="pedidoChangeMatrix(element, $event.target.value)"
                       style="color: rgba(0, 0, 255, 0.824);">
-                  </ng-template>
+                  </ng-container>
 
-                  <!-- <ng-container *ngIf="pinta_empaque_minimo === true;">
-                    <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
-                      (input)="cantidadChangeMatrix(element, $event.target.value);" style="color: rgb(255, 0, 0);">
-                  </ng-container> -->
+                  <ng-container *ngIf="element?.cumpleMin === true && element?.cumpleEmp !== true">
+                    <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
+                      min="0" (input)="pedidoChangeMatrix(element, $event.target.value)"
+                      style="color: rgba(255, 0, 0, 0.824);">
+                  </ng-container>
                 </td>
               </ng-container>
 
@@ -639,23 +640,22 @@
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
-                  <ng-container *ngIf="element?.cumple === true; else cumpleElse">
+                  <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
+                    (input)="cantidadChangeMatrix(element, $event.target.value);">
+
+                  <ng-container *ngIf="element?.cumpleEmp === true">
                     <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
-                      (input)="cantidadChangeMatrix(element, $event.target.value);">
+                      (input)="cantidadChangeMatrix(element, $event.target.value)"
+                      style="color: rgba(0, 0, 255, 0.824);">
                   </ng-container>
 
-                  <ng-template #cumpleElse>
-                    <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
-                      (input)="cantidadChangeMatrix(element, $event.target.value);"
-                      style="color: rgba(0, 0, 255, 0.824);">
-                  </ng-template>
-
-                  <!-- <ng-container *ngIf="element?.cumple === true;">
-                    <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
-                      (input)="cantidadChangeMatrix(element, $event.target.value);" style="color: rgb(255, 0, 0);">
-                  </ng-container> -->
+                  <ng-container *ngIf="element?.cumpleMin === true && element?.cumpleEmp !== true">
+                    <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida" min="0"
+                      (input)="pedidoChangeMatrix(element, $event.target.value)" style="color: rgba(255, 0, 0, 0.824);">
+                  </ng-container>
                 </td>
               </ng-container>
+
 
               <!-- sld Column -->
               <ng-container matColumnDef="sld">
@@ -1068,7 +1068,7 @@
               <ng-container matColumnDef="codControl">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion text-center"> Cod. </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ element.Codigo }} </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ element.CodControl }} </td>
               </ng-container>
 
               <!-- descripcion Column -->
@@ -1313,7 +1313,7 @@
                             readonly> -->
                           <input type="text" class="form-control form-control-sm"
                             style="margin-left: 5px;background-color: #ffff00;color: black;"
-                            formControlName="tipoentrega" [(ngModel)]="tipoentrega">
+                            formControlName="tipoentrega" [(ngModel)]="tipoentrega" [readOnly]="true">
 
                           <div class="input-group-append">
                             <button class="btn btn-outline-primary form-control-sm" type="button"
