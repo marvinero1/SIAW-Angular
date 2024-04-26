@@ -110,14 +110,14 @@ mat-row, mat-header-row, mat-footer-row{
 .pedido{
   text-align: right;
   background-color: #80808017;
-  color: black;
+  //color: black;
   border: 0;
   width: 100%;
   margin: auto;
 }
 
 .pedido::placeholder {
-  color: black;
+  color: gray;
   opacity: 1; /* Firefox */
 }
 
@@ -293,9 +293,15 @@ mat-row, mat-header-row, mat-footer-row{
 
 .selected-row {
   background-color: #093070; /* Color de fondo cuando se selecciona la fila */
-  color: white !important; /* Color de texto cuando se selecciona la fila */
-  cursor: pointer !important; /* Cambia el cursor al pasar sobre la fila */
+  color: white; /* Color de texto cuando se selecciona la fila */
+  cursor: pointer; /* Cambia el cursor al pasar sobre la fila */
 }
+.selected-row .pedido {
+  color: white;
+}
+
+ 
+  /* Estilos adicionales para el texto dentro de la fila seleccionada */
 
 .fixed-bottom-bar {
   position: sticky;

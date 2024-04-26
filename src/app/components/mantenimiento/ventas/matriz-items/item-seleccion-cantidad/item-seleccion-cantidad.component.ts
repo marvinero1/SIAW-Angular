@@ -24,6 +24,12 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
         case "cant_input":
           this.agregarItems();
           break;
+        case "precio_input":
+          this.agregarItems();
+          break;
+        case "descuento_input":
+          this.agregarItems();
+          break;
       }
     }
   };

@@ -1788,6 +1788,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
     console.log(this.dataSource.filteredData);
     this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
   }
 
   onLeavePrecioVenta(event: any) {
@@ -1830,6 +1836,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
         console.log("Recibiendo Descuento: ", data);
         this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
+
+        this.total = 0;
+        this.subtotal = 0;
+        this.iva = 0
+        this.des_extra = 0;
+        this.recargos = 0;
       });
 
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
@@ -1989,6 +2001,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
         console.log("Recibiendo Precio de Venta: ", data);
         this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
+
+        this.total = 0;
+        this.subtotal = 0;
+        this.iva = 0
+        this.des_extra = 0;
+        this.recargos = 0;
       });
 
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
@@ -2007,15 +2025,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             console.log(this.dataSource.filteredData);
 
             this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-            this.simularTab();
+            //this.simularTab();
           },
 
           error: (err: any) => {
             console.log(err, errorMessage);
-            this.simularTab();
+            //this.simularTab();
           },
           complete: () => {
-            this.simularTab();
+            //this.simularTab();
           }
         });
     }
@@ -2026,12 +2044,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log('Elemento seleccionado:', elemento);
     this.elementoSeleccionadoDescuento = elemento;
 
-
-
     this.servicioDesctEspecial.disparadorDeDescuentosDetalle.subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
       this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
-
     });
   }
   //FIN DESCUENTO ESPECIAL DETALLE
