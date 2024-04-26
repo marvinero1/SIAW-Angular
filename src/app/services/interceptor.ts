@@ -23,14 +23,21 @@ export class Interceptor implements HttpInterceptor {
         return next.handle(request).pipe(catchError(err => {
             this.err = err.error;
             this.status = err.status;
-            this.error_code = this.err.resp
-
+            this.error_code = this.err.resp;
             console.log(this.error_code);
 
             // CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
             // CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA transac / veproforma / getempaques
 
-            this.error_code === 801 ? console.log("NO TOAST xD") : this.toastr.error(this.err.resp);
+            if (this.error_code === 801 || this.error_code === undefined) {
+                console.log("NO TOAST xD");
+            } else {
+                this.toastr.error(this.err.resp);
+            }
+
+            // this.error_code === 801 ? console.log("NO TOAST xD") : this.toastr.error(this.err.resp);
+            // this.error_code === undefined ? console.log("NO TOAST xD") : console.log("NO TOAST xD");
+            // this.error_code ===  ? console.log("NO TOAST xD") : console.log("NO TOAST xD");
 
             let cadenaResultado: string = this.error_code.toString();
             switch (cadenaResultado) {

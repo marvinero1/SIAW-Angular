@@ -4505,11 +4505,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "2765554430526585779"
+        "hash": "2445942654863979420"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
-        "hash": "6790147370841042340"
+        "hash": "7129229579473187507"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.spec.ts",
@@ -5201,11 +5201,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "6272307263005436431"
+        "hash": "2109979828696920107"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "5264665435464567775"
+        "hash": "16953555179172578191"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5213,7 +5213,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "5587051044993833957"
+        "hash": "9814461698287063691"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6181,7 +6181,7 @@
       },
       {
         "file": "src/app/services/interceptor.ts",
-        "hash": "5334603316406738562"
+        "hash": "8557020067562308219"
       },
       {
         "file": "src/app/services/log-service.service.spec.ts",

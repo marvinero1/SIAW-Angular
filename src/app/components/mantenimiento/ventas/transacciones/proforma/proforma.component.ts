@@ -246,7 +246,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public cod_id_tipo_modal_id: string;
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
-  public venta_cliente_oficina: boolean;
+  public venta_cliente_oficina: boolean = false;
   public transporte: any;
   public medio_transporte: any;
   public fletepor: any;
@@ -505,7 +505,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     //Item Sin Procesar DEL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.subscribe(data => {
-      console.log("Recibiendo Item Sin Procesar: ", data);
+      //console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -534,6 +534,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
       }, 1000);
 
+      // Agregar el número de orden a los objetos de datos
+      this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+        element.orden = index + 1;
+      });
+
       // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
       this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
     });
@@ -556,6 +561,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       //siempre sera uno
       this.orden_creciente = 1;
+
+      // Agregar el número de orden a los objetos de datos
+      this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+        element.orden = index + 1;
+      });
 
       //ACA SE DIBUJA LA TABLA CON LA INFO DEL CARRITO DE COMPRAS YA CON LOS ITEM TRABAJADOS EN EL BACKEND
       this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
@@ -852,7 +862,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
       email: [this.dataform.email],
       complemento_ci: [this.dataform.complemento_ci],
-      venta_cliente_oficina: [this.dataform.venta_cliente_oficina === null ? false : true],
+      venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
       tipo_venta: ['0', Validators.required],
       estado_contra_entrega: [this.dataform.estado_contra_entrega === null ? "" : ""],
       contra_entrega: [this.dataform.contra_entrega === null ? false : true],
@@ -1715,7 +1725,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         },
         complete: () => { }
       })
-
   }
 
   onPaste(event: any) {
@@ -2089,7 +2098,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   simularTab() {
     const tabla = document.getElementById('tabla_detalle');
-    const inputs = tabla.querySelectorAll('input, select, textarea'); // Obtener todos los elementos interactivos dentro de la tabla
+    const inputs = tabla.querySelectorAll('input'); // Obtener todos los elementos interactivos dentro de la tabla
     const currentInput = document.activeElement; // Obtener el elemento actualmente enfocado
 
     // Encontrar el índice del elemento actualmente enfocado en la lista de elementos interactivos
@@ -3117,14 +3126,134 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   estadoMoraValidacion() {
 
+
   }
 
   empaquesCerradosValidacion() {
+    this.spinner.show()
+    let mesagge: string;
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesCerradosVerifica/";
+    return this.api.create('/venta/transac/veproforma/empaquesCerradosVerifica/' + this.userConn + "/" + this.codigo_cliente, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
 
+          if (datav.cumple === true) {
+            mesagge = "CUMPLE";
+          } else {
+            mesagge = "NO CUMPLE";
+            this.pinta_empaque_minimo = false;
+          }
+
+          this.modalDetalleObservaciones(datav.reg, mesagge);
+          this.toastr.success('EMPAQUES CERRADOS PROCESANDO ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      })
   }
 
+  pinta_empaque_minimo: boolean = false;
   empaquesMinimosPrecioValidacion() {
 
+    let mesagge: string;
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
+    return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.almacn_parame_usuario, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          if (datav.cumple === true) {
+            mesagge = "CUMPLE";
+          } else {
+            mesagge = "NO CUMPLE";
+            this.pinta_empaque_minimo = true;
+          }
+
+          this.modalDetalleObservaciones(datav.reg, mesagge);
+          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      })
+  }
+
+  aplicarDesctPorDeposito() {
+    let a = {
+      "getTarifaPrincipal": {
+        tabladetalle: this.array_items_carrito_y_f4_catalogo,
+        dvta: this.FormularioData.value
+      },
+      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tblcbza_deposito: []
+    }
+
+    console.log(a);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
+    return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
+      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage.bd + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+
+
+
+
+
+          this.totabilizar();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      })
   }
 
 
@@ -3240,21 +3369,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  eliminarItemTabla(orden, coditem) {
+    console.log(orden, coditem, this.array_items_carrito_y_f4_catalogo);
 
-
-  eliminarItemTabla(posicion, coditem) {
-    console.log(posicion, coditem);
-    // const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.orden_creciente !== posicion && i.coditem !== coditem);
-
-    //const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
-    const a = this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
-      // Condición para filtrar por coditem, coddescuento y codtarifa
-      return item.coditem !== coditem;
+    // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+      return item.orden !== orden || item.coditem !== coditem;
     });
 
-    this.array_items_carrito_y_f4_catalogo = a;
-    // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(i => i.coditem !== coditem);
-    console.log(a);
+    // Actualizar el origen de datos del MatTableDataSource
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
   }
 
