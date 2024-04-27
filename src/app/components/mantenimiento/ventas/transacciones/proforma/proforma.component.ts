@@ -822,7 +822,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
-      descuentos: [this.dataform.descuentos, Validators.compose([Validators.required])],
+      descuentos: [this.dataform.des_extra, Validators.compose([Validators.required])],
       tipopago: [this.dataform.tipopago === "CONTADO" ? 1 : 0, Validators.required],
       transporte: [this.dataform.transporte, Validators.compose([Validators.required])],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
@@ -861,7 +861,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
       email: [this.dataform.email],
-      complemento_ci: [this.dataform.complemento_ci],
+
       venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
       tipo_venta: ['0', Validators.required],
       estado_contra_entrega: [this.dataform.estado_contra_entrega === null ? "" : ""],
@@ -877,9 +877,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       monto_anticipo: [0], //anticipo Ventas
       pago_contado_anticipado: [false], //anticipo Ventas
 
+
+      complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       tipo_complementopf: [this.dataform.tipo_complementopf === null ? 0 : this.dataform.tipo_complementopf], //aca es para complemento de proforma
-      idpf_complemento: [this.dataform.idpf_complemento === null ? 0 : this.dataform.idpf_complemento], //aca es para complemento de proforma
-      nroidpf_complemento: [this.dataform.nroidpf_complemento === null ? 0 : this.dataform.nroidpf_complemento], //aca es para complemento de proforma
+      idpf_complemento: [this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento], //aca es para complemento de proforma
+      nroidpf_complemento: [this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento], //aca es para complemento de proforma
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVISAR
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1688,42 +1690,66 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  valor_nit: any;
+
   guardarNombreCliente() {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     let tipo_doc_cliente_parse_string = this.tipo_doc_cliente.toString();
-    let nit_string = this.nit_cliente.toString();
+    let nit_string;
+    let data1: any = [];
 
-    let data = {
+    if (this.valor_nit !== undefined) {
+      let nit_string = this.valor_nit.toString();
+      // Aquí puedes continuar con el resto de tu lógica
+    } else {
+      // Manejar el caso en el que this.valor_nit es undefined
+    }
+
+    data1 = {
       codSN: this.codigo_cliente,
       nomcliente_casual: this.nombre_comercial_razon_social,
-      nit_cliente_casual: nit_string,
+      nit_cliente_casual: "12345678",
       tipo_doc_cliente_casual: tipo_doc_cliente_parse_string,
       email_cliente_casual: this.email_cliente === undefined ? this.email : this.email_cliente,
-      celular_cliente_casual: this.whatsapp_cliente,
+      celular_cliente_casual: "76964607",
       codalmacen: this.almacn_parame_usuario,
       codvendedor: this.cod_vendedor_cliente,
 
       usuarioreg: usuario_logueado,
     };
 
+    console.log(data1);
+
+    this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/crearCliente/";
-    return this.api.create('/venta/transac/veproforma/crearCliente/' + this.userConn, data)
+    return this.api.create('/venta/transac/veproforma/crearCliente/' + this.userConn, data1)
       .subscribe({
         next: (datav) => {
           this.usuario_creado_save = datav;
           console.log(this.usuario_creado_save);
-
           this.toastr.success('!CLIENTE GUARDADO!');
           this._snackBar.open('!CLIENTE GUARDADO!', 'Ok', {
             duration: 2000,
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
           });
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
-        complete: () => { }
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
       })
   }
 
@@ -2128,18 +2154,23 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (cantidad_pedida !== undefined && precioneto !== undefined && cantidad !== undefined) {
       if (this.total_X_PU === true) {
-        return this.formatNumber(cantidad * precioneto);
+        return this.formatNumberTotalSub(cantidad * precioneto);
       } else {
         // console.log(input);
         let cantidadPedida = cantidad_pedida;
         // Realizar cálculos solo si los valores no son undefined
         //console.log(cantidadPedida, preciolista);
-        return this.formatNumber(cantidadPedida * precioneto);
+        return this.formatNumberTotalSub(cantidadPedida * precioneto);
       }
     } else {
       return 0; // O algún otro valor predeterminado
     }
   }
+
+
+
+
+
 
   calcularTotalPedidoXPU(newValue: number, preciolista: number) {
     // todo despues del if ya que si no siempre esta escuchando los eventos
@@ -2379,6 +2410,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   submitData() {
+    this.spinner.show();
     let total_proforma_concat: any = [];
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
       ...item,
@@ -2482,6 +2514,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
         },
         complete: () => {
           setTimeout(() => {
@@ -2848,11 +2883,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       let proforma_validar = {
         datosDocVta: this.valor_formulario_negativos,
-        detalleAnticipos: [{}],
-        detalleDescuentos: [{}],
-        detalleEtiqueta: [{}],
+        detalleAnticipos: [],
+        detalleDescuentos: [],
+        //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
+        detalleEtiqueta: [],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [{}],
+        detalleRecargos: [],
       }
 
       console.log(proforma_validar);
@@ -3014,11 +3050,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
       let proforma_validar = {
         datosDocVta: this.validacion_post_max_ventas,
-        detalleAnticipos: [{}],
-        detalleDescuentos: [{}],
-        detalleEtiqueta: [{}],
+        detalleAnticipos: [],
+        detalleDescuentos: [],
+        // detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
+        detalleEtiqueta: [],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [{}],
+        detalleRecargos: [],
       }
 
       console.log(proforma_validar);
@@ -3114,10 +3151,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     return parseFloat(value.toString().replace(',', '.'));
   }
 
-  formatNumberTotalSub(numberString: number): string {
+  formatNumberTotalSubTOTALES(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
 

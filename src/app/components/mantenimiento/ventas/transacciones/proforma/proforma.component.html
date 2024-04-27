@@ -436,43 +436,50 @@
                 <u> N.I.T</u>
               </span>
 
-              <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
-                [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readOnly]="true"
-                [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
+              <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
+                <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
+                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readOnly]="true"
+                  [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
+              </ng-container>
               <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
             </div>
 
             <div class="col-sm">
-              <container-element [ngSwitch]="tipo_doc_cliente">
-                <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
-                <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
-                <ng-container *ngSwitchCase="1">
-                  <input type="number" class="form-control form-control-sm" value="CI - CEDULA DE IDENTIDAD"
-                    style="font-size: 0.55rem !important;width: 100%;" disabled>
-                </ng-container>
-                <ng-container *ngSwitchCase="2">
-                  <input type="text" class="form-control form-control-sm"
-                    value="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO" style="width: 100%;font-size: 0.55rem !important;"
-                    disabled>
-                </ng-container>
-                <ng-container *ngSwitchCase="3">
-                  <input type="text" class="form-control form-control-sm" value="PAS - PASAPORTE"
-                    style="font-size: 0.55rem !important;width: 100%;" disabled>
-                </ng-container>
-                <ng-container *ngSwitchCase="4">
-                  <input type="text" class="form-control form-control-sm" value="OD - OTRO DOCUMENTO DE IDENTIDAD"
-                    style="font-size: 0.55rem !important;width: 100%;" disabled>
-                </ng-container>
-                <ng-container *ngSwitchCase="5">
-                  <input type="number" class="form-control form-control-sm"
-                    value="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" style="width: 100%;font-size: 0.55rem !important;"
-                    disabled>
-                </ng-container>
-              </container-element>
+              <ng-container *ngIf="razon_social === 'SIN NOMBRE';">
+                <container-element [ngSwitch]="tipo_doc_cliente">
+                  <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
+                  <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
+                  <ng-container *ngSwitchCase="1">
+                    <div class="input-group-prepend">
+                      <input type="number" class="form-control form-control-sm" placeholder="CI - CEDULA DE IDENTIDAD"
+                        style="font-size: 0.55rem !important;width: 80%;" [(ngModel)]="valor_nit" min="0">
+                      <input type="text" class="form-control-sm" formControlName="complemento_ci"
+                        [(value)]="complemento_ci" style="width: 18%;">
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="2">
+                    <input type="text" class="form-control form-control-sm"
+                      placeholder="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO"
+                      style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="valor_nit">
+                  </ng-container>
+                  <ng-container *ngSwitchCase="3">
+                    <input type="text" class="form-control form-control-sm" placeholder="PAS - PASAPORTE"
+                      style="font-size: 0.55rem !important;width: 100%;" [(ngModel)]="valor_nit">
+                  </ng-container>
+                  <ng-container *ngSwitchCase="4">
+                    <input type="text" class="form-control form-control-sm"
+                      placeholder="OD - OTRO DOCUMENTO DE IDENTIDAD" style="font-size: 0.55rem !important;width: 100%;"
+                      [(ngModel)]="valor_nit">
+                  </ng-container>
+                  <ng-container *ngSwitchCase="5">
+                    <input type="number" class="form-control form-control-sm"
+                      placeholder="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" min="0"
+                      style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="valor_nit">
+                  </ng-container>
+                </container-element>
+              </ng-container>
             </div>
 
-            <input type="text" class="form-control-sm" formControlName="complemento_ci" [(ngModel)]="complemento_ci"
-              style="width: 10%;">
           </div>
 
           <div class="input-group">
@@ -616,16 +623,18 @@
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
-                  <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
-                    min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
+                  <ng-container *ngIf="element?.cumpleEmp === true && element?.cumpleMin === true">
+                    <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
+                      min="0" (input)="pedidoChangeMatrix(element, $event.target.value)">
+                  </ng-container>
 
-                  <ng-container *ngIf="element?.cumpleEmp === true">
+                  <ng-container *ngIf="element?.cumpleEmp === false">
                     <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
                       min="0" (input)="pedidoChangeMatrix(element, $event.target.value)"
                       style="color: rgba(0, 0, 255, 0.824);">
                   </ng-container>
 
-                  <ng-container *ngIf="element?.cumpleMin === true && element?.cumpleEmp !== true">
+                  <ng-container *ngIf="element?.cumpleMin === false">
                     <input #inputCantidad matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida"
                       min="0" (input)="pedidoChangeMatrix(element, $event.target.value)"
                       style="color: rgba(255, 0, 0, 0.824);">
@@ -640,16 +649,18 @@
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
-                  <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
-                    (input)="cantidadChangeMatrix(element, $event.target.value);">
+                  <ng-container *ngIf="element?.cumpleEmp === true && element?.cumpleMin === true">
+                    <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
+                      (input)="cantidadChangeMatrix(element, $event.target.value);">
+                  </ng-container>
 
-                  <ng-container *ngIf="element?.cumpleEmp === true">
+                  <ng-container *ngIf="element?.cumpleEmp === false">
                     <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad" min="0"
                       (input)="cantidadChangeMatrix(element, $event.target.value)"
                       style="color: rgba(0, 0, 255, 0.824);">
                   </ng-container>
 
-                  <ng-container *ngIf="element?.cumpleMin === true && element?.cumpleEmp !== true">
+                  <ng-container *ngIf="element?.cumpleMin === false">
                     <input matInput type="number" class="pedido" [(ngModel)]="element.cantidad_pedida" min="0"
                       (input)="pedidoChangeMatrix(element, $event.target.value)" style="color: rgba(255, 0, 0, 0.824);">
                   </ng-container>
@@ -2038,7 +2049,7 @@
                   </td>
                   <td>
                     <div class="col text-right">
-                      <span>{{ (formatNumberTotalSub(subtotal) ) }}</span>
+                      <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
                       <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
                     </div>
                   </td>
@@ -2067,7 +2078,7 @@
                   </td>
                   <td>
                     <div class="col text-right">
-                      <span>{{ formatNumberTotalSub(recargos) }} </span>
+                      <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
                       <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
                     </div>
                   </td>
@@ -2097,7 +2108,7 @@
                   </td>
                   <td>
                     <div class="col text-right">
-                      <span> {{ formatNumberTotalSub(des_extra) }}</span>
+                      <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
                       <input type="text" [(ngModel)]="des_extra" formControlName="des_extra" [hidden]="true">
                     </div>
                   </td>
@@ -2126,7 +2137,7 @@
                   </td>
                   <td style="padding-left: 33px;">
                     <div class="col text-right">
-                      <span>{{ formatNumberTotalSub(iva) }}</span>
+                      <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
                       <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
                     </div>
                   </td>
@@ -2155,7 +2166,7 @@
                   </td>
                   <td style="padding-left: 33px;">
                     <div class="col text-right">
-                      <span>{{ formatNumberTotalSub(total) }}</span>
+                      <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
                       <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
                     </div>
                   </td>

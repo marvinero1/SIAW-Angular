@@ -4533,7 +4533,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.ts",
-        "hash": "1603075847100312169"
+        "hash": "11196615479608333158"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.html",
@@ -5201,7 +5201,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "10471079772720232590"
+        "hash": "13613490342792312491"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5213,7 +5213,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "3476094973276918730"
+        "hash": "10658992878857655495"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

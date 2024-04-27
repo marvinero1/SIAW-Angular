@@ -87,7 +87,7 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
           this.numero_ventas_sem = this.estado_pagos_all.nroVentasUrgSem;
           this.total_seleccionado = 0.00;
           this.total_adeudado = this.estado_pagos_all.montototal;
-          this.credito = this.estado_pagos_all.totCredito;
+          this.credito = this.formatNumber(this.estado_pagos_all.totCredito);
 
           this.pagos_cliente = this.estado_pagos_all.tablaEstadoCliente;
           this.dataSource_pagos = new MatTableDataSource(this.pagos_cliente);
@@ -128,6 +128,12 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
         }
       })
   }
+
+  formatNumber(number: number): any {
+    // Formatear el número con el separador de miles como coma y el separador decimal como punto
+    return new Intl.NumberFormat('en-US').format(number);
+  }
+
 
   calcularSeleccion(element) {
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta: -/venta/transac/prgestadocliente/calcularSeleccion/";
