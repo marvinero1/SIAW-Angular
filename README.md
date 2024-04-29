@@ -1,17 +1,36 @@
 <p align="center" style="margin-bottom: 32px">
-  <a href="https://erdkse.com" >
-    <img src="https://raw.githubusercontent.com/erdkse/adminlte-3-angular/main/src/assets/img/logo.png" alt="AdminLTE logo" width="75" height="75">
+  <a href="https://pertec.com.bo" >
+    <img src="src/favicon.ico" alt="Pertec S.R.L" width="75" height="75">
   </a>
 </p>
 
-<h1 align="center">Admin LTE 3.2.0 - Angular 15.0.1</h1>
+<h1 align="center">SIAW</h1>
 
 <p>
-  This repository is a form of original AdminLTE project. It is aim to use AdminLTE template with Angular.
+  <!-- This repository is a form of original AdminLTE project. It is aim to use AdminLTE template with Angular. -->
 </p>
 <br>
 
-<span align="center">
+| Color       | Hex                                                              |
+| ----------- | ---------------------------------------------------------------- |
+| ColorBlack  | ![#0a192f](https://via.placeholder.com/10/0a192f?text=+) #0a192f |
+| ColorWhite  | ![#f8f8f8](https://via.placeholder.com/10/f8f8f8?text=+) #f8f8f8 |
+| ColorYellow | ![#FBD800](https://via.placeholder.com/10/FFFE04?text=+) #fbd800 |
+| ColorBlue   | ![#093070](https://via.placeholder.com/10/2832A1?text=+) #093070 |
+
+## License
+
+Copyright 2022 COPYRIGHT PERTEC S.R.L © ®™
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+<!-- <span align="center">
 
 [![Run on Repl.it](https://repl.it/badge/github/erdkse/adminlte-3-angular)](https://repl.it/github/erdkse/adminlte-3-angular)
 ![Vercel](https://img.shields.io/github/deployments/erdkse/adminlte-3-angular/production.svg?logo=vercel&label=vercel)
@@ -54,4 +73,4 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md). -->
