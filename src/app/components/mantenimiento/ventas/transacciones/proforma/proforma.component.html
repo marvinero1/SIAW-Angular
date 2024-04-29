@@ -68,8 +68,10 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-window-restore blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-calculator blue" aria-hidden="true"></i>
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+            (click)="verificarDepositoPendientesDescuentoCliente()">
+            <i class="fa fa-calculator blue" aria-hidden="true" matTooltipClass="custom-tooltip"
+              matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente"></i>
           </button>
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
@@ -1935,14 +1937,15 @@
                 <mat-row *matRowDef="let row; columns: displayedColumns_precios_desct;"></mat-row>
               </table>
 
-              <div class="row" style="display: unset;position: sticky;bottom: -12px;">
-                <div class="col-md-12">
+              <div class="row" style="position: sticky;bottom: 0px;">
+                <div style="margin-left: 7px;">
                   <button class="btn btn-outline-primary form-control-sm" type="button"
-                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;"
+                    (click)="aplicarDescuentoEspecialSegunTipoPrecio();">
                     <i class="fa fa-plus-square" aria-hidden="true"></i> Aplicar Desc. Especial S/Tipo Precio
                   </button>
 
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="borrarDesct();"
                     style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <i class="fa fa-eraser"></i> Borrar Desc.
                   </button>
@@ -1968,6 +1971,7 @@
                   </button>
 
                   <button class="btn btn-outline-primary form-control-sm" type="button"
+                    (click)="dividirItemsParaCumplirCajaCerrada();"
                     style="background-color: #ff8c00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <i class="fa fa-tags" aria-hidden="true"></i> Dividir Items Para Cumplir Emp Caj Cerrada
                   </button>

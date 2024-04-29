@@ -1,13 +1,17 @@
-<!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" tabindex="0" (keydown)="onRowKeyPress($event)">
-  <ng-container *ngFor="let column of columns; let columnIndex = index" [matColumnDef]="column">
-    <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
-    <td mat-cell *matCellDef="let element; let rowIndex = index"
-      [class.selected]="rowIndex === selectedRowIndex && columnIndex === selectedColumnIndex"
-      (click)="onCellClick(rowIndex, columnIndex, element[column])">
-      {{ element[column] }}
-    </td>
+<!-- app.component.html -->
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let element; let i = index" [class.selected]="selectedRow === i" (click)="selectRow(i)"
+      (keydown.arrowup)="moveSelection(-1)" (keydown.arrowdown)="moveSelection(1)"
+      (keydown.enter)="printInfo(selectedRow)">{{element.id}}</td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element; let i = index" [class.selected]="selectedRow === i" (click)="selectRow(i)"
+      (keydown.arrowup)="moveSelection(-1)" (keydown.arrowdown)="moveSelection(1)"
+      (keydown.enter)="printInfo(selectedRow)">{{element.name}}</td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns"></tr>
-</table> -->
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

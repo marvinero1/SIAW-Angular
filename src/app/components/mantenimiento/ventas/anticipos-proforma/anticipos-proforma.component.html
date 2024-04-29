@@ -3,7 +3,7 @@
 
     <mat-card-header class="mb-1">
       <div class="col-md-9">
-        <mat-card-title style="font-size: 0.75rem;">Anticipos de Proformas Contado</mat-card-title>
+        <mat-card-title>Anticipos de Proformas Contado</mat-card-title>
       </div>
       <div class="col-md-3 float-right">
         <div class="text-right">
@@ -51,21 +51,22 @@
 
                 <tr>
                   <th class="tg-0lax">
-                    <div class="input-group" style="width: 95% !important;">
-                      <div class="input-group-" style="padding-block-start: 7px;">
-                        <span class="form-control-sm" style="padding: 0px 3px 0px 0px;"><u>Anticipos Venta a
-                            Contado</u></span>
+                    <div class="input-group">
+                      <div class="input-group-" style="padding-block-start: 6px;">
+                        <span class="form-control-sm" style="padding: 0px 3px 0px 0px;">
+                          <u>Anticipos Venta a Contado</u>
+                        </span>
                       </div>
                       <ng-container>
                         <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
                           formControlName="codvendedor">
                       </ng-container>
 
-                      <div class="input-group-append">
+                      <!-- <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
                           style="border-color: #093070;"><i class="fa fa-search"></i>
                         </button>
-                      </div>
+                      </div> -->
                       <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
                         formControlName="codvendedor">
                     </div>
@@ -75,22 +76,22 @@
                 <tr>
                   <th class="tg-0laxs" style="width: 61% !important;">
                     <mat-label style="padding-right: 66px;"><u>Monto Anticipo</u></mat-label>
-                    <input type="text" style="width: 28%;" readonly>
-                    <input type="text" style="width: 19.5%;" readonly>
-                    <input type="text" style="width: 19.5%;" readonly>
+                    <input type="text" style="width: 28%;" disabled>
+                    <input type="text" style="width: 19.5%;" disabled>
+                    <input type="text" style="width: 19.5%;" disabled>
                   </th>
                 </tr>
 
                 <tr>
                   <th class="tg-0laxs">
                     <mat-label style="padding-right: 63px;"><u>Monto Restante</u></mat-label>
-                    <input type="text" style="width: 67%;" readonly>
+                    <input type="text" style="width: 67%;" disabled>
                   </th>
 
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
                     <input type="text" style="width: 22%;" readonly>&nbsp;
-                    <i class="fa fa-cogs" style="color: #093070 !important;"></i>
+                    <button mat-button><i class="fa fa-cogs" style="color: #093070 !important;"></i></button>
                   </th>
                 </tr>
 
@@ -115,13 +116,13 @@
               <div class="row">
                 <div class="col-lg">
                   <div class="team scrollmenu">
-                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
+                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto;">
                       <table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z8"
                         style="height: 44px !important;">
 
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
-                          <td mat-cell *matCellDef="let element"> </td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"> </td>
                         </ng-container>
 
                         <ng-container matColumnDef="fecha">
@@ -136,17 +137,17 @@
 
                         <ng-container matColumnDef="usuario">
                           <th mat-header-cell *matHeaderCellDef class="white"> Usuario </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
                         </ng-container>
 
                         <ng-container matColumnDef="hora">
                           <th mat-header-cell *matHeaderCellDef class="white"> Hora Reg </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
                         </ng-container>
 
                         <ng-container matColumnDef="vendedor">
                           <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: right;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -156,20 +157,16 @@
                   </div>
                   <div style="float: right;text-align: end;">
                     <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" [(ngModel)]="total_get"
+                      readonly>
                   </div>
                 </div>
               </div>
             </mat-card-content>
           </mat-card>
-
-          <div style="float: right;text-align: end;">
-            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total</u></mat-label>
-            <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
-          </div>
         </mat-tab>
 
-        <mat-tab label="Anticipos Contado Pendientes"><br>
+        <mat-tab label="Anticipos Contado Pendientes">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <table class="tg" style="width: 100% !important;">
@@ -252,7 +249,7 @@
               <div class="row">
                 <div class="col-lg">
                   <div class="team scrollmenu">
-                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto; height: 200px;">
+                    <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto;">
                       <table mat-table [dataSource]="dataSourceAnticipado" multiTemplateDataRows
                         class="mat-elevation-z8" style="height: 44px !important;">
 
@@ -341,10 +338,9 @@
           </mat-card>
 
           <div style="float: right;text-align: end;">
-            <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Elegir Anticipos</u></mat-label>
-            <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+            <button mat-button mat-raised-button class="secondary">
+              <i class="fa fa-check"></i> Elegir Anticipos</button>
           </div>
-
         </mat-tab>
       </mat-tab-group>
     </ng-template>

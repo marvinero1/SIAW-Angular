@@ -83,9 +83,7 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "browserTarget": "adminlte:build",
-                        "ssl": true,
-                        "sslKey": "path to .key",
-                        "sslCert": "path to .crt"
+                        "ssl": true
                     },
                     "configurations": {
                         "production": {

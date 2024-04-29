@@ -35,6 +35,7 @@ export class AnticiposProformaComponent implements OnInit {
   userConn: any;
   usuarioLogueado: any;
   BD_storage: any;
+  total_get: any;
   nombre_ventana: string = "docininvconsol.vb";
 
   public fecha_formateada1;
@@ -65,6 +66,7 @@ export class AnticiposProformaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,
     @Inject(MAT_DIALOG_DATA) public vendedor: any, @Inject(MAT_DIALOG_DATA) public cod_cliente_real: any,
+    @Inject(MAT_DIALOG_DATA) public total: any,
     private datePipe: DatePipe) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -80,7 +82,8 @@ export class AnticiposProformaComponent implements OnInit {
     this.nombre_cliente_get = nombre_cliente.nombre_cliente;
     this.nit_get = nit.nit;
     this.vendedor_get = vendedor.vendedor;
-    this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real
+    this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real;
+    this.total_get = this.formatNumber(total.total);
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf, this.tipo_de_pago_proforma,
       this.nombre_cliente_get, this.nit_get, this.vendedor_get);
@@ -98,6 +101,7 @@ export class AnticiposProformaComponent implements OnInit {
       this.validacion = true;
       return this.message = "SELECCIONE MONEDA"
     }
+
     // if (this.totalProf == undefined || this.totalProf == 0) {
     //   this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
     //   this.validacion = true;
@@ -125,7 +129,9 @@ export class AnticiposProformaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { }
+        complete: () => {
+
+        }
       })
   }
 
@@ -141,7 +147,9 @@ export class AnticiposProformaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { }
+        complete: () => {
+
+        }
       })
   }
 
@@ -175,6 +183,11 @@ export class AnticiposProformaComponent implements OnInit {
           }, 1000);
         }
       })
+  }
+
+  formatNumber(number: number): any {
+    // Formatear el número con el separador de miles como coma y el separador decimal como punto
+    return new Intl.NumberFormat('en-US').format(number);
   }
 
   close() {

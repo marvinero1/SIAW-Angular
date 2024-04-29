@@ -1,0 +1,108 @@
+.right{
+    width: 50%;
+    background-color: #ffc107;
+    color: black;
+}
+
+  mat-tab-group{
+    font-size: 0.7rem;
+  }
+
+  mat-mdc-tab, mdc-tab {
+    height: 34px;
+    min-width: 62px !important;
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+  }
+  
+  // Tabla SCSS
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+    
+  .mat-mdc-row:nth-child(odd) {
+    background-color: #80808017;
+  }
+
+  .mat-mdc-header-row, .mat-header-row{
+    position: sticky;
+    top: 0;
+    background-color: #fbd800;
+    min-height: 25px !important;
+  }
+
+  .mat-row, .mat-header-row, .mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+  }
+
+  mat-row, mat-header-row, mat-footer-row{
+    width: 100%;
+    display: table-row !important;
+  }
+
+  .mat-row, .mat-footer-row{
+    min-height: 25px !important;
+  }
+
+  .wrapper .content-wrapper{
+    background-color: #CEFFFF !important;
+    min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
+  }
+
+  .mat-mdc-tab.mdc-tab{
+    height: 27px !important;
+  }
+  
+  .mat-mdc-table{
+    white-space: pre !important;
+    background-color: #ffffff !important;
+  }
+
+  .center1{
+    text-align: center;
+  }
+
+  .center2{
+    text-align: right;
+  }
+
+  .mat-mdc-header-row{
+    background: #093070;
+    position: sticky;
+    top: 0;
+  }
+  th{
+    text-align: center;
+    color: #fff; 
+  }
+  td{
+    text-align: left;
+    cursor: pointer;
+  }
+  .mat-mdc-table .mdc-data-table__row{
+    height: calc(0rem + 0px) !important;
+  }
+  .mat-mdc-header-row{
+    height: calc(0rem + 0px) !important;
+  }
+  .mat-mdc-form-field{
+    flex-direction: inherit !important;
+  }
+  .mat-mdc-table .mdc-data-table__header-row {
+    height: 21px;
+  }
+  td:hover {
+    background-color:  #093070;
+    color: white;
+  }
+  .right{
+    text-align: right;
+  }
+
+  .selected-row {
+    background-color: #093070; /* Color de fondo cuando se selecciona la fila */
+    color: white !important; /* Color de texto cuando se selecciona la fila */
+    cursor: pointer !important; /* Cambia el cursor al pasar sobre la fila */
+  }

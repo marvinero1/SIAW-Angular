@@ -48,6 +48,8 @@ import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-tot
 import { MatTabGroup } from '@angular/material/tabs';
 import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta.service';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
+import { element } from 'protractor';
+import { ModalDesctDepositoClienteComponent } from '../../modal-desct-deposito-cliente/modal-desct-deposito-cliente.component';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -2084,6 +2086,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
     });
   }
+
+
   //FIN DESCUENTO ESPECIAL DETALLE
 
 
@@ -3215,7 +3219,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   pinta_empaque_minimo: boolean = false;
   empaquesMinimosPrecioValidacion() {
-
     let mesagge: string;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
     return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.almacn_parame_usuario, this.array_items_carrito_y_f4_catalogo)
@@ -3252,7 +3255,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             this.spinner.hide();
           }, 1000);
         }
-      })
+      });
   }
 
   aplicarDesctPorDeposito() {
@@ -3274,7 +3277,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
 
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
           this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
@@ -3302,10 +3304,111 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
 
+  // MAT-TAB Precios - Descuentos Especiales
+  aplicarDescuentoEspecialSegunTipoPrecio() {
+    this.spinner.show();
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_desc_esp_seg_precio/";
+    return this.api.create('/venta/transac/veproforma/aplicar_desc_esp_seg_precio/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
 
+          this.toastr.success('DESCT. ESPECIAL S/TIPO PRECIO PROCESANDO ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
+          //siempre sera uno
+          this.orden_creciente = 1;
+          // Agregar el número de orden a los objetos de datos
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.orden = index + 1;
+          });
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
+          this.modalDetalleObservaciones(datav.msgTitulo, datav.msgDetalle);
 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
+
+  borrarDesct() {
+    this.spinner.show();
+
+    this.array_items_carrito_y_f4_catalogo.map((element) => {
+      element.coddescuento = 0
+      this.toastr.success("BORRANDO DESCUENTOS ⚙️");
+    });
+
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+  }
+
+  dividirItemsParaCumplirCajaCerrada() {
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
+    this.spinner.show();
+
+    if (this.disableSelect.value === false) {
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
+
+    this.spinner.show();
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_desc_esp_seg_precio/";
+    return this.api.create('/venta/transac/veproforma/aplicar_dividir_items/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado
+      + "/" + this.codigo_cliente + "/" + this.desct_nivel_actual + "/" + this.almacn_parame_usuario + "/" + this.complementopf + "/" + this.moneda_get_catalogo + "/" + fecha,
+      this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.toastr.success('DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESANDO ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          //siempre sera uno
+          this.orden_creciente = 1;
+          // Agregar el número de orden a los objetos de datos
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.orden = index + 1;
+          });
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+          this.modalDetalleObservaciones(datav.alertMsg, " ");
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
+  // FIN MAT-TAB Precios - Descuentos Especiales
 
 
 
@@ -3704,41 +3807,41 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // tipopago === contado
     // total != 0
 
-    // if (this.codigo_cliente === '' && this.codigo_cliente === undefined) {
-    //   this.dialog.open(VentanaValidacionesComponent, {
-    //     width: 'auto',
-    //     height: 'auto',
-    //     disableClose: true,
-    //     data: {
-    //       message: "INGRESE CODIGO DE USUARIO EN PROFORMA",
-    //     }
-    //   });
-    //   return;
-    // }
+    if (this.codigo_cliente === '' && this.codigo_cliente === undefined) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "INGRESE CODIGO DE USUARIO EN PROFORMA",
+        }
+      });
+      return;
+    }
 
-    // if (this.tipopago === '' || this.tipopago === "CREDITO" || this.tipopago === undefined) {
-    //   this.dialog.open(VentanaValidacionesComponent, {
-    //     width: 'auto',
-    //     height: 'auto',
-    //     disableClose: true,
-    //     data: {
-    //       message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
-    //     }
-    //   });
-    //   return;
-    // }
+    if (this.tipopago === '' || this.tipopago === "CREDITO" || this.tipopago === undefined) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
+        }
+      });
+      return;
+    }
 
-    // if (this.total === 0) {
-    //   this.dialog.open(VentanaValidacionesComponent, {
-    //     width: 'auto',
-    //     height: 'auto',
-    //     disableClose: true,
-    //     data: {
-    //       message: "EL TOTAL TIENE QUE SER DISTINTO A 0",
-    //     }
-    //   });
-    //   return;
-    // }
+    if (this.total === 0) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "EL TOTAL TIENE QUE SER DISTINTO A 0",
+        }
+      });
+      return;
+    }
 
     this.dialog.open(AnticiposProformaComponent, {
       width: 'auto',
@@ -3755,6 +3858,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         id: this.id_tipo_view_get_codigo,
         numero_id: this.id_proforma_numero_id,
         cod_cliente_real: this.cliente_catalogo_real,
+        total: this.total
       },
     });
   }
@@ -3955,7 +4059,24 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+  verificarDepositoPendientesDescuentoCliente() {
+    this.dialog.open(ModalDesctDepositoClienteComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: {
+        cod_cliente: this.codigo_cliente,
+        nombre_cliente: this.razon_social,
+        cliente_real: this.codigo_cliente === undefined ? this.codigo_cliente : this.codigo_cliente,
+        nit: this.nit_cliente,
 
+        // numero_id: this.id_proforma_numero_id,
+        // nom_cliente: this.razon_social,
+        // desc_linea: this.habilitar_desct_sgn_solicitud,
+        // id_sol_desct: this.id_solicitud_desct,
+        // nro_id_sol_desct: this.numero_id_solicitud_desct,
+      },
+    });
+  }
 
 
 

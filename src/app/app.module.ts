@@ -97,7 +97,6 @@ import { AuthGuard } from '@guards/auth.guard';
 import { Interceptor } from '@services/interceptor';
 import { NonAuthGuard } from '@guards/non-auth.guard';
 
-
 import { RefreshPasswordComponent } from '@modules/refresh-password/refresh-password.component';
 import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
 import { PageNotFoundComponent } from '@pages/errors/page-not-found/page-not-found.component';
@@ -415,6 +414,7 @@ import { ConceptosmovimientosmercaderiaEditComponent } from '@components/manteni
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ModalPasswordComponent } from '@components/seguridad/modal-password/modal-password.component';
 import { ModalGenerarAutorizacionComponent } from '@components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component';
+import { ModalDesctDepositoClienteComponent } from '@components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -496,6 +496,7 @@ registerPlugin(UndoRedo);
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent,
+        ModalDesctDepositoClienteComponent,
 
 
 
