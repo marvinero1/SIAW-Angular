@@ -3,8 +3,33 @@
     <div class="p-2">
       <div style="text-align: center !important;">
         <span><strong><u> OBSERVACIONES DE VALIDACIÓN </u></strong></span>
-        <p>{{ message }}</p>
-        <p>{{ obs_contenido_get }}</p>
+
+
+
+
+
+
+
+
+        <div>
+          <table>
+            <tbody>
+              <tr *ngFor="let row of data; let i = index">
+                <td>{{ i }}</td>
+                <td>{{ row }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+
+
+        <div class="mensaje">
+          <p>{{ obs_contenido_get }}</p>
+        </div>
+
 
         <!-- <ng-template #items_getw>
           <p></p>

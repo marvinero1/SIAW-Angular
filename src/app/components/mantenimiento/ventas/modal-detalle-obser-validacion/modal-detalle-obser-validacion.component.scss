@@ -7,3 +7,36 @@ p{
     font-size: 0.7rem !important;
     text-align: justify;
 }
+
+
+
+
+.mensaje {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.mensaje p {
+    margin: 0;
+}
+
+/* Estilos para la tabla */
+.mensaje table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mensaje th, .mensaje td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.mensaje th {
+    background-color: #f2f2f2;
+}

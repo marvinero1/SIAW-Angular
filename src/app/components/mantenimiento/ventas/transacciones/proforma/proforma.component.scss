@@ -106,7 +106,6 @@ mat-row, mat-header-row, mat-footer-row{
   height: calc(1.4rem + 0px) !important;
   font-size: 0.69rem !important;
 }
-
 .pedido{
   text-align: right;
   background-color: #80808017;
@@ -115,33 +114,23 @@ mat-row, mat-header-row, mat-footer-row{
   width: 100%;
   margin: auto;
 }
-
 .pedido::placeholder {
   color: gray;
   opacity: 1; /* Firefox */
 }
-
 // .form-control-sm{
 //   padding: 0.2rem 0.8rem !important;
 // }
-
 .wrapper .content-wrapper{
   background-color: #CEFFFF !important;
   min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
 }
-
 .mat-mdc-tab.mdc-tab{
   height: 27px !important;
 }
-
 .mat-mdc-table{
   white-space: pre !important;
 }
-
-  
-
-
-
 
 
 
@@ -155,25 +144,20 @@ mat-row, mat-header-row, mat-footer-row{
   // .wrapper.content-wrapper{
   //   background-color:#CEFFFF !important;
   // }
-
   .mat-mdc-tab-labels{
     height: calc(1.3rem + 0px) !important;
   }
-  
   .miTabGroupProformaFooter .mat-mdc-tab-body{
     //height: 14rem !important;
     height: 195px !important;
   }
-
   .mdc-data-table__cell, .mdc-data-table__header-cell{
-    padding: 0px 16px 0px 9px !important;
+    padding: 0px 10px 0px 10px !important;
   }
-
   .mdc-tab{
     padding-right: 15px;
     padding-left: 15px;
   }
-
   .invalid-feedback{
     display: contents;
     width: 0%;
@@ -181,51 +165,40 @@ mat-row, mat-header-row, mat-footer-row{
     font-size: 80%;
     color: #dc3545;
   }
-  
   .mat-mdc-tab.mdc-tab{
     height: 20px !important;
     padding-right: 13px !important;
     padding-left: 13px !important;
   }
-  
   .mdc-tab{
     min-width: 79px !important;  
   }
-
   .mat-mdc-tab-body-content{
     overflow: hidden;
   }
-
   .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell{
     z-index: 5;
   }
-
   // label:not(.form-check-label):not(.custom-file-label) {
   //   font-weight: 100;
   // }
-  
   .mat-mdc-tab .mdc-tab__text-label {
     padding: 0px 0px 0px 0px !important;
   }
-
   // .mdc-data-table__cell, .mdc-data-table__header-cell{
   //   padding: 0px 0px 0px 0px !important;
   // }
-
   // .mat-mdc-tab-body-content{
   //   height: 12rem !important;
   // }
-
   // .mat-mdc-tab .mdc-tab__content{
   //   height: 105px !important;
   // }
-
   // .mat-tooltip {
   //   font-size: 0.7rem !important;
   //   background-color: #093070 !important;
   //   color:#fbd800 !important
   // }
-
   .mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target{
     top: 50% !important;
     height: 19px !important;
@@ -234,63 +207,54 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
+
 .right1{
  text-align: right !important;
 }
-
 .center1{
   text-align: center !important;
 }
-
 .mat-column-negativos {
   /* Aplica bordes solo en los lados derecho e izquierdo */
   border-left: 0.001px solid #ff8000;
   border-right: 0.001px solid #ff8000;
 }
-
 /* Opcional: para eliminar los bordes superior e inferior del encabezado de la columna */
 .mat-header-cell, .mat-column-negativos {
   text-align: center !important;
   border-top: none;
   border-bottom: none;
 }
-
 .mat-column-max-ventas {
   /* Aplica bordes solo en los lados derecho e izquierdo */
   border-left: 0.001px solid #958100c6;
   border-right: 0.001px solid #958100c6;
 }
-
 /* Opcional: para eliminar los bordes superior e inferior del encabezado de la columna */
 .mat-header-cell, .mat-column-max-ventas {
   text-align: center !important;
   border-top: none;
   border-bottom: none;
 }
-
 .mat-column-resultado-validacion {
   /* Aplica bordes solo en los lados derecho e izquierdo */
   border-left: 0.001px solid #958100c6;
   border-right: 0.001px solid #958100c6;
 }
-
 /* Opcional: para eliminar los bordes superior e inferior del encabezado de la columna */
 .mat-header-cell, .mat-column-resultado-validacion {
   text-align: center !important;
   border-top: none;
   border-bottom: none;
 }
-
 .miTabGroupDetalle .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
   height: 215px;
 }
-
 .miTabGroupProformaFooter .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
   height: 195px !important;
 }
-
 .selected-row {
   background-color: #093070; /* Color de fondo cuando se selecciona la fila */
   color: white; /* Color de texto cuando se selecciona la fila */
@@ -299,17 +263,13 @@ mat-row, mat-header-row, mat-footer-row{
 .selected-row .pedido {
   color: white;
 }
-
- 
-  /* Estilos adicionales para el texto dentro de la fila seleccionada */
-
+/* Estilos adicionales para el texto dentro de la fila seleccionada */
 .fixed-bottom-bar {
   position: sticky;
   bottom: 0;
   background-color: #000000;
   z-index: 1; /* Asegura que el elemento fijo esté por encima del contenido de la tabla */
 }
-
 /* Agrega estilos adicionales según sea necesario */
 .fixed-bottom-bar .col-md {
   float: left;

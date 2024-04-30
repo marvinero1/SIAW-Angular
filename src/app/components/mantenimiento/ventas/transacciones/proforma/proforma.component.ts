@@ -373,7 +373,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     'nit', 'fecha', 'total', 'item', 'cantidad', 'moneda', 'aprobada', 'transferida'];
 
   displayedColumns_precios_desct = ['codproforma', 'id', 'numero_id', 'cod_cliente', 'cod_cliente_real', 'nom_cliente',
-    'nit', 'fecha', 'total', 'item', 'cantidad', 'moneda', 'aprobada', 'transferida'];
+    'nit', 'fecha', 'total', 'item', 'cantidad', 'moneda', 'aprobada'];
   //TABS DEL FOOTER PROFORMA
 
   dataSource = new MatTableDataSource();
@@ -3358,8 +3358,75 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }, 1000);
   }
 
+  validarEmpaqueDescEspc() {
+    this.spinner.show();
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+
+    if (this.disableSelect.value === false) {
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
+
+    let array = {
+      codempresa: this.BD_storage.bd,
+      usuario: this.usuarioLogueado,
+      codalmacen: this.almacn_parame_usuario,
+      codcliente_real: this.codigo_cliente_catalogo_real,
+      codcliente: this.codigo_cliente,
+      opcion_nivel: this.complementopf.toString(),
+      desc_linea_seg_solicitud: this.desct_nivel_actual,
+      codmoneda: this.moneda_get_catalogo,
+      fecha: fecha,
+      tabladetalle: this.array_items_carrito_y_f4_catalogo
+    };
+    console.log(array);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/valEmpDescEsp/";
+    return this.api.create('/venta/transac/veproforma/valEmpDescEsp/' + this.userConn, array)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.toastr.success('VALIDAR EMPAQUE DESC. ESPECIAL ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          //siempre sera uno
+          this.orden_creciente = 1;
+
+          // Agregar el número de orden a los objetos de datos
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.orden = index + 1;
+          });
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+          if (datav.cumple === true) {
+            this.modalDetalleObservaciones("CUMPLE", datav.msg);
+          } else {
+            this.modalDetalleObservaciones("NO CUMPLE", datav.msg);
+          }
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
+
   dividirItemsParaCumplirCajaCerrada() {
-    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     this.spinner.show();
 
     if (this.disableSelect.value === false) {
@@ -3369,7 +3436,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     this.spinner.show();
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_desc_esp_seg_precio/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_dividir_items/";
     return this.api.create('/venta/transac/veproforma/aplicar_dividir_items/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado
       + "/" + this.codigo_cliente + "/" + this.desct_nivel_actual + "/" + this.almacn_parame_usuario + "/" + this.complementopf + "/" + this.moneda_get_catalogo + "/" + fecha,
       this.array_items_carrito_y_f4_catalogo)
@@ -3389,6 +3456,50 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
           this.modalDetalleObservaciones(datav.alertMsg, " ");
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
+
+  sugerirCantidadDescEspecial() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_desc_esp_seg_precio/";
+    return this.api.create('/venta/transac/veproforma/aplicar_desc_esp_seg_precio/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.almacn_parame_usuario
+      + "/" + this.BD_storage.bd, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.toastr.success('VALIDAR EMPAQUE DESC. ESPECIAL ⚙️');
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          //siempre sera uno
+          this.orden_creciente = 1;
+
+          // Agregar el número de orden a los objetos de datos
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.orden = index + 1;
+          });
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+          this.modalDetalleObservaciones("", datav.res);
+
+          this.dataSource_precios_desct = new MatTableDataSource(datav.tabla_sugerencia);
 
           setTimeout(() => {
             this.spinner.hide();

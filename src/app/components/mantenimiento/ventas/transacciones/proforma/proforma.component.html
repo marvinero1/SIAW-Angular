@@ -8,9 +8,15 @@
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
               <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
             </button>
+
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
-              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Aprobar</span>
+              <span>
+                <mat-icon
+                  style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  done_outline</mat-icon>Aprobar
+              </span>
             </button>
+
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="limpiar();">
               <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
@@ -26,8 +32,11 @@
             </button>
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="modalVerificarCreditoDisponible();">
-              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Verificar Crédito
-                Disponible</span>
+              <span>
+                <mat-icon
+                  style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  account_balance_wallet</mat-icon> Verificar Crédito Disponible
+              </span>
             </button>
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1842,97 +1851,111 @@
             </mat-tab>
 
             <mat-tab label="Precios - Descuento Especial">
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
-                multiTemplateDataRows>
+              <table mat-table [dataSource]="dataSource_precios_desct" class="mat-elevation-z8 text-center"
+                multiTemplateDataRows matSort>
 
                 <!-- COD PROFORMA Column -->
                 <ng-container matColumnDef="codproforma">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.coditem }}</td>
                 </ng-container>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Descripción </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.descripcion }}</td>
                 </ng-container>
 
                 <!-- Numero I Column -->
                 <ng-container matColumnDef="numero_id">
-                  <th mat-header-cell *matHeaderCellDef class="center1">Medida </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <th mat-header-cell *matHeaderCellDef class="center1">Medida</th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.medida }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Column -->
                 <ng-container matColumnDef="cod_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.cantidad }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="cod_cliente_real">
                   <th mat-header-cell *matHeaderCellDef class="center1">Empaque</th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.empaque_caja_cerrada }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="nom_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> % Sugerencia</th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.porcentaje }}</td>
                 </ng-container>
 
                 <!-- NIT Column -->
                 <ng-container matColumnDef="nit">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad Limites de % </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <th mat-header-cell *matHeaderCellDef class="center1" style="white-space: normal;">
+                    Cantidad Limites de % </th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.cantidad_porcentaje }}</td>
                 </ng-container>
 
                 <!-- Fecha Column -->
                 <ng-container matColumnDef="fecha">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad Sugerida (+/-) </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <th mat-header-cell *matHeaderCellDef class="center1" style="white-space: normal;">
+                    Cantidad Sugerida (+/-) </th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.cantidad_sugerida }}</td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="total">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad Sugerida Aplicable </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <th mat-header-cell *matHeaderCellDef class="center1" style="white-space: normal;">
+                    Cantidad Sugerida Aplicable </th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.cantidad_sugerida_aplicable }}</td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="item">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Dif. Cant. Aplicable - Cant Limite </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <th mat-header-cell *matHeaderCellDef class="center1" style="white-space: normal;"> Dif. Cant.
+                    Aplicable - Cant Limite </th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.diferencia }}</td>
                 </ng-container>
 
                 <!-- Cantidad Column -->
                 <ng-container matColumnDef="cantidad">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Observación </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.obs }}</td>
                 </ng-container>
 
-                <!-- Moneda Column -->
+                <!-- Aplicar Column -->
                 <ng-container matColumnDef="moneda">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Aplicar </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Aplicar
+                    <mat-icon>done</mat-icon>
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="center1">
+                    <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Aplicar"
+                      matTooltipClass="custom-tooltip"> Aplicar
+                      <mat-icon>done</mat-icon>
+                    </button>
+                  </td>
                 </ng-container>
 
-                <!-- Aprobada Column -->
+                <!-- Restaurar Column -->
                 <ng-container matColumnDef="aprobada">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Restaurar </th>
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Restaurar <mat-icon>launch</mat-icon>
+                  </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <input type="checkbox">
+                    <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Restaurar"
+                      matTooltipClass="custom-tooltip"> Restaurar
+                      <mat-icon>launch</mat-icon>
+                    </button>
                   </td>
                 </ng-container>
 
                 <!-- Transferida Column -->
-                <ng-container matColumnDef="transferida">
+                <!-- <ng-container matColumnDef="transferida">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
                   <td mat-cell *matCellDef="let element" class="center1">
                     <input type="checkbox">
                   </td>
-                </ng-container>
-
+                </ng-container> -->
                 <mat-header-row *matHeaderRowDef="displayedColumns_precios_desct"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns_precios_desct;"></mat-row>
               </table>
@@ -1951,11 +1974,13 @@
                   </button>
 
                   <button class="btn btn-outline-primary form-control-sm" type="button"
+                    (click)="validarEmpaqueDescEspc();"
                     style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <i class="fa fa-inbox red" aria-hidden="true"></i> Validar Empaque Desc. Espc.
                   </button>
 
                   <button class="btn btn-outline-primary form-control-sm" type="button"
+                    (click)="sugerirCantidadDescEspecial();"
                     style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <i class="fa fa-comments" aria-hidden="true"></i> Sugerir Cantidad Desc. Especial
                   </button>
