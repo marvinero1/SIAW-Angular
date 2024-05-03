@@ -1,21 +1,23 @@
 <section class="content">
   <div class="container-fluid">
     <div class="p-2">
-      <div style="text-align: center !important;">
+      <div style="text-align: justify !important;">
         <span><strong><u> OBSERVACIONES DE VALIDACIÓN </u></strong></span>
 
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
 
 
 
-
-
-
-
-        <div>
+        <div class="mensaje">
           <table>
             <tbody>
-              <tr *ngFor="let row of data; let i = index">
+              <tr *ngFor="let row of lines; let i = index">
                 <td>{{ i }}</td>
+
                 <td>{{ row }}</td>
               </tr>
             </tbody>
@@ -29,7 +31,6 @@
         <div class="mensaje">
           <p>{{ obs_contenido_get }}</p>
         </div>
-
 
         <!-- <ng-template #items_getw>
           <p></p>

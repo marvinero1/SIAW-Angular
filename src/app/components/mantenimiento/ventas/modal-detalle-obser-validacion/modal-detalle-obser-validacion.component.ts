@@ -21,27 +21,15 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
     this.data = this.processMessage(obs_titulo.obs_titulo);
     this.obs_contenido_get = obs_contenido.obs_contenido;
 
-    console.log(this.message);
-    console.log(this.obs_contenido_get);
+
+
+    console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
+    console.log("mensaje procesado: ", this.data);
+
+    console.log("contenido: ?", this.obs_contenido_get);
   }
 
   ngOnInit() {
-    this.message = `
-      DESCUENTO PENDIENTE POR DEPOSITO DE CLIENTE                                    
-      -----------------------------------------------------------------------------------
-      COD     DOC            FECHA       DOC            MONTO     MONTO     %     MON
-      CLIENT  CBZA           DEPOSITO    DEPOSITO       DEPOSITO  DIST      DESC  DES
-      -----------------------------------------------------------------------------------
-
-      304067  CB301 31877     28/4/2023   DP311 26847    5363,11   160,89    100   160,8
-      -----------------------------------------------------------------------------------
-      Total Descuento Por Depositos Aplicable: 160,89 US
-      Total Descuento Por Depositos Aplicado: 1119,79 BS
-      -----------------------------------------------------------------------------------
-      El Descuento aplicado incluye Reintegro Depositos Pendientes Por: 160,89 US
-      Nota.-El monto restante del deposito queda pendiente para la siguiente proforma.
-    `;
-
     // Procesar el mensaje para crear la estructura de datos
     this.data = this.processMessage(this.message);
   }
@@ -68,7 +56,7 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
 
         console.log(this.lines);
         const tableRows = this.lines.map((element, index) => {
-          return `<tr><td>${index}</td><td>${element}</td></tr>`;
+          return `<tr><td> ${index} </td><td> ${element} </td></tr>`;
         });
 
         const tableHTML = `<table>${tableRows.join('')}</table>`;

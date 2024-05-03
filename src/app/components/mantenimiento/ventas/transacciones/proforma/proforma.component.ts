@@ -422,7 +422,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getDesctLineaIDTipo();
-    this.tipopago = 1;
+    this.tipopago = 0;
 
     //ID TIPO
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
@@ -1653,7 +1653,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.item_seleccionados_catalogo_matriz_sin_procesar = [];
     this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo = [];
 
+    this.recargo_de_recargos = [];
+    this.array_de_descuentos_ya_agregados = [];
+
+
     this.tablaInicializada();
+    this.limpiarEtiqueta();
   }
 
   guardarCorreo() {
@@ -2171,11 +2176,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
-
-
-
   calcularTotalPedidoXPU(newValue: number, preciolista: number) {
     // todo despues del if ya que si no siempre esta escuchando los eventos
     if (newValue !== undefined && preciolista !== undefined) {
@@ -2412,6 +2412,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
+
 
   submitData() {
     this.spinner.show();
@@ -2808,6 +2809,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   // FIN VALIDACION ALL
 
   // NEGATIVOS
+  validacion_post_negativos_filtrados_solo_negativos: any = [];
+  validacion_post_negativos_filtrados_solo_positivos: any = [];
+
+  toggleTodosNegativos: boolean = false;
+  toggleNegativos: boolean = false;
+  togglePositivos: boolean = false;
+
   validarProformaSoloNegativos() {
     // 00060 - VALIDAR SALDOS NEGATIVOS
     // VACIO - TODOS LOS CONTROLES
@@ -2934,13 +2942,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  validacion_post_negativos_filtrados_solo_negativos: any = [];
-  validacion_post_negativos_filtrados_solo_positivos: any = [];
-
-  toggleTodosNegativos: boolean = false;
-  toggleNegativos: boolean = false;
-  togglePositivos: boolean = false;
-
   negativosTodosFilterToggle() {
     this.toggleTodosNegativos = true;
     this.toggleNegativos = false;
@@ -2975,6 +2976,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   //FIN NEGATIVOS
 
   // MAX VENTAS
+  validacion_post_max_venta_filtrados_si_sobrepasa: any = [];
+  validacion_post_max_venta_filtrados_no_sobrepasa: any = [];
+
+  toggleTodosMaximoVentas: boolean = false;
+  toggleMaximoVentaSobrepasan: boolean = false;
+  toggleMaximoVentasNoSobrepasan: boolean = false;
+
   validarProformaSoloMaximoVenta() {
     // 00058 - VALIDAR MAXIMO DE VENTA
     // VACIO - TODOS LOS CONTROLES
@@ -3099,13 +3107,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
-
-  validacion_post_max_venta_filtrados_si_sobrepasa: any = [];
-  validacion_post_max_venta_filtrados_no_sobrepasa: any = [];
-
-  toggleTodosMaximoVentas: boolean = false;
-  toggleMaximoVentaSobrepasan: boolean = false;
-  toggleMaximoVentasNoSobrepasan: boolean = false;
 
   maximoVentasAllFilterToggle() {
     this.toggleTodosMaximoVentas = true;
@@ -3304,6 +3305,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
 
+
+
   // MAT-TAB Precios - Descuentos Especiales
   aplicarDescuentoEspecialSegunTipoPrecio() {
     this.spinner.show();
@@ -3494,6 +3497,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
             element.orden = index + 1;
           });
+
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
@@ -4179,12 +4183,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         nombre_cliente: this.razon_social,
         cliente_real: this.codigo_cliente === undefined ? this.codigo_cliente : this.codigo_cliente,
         nit: this.nit_cliente,
-
-        // numero_id: this.id_proforma_numero_id,
-        // nom_cliente: this.razon_social,
-        // desc_linea: this.habilitar_desct_sgn_solicitud,
-        // id_sol_desct: this.id_solicitud_desct,
-        // nro_id_sol_desct: this.numero_id_solicitud_desct,
       },
     });
   }
@@ -4327,7 +4325,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
-      width: '400px',
+      width: '600px',
       height: 'auto',
       disableClose: true,
       data: {

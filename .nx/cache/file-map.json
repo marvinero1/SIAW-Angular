@@ -4493,7 +4493,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.html",
-        "hash": "18284257369517489965"
+        "hash": "2499698638728385873"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.scss",
@@ -4505,7 +4505,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.ts",
-        "hash": "2141745372254198453"
+        "hash": "5821879221986801494"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.html",
@@ -4525,11 +4525,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "18123625279128774010"
+        "hash": "11841856907028453870"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
-        "hash": "3037352030717497096"
+        "hash": "13398512348795196731"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.spec.ts",
@@ -4537,7 +4537,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.ts",
-        "hash": "13646500117764322720"
+        "hash": "9944197369529213816"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
@@ -5221,7 +5221,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "13877751592444326617"
+        "hash": "11545899258025841510"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5233,7 +5233,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "4195151539126529302"
+        "hash": "1556668922836185240"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
