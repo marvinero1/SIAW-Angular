@@ -44,8 +44,8 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
     'obs'];
 
   displayedColumns_anticipos = ['nula', 'idprof', 'nroidprof', 'fechaprof', 'cod_cliente', 'cod_cliente_real', 'total',
-    'aprobada', 'transferida', 'id_cbza', 'id_deposito', 'nro_id_deposito', 'id_anticipo', 'id_cbza_contado', 'nro_id_cbza_contado',
-    'monto_desc', 'accion'];
+    'aprobada', 'transferida', 'id_cbza', 'id_deposito', 'nro_id_deposito', 'id_anticipo', 'id_cbza_contado',
+    'nro_id_cbza_contado', 'monto_desc', 'accion'];
 
   constructor(public dialogRef: MatDialogRef<ModalDesctDepositoClienteComponent>, private api: ApiService,
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public nombre_cliente: any,
