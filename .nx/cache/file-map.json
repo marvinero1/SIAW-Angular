@@ -4505,7 +4505,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.ts",
-        "hash": "7161660389257665505"
+        "hash": "2006940730754572169"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.html",
@@ -4537,7 +4537,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.ts",
-        "hash": "9944197369529213816"
+        "hash": "5451274946049095390"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
@@ -5233,7 +5233,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "1556668922836185240"
+        "hash": "13504005745243049190"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

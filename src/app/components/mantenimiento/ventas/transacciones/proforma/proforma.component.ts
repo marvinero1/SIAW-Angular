@@ -2498,6 +2498,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
+
     if (this.FormularioData.valid) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -2509,6 +2510,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.toastr.info("FORMULARIO CORRECTO ✅");
           this.totabilizar_post = datav;
           console.log(this.totabilizar_post);
+
+
+
 
           setTimeout(() => {
             this.spinner.hide();

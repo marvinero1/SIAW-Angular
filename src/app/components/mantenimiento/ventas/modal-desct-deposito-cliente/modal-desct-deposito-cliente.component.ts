@@ -18,7 +18,6 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
   tabla_asignaciones_pendientes: any = [];
   tabla_asignaciones_NO_FACTURADAS: any = [];
 
-
   total_depositos: any;
   total_distribuido: any;
   total_desc_por_aplicar: any;
@@ -56,7 +55,6 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
     this.nombre_cliente_get = nombre_cliente.nombre_cliente;
     this.nit_get = nit.nit;
     this.cliente_real_get = cliente_real.cliente_real;
-
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;

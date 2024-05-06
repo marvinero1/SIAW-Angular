@@ -22,10 +22,8 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
     this.obs_contenido_get = obs_contenido.obs_contenido;
 
 
-
     console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
     console.log("mensaje procesado: ", this.data);
-
     console.log("contenido: ?", this.obs_contenido_get);
   }
 
