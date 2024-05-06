@@ -1,12 +1,11 @@
-import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
+import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-modal-desct-deposito-cliente',
   templateUrl: './modal-desct-deposito-cliente.component.html',
@@ -47,9 +46,11 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
     'nro_id_cbza_contado', 'monto_desc', 'accion'];
 
   constructor(public dialogRef: MatDialogRef<ModalDesctDepositoClienteComponent>, private api: ApiService,
-    public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public nombre_cliente: any,
-    @Inject(MAT_DIALOG_DATA) public nit: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
-    private spinner: NgxSpinnerService) {
+    private toastr: ToastrService, public log_module: LogService, private spinner: NgxSpinnerService,
+    public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
+    @Inject(MAT_DIALOG_DATA) public nombre_cliente: any,
+    @Inject(MAT_DIALOG_DATA) public nit: any,
+    @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
     this.cod_cliente_get = cod_cliente.cod_cliente;
     this.nombre_cliente_get = nombre_cliente.nombre_cliente;
@@ -79,13 +80,51 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
           this.total_desc_por_aplicar = datav.desc_por_depos_pend_por_apli.ttl_dist;
           this.total_aplicado_NO_FACTURADO = datav.desc_asig_no_fact.ttl_aplicado_no_facturado;
 
-
           this.tabla_asignaciones_pendientes = datav.desc_por_depos_pend_por_apli.dt_depositos_pendientes;
           this.tabla_asignaciones_NO_FACTURADAS = datav.desc_asig_no_fact.dt_desctos_aplicados_no_facturados;
 
-
           this.dataSource = new MatTableDataSource(this.tabla_asignaciones_pendientes);
           this.dataSource_anticipos = new MatTableDataSource(this.tabla_asignaciones_NO_FACTURADAS);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      })
+  }
+
+  eliminarDeposito(deposito) {
+    console.log(deposito);
+    this.spinner.show();
+
+    let a = [deposito].map(element => {
+      return { ...element, borrar: true };
+    });
+
+    console.log(a);
+
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgdesctodeposito_pendiente/deleteDescProf/";
+    return this.api.create('/venta/transac/prgdesctodeposito_pendiente/deleteDescProf/' + this.userConn + "/prgdesctodeposito_pendiente/" + this.usuarioLogueado, a)
+      .subscribe({
+        next: (datav) => {
+          // this.pendientes = datav;
+          console.log(datav);
+          this.getData1Tab();
+          this.toastr.success(datav.resp);
+
+          this.log_module.guardarLog("prgdesctodeposito_pendiente", "eliminarDescuentoDepositoProforma", "modalVerificarDepositoProforma");
 
           setTimeout(() => {
             this.spinner.hide();

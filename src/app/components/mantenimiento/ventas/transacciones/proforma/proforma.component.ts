@@ -2511,9 +2511,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.totabilizar_post = datav;
           console.log(this.totabilizar_post);
 
-
-
-
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -3973,11 +3970,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         cod_moneda: this.moneda_get_catalogo,
         totalProf: this.total,
         tipoPago: this.tipopago,
-        vendedor: this.almacn_parame_usuario,
+        vendedor: this.cod_vendedor_cliente,
         id: this.id_tipo_view_get_codigo,
         numero_id: this.id_proforma_numero_id,
         cod_cliente_real: this.cliente_catalogo_real,
-        total: this.total
+        total: this.total,
+        tdc: this.tipo_cambio_moneda_catalogo
       },
     });
   }
@@ -4179,13 +4177,25 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   verificarDepositoPendientesDescuentoCliente() {
+    if (this.codigo_cliente === undefined || this.codigo_cliente === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE CLIENTE EN PROFORMA",
+        }
+      });
+      return;
+    }
+
     this.dialog.open(ModalDesctDepositoClienteComponent, {
       width: 'auto',
       height: 'auto',
       data: {
         cod_cliente: this.codigo_cliente,
         nombre_cliente: this.razon_social,
-        cliente_real: this.codigo_cliente === undefined ? this.codigo_cliente : this.codigo_cliente,
+        cliente_real: this.codigo_cliente_catalogo_real === undefined ? this.codigo_cliente : this.codigo_cliente_catalogo_real,
         nit: this.nit_cliente,
       },
     });

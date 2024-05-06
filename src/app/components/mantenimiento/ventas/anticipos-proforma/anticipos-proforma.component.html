@@ -32,7 +32,7 @@
                   </th>
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Proforma</u></mat-label>
-                    <input type="text" style="width: 35%;" [ngModel]="totalProf | number:'1.2-2'" readonly>
+                    <input type="text" style="width: 35%;" [ngModel]="formatNumber(totalProf)" readonly>
                     {{ cod_moneda_proforma }}
                   </th>
                 </tr>
@@ -59,7 +59,7 @@
                       </div>
                       <ng-container>
                         <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                          formControlName="codvendedor">
+                          formControlName="codvendedor" value="AN311" readonly>
                       </ng-container>
 
                       <!-- <div class="input-group-append">
@@ -67,8 +67,7 @@
                           style="border-color: #093070;"><i class="fa fa-search"></i>
                         </button>
                       </div> -->
-                      <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                        formControlName="codvendedor">
+                      <input type="text" class="form-control form-control-sm" [(ngModel)]="anticipo">
                     </div>
                   </th>
                 </tr>
@@ -90,14 +89,14 @@
 
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
-                    <input type="text" style="width: 22%;" readonly>&nbsp;
+                    <input type="text" style="width: 22%;" [(ngModel)]="monto_a_asignar">&nbsp;
                     <button mat-button><i class="fa fa-cogs" style="color: #093070 !important;"></i></button>
                   </th>
                 </tr>
 
                 <div class="row" style="width: 167%;">
                   <div class="col-md-3" style="float: left;">
-                    <button mat-raised-button class="secondary">
+                    <button mat-raised-button class="secondary" (click)="asignarMontoAlArray();">
                       <i class="fa fa-plus" aria-hidden="true" style="color: rgb(76, 226, 34);"></i>
                       Asignar Monto
                     </button>&nbsp;
@@ -122,32 +121,37 @@
 
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"> </td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.docanticipo }}
+                          </td>
                         </ng-container>
 
                         <ng-container matColumnDef="fecha">
                           <th mat-header-cell *matHeaderCellDef class="white"> Fecha </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{ element.fechareg | date:'yyyy-MM-dd'}}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="monto">
                           <th mat-header-cell *matHeaderCellDef class="white"> Monto </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">
+                            {{ formatNumber(element.monto) | number: '1.2-2' }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="usuario">
                           <th mat-header-cell *matHeaderCellDef class="white"> Usuario </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.usuarioreg}}
+                          </td>
                         </ng-container>
 
                         <ng-container matColumnDef="hora">
                           <th mat-header-cell *matHeaderCellDef class="white"> Hora Reg </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.horareg }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="vendedor">
                           <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codvendedor }}
+                          </td>
                         </ng-container>
 
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -157,8 +161,7 @@
                   </div>
                   <div style="float: right;text-align: end;">
                     <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" [(ngModel)]="total_get"
-                      readonly>
+                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
                   </div>
                 </div>
               </div>

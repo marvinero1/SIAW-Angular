@@ -16,9 +16,11 @@ export class AnticiposProformaComponent implements OnInit {
 
   public fecha_desde = new Date();
   public fecha_hasta = new Date();
+  public hora_actual = new Date();
 
   anticipos_asignados_table: any = [];
   data_tabla_anticipos: any = [];
+  array_anticipos: any = [];
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -36,6 +38,10 @@ export class AnticiposProformaComponent implements OnInit {
   usuarioLogueado: any;
   BD_storage: any;
   total_get: any;
+  tdc_get: any;
+
+  monto_a_asignar: any;
+  anticipo: any;
   nombre_ventana: string = "docininvconsol.vb";
 
   public fecha_formateada1;
@@ -66,7 +72,7 @@ export class AnticiposProformaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,
     @Inject(MAT_DIALOG_DATA) public vendedor: any, @Inject(MAT_DIALOG_DATA) public cod_cliente_real: any,
-    @Inject(MAT_DIALOG_DATA) public total: any,
+    @Inject(MAT_DIALOG_DATA) public total: any, @Inject(MAT_DIALOG_DATA) public tdc: any,
     private datePipe: DatePipe) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -84,6 +90,7 @@ export class AnticiposProformaComponent implements OnInit {
     this.vendedor_get = vendedor.vendedor;
     this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real;
     this.total_get = this.formatNumber(total.total);
+    this.tdc_get = tdc.tdc;
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf, this.tipo_de_pago_proforma,
       this.nombre_cliente_get, this.nit_get, this.vendedor_get);
@@ -129,9 +136,7 @@ export class AnticiposProformaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -173,6 +178,73 @@ export class AnticiposProformaComponent implements OnInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      })
+  }
+
+  asignarMontoAlArray() {
+    this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
+    let hour = this.hora_actual.getHours();
+    let minuts = this.hora_actual.getMinutes();
+
+    let hora_actual_complete = hour + ":" + minuts;
+
+    let array_monto = {
+      codproforma: 0,
+      codanticipo: 0,
+      id_anticipo: "",
+      docanticipo: "AN311",
+      nroid_anticipo: this.anticipo,
+      fechareg: this.fecha_formateada1,
+      monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
+      usuarioreg: this.usuarioLogueado,
+      horareg: hora_actual_complete,
+      tdc: this.tdc_get,
+      codmoneda: this.cod_moneda_proforma,
+      codvendedor: this.vendedor_get.toString(),
+    };
+
+    console.log(array_monto);
+
+    if (this.monto_a_asignar === undefined) {
+      this.monto_a_asignar = 0;
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/";
+    return this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
+      "UFV" + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          if (datav === true) {
+            this.toastr.success('Anticipo Agregado Exitosamente! 🎉');
+
+            this.array_anticipos.push(array_monto);
+            this.dataSource = new MatTableDataSource(this.array_anticipos);
+
+            console.log(this.array_anticipos);
+          } else {
+            this.toastr.error('NO SE AÑADIO');
+          }
+
+          this.spinner.show();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! Anticipo NO Agregado !');
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);

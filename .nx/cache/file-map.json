@@ -705,7 +705,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.ts",
-        "hash": "3615089461778864997"
+        "hash": "924937076806324899"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-edit/area-edit.component.html",
@@ -4157,11 +4157,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.html",
-        "hash": "4167591829138844728"
+        "hash": "5740631414963171327"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.scss",
-        "hash": "4280833311977231541"
+        "hash": "4041820955749783371"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.spec.ts",
@@ -4169,7 +4169,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.ts",
-        "hash": "4128930592859150502"
+        "hash": "8779693777035551374"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes/clientes.component.html",
@@ -4493,7 +4493,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.html",
-        "hash": "10086699280241694095"
+        "hash": "8169026403037654346"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.scss",
@@ -4505,7 +4505,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.ts",
-        "hash": "2006940730754572169"
+        "hash": "11595479374372596034"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.html",
@@ -5221,7 +5221,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "11545899258025841510"
+        "hash": "2126357083137982705"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5233,7 +5233,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13504005745243049190"
+        "hash": "13452869714287606099"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

@@ -79,6 +79,7 @@
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente"
+            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
@@ -490,7 +491,6 @@
                 </container-element>
               </ng-container>
             </div>
-
           </div>
 
           <div class="input-group">
