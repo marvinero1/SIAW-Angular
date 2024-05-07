@@ -22,6 +22,7 @@
     "bn-ng-idle": "^2.0.5",
     "bootstrap": "4.6.1",
     "core-js": "3.25.0",
+    "date-fns": "^3.6.0",
     "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
     "luxon": "3.0.3",
@@ -161,7 +162,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "12751868811261698162"
+        "hash": "7266324835374826902"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -201,7 +202,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "10116584811782291129"
+        "hash": "10293105664908419949"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -273,11 +274,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "8231308306225103850"
+        "hash": "750233270148170552"
       },
       {
         "file": "package.json",
-        "hash": "8239270195031821879"
+        "hash": "4736382637996944227"
       },
       {
         "file": "proxy.conf.json",
@@ -285,7 +286,7 @@
       },
       {
         "file": "src/app/app-routing.module.ts",
-        "hash": "14431157144544416762"
+        "hash": "5628558463581636797"
       },
       {
         "file": "src/app/app.component.html",
@@ -4157,7 +4158,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.html",
-        "hash": "5740631414963171327"
+        "hash": "3268121164541543628"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.scss",
@@ -4169,7 +4170,15 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.ts",
-        "hash": "8779693777035551374"
+        "hash": "7358461455242956258"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service.spec.ts",
+        "hash": "18135248080276652986"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service.ts",
+        "hash": "2967038593125348847"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes/clientes.component.html",
@@ -4349,7 +4358,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "12069047226219786409"
+        "hash": "14094971574898740173"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -5221,11 +5230,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "2126357083137982705"
+        "hash": "9285999422398670994"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "16015336195925227658"
+        "hash": "6500122950200204560"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5233,7 +5242,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13452869714287606099"
+        "hash": "9489597197768575123"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

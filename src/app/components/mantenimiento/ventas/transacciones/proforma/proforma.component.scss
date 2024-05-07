@@ -11,7 +11,7 @@
   border-color: #093070;
 }
 .inputsSaldos{
-  width: 10%;
+  width: 5%;
   background-color: black;
   color: #fbd800;
   height: 40%;
@@ -104,7 +104,7 @@ mat-row, mat-header-row, mat-footer-row{
 }
 .inputsSaldos{
   height: calc(1.4rem + 0px) !important;
-  font-size: 0.69rem !important;
+  font-size: 0.66rem !important;
 }
 .pedido{
   text-align: right;
@@ -273,4 +273,12 @@ mat-row, mat-header-row, mat-footer-row{
 /* Agrega estilos adicionales según sea necesario */
 .fixed-bottom-bar .col-md {
   float: left;
+}
+.center2{
+  text-align: right;
+}
+
+.inputsSaldos2::placeholder {
+  color: #00c600;
+  opacity: 0.8;
 }

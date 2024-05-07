@@ -407,8 +407,10 @@ const routes: Routes = [
                 component: SolicitudesDescuentoComponent,
                 canActivate: [AuthGuard]
             },
-
             //fin ventas
+
+
+
 
 
 

@@ -5832,6 +5832,15 @@
         "hash": "sha512-x70tepWUQKDYFHejk2o1zR4HBqH7Idz4cMTemdeM8oT7lmRnGb9gbiUoYMgwc5h2S2jkDYeIkvQWWMsI17shCg=="
       }
     },
+    "npm:date-fns": {
+      "type": "npm",
+      "name": "npm:date-fns",
+      "data": {
+        "version": "3.6.0",
+        "packageName": "date-fns",
+        "hash": "sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww=="
+      }
+    },
     "npm:date-format": {
       "type": "npm",
       "name": "npm:date-format",

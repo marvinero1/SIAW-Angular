@@ -7,6 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { AnticipoProformaService } from './servicio-anticipo-proforma/anticipo-proforma.service';
+import { subMonths } from 'date-fns';
+import { element } from 'protractor';
 @Component({
   selector: 'app-anticipos-proforma',
   templateUrl: './anticipos-proforma.component.html',
@@ -21,6 +24,7 @@ export class AnticiposProformaComponent implements OnInit {
   anticipos_asignados_table: any = [];
   data_tabla_anticipos: any = [];
   array_anticipos: any = [];
+  array_tabla_anticipos_get: any = [];
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -51,10 +55,10 @@ export class AnticiposProformaComponent implements OnInit {
   public detalle = "ActualizarStock-create";
   public tipo = "ActualizarStock-CREATE";
 
-  displayedColumns = ['doc', 'fecha', 'monto', 'usuario', 'hora', 'vendedor'];
+  displayedColumns = ['doc', 'monto', 'usuario', 'fecha', 'hora', 'vendedor', 'accion'];
 
   displayedColumnsAnticipado = ['doc', 'cliente', 'vendedor', 'anulado', 'cliente_real', 'nit',
-    'fecha', 'pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg'];
+    'fecha', 'pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -67,12 +71,14 @@ export class AnticiposProformaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
+    private anticipo_servicio: AnticipoProformaService,
     @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public tipoPago: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any, @Inject(MAT_DIALOG_DATA) public nit: any,
     @Inject(MAT_DIALOG_DATA) public vendedor: any, @Inject(MAT_DIALOG_DATA) public cod_cliente_real: any,
     @Inject(MAT_DIALOG_DATA) public total: any, @Inject(MAT_DIALOG_DATA) public tdc: any,
+    @Inject(MAT_DIALOG_DATA) public array_tabla_anticipos: any,
     private datePipe: DatePipe) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -91,9 +97,10 @@ export class AnticiposProformaComponent implements OnInit {
     this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real;
     this.total_get = this.formatNumber(total.total);
     this.tdc_get = tdc.tdc;
+    this.array_tabla_anticipos_get = array_tabla_anticipos.array_tabla_anticipos;
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf, this.tipo_de_pago_proforma,
-      this.nombre_cliente_get, this.nit_get, this.vendedor_get);
+      this.nombre_cliente_get, this.nit_get, this.vendedor_get, this.array_tabla_anticipos_get);
   }
 
   ngOnInit() {
@@ -109,19 +116,16 @@ export class AnticiposProformaComponent implements OnInit {
       return this.message = "SELECCIONE MONEDA"
     }
 
-    // if (this.totalProf == undefined || this.totalProf == 0) {
-    //   this.toastr.error('EL TOTAL ES 0 O NO HAY TOTAL ⚠️');
-    //   this.validacion = true;
-    //   return this.message = "EL TOTAL ES 0 O NO HAY TOTAL"
-    // }
-
-    if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma == "CREDITO") {
+    if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma === 0) {
       this.toastr.error('SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA"
     }
 
+    // Resta 4 meses a la fecha actual
+    this.fecha_desde = subMonths(this.fecha_desde, 4);
     this.anticiposAsignadosInicioCargaTabla();
+    //this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
   }
 
   anticiposAsignadosInicioCargaTabla() {
@@ -131,6 +135,8 @@ export class AnticiposProformaComponent implements OnInit {
         next: (datav) => {
           this.anticipos_asignados_table = datav;
           console.log('data', this.anticipos_asignados_table);
+
+          this.dataSource = new MatTableDataSource(this.anticipos_asignados_table.concat(this.array_tabla_anticipos_get));
         },
 
         error: (err: any) => {
@@ -220,18 +226,17 @@ export class AnticiposProformaComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/";
     return this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
-      "UFV" + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
+      this.cod_moneda_proforma + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
           if (datav === true) {
             this.toastr.success('Anticipo Agregado Exitosamente! 🎉');
 
-            this.array_anticipos.push(array_monto);
-            this.dataSource = new MatTableDataSource(this.array_anticipos);
+            this.array_tabla_anticipos_get.push(array_monto);
+            this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
 
-            console.log(this.array_anticipos);
+            console.log(this.array_anticipos, this.array_tabla_anticipos_get);
           } else {
             this.toastr.error('NO SE AÑADIO');
           }
@@ -257,12 +262,32 @@ export class AnticiposProformaComponent implements OnInit {
       })
   }
 
+
+
+  elegirAnticipo(element) {
+    if (element.montorest <= 0) {
+      this.toastr.warning("EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + " NO TIENE SALDO RESTANTE");
+    } else {
+      this.toastr.success("ANTICIPO SELECCIONADO");
+    }
+  }
+
+  eliminarMonto(element) {
+    console.log("Elemento a Eliminar:", element);
+    this.array_tabla_anticipos_get = this.array_tabla_anticipos_get.filter(i => i.nroid_anticipo !== element.nroid_anticipo);
+    this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+  }
+
   formatNumber(number: number): any {
     // Formatear el número con el separador de miles como coma y el separador decimal como punto
     return new Intl.NumberFormat('en-US').format(number);
   }
 
   close() {
+    this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
+      anticipos: this.array_tabla_anticipos_get,
+    });
+
     this.dialogRef.close();
   }
 }

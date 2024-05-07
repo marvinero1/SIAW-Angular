@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
 import { ServicioclienteService } from '../../serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { ServicioalmacenService } from '../../../inventario/almacen/servicioalmacen/servicioalmacen.service';
-import { TarifaService } from '../../serviciotarifa/tarifa.service';
 import { VendedorService } from '../../serviciovendedor/vendedor.service';
 import { TipoidService } from '../../serviciotipoid/tipoid.service';
 import { DescuentoService } from '../../serviciodescuento/descuento.service';
@@ -48,8 +47,8 @@ import { SubTotalService } from '../../modal-sub-total/sub-total-service/sub-tot
 import { MatTabGroup } from '@angular/material/tabs';
 import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta.service';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
-import { element } from 'protractor';
 import { ModalDesctDepositoClienteComponent } from '../../modal-desct-deposito-cliente/modal-desct-deposito-cliente.component';
+import { AnticipoProformaService } from '../../anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -140,6 +139,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  @ViewChild('tabGroupfooter') tabGroup1: MatTabGroup;
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -172,7 +172,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   descuentos_get: any = [];
   descuentos_get_copied: any = [];
   descuentos_get_unico: any;
-
 
   tarifa_get_unico: any = [];
   tarifa_get_unico_copied: any = [];
@@ -208,6 +207,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   totabilizar_post: any = [];
   tablaIva: any = [];
   ids_complementar_proforma: any = [];
+  array_venta_item_23_dias: any = [];
 
   saldo_modal_total_1: any;
   saldo_modal_total_2: any;
@@ -221,7 +221,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   BD_storage: any;
   orden_creciente: number = 1;
   fecha_actual_empaque: string;
-
 
   public cod_cliente_enter;
   public codigo_cliente: string;
@@ -300,6 +299,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   selectedCountryControl = new FormControl(this.selectTPago);
 
   veCliente: veCliente[] = [];
+  array_ultimas_proformas: any = [];
 
   public codigo_cliente_catalogo: string;
   public codigo_cliente_catalogo_direccion: string;
@@ -314,6 +314,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public cantidad_item_matriz: number;
   public recargos_ya_en_array_tamanio: number;
   public URL_maps: string;
+
+  public item_obtenido: any = [];
+  porcen_item: string;
+  valor_nit: any;
+
 
   // arraySacarTotal
   veproforma: any = [];
@@ -349,6 +354,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   public negativos_validacion: any = [];
   public maximo_validacion: any = [];
+  public tabla_anticipos: any = [];
 
   // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'pedido',
@@ -379,9 +385,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  dataSource__venta_23_dias = new MatTableDataSource();
-  dataSourceWithPageSize__venta_23_dias = new MatTableDataSource();
-
   dataSource_precios_desct = new MatTableDataSource();
   dataSourceWithPageSize_precios_desct = new MatTableDataSource();
 
@@ -394,16 +397,23 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   dataSource_validacion = new MatTableDataSource();
   dataSourceWithPageSize_validacion = new MatTableDataSource();
 
+  dataSourceUltimasProformas = new MatTableDataSource();
+  dataSourceWithPageSize_UltimasProformas = new MatTableDataSource();
+
+  dataSource__venta_23_dias = new MatTableDataSource();
+  dataSourceWithPageSize__venta_23_dias = new MatTableDataSource();
+
   decimalPipe: any;
 
-  constructor(public dialog: MatDialog, private api: ApiService, public itemservice: ItemServiceService,
-    public servicioCliente: ServicioclienteService, public almacenservice: ServicioalmacenService,
-    public serviciovendedor: VendedorService, public servicioTarifa: TarifaService, public servicioPrecioVenta: ServicioprecioventaService,
-    private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, public subtotal_service: SubTotalService,
-    private _formBuilder: FormBuilder, public servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
-    private toastr: ToastrService, private spinner: NgxSpinnerService, public log_module: LogService, public saldoItemServices: SaldoItemMatrizService,
-    public _snackBar: MatSnackBar, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
-    public servicio_recargo_proforma: RecargoToProformaService, public servicioEtiqueta: EtiquetaService) {
+  constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
+    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService,
+    private serviciovendedor: VendedorService, private servicioPrecioVenta: ServicioprecioventaService,
+    private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private subtotal_service: SubTotalService,
+    private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
+    private toastr: ToastrService, private spinner: NgxSpinnerService, private log_module: LogService, private saldoItemServices: SaldoItemMatrizService,
+    private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
+    private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
+    private anticipo_servicio: AnticipoProformaService) {
 
     this.decimalPipe = new DecimalPipe('en-US');
     this.FormularioData = this.createForm();
@@ -737,6 +747,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.recargo_de_recargos = data.resultado_validacion_tabla_recargos
     });
     //FIN DE RECARGOS
+
+
+    //ventana anticipos de proforma // mat-tab Anticipo Venta
+    this.anticipo_servicio.disparadorDeTablaDeAnticipos.subscribe(data => {
+      console.log("Recibiendo Tabla de Anticipos Agregados: ", data);
+      this.tabla_anticipos = data.anticipos;
+
+      console.log(this.tabla_anticipos);
+    });
+    //fin ventana anticipos de proforma // mat-tab Anticipo Venta
+
   }
 
   ngAfterViewInit() {
@@ -753,6 +774,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getDescuento();
     this.tablaInicializada();
     this.getIDScomplementarProforma();
+  }
+
+  onNoClick(event: Event): void {
+    event.preventDefault();
   }
 
   ponerFocoEnInput() {
@@ -915,6 +940,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getSaldoItemSeleccionadoDetalle(codigo);
     this.getAlmacenesSaldos();
     this.getSaldoItem(codigo);
+    this.getPorcentajeVentaItem(codigo);
 
     this.saldo_modal_total_1 = "";
     this.saldo_modal_total_2 = "";
@@ -1101,6 +1127,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
     if (index !== -1) {
       this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
+
+  abrirTabPorLabelFooter(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup1._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup1.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
     }
   }
 
@@ -1332,9 +1367,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.total = 0.00;
     this.subtotal = 0.00;
     this.servicioCliente.disparadorDeClientes.emit({
-      cliente: {
-        codigo: cod_cliente,
-      }
+      cliente: { codigo: cod_cliente }
     });
   }
 
@@ -1345,7 +1378,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.moneda_get_fuction = datav;
           console.log(this.moneda_get_fuction);
-
           const encontrado = this.moneda_get_fuction.some((moneda) => moneda.codigo === 'BS');
 
           if (encontrado) {
@@ -1359,9 +1391,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -1471,48 +1501,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-  // MAT-TAB-GROUP RESULTADO DE VALIDACION
-  getDetalleItemResultadoValidacion(item, tarifa, descuento, cantidad) {
-    let data: any = [
-    ];
-
-    this.fecha_actual_empaque = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
-    console.log(this.fecha_actual_empaque);
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.create('venta/transac/veproforma/validarProforma/dpd3_310_PE/vacio/proforma/grabar_aprobar', data)
-      .subscribe({
-        next: (datav) => {
-          this.itemTabla = datav;
-          // console.log(this.itemTabla);
-
-
-          // aca agrega los items a un arrays de items
-          this.arr.push(datav);
-
-
-          // this.arr.map(function(dato){
-          //   dato.cantidad = cantidad;
-          //   return dato;
-          // })
-
-          console.log(this.arr);
-
-
-
-          this.dataSource = new MatTableDataSource(this.arr);
-          // this.dataSource.paginator = this.paginator;
-          // this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-  //FIN MAT-TAB-GROUP RESULTADO DE VALIDACION
-
   getAlmacenesSaldos() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCodAlmSlds/";
     return this.api.getAll('/venta/transac/veproforma/getCodAlmSlds/' + this.userConn + "/" + this.usuarioLogueado)
@@ -1603,6 +1591,24 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  getPorcentajeVentaItem(item) {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inmatriz/infoItemRes/";
+    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia_logueado + "/" + item)
+      .subscribe({
+        next: (datav) => {
+          this.item_obtenido = datav;
+          console.log('item seleccionado: ', this.item_obtenido);
+          this.porcen_item = this.item_obtenido.porcen_maximo;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      })
+  }
+
   limpiar() {
     this.codigo_cliente = "";
     this.nombre_cliente = "";
@@ -1655,7 +1661,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.recargo_de_recargos = [];
     this.array_de_descuentos_ya_agregados = [];
-
+    this.tabla_anticipos = [];
 
     this.tablaInicializada();
     this.limpiarEtiqueta();
@@ -1696,8 +1702,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
       })
   }
-
-  valor_nit: any;
 
   guardarNombreCliente() {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -1930,41 +1934,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   //FIN PRECIO VENTA DETALLE
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   //DESCUENTO ESPECIAL DETALLE
   DEChangeMatrix(element: any, newValue: number) {
     // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
@@ -2091,64 +2060,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.elementoSeleccionadoDescuento.coddescuento = data.descuento.codigo;
     });
   }
-
-
   //FIN DESCUENTO ESPECIAL DETALLE
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  simularTab() {
-    const tabla = document.getElementById('tabla_detalle');
-    const inputs = tabla.querySelectorAll('input'); // Obtener todos los elementos interactivos dentro de la tabla
-    const currentInput = document.activeElement; // Obtener el elemento actualmente enfocado
-
-    // Encontrar el índice del elemento actualmente enfocado en la lista de elementos interactivos
-    const currentIndex = Array.from(inputs).findIndex(input => input === currentInput);
-
-    // Obtener el siguiente elemento en la lista o volver al primer elemento si estamos al final
-    const nextIndex = (currentIndex + 1) % inputs.length;
-    const nextInput = inputs[nextIndex];
-
-    // Verificar si el siguiente elemento es enfocable
-    if (nextInput && typeof (nextInput as HTMLElement).focus === 'function') {
-      // Enfocar el siguiente elemento
-      (nextInput as HTMLElement).focus();
-    }
-  }
 
 
 
@@ -2321,7 +2235,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   imprimir_cotizacion_transferida(cotizacion) {
     console.log(cotizacion);
-
     this.cod_id_tipo_modal_id = cotizacion.cabecera.id;
     this.id_proforma_numero_id = cotizacion.cabecera.numeroid;
     this.fecha_actual = cotizacion.cabecera.fecha;
@@ -2340,7 +2253,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.des_extra = cotizacion.cabecera.descuentos;
     this.iva = cotizacion.cabecera.iva;
     this.total = cotizacion.cabecera.total;
-
 
     this.direccion = cotizacion.cabecera.direccion;
     this.obs = cotizacion.cabecera.obs;
@@ -2364,7 +2276,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.item_seleccionados_catalogo_matriz_codigo = item;
 
     let agencia_concat = "AG" + this.agencia_logueado;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
       ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado)
@@ -2391,9 +2302,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -2412,7 +2321,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
 
   submitData() {
     this.spinner.show();
@@ -2498,7 +2406,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
     if (this.FormularioData.valid) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -2514,8 +2421,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
-
-          //window.location.reload();
         },
         error: (err) => {
           console.log(err, errorMessage);
@@ -2618,7 +2523,29 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  formatNumber(number: number): any {
+    // Formatear el número con el separador de miles como coma y el separador decimal como punto
+    return new Intl.NumberFormat('en-US').format(number);
+  }
 
+  convertToNumber(value: any): number {
+    if (value === undefined) {
+      return 0; // O cualquier valor predeterminado que desees
+    }
+    return parseFloat(value.toString().replace(',', '.'));
+  }
+
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+  }
 
 
 
@@ -3145,37 +3072,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-  formatNumber(number: number): any {
-    // Formatear el número con el separador de miles como coma y el separador decimal como punto
-    return new Intl.NumberFormat('en-US').format(number);
-  }
 
-  convertToNumber(value: any): number {
-    if (value === undefined) {
-      return 0; // O cualquier valor predeterminado que desees
-    }
-    return parseFloat(value.toString().replace(',', '.'));
-  }
 
-  formatNumberTotalSubTOTALES(numberString: number): string {
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
-  }
 
-  formatNumberTotalSub(numberString: number): string {
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
-  }
+
 
 
 
 
 
   estadoMoraValidacion() {
-
-
   }
 
   empaquesCerradosValidacion() {
@@ -3260,15 +3166,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
   }
 
+
   aplicarDesctPorDeposito() {
     let a = {
-      "getTarifaPrincipal": {
+      getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
-        dvta: this.FormularioData.value
+        dvta: this.FormularioData.value,
       },
       tabladescuentos: this.array_de_descuentos_ya_agregados,
-      tblcbza_deposito: []
-    }
+      tblcbza_deposito: [],
+    };
 
     this.spinner.show();
     console.log(a);
@@ -3305,10 +3212,72 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  // MAT-TAB Ultimas Proformas
+  ultimasProformas() {
+    this.spinner.show();
+    this.abrirTabPorLabelFooter("Ultimas-Proformas");
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/ultimasProformas/";
+    return this.api.getAll('/venta/transac/veproforma/ultimasProformas/' + this.userConn + "/" + this.codigo_cliente
+      + "/" + this.codigo_cliente_catalogo_real + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.array_ultimas_proformas = datav;
+          console.log(this.array_ultimas_proformas);
 
+          this.dataSourceUltimasProformas = new MatTableDataSource(this.array_ultimas_proformas);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      })
+  }
+  //FIN MATTAB Ultimas Proformas
 
-  // MAT-TAB Precios - Descuentos Especiales
+  // MAT-TAB Ultimas Proformas
+  ultimasVentas23Dias(item) {
+    this.spinner.show();
+    this.abrirTabPorLabelFooter("Ultimas Ventas Item 23 Dias");
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/cargarPFVtaDias/";
+    return this.api.getAll('/venta/transac/veproforma/cargarPFVtaDias/' + this.userConn + "/" + item + "/" + this.BD_storage.bd + "/" + this.codigo_cliente_catalogo_real + "/23")
+      .subscribe({
+        next: (datav) => {
+          this.array_venta_item_23_dias = datav;
+          console.log(this.array_venta_item_23_dias);
+
+          this.dataSource__venta_23_dias = new MatTableDataSource(this.array_venta_item_23_dias);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      })
+  }
+  //FIN MATTAB Ultimas Proformas
+
+  //MAT-TAB Precios - Descuentos Especiales
   aplicarDescuentoEspecialSegunTipoPrecio() {
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_desc_esp_seg_precio/";
@@ -3348,6 +3317,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
       });
   }
+  //FIN MAT-TAB Precios - Descuentos Especiales
 
   borrarDesct() {
     this.spinner.show();
@@ -3525,84 +3495,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
   }
   // FIN MAT-TAB Precios - Descuentos Especiales
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3935,7 +3827,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.tipopago === '' || this.tipopago === "CREDITO" || this.tipopago === undefined) {
+    if (this.tipopago === 0 || this.tipopago === undefined) {
       this.dialog.open(VentanaValidacionesComponent, {
         width: 'auto',
         height: 'auto',
@@ -3975,7 +3867,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         numero_id: this.id_proforma_numero_id,
         cod_cliente_real: this.cliente_catalogo_real,
         total: this.total,
-        tdc: this.tipo_cambio_moneda_catalogo
+        tdc: this.tipo_cambio_moneda_catalogo,
+        array_tabla_anticipos: this.tabla_anticipos,
       },
     });
   }

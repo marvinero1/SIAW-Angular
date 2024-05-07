@@ -89,7 +89,10 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="simularTab()">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+            matTooltip="Ultimas Proformas"
+            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
+            (click)="ultimasProformas()">
             <i class="fa fa-clone green" aria-hidden="true"></i>
           </button>
         </div>
@@ -938,7 +941,8 @@
               <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas"> Item </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codigo }}</td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important;cursor:pointer"
+                  (click)="ultimasVentas23Dias(element.codigo)">{{ element.codigo }}</td>
               </ng-container>
 
               <!-- Descripcion Medida Column -->
@@ -1238,7 +1242,7 @@
     <div>
       <div class="row">
         <div class="col-md-10">
-          <mat-tab-group class="miTabGroupProformaFooter" style="border-style: ridge;padding: 1px;">
+          <mat-tab-group class="miTabGroupProformaFooter" style="border-style: ridge;padding: 1px;" #tabGroupfooter>
             <mat-tab label="Datos">
               <form class="example-form" [formGroup]="FormularioData">
                 <div class="row">
@@ -1673,70 +1677,75 @@
               </div>
             </mat-tab>
 
-            <mat-tab label="Ultimas Proformas">
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+            <mat-tab label="Ultimas-Proformas">
+              <table mat-table [dataSource]="dataSourceUltimasProformas" class="mat-elevation-z8 text-center"
                 multiTemplateDataRows style="text-align: center !important; padding: 0px 0px 0px 0px !important">
 
                 <!-- COD PROFORMA Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.id }}</td>
                 </ng-container>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="numero_id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Numero ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1"></td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.numeroid }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Column -->
                 <ng-container matColumnDef="cod_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
-                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.codcliente }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="cliente_real">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
-                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.codcliente_real }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="nombre_cliente">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
-                  <td mat-cell *matCellDef="let element" class="center1">EMPRO METAL</td>
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Nombre</th>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.nomcliente }}</td>
                 </ng-container>
 
                 <!-- NIT Column -->
                 <ng-container matColumnDef="nit">
                   <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
-                  <td mat-cell *matCellDef="let element" class="center1">3823337020</td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.nit }}</td>
                 </ng-container>
 
                 <!-- Fecha Column -->
                 <ng-container matColumnDef="fecha">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
-                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.fecha | date:'yyyy-MM-dd' }}</td>
+                </ng-container>
+
+                <!-- Moneda Column -->
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Moneda </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> {{ element.codmoneda }} </td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="total">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
-                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                  <th mat-header-cell *matHeaderCellDef class="center2"> Total </th>
+                  <td mat-cell *matCellDef="let element" class="center2">
+                    {{ formatNumberTotalSubTOTALES(element.total) }} </td>
                 </ng-container>
-
-                <!-- Total Column -->
-                <ng-container matColumnDef="item">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
-                </ng-container>
-
 
                 <!-- Aprobada Column -->
                 <ng-container matColumnDef="aprobada">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Aprobada </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <input type="checkbox">
+                    <ng-container *ngIf="element.aprobada === true; else aprbd">
+                      <input type="checkbox" [checked]="true" (click)="onNoClick($event)">
+                    </ng-container>
+                    <ng-template #aprbd>
+                      <input type="checkbox" [checked]="false" (click)="onNoClick($event)">
+                    </ng-template>
                   </td>
                 </ng-container>
 
@@ -1744,7 +1753,12 @@
                 <ng-container matColumnDef="transferida">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <input type="checkbox">
+                    <ng-container *ngIf="element.transferida === true; else trsf">
+                      <input type="checkbox" [checked]="true" (click)="onNoClick($event)">
+                    </ng-container>
+                    <ng-template #trsf>
+                      <input type="checkbox" [checked]="false" (click)="onNoClick($event)">
+                    </ng-template>
                   </td>
                 </ng-container>
 
@@ -1754,79 +1768,79 @@
             </mat-tab>
 
             <mat-tab label="Ultimas Ventas Item 23 Dias">
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" matSort
+              <table mat-table [dataSource]="dataSource__venta_23_dias" class="mat-elevation-z8 text-center" matSort
                 multiTemplateDataRows style="text-align: center !important; padding: 0px 0px 0px 0px !important">
 
                 <!-- COD PROFORMA Column -->
                 <ng-container matColumnDef="codproforma">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Prof </th>
-                  <td mat-cell *matCellDef="let element" class="center1">123456</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1">XF-311</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Numero I Column -->
                 <ng-container matColumnDef="numero_id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> # ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1">2390</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Cod. Cliente Column -->
                 <ng-container matColumnDef="cod_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
-                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="cod_cliente_real">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
-                  <td mat-cell *matCellDef="let element" class="center1">300956</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="nom_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
-                  <td mat-cell *matCellDef="let element" class="center1">EMPRO METAL</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- NIT Column -->
                 <ng-container matColumnDef="nit">
                   <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
-                  <td mat-cell *matCellDef="let element" class="center1">3823337020</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Fecha Column -->
                 <ng-container matColumnDef="fecha">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
-                  <td mat-cell *matCellDef="let element" class="center1">13/3/2024</td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="total">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
-                  <td mat-cell *matCellDef="let element" class="center1">1912.04 </td>
+                  <td mat-cell *matCellDef="let element" class="center2"> </td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="item">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> 04APRB37 </td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Cantidad Column -->
                 <ng-container matColumnDef="cantidad">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> 500 </td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Moneda Column -->
                 <ng-container matColumnDef="moneda">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Moneda </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> BS </td>
+                  <td mat-cell *matCellDef="let element" class="center1"> </td>
                 </ng-container>
 
                 <!-- Aprobada Column -->
@@ -2251,33 +2265,36 @@
       <div mat-dialog-footer>
         <!-- Saldos -->
         <div class="row pl-2">
-          <input type="text" class="inputsSaldos" value="311: {{ saldoItem | number:'1.2-2'}}"
-            style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
+          <input type="text" class="inputsSaldos inputsSaldos2"
+            value="{{ almacn_parame_usuario }}: {{ saldoItem | number:'1.2-2'}}"
+            style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+            placeholder="0.00">
+
           <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
-            <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
+              (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
 
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
-            <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
+              (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
 
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
-            <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
+              (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
 
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
-            <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
+              (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
 
             <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
-            <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
+              (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
           </ng-container>
         </div>
 
@@ -2289,24 +2306,45 @@
         </div>
         <!-- finSaldos -->
 
-        <!-- Empaques -->
-        <div class="row ">
-          <div class="col-md">
-            <div class="input-group">
-              <span class="input-group-text form-control-sm">Empaques</span>
+        <!-- Empaques Minimo-->
+        <div class="row">
+          <div class="input-group" style="width: 65% !important;">
+            <span class="input-group-text form-control-sm">Empaque Minimo</span>
 
-              <ng-container *ngIf="!empaque_view; else empaque_view">
-                <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-              </ng-container>&nbsp;
+            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
+            </div> &nbsp;|&nbsp;
 
-              <ng-template #empaque_view>
-                <div *ngFor="let empaquesItems of empaquesItem">
-                  <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
-                    ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
-                  </div>
-                </div>
-              </ng-template>
+            <span class="input-group-text form-control-sm">Peso Minimo</span>
+            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
+
             </div>
+
+            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
+
+            </div> &nbsp;|&nbsp;
+            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 8.5% !important;">
+              {{ porcen_item }}
+            </div>
+          </div>
+        </div>
+        <!-- finempaque Minimo-->
+
+        <!-- Empaques -->
+        <div class="row">
+          <div class="input-group" style="padding-left: 7px;">
+            <span class="input-group-text form-control-sm">Empaques</span>
+
+            <ng-container *ngIf="!empaque_view; else empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+            </ng-container>&nbsp;
+
+            <ng-template #empaque_view>
+              <div *ngFor="let empaquesItems of empaquesItem">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
+                </div>
+              </div>
+            </ng-template>
           </div>
         </div>
         <!-- finempaque -->
