@@ -3246,11 +3246,30 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   //FIN MATTAB Ultimas Proformas
 
   // MAT-TAB Ultimas Proformas
-  ultimasVentas23Dias(item) {
+  getDiasControl(item) {
+    this.abrirTabPorLabelFooter("Ultimas Ventas Item 23 Dias");
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDiasControl/";
+    return this.api.getAll('/venta/transac/veproforma/getDiasControl/' + this.userConn + "/" + this.BD_storage.bd)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.ultimasVentas23Dias(item, datav.diascontrol)
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+
+        },
+        complete: () => { }
+      })
+  }
+
+  ultimasVentas23Dias(item, dias) {
     this.spinner.show();
     this.abrirTabPorLabelFooter("Ultimas Ventas Item 23 Dias");
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/cargarPFVtaDias/";
-    return this.api.getAll('/venta/transac/veproforma/cargarPFVtaDias/' + this.userConn + "/" + item + "/" + this.BD_storage.bd + "/" + this.codigo_cliente_catalogo_real + "/23")
+    return this.api.getAll('/venta/transac/veproforma/cargarPFVtaDias/' + this.userConn + "/" + item + "/" + this.BD_storage.bd + "/" + this.codigo_cliente_catalogo_real + "/" + dias)
       .subscribe({
         next: (datav) => {
           this.array_venta_item_23_dias = datav;
@@ -3495,6 +3514,50 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
   }
   // FIN MAT-TAB Precios - Descuentos Especiales
+
+
+  // MAT-TAB Ultimas Proformas
+  tarifaPrincipal: any = [];
+  getPrecioMayorEnDetalle() {
+    let array_post = {
+      tabladetalle: this.array_items_carrito_y_f4_catalogo,
+      dvta: this.FormularioData.value,
+    };
+
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
+    return this.api.create('/venta/transac/veproforma/getTarifaPrincipal/' + this.userConn, array_post)
+      .subscribe({
+        next: (datav) => {
+          this.tarifaPrincipal = datav;
+          console.log(this.tarifaPrincipal);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+
+        complete: () => { }
+      })
+  }
+  // FIN MAT-TAB Ultimas Proformas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4206,7 +4269,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
 
         this.dataSource_validacion = new MatTableDataSource(elementosDiferentes);
-
 
         console.log(this.array_original_de_validaciones_copied);
         console.log("Elemento Resuelto ya eliminado: ", elementosDiferentes);

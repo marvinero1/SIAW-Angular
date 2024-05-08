@@ -6,16 +6,15 @@
           <mat-card-title style="font-size: 0.8rem;">Descuentos Especiales</mat-card-title>
         </mat-card-header>
 
-        <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader"
+        <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader"
           [fullScreen]="true">
           <br>
           <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
         </ngx-spinner>
 
         <div>
-          <mat-card-actions align="start">
-            <button mat-raised-button color="primary" [disabled]="!FormularioData.valid" (click)="submitData();"><i
-                class="fa fa-save"></i>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="submitData();"><i class="fa fa-save"></i>
               Grabar
             </button>&nbsp;
 
@@ -55,7 +54,7 @@
               </ng-container>
 
               <div class="row">
-                <mat-label style="padding-right: 48px;padding-top: 7px;"><u>Descipción</u></mat-label>
+                <mat-label style="padding-right: 47px;padding-top: 7px;"><u>Descipción</u></mat-label>
                 <input type="text" formControlName="descripcion" [(ngModel)]="descuento.descripcion" required>
               </div>
 
@@ -63,7 +62,7 @@
                 <div class="input-group">
                   <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Lista de Empaques</u></mat-label>
                   <select formControlName="moneda" formControlName="codempaque" [(ngModel)]="descuento.codempaque"
-                    style="width: 12.1%;" required>
+                    style="width: 11.62%;" required>
                     <option *ngFor="let empaque_gets of empaque_get" [value]="empaque_gets.codigo">
                       {{ empaque_gets.codigo }} - {{ empaque_gets.descripcion }}</option>
                   </select>
@@ -71,15 +70,15 @@
               </div>
 
               <div class="row">
-                <mat-label style="padding-right: 32px;padding-top: 7px;"><u>Monto Minimo</u></mat-label>
+                <mat-label style="padding-right: 31px;padding-top: 7px;"><u>Monto Minimo</u></mat-label>
                 <input type="number" formControlName="monto" [(ngModel)]="descuento.monto" min="0" step="1" required>
               </div>
 
               <div class="row">
                 <div class="input-group">
-                  <mat-label style="padding-right: 62px;padding-top: 7px;"><u>Moneda</u>
+                  <mat-label style="padding-right: 61px;padding-top: 7px;"><u>Moneda</u>
                   </mat-label>
-                  <select formControlName="moneda" [(ngModel)]="descuento.moneda" style="width: 12.1%;">
+                  <select formControlName="moneda" [(ngModel)]="descuento.moneda" style="width: 11.66%;">
                     <option *ngFor="let moneda_gets of moneda_get" [value]="moneda_gets.codigo">
                       {{ moneda_gets.codigo }}</option>
                   </select>

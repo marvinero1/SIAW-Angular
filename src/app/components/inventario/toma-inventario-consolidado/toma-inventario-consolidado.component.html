@@ -140,11 +140,11 @@
               <tr>
                 <th class="tg-0lax">
                   <mat-label style="padding-right: 8px;"><u>Fecha Inicio</u></mat-label>
-                  <input type="text" style="width: 78.7%;" [(ngModel)]="cabecera.fechainicio" disabled>
+                  <input type="text" style="width: 78.7%;" [value]="cabecera.fechainicio | date:'yyyy-mm-dd'" disabled>
                 </th>
                 <th class="tg-0lax">
                   <mat-label style="padding-right: 2px;"><u>Fecha Fin</u></mat-label>
-                  <input type="text" style="width: 46%;" [(ngModel)]="cabecera.fechafin" disabled>
+                  <input type="text" style="width: 46%;" [value]="cabecera.fechafin | date:'yyyy-mm-dd'" disabled>
                 </th>
               </tr>
 

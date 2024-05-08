@@ -17,10 +17,11 @@
 
 <mat-menu #transacacciones_ventas="matMenu">
   <a mat-menu-item>Cotización</a>
-  <a mat-menu-item (click)="guardarRutaLOG('proforma','/venta/transacciones/proforma');">Proforma</a>
-  <a mat-menu-item (click)="guardarRutaLOG('nota-remision','/venta/transacciones/nota-remision');">Notas de Remisión</a>
-  <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura','/venta/transacciones/nota-remision-factura');"
-    style="background-color: red !important;">Facturar Nota de Remisión(FEL)</a>
+  <a mat-menu-item (click)="guardarRutaLOG('proforma','/venta/transacciones/proforma');">Proforma 🟡</a>
+  <a mat-menu-item (click)="guardarRutaLOG('nota-remision','/venta/transacciones/nota-remision');">
+    Notas de Remisión 🟡</a>
+  <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura','/venta/transacciones/nota-remision-factura');">
+    Facturar Nota de Remisión (FEL) 🟡</a>
   <a mat-menu-item>Emitir Notas de Debito de Notas de Remisión</a>
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Facturación Mostrador Tiendas (FEL)</a>

@@ -27,7 +27,7 @@
             <mat-label>Persona</mat-label>
             <mat-select [(ngModel)]="usuario_edit.$id" formControlName="persona">
               <mat-option *ngFor="let pepersonas of pepersona" [value]="pepersonas.$id">
-                {{ pepersonas.$id }} - {{ pepersonas.nombre1 }} {{ pepersonas.nombre2 }}, {{ pepersonas.apellido1 }}
+                {{ pepersonas.codigo }} - {{ pepersonas.descrip }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -67,8 +67,9 @@
 
       <div class="mat-dialog-actions" mat-dialog-actions>
         <button mat-button (click)="onNoClick()"><i class="fa fa-arrow-left"></i> Atras</button>
-        <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit"><i
-            class="fa fa-save"></i> Guardar</button>
+        <button mat-raised-button color="primary" [disabled]="!FormularioDataEdit.valid" type="submit">
+          <i class="fa fa-save"></i> Guardar
+        </button>
       </div>
     </form>
   </div>

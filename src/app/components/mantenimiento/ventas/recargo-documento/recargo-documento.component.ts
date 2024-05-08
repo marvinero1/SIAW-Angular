@@ -168,8 +168,11 @@ export class RecargoDocumentoComponent implements OnInit {
           this.recargo = datav;
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-          this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
+          this.spinner.show();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
           location.reload();
         },
 
@@ -192,7 +195,7 @@ export class RecargoDocumentoComponent implements OnInit {
 
   eliminar(codigo): void {
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:  venta/mant/vetipocredito Delete";
-
+    this.spinner.show();
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
       height: 'auto',
@@ -207,13 +210,23 @@ export class RecargoDocumentoComponent implements OnInit {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
               location.reload();
             },
             error: (err: any) => {
               console.log(err, errorMessage);
               this.toastr.error('! NO ELIMINADO !');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
             },
-            complete: () => { }
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+            }
           })
       } else {
         this.toastr.error('! CANCELADO !');
@@ -233,6 +246,4 @@ export class RecargoDocumentoComponent implements OnInit {
     this.recargo_get_service.montopor = "";
     this.recargo_get_service.porcentaje = "";
   }
-
-
 }

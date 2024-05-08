@@ -14,8 +14,8 @@ import { LogService } from '@services/log-service.service';
   templateUrl: './usuario-create.component.html',
   styleUrls: ['./usuario-create.component.scss'],
 })
-
 export class UsuarioCreateComponent implements OnInit {
+
   public pepersona: any = [];
   public serol: any = [];
   public dataform: any = '';
@@ -28,18 +28,17 @@ export class UsuarioCreateComponent implements OnInit {
   public tipo;
   public pepersona_get;
 
-  userConn: any;
-  usuario_logueado: any;
-
   myControl = new FormControl<string | pePersona>('');
   options: pePersona[] = [];
   filteredOptions: Observable<pePersona[]>;
 
   FormularioData: FormGroup;
 
+  userConn: any;
+  usuario_logueado: any;
+
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public _snackBar: MatSnackBar, private api: ApiService,
-    @Inject(MAT_DATE_LOCALE) private _locale: string, private toastr: ToastrService,
-    private datePipe: DatePipe, public dialogRef: MatDialogRef<UsuarioCreateComponent>) {
+    private toastr: ToastrService, public dialogRef: MatDialogRef<UsuarioCreateComponent>, private datePipe: DatePipe) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -81,7 +80,6 @@ export class UsuarioCreateComponent implements OnInit {
   }
 
   async getPersonaCatalogo() {
-
     this.errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/";
     return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
       .subscribe({

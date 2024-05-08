@@ -34,7 +34,8 @@
               </ng-container>
               <ng-container *ngIf="lugar_get.codigo">
                 <mat-label style="padding-right: 50px;padding-top: 7px;"><u>Codigo</u></mat-label>
-                <span>{{ lugar_get.codigo }}</span>
+                <!-- <span>{{ lugar_get.codigo }}</span> -->
+                <input type="text" formControlName="codigo" [(ngModel)]="lugar_get.codigo" readonly>
               </ng-container>
             </div>
 

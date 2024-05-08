@@ -942,7 +942,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas"> Item </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important;cursor:pointer"
-                  (click)="ultimasVentas23Dias(element.codigo)">{{ element.codigo }}</td>
+                  (click)="getDiasControl(element.codigo)">{{ element.codigo }}</td>
               </ng-container>
 
               <!-- Descripcion Medida Column -->
@@ -1003,7 +1003,7 @@
               <ng-container matColumnDef="saldo">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Saldo</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ element.saldo | number: '1.2-2' }}</td>
+                  !important">{{ formatNumberTotalSubTOTALES(element.saldo) }}</td>
               </ng-container>
 
               <!-- % Max. Ventas Column -->
@@ -1019,7 +1019,7 @@
               <ng-container matColumnDef="cantidad_max_venta">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Max. Ventas</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ element.cantidad_permitida_seg_porcen | number: '1.2-2' }}</td>
+                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad_permitida_seg_porcen) }}</td>
               </ng-container>
 
               <!-- Empaque Column -->
@@ -1496,11 +1496,12 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                              <u>Total Anticipo Aplicado</u></span>
+                              <u>Total Anticipo Aplicado</u>
+                            </span>
                           </div>
                           <input type="number" class="form-control form-control-sm" style="margin-left: 5px;
-                          width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                            placeholder="0.00">
+                            width: 15% !important;text-align: right;" formControlName="monto_anticipo"
+                            placeholder="0.00" min="0">
                         </div><br>
                         <div style="text-align: center;">
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -2039,12 +2040,13 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text form-control-sm"
                           style="padding: 10px 0px 0px 116px;border: 0 !important;">
-                          <u>Precio Principal del Pedido</u></span>
+                          <u>Precio Principal del Pedido</u>
+                        </span>
                       </div>
-                      <input type="text" style="margin-left: 6px;">
+                      <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal.codTarifa" readonly>
                       <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #ffc107;">
+                          (click)="getPrecioMayorEnDetalle();" style="border-color: #ffc107;">
                           <i class="fa fa-check"></i>
                         </button>
                       </div>
@@ -2061,12 +2063,12 @@
                         <option value="C">C : DESC PROM MARZO 2024</option>
                       </select>&nbsp;
 
-                      <div class="input-group-append">
+                      <!-- <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #ffc107;" [disabled]="!codigo_cliente">
+                          style="border-color: #ffc107;">
                           <i class="fa fa-cog"> Aplicar Descuento</i>
                         </button>
-                      </div>
+                      </div> -->
                     </div>
                   </form>
                 </div>

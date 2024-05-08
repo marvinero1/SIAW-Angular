@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -26,15 +26,12 @@ import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-client
 import { ModalClienteDireccionComponent } from '../../modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
-
 @Component({
   selector: 'app-nota-remision',
   templateUrl: './nota-remision.component.html',
   styleUrls: ['./nota-remision.component.scss']
 })
-export class NotaRemisionComponent implements OnInit {
-
-  nombre_ventana: string = "docveremision.vb";
+export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
   @HostListener("document:keydown.F4", []) unloadHandler(event: Event) {
     this.modalMatrizProductos();
@@ -90,7 +87,6 @@ export class NotaRemisionComponent implements OnInit {
   hora_actual = new Date();
   public cliente_create: any = [];
 
-
   public cod_cliente_enter;
   public disable_input_create: boolean;
   public codigo_cliente: string;
@@ -139,10 +135,9 @@ export class NotaRemisionComponent implements OnInit {
   veCliente: veCliente[] = [];
 
   public codigo_cliente_catalogo: string;
-  private codigo_item_catalogo: string;
+  public codigo_item_catalogo: string;
 
-
-
+  nombre_ventana: string = "docveremision.vb";
 
 
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'pedido',
@@ -151,15 +146,13 @@ export class NotaRemisionComponent implements OnInit {
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-
-  constructor(public dialog: MatDialog, private api: ApiService, public itemservice: ItemServiceService,
-    public servicioCliente: ServicioclienteService, public almacenservice: ServicioalmacenService,
-    public serviciovendedor: VendedorService, public servicioPrecioVenta: TarifaService,
-    private _formBuilder: FormBuilder, public servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
-    private toastr: ToastrService, private spinner: NgxSpinnerService, public log_module: LogService, public _snackBar: MatSnackBar) {
+  constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
+    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService,
+    private serviciovendedor: VendedorService, private servicioPrecioVenta: TarifaService,
+    private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
+    private toastr: ToastrService, private spinner: NgxSpinnerService, private log_module: LogService) {
 
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
 
     this.FormularioData = this.createForm();
@@ -186,8 +179,6 @@ export class NotaRemisionComponent implements OnInit {
         this.cod_almacen_cliente = data.almacen;
       });
     }
-
-
     // finalmacen
 
     //Vendedor
@@ -221,7 +212,6 @@ export class NotaRemisionComponent implements OnInit {
       this.codigo_item_catalogo = data.item;
       this.getEmpaqueItem(this.userConn, this.codigo_item_catalogo);
       this.getDetalleItem(this.userConn, this.codigo_item_catalogo, this.tarifa_get_unico?.codigo, this.descuentos_get_unico?.codigo);
-
     });
 
     this.servicioCliente.disparadorDeClientes.subscribe(data => {

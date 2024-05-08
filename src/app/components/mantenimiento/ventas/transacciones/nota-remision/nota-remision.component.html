@@ -18,6 +18,9 @@
               </button>
             </div>
             <!-- botones - fin -->
+            <div class="pt-2" style="padding-left: 23rem;">
+              <h3><strong><u>NOTA DE REMISION</u></strong></h3>
+            </div>
           </div>
 
           <div class="input-group-append text-center" style="float: right;">
@@ -60,15 +63,9 @@
                     style="padding: 10px 0px 0px 33px;border: 0 !important;"><u>ID Tipo </u></span>
                 </div>
 
-                <ng-container *ngIf="cod_id_tipo_modal">
-                  <input type="text" class="form-control form-control-sm" [ngModel]="cod_id_tipo_modal"
-                    style="margin-left: 5px;" disabled>
-                </ng-container>
+                <input type="text" class="form-control form-control-sm" [ngModel]="cod_id_tipo_modal"
+                  style="margin-left: 5px;background-color: black;color: #ffc107;" disabled>
 
-                <ng-container *ngIf="!cod_id_tipo_modal">
-                  <input type="text" class="form-control form-control-sm" [ngModel]="id_tipo_view_get.codigo"
-                    style="margin-left: 5px;" disabled>
-                </ng-container>
 
                 <div class="input-group-append">
                   <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalTipoID();"
@@ -80,7 +77,8 @@
 
             <div class="col-md-4" style="padding-right: 6.5px;padding-left: 0px;">
               <div class="input-group">
-                <input type="text" class="form-control form-control-sm" [ngModel]="id_proforma_numero_id" disabled>
+                <input type="text" class="form-control form-control-sm" [ngModel]="id_proforma_numero_id"
+                  style="background-color: black;color: #ffc107;" disabled>
               </div>
             </div>
           </div>
@@ -93,8 +91,6 @@
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
               value="{{fecha_actual | date:'dd/MM/yyyy'}}" disabled>
           </div>
-
-
 
           <div class="input-group">
             <div class="input-group-">
@@ -136,7 +132,7 @@
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Tipo de Pago</u> </span>
+                style="padding: 10px 1px 0px 0px;border: 0 !important;"><u>Tipo de Pago</u> </span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" value="CREDITO" disabled>
 
@@ -146,10 +142,6 @@
               <mat-option value="contado">Contado</mat-option>
             </mat-select> -->
           </div>
-
-
-
-
 
           <div class="row">
             <div class="col-sm">
@@ -216,12 +208,6 @@
               </div>
             </div>
           </div>
-
-
-
-
-
-
         </div>
 
         <!-- segundaColumna -->
@@ -293,7 +279,16 @@
             </select>
           </div>
 
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 6px;border: 0 !important;"><u>Solicitud Urgente </u></span>
+            </div>
+            <input type="text" class="form-control form-control-sm"
+              style="margin-left: 6px;background-color: #ffffc0;">&nbsp;
 
+            <input type="text" class="form-control form-control-sm" style="background-color: #ffffc0;">
+          </div>
 
           <div class="input-group">
             <div class="input-group-prepend">
@@ -328,7 +323,7 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 17px;border: 0 !important;"><u>Cod. Cliente</u></span>
+                  style="padding: 10px 0px 0px 18px;border: 0 !important;"><u>Cod. Cliente</u></span>
               </div>
               <input type="text" class="form-control cliente form-control-sm" formControlName="codSN"
                 [ngModel]="codigo_cliente" style="margin-left: 7.5px;" #cod_cliente>
@@ -348,7 +343,7 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm"
-                  style="padding: 10px 8px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
+                  style="padding: 10px 9px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
               </div>
 
               <input type="text" class="form-control form-control-sm" formControlName="nomcliente_casual"
@@ -358,7 +353,7 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm"
-                  style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
+                  style="padding: 10px 6px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
               </div>
 
               <input type="text" class="form-control form-control-sm" formControlName="nomcliente_casual"
@@ -560,27 +555,9 @@
               </table>
             </mat-tab>
             <mat-tab label="Negativos"></mat-tab>
-            <mat-tab label="Limites Maximo de Ventas"> </mat-tab>
-            <mat-tab label="Resultado de Validacion"></mat-tab>
           </mat-tab-group>
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -633,13 +610,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
 
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="input-group">
@@ -683,13 +657,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
 
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md">
                   <div class="row">
                     <div class="col-md-4">
                       <div class="input-group">
@@ -722,13 +693,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
 
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md">
                   <div class="row">
                     <div class="col">
                       <div class="input-group">
@@ -751,13 +719,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
 
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md">
                   <div class="row">
                     <div class="col">
                       <div class="input-group">
@@ -771,13 +736,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
 
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md">
                   <div class="row">
                     <div class="col">
                       <div class="input-group">
@@ -790,21 +752,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <!-- 4 -->
-                </div>
               </div>
             </mat-tab>
-            <mat-tab label="Anticipo Venta Contado"></mat-tab>
-            <mat-tab label="Cliente Real - Referencial"> </mat-tab>
-            <mat-tab label="Descuentos de Linea de Solicitud"></mat-tab>
+            <mat-tab label="Descuentos de Linea de Cliente"></mat-tab>
+            <mat-tab label="Solicitud Descuentos de Linea"></mat-tab>
             <mat-tab label="Complementar Proforma"></mat-tab>
-            <mat-tab label="Ultimas Proformas"></mat-tab>
-            <mat-tab label="Ultimas Ventas Item 23 Dias"></mat-tab>
+            <mat-tab label="Anticipo Venta Contado"></mat-tab>
             <mat-tab label="Precios - Descuento Especial"></mat-tab>
-            <mat-tab label="Descuentos de Nivel"></mat-tab>
           </mat-tab-group>
         </div>
+
         <div class="col-md-2">
           <div class="input-group">
             <div class="input-group-prepend" style="width: 33%;">
@@ -866,7 +823,7 @@
             </div>
           </div>
 
-          <div class="input-group mb-2">
+          <div class="input-group">
             <div class="input-group-prepend" style="width: 33%;">
               <span class="input-group-text form-control-sm"
                 style="padding: 5px 0px 0px 0px;display: block;border: 0 !important;"><u>Total</u></span>
@@ -881,15 +838,24 @@
             </div>
           </div>
 
+          <div style="text-align: center;">
+            <span class="form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
+              <u>Es Venta</u>
+            </span>
+            <input type="checkbox" style="margin-left: 5px;">
+          </div>
+
           <div class="text-center" style="text-align: center;">
             <div>
-              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;">Aplicar Desc.
-                Deposito</button>
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;">
+                Aplicar Desc. Deposito
+              </button>
             </div>
             <hr>
             <div>
-              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;">Quitar Desc.
-                Deposito</button>
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;">
+                Quitar Desc. Deposito
+              </button>
             </div>
           </div>
         </div>
@@ -898,7 +864,6 @@
       <!-- Saldos -->
       <div class="row pl-2">
         <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-
           <input type="text" class="inputsSaldos" placeholder="{{ almacenes_saldoss.codalmsald1 }}:"
             (click)="modalSaldos(almacenes_saldoss.codalmsald1);" style="font-size: 0.8rem;">
           |
@@ -916,42 +881,6 @@
         </ng-container>
       </div>
       <!-- finSaldos -->
-
-      <div class="row">
-        <div class="col-sm">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm">Empaque Minimo</span>
-            </div>
-            <input type="text" class="form-control form-control-sm" placeholder="0">
-          </div>
-        </div>
-
-        <div class="col-sm">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm">Peso Minimo</span>
-            </div>
-            <input type="text" class="form-control form-control-sm" placeholder="0">
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm">Empaques</span>
-            </div>
-            <div *ngFor="let empaquesItems of empaquesItem">
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 100% !important;height: calc(1.8rem + 0px) !important;">
-                ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }} |
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>

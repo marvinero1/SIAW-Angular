@@ -326,7 +326,7 @@
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalMinimoComplementarias/modalMinimoComplementarias.component.html",
-        "hash": "15060357867499865079"
+        "hash": "2827513292481870053"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalMinimoComplementarias/modalMinimoComplementarias.component.scss",
@@ -646,7 +646,7 @@
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/toma-inventario-consolidado.component.html",
-        "hash": "9096078033657593646"
+        "hash": "7214185863645063227"
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/toma-inventario-consolidado.component.scss",
@@ -4006,7 +4006,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/seguridad/permisos-especiales/permisos-especiales-create/permisos-especiales-create.component.html",
-        "hash": "5411247688984685062"
+        "hash": "12992983532919490264"
       },
       {
         "file": "src/app/components/mantenimiento/seguridad/permisos-especiales/permisos-especiales-create/permisos-especiales-create.component.scss",
@@ -4018,7 +4018,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/seguridad/permisos-especiales/permisos-especiales-create/permisos-especiales-create.component.ts",
-        "hash": "14754588116560613345"
+        "hash": "6151474748240991882"
       },
       {
         "file": "src/app/components/mantenimiento/seguridad/permisos-especiales/permisos-especiales-edit/permisos-especiales-edit.component.html",
@@ -4070,7 +4070,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/usuario/modal-usuario/modal-usuario.component.html",
-        "hash": "11586486357259053486"
+        "hash": "4474880338960227835"
       },
       {
         "file": "src/app/components/mantenimiento/usuario/modal-usuario/modal-usuario.component.scss",
@@ -4106,11 +4106,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-create/usuario-create.component.ts",
-        "hash": "14148602612327085961"
+        "hash": "17205800897585307799"
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-delete/usuario-delete.component.html",
-        "hash": "6179444217589489293"
+        "hash": "1393611094857806204"
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-delete/usuario-delete.component.scss",
@@ -4126,7 +4126,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-edit/usuario-edit.component.html",
-        "hash": "6227072187492496655"
+        "hash": "5438529167758698735"
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-edit/usuario-edit.component.scss",
@@ -4138,7 +4138,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario-edit/usuario-edit.component.ts",
-        "hash": "17228624828957061875"
+        "hash": "13574034592585542417"
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario.component.html",
@@ -4238,7 +4238,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/descuentos-especiales.component.html",
-        "hash": "5824058759347780398"
+        "hash": "17822522936406253849"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/descuentos-especiales.component.scss",
@@ -4326,7 +4326,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/lugares/lugares.component.html",
-        "hash": "9373817288088648713"
+        "hash": "3193783714519468126"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/lugares/lugares.component.scss",
@@ -4338,7 +4338,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/lugares/lugares.component.ts",
-        "hash": "8765019197950302603"
+        "hash": "15394027613624207876"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.html",
@@ -5010,7 +5010,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento.component.ts",
-        "hash": "7820997880845017317"
+        "hash": "14729459856786742184"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/service-recargo/recargo-servicio.service.spec.ts",
@@ -5198,11 +5198,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.html",
-        "hash": "12856426705398524698"
+        "hash": "8473279913892052256"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.scss",
-        "hash": "3541632818728374161"
+        "hash": "10929809258353222784"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.spec.ts",
@@ -5210,7 +5210,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.ts",
-        "hash": "7427404434684758802"
+        "hash": "15441954848821139574"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component.html",
@@ -5230,7 +5230,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "9285999422398670994"
+        "hash": "3686840340932941284"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5242,7 +5242,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "9489597197768575123"
+        "hash": "3148210898724251696"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5382,7 +5382,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "18147860843237187043"
+        "hash": "4170217068014743733"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",
@@ -5938,7 +5938,7 @@
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.html",
-        "hash": "17062183138366260454"
+        "hash": "13064342386185328153"
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.scss",
