@@ -4158,7 +4158,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.html",
-        "hash": "3268121164541543628"
+        "hash": "8890452508490266326"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.scss",
@@ -4170,7 +4170,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.ts",
-        "hash": "7358461455242956258"
+        "hash": "3215954616225850315"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service.spec.ts",
@@ -4270,7 +4270,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.html",
-        "hash": "9509317905633247362"
+        "hash": "15742918441613957135"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.scss",
@@ -4282,7 +4282,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component.ts",
-        "hash": "18070044659534515282"
+        "hash": "9169192957954724534"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/precios-permitido-desct/precios-permitido-desct.component.html",
@@ -4370,7 +4370,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "5058183511855259931"
+        "hash": "9740999253213026348"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4530,7 +4530,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.ts",
-        "hash": "9897430195069458981"
+        "hash": "2764564767981810334"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
@@ -5230,7 +5230,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "3686840340932941284"
+        "hash": "7665884287402486111"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5242,7 +5242,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "3148210898724251696"
+        "hash": "3534141787984875042"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

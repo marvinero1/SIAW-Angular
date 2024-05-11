@@ -151,7 +151,6 @@ export class ModalDesctExtrasComponent implements OnInit {
             porcentaje: this.info_descuento_porcentaje,
           }));
 
-
           this.info_descuento_peso_minimo = this.info_descuento.peso_minimo;
           this.info_descuento_porcentaje = this.info_descuento.porcentaje;
 

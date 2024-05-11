@@ -17,8 +17,8 @@
     </ng-container>
 
     <ng-template #val>
-      <mat-tab-group style="background-color: #ffe0c0;">
-        <mat-tab label="{{ id_get }} - {{ numero_id_get }}">
+      <mat-tab-group style="background-color: #ffe0c0;" #tabGroup>
+        <mat-tab label="{{ id_get }}-{{ numero_id_get }}">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <table class="tg">
@@ -32,7 +32,7 @@
                   </th>
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Proforma</u></mat-label>
-                    <input type="text" style="width: 35%;" [ngModel]="formatNumber(totalProf)" readonly>
+                    <input type="text" style="width: 35%;" [ngModel]="formatNumberTotalSubTOTALES(totalProf)" readonly>
                     {{ cod_moneda_proforma }}
                   </th>
                 </tr>
@@ -54,20 +54,9 @@
                     <div class="input-group">
                       <div class="input-group-" style="padding-block-start: 6px;">
                         <span class="form-control-sm" style="padding: 0px 3px 0px 0px;">
-                          <u>Anticipos Venta a Contado</u>
+                          <u>Anticipos Venta a Contado: </u> &nbsp; {{ anticipo }} - {{ get_anticipos_desc }}
                         </span>
                       </div>
-                      <ng-container>
-                        <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                          formControlName="codvendedor" value="AN311" readonly>
-                      </ng-container>
-
-                      <!-- <div class="input-group-append">
-                        <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #093070;"><i class="fa fa-search"></i>
-                        </button>
-                      </div> -->
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="anticipo">
                     </div>
                   </th>
                 </tr>
@@ -75,28 +64,32 @@
                 <tr>
                   <th class="tg-0laxs" style="width: 61% !important;">
                     <mat-label style="padding-right: 66px;"><u>Monto Anticipo</u></mat-label>
-                    <input type="text" style="width: 28%;" disabled>
-                    <input type="text" style="width: 19.5%;" disabled>
-                    <input type="text" style="width: 19.5%;" disabled>
+                    <input type="text" style="width: 28.0%;text-align: right;" [ngModel]="monto | number:'2.2-2'"
+                      disabled>
+                    <input type="text" style="width: 19.5%;text-align: right;" [(ngModel)]="moneda" disabled>
+                    <input type="text" style="width: 19.5%;text-align: right;" [(ngModel)]="cod_vendedor" disabled>
                   </th>
                 </tr>
 
                 <tr>
                   <th class="tg-0laxs">
                     <mat-label style="padding-right: 63px;"><u>Monto Restante</u></mat-label>
-                    <input type="text" style="width: 67%;" disabled>
+                    <input type="number" style="width: 67%;text-align: right;" [(ngModel)]="monto_restante" min="0"
+                      disabled>
                   </th>
 
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
-                    <input type="text" style="width: 22%;" [(ngModel)]="monto_a_asignar">&nbsp;
-                    <button mat-button><i class="fa fa-cogs" style="color: #093070 !important;"></i></button>
+                    <input type="number" style="width: 22%;text-align: right;" [(ngModel)]="monto_a_asignar"
+                      min="0">&nbsp;
+                    <button mat-raised-button (click)="BTNengranaje(monto_a_asignar);"><i class="fa fa-cogs"
+                        style="color: #093070 !important;"></i></button>
                   </th>
                 </tr>
 
                 <div class="row" style="width: 167%;">
                   <div class="col-md-3" style="float: left;">
-                    <button mat-raised-button class="secondary" (click)="asignarMontoAlArray();">
+                    <button mat-raised-button class="secondary" (click)="asignarMontoAlArray(monto_a_asignar);">
                       <i class="fa fa-plus" aria-hidden="true" style="color: rgb(76, 226, 34);"></i>
                       Asignar Monto
                     </button>&nbsp;
@@ -125,7 +118,7 @@
                         <ng-container matColumnDef="monto">
                           <th mat-header-cell *matHeaderCellDef class="white"> Monto </th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            {{ formatNumber(element.monto) | number: '1.2-2' }}</td>
+                            {{ formatNumberTotalSubTOTALES(element.monto) }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="usuario">
@@ -175,7 +168,8 @@
 
                   <div style="float: right;text-align: end;">
                     <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                    <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly>
+                    <input type="text" style="width: 35%;text-align: right;" [(ngModel)]="total_anticipos"
+                      placeholder="0.00" readonly>
                   </div>
                 </div>
               </div>
@@ -223,12 +217,12 @@
 
                     </div>
                   </th>
-                </tr>
+                </tr><br>
 
                 <tr>
                   <th class="tg-0lax">
                     <mat-label style="padding-right: 5px;"><u>Desde</u></mat-label>
-                    <mat-form-field class="example-full-width" style="width: 40%;">
+                    <mat-form-field class="example-full-width" style="width: 22%;">
                       <mat-label>Elija una Fecha</mat-label>
                       <input matInput [matDatepicker]="picker" [(ngModel)]="fecha_desde">
                       <mat-datepicker-toggle matIconSuffix [for]="picker">
@@ -238,7 +232,7 @@
                     </mat-form-field>
 
                     <mat-label style="padding-right: 5px;"><u>Hasta</u></mat-label>
-                    <mat-form-field class="example-full-width" style="width: 40%;">
+                    <mat-form-field class="example-full-width" style="width: 22%;">
                       <mat-label>Elija una Fecha</mat-label>
                       <input matInput [matDatepicker]="picker1" [(ngModel)]="fecha_hasta">
                       <mat-datepicker-toggle matIconSuffix [for]="picker1">
@@ -312,7 +306,8 @@
 
                         <ng-container matColumnDef="moneda">
                           <th mat-header-cell *matHeaderCellDef class="white">Moneda</th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;"></td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codmoneda }}
+                          </td>
                         </ng-container>
 
                         <ng-container matColumnDef="monto">
@@ -323,7 +318,7 @@
 
                         <ng-container matColumnDef="monto_rest">
                           <th mat-header-cell *matHeaderCellDef class="white">Monto Rest</th>
-                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.montorest}}
+                          <td mat-cell *matCellDef="let element" style="text-align: right;">{{ element.montorest }}
                           </td>
                         </ng-container>
 
@@ -342,10 +337,13 @@
                         <ng-container matColumnDef="accion">
                           <th mat-header-cell *matHeaderCellDef class="white">Accion</th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            <button mat-raised-button class="secondary" (click)="elegirAnticipo(element);">
-                              <i class="fa fa-minus" style="color: rgba(24, 187, 34, 0.834);"></i>
-                              Elegir Anticipo
-                            </button>
+                            <ng-container *ngIf="element.montorest !== 0;else montorest1">
+                              <button mat-raised-button class="secondary" (click)="elegirAnticipo(element);">
+                                <i class="fa fa-minus" style="color: rgba(24, 187, 34, 0.834);"></i>
+                                Elegir Anticipo
+                              </button>
+                            </ng-container>
+                            <ng-template #montorest1></ng-template>
                           </td>
                         </ng-container>
 

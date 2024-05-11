@@ -68,10 +68,8 @@ export class ModalDescuentosComponent implements OnInit {
   }
 
   getDescuentos() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --vedescuento/catalogo";
-
-    return this.api.getAll('/venta/mant/vedescuento/' + this.userConn)
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vedescuento/catalogo/";
+    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.descuentos_get = datav;

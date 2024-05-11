@@ -9,7 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AnticipoProformaService } from './servicio-anticipo-proforma/anticipo-proforma.service';
 import { subMonths } from 'date-fns';
-import { element } from 'protractor';
+import { MatTabGroup } from '@angular/material/tabs';
 @Component({
   selector: 'app-anticipos-proforma',
   templateUrl: './anticipos-proforma.component.html',
@@ -25,6 +25,7 @@ export class AnticiposProformaComponent implements OnInit {
   data_tabla_anticipos: any = [];
   array_anticipos: any = [];
   array_tabla_anticipos_get: any = [];
+  public arraya_asignacion_anticipo: any = [];
 
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
@@ -46,6 +47,13 @@ export class AnticiposProformaComponent implements OnInit {
 
   monto_a_asignar: any;
   anticipo: any;
+  get_anticipos_desc: any;
+
+  monto: any;
+  moneda: any;
+  cod_vendedor: any;
+  monto_restante: any;
+  total_anticipos: any;
   nombre_ventana: string = "docininvconsol.vb";
 
   public fecha_formateada1;
@@ -68,6 +76,7 @@ export class AnticiposProformaComponent implements OnInit {
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
@@ -95,7 +104,7 @@ export class AnticiposProformaComponent implements OnInit {
     this.nit_get = nit.nit;
     this.vendedor_get = vendedor.vendedor;
     this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real;
-    this.total_get = this.formatNumber(total.total);
+    this.total_get = this.formatNumberTotalSubTOTALES(total.total);
     this.tdc_get = tdc.tdc;
     this.array_tabla_anticipos_get = array_tabla_anticipos.array_tabla_anticipos;
 
@@ -125,7 +134,7 @@ export class AnticiposProformaComponent implements OnInit {
     // Resta 4 meses a la fecha actual
     this.fecha_desde = subMonths(this.fecha_desde, 4);
     this.anticiposAsignadosInicioCargaTabla();
-    //this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+    this.getAnticipo();
   }
 
   anticiposAsignadosInicioCargaTabla() {
@@ -135,6 +144,7 @@ export class AnticiposProformaComponent implements OnInit {
         next: (datav) => {
           this.anticipos_asignados_table = datav;
           console.log('data', this.anticipos_asignados_table);
+          this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
 
           this.dataSource = new MatTableDataSource(this.anticipos_asignados_table.concat(this.array_tabla_anticipos_get));
         },
@@ -158,9 +168,7 @@ export class AnticiposProformaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -196,7 +204,17 @@ export class AnticiposProformaComponent implements OnInit {
       })
   }
 
-  asignarMontoAlArray() {
+  asignarMontoAlArray(monto_del_input) {
+    if (monto_del_input == 0) {
+      this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
+      return;
+    }
+
+    if (monto_del_input > this.totalProf) {
+      this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
+      return;
+    }
+
     this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -217,28 +235,48 @@ export class AnticiposProformaComponent implements OnInit {
       codmoneda: this.cod_moneda_proforma,
       codvendedor: this.vendedor_get.toString(),
     };
-
     console.log(array_monto);
 
     if (this.monto_a_asignar === undefined) {
       this.monto_a_asignar = 0;
     }
 
+    const existe_en_array = this.array_tabla_anticipos_get.some(item => item.nroid_anticipo === array_monto.nroid_anticipo);
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/";
     return this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
-      this.cod_moneda_proforma + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
+      this.moneda + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
       .subscribe({
         next: (datav) => {
           console.log(datav);
-          if (datav === true) {
-            this.toastr.success('Anticipo Agregado Exitosamente! 🎉');
-
-            this.array_tabla_anticipos_get.push(array_monto);
-            this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
-
+          if (datav.value === true) {
+            //verificar si ya esta en el array
+            if (existe_en_array) {
+              this.toastr.warning("EL ANTICIPO YA ESTA AGREGADO !")
+            } else {
+              if (this.monto_a_asignar > this.totalProf) {
+                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR ES MAYOR AL TOTAL !")
+                return;
+              }
+              if (this.monto_a_asignar > this.monto_restante) {
+                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR SOBREPASA EL MONTO RESTANTE DEL ANTICIPO !")
+                return;
+              }
+              if (this.monto_a_asignar === 0) {
+                this.toastr.warning("¡ NO PUEDE ASIGNAR UN MONTO IGUAL A 0 BOBO xD !")
+                return;
+              }
+              this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + array_monto.docanticipo);
+              this.array_tabla_anticipos_get.push(array_monto);
+              this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
+              this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+            };
             console.log(this.array_anticipos, this.array_tabla_anticipos_get);
           } else {
-            this.toastr.error('NO SE AÑADIO');
+            if (datav.resp === undefined) {
+              this.toastr.error('NO SE AÑADIO ');
+            } else {
+              this.toastr.error('NO SE AÑADIO ' + datav.resp);
+            }
           }
 
           this.spinner.show();
@@ -262,30 +300,88 @@ export class AnticiposProformaComponent implements OnInit {
       })
   }
 
+  getAnticipo() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/ctsxcob/mant/cotipoanticipo/";
+    return this.api.getAll('/ctsxcob/mant/cotipoanticipo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.anticipo = datav[0].id; //sacar de la primera posicion
+          this.get_anticipos_desc = datav[0].descripcion; //sacar de la primera posicion
+          console.log('data', datav, this.anticipo, this.get_anticipos_desc);
+          this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   elegirAnticipo(element) {
+    console.log(element, this.vendedor_get);
+    //comparar el codvendedor del anticipo elegido con el vendedor de la proforma que esta en el primer tab
+    //comparar el montoRest del anticipo elegido si el anticipo es igual o menor a 0 tonces no dejar seleccionarlo 
     if (element.montorest <= 0) {
       this.toastr.warning("EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + " NO TIENE SALDO RESTANTE");
+      return;
+    }
+
+    if (element.codvendedor != this.vendedor_get) {
+      this.toastr.warning("EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + "TIENE UN VENDEDOR DISTINTO A LA DE LA PROFORMA");
     } else {
-      this.toastr.success("ANTICIPO SELECCIONADO");
+      this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo);
+
+      this.monto = element.monto;
+      this.moneda = element.codmoneda;
+      this.cod_vendedor = element.codvendedor;
+      this.monto_restante = element.montorest;
+      this.monto_a_asignar = element.montorest;
+      this.anticipo = element.numeroid;
+
+      console.log(this.id_get + "-" + this.numero_id_get);
+      this.abrirTabPorLabel(this.id_get + "-" + this.numero_id_get);
+    }
+  }
+
+  BTNengranaje(monto_del_input) {
+    if (monto_del_input == 0) {
+      this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
+      return;
+    }
+
+    if (monto_del_input > this.totalProf) {
+      this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
+      return;
+    }
+  }
+
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
     }
   }
 
   eliminarMonto(element) {
     console.log("Elemento a Eliminar:", element);
     this.array_tabla_anticipos_get = this.array_tabla_anticipos_get.filter(i => i.nroid_anticipo !== element.nroid_anticipo);
+    this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
     this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
   }
 
-  formatNumber(number: number): any {
-    // Formatear el número con el separador de miles como coma y el separador decimal como punto
-    return new Intl.NumberFormat('en-US').format(number);
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
   }
 
   close() {
     this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
       anticipos: this.array_tabla_anticipos_get,
+      totalAnticipo: this.total_anticipos
     });
 
     this.dialogRef.close();

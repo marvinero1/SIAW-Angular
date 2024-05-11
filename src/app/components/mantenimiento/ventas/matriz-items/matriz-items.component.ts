@@ -119,6 +119,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   fecha_get: any;
   codmoneda_get: any;
   descuento_nivel_get: any;
+  codcliente_real_get: any;
 
   contador: number = 0;
   codigo_item_celda: any;
@@ -139,7 +140,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any) {
 
     this.array_items_proforma_matriz = items.items;
 
@@ -170,6 +171,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
+    this.codcliente_real_get = codcliente_real.codcliente_real
 
 
 
@@ -763,7 +765,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let item1 = cleanText.toUpperCase();
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inmatriz/infoItemRes/";
-    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + item1)
+    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + item1 + "/" +
+      this.tarifa_get + "/" + this.descuento_get + "/" + this.codcliente_real_get)
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;

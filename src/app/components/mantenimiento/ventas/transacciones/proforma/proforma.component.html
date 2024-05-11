@@ -940,7 +940,8 @@
               <!-- Código Item  Column -->
               <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas"> Item </th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
+                <td mat-cell *matCellDef="let element; let i = index" class="mat-column-max-ventas"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}"
                   style="text-align: center !important; padding: 0 0px 0 0px !important;cursor:pointer"
                   (click)="getDiasControl(element.codigo)">{{ element.codigo }}</td>
               </ng-container>
@@ -1501,7 +1502,7 @@
                           </div>
                           <input type="number" class="form-control form-control-sm" style="margin-left: 5px;
                             width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                            placeholder="0.00" min="0">
+                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0">
                         </div><br>
                         <div style="text-align: center;">
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1610,7 +1611,8 @@
                         </div>
                         <mat-form-field>
                           <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf">
+                          <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
+                            formControlName="tipo_complementopf">
                             <mat-option value="0">1. Dimediado - Precio Mayorista Para Cumplir
                               Monto Minimo
                             </mat-option>
@@ -1628,7 +1630,7 @@
                               [(ngModel)]="idpf_complemento_view">
                               <option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
                                 [value]="ids_complementar_proformas.id">{{ ids_complementar_proformas.id }} -
-                                {{ ids_complementar_proformas.descripcion}}</option>
+                                {{ ids_complementar_proformas.descripcion }}</option>
                             </select>
 
                             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
@@ -1637,8 +1639,8 @@
 
                             <div class="input-group-append">
                               <button class="btn btn-outline-primary form-control-sm" type="button"
-                                style="border-color: #ffc107;" (click)="buscadorIDComplementarProforma(idpf_complemento_view,
-                                input_complemento_view);">
+                                style="border-color: #ffc107;"
+                                (click)="buscadorIDComplementarProforma(idpf_complemento_view, input_complemento_view);">
                                 <i class="fa fa-search"></i>
                               </button>
                             </div>
@@ -1647,28 +1649,24 @@
                           <div class="input-group">
                             <div class="input-group-prepend">
                               <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Fecha Aut Proforma</u></span>
+                                <u>Fecha Aut
+                                  Proforma</u></span>{{ complemento_proforma?.fechaaut_pfcomplemento | date:'yyyy-mm-dd'}}
                             </div>
-                            <input type="text" class="form-control form-control-sm" placeholder="0.00" disabled>
-                          </div>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>SubTotal Proforma</u></span>
-                            </div>
-                            <input type="text" class="form-control form-control-sm" style="margin-left: 7px;"
-                              placeholder="0.00" disabled>
-                          </div>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Total Proforma</u></span>
-                            </div>
-                            <input type="text" class="form-control form-control-sm" style="margin-left: 28px;"
-                              placeholder="0.00" disabled>
 
-                            <input type="text" class="form-control form-control-sm" style="width: 10%;"
-                              placeholder="0.00" disabled>
+                          </div>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                <u>SubTotal Proforma</u></span> {{ complemento_proforma?.subtotal_pfcomplemento }}
+                            </div>
+                          </div>
+
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                <u>Total Proforma</u></span>{{ complemento_proforma?.total_pfcomplemento}}
+                              {{ complemento_proforma?.moneda_total_pfcomplemento}}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1772,83 +1770,90 @@
               <table mat-table [dataSource]="dataSource__venta_23_dias" class="mat-elevation-z8 text-center" matSort
                 multiTemplateDataRows style="text-align: center !important; padding: 0px 0px 0px 0px !important">
 
+                <!-- Total Column -->
+                <ng-container matColumnDef="item">
+                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
+                  <td mat-cell *matCellDef="let element" class="center1"> {{ element.coditem }}</td>
+                </ng-container>
+
                 <!-- COD PROFORMA Column -->
                 <ng-container matColumnDef="codproforma">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Prof </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1"></td>
                 </ng-container>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.id }}</td>
                 </ng-container>
 
                 <!-- Numero I Column -->
                 <ng-container matColumnDef="numero_id">
                   <th mat-header-cell *matHeaderCellDef class="center1"> # ID </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.numeroid }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Column -->
                 <ng-container matColumnDef="cod_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.codcliente }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="cod_cliente_real">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cod. Cliente Real</th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.codcliente_real }}</td>
                 </ng-container>
 
                 <!-- Cod. Cliente Real Column -->
                 <ng-container matColumnDef="nom_cliente">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cliente</th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.nomcliente }}</td>
                 </ng-container>
 
                 <!-- NIT Column -->
                 <ng-container matColumnDef="nit">
                   <th mat-header-cell *matHeaderCellDef class="center1"> NIT </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.nit }}</td>
                 </ng-container>
 
                 <!-- Fecha Column -->
                 <ng-container matColumnDef="fecha">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Fecha </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.fecha | date:'yyyy-mm-dd' }}</td>
                 </ng-container>
 
                 <!-- Total Column -->
                 <ng-container matColumnDef="total">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Total </th>
-                  <td mat-cell *matCellDef="let element" class="center2"> </td>
+                  <td mat-cell *matCellDef="let element" class="center2">{{ element.total }}</td>
                 </ng-container>
 
-                <!-- Total Column -->
-                <ng-container matColumnDef="item">
-                  <th mat-header-cell *matHeaderCellDef class="center1"> Item </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
-                </ng-container>
+
 
                 <!-- Cantidad Column -->
                 <ng-container matColumnDef="cantidad">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Cantidad </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.cantidad }}</td>
                 </ng-container>
 
                 <!-- Moneda Column -->
                 <ng-container matColumnDef="moneda">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Moneda </th>
-                  <td mat-cell *matCellDef="let element" class="center1"> </td>
+                  <td mat-cell *matCellDef="let element" class="center1">{{ element.codmoneda }}</td>
                 </ng-container>
 
                 <!-- Aprobada Column -->
                 <ng-container matColumnDef="aprobada">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Aprobada </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <input type="checkbox">
+                    <ng-container *ngIf="element.aprobada === true; else aprbd">
+                      <input type="checkbox" [checked]="true">
+                    </ng-container>
+                    <ng-template #aprbd>
+                      <input type="checkbox" [checked]="false">
+                    </ng-template>
                   </td>
                 </ng-container>
 
@@ -1856,7 +1861,12 @@
                 <ng-container matColumnDef="transferida">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Transferida </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <input type="checkbox">
+                    <ng-container *ngIf="element.transferida === true; else trans1">
+                      <input type="checkbox" [checked]="true">
+                    </ng-container>
+                    <ng-template #trans1>
+                      <input type="checkbox" [checked]="false">
+                    </ng-template>
                   </td>
                 </ng-container>
 
@@ -2273,27 +2283,27 @@
             placeholder="0.00">
 
           <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
             <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
               (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
             <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
               (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
             <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
               (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
             <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
               (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
             <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
               style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
               (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
@@ -2313,18 +2323,22 @@
           <div class="input-group" style="width: 65% !important;">
             <span class="input-group-text form-control-sm">Empaque Minimo</span>
 
-            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 1% !important;text-align: right;">
+              {{ item_obtenido.empaqueminimo }} PZ
             </div> &nbsp;|&nbsp;
 
             <span class="input-group-text form-control-sm">Peso Minimo</span>
-            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
-
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 1% !important;text-align: right;">
+              {{ item_obtenido.pesominimo | number:'1.3-3' }}
             </div>
-
-            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 1% !important;">
-
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 1% !important;text-align: right;">
+              {{ item_obtenido.penalizadoText }}
             </div> &nbsp;|&nbsp;
-            <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 8.5% !important;">
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 8.5% !important;text-align: center;">
               {{ porcen_item }}
             </div>
           </div>
