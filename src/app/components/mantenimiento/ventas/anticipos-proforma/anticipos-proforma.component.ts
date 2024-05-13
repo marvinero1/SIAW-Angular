@@ -210,7 +210,7 @@ export class AnticiposProformaComponent implements OnInit {
       return;
     }
 
-    if (monto_del_input > this.totalProf) {
+    if (monto_del_input > this.monto_restante) {
       this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
       return;
     }
@@ -345,15 +345,15 @@ export class AnticiposProformaComponent implements OnInit {
   }
 
   BTNengranaje(monto_del_input) {
-    if (monto_del_input == 0) {
-      this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
-      return;
-    }
+    // if (monto_del_input == 0) {
+    //   this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
+    //   return;
+    // }
 
-    if (monto_del_input > this.totalProf) {
-      this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
-      return;
-    }
+    // if (monto_del_input > this.totalProf) {
+    //   this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
+    //   return;
+    // }
   }
 
   abrirTabPorLabel(label: string) {

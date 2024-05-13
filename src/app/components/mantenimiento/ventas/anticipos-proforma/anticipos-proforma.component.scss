@@ -6,6 +6,9 @@
     .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
         width: 150px !important;
     }
+    .mdc-text-field--filled:not(.mdc-text-field--disabled){
+        background-color: white !important;
+    }
 }
 .mat-mdc-header-row{
     background: #093070;

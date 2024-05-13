@@ -43,7 +43,7 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
 
   displayedColumns_anticipos = ['nula', 'idprof', 'nroidprof', 'fechaprof', 'cod_cliente', 'cod_cliente_real', 'total',
     'aprobada', 'transferida', 'id_cbza', 'id_deposito', 'nro_id_deposito', 'id_anticipo', 'id_cbza_contado',
-    'nro_id_cbza_contado', 'monto_desc', 'accion'];
+    'nro_id_cbza_contado', 'monto_desc', 'accion', 'numero_id_deposito'];
 
   constructor(public dialogRef: MatDialogRef<ModalDesctDepositoClienteComponent>, private api: ApiService,
     private toastr: ToastrService, public log_module: LogService, private spinner: NgxSpinnerService,

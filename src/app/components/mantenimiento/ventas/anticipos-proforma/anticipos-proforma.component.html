@@ -20,8 +20,8 @@
       <mat-tab-group style="background-color: #ffe0c0;" #tabGroup>
         <mat-tab label="{{ id_get }}-{{ numero_id_get }}">
           <mat-card style="background-color: #ffe0c0;">
-            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
-              <table class="tg">
+            <mat-card-content style="padding: 5px 0px 0px 0px !important;">
+              <table class="tg" style="margin-bottom: 4.5px;">
                 <tr>
                   <th class="tg-0lax">
                     <div class="input-group">
@@ -179,16 +179,19 @@
 
         <mat-tab label="Anticipos Contado Pendientes">
           <mat-card style="background-color: #ffe0c0;">
-            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
-              <table class="tg" style="width: 100% !important;">
+            <mat-card-content style="padding: 5px 0px 0px 0px !important;margin-bottom: 1.5px;">
+              <table class="tg" style="width: 100% !important;margin-bottom: 6px;">
                 <tr>
-                  <th class="tg-0lax">
-                    <div class="input-group" style="width: 95% !important;">
-                      <div class="input-group-" style="padding-block-start: 6px;">
-                        <span style="padding-right: 128px;">
+                  <th class="tg-0lax" style="padding-left: 128px;">
+                    <div class="input-group">
+                      <div class="input-group-">
+                        <span style="padding-right: 2px;">
                           <u>NIT:</u>
-                          {{ nit_get }} - {{ nombre_cliente_get }}
                         </span>
+                        <input type="text" style="width: 25%;text-align: right;" [(ngModel)]="nit_get" disabled>
+
+                        <input type="text" style="width: 67%;text-align: right;" [(ngModel)]="nombre_cliente_get"
+                          disabled>
                       </div>
                     </div>
                   </th>
@@ -199,8 +202,11 @@
                     <div class="input-group" style="width: 95% !important;">
                       <div class="input-group-" style="padding-block-start: 6px;">
                         <span class="form-control-sm" style="padding: 0px 3px 0px 0px;">
-                          <u>Anticipos Contado Cliente:</u> {{ cod_cliente_proforma }}
+                          <u>Anticipos Contado Cliente:</u>
                         </span>
+                        <input type="text" style="width: 19.5%;text-align: right;" [(ngModel)]="cod_cliente_proforma"
+                          disabled>
+
                       </div>
                     </div>
                   </th>
@@ -210,14 +216,15 @@
                   <th class="tg-0lax">
                     <div class="input-group" style="width: 95% !important;">
                       <div class="input-group-" style="padding-block-start: 6px;">
-                        <span style="padding-right: 81px;">
-                          <u>Cliente Real:</u> {{ cod_cliente_proforma }}
+                        <span style="padding-right: 1px;padding-left: 80px;">
+                          <u>Cliente Real:</u>
                         </span>
                       </div>
-
+                      <input type="text" style="width: 58.9px;text-align: right;margin-bottom: 2.5px;"
+                        [(ngModel)]="cod_cliente_proforma" disabled>
                     </div>
                   </th>
-                </tr><br>
+                </tr>
 
                 <tr>
                   <th class="tg-0lax">
@@ -257,7 +264,7 @@
                   <div class="team scrollmenu">
                     <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto;">
                       <table mat-table [dataSource]="dataSourceAnticipado" multiTemplateDataRows
-                        class="mat-elevation-z8" style="height: 44px !important;">
+                        class="mat-elevation-z8" style="height: 44px !important;margin-bottom: 6px;">
 
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>

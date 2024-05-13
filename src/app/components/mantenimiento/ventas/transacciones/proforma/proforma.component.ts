@@ -342,7 +342,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   elementoSeleccionadoPrecioVenta: any;
   elementoSeleccionadoDescuento: any;
 
-  monto_anticipo: number;
+  monto_anticipo: any;
 
   //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
   public validacion_post: any = [];
@@ -2367,6 +2367,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
           if (datav.value === false) {
             this.modalDetalleObservaciones(datav.resp, datav.detalle);
+            this.complementopf = false;
           } else {
             this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
           }
@@ -2379,7 +2380,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err) => {
           console.log(err);
           this.toastr.error('! NO SE TOTALIZO !');
-
+          this.complementopf = false;
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -3540,6 +3541,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   dividirItemsParaCumplirCajaCerrada() {
+    console.log(this.array_items_carrito_y_f4_catalogo);
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     this.spinner.show();
 
@@ -3592,6 +3594,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   sugerirCantidadDescEspecial() {
+    console.log(this.array_items_carrito_y_f4_catalogo);
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/sugerirCantDescEsp/";
     return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.almacn_parame_usuario
       + "/" + this.BD_storage.bd, this.array_items_carrito_y_f4_catalogo)
@@ -3600,7 +3603,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           console.log(datav);
 
           this.toastr.success('VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️');
-          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle.slice();
 
           //siempre sera uno
           this.orden_creciente = 1;
@@ -3610,7 +3613,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             element.orden = index + 1;
           });
 
-          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
           console.log(this.array_items_carrito_y_f4_catalogo);
           this.toastr.warning(datav.msgDetalle);
