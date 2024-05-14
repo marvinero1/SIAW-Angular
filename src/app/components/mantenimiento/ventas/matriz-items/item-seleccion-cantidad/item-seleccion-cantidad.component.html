@@ -18,7 +18,8 @@
             Cantidad Fija </mat-slide-toggle>
         </div>
         <div class="col-md-8">
-          <input type="number" [disabled]="isCheckedEmpaque" [(ngModel)]="cantidad_input" #cant_input id="cant_input">
+          <input type="number" [disabled]="isCheckedEmpaque" [(ngModel)]="cantidad_input" min="0" #cant_input
+            id="cant_input">
         </div>
       </div>
 
@@ -34,7 +35,7 @@
             </div>
 
             <input type="text" [(ngModel)]="cod_precio_venta_modal_codigo" (blur)="onLeavePrecioVenta($event)"
-              [disabled]="isCheckedCantidad" id="precio_input">
+              [disabled]="isCheckedCantidad" min="0" id="precio_input">
 
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button"
@@ -49,7 +50,7 @@
             </div>
 
             <input type="text" [(ngModel)]="cod_descuento_modal_codigo" [disabled]="isCheckedCantidad"
-              (blur)="onLeaveDesctEspecial($event)" id="descuento_input">
+              (blur)="onLeaveDesctEspecial($event)" min="0" id="descuento_input">
 
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button"

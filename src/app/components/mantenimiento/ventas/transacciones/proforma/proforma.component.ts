@@ -1563,7 +1563,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.empaquesItem = datav;
           console.log(this.empaquesItem);
-
           this.empaque_view = true;
 
           this.empaque_item_codigo = this.empaquesItem.codigo;
@@ -1571,8 +1570,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.cantidad = this.empaquesItem.cantidad;
 
           this.empaque_descripcion_concat = "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
-
-          console.log(this.empaquesItem);
         },
 
         error: (err: any) => {
@@ -1596,8 +1593,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
@@ -2388,8 +2384,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
-
 
   getSaldoItemSeleccionadoDetalle(item) {
     console.log(item);
@@ -3541,6 +3535,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   dividirItemsParaCumplirCajaCerrada() {
+    this.total = 0.00;
+    this.subtotal = 0.00;
+
+    // dejar tabla de descuentos sugeridos en blanco sino al darle click en aplica a todos aplica a los q no son xD
+    this.dataSource_precios_desct = new MatTableDataSource([]);
     console.log(this.array_items_carrito_y_f4_catalogo);
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     this.spinner.show();
@@ -3595,6 +3594,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   sugerirCantidadDescEspecial() {
     console.log(this.array_items_carrito_y_f4_catalogo);
+    this.restablecerContadorClickSugerirCantidad();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/sugerirCantDescEsp/";
     return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.almacn_parame_usuario
       + "/" + this.BD_storage.bd, this.array_items_carrito_y_f4_catalogo)
@@ -3602,8 +3602,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           console.log(datav);
 
+          if (datav.status === false) {
+            this.toastr.warning(datav.resp);
+            return;
+          }
+
           this.toastr.success('VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️');
-          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle.slice();
+          this.array_items_carrito_y_f4_catalogo = [...datav.tabladetalle];
 
           //siempre sera uno
           this.orden_creciente = 1;
@@ -3614,7 +3619,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           });
 
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-          console.log(this.array_items_carrito_y_f4_catalogo);
+          console.log("Data Sugerida: ", datav.tabla_sugerencia)
+          //console.log("Data del Carrito: ", this.array_items_carrito_y_f4_catalogo);
           this.toastr.warning(datav.msgDetalle);
 
           this.dataSource_precios_desct = new MatTableDataSource(datav.tabla_sugerencia);
@@ -3637,7 +3643,149 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
+  //btn APLICAR de su tabla detalle por ITEM
+  aplicarCantidadSugeridadParaCumplirEmpaque(detalle, item) {
+    console.log("Detalle Carrito: ", detalle.filteredData, item);
+    let item_select = detalle.filteredData.find((element1) => element1.coditem === item.coditem);
+
+    console.log("Item seleccionado sacando del carrito: ", item_select);
+    // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
+    // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
+    if (item_select) {
+      if (item_select.cantidad === item.cantidad) {
+        if (item.cantidad_sugerida_aplicable >= 0) {
+          item_select.cantidad += item.cantidad_sugerida_aplicable;
+          //item_select.cantidad_pedida = (item_select.cantidad_pedida + item.cantidad_sugerida_aplicable);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(item_select.cantidad_pedida);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+        }
+      }
+      else {
+        if (item_select.cantidad === item.cantidad) {
+          item_select.cantidad -= item.cantidad_sugerida_aplicable;
+          //item_select.cantidad_pedida = (item_select.cantidad_pedida - item.cantidad_sugerida_aplicable);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+        }
+      }
+    } else {
+      console.error("Elemento no encontrado en detalle.filteredData");
+    }
+  }
+
+  //btn RESTAURAR de su tabla detalle por ITEM
+  restaurarCantidadSugeridadParaCumplirEmpaque(detalle, item) {
+    console.log(item);
+    console.log("Detalle Carrito: ", detalle.filteredData, item);
+    let item_select = detalle.filteredData.find((element1) => element1.coditem === item.coditem);
+
+    console.log("Item seleccionado sacando del carrito: ", item_select);
+    // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
+    // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
+    if (item_select) {
+      if (item_select.cantidad !== item.cantidad) {
+        if (item.cantidad_sugerida_aplicable >= 0) {
+          item_select.cantidad -= item.cantidad_sugerida_aplicable;
+          //item_select.cantidad_pedida = (item_select.cantidad_pedida - item.cantidad_sugerida_aplicable);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+        }
+      } else {
+        if (item_select.cantidad !== item.cantidad) {
+          item_select.cantidad += item.cantidad_sugerida_aplicable;
+          //item_select.cantidad_pedida = (item_select.cantidad_pedida + item.cantidad_sugerida_aplicable);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(item_select.cantidad_pedida);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+
+          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+        }
+      }
+    } else {
+      console.error("Elemento no encontrado en detalle.filteredData");
+    }
+  }
+
+  // Contador de clics TODOS
+  contadorClicks = 0;
+  contadorClicksRestaur = 0;
+
+  aplicarCantidadSugeridadParaCumplirEmpaqueATODO(carrito, sugerencia_array) {
+    let carrito1 = carrito.filteredData;
+    let array_sugerido = sugerencia_array.filteredData;
+    this.contadorClicksRestaur = 0;
+
+    console.log(carrito1, array_sugerido);
+
+    if (this.contadorClicks <= 0) {
+      carrito1.forEach((elementCarrito) => {
+        array_sugerido.forEach((elementSugerido) => {
+          if (elementCarrito.coditem === elementSugerido.coditem) {
+            if (elementSugerido.obs !== 'No Cumple.' && elementSugerido.obs !== 'Cumple Empaque Cerrado.') {
+              if (elementSugerido.cantidad_sugerida_aplicable >= 0) {
+                elementCarrito.cantidad += elementSugerido.cantidad_sugerida_aplicable;
+              } else {
+                elementCarrito.cantidad -= elementSugerido.cantidad_sugerida_aplicable;
+              }
+            }
+          }
+        });
+      });
+      // Incrementar el contador de clics después de aplicar la suma
+      this.contadorClicks += 1;
+    }
+    // 'carrito' ahora contiene todos los elementos con la cantidad sugerida aplicada
+    console.log(carrito1, this.contadorClicks);
+  }
+
+  restablecerContadorClickSugerirCantidad() {
+    this.contadorClicks = 0;
+    this.contadorClicksRestaur = 0;
+  }
+
+  restaurarCantidadSugeridadParaCumplirEmpaqueATODO(carrito, sugerencia_array) {
+    let carrito1 = carrito.filteredData;
+    let array_sugerido = sugerencia_array.filteredData;
+    this.contadorClicks = 0;
+
+    console.log(carrito1, array_sugerido);
+
+    if (this.contadorClicksRestaur <= 0) {
+      carrito1.forEach((elementCarrito) => {
+        // Verificar si el elemento ya ha sido sumado antes
+        array_sugerido.forEach((elementSugerido) => {
+          if (elementCarrito.coditem === elementSugerido.coditem) {
+            if (elementSugerido.obs !== 'No Cumple.' && elementSugerido.obs !== 'Cumple Empaque Cerrado.') {
+              if (elementSugerido.cantidad_sugerida_aplicable >= 0) {
+                elementCarrito.cantidad -= elementSugerido.cantidad_sugerida_aplicable;
+              } else {
+                elementCarrito.cantidad += elementSugerido.cantidad_sugerida_aplicable;
+              }
+            }
+          }
+        });
+      });
+      // Incrementar el contador de clics después de aplicar la suma
+      this.contadorClicksRestaur += 1;
+    }
+
+    // 'carrito' ahora contiene todos los elementos con la cantidad sugerida aplicada
+    console.log(carrito1, this.contadorClicksRestaur);
+  }
   // FIN MAT-TAB Precios - Descuentos Especiales
+
+
+
 
 
   // MAT-TAB Ultimas Proformas

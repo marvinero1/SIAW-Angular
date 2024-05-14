@@ -269,7 +269,7 @@
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo"
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo"
                 (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta" formControlName="preciovta">
             </ng-container>
 
@@ -290,7 +290,7 @@
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal_codigo"
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal_codigo"
                 id="inputCatalogoDesctEspecial" (blur)="onLeaveDescuentoEspecial($event)" formControlName="descuentos">
             </ng-container>
 
@@ -1954,13 +1954,19 @@
                 <!-- Aplicar Column -->
                 <ng-container matColumnDef="moneda">
                   <th mat-header-cell *matHeaderCellDef class="center1"> Aplicar
-                    <mat-icon>done</mat-icon>
+                    <mat-icon (click)="restablecerContadorClickSugerirCantidad()">done</mat-icon>
                   </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Aplicar"
-                      matTooltipClass="custom-tooltip"> Aplicar
-                      <mat-icon>done</mat-icon>
-                    </button>
+                    <ng-container
+                      *ngIf="element.obs !== 'No Cumple.' && element.obs !== 'Cumple Empaque Cerrado.' else obsNoCumple">
+                      <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Aplicar"
+                        matTooltipClass="custom-tooltip"
+                        (click)="aplicarCantidadSugeridadParaCumplirEmpaque(this.dataSource, element);">
+                        Aplicar <mat-icon>done</mat-icon>
+                      </button>
+                    </ng-container>
+
+                    <ng-template #obsNoCumple></ng-template>
                   </td>
                 </ng-container>
 
@@ -1969,10 +1975,15 @@
                   <th mat-header-cell *matHeaderCellDef class="center1"> Restaurar <mat-icon>launch</mat-icon>
                   </th>
                   <td mat-cell *matCellDef="let element" class="center1">
-                    <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Restaurar"
-                      matTooltipClass="custom-tooltip"> Restaurar
-                      <mat-icon>launch</mat-icon>
-                    </button>
+                    <ng-container
+                      *ngIf="element.obs !== 'No Cumple.' && element.obs !== 'Cumple Empaque Cerrado.'else obsNoCumpleRes">
+                      <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Restaurar"
+                        matTooltipClass="custom-tooltip"
+                        (click)="restaurarCantidadSugeridadParaCumplirEmpaque(this.dataSource, element)">
+                        Restaurar <mat-icon>launch</mat-icon>
+                      </button>
+                    </ng-container>
+                    <ng-template #obsNoCumpleRes></ng-template>
                   </td>
                 </ng-container>
 
@@ -2012,12 +2023,14 @@
                     <i class="fa fa-comments" aria-hidden="true"></i> Sugerir Cantidad Desc. Especial
                   </button>
 
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="aplicarCantidadSugeridadParaCumplirEmpaqueATODO(this.dataSource,
+                    this.dataSource_precios_desct);"
                     style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <i class="fa fa-check"></i> Aplicar a Todos
                   </button>
 
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="restaurarCantidadSugeridadParaCumplirEmpaqueATODO(this.dataSource,
+                   this.dataSource_precios_desct);"
                     style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
                     <mat-icon class="green">restore_page</mat-icon> Restaurar Todos
                   </button>
@@ -2335,10 +2348,21 @@
               style="width: 1% !important;text-align: right;">
               {{ item_obtenido.pesominimo | number:'1.3-3' }}
             </div>
-            <div type="text" class="form-control form-control-sm inputsSaldos"
-              style="width: 1% !important;text-align: right;">
-              {{ item_obtenido.penalizadoText }}
-            </div> &nbsp;|&nbsp;
+
+            <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
+              <div type="text" class="form-control form-control-sm inputsSaldos"
+                style="width: 1% !important;text-align: right;">
+                no penalizado
+              </div> &nbsp;|&nbsp;
+            </ng-container>
+
+            <ng-template #penalizado>
+              <div type="text" class="form-control form-control-sm inputsSaldos"
+                style="width: 1% !important;text-align: right;">
+                {{ item_obtenido.penalizadoText }}
+              </div> &nbsp;|&nbsp;
+            </ng-template>
+
             <div type="text" class="form-control form-control-sm inputsSaldos"
               style="width: 8.5% !important;text-align: center;">
               {{ porcen_item }}

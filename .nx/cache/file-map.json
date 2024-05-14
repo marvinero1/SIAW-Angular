@@ -4342,7 +4342,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.html",
-        "hash": "7291957741360056149"
+        "hash": "17338691986468778320"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.scss",
@@ -4419,22 +4419,6 @@
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/stock-actual-f9/stock-actual-f9.component.ts",
         "hash": "10973560305611069640"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cantidad-item/modal-cantidad-item.component.html",
-        "hash": "18313917144913633782"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cantidad-item/modal-cantidad-item.component.scss",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cantidad-item/modal-cantidad-item.component.spec.ts",
-        "hash": "13842290197623667619"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cantidad-item/modal-cantidad-item.component.ts",
-        "hash": "15558506049224599853"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente/modal-cliente.component.html",
@@ -5230,7 +5214,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "11011991033405256479"
+        "hash": "1711836494043969201"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5242,7 +5226,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "18173929387284900581"
+        "hash": "11849505981516532711"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6374,7 +6358,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "3801401756719747614"
+        "hash": "14198207926531897529"
       },
       {
         "file": "src/test.ts",
