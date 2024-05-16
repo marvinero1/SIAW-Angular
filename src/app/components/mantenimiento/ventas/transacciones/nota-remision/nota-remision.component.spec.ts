@@ -11,9 +11,9 @@ describe('NotaRemisionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NotaRemisionComponent ]
+      declarations: [NotaRemisionComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

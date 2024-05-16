@@ -1,0 +1,78 @@
+<section class="content" style="background-color: #ffffc0;">
+  <div class="container-fluid"><br>
+    <div class="row">
+      <div class="col-md-9">
+        <mat-card-title style="font-size: 0.75rem;">Transferir a Notas de Remisión</mat-card-title>
+      </div>
+      <div class="col-md-3 float-right">
+        <div class="text-right">
+          <mat-icon color="primary" (click)="close();">close</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <div class="p-2">
+      <div class="row">
+        <div class="col-md-4">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedProformas" (click)="cotizacionHabilitar();">
+            DE PROFORMAS: </mat-slide-toggle>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" [disabled]="isCheckedCotizaciones" [(ngModel)]="id_proformas"
+              (blur)="onLeaveIDProformas($event)" style="width: 30%;">
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="isCheckedCotizaciones"
+                style="border-color: #093070;padding: 5px;" (click)="modalCatalogoProformas();"><i
+                  class="fa fa-search"></i>
+              </button>
+            </div>
+            <input type="text" [(ngModel)]="numero_id_proformas" [disabled]="isCheckedCotizaciones">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedCotizaciones" (click)="proformaHabilitar();">
+            DE COTIZACIONES:
+          </mat-slide-toggle>
+        </div>
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" [disabled]="isCheckedProformas" [(ngModel)]="id_cotizaciones"
+              (blur)="onLeaveIDCotizaciones($event)" style="width: 30%;">
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="isCheckedProformas"
+                style="border-color: #093070;padding: 5px;" (click)="modalCatalogoCotizaciones();"><i
+                  class="fa fa-search"></i>
+              </button>
+            </div>
+            <input type="text" [disabled]="isCheckedProformas" [(ngModel)]="numero_id_cotizaciones">
+          </div>
+        </div>
+      </div><br>
+
+      <div style="text-align: center;">
+        <ng-container *ngIf="isCheckedProformas">
+          <button mat-raised-button color="primary" (click)="transferirProforma();" [disabled]="!id_proformas">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> Transferir Proforma
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isCheckedCotizaciones">
+          <button mat-raised-button color="primary" (click)="transferirCotizaciones();" [disabled]="!id_cotizaciones">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> Transferir Cotización
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

@@ -118,9 +118,6 @@ mat-row, mat-header-row, mat-footer-row{
   color: gray;
   opacity: 1; /* Firefox */
 }
-// .form-control-sm{
-//   padding: 0.2rem 0.8rem !important;
-// }
 .wrapper .content-wrapper{
   background-color: #CEFFFF !important;
   min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
@@ -131,83 +128,6 @@ mat-row, mat-header-row, mat-footer-row{
 .mat-mdc-table{
   white-space: pre !important;
 }
-
-
-
-::ng-deep {
-  .custom-tooltip {
-    font-size: 0.7rem !important;
-    background-color: #093070 !important;
-    color: #fbd800 !important;
-  }
-
-  // .wrapper.content-wrapper{
-  //   background-color:#CEFFFF !important;
-  // }
-  .mat-mdc-tab-labels{
-    height: calc(1.3rem + 0px) !important;
-  }
-  .miTabGroupProformaFooter .mat-mdc-tab-body{
-    //height: 14rem !important;
-    height: 195px !important;
-  }
-  .mdc-data-table__cell, .mdc-data-table__header-cell{
-    padding: 0px 10px 0px 10px !important;
-  }
-  .mdc-tab{
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  .invalid-feedback{
-    display: contents;
-    width: 0%;
-    margin-top: 0.25rem;
-    font-size: 80%;
-    color: #dc3545;
-  }
-  .mat-mdc-tab.mdc-tab{
-    height: 20px !important;
-    padding-right: 13px !important;
-    padding-left: 13px !important;
-  }
-  .mdc-tab{
-    min-width: 79px !important;  
-  }
-  .mat-mdc-tab-body-content{
-    overflow: hidden;
-  }
-  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell{
-    z-index: 5;
-  }
-  // label:not(.form-check-label):not(.custom-file-label) {
-  //   font-weight: 100;
-  // }
-  .mat-mdc-tab .mdc-tab__text-label {
-    padding: 0px 0px 0px 0px !important;
-  }
-  // .mdc-data-table__cell, .mdc-data-table__header-cell{
-  //   padding: 0px 0px 0px 0px !important;
-  // }
-  // .mat-mdc-tab-body-content{
-  //   height: 12rem !important;
-  // }
-  // .mat-mdc-tab .mdc-tab__content{
-  //   height: 105px !important;
-  // }
-  // .mat-tooltip {
-  //   font-size: 0.7rem !important;
-  //   background-color: #093070 !important;
-  //   color:#fbd800 !important
-  // }
-  .mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target{
-    top: 50% !important;
-    height: 19px !important;
-  }
-}
-
-
-
-
 .right1{
  text-align: right !important;
 }
@@ -282,3 +202,96 @@ mat-row, mat-header-row, mat-footer-row{
   color: #00c600;
   opacity: 0.8;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::ng-deep {
+  .btn-outline-primary:hover{
+    color: black;
+  }
+  .custom-tooltip {
+    font-size: 0.7rem !important;
+    background-color: #093070 !important;
+    color: #fbd800 !important;
+  }
+  // .wrapper.content-wrapper{
+  //   background-color:#CEFFFF !important;
+  // }
+  .mat-mdc-tab-labels{
+    height: calc(1.3rem + 0px) !important;
+  }
+  .miTabGroupProformaFooter .mat-mdc-tab-body{
+    //height: 14rem !important;
+    height: 195px !important;
+  }
+  .mdc-data-table__cell, .mdc-data-table__header-cell{
+    padding: 0px 10px 0px 10px !important;
+  }
+  .mdc-tab{
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .invalid-feedback{
+    display: contents;
+    width: 0%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #dc3545;
+  }
+  .mat-mdc-tab.mdc-tab{
+    height: 20px !important;
+    padding-right: 13px !important;
+    padding-left: 13px !important;
+  }
+  .mdc-tab{
+    min-width: 79px !important;  
+  }
+  .mat-mdc-tab-body-content{
+    overflow: hidden;
+  }
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell{
+    z-index: 5;
+  }
+  // label:not(.form-check-label):not(.custom-file-label) {
+  //   font-weight: 100;
+  // }
+  .mat-mdc-tab .mdc-tab__text-label {
+    padding: 0px 0px 0px 0px !important;
+  }
+  // .mdc-data-table__cell, .mdc-data-table__header-cell{
+  //   padding: 0px 0px 0px 0px !important;
+  // }
+  // .mat-mdc-tab-body-content{
+  //   height: 12rem !important;
+  // }
+  // .mat-mdc-tab .mdc-tab__content{
+  //   height: 105px !important;
+  // }
+  // .mat-tooltip {
+  //   font-size: 0.7rem !important;
+  //   background-color: #093070 !important;
+  //   color:#fbd800 !important
+  // }
+  .mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target{
+    top: 50% !important;
+    height: 19px !important;
+  }
+}
+

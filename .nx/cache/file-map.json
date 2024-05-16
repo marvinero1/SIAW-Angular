@@ -209,6 +209,10 @@
         "hash": "9195323084949195122"
       },
       {
+        "file": ".nx/cache/project-graph.json~eb5e18ce",
+        "hash": "8752089929145193763"
+      },
+      {
         "file": ".prettierignore",
         "hash": "2952368148068339419"
       },
@@ -306,7 +310,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "190451961895617161"
+        "hash": "9113257436558958275"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4358,7 +4362,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "14094971574898740173"
+        "hash": "3093731703413195930"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4514,7 +4518,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.ts",
-        "hash": "2764564767981810334"
+        "hash": "11079137016514121164"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
@@ -4699,6 +4703,22 @@
       {
         "file": "src/app/components/mantenimiento/ventas/modal-sub-total/sub-total-service/sub-total.service.ts",
         "hash": "980490608712166485"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component.html",
+        "hash": "2799091981700441849"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component.spec.ts",
+        "hash": "463022396792692254"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component.ts",
+        "hash": "17566741074571726353"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.html",
@@ -5182,19 +5202,19 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.html",
-        "hash": "8473279913892052256"
+        "hash": "11444123898016753652"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.scss",
-        "hash": "10929809258353222784"
+        "hash": "17749993302249246936"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.spec.ts",
-        "hash": "4886049381039411149"
+        "hash": "15491489409242276247"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.ts",
-        "hash": "15441954848821139574"
+        "hash": "6081869811838131928"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component.html",
@@ -5214,11 +5234,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "1711836494043969201"
+        "hash": "13311133766548919770"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "6500122950200204560"
+        "hash": "9132221196272873870"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5226,11 +5246,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "11849505981516532711"
+        "hash": "4186861738147364027"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
-        "hash": "16945768318424761007"
+        "hash": "3528970784861892375"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.ts",

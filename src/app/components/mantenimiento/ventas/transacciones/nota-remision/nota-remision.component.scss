@@ -110,7 +110,6 @@ mat-row, mat-header-row, mat-footer-row{
 .pedido{
   text-align: right;
   background-color: #80808017;
-  //color: black;
   border: 0;
   width: 100%;
   margin: auto;
@@ -119,9 +118,6 @@ mat-row, mat-header-row, mat-footer-row{
   color: gray;
   opacity: 1; /* Firefox */
 }
-// .form-control-sm{
-//   padding: 0.2rem 0.8rem !important;
-// }
 .wrapper .content-wrapper{
   background-color: #CEFFFF !important;
   min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
@@ -132,14 +128,15 @@ mat-row, mat-header-row, mat-footer-row{
 .mat-mdc-table{
   white-space: pre !important;
 }
-
-
-
 span{
-    border: 0 !important;
+  border: 0 !important;
 }
 
 ::ng-deep {
+  .btn-outline-primary:hover{
+    color: black;
+  }
+
   .custom-tooltip {
     font-size: 0.7rem !important;
     background-color: #093070 !important;
@@ -261,7 +258,7 @@ span{
 }
 .miTabGroupProformaFooter .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
-  height: 195px !important;
+  height: 184px !important;
 }
 .selected-row {
   background-color: #093070; /* Color de fondo cuando se selecciona la fila */
@@ -285,7 +282,6 @@ span{
 .center2{
   text-align: right;
 }
-
 .inputsSaldos2::placeholder {
   color: #00c600;
   opacity: 0.8;

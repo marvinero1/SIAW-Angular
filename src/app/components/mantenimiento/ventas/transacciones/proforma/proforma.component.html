@@ -245,14 +245,44 @@
             <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente"
               [readOnly]="true">
           </div>
+
+
+
+
+
+
+          <div class="row">
+            <div class="col">
+              <div class="input-group">
+                <span class="form-control-sm" style="border: 0 !important;">
+                  <u>Calcular Empaques por Precio</u>
+                </span>
+
+                <div class="input-group-text" style="border: 0;">
+                  <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <span class="form-control-sm" style="border: 0 !important;">
+                  <u>Calcular Empaques por Descuento</u>
+                </span>
+
+                <div class="" style="border: 0;">
+                  <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- segundaColumna -->
         <div class="col col-lg-4">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="border: 0 !important;"><u>Venta Cliente en
-                  Oficina</u>
+              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                <u>Venta Cliente en Oficina</u>
               </span>
             </div>
             <div class="input-group-prepend">
@@ -413,12 +443,12 @@
             </div>
 
             <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_comercial_razon_social"
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
                 formControlName="nomcliente">
             </ng-container>
 
             <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_comercial_razon_social"
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
                 formControlName="nomcliente" readonly>
             </ng-container>
           </div>
@@ -627,6 +657,14 @@
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
                   {{ element?.porceniva }}
+                </td>
+              </ng-container>
+
+              <!-- empaque Column -->
+              <ng-container matColumnDef="empaque">
+                <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Empaque </th>
+                <td mat-cell *matCellDef="let element; let i = index"
+                  [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
                 </td>
               </ng-container>
 
@@ -1502,7 +1540,8 @@
                           </div>
                           <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
                             width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                            [value]="monto_anticipo | number:'1.2-2'" placeholder="0.00" min="0">
+                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0" disabled>
+                          {{ monto_anticipo | number:'1.2-2' }}
                         </div><br>
                         <div style="text-align: center;">
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1640,7 +1679,7 @@
 
                             <div class="input-group-append">
                               <button class="btn btn-outline-primary form-control-sm" type="button"
-                                style="border-color: #ffc107;"
+                                style="border-color: #ffc107;" [disabled]="!disableSelect.value"
                                 (click)="buscadorIDComplementarProforma(idpf_complemento_view, input_complemento_view);">
                                 <i class="fa fa-search"></i>
                               </button>
@@ -2044,7 +2083,7 @@
               </div>
             </mat-tab>
 
-            <mat-tab label="Descuentos de Nivel">
+            <mat-tab label="Descuentos de Promoción">
               <div class="row p-2">
                 <div class="col-md">
                   <form class="example-form" [formGroup]="FormularioData">
@@ -2260,7 +2299,7 @@
                 style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Aplicar Desc.
                 Deposito</button>
 
-              <button mat-raised-button
+              <button mat-raised-button (click)="quitarDescDeposito23();"
                 style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Quitar Desc.
                 Deposito</button>
             </div>
@@ -2340,7 +2379,7 @@
 
             <div type="text" class="form-control form-control-sm inputsSaldos"
               style="width: 1% !important;text-align: right;">
-              {{ item_obtenido.empaqueminimo }} PZ
+              {{ item_obtenido.empaqueminimo }}
             </div> &nbsp;|&nbsp;
 
             <span class="input-group-text form-control-sm">Peso Minimo</span>
