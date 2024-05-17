@@ -323,6 +323,10 @@ export class ApiService {
         }
     }
 
+    descargarArchivo(url: string) {
+        return this.getAll(url);
+    }
+
     async logout() {
         localStorage.removeItem("usuario_logueado");
         sessionStorage.removeItem("usuario_logueado");

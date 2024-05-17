@@ -26,6 +26,19 @@
               id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''">
               <span><i class="fa fa-clone" aria-hidden="true" style="color: #ffc107;"></i> Transferir</span>
             </button>
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="exportProformaExcel();">
+              <span><i class="fa fa-file-archive" aria-hidden="true" style="color: #ffc107;"></i>
+                Exportar ZIP</span>
+            </button>
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="cargarDataExcel();">
+              <span><i class="fa fa-file-excel" aria-hidden="true" style="color: #ffc107;"></i>
+                Cargar</span>
+            </button>
+
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="validarProformaAll();">
               <span> <i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i> Validar</span>
@@ -39,7 +52,7 @@
               </span>
             </button>
           </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="pt-1">
             <h3><strong><u>PROFORMA</u></strong></h3>
           </div>
@@ -89,11 +102,17 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
           </button>
+
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Ultimas Proformas"
             [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
             (click)="ultimasProformas()">
             <i class="fa fa-clone green" aria-hidden="true"></i>
+          </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+            (click)="detalleProformaCarritoTOExcel();" matTooltipClass="custom-tooltip" matTooltip="Detalle a Excel">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -2314,14 +2333,22 @@
             min-width: 45px !important;" (click)="limpiarEtiqueta();">
               <i class="fa fa-eraser"></i></button>
 
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-            padding: 0 11px 0 11px;">
-              <mat-icon class="green" style="margin-left: 10px;margin-right: 10px;"> layers</mat-icon>
+
+
+
+            <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar Excel Proforma"><i
+                class="fa fa-file-excel green" aria-hidden="true"></i>
             </button>
 
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
-              <mat-icon class="blue" style="margin-left: 10px;margin-right: 10px;"> layers</mat-icon>
-            </button>
+            <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
+
+            <!-- <ul>
+              <li *ngFor="let file of extractedFiles">
+                <span>{{ file.name }}</span>
+                <pre>{{ file.content }}</pre>
+              </li>
+            </ul> -->
           </div>
           <!-- FIN BTN ABAJO TOTAL -->
         </div>

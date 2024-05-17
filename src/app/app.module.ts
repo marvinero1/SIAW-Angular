@@ -416,6 +416,7 @@ import { ModalPasswordComponent } from '@components/seguridad/modal-password/mod
 import { ModalGenerarAutorizacionComponent } from '@components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component';
 import { ModalDesctDepositoClienteComponent } from '@components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component';
 import { ModalTransfeNotaRemisionComponent } from '@components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component';
+import { CargarExcelComponent } from '@components/mantenimiento/ventas/cargar-excel/cargar-excel.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -497,7 +498,7 @@ registerPlugin(UndoRedo);
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent,
-        ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent,
+        ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent,
 
 
 

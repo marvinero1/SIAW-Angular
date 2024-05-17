@@ -49,6 +49,13 @@ import { EtiquetaService } from '../../modal-etiqueta/servicio-etiqueta/etiqueta
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ModalDesctDepositoClienteComponent } from '../../modal-desct-deposito-cliente/modal-desct-deposito-cliente.component';
 import { AnticipoProformaService } from '../../anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service';
+import { CargarExcelComponent } from '../../cargar-excel/cargar-excel.component';
+
+import JSZip from 'jszip';
+import * as xmljs from 'xml-js';
+import { read, writeFileXLSX } from "xlsx";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -619,6 +626,22 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       // //concatenar el array de la matriz con el del catalogo, asi todos los pedidos llegan al mismo array
       // console.log(this.item_seleccionados_catalogo_matriz);//aca el item solito que se eligio en el catalogo
       // this.infoItemTotalSubTotal(this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo);
+    });
+    //
+
+    //Detalle de item q se importaron de un Excel
+    this.itemservice.disparadorDeDetalleImportarExcel.subscribe(data => {
+      console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
+      this.array_items_carrito_y_f4_catalogo = data.detalle;
+      // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
+      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.recargos = 0.00;
+      this.des_extra = 0.00;
+      this.iva = 0.00;
+      this.tipoentrega = "";
     });
     //
 
@@ -2500,7 +2523,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     if (this.FormularioData.valid) {
       console.log("DATOS VALIDADOS");
-      this.spinner.show();
       const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage.bd}`;
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
@@ -2512,24 +2534,28 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 1000);
         },
         error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 1000);
         },
         complete: () => {
+          this.exportProformaExcel()
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 1000);
         }
       });
     } else {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
     }
   }
 
@@ -3786,6 +3812,141 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  //Importar a EXCEL
+  extractedFiles: { name: string, content: string | ArrayBuffer | null }[] = [];
+
+  async onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file && this.isZipFile(file)) {
+      const zip = new JSZip();
+      const zipContent = await this.readFile(file);
+      const zipData = await zip.loadAsync(zipContent);
+      this.extractedFiles = [];
+      this.toastr.success("ARCHIVO ZIP CARGADO EXITOSAMENTE ✅");
+
+      zipData.forEach((relativePath, zipEntry) => {
+        zipEntry.async("string").then(content => {
+          this.extractedFiles.push({ name: relativePath, content });
+          //this.modalDetalleObservaciones(relativePath, content);
+          console.log(`Archivos: ${relativePath}, Contenido: ${content}`);
+          this.convertXmlToJson()
+        });
+      });
+    } else {
+      console.error('Please upload a valid ZIP file.');
+      this.toastr.error("SOLO SELECCIONAR FORMATO .ZIP ❌");
+    }
+  }
+
+  isZipFile(file: File): boolean {
+    return file.name.endsWith('.zip');
+  }
+
+  readFile(file: File): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.onerror = error => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+
+  xmlData: string = `
+    <?xml version="1.0" encoding="utf-8"?>
+    <note importance="high" logged="true">
+        <title>Happy</title>
+        <todo>Work</todo>
+        <todo>Play</todo>
+    </note>`;
+  jsonData: any;
+
+  convertXmlToJson() {
+    this.jsonData = xmljs.xml2json(this.xmlData, { compact: true, spaces: 2 });
+    console.log(this.jsonData); // Asegúrate de que estés recibiendo el resultado esperado en la consola
+  }
+  //FIN Importar a EXCEL
+
+
+
+
+  //Exportar a EXCEL
+  exportProformaExcel() {
+    const resultado: boolean = window.confirm("Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id
+      + " con Exito. ¿Desea Exportar el Documento? ");
+    if (resultado) {
+      console.log("El usuario hizo clic en Aceptar.");
+      const content = 'Este es el contenido del archivo';
+      const fileName = this.cod_id_tipo_modal_id + "-" + this.id_proforma_numero_id + '.zip';
+      const blob = new Blob([content], { type: 'zip' });
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Cleanup
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      //esperar URL DEL BACKEND, PARA DESCARGAR ARCHIVO
+      // this.api.descargarArchivo('https://ejemplo.com/archivo')
+      //   .subscribe(blob => {
+      //     const url = window.URL.createObjectURL(blob);
+      //     const a = document.createElement('a');
+      //     a.href = url;
+      //     a.download = 'archivo.txt';
+      //     document.body.appendChild(a);
+      //     a.click();
+      //     document.body.removeChild(a);
+      //     window.URL.revokeObjectURL(url);
+      //   });
+    } else {
+      console.log("El usuario hizo clic en Cancelar.");
+    }
+
+
+  }
+
+
+  cargarDataExcel() {
+    //funcion para traer data de excel abierto dando los datos pestania, celdas
+    this.dialog.open(CargarExcelComponent, {
+      width: 'auto',
+      height: 'auto',
+    });
+  }
+
+
+  detalleProformaCarritoTOExcel() {
+    console.log(this.array_items_carrito_y_f4_catalogo);
+
+    // Convertir los datos a una hoja de cálculo
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    // Generar el archivo Excel
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    // Guardar el archivo
+    this.saveAsExcelFile(excelBuffer, 'example');
+  }
+
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+
+    const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
+    saveAs(data, `${fileName}_export_${this.cod_id_tipo_modal_id + this.id_proforma_numero_id + "DETALLE" + new Date().getTime()}.xlsx`);
+  }
+
+  //FIN Exportar a EXCEL
+
+
+
+
+
+
 
 
 
@@ -4577,7 +4738,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
-      width: '600px',
+      width: 'auto',
       height: 'auto',
       disableClose: true,
       data: {

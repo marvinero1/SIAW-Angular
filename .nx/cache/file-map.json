@@ -23,8 +23,10 @@
     "bootstrap": "4.6.1",
     "core-js": "3.25.0",
     "date-fns": "^3.6.0",
+    "file-saver": "^2.0.5",
     "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
+    "jszip": "^3.10.1",
     "luxon": "3.0.3",
     "moment": "^2.29.4",
     "ng-pipes": "^0.1.5",
@@ -38,6 +40,8 @@
     "summernote": "./summernote",
     "tslib": "2.4.0",
     "uuid": "8.3.2",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
+    "xml-js": "^1.6.11",
     "zone.js": "~0.11.8",
     "@angular-devkit/build-angular": "15.0.1",
     "@angular-eslint/builder": "14.0.3",
@@ -50,6 +54,7 @@
     "@angular/language-service": "15.0.1",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "2.0.10",
+    "@types/jszip": "^3.4.1",
     "@types/node": "18.7.14",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
@@ -162,7 +167,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "7266324835374826902"
+        "hash": "11620867891671712982"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -202,7 +207,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "10293105664908419949"
+        "hash": "14981243395436065016"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -278,11 +283,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "750233270148170552"
+        "hash": "3077872691679541126"
       },
       {
         "file": "package.json",
-        "hash": "4736382637996944227"
+        "hash": "18042084961563496927"
       },
       {
         "file": "proxy.conf.json",
@@ -310,7 +315,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "9113257436558958275"
+        "hash": "259408841053099695"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4185,6 +4190,22 @@
         "hash": "2967038593125348847"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.html",
+        "hash": "12094947585819328488"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.scss",
+        "hash": "9148315332683615391"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.spec.ts",
+        "hash": "11850692827477368711"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.ts",
+        "hash": "4561491238903126084"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/clientes/clientes.component.html",
         "hash": "3989681868632893633"
       },
@@ -4522,7 +4543,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "2411031535755444482"
+        "hash": "11639802451782656366"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
@@ -5054,7 +5075,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/serviciosItem/item-service.service.ts",
-        "hash": "2479827362030508132"
+        "hash": "15244156137696287603"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/serviciotarifa/tarifa.service.spec.ts",
@@ -5234,7 +5255,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "13311133766548919770"
+        "hash": "15882686803942024404"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5246,7 +5267,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "4186861738147364027"
+        "hash": "13356956030017103641"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6202,7 +6223,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "13591769115076832861"
+        "hash": "10181282801254257666"
       },
       {
         "file": "src/app/services/app.service.spec.ts",

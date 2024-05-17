@@ -13,6 +13,7 @@ export class ItemServiceService {
   @Output() disparadorDeItemsYaMapeadosAProforma: EventEmitter<any[]> = new EventEmitter();
   @Output() disparadorDeItemsYaMapeadosAProformaF4: EventEmitter<any[]> = new EventEmitter();
   @Output() disparadorDeItemsSeleccionadosAMatriz: EventEmitter<any[]> = new EventEmitter();
+  @Output() disparadorDeDetalleImportarExcel: EventEmitter<any> = new EventEmitter();
 
   constructor() {
 
@@ -45,4 +46,5 @@ export class ItemServiceService {
   enviarItemCompletoAProformaF4(items: any[]) {
     this.disparadorDeItemsYaMapeadosAProformaF4.emit(items);
   }
+
 }
