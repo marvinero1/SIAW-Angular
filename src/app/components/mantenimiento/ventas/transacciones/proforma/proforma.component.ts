@@ -3919,25 +3919,31 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   detalleProformaCarritoTOExcel() {
     console.log(this.array_items_carrito_y_f4_catalogo);
+    // console.log([this.array_items_carrito_y_f4_catalogo].length);
+    //aca mapear el array del carrito para que solo esten con las columnas necesarias
 
-    // Convertir los datos a una hoja de cálculo
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
-    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    // Generar el archivo Excel
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const resultado: boolean = window.confirm("¿ Desea Exportar El Detalle Del Documento a Excel ?");
+    if (resultado) {
+      // Convertir los datos a una hoja de cálculo
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      // Generar el archivo Excel
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
-    // Guardar el archivo
-    this.saveAsExcelFile(excelBuffer, 'example');
+      // Guardar el archivo
+      this.saveAsExcelFile(excelBuffer, 'DETALLE');
+    } else {
+      console.log("El usuario hizo clic en Cancelar.");
+    }
   }
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 
     const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
-    saveAs(data, `${fileName}_export_${this.cod_id_tipo_modal_id + this.id_proforma_numero_id + "DETALLE" + new Date().getTime()}.xlsx`);
+    saveAs(data, `${fileName}+{this.cod_id_tipo_modal_id + this.id_proforma_numero_id + new Date().getDate()}.xlsx`);
   }
 
   //FIN Exportar a EXCEL

@@ -1,31 +1,68 @@
 <div class="p-1" style="font-size: 0.8rem;background-color: #ffffc0;">
   <div class="row">
     <div class="col-md tittle">
-      <span>Importar Detalle Item's Proforma</span>&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="padding-left: 80px;">Importar Detalle Item's Proforma</span>
       <button mat-stroked-button color="warn" (click)="close();" style="float: right;">
         <i class="fa fa-times"></i></button>
     </div>
   </div>
 
   <div class="p-1 mat-elevation-z8">
-    <div class="row p-2 text-center">
+    <div class="row text-center">
       <div class="container">
-        <div class="panel panel-primary">
-          <div class="panel-body">
-            <!-- Input type file to upload excel file -->
-            <input type="file" (change)="onFileChange($event)" accept=".xls,.xlsx" /><br />
-            <!-- Render parsed JSON data here -->
-            <!-- <div style="margin-top: 10px;">
-              <p>{{ jsonData | json }}</p>
-            </div> -->
-          </div>
-        </div>
+        <mat-list>
+          <mat-list-item style="height: 170px !important;">
+            <span>Seleccionar por Filas </span>
+            <table class="table1">
+              <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2"><u>Filas</u></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>Columna</td>
+                <td>Desde</td>
+                <td>Hasta</td>
+              </tr>
+              <tr>
+                <td>Items</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+              <tr>
+                <td>Valores</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+            </table><br>
+            <div class="text-center">
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                (click)="uploadExcel()"> <i class="fa fa-upload" aria-hidden="true"></i> Cargar a Detalle</button>
+            </div><br>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item style="height: 130px !important;">
+            <span>Cargar Todo </span>
+            <div class="panel panel-primary">
+              <div class="panel-body"><br>
+                <!-- Input type file to upload excel file -->
+                <input type="file" (change)="onFileChange($event)" accept=".xls,.xlsx" /><br />
+                <!-- Render parsed JSON data here -->
+                <!-- <div style="margin-top: 10px;">
+                  <p>{{ jsonData | json }}</p>
+                </div> -->
+              </div>
+            </div><br>
+            <div class="text-center">
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                (click)="uploadExcel()"> <i class="fa fa-upload" aria-hidden="true"></i> Cargar a Detalle</button>
+            </div><br>
+          </mat-list-item>
+        </mat-list>
       </div>
-    </div><br>
-
-    <div class="text-center">
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-        (click)="uploadExcel()"> <i class="fa fa-upload" aria-hidden="true"></i> Cargar a Detalle</button>
     </div>
   </div>
 </div>

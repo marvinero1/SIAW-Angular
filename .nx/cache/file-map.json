@@ -167,7 +167,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "11620867891671712982"
+        "hash": "3199599527575429669"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -207,7 +207,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "14981243395436065016"
+        "hash": "10614019732361725315"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -4191,11 +4191,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.html",
-        "hash": "12094947585819328488"
+        "hash": "4822111492397979177"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.scss",
-        "hash": "9148315332683615391"
+        "hash": "3899819108874045215"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.spec.ts",
@@ -5255,7 +5255,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "15882686803942024404"
+        "hash": "2247820961609639985"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5267,7 +5267,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "13356956030017103641"
+        "hash": "10958387735250323583"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
