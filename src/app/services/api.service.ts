@@ -323,9 +323,14 @@ export class ApiService {
         }
     }
 
-    descargarArchivo(url: string) {
-        return this.getAll(url);
+    cargarArchivo(url: string, formData: FormData): Observable<any> {
+        return this.http.post(this.API_URL + url, formData);
     }
+
+    descargarArchivo(url: string, options: any): Observable<ArrayBuffer> {
+        return this.http.get(this.API_URL + url, { ...options, responseType: 'arraybuffer' as 'json' });
+    }
+
 
     async logout() {
         localStorage.removeItem("usuario_logueado");

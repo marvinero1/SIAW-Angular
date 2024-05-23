@@ -258,11 +258,11 @@ export class AnticiposProformaComponent implements OnInit {
                 return;
               }
               if (this.monto_a_asignar > this.monto_restante) {
-                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR SOBREPASA EL MONTO RESTANTE DEL ANTICIPO !")
+                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR NO PUEDE SER MAYOR AL SALDO DEL ANTICIPO !")
                 return;
               }
               if (this.monto_a_asignar === 0) {
-                this.toastr.warning("¡ NO PUEDE ASIGNAR UN MONTO IGUAL A 0 BOBO xD !")
+                this.toastr.warning("¡ NO PUEDE ASIGNAR UN MONTO IGUAL A 0!")
                 return;
               }
               this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + array_monto.docanticipo);

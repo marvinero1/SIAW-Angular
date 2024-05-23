@@ -27,15 +27,14 @@
               <span><i class="fa fa-clone" aria-hidden="true" style="color: #ffc107;"></i> Transferir</span>
             </button>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="exportProformaExcel();">
-              <span><i class="fa fa-file-archive" aria-hidden="true" style="color: #ffc107;"></i>
-                Exportar ZIP</span>
-            </button>
+              <span>Exportar Proforma</span>
+            </button> -->
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="cargarDataExcel();">
-              <span><i class="fa fa-file-excel" aria-hidden="true" style="color: #ffc107;"></i>
+              <span><i class="fa fa-file-excel green" aria-hidden="true" style="color: #ffc107;"></i>
                 Cargar</span>
             </button>
 
@@ -1414,7 +1413,8 @@
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">Kgr.</span>
                           </div>
                           <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
-                            placeholder="0.00" formControlName="peso" [(ngModel)]="peso" readonly>
+                            placeholder="0.00" formControlName="peso" [(ngModel)]="peso"
+                            [value]="peso | number: '1.2-2'" readonly>
                         </div>
                       </div>
                     </div>
@@ -1560,8 +1560,8 @@
                           </div>
                           <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
                             width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0" disabled>
-                          {{ monto_anticipo | number:'1.2-2' }}
+                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0" value="0" disabled>
+                          {{ moneda_get_catalogo | number:'1.2-2' }}
                         </div><br>
                         <div style="text-align: center;">
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1634,13 +1634,13 @@
                           </div>
                           <mat-select *ngFor="let desct_linea_id_tipos of desct_linea_id_tipo"
                             style="margin-left: 5px;border: 1px solid black; width: 81% !important;"
-                            [(ngModel)]="id_solicitud_desct" formControlName="idsoldesctos">
+                            [(ngModel)]="id_solicitud_desct">
                             <mat-option value="desct_linea_id_tipos.codigo">
                               {{ desct_linea_id_tipos.codigo }} -
                               {{ desct_linea_id_tipos.descripcion }}
                             </mat-option>
                           </mat-select>
-                          <input type="text" formControlName="nroidsoldesctos" hidden="true">
+                          <input type="text" [(ngModel)]="id_solicitud_desct" hidden="true">
                         </div><br>
                         <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
                           style="border-color: #ffc107;">
@@ -1673,10 +1673,10 @@
                           <mat-label>Eliga una Opción</mat-label>
                           <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
                             formControlName="tipo_complementopf">
-                            <mat-option value="0">1. Dimediado - Precio Mayorista Para Cumplir
+                            <mat-option [value]=0>1. Dimediado - Precio Mayorista Para Cumplir
                               Monto Minimo
                             </mat-option>
-                            <mat-option value="1">2. Para Cumplir Monto Minimo Para Aplicar
+                            <mat-option [value]=1>2. Para Cumplir Monto Minimo Para Aplicar
                               Descuento Extra
                             </mat-option>
                           </mat-select>
@@ -2338,8 +2338,8 @@
 
 
             <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar Excel Proforma"><i
-                class="fa fa-file-excel green" aria-hidden="true"></i>
+              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
+                class="fa fa-file-archive " aria-hidden="true"></i>
             </button>
 
             <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />

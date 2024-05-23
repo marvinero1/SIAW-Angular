@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { ModalDetalleObserValidacionComponent } from '../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 @Component({
   selector: 'app-modal-desct-deposito-cliente',
   templateUrl: './modal-desct-deposito-cliente.component.html',
@@ -48,6 +49,7 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModalDesctDepositoClienteComponent>, private api: ApiService,
     private toastr: ToastrService, public log_module: LogService, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any,
     @Inject(MAT_DIALOG_DATA) public nit: any,
     @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
@@ -86,6 +88,10 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
           this.dataSource = new MatTableDataSource(this.tabla_asignaciones_pendientes);
           this.dataSource_anticipos = new MatTableDataSource(this.tabla_asignaciones_NO_FACTURADAS);
 
+          if (this.total_aplicado_NO_FACTURADO > 0) {
+            this.modalDetalleObservaciones("ADVERTENCIA", "Se han encontrado proformas las cuales tienen descuentos por deposito asignados, verifidque esta situacion!!!");
+          }
+
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -103,6 +109,18 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
           }, 1500);
         }
       })
+  }
+
+  modalDetalleObservaciones(obs, obsDetalle) {
+    this.dialog.open(ModalDetalleObserValidacionComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        obs_titulo: obs,
+        obs_contenido: obsDetalle,
+      },
+    });
   }
 
   eliminarDeposito(deposito) {

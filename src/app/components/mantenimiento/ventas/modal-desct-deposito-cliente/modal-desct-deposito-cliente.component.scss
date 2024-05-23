@@ -1,8 +1,8 @@
-.right{
-    width: 50%;
+  .right{
+    width: 30%;
     background-color: #ffc107;
     color: black;
-}
+  }
 
   mat-tab-group{
     font-size: 0.7rem;
@@ -14,7 +14,15 @@
     padding-right: 8px !important;
     padding-left: 8px !important;
   }
+
+  .mat-mdc-tab-label-container{
+    border: 1px solid #093070;
+  }
+
   
+  
+
+
   // Tabla SCSS
   table {
     border-collapse: collapse;
@@ -100,7 +108,6 @@
   .right{
     text-align: right;
   }
-
   .selected-row {
     background-color: #093070; /* Color de fondo cuando se selecciona la fila */
     color: white !important; /* Color de texto cuando se selecciona la fila */

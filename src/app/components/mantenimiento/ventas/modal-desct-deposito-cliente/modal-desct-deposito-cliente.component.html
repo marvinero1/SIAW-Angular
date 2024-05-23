@@ -36,7 +36,7 @@
 
       <mat-tab-group style="background-color: #ffffc0;">
         <mat-tab label="Descuentos Pendientes de Asignación">
-          <mat-card style="background-color: #ffffc0;">
+          <mat-card style="background-color: #ffffc0;padding: 5px 0px 5px 0px !important;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 text-center" multiTemplateDataRows
                 style="text-align: center !important; padding: 0px 0px 0px 0px !important">
@@ -117,7 +117,7 @@
         </mat-tab>
 
         <mat-tab label="Descuentos Asignados A Proformas NO FACTURADAS">
-          <mat-card style="background-color: #ffffc0;">
+          <mat-card style="background-color: #ffffc0;padding: 5px 0px 5px 0px !important;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <table mat-table [dataSource]="dataSource_anticipos" class="mat-elevation-z8 text-center" matSort
                 style="text-align: center !important; padding: 0px 0px 0px 0px !important" multiTemplateDataRows>
@@ -252,25 +252,23 @@
       </mat-tab-group>
 
       <div class="row" style="background-color: black;">
-        <div class="col-sm">
-          <span style="color: #008200;"><u>Total Depositos: </u></span>
+        <div class="col-md-5">
+          <span style="color: #00ff00;"><u>Total Depositos: </u></span>
           <input type="text" class="right" [(ngModel)]="total_depositos" [readOnly]="true">
-        </div>
-
-        <div class="col-sm">
-          <span style="color: #008200;"><u>Total Distribuido: </u></span>
+          |
+          <span style="color: #00ff00;"><u>Total Distribuido: </u></span>
           <input type="text" class="right" [(ngModel)]="total_distribuido" [readOnly]="true">
         </div>
 
         <div class="col-sm">
-          <span style="color: #008200;"><u>Total Desc. Por Aplicar: </u></span>
+          <span style="color: #00ff00;"><u>Total Desc. Por Aplicar: </u></span>
           <input type="text" class="right" [(ngModel)]="total_desc_por_aplicar" [readOnly]="true">
         </div>
 
         <div class="col-sm">
-          <span style="color: #ca2222;"><u>Total Desc. Aplicado NO FACTURADO: </u></span>
+          <span style="color: #fb4242;"><u>Total Desc. Aplicado NO FACTURADO: </u></span>
           <input type="text" class="right" [(ngModel)]="total_aplicado_NO_FACTURADO" [readOnly]="true"
-            style="width: 100%;">
+            style="width: 25%;">
         </div>
       </div>
     </ng-container>

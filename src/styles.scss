@@ -485,10 +485,13 @@ select, textarea {
   .bg-yellow .mat-dialog-container{
   --mdc-dialog-container-color: #ffffc0 !important;
   }
+  
+  .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label{
+    color: #093070;
+  }
 
 
 }
-
 
   input[type=number]::-webkit-inner-spin-button, 
   input[type=number]::-webkit-outer-spin-button { 
@@ -496,6 +499,10 @@ select, textarea {
     margin: 0; 
   }
 
+  ///tamanio maximo de todos los modales, esta es su clase en general de todos xD
+  .cdk-overlay-pane{
+    max-width: 95vw !important;
+  }
 
 
 
