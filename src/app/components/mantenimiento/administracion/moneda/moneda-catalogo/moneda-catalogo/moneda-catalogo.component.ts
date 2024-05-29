@@ -54,7 +54,7 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
     private serviciMoneda: MonedaServicioService, private datePipe: DatePipe) {
 
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.bd_logueado = this.BD_storage.bd;
+    this.bd_logueado = this.BD_storage;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 

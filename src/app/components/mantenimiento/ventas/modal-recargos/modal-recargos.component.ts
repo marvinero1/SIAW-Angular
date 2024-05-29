@@ -116,7 +116,7 @@ export class ModalRecargosComponent implements OnInit {
     }
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddRecargo/"
-    return this.api.getAll('/venta/transac/veproforma/validaAddRecargo/' + this.userConn + "/" + this.recargo_get_service.codigo + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/veproforma/validaAddRecargo/' + this.userConn + "/" + this.recargo_get_service.codigo + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           console.log('valor boolean del backend boolean', datav); //este valor simplemente es un true que valida si se puede agregar
@@ -200,7 +200,7 @@ export class ModalRecargosComponent implements OnInit {
     console.log(total_proforma_concat);
     //al darle al boton OK tiene consultar al backend validando los recargos y re calculando los total, subtotal.
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/recarcularRecargos/"
-    this.api.create('/venta/transac/veproforma/recarcularRecargos/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.des_extra_del_total_get, total_proforma_concat)
+    this.api.create('/venta/transac/veproforma/recarcularRecargos/' + this.userConn + "/" + this.BD_storage + "/" + this.des_extra_del_total_get, total_proforma_concat)
       .subscribe({
         next: (datav) => {
           console.log(datav);

@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
   </ngx-spinner>
 
@@ -96,13 +96,13 @@
                     <!-- <section class="example-section">
                       <mat-checkbox class="example-margin">Activar Cierres Diarios</mat-checkbox>
                     </section> -->
-                    <ng-container *ngIf="parametros.cierres_diarios == true">
+                    <ng-container *ngIf="parametros.cierres_diarios === true">
                       <section class="example-section">
                         <mat-checkbox class="example-margin" formControlName="cierres_diarios" value="true" checked>
                           Activar Cierres Diarios</mat-checkbox>
                       </section>
                     </ng-container>
-                    <ng-container *ngIf="parametros.cierres_diarios == false">
+                    <ng-container *ngIf="parametros.cierres_diarios === false">
                       <section class="example-section">
                         <mat-checkbox class="example-margin" formControlName="cierres_diarios" value="false">Activar
                           Cierres Diarios</mat-checkbox>
@@ -158,13 +158,13 @@
 
                   <div class="row">
                     <div class="col-md text-center">
-                      <ng-container *ngIf="parametros.obliga_remito == true">
+                      <ng-container *ngIf="parametros.obliga_remito === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="obliga_remito" value="true" checked>
                             Obliga a generar remito</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.obliga_remito == false">
+                      <ng-container *ngIf="parametros.obliga_remito === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="obliga_remito" value="false">Obliga a
                             generar remito</mat-checkbox>
@@ -857,13 +857,13 @@
                       </mat-form-field>
 
                       <section class="example-section">
-                        <ng-container *ngIf="parametros.valida_salariomin == true">
+                        <ng-container *ngIf="parametros.valida_salariomin === true">
                           <section class="example-section">
                             <mat-checkbox class="example-margin" formControlName="valida_salariomin" value="true"
                               checked>Valida Salario Minimo Nacional</mat-checkbox>
                           </section>
                         </ng-container>
-                        <ng-container *ngIf="parametros.valida_salariomin == false">
+                        <ng-container *ngIf="parametros.valida_salariomin === false">
                           <section class="example-section">
                             <mat-checkbox class="example-margin" formControlName="valida_salariomin" value="false">
                               Valida Salario Minimo Nacional</mat-checkbox>
@@ -872,14 +872,14 @@
                       </section>
 
                       <section class="example-section">
-                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion == true">
+                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion === true">
                           <section class="example-section">
                             <mat-checkbox class="example-margin"
                               formControlName="bono_rendimiento_pymes_segun_evaluacion" value="true" checked>Bono
                               Rendimiento Pymes Segun Evaluación</mat-checkbox>
                           </section>
                         </ng-container>
-                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion == false">
+                        <ng-container *ngIf="parametros.bono_rendimiento_pymes_segun_evaluacion === false">
                           <section class="example-section">
                             <mat-checkbox class="example-margin"
                               formControlName="bono_rendimiento_pymes_segun_evaluacion" value="false">Bono Rendimiento
@@ -989,13 +989,13 @@
 
                 <div class="row">
                   <div class="col">
-                    <ng-container *ngIf="parametros.negativos == true">
+                    <ng-container *ngIf="parametros.negativos === true">
                       <section class="example-section">
                         <mat-checkbox class="example-margin" formControlName="negativos" value="true" checked>Permitir
                           Saldos Negativos</mat-checkbox>
                       </section>
                     </ng-container>
-                    <ng-container *ngIf="parametros.negativos == false">
+                    <ng-container *ngIf="parametros.negativos === false">
                       <section class="example-section">
                         <mat-checkbox class="example-margin" formControlName="negativos" value="false">Permitir Saldos
                           Negativos</mat-checkbox>
@@ -1004,13 +1004,13 @@
                   </div>
                   <div class="col">
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.stock_seguridad == true">
+                      <ng-container *ngIf="parametros.stock_seguridad === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="stock_seguridad" value="true" checked>
                             Controlar Stock de Reserva</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.stock_seguridad == false">
+                      <ng-container *ngIf="parametros.stock_seguridad === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="stock_seguridad" value="false">Controlar
                             Stock de Reserva</mat-checkbox>
@@ -1297,13 +1297,13 @@
                   </div><br>
                   <div class="row">
                     <div class="col-md">
-                      <ng-container *ngIf="parametros.factura_imprime_labels == true">
+                      <ng-container *ngIf="parametros.factura_imprime_labels === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="factura_imprime_labels" value="true"
                             checked>En Factura Pre-Impresas Imprimir Toda Cabecera</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                      <ng-container *ngIf="parametros.factura_imprime_labels === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="factura_imprime_labels" value="false">En
                             Factura Pre-Impresas Imprimir Toda Cabecera</mat-checkbox>
@@ -1355,13 +1355,13 @@
                 <div class="row">
                   <div class="col">
                     <div>
-                      <ng-container *ngIf="parametros.proforma_reserva == true">
+                      <ng-container *ngIf="parametros.proforma_reserva === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="proforma_reserva" value="true" checked>
                             Las Proformas Autorizadas Reservan Mercaderia.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.proforma_reserva == false">
+                      <ng-container *ngIf="parametros.proforma_reserva === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="proforma_reserva" value="false">
                             Las Proformas Autorizadas Reservan Mercaderia.</mat-checkbox>
@@ -1370,13 +1370,13 @@
                     </div>
 
                     <div>
-                      <ng-container *ngIf="parametros.rev_automaticas == true">
+                      <ng-container *ngIf="parametros.rev_automaticas === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="rev_automaticas" value="true" checked>
                             Revertir Automaticamente los Pronto Pago Excedidos.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.rev_automaticas == false">
+                      <ng-container *ngIf="parametros.rev_automaticas === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="rev_automaticas" value="false">
                             Revertir Automaticamente los Pronto Pago Excedidos.</mat-checkbox>
@@ -1385,13 +1385,13 @@
                     </div>
 
                     <div>
-                      <ng-container *ngIf="parametros.clientevendedor == true">
+                      <ng-container *ngIf="parametros.clientevendedor === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="clientevendedor" value="true" checked>
                             Controlar que el Cliente sea atendido por su propio vendedor.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                      <ng-container *ngIf="parametros.factura_imprime_labels === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="clientevendedor" value="false">Controlar
                             que el Cliente sea atendido por su propio vendedor.</mat-checkbox>
@@ -1400,13 +1400,13 @@
                     </div>
 
                     <div>
-                      <ng-container *ngIf="parametros.forzar_etiqueta == true">
+                      <ng-container *ngIf="parametros.forzar_etiqueta === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="forzar_etiqueta" value="true" checked>
                             Obligar a llenar Etiqueta de Cliente en Proformas.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.forzar_etiqueta == false">
+                      <ng-container *ngIf="parametros.forzar_etiqueta === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="forzar_etiqueta" value="false">Obligar a
                             llenar Etiqueta de Cliente en Proformas.</mat-checkbox>
@@ -1414,13 +1414,13 @@
                       </ng-container>
                     </div>
                     <div>
-                      <ng-container *ngIf="parametros.permitir_items_repetidos == true">
+                      <ng-container *ngIf="parametros.permitir_items_repetidos === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="permitir_items_repetidos" value="true"
                             checked>Permitir Items Repetidos.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.factura_imprime_labels == false">
+                      <ng-container *ngIf="parametros.factura_imprime_labels === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="permitir_items_repetidos" value="false">
                             Permitir Items Repetidos.</mat-checkbox>
@@ -1431,7 +1431,7 @@
                   <div class="col">
                     <section class="example-section">
                       <div>
-                        <ng-container *ngIf="parametros.cambiar_credito_morosos == true">
+                        <ng-container *ngIf="parametros.cambiar_credito_morosos === true">
                           <section class="example-section">
                             <mat-checkbox class="example-margin" formControlName="cambiar_credito_morosos" value="true"
                               checked>
@@ -1439,7 +1439,7 @@
                             </mat-checkbox>
                           </section>
                         </ng-container>
-                        <ng-container *ngIf="parametros.cambiar_credito_morosos == false">
+                        <ng-container *ngIf="parametros.cambiar_credito_morosos === false">
                           <section class="example-section">
                             <mat-checkbox class="example-margin" formControlName="cambiar_credito_morosos"
                               value="false">
@@ -1453,13 +1453,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.valida_cobertura == true">
+                      <ng-container *ngIf="parametros.valida_cobertura === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="true" checked>
                             Validar Cobertura en Cumplimiento de Objetivos por Vendedor. </mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.valida_cobertura == false">
+                      <ng-container *ngIf="parametros.valida_cobertura === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="false">
                             Validar Cobertura en Cumplimiento de Objetivos por Vendedor. </mat-checkbox>
@@ -1468,13 +1468,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.valida_cobertura == true">
+                      <ng-container *ngIf="parametros.valida_cobertura === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="true" checked>
                             Generar Hoja de Rutas Diarias.</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.valida_cobertura == false">
+                      <ng-container *ngIf="parametros.valida_cobertura === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="valida_cobertura" value="false">
                             Generar Hoja de Rutas Diarias. </mat-checkbox>
@@ -1501,7 +1501,7 @@
                 <div class="row text-center">
                   <div class="col">
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura == true">
+                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="distribuir_desc_extra_en_factura"
                             value="true" checked>
@@ -1512,7 +1512,7 @@
                           </mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura == false">
+                      <ng-container *ngIf="parametros.distribuir_desc_extra_en_factura === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="distribuir_desc_extra_en_factura"
                             value="false">
@@ -1551,13 +1551,13 @@
                 <div class="row" style="border-style: groove;">
                   <div class="col-md">
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_ventascontado == true">
+                      <ng-container *ngIf="parametros.preg_cont_ventascontado === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_ventascontado" value="true"
                             checked>Ventas al Contado</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_ventascontado == false">
+                      <ng-container *ngIf="parametros.preg_cont_ventascontado === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_ventascontado" value="false">
                             Ventas al Contado</mat-checkbox>
@@ -1565,13 +1565,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_ventascredito == true">
+                      <ng-container *ngIf="parametros.preg_cont_ventascredito === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_ventascredito" value="true"
                             checked>Ventas a Credito</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_ventascredito == false">
+                      <ng-container *ngIf="parametros.preg_cont_ventascredito === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_ventascredito" value="false">
                             Ventas a Credito</mat-checkbox>
@@ -1579,13 +1579,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_cobranza == true">
+                      <ng-container *ngIf="parametros.preg_cont_cobranza === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_cobranza" value="true"
                             checked>Cobranzas</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_cobranza == false">
+                      <ng-container *ngIf="parametros.preg_cont_cobranza === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_cobranza" value="false">
                             Cobranzas</mat-checkbox>
@@ -1593,13 +1593,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_notamov == true">
+                      <ng-container *ngIf="parametros.preg_cont_notamov === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_notamov" value="true" checked>
                             Nota de Movimiento</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_notamov == false">
+                      <ng-container *ngIf="parametros.preg_cont_notamov === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_notamov" value="false">Nota de
                             Movimiento</mat-checkbox>
@@ -1610,13 +1610,13 @@
 
                   <div class="col-md">
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_depositos == true">
+                      <ng-container *ngIf="parametros.preg_cont_depositos === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_depositos" value="true"
                             checked>Depositos</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_depositos == false">
+                      <ng-container *ngIf="parametros.preg_cont_depositos === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_depositos" value="false">
                             Depositos</mat-checkbox>
@@ -1625,13 +1625,13 @@
                     </div>
 
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_retiros == true">
+                      <ng-container *ngIf="parametros.preg_cont_retiros === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_retiros" value="true" checked>
                             Retiros</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_retiros == false">
+                      <ng-container *ngIf="parametros.preg_cont_retiros === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_retiros" value="false">Retiros
                           </mat-checkbox>
@@ -1639,13 +1639,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_movfondos == true">
+                      <ng-container *ngIf="parametros.preg_cont_movfondos === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_movfondos" value="true"
                             checked>Movimiento de Fondos</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_movfondos == false">
+                      <ng-container *ngIf="parametros.preg_cont_movfondos === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_movfondos" value="false">
                             Movimiento de Fondos</mat-checkbox>
@@ -1653,13 +1653,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_cheques == true">
+                      <ng-container *ngIf="parametros.preg_cont_cheques === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_cheques" value="true" checked>
                             Cheques</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_cheques == false">
+                      <ng-container *ngIf="parametros.preg_cont_cheques === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_cheques" value="false">Cheques
                           </mat-checkbox>
@@ -1667,13 +1667,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_transferencias == true">
+                      <ng-container *ngIf="parametros.preg_cont_transferencias === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_transferencias" value="true"
                             checked>Transferencia</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_transferencias == false">
+                      <ng-container *ngIf="parametros.preg_cont_transferencias === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_transferencias" value="false">
                             Transferencia</mat-checkbox>
@@ -1684,13 +1684,13 @@
 
                   <div class="col-md">
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_compras == true">
+                      <ng-container *ngIf="parametros.preg_cont_compras === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_compras" value="true" checked>
                             Compras</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_compras == false">
+                      <ng-container *ngIf="parametros.preg_cont_compras === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_compras" value="false">Compras
                           </mat-checkbox>
@@ -1698,13 +1698,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_pagos == true">
+                      <ng-container *ngIf="parametros.preg_cont_pagos === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_pagos" value="true" checked>
                             Pagos</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_pagos == false">
+                      <ng-container *ngIf="parametros.preg_cont_pagos === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_pagos" value="false">Pagos
                           </mat-checkbox>
@@ -1715,13 +1715,13 @@
 
                   <div class="col-md">
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_trasladoaf == true">
+                      <ng-container *ngIf="parametros.preg_cont_trasladoaf === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_trasladoaf" value="true"
                             checked>Traslado de Activos</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_trasladoaf == false">
+                      <ng-container *ngIf="parametros.preg_cont_trasladoaf === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_trasladoaf" value="false">
                             Traslado de Activos</mat-checkbox>
@@ -1729,13 +1729,13 @@
                       </ng-container>
                     </div>
                     <div class="col">
-                      <ng-container *ngIf="parametros.preg_cont_bajaaf == true">
+                      <ng-container *ngIf="parametros.preg_cont_bajaaf === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_bajaaf" value="true" checked>
                             Bajas de Activos</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.preg_cont_bajaaf == false">
+                      <ng-container *ngIf="parametros.preg_cont_bajaaf === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="preg_cont_bajaaf" value="false">Bajas de
                             Activos</mat-checkbox>
@@ -1802,13 +1802,13 @@
                   </div>
                 </div>
                 <section class="example-section">
-                  <ng-container *ngIf="parametros.comnoviajantes == true">
+                  <ng-container *ngIf="parametros.comnoviajantes === true">
                     <section class="example-section">
                       <mat-checkbox class="example-margin" formControlName="comnoviajantes" value="true" checked>
                         Calcular Comision Personal NO Viajantes</mat-checkbox>
                     </section>
                   </ng-container>
-                  <ng-container *ngIf="parametros.comnoviajantes == false">
+                  <ng-container *ngIf="parametros.comnoviajantes === false">
                     <section class="example-section">
                       <mat-checkbox class="example-margin" formControlName="comnoviajantes" value="false">Calcular
                         Comision Personal NO Viajantes</mat-checkbox>
@@ -1832,13 +1832,13 @@
                 <div class="row" style="width: 60%;">
                   <div class="col">
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_mora == true">
+                      <ng-container *ngIf="parametros.crm_ta_mora === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_mora" value="true" checked>Dias
                             de Mora: </mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_mora == false">
+                      <ng-container *ngIf="parametros.crm_ta_mora === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_mora" value="false">Dias de Mora:
                           </mat-checkbox>
@@ -1850,13 +1850,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_sinventa == true">
+                      <ng-container *ngIf="parametros.crm_ta_sinventa === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_sinventa" value="true" checked>
                             Dias sin Ventas: </mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_sinventa == false">
+                      <ng-container *ngIf="parametros.crm_ta_sinventa === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_sinventa" value="false">Dias sin
                             Ventas: </mat-checkbox>
@@ -1868,13 +1868,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_sinvisita == true">
+                      <ng-container *ngIf="parametros.crm_ta_sinvisita === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_sinvisita" value="true" checked>
                             Dias sin Visita: &nbsp;</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_sinvisita == false">
+                      <ng-container *ngIf="parametros.crm_ta_sinvisita === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_sinvisita" value="false">Dias sin
                             Visita: &nbsp;</mat-checkbox>
@@ -1887,13 +1887,13 @@
 
 
                     <section class="example-section row">
-                      <ng-container *ngIf="parametros.crm_ta_despacho == true">
+                      <ng-container *ngIf="parametros.crm_ta_despacho === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_despacho" value="true" checked>
                             Dias de Despacho: &nbsp;</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_despacho == false">
+                      <ng-container *ngIf="parametros.crm_ta_despacho === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_despacho" value="false">Dias de
                             Despacho: &nbsp;</mat-checkbox>
@@ -1912,13 +1912,13 @@
 
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_vencimiento == true">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento" value="true"
                             checked>Vencimientos de Pronto Pago: &nbsp;</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_vencimiento == false">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento" value="false">
                             Vencimientos de Pronto Pago: &nbsp;</mat-checkbox>
@@ -1927,13 +1927,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_cumpleanios == true">
+                      <ng-container *ngIf="parametros.crm_ta_cumpleanios === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_cumpleanios" value="true"
                             checked>Cumpleaños de Clientes: &nbsp;</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_cumpleanios == false">
+                      <ng-container *ngIf="parametros.crm_ta_cumpleanios === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_cumpleanios" value="false">
                             Cumpleaños de Clientes: &nbsp;</mat-checkbox>
@@ -1942,13 +1942,13 @@
                     </section>
 
                     <section class="example-section">
-                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias == true">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias === true">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento_dias" value="true"
                             checked>Aviso de Vencimiento: &nbsp;</mat-checkbox>
                         </section>
                       </ng-container>
-                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias == false">
+                      <ng-container *ngIf="parametros.crm_ta_vencimiento_dias === false">
                         <section class="example-section">
                           <mat-checkbox class="example-margin" formControlName="crm_ta_vencimiento_dias" value="false">
                             Aviso de Vencimiento: &nbsp;</mat-checkbox>

@@ -287,7 +287,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getItemMatriz_Anadir";
     return this.api.getAll(
-      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
+      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
       .subscribe({
         next: (datav) => {
           this.itemParaTabla = datav;

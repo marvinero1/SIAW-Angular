@@ -1,44 +1,49 @@
-<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Cuentas Por Cobrar">
-  <span><mat-icon style="font-size: 1.75rem !important;width: auto !important;height: auto !important;padding-block-start: 10px;color: #093070;">monetization_on</mat-icon>
-  <mat-icon style="color: #093070;">keyboard_arrow_down</mat-icon></span>
-</a> 
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Cuentas Por Cobrar"
+  matTooltipClass="custom-tooltip" matTooltipPosition="above">
+  <span>
+    <mat-icon
+      style="font-size: 1.75rem !important;width: auto !important;height: auto !important;padding-block-start: 10px;color: #093070;">
+      monetization_on</mat-icon>
+    <mat-icon style="color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
+</a>
 
 <mat-menu #mantenimiento="matMenu">
   <a mat-menu-item [matMenuTriggerFor]="transacacciones_cuentas">Transacciones</a>
   <a mat-menu-item [matMenuTriggerFor]="modificaciones_cuentas">Modificaciones</a>
-   <a mat-menu-item [matMenuTriggerFor]="operaciones_cuentas">Operaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_cuentas">Operaciones</a>
   <a mat-menu-item href="">Verificar Distribuciones</a>
 </mat-menu>
-  
+
 <mat-menu #transacacciones_cuentas="matMenu">
-  <a mat-menu-item >Anticipo</a>
-  <a mat-menu-item >Cobranza</a>
-  <a mat-menu-item >Cobranza Venta Contado CE</a>
-  <a mat-menu-item >Devolución de Anticipo</a>
+  <a mat-menu-item>Anticipo</a>
+  <a mat-menu-item>Cobranza</a>
+  <a mat-menu-item>Cobranza Venta Contado CE</a>
+  <a mat-menu-item>Devolución de Anticipo</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Pago de Mora</a>
+  <a mat-menu-item>Pago de Mora</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Ajuste de Saldos</a>
-  <a mat-menu-item >Retención Por Cuentas en Mora</a>
-  <a mat-menu-item >Descuentos Varios</a>
-  <a mat-menu-item >Devolución Retención de Mora</a>
+  <a mat-menu-item>Ajuste de Saldos</a>
+  <a mat-menu-item>Retención Por Cuentas en Mora</a>
+  <a mat-menu-item>Descuentos Varios</a>
+  <a mat-menu-item>Devolución Retención de Mora</a>
 </mat-menu>
 
 <mat-menu #modificaciones_cuentas="matMenu">
-  <a mat-menu-item >Anticipo</a>
-  <a mat-menu-item >Cobranza</a>
-  <a mat-menu-item >Cobranza Venta Contado CE</a>
-  <a mat-menu-item >Devolución de Anticipo</a>
+  <a mat-menu-item>Anticipo</a>
+  <a mat-menu-item>Cobranza</a>
+  <a mat-menu-item>Cobranza Venta Contado CE</a>
+  <a mat-menu-item>Devolución de Anticipo</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Pago de Mora</a>
+  <a mat-menu-item>Pago de Mora</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Ajuste de Saldos</a>
-  <a mat-menu-item >Retención Por Cuentas en Mora</a>
-  <a mat-menu-item >Descuentos Varios</a>
+  <a mat-menu-item>Ajuste de Saldos</a>
+  <a mat-menu-item>Retención Por Cuentas en Mora</a>
+  <a mat-menu-item>Descuentos Varios</a>
 </mat-menu>
 
 <mat-menu #operaciones_cuentas="matMenu">
-  <a mat-menu-item >Distribuicion de Cobranzas</a>
-  <a mat-menu-item >Arreglo Creditos Disponibles</a>
-  <a mat-menu-item >Buscador de Deudas</a>
+  <a mat-menu-item>Distribuicion de Cobranzas</a>
+  <a mat-menu-item>Arreglo Creditos Disponibles</a>
+  <a mat-menu-item>Buscador de Deudas</a>
 </mat-menu>

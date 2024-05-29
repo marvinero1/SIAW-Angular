@@ -49,6 +49,7 @@ export class AnticiposProformaComponent implements OnInit {
   anticipo: any;
   get_anticipos_desc: any;
 
+  cod_anticipo: any;
   monto: any;
   moneda: any;
   cod_vendedor: any;
@@ -125,7 +126,7 @@ export class AnticiposProformaComponent implements OnInit {
       return this.message = "SELECCIONE MONEDA"
     }
 
-    if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma === 0) {
+    if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma === 1) {
       this.toastr.error('SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA"
@@ -177,7 +178,8 @@ export class AnticiposProformaComponent implements OnInit {
     this.fecha_formateada2 = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/";
-    return this.api.update('/venta/transac/prgveproforma_anticipo/btnrefrescar_Anticipos/' + this.userConn + "/" + this.cod_cliente_proforma + "/" + this.fecha_formateada1 + "/" + this.fecha_formateada2 + "/" + this.nit_get + "/" + this.cod_cliente_proforma + "/" + this.BD_storage.bd, [])
+    return this.api.update('/venta/transac/prgveproforma_anticipo/btnrefrescar_Anticipos/' + this.userConn + "/" + this.cod_cliente_proforma + "/" + this.fecha_formateada1 + "/" + this.fecha_formateada2 + "/" +
+      this.nit_get + "/" + this.cod_cliente_proforma + "/" + this.BD_storage, [])
       .subscribe({
         next: (datav) => {
           this.data_tabla_anticipos = datav;
@@ -222,7 +224,7 @@ export class AnticiposProformaComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     let array_monto = {
-      codproforma: 0,
+      codproforma: this.cod_anticipo,
       codanticipo: 0,
       id_anticipo: "",
       docanticipo: "AN311",
@@ -332,6 +334,7 @@ export class AnticiposProformaComponent implements OnInit {
     } else {
       this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo);
 
+      this.cod_anticipo = element.codanticipo;
       this.monto = element.monto;
       this.moneda = element.codmoneda;
       this.cod_vendedor = element.codvendedor;
@@ -381,7 +384,7 @@ export class AnticiposProformaComponent implements OnInit {
   close() {
     this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
       anticipos: this.array_tabla_anticipos_get,
-      totalAnticipo: this.total_anticipos
+      totalAnticipo: this.total_anticipos,
     });
 
     this.dialogRef.close();

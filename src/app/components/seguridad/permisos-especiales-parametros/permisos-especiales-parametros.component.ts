@@ -252,7 +252,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.user_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    console.log(this.BD_storage.bd);
+    console.log(this.BD_storage);
 
     this.data_text_area = this.autorizacion.find(x => x.codigo == this.data_servicio);
   }
@@ -288,7 +288,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       descServicio: this.data_inventario,
       codpersona: this.persona_code,
       password: this.contrasenia,
-      codempresa: this.BD_storage.bd,
+      codempresa: this.BD_storage,
       dato_a: this.dataA_get.toString(),
       dato_b: this.dataB_get.toString(),
       fechareg: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),

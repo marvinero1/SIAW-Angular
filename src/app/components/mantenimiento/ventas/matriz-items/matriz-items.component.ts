@@ -154,9 +154,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.agencia = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+    this.getAlmacenParamUsuario();
 
-    if (this.BD_storage.bd === 'Loc') {
-      this.BD_storage.bd = '311'
+    if (this.BD_storage === 'Loc') {
+      this.BD_storage = '311'
     }
 
     if (this.agencia === 'Loc') {
@@ -166,14 +167,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
     this.codcliente_get = codcliente.codcliente;
-    this.codalmacen_get = codalmacen.codalmacen;
+    this.codalmacen_get = codalmacen.codalmacen.codalmacen;
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
     this.codcliente_real_get = codcliente_real.codcliente_real
-
-
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -288,7 +287,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + item + "/" + this.codalmacen_get + "/" + this.BD_storage.bd)
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + item + "/" + this.codalmacen_get + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
@@ -310,7 +309,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.codalmacen_get + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuario_logueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.codalmacen_get + "/" + item + "/" + this.BD_storage + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
@@ -574,11 +573,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
     console.log(this.valorCelda, cleanText);
 
-    // if (this.valorCelda === undefined) {
-    //   this.toastr.warning('¡CELDA NO VALIDA!');
-    //   return;
-    // }
-
     if (existe) {
       console.log("El item ya existe en el array.");
       //this.toastr.warning('¡EL ITEM YA ESTA EN PEDIDO!');
@@ -662,7 +656,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado, a)
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, a)
       .subscribe({
         next: (datav) => {
           this.items_post = datav;
@@ -820,6 +814,22 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           console.log("Almacenes Parametros: ", this.almacenes_saldos);
         },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  public almacn_parame_usuario: any = [];
+  getAlmacenParamUsuario() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getAlmacenUser/";
+    return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuario_logueado)
+      .subscribe({
+        next: (datav) => {
+          this.almacn_parame_usuario = datav;
+          console.log('data', this.almacn_parame_usuario);
+        },
         error: (err: any) => {
           console.log(err, errorMessage);
         },

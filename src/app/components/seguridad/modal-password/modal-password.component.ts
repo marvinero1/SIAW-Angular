@@ -228,7 +228,7 @@ export class ModalPasswordComponent implements OnInit {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    console.log(this.BD_storage.bd);
+    console.log(this.BD_storage);
 
 
     this.data_servicio = this.sevicio_select.sevicio_select;
@@ -241,7 +241,7 @@ export class ModalPasswordComponent implements OnInit {
   getaAutorizacion() {
     console.log(this.data_servicio, this.data_autorizacionA, this.data_autorizacionB);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgcontrasena/passwordAut/"
-    return this.api.getAll('/seg_adm/oper/prgcontrasena/passwordAut/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.data_servicio + "/" + this.contrasenia)
+    return this.api.getAll('/seg_adm/oper/prgcontrasena/passwordAut/' + this.userConn + "/" + this.BD_storage + "/" + this.data_servicio + "/" + this.contrasenia)
       .subscribe({
         next: (datav) => {
           this.autorizacion_recibida = datav;

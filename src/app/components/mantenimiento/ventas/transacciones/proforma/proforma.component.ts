@@ -256,6 +256,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
   public venta_cliente_oficina: boolean = false;
+
   public transporte: any;
   public medio_transporte: any;
   public fletepor: any;
@@ -283,14 +284,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public anticipo_button: boolean;
   public cliente_casual: boolean;
   public total_X_PU: boolean = false;
-  public disableSelect = new FormControl(false);
+  public disableSelect: any = new FormControl(false);
   public habilitar_desct_sgn_solicitud: boolean = false;
   public empaque_view = false;
   public submitted = false;
+  public contra_entrega = false;
 
   public idpf_complemento_view: any;
   public nroidpf_complemento_view: any;
-  public input_complemento_view: any = 0;
+  public input_complemento_view: any;
 
   public moneda_get_catalogo: any;
   public moneda_get_array: any = [];
@@ -366,7 +368,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public maximo_validacion: any = [];
   public tabla_anticipos: any = [];
 
-  public tipo_complementopf_input: any = 0;
+  public tipo_complementopf_input: number = 0;
 
   // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
@@ -434,6 +436,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    console.log(this.BD_storage);
 
     this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
     this.mandarNombre();
@@ -441,11 +444,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     if (this.agencia_logueado === 'Loc') {
       this.agencia_logueado = '311'
     }
+
+    this.disableSelect.value = false;
+    console.log("Valor del Disabled:", this.disableSelect.value);
   }
 
   ngOnInit() {
     this.getDesctLineaIDTipo();
-    this.tipopago = 0;
+    this.tipopago = 1;
     this.transporte = "FLOTA";
     this.fletepor = "CLIENTE";
 
@@ -802,6 +808,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getDescuento();
     this.tablaInicializada();
     this.getIDScomplementarProforma();
+
+
   }
 
   onNoClick(event: Event): void {
@@ -884,17 +892,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
       fecha: [fecha_actual],
-
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: [this.dataform.des_extra, Validators.compose([Validators.required])],
-      tipopago: [this.dataform.tipopago === "CONTADO" ? 1 : 0, Validators.required],
-      transporte: [this.dataform.transporte, Validators.required],
+      tipopago: [this.dataform.tipopago === 0 ? 0 : 1, Validators.required],
+      transporte: [this.dataform.transporte === "FLOTA", Validators.required],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
       tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
       preparacion: [this.dataform.preparacion, Validators.compose([Validators.required])],
       tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega, Validators.compose([Validators.required])],
-      fletepor: [this.dataform.fletepor, Validators.compose([Validators.required])],
+      fletepor: [this.dataform.fletepor === "CLIENTE", Validators.compose([Validators.required])],
 
       fecha_inicial: [fecha_actual],
       tdc: [this.dataform.tdc],
@@ -915,7 +922,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       obs: [this.dataform.obs],
       obs2: [""],
       direccion: [this.dataform.direccion],
-      peso: [this.dataform.peso],
+      peso: Number(this.peso),
       codcliente_real: [this.dataform.cliente_real === null ? this.codigo_cliente : this.dataform.cliente_real],
       latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
@@ -924,8 +931,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
       tipo_venta: ['0'],
-      estado_contra_entrega: [this.dataform.estado_contra_entrega === null ? "" : ""],
-      contra_entrega: [this.dataform.contra_entrega === null ? false : true],
+      estado_contra_entrega: [this.dataform.estado_contra_entrega === null ? this.dataform.estado_contra_entrega : ""],
+      contra_entrega: [this.dataform.contra_entrega === false ? false : true],
       odc: "",
 
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
@@ -936,15 +943,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVISAR
 
-
-      idsoldesctos: valor_cero?.toString() || '', // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
+      idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
-      idpf_complemento: [this.idpf_complemento_view === undefined ? 0 : this.idpf_complemento_view], //aca es para complemento de proforma
-      monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
-      nroidpf_complemento: [this.dataform.nroidpf_complemento],//aca es para complemento de proforma
-      tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? "0" : this.dataform.idpf_complemento, //aca es para complemento de proforma
 
+      monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
+      nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? " " : this.dataform.nroidpf_complemento,//aca es para complemento de proforma
+      tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1068,7 +1074,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
-    return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage.bd, proforma_validar)
+    return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage, proforma_validar)
       .subscribe({
         next: (datav) => {
           this.tipoentrega = datav.mensaje;
@@ -1180,12 +1186,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   getAlmacenParamUsuario() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getAlmacenUser/";
-    return this.api.getAll('/seg_adm/mant/adusparametros/getAlmacenUser/' + this.userConn + "/" + this.usuarioLogueado)
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
+    return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.almacn_parame_usuario = datav;
           console.log('data', this.almacn_parame_usuario);
+
+          this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa
+          this.cod_descuento_modal_codigo = this.almacn_parame_usuario.coddescuento;
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -1253,7 +1262,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.tarifa_get_unico = datav;
           this.tarifa_get_unico_copied = this.tarifa_get_unico.slice();
           this.cod_precio_venta_modal_first = this.tarifa_get_unico_copied.shift();
-          this.cod_precio_venta_modal_codigo = this.cod_precio_venta_modal_first.codigo
+          // this.cod_precio_venta_modal_codigo = this.cod_precio_venta_modal_first.codigo
 
           console.log("Precio Venta: ", this.cod_precio_venta_modal_codigo);
         },
@@ -1541,7 +1550,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   getSaldoEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/pesoEmpaqueSaldo/";
-    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage.bd)
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
@@ -1560,7 +1569,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getsaldosCompleto/";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.almacn_parame_usuario + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.almacn_parame_usuario + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
@@ -1898,7 +1907,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
 
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
-      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
         "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
@@ -1961,7 +1970,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.descuentos_get = datav;
-          this.cod_descuento_modal_codigo = 0;
+          //this.cod_descuento_modal_codigo = 0;
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -2001,7 +2010,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = 0;
       console.log("NO ENCONTRADO VALOR DE INPUT");
-      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + "0" + "/" + element.cantidad_pedida +
         "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
@@ -2041,7 +2050,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
 
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
-      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage.bd + "/"
+      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
         "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
@@ -2438,7 +2447,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(proforma_validar);
 
     return this.api.create("/venta/transac/veproforma/recuperarPfComplemento/" + this.userConn + "/" + complemento_id + "/" +
-      complemento_numero_id + "/" + this.complementopf + "/" + this.BD_storage.bd, proforma_validar)
+      complemento_numero_id + "/" + this.complementopf + "/" + this.BD_storage, proforma_validar)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -2458,7 +2467,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
         error: (err) => {
           console.log(err);
-          this.toastr.error('! NO SE TOTALIZO !');
+          this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
           this.complementopf = false;
           setTimeout(() => {
             this.spinner.hide();
@@ -2475,7 +2484,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let agencia_concat = "AG" + this.agencia_logueado;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
@@ -2519,18 +2528,55 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  //accion de btn grabar
   submitData() {
     this.spinner.show();
+    //this.validarProformaAll();
+    //this.totabilizar();
 
-    let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
-    let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
 
-    let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
-    let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
-    console.log("NEGATIVOS,", array_negativos_aun_existe_tamanio, "tamanio:", array_negativos_aun_existe_tamanio.length);
-    console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
+    // Asegúrate de que las variables estén definidas antes de aplicar el filtro
+    if (this.validacion_post && this.validacion_post_negativos) {
+      let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
+      let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
+      let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
+      let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
 
+      console.log("NEGATIVOS,", array_negativos_aun_existe_tamanio, "tamanio:", array_negativos_aun_existe_tamanio.length);
+      console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
+      // Aquí puedes continuar con tu lógica...
+      console.log(array_validacion_existe_aun_no_validos);
+      console.log(array_negativos_aun_existe);
+
+      //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
+      if (array_validacion_existe_aun_no_validos_tamanio > 0) {
+        const confirmacionValidaciones: boolean = window.confirm(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?`);
+        if (!confirmacionValidaciones) {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+          return;
+        }
+      }
+
+      //VALIDACION SI EN LA VALIDACIONES HAY ITEMS QUE GENERAN NEGATIVOS
+      if (array_negativos_aun_existe_tamanio > 0) {
+        const confirmacionNegativos = window.confirm(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?`);
+        if (!confirmacionNegativos) {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+          return;
+        }
+      }
+
+    } else {
+      console.error('validacion_post o validacion_post_negativos no están definidos');
+    }
+
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let total_proforma_concat: any = [];
+
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
       ...item,
       cantaut: 0,
@@ -2598,20 +2644,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           "clave_servicio": ""
         }
       ],
-      dt_anticipo_pf: [],
+      dt_anticipo_pf: this.tabla_anticipos,
       vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
       verecargoprof: this.recargo_de_recargos, //array de recargos,
       veetiqueta_proforma: this.etiqueta_get_modal_etiqueta, // array de etiqueta
       veproforma_iva: this.veproforma_iva, //array de iva
     };
+
     console.log(total_proforma_concat);
 
-    if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    }
+
 
     if (!this.FormularioData.valid) {
       this.toastr.info("VALIDACION ACTIVA 🚨");
@@ -2621,69 +2663,89 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
 
-    const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
-      this.id_proforma_numero_id + "no esta confirmada. ¿Desea Confirmarla? ");
+    if (tamanio_array_etiqueta === 0) {
+      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    }
 
-    if (confirmar_proforma) {
-      if (array_validacion_existe_aun_no_validos_tamanio > 0) {
-        const resultado_validaciones: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
-          this.id_proforma_numero_id + " tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma? ");
-        if (resultado_validaciones) {
-          if (array_negativos_aun_existe_tamanio > 0) {
-            const resultado_negativos: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
-              this.id_proforma_numero_id + "genera saldos negativos. ¿Esta seguro de grabar la proforma? ");
-            if (resultado_negativos) {
-              console.log("FORMULARIO VALIDADO");
-              const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage.bd}`;
-              const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-              this.api.create(url, total_proforma_concat).subscribe({
-                next: (datav) => {
-                  this.toastr.info("FORMULARIO CORRECTO ✅");
-                  this.totabilizar_post = datav;
-                  console.log(this.totabilizar_post);
-
-                  this.exportProformaExcel(this.totabilizar_post.codProf);
-
-                  setTimeout(() => {
-                    this.spinner.hide();
-                  }, 1000);
-                },
-
-                error: (err) => {
-                  console.log(err, errorMessage);
-                  this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-                  setTimeout(() => {
-                    this.spinner.hide();
-                  }, 1000);
-                },
-
-                complete: () => {
-                  setTimeout(() => {
-                    this.spinner.hide();
-                  }, 1000);
-                }
-              });
-            }
-          }
-        }
-      }
-
+    if (this.total === 0.00) {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
       setTimeout(() => {
         this.spinner.hide();
       }, 1000);
     }
+
+
+
+
+    // const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
+    //   this.id_proforma_numero_id + "no esta confirmada. ¿Desea Confirmarla? ");
+
+    // if (confirmar_proforma) {
+    //   setTimeout(() => {
+    //     spinner.hide();
+    //   }, 1000);
+    //   return;
+
+    // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
+    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
+    if (confirmacionValidaciones) {
+      this.aplicarDesctPorDeposito();
+
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    }
+
+
+
+    console.log("FORMULARIO VALIDADO");
+    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    this.api.create(url, total_proforma_concat).subscribe({
+      next: (datav) => {
+        this.toastr.info("GUARDADO CON EXITO ✅");
+        this.totabilizar_post = datav;
+        console.log(this.totabilizar_post);
+
+        this.exportProformaExcel(this.totabilizar_post.codProf);
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      }
+    });
   }
 
   totabilizar() {
     let total_proforma_concat: any = [];
 
     //valor del check en el mat-tab complementar proforma
-    // if (this.disableSelect.value === false) { //valor del check en el mat-tab complementar proforma this.disableSelect.value 
-    //   this.complementopf = 0;
-    // } else {
-    //   this.complementopf = 1;
-    // }
+    if (this.disableSelect.value === false) { //valor del check en el mat-tab complementar proforma this.disableSelect.value 
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
       this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
     };
@@ -2706,12 +2768,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
       this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
 
-    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
-      return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd + "/" +
+      return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
         this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
         .subscribe({
           next: (datav) => {
@@ -2742,7 +2804,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             this.recargos = this.totabilizar_post.totales?.recargo;
             this.des_extra = this.totabilizar_post.totales?.descuento;
             this.iva = this.totabilizar_post.totales?.iva;
-            this.peso = this.decimalPipe.transform(this.totabilizar_post.totales?.peso, '1.3-3');
+            this.peso = Number(this.totabilizar_post.totales?.peso);
             this.tablaIva = this.totabilizar_post.totales?.tablaIva;
             const item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
@@ -2873,7 +2935,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     this.submitted = true;
 
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
     if (this.total === 0) {
@@ -2894,15 +2956,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
-
     this.api.create(url, proforma_validar).subscribe({
       next: (datav) => {
         this.toastr.info("VALIDACION EN CURSO ⚙️");
         this.validacion_post = datav;
-        console.log("INFO VALIDACIONES:", this.validacion_post);
-
-
+        console.log("INFO VALIDACIONES:", datav);
 
         this.abrirTabPorLabel("Resultado de Validacion");
         this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
@@ -2912,11 +2970,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.toggleNoValidos = false;
 
         // al traer todas las validaciones tambien se traen los negativos
-        this.validacion_post_negativos = datav[55]?.Dtnegativos;
+        this.validacion_post_negativos = datav[56]?.Dtnegativos;
         this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
 
         // maximo de ventas
-        this.validacion_post_max_ventas = datav[53]?.Dtnocumplen;
+        this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
         this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
 
         setTimeout(() => {
@@ -3069,7 +3127,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
 
       console.log(proforma_validar);
-      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
       this.api.create(url, proforma_validar).subscribe({
@@ -3239,7 +3297,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
 
       console.log(proforma_validar);
-      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage.bd}/${this.usuarioLogueado}`;
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00058/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
       this.api.create(url, proforma_validar).subscribe({
@@ -3423,7 +3481,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
-      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage.bd + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
+      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -3487,7 +3545,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   getDiasControl(item) {
     this.abrirTabPorLabelFooter("Ultimas Ventas Item 23 Dias");
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDiasControl/";
-    return this.api.getAll('/venta/transac/veproforma/getDiasControl/' + this.userConn + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/veproforma/getDiasControl/' + this.userConn + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -3507,7 +3565,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     this.abrirTabPorLabelFooter("Ultimas Ventas Item 23 Dias");
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/cargarPFVtaDias/";
-    return this.api.getAll('/venta/transac/veproforma/cargarPFVtaDias/' + this.userConn + "/" + item + "/" + this.BD_storage.bd + "/" + this.codigo_cliente_catalogo_real + "/" + dias)
+    return this.api.getAll('/venta/transac/veproforma/cargarPFVtaDias/' + this.userConn + "/" + item + "/" + this.BD_storage + "/" + this.codigo_cliente_catalogo_real + "/" + dias)
       .subscribe({
         next: (datav) => {
           this.array_venta_item_23_dias = datav;
@@ -3600,7 +3658,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     let array = {
-      codempresa: this.BD_storage.bd,
+      codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
       codalmacen: this.almacn_parame_usuario,
       codcliente_real: this.codigo_cliente_catalogo_real,
@@ -3674,7 +3732,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_dividir_items/";
-    return this.api.create('/venta/transac/veproforma/aplicar_dividir_items/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado
+    return this.api.create('/venta/transac/veproforma/aplicar_dividir_items/' + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado
       + "/" + this.codigo_cliente + "/" + this.desct_nivel_actual + "/" + this.almacn_parame_usuario + "/" + this.complementopf + "/" + this.moneda_get_catalogo + "/" + fecha,
       this.array_items_carrito_y_f4_catalogo)
       .subscribe({
@@ -3719,7 +3777,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.restablecerContadorClickSugerirCantidad();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/sugerirCantDescEsp/";
     return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.almacn_parame_usuario
-      + "/" + this.BD_storage.bd, this.array_items_carrito_y_f4_catalogo)
+      + "/" + this.BD_storage, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -3969,10 +4027,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             this.toastr.success("ARCHIVO ZIP CARGADO EXITOSAMENTE ✅");
             this.imprimir_zip_importado(datav);
 
-
-
-
-
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);
@@ -4176,7 +4230,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }];
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
-    return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage.bd, borrarDesct23)
+    return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage, borrarDesct23)
       .subscribe({
         next: (datav) => {
           this.tarifaPrincipal = datav;
@@ -4501,7 +4555,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.tipopago === 0 || this.tipopago === undefined) {
+    if (this.tipopago === 1 || this.tipopago === undefined) {
       this.dialog.open(VentanaValidacionesComponent, {
         width: 'auto',
         height: 'auto',
@@ -4644,11 +4698,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.tipopago === "CREDITO") {
-      this.tipopago = 0;
-    } else {
-      this.tipopago = 1;
-    }
+    // if (this.tipopago === 0) {
+    //   this.tipopago = 0;
+    // } else {
+    //   this.tipopago = 1;
+    // }
 
     this.submitted = true;
     if (this.FormularioData.valid) {
@@ -4920,10 +4974,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+  public calcularEmpaquePorPrecio: boolean = true;
+  public calcularEmpaquePorDescuento: boolean = false;
 
-
-
-
+  changeValueCheck(type: string) {
+    if (type === 'precio') {
+      if (this.calcularEmpaquePorPrecio) {
+        this.calcularEmpaquePorDescuento = false;
+      }
+    } else if (type === 'descuento') {
+      if (this.calcularEmpaquePorDescuento) {
+        this.calcularEmpaquePorPrecio = false;
+      }
+    }
+  }
 
 
 

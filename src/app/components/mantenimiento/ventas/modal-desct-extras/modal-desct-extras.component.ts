@@ -6,6 +6,7 @@ import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DescuentoService } from '../serviciodescuento/descuento.service';
+import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'app-modal-desct-extras',
   templateUrl: './modal-desct-extras.component.html',
@@ -45,6 +46,7 @@ export class ModalDesctExtrasComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
+  decimalPipe: any;
 
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalDesctExtrasComponent>, private toastr: ToastrService,
@@ -87,6 +89,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.decimalPipe = new DecimalPipe('en-US');
     this.getPrecioInicial();
   }
 
@@ -155,7 +158,7 @@ export class ModalDesctExtrasComponent implements OnInit {
           }));
 
           this.info_descuento_peso_minimo = this.info_descuento.peso_minimo;
-          this.info_descuento_porcentaje = this.info_descuento.porcentaje;
+          this.info_descuento_porcentaje = this.info_descuento_porcentaje;
 
           setTimeout(() => {
             this.spinner.hide();
@@ -176,6 +179,14 @@ export class ModalDesctExtrasComponent implements OnInit {
     let tamanio = this.array_de_descuentos_con_descuentos.length;
     const existe_en_array = this.array_de_descuentos.some(item => item.codigo === this.info_descuento.codigo);
     console.log(existe_en_array);
+
+    if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
+      this.toastr.error("La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    }
 
     if (this.info_descuento) {
       if (existe_en_array) {
@@ -229,16 +240,16 @@ export class ModalDesctExtrasComponent implements OnInit {
     let ucr;
 
     if (this.cabecera_proforma.tipopago === 0) {
-      ucr = "CREDITO";
+      ucr = "CONTADO";
     } else {
       // this.cabecera_proforma.tipopago = "CONTADO";
-      ucr = "CONTADO";
+      ucr = "CREDITO";
     }
 
     //si es true anadir a tabla temporal
     //ESTO EN EL BOTON DE ANADIR
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddDescExtraProf/"
-    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real + "/" + this.BD_storage.bd + "/" + ucr + "/" + this.contra_entrega_get, this.array_valida_detalle)
+    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real + "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_valida_detalle)
       .subscribe({
         next: (datav) => {
           this.validacion_bool_descuento = datav;
@@ -349,7 +360,7 @@ export class ModalDesctExtrasComponent implements OnInit {
 
     //al darle al boton OK tiene consultar al backend validando los recargos y re calculando los total, subtotal.
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/recarcularDescuentos/"
-    this.api.create('/venta/transac/veproforma/recarcularDescuentos/' + this.userConn + "/" + this.BD_storage.bd + "/" +
+    this.api.create('/venta/transac/veproforma/recarcularDescuentos/' + this.userConn + "/" + this.BD_storage + "/" +
       this.recargos_del_total_get + "/" + this.cmtipo_complementopf_get, total_proforma_concat)
       .subscribe({
         next: (datav) => {

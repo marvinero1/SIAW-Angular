@@ -1,333 +1,410 @@
-import { Component, OnInit, OnDestroy, Renderer2, HostBinding, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { UntypedFormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { ApiService } from '@services/api.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
-import { LogService } from '@services/log-service.service';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Renderer2,
+  HostBinding,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  Validators,
+  FormGroup,
+  FormBuilder
+} from '@angular/forms';
+import {
+  ToastrService
+} from 'ngx-toastr';
+import {
+  ApiService
+} from '@services/api.service';
+import {
+  NgxSpinnerService
+} from 'ngx-spinner';
+import {
+  Router
+} from '@angular/router';
+import {
+  MatDialog
+} from '@angular/material/dialog';
+import {
+  MatSnackBar
+} from '@angular/material/snack-bar';
+import {
+  TransformacionDigitalComponent
+} from '@modules/transformacion-digital/transformacion-digital.component';
+import {
+  LogService
+} from '@services/log-service.service';
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
-    @HostBinding('class') class = 'login-box';
+  @HostBinding('class') class = 'login-box';
 
-    public isAuthLoading = false;
-    public isGoogleLoading = false;
-    public isFacebookLoading = false;
+  public isAuthLoading = false;
+  public isGoogleLoading = false;
+  public isFacebookLoading = false;
 
-    public ip_servidores = true;
-    public bd_datos = true;
-    public login_box = true;
-    public existe_usuario = false;
-    public usuario_login: any;
+  public ip_servidores = true;
+  public bd_datos = true;
+  public login_box = true;
+  public existe_usuario = false;
+  public usuario_login: any;
 
-    public dato_local_storage;
-    public dato_local_session;
+  public dato_local_storage;
+  public dato_local_session;
 
-    public fecha_hoy_dia = Date.now();
-    public fecha_actual = new Date();
-    public anio_actual = new Date();
+  public fecha_hoy_dia = Date.now();
+  public fecha_actual = new Date();
+  public anio_actual = new Date();
 
-    loginForm: FormGroup;
-    logData: FormGroup;
-    serverForm: FormGroup;
-    BDForm: FormGroup;
-    BDForm1: FormGroup;
+  loginForm: FormGroup;
+  logData: FormGroup;
+  serverForm: FormGroup;
+  BDForm: FormGroup;
+  BDForm1: FormGroup;
 
-    public logs: any = [];
-    public agencias: any = [];
-    public connDBs: any = [];
-    public IP_api: any = [];
+  public logs: any = [];
+  public agencias: any = [];
+  public connDBs: any = [];
+  public IP_api: any = [];
 
-    public agencia = '';
-    public login_form_complete_with_status: any = [];
-    public token;
-    public anio;
+  public agencia = '';
+  public login_form_complete_with_status: any = [];
+  public token;
+  public anio;
 
-    public ventana = "login"
-    public detalle = "login-user";
-    public tipo = "ingreso-login-POST";
+  public ventana = "login"
+  public detalle = "login-user";
+  public tipo = "ingreso-login-POST";
 
-    code_error: number;
+  code_error: number;
 
-    @ViewChild('usernameInput') usernameInput: ElementRef;
-    @ViewChild('passwordInput') passwordInput: ElementRef;
+  @ViewChild('usernameInput') usernameInput: ElementRef;
+  @ViewChild('passwordInput') passwordInput: ElementRef;
 
-    constructor(
-        private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router,
-        private toastr: ToastrService, private api: ApiService, public log_module: LogService,
-        private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,
-        public dialog: MatDialog,) {
+  constructor(
+    private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router,
+    private toastr: ToastrService, private api: ApiService, public log_module: LogService,
+    private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,
+    public dialog: MatDialog,) {
 
-        this.BDForm = this.createFormBD();
-        this.BDForm1 = this.createFormBD1();
+    this.BDForm = this.createFormBD();
+    this.BDForm1 = this.createFormBD1();
 
-        this.serverForm = this.createFormServer();
-    }
+    this.serverForm = this.createFormServer();
+  }
 
-    ngOnInit() {
-        this.anio = this.anio_actual.getFullYear();
-    }
+  ngOnInit() {
+    this.anio = this.anio_actual.getFullYear();
+  }
 
-    ngAfterViewInit(): void {
-        // Desactivar el autocompletar
-        this.usernameInput.nativeElement.setAttribute('autocomplete', 'off');
-        this.passwordInput.nativeElement.setAttribute('autocomplete', 'off');
-    }
+  ngAfterViewInit(): void {
+    // Desactivar el autocompletar
+    this.usernameInput.nativeElement.setAttribute('autocomplete', 'off');
+    this.passwordInput.nativeElement.setAttribute('autocomplete', 'off');
+  }
 
-    createFormServer(): FormGroup {
-        return this._formBuilder.group({
-            agencia: new UntypedFormControl(null, [Validators.required])
+  createFormServer(): FormGroup {
+    return this._formBuilder.group({
+      agencia: new UntypedFormControl(null, [Validators.required])
+    });
+  }
+
+  createFormBD(): FormGroup {
+    return this._formBuilder.group({
+      login: new UntypedFormControl(null, [Validators.required]),
+      password: new UntypedFormControl(null, [Validators.required])
+    });
+  }
+
+  createFormBD1(): FormGroup {
+    return this._formBuilder.group({
+      bd: new UntypedFormControl(null, [Validators.required])
+    });
+  }
+
+  async loginByAuth() {
+    // let data = this.loginForm.value;
+    let dataForm = this.BDForm.value; // usuarioJSON
+    let dataFormAgencia = this.serverForm.value; //agenciaJson
+    let login = dataForm.login; //usuario
+    let agencia = dataFormAgencia.agencia; //agencia
+    let bd = this.BDForm1.value; //base de datos seleccionada
+    let select_bd = bd.bd;
+    let userConn = login + "_" + agencia + "_" + select_bd;
+    // console.log(userConn);
+
+    // 1) Revisa Agencia Connection
+    this.conectarAgencia(agencia); //pruebaDBs
+    // this.conectarBD(select_bd); //connDBs
+
+    // 2) Una vez q se elige agencia, pasamos los datos del usuario
+    if (this.BDForm.valid && login != null) {
+      try {
+        console.log("json completo");
+
+        // aca se hace el login
+        this.guardarStorageUsuario(login);
+        this.conectarBD(select_bd);
+        this.guardarStorageBD(bd);
+        this.guardarStorageuserConn(userConn);
+        this.login(userConn, dataForm); //login                  
+
+        this.isAuthLoading = true;
+        // await this.appService.loginByAuth(this.loginForm.value);
+        this.isAuthLoading = false;
+      } catch (error) {
+        console.log("No se pudo hacer login");
+
+        this._snackBar.open('¡ No se pudo Iniciar Sesion, verifique su conexion !', '🤖', {
+          duration: 3000,
+          panelClass: ['coorporativo-snackbar', 'login-snackbar'],
         });
+      }
     }
-
-    createFormBD(): FormGroup {
-        return this._formBuilder.group({
-            login: new UntypedFormControl(null, [Validators.required]),
-            password: new UntypedFormControl(null, [Validators.required])
-        });
+    if (agencia == null) {
+      this._snackBar.open('¡ Agencia no encontrada o sin conexion !', '📡', {
+        duration: 3000,
+        panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      });
     }
+  }
 
-    createFormBD1(): FormGroup {
-        return this._formBuilder.group({
-            bd: new UntypedFormControl(null, [Validators.required])
-        });
-    }
+  login(userConn, data) {
+    let event: Event
+    let dataFormAgencia = this.serverForm.value; //agenciaForm
+    let dataForm = this.BDForm.value; // usuarioJSON
+    let agencia = dataFormAgencia.agencia; //agencia
+    let login = dataForm.login; //usuario
+    console.log(agencia, data);
 
-    async loginByAuth() {
-        // let data = this.loginForm.value;
-        let dataForm = this.BDForm.value; // usuarioJSON
-        let dataFormAgencia = this.serverForm.value; //agenciaJson
-        let login = dataForm.login; //usuario
-        let agencia = dataFormAgencia.agencia; //agencia
-        let bd = this.BDForm1.value; //base de datos seleccionada
-        let select_bd = bd.bd;
-        let userConn = login + "_" + agencia + "_" + select_bd;
-        // console.log(userConn);
+    this.spinner.show();
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/login/authenticate/";
+    return this.api.login("/seg_adm/login/authenticate/" + userConn, data)
+      .subscribe({
+        next: (datav) => {
+          this.login_form_complete_with_status = datav;
+          console.log(datav);
 
-        // 1) Revisa Agencia Connection
-        this.conectarAgencia(agencia); //pruebaDBs
-        // this.conectarBD(select_bd); //connDBs
+          // controlar el codigo que devuelve el BE con el Interceptor
+          // 200 Todos los datos correctos
+          // 201 No se encontro los datos proporcionados
+          // 203 Contrasenia Erronea
+          // 207 Usuario no activo
+          // 205 Contrasenia Vencida
+          if (datav != null) {
+            //aca se guarda el TOKEN
+            this.guardarToken(datav);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-        // 2) Una vez q se elige agencia, pasamos los datos del usuario
-        if (this.BDForm.valid && login != null) {
-            try {
-                console.log("json completo");
+            this.toastr.success('Bienvenido! 🎉');
+            this.isAuthLoading = false;
+            this.obtenerBDUsuario(login, agencia);
 
-                // aca se hace el login
-                this.guardarStorageUsuario(login);
-                this.conectarBD(select_bd);
-                this.guardarStorageBD(bd);
-                this.guardarStorageuserConn(userConn);
-                this.login(userConn, dataForm); //login                  
+            this._snackBar.open('¡ Bienvenido al SIAW !', '🎉', {
+              duration: 2500,
+              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            }),
 
-                this.isAuthLoading = true;
-                // await this.appService.loginByAuth(this.loginForm.value);
-                this.isAuthLoading = false;
-            } catch (error) {
-                console.log("No se pudo hacer login");
+              console.log("DATOS CORRECTOS");
 
-                this._snackBar.open('¡ No se pudo Iniciar Sesion, verifique su conexion !', '🤖', {
-                    duration: 3000,
-                    panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                });
-            }
-        } if (agencia == null) {
-            this._snackBar.open('¡ Agencia no encontrada o sin conexion !', '📡', {
-                duration: 3000,
-                panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-            });
+            this.router.navigate(['/']);
+            event.preventDefault();
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+          }
+          // console.log('data', datav);
+          // this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          // this.appService.loginByAuth(this.loginForm.value);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         }
-    }
+      })
+  }
 
-    login(userConn, data) {
-        let event: Event
-        let dataFormAgencia = this.serverForm.value; //agenciaForm
-        let agencia = dataFormAgencia.agencia; //agencia
-        console.log(agencia, data);
+  ngOnDestroy() {
+    this.renderer.removeClass(
+      document.querySelector('app-root'),
+      'login-page'
+    );
+  }
 
-        let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/login/authenticate/";
-        return this.api.login("/seg_adm/login/authenticate/" + userConn, data)
-            .subscribe({
-                next: (datav) => {
-                    this.login_form_complete_with_status = datav;
-                    console.log(datav);
+  conectarAgencia(agencia) {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /Connection/connServers/";
+    return this.api.getAll("/Connection/connServers/" + agencia)
+      .subscribe({
+        next: (agencias) => {
+          this.agencias = agencias;
+          console.log(agencias);
+          if (agencias) {
+            console.log("Se Verifico la AG seleccionada: ", agencia);
 
-                    // controlar el codigo que devuelve el BE con el Interceptor
-                    // 200 Todos los datos correctos
-                    // 201 No se encontro los datos proporcionados
-                    // 203 Contrasenia Erronea
-                    // 207 Usuario no activo
-                    // 205 Contrasenia Vencida
-                    if (datav != null) {
-                        //aca se guarda el TOKEN
-                        this.guardarToken(datav);
-                        this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            localStorage.setItem('agencia_logueado', JSON.stringify(agencia));
+            sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
+            this.ip_servidores = false;
+            this.bd_datos = false;
+            return agencias;
+          }
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
+            duration: 3000,
+            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          });
+        },
+        complete: () => { }
+      })
+  }
 
-                        this.toastr.success('Bienvenido! 🎉');
-                        this.isAuthLoading = false;
+  atras() {
+    this.ip_servidores = true;
+    this.bd_datos = true;
+  }
 
-                        this._snackBar.open('¡ Bienvenido al SIAW !', '🎉', {
-                            duration: 2500,
-                            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                        }),
+  conectarBD(bd) {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /login/authenticate/";
+    return this.api.getAll("/Connection/connDBS/" + bd)
+      .subscribe({
+        next: (connDBs) => {
+          this.connDBs = connDBs;
+          console.log("Conexion exitosa: ", this.connDBs);
+        },
 
-                            this.spinner.show();
-                        setTimeout(() => {
-                            this.spinner.hide();
-                        }, 1000);
+        error: (err) => {
+          console.log(err, errorMessage);
+          this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
+            duration: 3000,
+            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          })
+        },
+        complete: () => {
 
-                        console.log("datos correctos");
+        }
+      })
+  }
 
-                        this.router.navigate(['/']);
-                        event.preventDefault();
+  verificarUsuario() {
+    //primero verificamos que el usuario que se puso en el input exista si no ya no entra 
+    let dataForm = this.loginForm.value;
+    let usuario = dataForm.usuario;
 
-                    }
-                    // console.log('data', datav);
-                    // this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-                    // this.appService.loginByAuth(this.loginForm.value);
-                },
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adusuario + login_usuario";
+    return this.api.getById('/seg_adm/mant/adusuario/' + usuario)
+      .subscribe({
+        next: (datav) => {
+          this.usuario_login = datav;
+          console.log(this.usuario_login);
 
-                error: (err) => {
-                    console.log(err, errorMessage);
-                },
-                complete: () => { }
-            })
-    }
+          this.login_box = true;
+          this.ip_servidores = false;
 
-    ngOnDestroy() {
-        this.renderer.removeClass(
-            document.querySelector('app-root'),
-            'login-page'
-        );
-    }
+          this._snackBar.open('¡ El usuario existe !', 'Ok', {
+            duration: 2000,
+            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          });
+          return this.existe_usuario = true;
+        },
 
-    conectarAgencia(agencia) {
-        let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /Connection/connServers/";
-        return this.api.getAll("/Connection/connServers/" + agencia)
-            .subscribe({
-                next: (agencias) => {
-                    this.agencias = agencias;
-                    console.log(agencias);
-                    if (agencias) {
-                        console.log("Se Verifico la AG seleccionada: ", agencia);
+        error: (err: any) => {
+          console.log(err, errorMessage);
 
-                        localStorage.setItem('agencia_logueado', JSON.stringify(agencia));
-                        sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
-                        this.ip_servidores = false;
-                        this.bd_datos = false;
-                        this.spinner.show();
-                        setTimeout(() => {
-                            this.spinner.hide();
-                        }, 1000);
-                        return agencias;
-                    }
-                },
-                error: (err) => {
-                    console.log(err, errorMessage);
-                    this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
-                        duration: 3000,
-                        panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                    })
-                },
-                complete: () => { }
-            })
-    }
+          this._snackBar.open('¡ No se encontro el usuario !', '=(', {
+            duration: 2500,
+            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          });
+          return this.existe_usuario = false;
+        },
+        complete: () => {
+          return this.existe_usuario
+        }
+      })
+  }
 
-    conectarBD(bd) {
-        let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /login/authenticate/";
-        return this.api.getAll("/Connection/connDBS/" + bd)
-            .subscribe({
-                next: (connDBs) => {
-                    this.connDBs = connDBs;
-                    console.log("Conexion exitosa: ", this.connDBs);
-                },
+  obtenerBDUsuario(usuario, agencia) {
+    this.spinner.show();
+    let bd = this.BDForm1.value;
+    let userConn = usuario + "_" + agencia + "_" + bd.bd;
+    console.log("/seg_adm/mant/adempresa/getFirstEmpresa/", userConn);
 
-                error: (err) => {
-                    // console.log(err, errorMessage);
-                    //     this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
-                    //         duration: 3000,
-                    //         panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                    //     })
-                },
-                complete: () => {
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/adempresa/getFirstEmpresa/";
+    return this.api.getAll("/seg_adm/mant/adempresa/getFirstEmpresa/" + userConn)
+      .subscribe({
+        next: (datav) => {
+          // this.first_empresa = datav;
+          console.log("Usuario BD getFirstEmpresa: ", datav.empresa);
+          this.guardarStorageBD(datav.empresa);
 
-                }
-            })
-    }
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
 
-    verificarUsuario() {
-        //primero verificamos que el usuario que se puso en el input exista si no ya no entra 
-        let dataForm = this.loginForm.value;
-        let usuario = dataForm.usuario;
+        error: (err) => {
+          console.log(err, errorMessage);
+          this._snackBar.open('¡ EL USUARIO BD NO ESTA DISPONIBLE !', '⚠️', {
+            duration: 3000,
+            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          })
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
 
-        let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adusuario + login_usuario";
-        return this.api.getById('/seg_adm/mant/adusuario/' + usuario)
-            .subscribe({
-                next: (datav) => {
-                    this.usuario_login = datav;
-                    console.log(this.usuario_login);
+  guardarToken(token) {
+    localStorage.setItem('token', JSON.stringify(token));
+  }
 
-                    this.login_box = true;
-                    this.ip_servidores = false;
+  guardarStorageUsuario(usuario) {
+    localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+  }
 
-                    this._snackBar.open('¡ El usuario existe !', 'Ok', {
-                        duration: 2000,
-                        panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                    });
-                    return this.existe_usuario = true;
-                },
+  guardarStorageBD(data) {
+    localStorage.setItem('bd_logueado', JSON.stringify(data));
+    sessionStorage.setItem('bd_logueado', JSON.stringify(data));
+  }
 
-                error: (err: any) => {
-                    console.log(err, errorMessage);
+  guardarStorageuserConn(data) {
+    localStorage.setItem('user_conn', JSON.stringify(data));
+    sessionStorage.setItem('user_conn', JSON.stringify(data));
+  }
 
-                    this._snackBar.open('¡ No se encontro el usuario !', '=(', {
-                        duration: 2500,
-                        panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-                    });
-                    return this.existe_usuario = false;
-                },
-                complete: () => {
-                    return this.existe_usuario
-                }
-            })
-    }
+  obtenerStorage() {
+    this.dato_local_storage = localStorage.getItem('usuario_logueado');
+    this.dato_local_session = sessionStorage.getItem('usuario_logueado');
 
-    guardarToken(token) {
-        localStorage.setItem('token', JSON.stringify(token));
-    }
+    console.log(this.dato_local_storage, JSON.parse(this.dato_local_storage));
+  }
 
-    guardarStorageUsuario(usuario) {
-        localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
-        sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
-    }
-
-    guardarStorageBD(data) {
-        localStorage.setItem('bd_logueado', JSON.stringify(data));
-        sessionStorage.setItem('bd_logueado', JSON.stringify(data));
-    }
-
-    guardarStorageuserConn(data) {
-        localStorage.setItem('user_conn', JSON.stringify(data));
-        sessionStorage.setItem('user_conn', JSON.stringify(data));
-    }
-
-    obtenerStorage() {
-        this.dato_local_storage = localStorage.getItem('usuario_logueado');
-        this.dato_local_session = sessionStorage.getItem('usuario_logueado');
-
-        console.log(this.dato_local_storage, JSON.parse(this.dato_local_storage));
-    }
-
-    transformacionTecnologica() {
-        this.dialog.open(TransformacionDigitalComponent, {
-            width: 'auto',
-            height: 'auto',
-        });
-    }
+  transformacionTecnologica() {
+    this.dialog.open(TransformacionDigitalComponent, {
+      width: 'auto',
+      height: 'auto',
+    });
+  }
 }

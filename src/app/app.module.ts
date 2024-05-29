@@ -163,7 +163,7 @@ import { RolesCreateComponent } from '@components/mantenimiento/roles-component/
 import { RolesEditComponent } from '@components/mantenimiento/roles-component/roles-edit/roles-edit.component';
 import { MantenimientoComponent } from '@modules/mantenimiento/mantenimiento.component';
 import { ArchivoComponent } from '@modules/main/header/archivo/archivo.component';
-import { MenuInventarioComponent } from '@modules/main/menu-inventario/menu-inventario.component';
+import { MenuInventarioComponent } from '@modules/menu-inventario/menu-inventario.component';
 import { MenuCuentasCobrarComponent } from '@modules/menu-cuentas-cobrar/menu-cuentas-cobrar.component';
 import { MenuContabilidadComponent } from '@modules/menu-contabilidad/menu-contabilidad.component';
 import { MenuActivosFijosComponent } from '@modules/menu-activos-fijos/menu-activos-fijos.component';

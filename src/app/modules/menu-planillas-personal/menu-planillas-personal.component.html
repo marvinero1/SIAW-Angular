@@ -1,6 +1,8 @@
-<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Personal y Planillas">
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltipClass="custom-tooltip"
+  matTooltipPosition="above" matTooltip="Personal y Planillas">
   <span><i class="fa fa-briefcase" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
-  <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon></span>
+    <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
 </a>
 
 <mat-menu #mantenimiento="matMenu">
@@ -10,49 +12,49 @@
   <a mat-menu-item [matMenuTriggerFor]="vacaciones_planillas">Vacaciones</a>
   <a mat-menu-item [matMenuTriggerFor]="evaluaciones_planillas">Evaluaciones</a>
 </mat-menu>
-  
+
 <mat-menu #transacacciones_planillas="matMenu">
-  <a mat-menu-item >Planilla de Sueldos</a>
-  <a mat-menu-item >Planilla de Aguinaldos</a>
-  <a mat-menu-item >Planilla de Primas</a>
-  <a mat-menu-item >Planillas de Indemnización</a>
-  <a mat-menu-item >Finiquito</a>
+  <a mat-menu-item>Planilla de Sueldos</a>
+  <a mat-menu-item>Planilla de Aguinaldos</a>
+  <a mat-menu-item>Planilla de Primas</a>
+  <a mat-menu-item>Planillas de Indemnización</a>
+  <a mat-menu-item>Finiquito</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Liquidación de Sueldos</a>
+  <a mat-menu-item>Liquidación de Sueldos</a>
 </mat-menu>
-  
+
 <mat-menu #modificaciones_planillas="matMenu">
-  <a mat-menu-item >Finiquito</a>
+  <a mat-menu-item>Finiquito</a>
 </mat-menu>
 
 <mat-menu #operaciones_planillas="matMenu">
-  <a mat-menu-item >Ajuste de Planilla</a>
-  <a mat-menu-item >Actualización de Cargos</a>
-  <a mat-menu-item >Asignar Descuentos/Bonos a Personas</a>
-  <a mat-menu-item >Cálculo de Comisiones</a>
-  <a mat-menu-item >Comisiones Ejecutivos Ventas Mayoristas </a>
-  <a mat-menu-item >Cuadro de Compensaciones</a>
-  <a mat-menu-item >Hojas de Rutas Personal</a>
-  <a mat-menu-item >Justificar Asistencia</a>
-  <a mat-menu-item >Liquidar Contrato</a>
-  <a mat-menu-item >Plan de Subsidios</a>
-  <a mat-menu-item >Recesión de Contrato</a>
-  <a mat-menu-item >Rotar Cargos</a>
-  <a mat-menu-item >Ventas Alcanzadas Tiendas</a>
-  <a mat-menu-item >Ventas Alcanzadas Vendedores</a>
+  <a mat-menu-item>Ajuste de Planilla</a>
+  <a mat-menu-item>Actualización de Cargos</a>
+  <a mat-menu-item>Asignar Descuentos/Bonos a Personas</a>
+  <a mat-menu-item>Cálculo de Comisiones</a>
+  <a mat-menu-item>Comisiones Ejecutivos Ventas Mayoristas </a>
+  <a mat-menu-item>Cuadro de Compensaciones</a>
+  <a mat-menu-item>Hojas de Rutas Personal</a>
+  <a mat-menu-item>Justificar Asistencia</a>
+  <a mat-menu-item>Liquidar Contrato</a>
+  <a mat-menu-item>Plan de Subsidios</a>
+  <a mat-menu-item>Recesión de Contrato</a>
+  <a mat-menu-item>Rotar Cargos</a>
+  <a mat-menu-item>Ventas Alcanzadas Tiendas</a>
+  <a mat-menu-item>Ventas Alcanzadas Vendedores</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Conceptos Asignados por Persona</a>
-  <a mat-menu-item >Actualizar Objetivos</a>
+  <a mat-menu-item>Conceptos Asignados por Persona</a>
+  <a mat-menu-item>Actualizar Objetivos</a>
 
 </mat-menu>
 
 <mat-menu #vacaciones_planillas="matMenu">
-  <a mat-menu-item >Dias No Habiles</a>
-  <a mat-menu-item >Registro Vacaciones</a>
-  <a mat-menu-item >Asignación Automatica de Dias</a>
-  <a mat-menu-item >Vacaciones Colectivas</a>
+  <a mat-menu-item>Dias No Habiles</a>
+  <a mat-menu-item>Registro Vacaciones</a>
+  <a mat-menu-item>Asignación Automatica de Dias</a>
+  <a mat-menu-item>Vacaciones Colectivas</a>
 </mat-menu>
 
 <mat-menu #evaluaciones_planillas="matMenu">
-  <a mat-menu-item >Realizar Evaluaciones</a>
+  <a mat-menu-item>Realizar Evaluaciones</a>
 </mat-menu>

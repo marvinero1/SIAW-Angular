@@ -44,6 +44,7 @@ export class ApiService {
     constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
         public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
         public periodoSistemaService: PeriodoSistemaService) {
+
         this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
         this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
@@ -72,7 +73,7 @@ export class ApiService {
     createAllWithOutToken(url: string, obj): Observable<any> {
         return this.http.post(this.API_URL + url, obj).pipe(
             catchError((err) => {
-                console.log('error caught in service')
+                console.log('createAllWithOutToken ERROR')
                 console.error(err);
                 return throwError(() => new Error());
             })

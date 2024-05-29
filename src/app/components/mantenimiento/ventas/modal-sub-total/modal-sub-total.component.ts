@@ -77,7 +77,7 @@ export class ModalSubTotalComponent implements OnInit {
 
     console.log(arrayTransformado);
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/versubTotal/";
-    return this.api.create("/venta/transac/veproforma/versubTotal/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuario_logueado, arrayTransformado)
+    return this.api.create("/venta/transac/veproforma/versubTotal/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, arrayTransformado)
       .subscribe({
         next: (datav) => {
           this.sub_totabilizar_post = datav;

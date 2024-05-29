@@ -1,14 +1,38 @@
-import { AppState } from '@/store/state';
-import { UiState } from '@/store/ui/state';
-import { DatePipe } from '@angular/common';
-import { Component, HostBinding, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TipocambiovalidacionComponent } from '@components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component';
-import { Store } from '@ngrx/store';
-import { ApiService } from '@services/api.service';
-import { AppService } from '@services/app.service';
-import { Observable } from 'rxjs';
+import {
+    AppState
+} from '@/store/state';
+import {
+    UiState
+} from '@/store/ui/state';
+import {
+    DatePipe
+} from '@angular/common';
+import {
+    Component,
+    HostBinding,
+    OnInit
+} from '@angular/core';
+import {
+    MatDialog
+} from '@angular/material/dialog';
+import {
+    MatSnackBar
+} from '@angular/material/snack-bar';
+import {
+    TipocambiovalidacionComponent
+} from '@components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component';
+import {
+    Store
+} from '@ngrx/store';
+import {
+    ApiService
+} from '@services/api.service';
+import {
+    AppService
+} from '@services/app.service';
+import {
+    Observable
+} from 'rxjs';
 
 const BASE_CLASSES = 'bck-azul elevation-4 main-sidebar sidebar-dark-warning';
 @Component({
@@ -26,6 +50,7 @@ export class MenuSidebarComponent implements OnInit {
     public dato_local_storage: any = [];
     public dato_local_session: any = [];
     public tipo_cambio_hoy_dia: any = [];
+    public almacn_parame_usuario: any = [];
     public agencia_storage: any;
     public BD_storage: any;
     public session: any;
@@ -36,13 +61,14 @@ export class MenuSidebarComponent implements OnInit {
     tipo_cambio_dolar_moneda_base: any;
 
     userConn: any;
-
+    usuarioLogueado: any;
     fecha_actual_format: any;
     fecha_actual = new Date();
 
     constructor(public appService: AppService, private datePipe: DatePipe, private api: ApiService,
         private store: Store<AppState>, public dialog: MatDialog, public _snackBar: MatSnackBar) {
 
+        this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
         this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
         let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
@@ -51,6 +77,7 @@ export class MenuSidebarComponent implements OnInit {
         this.getTipoCambioHoyDia();
         this.obtenerAgenciaStorage();
         this.obtenerBDStorage();
+        this.getAlmacenParamUsuario();
     }
 
     ngOnInit() {
@@ -98,6 +125,7 @@ export class MenuSidebarComponent implements OnInit {
                         const dialogRef = this.dialog.open(TipocambiovalidacionComponent, {
                             disableClose: true,
                             width: 'auto',
+                            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
                         })
                     } else {
                         // this._snackBar.open('¡ Hay Tipo de Cambio !', '💲', {
@@ -135,5 +163,21 @@ export class MenuSidebarComponent implements OnInit {
             })
     }
 
-}
+    getAlmacenParamUsuario() {
+        let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
+        return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
+            .subscribe({
+                next: (datav) => {
+                    this.almacn_parame_usuario = datav;
+                    console.log('data', this.almacn_parame_usuario);
 
+                    //this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa;
+                    //this.cod_descuento_modal_codigo = this.almacn_parame_usuario.coddescuento;
+                },
+                error: (err: any) => {
+                    console.log(err, errorMessage);
+                },
+                complete: () => { }
+            })
+    }
+}

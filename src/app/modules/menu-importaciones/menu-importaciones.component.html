@@ -1,6 +1,8 @@
-<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Importaciones">
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltipClass="custom-tooltip"
+  matTooltipPosition="above" matTooltip="Importaciones">
   <span><i class="fa fa-archive" aria-hidden="true" style="font-size: 1.4rem !important;color: #093070;"></i>
-  <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon></span>
+    <mat-icon style="padding-block-start: 7px;color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
 </a>
 
 <mat-menu #mantenimiento="matMenu">
@@ -8,25 +10,24 @@
   <a mat-menu-item [matMenuTriggerFor]="modificaciones_importaciones">Modificaciones</a>
   <a mat-menu-item [matMenuTriggerFor]="operaciones_importaciones">Operaciones</a>
 </mat-menu>
-  
+
 <mat-menu #transacacciones_importaciones="matMenu">
-  <a mat-menu-item >Pedido de Compra</a>
-  <a mat-menu-item >Proforma de Proveedor</a>
-  <a mat-menu-item >Orden de Compra</a>
-  <a mat-menu-item >Embarque de Compra</a>
+  <a mat-menu-item>Pedido de Compra</a>
+  <a mat-menu-item>Proforma de Proveedor</a>
+  <a mat-menu-item>Orden de Compra</a>
+  <a mat-menu-item>Embarque de Compra</a>
 </mat-menu>
 
 <mat-menu #modificaciones_importaciones="matMenu">
-  <a mat-menu-item >Pedido de Compra</a>
-  <a mat-menu-item >Proforma de Proveedor</a>
-  <a mat-menu-item >Orden de Compra</a>
-  <a mat-menu-item >Embarque de Compra</a>
-  <a mat-menu-item >Recepción de Embarque</a>
+  <a mat-menu-item>Pedido de Compra</a>
+  <a mat-menu-item>Proforma de Proveedor</a>
+  <a mat-menu-item>Orden de Compra</a>
+  <a mat-menu-item>Embarque de Compra</a>
+  <a mat-menu-item>Recepción de Embarque</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Modificar Tiempos de Reposición</a>
+  <a mat-menu-item>Modificar Tiempos de Reposición</a>
 </mat-menu>
 
 <mat-menu #operaciones_importaciones="matMenu">
-  <a mat-menu-item >Importar Valor Criterio</a>
+  <a mat-menu-item>Importar Valor Criterio</a>
 </mat-menu>
-

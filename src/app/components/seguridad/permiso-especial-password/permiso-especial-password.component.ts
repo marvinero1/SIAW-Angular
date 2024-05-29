@@ -52,7 +52,7 @@ export class PermisoEspecialPasswordComponent implements OnInit {
 
   getaAutorizacion() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgcontrasena/passwordAut/"
-    return this.api.getAll('/seg_adm/oper/prgcontrasena/passwordAut/' + this.userConn + "/" + this.BD_storage.bd + "/" + this.servicio_id + "/" + this.contrasenia)
+    return this.api.getAll('/seg_adm/oper/prgcontrasena/passwordAut/' + this.userConn + "/" + this.BD_storage + "/" + this.servicio_id + "/" + this.contrasenia)
       .subscribe({
         next: (datav) => {
           this.autorizacion_recibida = datav;

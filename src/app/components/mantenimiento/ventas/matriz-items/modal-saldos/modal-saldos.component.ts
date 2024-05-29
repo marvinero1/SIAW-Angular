@@ -45,8 +45,8 @@ export class ModalSaldosComponent implements OnInit {
     this.user_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
-    if (this.BD_storage.bd === 'Loc') {
-      this.BD_storage.bd = '311'
+    if (this.BD_storage === 'Loc') {
+      this.BD_storage = '311'
     }
     console.log(dataAgencias);
     this.infoAgenciaSaldo = dataAgencias.cod_almacen;
@@ -67,7 +67,7 @@ export class ModalSaldosComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.infoAgenciaSaldo + "/" + this.item + "/" + this.BD_storage.bd + "/" + this.user_logueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.infoAgenciaSaldo + "/" + this.item + "/" + this.BD_storage + "/" + this.user_logueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;

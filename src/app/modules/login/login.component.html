@@ -12,6 +12,11 @@
               <div class="h1">SIAW</div>
               <div class="h1">Pertec S.R.L | Maestros en Pernos</div>
             </div>
+            <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader"
+              [fullScreen]="true">
+              <br>
+              <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+            </ngx-spinner>
 
             <!-- /.login-card-body IP Y SERVIDORES -->
             <div *ngIf="ip_servidores">
@@ -107,12 +112,16 @@
                       <mat-icon style="color: gray;">input</mat-icon> Ingresar
                     </button>
                   </div>
-                </div><br>
+                </div>
+              </form><br>
 
-                <p class=" text-center">
-                  <a [routerLink]="['/forgot-password']">Olvide mi contraseña</a>
-                </p>
-              </form>
+              <button mat-raised-button color="primary" class="loginbutton" (click)="atras();">
+                <mat-icon style="color: gray;">backspace</mat-icon> Atras
+              </button>
+
+              <p class=" text-center">
+                <a [routerLink]="['/forgot-password']">Olvide mi contraseña</a>
+              </p>
             </div><br>
             <!-- bases de datos -->
 

@@ -17,31 +17,31 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class ParamempresaComponent implements OnInit {
 
-  FormularioDataParamEmpresa:FormGroup;
+  FormularioDataParamEmpresa: FormGroup;
 
-  public parametros:any=[];
-  public moneda:any=[];
-  public dataform:any=[];
-  public intarifa:any=[];
-  public cncuenta:any=[];
-  public planpago:any=[];
-  public empresa:any;
+  public parametros: any = [];
+  public moneda: any = [];
+  public dataform: any = [];
+  public intarifa: any = [];
+  public cncuenta: any = [];
+  public planpago: any = [];
+  public empresa: any;
   private errorMessage;
-  public dataformupdate=[];
-  userConn:any;
-  BD_storage:any;
+  public dataformupdate = [];
+  userConn: any;
+  BD_storage: any;
 
   @ViewChild('UploadFileInput') uploadFileInput: ElementRef;
   myfilename = 'Seleccionar Archivo';
 
-  nombre_ventana:string="prgadparametros.vb";
-  public ventana="Parametros de la Empresa"
-	public detalle="paramempresa-edit";
-	public tipo="transaccion-paramempresa-PUT";
+  nombre_ventana: string = "prgadparametros.vb";
+  public ventana = "Parametros de la Empresa"
+  public detalle = "paramempresa-edit";
+  public tipo = "transaccion-paramempresa-PUT";
 
-  constructor(private api:ApiService, private spinner: NgxSpinnerService, public dialog: MatDialog, public log_module:LogService,
+  constructor(private api: ApiService, private spinner: NgxSpinnerService, public dialog: MatDialog, public log_module: LogService,
     public _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private toastr: ToastrService,
-    public nombre_ventana_service: NombreVentanaService) { 
+    public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -49,11 +49,11 @@ export class ParamempresaComponent implements OnInit {
     this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.getParametroSegunCodigoAdEmpresa(this.userConn, this.BD_storage.bd);
+    this.getParametroSegunCodigoAdEmpresa(this.userConn, this.BD_storage);
     this.getEmpresa(this.userConn);
     this.getinTarifa(this.userConn);
     this.getAllmoneda(this.userConn);
@@ -63,75 +63,75 @@ export class ParamempresaComponent implements OnInit {
     this.FormularioDataParamEmpresa = this.createForm();
   }
 
-  getEmpresa(userConn){ 
+  getEmpresa(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /seg_adm/mant/adempresa/";
-    return this.api.getAll('/seg_adm/mant/adempresa/'+userConn)
+    return this.api.getAll('/seg_adm/mant/adempresa/' + userConn)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
           // console.log('adempresa', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getinTarifa(userConn){
+  getinTarifa(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /inventario/mant/intarifa/";
-    return this.api.getAll('/inventario/mant/intarifa/'+userConn)
+    return this.api.getAll('/inventario/mant/intarifa/' + userConn)
       .subscribe({
         next: (datav) => {
           this.intarifa = datav;
           // console.log('adempresa', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getveplanPago(userConn){
+  getveplanPago(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /venta/mant/veplanpago/";
-    return this.api.getAll('/venta/mant/veplanpago/'+userConn)
+    return this.api.getAll('/venta/mant/veplanpago/' + userConn)
       .subscribe({
         next: (datav) => {
           this.planpago = datav;
           // console.log('adempresa', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getcnCuenta(userConn){
+  getcnCuenta(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros '/contab/mant/cncuenta/";
-    return this.api.getAll('/contab/mant/cncuenta/'+userConn)
+    return this.api.getAll('/contab/mant/cncuenta/' + userConn)
       .subscribe({
         next: (datav) => {
           this.cncuenta = datav;
           // console.log('adempresa', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getParametroSegunCodigoAdEmpresa(userConn,codigo:string){
+  getParametroSegunCodigoAdEmpresa(userConn, codigo: string) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /seg_adm/mant/adparametros/";
-    return this.api.getAll('/seg_adm/mant/adparametros/'+userConn+"/"+codigo)
+    return this.api.getAll('/seg_adm/mant/adparametros/' + userConn + "/" + codigo)
       .subscribe({
-        next: (datav)=>{
+        next: (datav) => {
           this.parametros = datav;
           console.log('parametrosEmpresa: ', datav);
           // this.spinner.show();
@@ -139,31 +139,31 @@ export class ParamempresaComponent implements OnInit {
           //   this.spinner.hide();
           // }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllmoneda(userConn){
+  getAllmoneda(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/admoneda";
-    return this.api.getAll('/seg_adm/mant/admoneda/'+userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  fileChangeEvent(fileInput: any){
-    if(fileInput.target.files && fileInput.target.files[0]){
+  fileChangeEvent(fileInput: any) {
+    if (fileInput.target.files && fileInput.target.files[0]) {
       this.myfilename = '';
       Array.from(fileInput.target.files).forEach((file: File) => {
         console.log(file);
@@ -189,35 +189,35 @@ export class ParamempresaComponent implements OnInit {
     }
   }
 
-  detectFiles(event){
+  detectFiles(event) {
     console.log(event.currentTarget.files[0].webkitRelativePath);
   }
 
-  openDialogMinimoComplementarias(dataEmpresaParametros){
+  openDialogMinimoComplementarias(dataEmpresaParametros) {
     const dialogRef = this.dialog.open(ModalMinimoComplementariasComponent, {
       width: '1120px',
-      height:'auto',
-      data:{dataEmpresaParametros:dataEmpresaParametros},
+      height: 'auto',
+      data: { dataEmpresaParametros: dataEmpresaParametros },
     });
   }
 
-  openDialogCreditoConAutorizacion(dataEmpresaParametros){
+  openDialogCreditoConAutorizacion(dataEmpresaParametros) {
     const dialogRef = this.dialog.open(ModalCreditoAutorizacionComponent, {
       width: '850px',
-      height:'auto',
-      data:{dataEmpresaParametros:dataEmpresaParametros},
+      height: 'auto',
+      data: { dataEmpresaParametros: dataEmpresaParametros },
     });
   }
 
-  openDialogPreciosFacturacion(dataEmpresaParametros){
+  openDialogPreciosFacturacion(dataEmpresaParametros) {
     const dialogRef = this.dialog.open(ModalPreciosFacturacionComponent, {
       width: '750px',
-      height:'auto',
-      data:{dataEmpresaParametros:dataEmpresaParametros},
+      height: 'auto',
+      data: { dataEmpresaParametros: dataEmpresaParametros },
     });
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codempresa: [this.dataform.codempresa, Validators.compose([Validators.required])],
       diascomplementarias: [this.dataform.diascomplementarias, Validators.compose([Validators.required])],
@@ -228,13 +228,13 @@ export class ParamempresaComponent implements OnInit {
       it: [this.dataform.it],
       frase: [this.dataform.frase],
       diasproceso: [this.dataform.diasproceso],
-      cierres_diarios: [this.dataform.cierres_diarios == null ? false:true],
+      cierres_diarios: [this.dataform.cierres_diarios == null ? false : true],
       fact_lineas_arriba: [this.dataform.fact_lineas_arriba],
       fecha_inicio_rutas: [this.dataform.fecha_inicio_rutas],
       bd_opcional: [this.dataform.bd_opcional],
-      obliga_remito: [this.dataform.obliga_remito == null ? true:false],
+      obliga_remito: [this.dataform.obliga_remito == null ? true : false],
       servidor_opcional: [this.dataform.servidor_opcional],
-      acmonedaajuste: [this.dataform.acmonedaajuste == null ? false:true],
+      acmonedaajuste: [this.dataform.acmonedaajuste == null ? false : true],
 
       dias_cierre_01: [this.dataform.dias_cierre_01],
       dias_cierre_02: [this.dataform.dias_cierre_02],
@@ -268,8 +268,8 @@ export class ParamempresaComponent implements OnInit {
       diascomerciales: [this.dataform.diascomerciales],
       horasmes: [this.dataform.horasmes],
       horasdia: [this.dataform.horasdia],
-      valida_salariomin: [this.dataform.valida_salariomin == null ? false:true],
-      bono_rendimiento_pymes_segun_evaluacion: [this.dataform.bono_rendimiento_pymes_segun_evaluacion == null ? false:true],
+      valida_salariomin: [this.dataform.valida_salariomin == null ? false : true],
+      bono_rendimiento_pymes_segun_evaluacion: [this.dataform.bono_rendimiento_pymes_segun_evaluacion == null ? false : true],
 
       topemonto_asn1: [this.dataform.topemonto_asn1],
       porcentaje_asn1: [this.dataform.porcentaje_asn1],
@@ -278,8 +278,8 @@ export class ParamempresaComponent implements OnInit {
       topemonto_asn3: [this.dataform.topemonto_asn3],
       porcentaje_asn3: [this.dataform.porcentaje_asn3],
 
-      negativos: [this.dataform.negativos == null ? false:true],
-      stock_seguridad: [this.dataform.stock_seguridad == null ? false:true],
+      negativos: [this.dataform.negativos == null ? false : true],
+      stock_seguridad: [this.dataform.stock_seguridad == null ? false : true],
       codmoneda_costeo: [this.dataform.codmoneda_costeo],
       ctsc1_descripcion: [this.dataform.ctsc1_descripcion],
       ctsc2_descripcion: [this.dataform.ctsc2_descripcion],
@@ -313,33 +313,33 @@ export class ParamempresaComponent implements OnInit {
       dias_igualacion: [this.dataform.dias_igualacion],
       maxdiaspp: [this.dataform.maxdiaspp],
       estandardiaspp: [this.dataform.estandardiaspp],
-      factura_imprime_labels: [this.dataform.factura_imprime_labels == null ? false:true],
+      factura_imprime_labels: [this.dataform.factura_imprime_labels == null ? false : true],
 
-      proforma_reserva: [this.dataform.proforma_reserva == null ? false:true],
-      rev_automaticas: [this.dataform.rev_automaticas == null ? false:true],
-      clientevendedor: [this.dataform.clientevendedor == null ? false:true],
-      forzar_etiqueta: [this.dataform.forzar_etiqueta == null ? false:true],
-      permitir_items_repetidos: [this.dataform.permitir_items_repetidos == null ? false:true],
-      distribuir_desc_extra_en_factura: [this.dataform.distribuir_desc_extra_en_factura == null ? false:true],
-      cambiar_credito_morosos: [this.dataform.cambiar_credito_morosos == null ? false:true],
-      valida_cobertura: [this.dataform.valida_cobertura == null ? false:true],
+      proforma_reserva: [this.dataform.proforma_reserva == null ? false : true],
+      rev_automaticas: [this.dataform.rev_automaticas == null ? false : true],
+      clientevendedor: [this.dataform.clientevendedor == null ? false : true],
+      forzar_etiqueta: [this.dataform.forzar_etiqueta == null ? false : true],
+      permitir_items_repetidos: [this.dataform.permitir_items_repetidos == null ? false : true],
+      distribuir_desc_extra_en_factura: [this.dataform.distribuir_desc_extra_en_factura == null ? false : true],
+      cambiar_credito_morosos: [this.dataform.cambiar_credito_morosos == null ? false : true],
+      valida_cobertura: [this.dataform.valida_cobertura == null ? false : true],
       dias_sin_compra: [this.dataform.dias_sin_compra],
       dias_mora_limite_revertir_credito: [this.dataform.dias_mora_limite_revertir_credito],
       nro_reversiones_pendientes: [this.dataform.nro_reversiones_pendientes],
 
-      preg_cont_ventascontado: [this.dataform.preg_cont_ventascontado == null ? false:true],
-      preg_cont_ventascredito: [this.dataform.preg_cont_ventascredito == null ? false:true],
-      preg_cont_cobranza: [this.dataform.preg_cont_cobranza == null ? false:true],
-      preg_cont_notamov: [this.dataform.preg_cont_notamov == null ? false:true],
-      preg_cont_depositos: [this.dataform.preg_cont_depositos == null ? false:true],
-      preg_cont_retiros: [this.dataform.preg_cont_retiros == null ? false:true],
-      preg_cont_movfondos: [this.dataform.preg_cont_movfondos == null ? false:true],
-      preg_cont_cheques: [this.dataform.preg_cont_cheques == null ? false:true],
-      preg_cont_transferencias: [this.dataform.preg_cont_transferencias == null ? false:true],
-      preg_cont_compras: [this.dataform.preg_cont_compras == null ? false:true],
-      preg_cont_pagos: [this.dataform.preg_cont_pagos == null ? false:true],
-      preg_cont_trasladoaf: [this.dataform.preg_cont_trasladoaf == null ? false:true],
-      preg_cont_bajaaf: [this.dataform.preg_cont_trasladoaf == null ? false:true],
+      preg_cont_ventascontado: [this.dataform.preg_cont_ventascontado == null ? false : true],
+      preg_cont_ventascredito: [this.dataform.preg_cont_ventascredito == null ? false : true],
+      preg_cont_cobranza: [this.dataform.preg_cont_cobranza == null ? false : true],
+      preg_cont_notamov: [this.dataform.preg_cont_notamov == null ? false : true],
+      preg_cont_depositos: [this.dataform.preg_cont_depositos == null ? false : true],
+      preg_cont_retiros: [this.dataform.preg_cont_retiros == null ? false : true],
+      preg_cont_movfondos: [this.dataform.preg_cont_movfondos == null ? false : true],
+      preg_cont_cheques: [this.dataform.preg_cont_cheques == null ? false : true],
+      preg_cont_transferencias: [this.dataform.preg_cont_transferencias == null ? false : true],
+      preg_cont_compras: [this.dataform.preg_cont_compras == null ? false : true],
+      preg_cont_pagos: [this.dataform.preg_cont_pagos == null ? false : true],
+      preg_cont_trasladoaf: [this.dataform.preg_cont_trasladoaf == null ? false : true],
+      preg_cont_bajaaf: [this.dataform.preg_cont_trasladoaf == null ? false : true],
 
       porcentaje_afp: [this.dataform.porcentaje_afp],
       porcentaje_cns: [this.dataform.porcentaje_cns],
@@ -349,19 +349,19 @@ export class ParamempresaComponent implements OnInit {
       porcencomventas: [this.dataform.porcencomventas],
       porcencomcbzas: [this.dataform.porcencomcbzas],
       mingarantizado: [this.dataform.mingarantizado],
-      comnoviajantes: [this.dataform.comnoviajantes == null ? false:true],
+      comnoviajantes: [this.dataform.comnoviajantes == null ? false : true],
     });
   }
 
-  submitDataUpdateParamEmpresa(){
+  submitDataUpdateParamEmpresa() {
     let data = this.FormularioDataParamEmpresa.value;
     console.log(data);
-    
-    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /seg_adm/mant/adusuario Update";
-    return this.api.update('/seg_adm/mant/adparametros/'+this.BD_storage.bd, data)
+
+    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
+    return this.api.update('/seg_adm/mant/adparametros/' + this.BD_storage, data)
       .subscribe({
         next: (datav) => {
-          this.log_module.guardarLog(this.ventana,this.detalle,this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.dataformupdate = datav;
           // console.log('data', datav);
           this._snackBar.open('Se ha editado correctamente!', 'Ok', {
@@ -369,8 +369,8 @@ export class ParamempresaComponent implements OnInit {
           });
           // location.reload();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, this.errorMessage);
           this.toastr.error('! NO SE ACTUALIZO EXITOSAMENTE !');
         },
@@ -378,9 +378,9 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  mandarNombre(){
-	this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-	  nombre_vent:this.ventana,
-	});
-}
+  mandarNombre() {
+    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
+      nombre_vent: this.ventana,
+    });
+  }
 }

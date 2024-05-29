@@ -49,7 +49,7 @@ export class TipocambiovalidacionComponent implements OnInit {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.bd_logueado = this.BD_storage.bd;
+    this.bd_logueado = this.BD_storage;
     console.log(this.bd_logueado);
   }
 

@@ -315,7 +315,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "259408841053099695"
+        "hash": "11686100698061313719"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -363,11 +363,11 @@
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalPreciosFacturacion/modalPreciosFacturacion.component.ts",
-        "hash": "3908191610502647821"
+        "hash": "3130370168886053049"
       },
       {
         "file": "src/app/components/archivo/paramempresa/paramempresa.component.html",
-        "hash": "9705243112540879572"
+        "hash": "7691449892985696232"
       },
       {
         "file": "src/app/components/archivo/paramempresa/paramempresa.component.scss",
@@ -379,7 +379,7 @@
       },
       {
         "file": "src/app/components/archivo/paramempresa/paramempresa.component.ts",
-        "hash": "935858269190369873"
+        "hash": "9481995970369266199"
       },
       {
         "file": "src/app/components/inventario/catalogo-inventario/catalogo-inventario.component.html",
@@ -931,7 +931,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component.ts",
-        "hash": "6130909133030936141"
+        "hash": "15838947803984260351"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda-create/moneda-create.component.html",
@@ -4179,7 +4179,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.ts",
-        "hash": "1916900397086964153"
+        "hash": "11847390868192014898"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service.spec.ts",
@@ -4379,11 +4379,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "12514683257759628027"
+        "hash": "5570501116507705893"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "3093731703413195930"
+        "hash": "7130943895256108551"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4395,7 +4395,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "9740999253213026348"
+        "hash": "8280753205734577357"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4411,7 +4411,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.ts",
-        "hash": "15837187526399473324"
+        "hash": "8366011123035602121"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service.spec.ts",
@@ -4443,7 +4443,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/stock-actual-f9/stock-actual-f9.component.ts",
-        "hash": "10973560305611069640"
+        "hash": "15431100927825317188"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente/modal-cliente.component.html",
@@ -4523,11 +4523,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-deposito-cliente/modal-desct-deposito-cliente.component.ts",
-        "hash": "9587628370650184793"
+        "hash": "8721547572948238826"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.html",
-        "hash": "14129153349914167924"
+        "hash": "15965442160340945231"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.scss",
@@ -4539,7 +4539,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-desct-extras/modal-desct-extras.component.ts",
-        "hash": "11079137016514121164"
+        "hash": "6934966872883411924"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
@@ -4571,7 +4571,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.ts",
-        "hash": "11196615479608333158"
+        "hash": "9250219165780697932"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.html",
@@ -4627,7 +4627,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.ts",
-        "hash": "1772109591515949831"
+        "hash": "4604697664795092878"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-iva/modal-iva.component.html",
@@ -4675,7 +4675,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/modal-recargos.component.ts",
-        "hash": "6728034646107607311"
+        "hash": "575105977098088327"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.spec.ts",
@@ -4715,7 +4715,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-sub-total/modal-sub-total.component.ts",
-        "hash": "5786692669914731136"
+        "hash": "9215065188738290068"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-sub-total/sub-total-service/sub-total.service.spec.ts",
@@ -4739,7 +4739,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component.ts",
-        "hash": "17566741074571726353"
+        "hash": "7199919718215654312"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.html",
@@ -4755,7 +4755,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component.ts",
-        "hash": "13078411727183064387"
+        "hash": "9093361269186611044"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service.spec.ts",
@@ -5255,11 +5255,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "5069414211334443479"
+        "hash": "5956359376160306417"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "7900533614931866602"
+        "hash": "14922961724354499008"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5267,7 +5267,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "3408154108883362868"
+        "hash": "2216447066001512762"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5323,7 +5323,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.ts",
-        "hash": "14331116560092902672"
+        "hash": "6397857949201842418"
       },
       {
         "file": "src/app/components/menu-item/menu-item.animations.ts",
@@ -5375,7 +5375,7 @@
       },
       {
         "file": "src/app/components/seguridad/modal-password/modal-password.component.ts",
-        "hash": "17787288039161179638"
+        "hash": "8223848093546643131"
       },
       {
         "file": "src/app/components/seguridad/permiso-especial-password/permiso-especial-password.component.html",
@@ -5391,7 +5391,7 @@
       },
       {
         "file": "src/app/components/seguridad/permiso-especial-password/permiso-especial-password.component.ts",
-        "hash": "9389398282687959897"
+        "hash": "2267734888220445404"
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.html",
@@ -5407,7 +5407,7 @@
       },
       {
         "file": "src/app/components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component.ts",
-        "hash": "4170217068014743733"
+        "hash": "18036756093552746404"
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion-create/tipocambiovalidacion-create.component.html",
@@ -5439,7 +5439,7 @@
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component.ts",
-        "hash": "11812407476570572901"
+        "hash": "4119649057899816285"
       },
       {
         "file": "src/app/components/sidebar-search/sidebar-search.component.html",
@@ -5571,7 +5571,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.html",
-        "hash": "8456865544875508081"
+        "hash": "13040346852497161739"
       },
       {
         "file": "src/app/modules/login/login.component.scss",
@@ -5583,7 +5583,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.ts",
-        "hash": "6896309272271824645"
+        "hash": "12658332793437146220"
       },
       {
         "file": "src/app/modules/main/control-sidebar/control-sidebar.component.html",
@@ -5799,27 +5799,11 @@
       },
       {
         "file": "src/app/modules/main/main.component.ts",
-        "hash": "18304514366589908273"
-      },
-      {
-        "file": "src/app/modules/main/menu-inventario/menu-inventario.component.html",
-        "hash": "10457609191450064395"
-      },
-      {
-        "file": "src/app/modules/main/menu-inventario/menu-inventario.component.scss",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "src/app/modules/main/menu-inventario/menu-inventario.component.spec.ts",
-        "hash": "4128765487870493145"
-      },
-      {
-        "file": "src/app/modules/main/menu-inventario/menu-inventario.component.ts",
-        "hash": "15658792353904583784"
+        "hash": "9110547809006348293"
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.html",
-        "hash": "17665448392539075959"
+        "hash": "5341248203035348532"
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.scss",
@@ -5831,7 +5815,7 @@
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.ts",
-        "hash": "17061404144897076197"
+        "hash": "764627355610477964"
       },
       {
         "file": "src/app/modules/mantenimiento/mantenimiento.component.html",
@@ -5851,7 +5835,7 @@
       },
       {
         "file": "src/app/modules/menu-activos-fijos/menu-activos-fijos.component.html",
-        "hash": "8037003269273785200"
+        "hash": "3172517792864969023"
       },
       {
         "file": "src/app/modules/menu-activos-fijos/menu-activos-fijos.component.scss",
@@ -5867,7 +5851,7 @@
       },
       {
         "file": "src/app/modules/menu-compras/menu-compras.component.html",
-        "hash": "13562330179450452879"
+        "hash": "13618498763758970024"
       },
       {
         "file": "src/app/modules/menu-compras/menu-compras.component.scss",
@@ -5883,7 +5867,7 @@
       },
       {
         "file": "src/app/modules/menu-contabilidad/menu-contabilidad.component.html",
-        "hash": "808539070871320767"
+        "hash": "11843562606928323316"
       },
       {
         "file": "src/app/modules/menu-contabilidad/menu-contabilidad.component.scss",
@@ -5899,7 +5883,7 @@
       },
       {
         "file": "src/app/modules/menu-cuentas-cobrar/menu-cuentas-cobrar.component.html",
-        "hash": "9813407946977561704"
+        "hash": "5969069990684486483"
       },
       {
         "file": "src/app/modules/menu-cuentas-cobrar/menu-cuentas-cobrar.component.scss",
@@ -5915,7 +5899,7 @@
       },
       {
         "file": "src/app/modules/menu-fondos/menu-fondos.component.html",
-        "hash": "12169666770728894858"
+        "hash": "4588788428250012679"
       },
       {
         "file": "src/app/modules/menu-fondos/menu-fondos.component.scss",
@@ -5931,7 +5915,7 @@
       },
       {
         "file": "src/app/modules/menu-importaciones/menu-importaciones.component.html",
-        "hash": "4186321591799760185"
+        "hash": "11104779500986062339"
       },
       {
         "file": "src/app/modules/menu-importaciones/menu-importaciones.component.scss",
@@ -5946,8 +5930,24 @@
         "hash": "2198880882796151347"
       },
       {
+        "file": "src/app/modules/menu-inventario/menu-inventario.component.html",
+        "hash": "15199033630012761628"
+      },
+      {
+        "file": "src/app/modules/menu-inventario/menu-inventario.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/menu-inventario/menu-inventario.component.spec.ts",
+        "hash": "4128765487870493145"
+      },
+      {
+        "file": "src/app/modules/menu-inventario/menu-inventario.component.ts",
+        "hash": "15658792353904583784"
+      },
+      {
         "file": "src/app/modules/menu-planillas-personal/menu-planillas-personal.component.html",
-        "hash": "14615919516061628725"
+        "hash": "1707940825881611570"
       },
       {
         "file": "src/app/modules/menu-planillas-personal/menu-planillas-personal.component.scss",
@@ -5963,7 +5963,7 @@
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.html",
-        "hash": "13064342386185328153"
+        "hash": "16680021684946003101"
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.scss",
@@ -6223,7 +6223,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "5833179837080809805"
+        "hash": "6032310371052049811"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6235,7 +6235,7 @@
       },
       {
         "file": "src/app/services/interceptor.ts",
-        "hash": "8557020067562308219"
+        "hash": "5567976742792877139"
       },
       {
         "file": "src/app/services/log-service.service.spec.ts",
@@ -6243,7 +6243,7 @@
       },
       {
         "file": "src/app/services/log-service.service.ts",
-        "hash": "5458158406219162241"
+        "hash": "10159008632085725826"
       },
       {
         "file": "src/app/services/modelos/objetos.ts",
@@ -6399,7 +6399,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "12450674784513162788"
+        "hash": "9486881279913482093"
       },
       {
         "file": "src/test.ts",

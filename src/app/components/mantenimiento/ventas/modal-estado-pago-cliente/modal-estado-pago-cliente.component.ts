@@ -78,7 +78,7 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
     this.spinner.show();
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/prgestadocliente/getEstadoPagosCliente/";
-    return this.api.getAll('/venta/transac/prgestadocliente/getEstadoPagosCliente/' + this.userConn + "/" + this.cod_cliente_get + "/" + this.fecha_actual1 + "/" + this.agencia_logueado + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/prgestadocliente/getEstadoPagosCliente/' + this.userConn + "/" + this.cod_cliente_get + "/" + this.fecha_actual1 + "/" + this.agencia_logueado + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.estado_pagos_all = datav;
@@ -137,7 +137,7 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
 
   calcularSeleccion(element) {
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta: -/venta/transac/prgestadocliente/calcularSeleccion/";
-    return this.api.create("/venta/transac/prgestadocliente/calcularSeleccion/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage.bd, element)
+    return this.api.create("/venta/transac/prgestadocliente/calcularSeleccion/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage, element)
       .subscribe({
         next: (datav) => {
           this.calculo_sesion = datav;

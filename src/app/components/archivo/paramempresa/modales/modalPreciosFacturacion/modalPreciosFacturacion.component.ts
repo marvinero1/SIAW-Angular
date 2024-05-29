@@ -16,28 +16,28 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ModalPreciosFacturacionComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  public dataform:any=[];
-  public tarifasfact=[];
-  public params_tarifas=[];
-  public intarifa:any=[];
-  public dataEmpresa=[];
-  empresa="PE";
-  userConn:any;
-  BD_storage:any;
+  FormularioData: FormGroup;
+  public dataform: any = [];
+  public tarifasfact = [];
+  public params_tarifas = [];
+  public intarifa: any = [];
+  public dataEmpresa = [];
+  empresa = "PE";
+  userConn: any;
+  BD_storage: any;
 
-  displayedColumns = ['codtarifa','descripcion','accion'];
+  displayedColumns = ['codtarifa', 'descripcion', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  public ventana="prec-fac-create"
-  public detalle="prec-fac-detalle";
-  public tipo="prec-fac-POST";
+  public ventana = "prec-fac-create"
+  public detalle = "prec-fac-detalle";
+  public tipo = "prec-fac-POST";
 
-  constructor(public dialogRef: MatDialogRef<ModalPreciosFacturacionComponent>, private api:ApiService, private spinner: NgxSpinnerService,
+  constructor(public dialogRef: MatDialogRef<ModalPreciosFacturacionComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public dataEmpresaParametros: any, public _snackBar: MatSnackBar, public dialog: MatDialog,
-    private _formBuilder: FormBuilder, public log_module:LogService, private toastr: ToastrService,){
+    private _formBuilder: FormBuilder, public log_module: LogService, private toastr: ToastrService,) {
 
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -46,101 +46,101 @@ export class ModalPreciosFacturacionComponent implements OnInit {
     this.getAllinTarifaSelect(this.userConn);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.dataEmpresa = this.dataEmpresaParametros.dataEmpresaParametros;
     this.getbyIdparametrosTarifas();
   }
 
-  createForm(): FormGroup{      
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codempresa: [this.empresa],
       codtarifa: [this.dataform.codigo_intarifa, Validators.compose([Validators.required])],
     });
   }
 
-  getAllinTarifaSelect(useConn){
+  getAllinTarifaSelect(useConn) {
     //select
-    let  errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adparametrosDiasextranc";
-    return this.api.getAll('/inventario/mant/intarifa/'+useConn)  
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adparametrosDiasextranc";
+    return this.api.getAll('/inventario/mant/intarifa/' + useConn)
       .subscribe({
         next: (datav) => {
           this.intarifa = datav;
           // console.log('data', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getbyIdparametrosTarifas(){
+  getbyIdparametrosTarifas() {
     //tabla
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adparametrosDiasextranc";
-    return this.api.getById('/seg_adm/mant/adparametros_tarifasfact/'+this.userConn+"/"+this.BD_storage.bd)  
+    return this.api.getById('/seg_adm/mant/adparametros_tarifasfact/' + this.userConn + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.params_tarifas = datav;
           // console.log('data', datav);
           this.dataSource = new MatTableDataSource(this.params_tarifas);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /seg_adm/mant/adparametros_tarifasfact";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adparametros_tarifasfact";
 
-    return this.api.create("/seg_adm/mant/adparametros_tarifasfact/"+this.userConn, data)
+    return this.api.create("/seg_adm/mant/adparametros_tarifasfact/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.tarifasfact = datav;
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this.getbyIdparametrosTarifas();
-          
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- seg_adm/mant/adparametrosTarifasfact Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- seg_adm/mant/adparametrosTarifasfact Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result:Boolean)=>{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result) {
-        return this.api.delete('/seg_adm/mant/adparametros_tarifasfact/'+this.userConn+"/"+element.codtarifa+'/'+this.BD_storage.bd)
-        .subscribe({
-          next: () => {
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1000);
-            this.getbyIdparametrosTarifas();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adparametros_tarifasfact/' + this.userConn + "/" + element.codtarifa + '/' + this.BD_storage)
+          .subscribe({
+            next: () => {
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+              this.getbyIdparametrosTarifas();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! NO SE ELIMINO !');
       }
     });

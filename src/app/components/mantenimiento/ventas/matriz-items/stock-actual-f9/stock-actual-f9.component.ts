@@ -40,8 +40,8 @@ export class StockActualF9Component implements OnInit {
     this.item_stock = cod_item_celda.cod_item_celda;
     console.log(this.item_stock);
 
-    if (this.BD_storage.bd === 'Loc') {
-      this.BD_storage.bd = '311'
+    if (this.BD_storage === 'Loc') {
+      this.BD_storage = '311'
     }
   }
 
@@ -51,7 +51,7 @@ export class StockActualF9Component implements OnInit {
   getStockItem() {
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getSaldosItemF9/";
-    return this.api.getAll('/venta/transac/veproforma/getSaldosItemF9/' + this.userConn + "/" + this.item_stock + "/" + this.BD_storage.bd + "/" + this.usuario_logueado)
+    return this.api.getAll('/venta/transac/veproforma/getSaldosItemF9/' + this.userConn + "/" + this.item_stock + "/" + this.BD_storage + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
           this.data_stock_item = datav;

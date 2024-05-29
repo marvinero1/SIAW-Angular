@@ -272,7 +272,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
       console.log("SOLO CANTIDAD");
       const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
 
-      this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage.bd + "/" + this.usuarioLogueado, nuevosItems)
+      this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
         .subscribe({
           next: (datav) => {
             if (this.tamanio_carrito > 0) {

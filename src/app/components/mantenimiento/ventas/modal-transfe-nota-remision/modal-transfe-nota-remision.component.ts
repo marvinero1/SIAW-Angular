@@ -66,7 +66,7 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
   transferirProforma() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
@@ -98,7 +98,7 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
   transferirCotizaciones() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosCotizacion/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;

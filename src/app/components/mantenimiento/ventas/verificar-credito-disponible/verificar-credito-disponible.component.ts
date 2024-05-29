@@ -86,7 +86,7 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
     let fechareg = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/transac/veproforma/valCredDispCli/' + this.user_conn + "/" + this.cod_cliente_proforma + "/" +
-      this.usuario_logueado + "/" + this.BD_storage.bd + "/" + this.cod_moneda_proforma + "/" + this.totalProf + "/" + fechareg)
+      this.usuario_logueado + "/" + this.BD_storage + "/" + this.cod_moneda_proforma + "/" + this.totalProf + "/" + fechareg)
       .subscribe({
         next: (datav) => {
           this.credito_disponible = datav;

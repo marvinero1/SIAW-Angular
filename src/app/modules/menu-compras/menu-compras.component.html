@@ -1,6 +1,11 @@
-<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Compras">
-  <span><mat-icon style="font-size: 1.5rem;width: auto !important;height: auto !important;padding-block-start: 5px;color: #093070;">shopping_cart</mat-icon>
-  <mat-icon style="color: #093070;">keyboard_arrow_down</mat-icon></span>
+<a mat-button class="nav-link" [matMenuTriggerFor]="mantenimiento" matTooltip="Compras" matTooltipClass="custom-tooltip"
+  matTooltipPosition="above">
+  <span>
+    <mat-icon
+      style="font-size: 1.5rem;width: auto !important;height: auto !important;padding-block-start: 5px;color: #093070;">
+      shopping_cart</mat-icon>
+    <mat-icon style="color: #093070;">keyboard_arrow_down</mat-icon>
+  </span>
 </a>
 
 <mat-menu #mantenimiento="matMenu">
@@ -8,23 +13,23 @@
   <a mat-menu-item [matMenuTriggerFor]="modificaciones_compras">Modificaciones</a>
   <a mat-menu-item [matMenuTriggerFor]="operaciones_compras">Operaciones</a>
 </mat-menu>
-  
+
 <mat-menu #transacacciones_compras="matMenu">
-  <a mat-menu-item >Provisión de Compra</a>
-  <a mat-menu-item >Compra</a>
-  <a mat-menu-item >Pago a Proveedor</a>
+  <a mat-menu-item>Provisión de Compra</a>
+  <a mat-menu-item>Compra</a>
+  <a mat-menu-item>Pago a Proveedor</a>
 </mat-menu>
 
 <mat-menu #modificaciones_compras="matMenu">
-  <a mat-menu-item >Provisión de Compra</a>
-  <a mat-menu-item >Compra</a>
-  <a mat-menu-item >Pago a Proveedor</a>
+  <a mat-menu-item>Provisión de Compra</a>
+  <a mat-menu-item>Compra</a>
+  <a mat-menu-item>Pago a Proveedor</a>
 </mat-menu>
 
 <mat-menu #operaciones_compras="matMenu">
-  <a mat-menu-item >Aprobación de Pagos</a>
-  <a mat-menu-item >Desprobación</a>
+  <a mat-menu-item>Aprobación de Pagos</a>
+  <a mat-menu-item>Desprobación</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item >Distribuición de Pagos</a>
-  <a mat-menu-item >Deshacer Distribución de Pagos</a>
+  <a mat-menu-item>Distribuición de Pagos</a>
+  <a mat-menu-item>Deshacer Distribución de Pagos</a>
 </mat-menu>

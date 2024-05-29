@@ -190,7 +190,7 @@
                   </span>
                 </div>
                 <ng-container>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario"
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario.codalmacen"
                     formControlName="codalmacen" id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)"
                     [class.is-invalid]="f.codalmacen.invalid && (f.codalmacen.dirty || f.codalmacen.touched)"
                     style="margin-left: 6px;" readonly>
@@ -265,20 +265,14 @@
               [readOnly]="true">
           </div>
 
-
-
-
-
-
           <div class="row">
             <div class="col">
               <div class="input-group">
                 <span class="form-control-sm" style="border: 0 !important;">
                   <u>Calcular Empaques por Precio</u>
                 </span>
-
                 <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
+                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorPrecio" (change)="changeValueCheck('precio')">
                 </div>
               </div>
             </div>
@@ -287,9 +281,9 @@
                 <span class="form-control-sm" style="border: 0 !important;">
                   <u>Calcular Empaques por Descuento</u>
                 </span>
-
-                <div class="" style="border: 0;">
-                  <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
+                <div class="input-group-text" style="border: 0;">
+                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento"
+                    (change)="changeValueCheck('descuento')">
                 </div>
               </div>
             </div>
@@ -367,12 +361,12 @@
             <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
               formControlName="tipopago"
               [class.is-invalid]="f.tipopago.invalid && (f.tipopago.dirty || f.tipopago.touched)">
-              <mat-option [value]=0>CREDITO</mat-option>
-              <mat-option [value]=1>CONTADO</mat-option>
+              <mat-option [value]=0>CONTADO</mat-option>
+              <mat-option [value]=1>CREDITO</mat-option>
             </mat-select>
           </div>
 
-          <ng-container *ngIf="tipopago === 1">
+          <ng-container *ngIf="tipopago === 0">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm"
@@ -380,7 +374,7 @@
               </div>
               <div class="input-group-prepend">
                 <div class="input-group-text" style="border: 0 !important;">
-                  <input [checked]="es_contra_entrega" type="checkbox" formControlName="contra_entrega">
+                  <input type="checkbox" formControlName="contra_entrega" [(ngModel)]="contra_entrega">
                 </div>
               </div>
             </div>
@@ -550,9 +544,9 @@
               <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;"><u
                   (click)="setEmailDefault();" style="cursor: pointer;">Email </u></span>
             </div>
-            <ng-container *ngIf="!email_cliente">
+            <ng-container *ngIf="!email_cliente ">
               <input type="email" class="form-control form-control-sm" formControlName="email" style="margin-left: 4px;"
-                style="margin-left: 2px;" placeholder="CORREO ELECTRONICO" [(ngModel)]="email">
+                style="margin-left: 2px;" [value]="" [(ngModel)]="email">
             </ng-container>
 
             <ng-container *ngIf="email_cliente">
@@ -1410,11 +1404,12 @@
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 0px;border: 0 !important;">Kgr.</span>
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">Kgr.
+                              {{ peso | number:'2.2-2' }}</span>
                           </div>
+
                           <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
-                            placeholder="0.00" formControlName="peso" [(ngModel)]="peso"
-                            [value]="peso | number: '1.2-2'" readonly>
+                            placeholder="0.00" formControlName="peso" [(ngModel)]="peso" hidden="true" readonly>
                         </div>
                       </div>
                     </div>
@@ -1665,14 +1660,13 @@
                               style="padding: 10px 0px 0px 5px;border: 0 !important;">
                               <u>Complementar Proforma</u></span>
                           </div>
-                          <mat-checkbox class="example-margin" [formControl]="disableSelect"
-                            [(ngModel)]="complementopf">
+                          <mat-checkbox class="example-margin" [formControl]="disableSelect">
                           </mat-checkbox>
                         </div>
                         <mat-form-field>
                           <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
-                            formControlName="tipo_complementopf">
+                          <mat-select [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf"
+                            [disabled]="disableSelect.value === false">
                             <mat-option [value]=0>1. Dimediado - Precio Mayorista Para Cumplir
                               Monto Minimo
                             </mat-option>
@@ -1684,22 +1678,27 @@
                       </div>
 
                       <div class="col-md-8">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                           <div class="input-group">
-                            <select [disabled]="!disableSelect.value" formControlName="idpf_complemento"
-                              [(ngModel)]="idpf_complemento_view">
-                              <option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
-                                [value]="ids_complementar_proformas.id">{{ ids_complementar_proformas.id }} -
-                                {{ ids_complementar_proformas.descripcion }}</option>
-                            </select>
+                            <mat-form-field style="width: 265px !important;">
+                              <mat-select [(ngModel)]="idpf_complemento_view" formControlName="idpf_complemento"
+                                [disabled]="disableSelect.value === false">
+                                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                                  [value]="ids_complementar_proformas.id">
+                                  {{ ids_complementar_proformas.id }} -
+                                  {{ ids_complementar_proformas.descripcion }}
+                                  <hr>
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
 
-                            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                              formControlName="nroidpf_complemento" [(ngModel)]="input_complemento_view"
-                              [disabled]="!disableSelect.value">
+                            <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
+                              formControlName="nroidpf_complemento" placeholder="0"
+                              [(ngModel)]="input_complemento_view">
 
                             <div class="input-group-append">
                               <button class="btn btn-outline-primary form-control-sm" type="button"
-                                style="border-color: #ffc107;" [disabled]="!disableSelect.value"
+                                style="border-color: #ffc107;" [disabled]="disableSelect.value === false"
                                 (click)="buscadorIDComplementarProforma(idpf_complemento_view, input_complemento_view);">
                                 <i class="fa fa-search"></i>
                               </button>
@@ -1727,7 +1726,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text form-control-sm" style="border: 0 !important;">
                                 <u>Total Proforma: </u></span>
-                              {{ complemento_proforma?.total_pfcomplemento | number:'1.2-2' }}
+                              {{  complemento_proforma?.total_pfcomplemento | number:'1.2-2'}}
                               {{ complemento_proforma?.moneda_total_pfcomplemento }}
                             </div>
                           </div>
@@ -2360,7 +2359,7 @@
         <!-- Saldos -->
         <div class="row pl-2">
           <input type="text" class="inputsSaldos inputsSaldos2"
-            value="{{ almacn_parame_usuario }}: {{ saldoItem | number:'1.2-2'}}"
+            value="{{ almacn_parame_usuario.codalmacen }}: {{ saldoItem | number:'1.2-2'}}"
             style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
             placeholder="0.00">
 
@@ -2450,7 +2449,7 @@
             <ng-template #empaque_view>
               <div *ngFor="let empaquesItems of empaquesItem">
                 <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
-                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
+                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'1.2-5' }}
                 </div>
               </div>
             </ng-template>

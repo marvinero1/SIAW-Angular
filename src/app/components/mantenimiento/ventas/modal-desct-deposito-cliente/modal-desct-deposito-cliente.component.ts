@@ -72,7 +72,7 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
   getData1Tab() {
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgdesctodeposito_pendiente/depPendientesRefresh/";
-    return this.api.getAll('/venta/transac/prgdesctodeposito_pendiente/depPendientesRefresh/' + this.userConn + "/" + this.cod_cliente_get + "/" + this.cliente_real_get + "/" + this.nit_get + "/" + this.BD_storage.bd)
+    return this.api.getAll('/venta/transac/prgdesctodeposito_pendiente/depPendientesRefresh/' + this.userConn + "/" + this.cod_cliente_get + "/" + this.cliente_real_get + "/" + this.nit_get + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.pendientes = datav;
