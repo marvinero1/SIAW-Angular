@@ -34,6 +34,29 @@
           <thead>
             <tr>
               <td rowspan="2">
+                <mat-icon style="font-size: 21px !important;">signal_wifi_4_bar</mat-icon>
+              </td>
+              <ng-container *ngIf="statusInternet;else valid1">
+                <td>&nbsp; Conexión Internet: &nbsp; <strong>🟢</strong>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mat-icon (click)="verificarInternet();"
+                    style="font-size: 20px !important;float: right !important;">refresh
+                  </mat-icon>
+                </td>
+              </ng-container>
+              <ng-template #valid1>
+                <td>&nbsp; Conexión Internet: &nbsp; <strong>🔴</strong>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mat-icon (click)="verificarInternet();"
+                    style="font-size: 20px !important;float: right !important;">refresh
+                  </mat-icon>
+                </td>
+              </ng-template>
+            </tr>
+          </thead>
+        </table>
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
                 <mat-icon>calendar_today</mat-icon>
               </td>
               <td>&nbsp; Fecha Actual:</td>
@@ -83,12 +106,22 @@
           <thead>
             <tr>
               <td rowspan="2">
-                <mat-icon>settings_input_component</mat-icon>
+                <mat-icon>settings_input_svideo</mat-icon>
               </td>
               <td>&nbsp; Servidor:</td>
             </tr>
             <tr>
               <td>&nbsp; <strong>{{ agencia_storage }}</strong></td>
+            </tr>
+          </thead>
+        </table>
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon>data_usage</mat-icon>
+              </td>
+              <td>&nbsp; BD: <strong *ngIf="BD_storage">{{ BD_storage }}</strong></td>
             </tr>
           </thead>
         </table>
@@ -110,16 +143,7 @@
       <div class="user-panel mt-1 pb-2 mb-1 d-flex"></div>
       <li>
 
-        <table>
-          <thead>
-            <tr>
-              <td rowspan="2">
-                <mat-icon>data_usage</mat-icon>
-              </td>
-              <td>&nbsp; BD: <strong *ngIf="BD_storage">{{ BD_storage.bd }}</strong></td>
-            </tr>
-          </thead>
-        </table>
+
 
         <table>
           <thead>

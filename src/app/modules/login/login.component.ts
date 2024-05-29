@@ -73,6 +73,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public agencias: any = [];
   public connDBs: any = [];
   public IP_api: any = [];
+  public ip: any = [];
 
   public agencia = '';
   public login_form_complete_with_status: any = [];
@@ -92,7 +93,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router,
     private toastr: ToastrService, private api: ApiService, public log_module: LogService,
     private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,
-    public dialog: MatDialog,) {
+    public dialog: MatDialog) {
 
     this.BDForm = this.createFormBD();
     this.BDForm1 = this.createFormBD1();
@@ -274,11 +275,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       })
   }
 
-  atras() {
-    this.ip_servidores = true;
-    this.bd_datos = true;
-  }
-
   conectarBD(bd) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /login/authenticate/";
     return this.api.getAll("/Connection/connDBS/" + bd)
@@ -295,10 +291,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
           })
         },
-        complete: () => {
-
-        }
-      })
+        complete: () => { }
+      });
   }
 
   verificarUsuario() {
@@ -373,6 +367,11 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           }, 1000);
         }
       });
+  }
+
+  atras() {
+    this.ip_servidores = true;
+    this.bd_datos = true;
   }
 
   guardarToken(token) {

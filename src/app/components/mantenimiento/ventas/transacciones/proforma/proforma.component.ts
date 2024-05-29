@@ -432,6 +432,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.decimalPipe = new DecimalPipe('en-US');
     this.FormularioData = this.createForm();
 
+    console.log("Estado Internet: ", this.api.statusInternet);
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
@@ -2534,7 +2536,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //this.validarProformaAll();
     //this.totabilizar();
 
-
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (this.validacion_post && this.validacion_post_negativos) {
       let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
@@ -2653,8 +2654,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     console.log(total_proforma_concat);
 
-
-
     if (!this.FormularioData.valid) {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
@@ -2678,8 +2677,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
 
-
-
+    const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
+    if (this.api.statusInternet === false) {
+      if (confirmacionValidacionesInternet) {
+        this.detalleProformaCarritoTOExcel();
+      }
+    }
 
     // const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
     //   this.id_proforma_numero_id + "no esta confirmada. ¿Desea Confirmarla? ");
@@ -2704,8 +2707,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
 
-
-
     console.log("FORMULARIO VALIDADO");
     const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
@@ -2717,7 +2718,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         console.log(this.totabilizar_post);
 
         this.exportProformaExcel(this.totabilizar_post.codProf);
-
+        window.location.reload();
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
@@ -2725,6 +2726,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       error: (err) => {
         console.log(err, errorMessage);
         this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);

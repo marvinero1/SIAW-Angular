@@ -97,12 +97,16 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
           console.log(err, errorMessage);
         },
         complete: () => {
-          this.limite_text = this.credito_disponible.limite.text.slice(0, 3);
-          this.anticipo_text = this.credito_disponible.anticipo.text.slice(0, 3);
-          this.deuLoc_text = this.credito_disponible.deuLoc.text.slice(0, 3);
-          this.profApro_text = this.credito_disponible.profApro.text.slice(0, 3);
-          this.profApAgs_text = this.credito_disponible.profApro.text.slice(0, 3);
-          this.profAct_text = this.credito_disponible.profAct.text.slice(0, 3);
+          if (this.credito_disponible) {
+            this.limite_text = this.credito_disponible.limite?.text?.slice(0, 3) || '';
+            this.anticipo_text = this.credito_disponible.anticipo?.text?.slice(0, 3) || '';
+            this.deuLoc_text = this.credito_disponible.deuLoc?.text?.slice(0, 3) || '';
+            this.profApro_text = this.credito_disponible.profApro?.text?.slice(0, 3) || '';
+            this.profApAgs_text = this.credito_disponible.profApro?.text?.slice(0, 3) || '';
+            this.profAct_text = this.credito_disponible.profAct?.text?.slice(0, 3) || '';
+          } else {
+            console.error('Credito Disponible no está definido');
+          }
         }
       })
   }

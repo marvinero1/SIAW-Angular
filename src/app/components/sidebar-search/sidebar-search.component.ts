@@ -10,7 +10,8 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class SidebarSearchComponent implements OnInit {
 
-    menu:Menu[] = [
+    //este es el arrray del buscador de ventanas
+    menu: Menu[] = [
         {
             name: 'Dashboard',
             iconClasses: 'fas fa-tachometer-alt',
@@ -58,9 +59,9 @@ export class SidebarSearchComponent implements OnInit {
         },
         {
             name: 'Parametros de la Empresa',
-            iconClasses: 'fas fa-file', 
+            iconClasses: 'fas fa-file',
             path: ['/archivo/parametros_empresa']
-        }, 
+        },
         {
             name: 'Compradores',
             iconClasses: 'fas fa-file',
@@ -108,7 +109,7 @@ export class SidebarSearchComponent implements OnInit {
         },
         {
             name: 'Tipo Activo',
-            iconClasses: 'fas fa-file', 
+            iconClasses: 'fas fa-file',
             path: ['/blank']
         },
         {
@@ -126,16 +127,16 @@ export class SidebarSearchComponent implements OnInit {
             iconClasses: 'fas fa-file',
             path: ['/blank']
         },
-    
-    
+
+
         //inventario
         {
             name: 'Almacen',
             iconClasses: 'fas fa-file',
-            path: ['/admin/mante/almacen']   
+            path: ['/admin/mante/almacen']
         },
         {
-            name: 'Item', 
+            name: 'Item',
             iconClasses: 'fas fa-file',
             path: ['/mantenimiento/inventario/item']
         },
@@ -147,25 +148,25 @@ export class SidebarSearchComponent implements OnInit {
         {
             name: 'Grupo de Lineas para Descuento',
             iconClasses: 'fas fa-file',
-            path: ['/mantenimiento/inventario/grupoLineaDescuentos'] 
+            path: ['/mantenimiento/inventario/grupoLineaDescuentos']
         },
         {
             name: 'Grupo de Items Ventas',
             iconClasses: 'fas fa-file',
             path: ['/blank']
         },
-       
-    
-    
-    
+
+
+
+
         {
             name: 'Bancos',
             iconClasses: 'fas fa-file',
             path: ['/fondos/bancos']
         },
-    
-    
-        
+
+
+
         {
             name: 'Rosca',
             iconClasses: 'fas fa-file',
@@ -246,11 +247,11 @@ export class SidebarSearchComponent implements OnInit {
             iconClasses: 'fas fa-file',
             path: ['/mantenimiento/inventario/numeracionInventarioFisico']
         },
-    
-    
-    
-    
-    
+
+
+
+
+
         {
             name: 'Roles',
             iconClasses: 'fas fa-file',
@@ -292,30 +293,30 @@ export class SidebarSearchComponent implements OnInit {
 
     constructor() { }
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         this.filteredOptions = this.myControl.valueChanges.pipe(
             startWith(""),
             map(value => (typeof value === "string" ? value : value.name)),
             map(name => (name ? this._filter(name) : this.menu.slice()))
-        );  
+        );
     }
 
 
     displayFn(user?: Menu): string | undefined {
         console.log(user ? user.name : "");
         return user ? user.name : undefined;
-      }
-      returnFn(user?: Menu): string | undefined {
+    }
+    returnFn(user?: Menu): string | undefined {
         return user ? user.name : undefined;
-      }
-    
-      private _filter(name: string): Menu[] {
+    }
+
+    private _filter(name: string): Menu[] {
         const filterValue = name.toLowerCase();
-    
+
         return this.menu.filter(
-          option => option.name.toLowerCase().indexOf(filterValue) === 0
+            option => option.name.toLowerCase().indexOf(filterValue) === 0
         );
-      }
+    }
 
 
 }

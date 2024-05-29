@@ -12,11 +12,6 @@
               <div class="h1">SIAW</div>
               <div class="h1">Pertec S.R.L | Maestros en Pernos</div>
             </div>
-            <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader"
-              [fullScreen]="true">
-              <br>
-              <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
-            </ngx-spinner>
 
             <!-- /.login-card-body IP Y SERVIDORES -->
             <div *ngIf="ip_servidores">
@@ -24,19 +19,65 @@
                 <div class="input-group ">
                   <mat-form-field appearance="outline" class="login_input">
                     <mat-icon matPrefix style="padding: 8px 8px 8px 8px !important;margin-bottom: 16px !important;">
-                      vpn_lock</mat-icon>
+                      public </mat-icon>
                     <mat-select class="select1" placeholder="Area a conectar" formControlName="agencia"
                       style="padding-top: 7px !important;">
-                      <mat-option value="410"><i class="fa fa-building"></i>&nbsp; Oficina 410</mat-option>
-                      <mat-option value="311"><i class="fa fa-building"></i>&nbsp; Of. Central 310
-                        <strong>30.5</strong></mat-option>
-                      <mat-option value="310"><i class="fa fa-building"></i>&nbsp; Of. Central 310
-                        <strong>30.6</strong></mat-option>
-                      <mat-option value="810"><i class="fa fa-building"></i>&nbsp; Oficina 810</mat-option>
-                      <mat-option value="Loc"><i class="fa fa-globe"></i>&nbsp; <strong>Maquina Rodri</strong>
+                      <mat-option value="411">
+                        <mat-icon>account_balance</mat-icon> Oficina La Paz - <strong>410</strong>
+                      </mat-option>
+                      <!-- <mat-option value="311"><mat-icon>account_balance</mat-icon>&nbsp; Of. Central 310<strong>30.4</strong>
+                      </mat-option> -->
+                      <mat-option value="311">
+                        <mat-icon>account_balance</mat-icon> Oficina. Central Cbba - <strong>310</strong>
+                      </mat-option>
+                      <!-- <mat-option value="311"><mat-icon>account_balance</mat-icon>&nbsp; Of. Central 310<strong>30.6</strong>
+                      </mat-option> -->
+                      <mat-option value="811">
+                        <mat-icon>account_balance</mat-icon> Oficina Stcz - <strong>810</strong>
+                      </mat-option>
+
+                      <hr style="border-top: 1px solid #ffc107 !important;margin-top: 0.5rem !important;margin-bottom: 0.5rem
+                        !important;width: 300px;">
+
+                      <mat-option value="321">
+                        <mat-icon>store</mat-icon>AG 321 - <strong>192.168.32.68</strong>
+                      </mat-option>
+                      <mat-option value="331">
+                        <mat-icon>store</mat-icon>AG 331 - <strong>192.168.33.99</strong>
+                      </mat-option>
+                      <mat-option value="341">
+                        <mat-icon>store</mat-icon>AG 341 - <strong>192.168.34.99</strong>
+                      </mat-option>
+                      <mat-option value="421">
+                        <mat-icon>store</mat-icon>AG 421 - <strong>192.168.42.99</strong>
+                      </mat-option>
+                      <mat-option value="431">
+                        <mat-icon>store</mat-icon>AG 431 - <strong>192.168.43.99</strong>
+                      </mat-option>
+                      <mat-option value="441">
+                        <mat-icon>store</mat-icon>AG 441 - <strong>192.168.44.99</strong>
+                      </mat-option>
+                      <mat-option value="451">
+                        <mat-icon>store</mat-icon>AG 451 - <strong>192.168.45.99</strong>
+                      </mat-option>
+                      <mat-option value="821">
+                        <mat-icon>store</mat-icon>AG 821 - <strong>192.168.82.99</strong>
+                      </mat-option>
+                      <mat-option value="831">
+                        <mat-icon>store</mat-icon>AG 831 - <strong>192.168.83.99</strong>
                       </mat-option>
                       <mat-option value="841">
-                        <i class="fa fa-cart-plus" aria-hidden="true"></i>&nbsp;AG 841
+                        <mat-icon>store</mat-icon>AG 841 - <strong>192.168.84.99</strong>
+                      </mat-option>
+                      <mat-option value="851">
+                        <mat-icon>store</mat-icon>AG 851 - <strong>192.168.85.99</strong>
+                      </mat-option>
+
+                      <hr style="border-top: 1px solid #ffc107 !important;margin-top: 0.5rem !important;margin-bottom: 0.5rem
+                        !important;width: 300px;">
+
+                      <mat-option value="Loc">
+                        <mat-icon>vpn_lock</mat-icon>&nbsp; <strong>Maquina Rodri .240</strong>
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -222,6 +263,11 @@
         </div>
       </div>
     </div>
+
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#ffc107" type="pacman" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
 
     <div class="col-md-6" id="bg-cover-login">
       <div class="bgImgCoverPages"></div>

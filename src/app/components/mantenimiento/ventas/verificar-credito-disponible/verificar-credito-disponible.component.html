@@ -7,10 +7,10 @@
       </ng-container>
       <ng-template #valid>
         <div style="text-align: center !important;">
-          <span>El Credito del Cliente o Agrupacion en Moneda: {{ credito_disponible.titulo }}</span>
+          <span>{{ credito_disponible.data.titulo }}</span>
         </div>
         <div style="text-align: center !important;">
-          <span>{{ credito_disponible.subtitulo }}</span>
+          <span><strong>{{ credito_disponible.data.subtitulo }}</strong></span>
         </div>
         <hr>
 
@@ -18,44 +18,37 @@
           <div class="col-md" style="text-align: justify !important;">
             <table>
               <tr>
-                <td class="td1">{{ credito_disponible.limite.text }}</td>
-                <td class="th2">{{ credito_disponible.limite.sld | number: '1.2-2' }} {{ limite_text }}</td>
+                <td class="td1">{{ credito_disponible?.data.limite?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.limite?.sld | number: '1.2-2' }} {{ limite_text }}</td>
               </tr>
               <tr>
-                <td class="td1">{{ credito_disponible.anticipo.text }}</td>
-                <td class="th2">{{ credito_disponible.anticipo.sld | number: '1.2-2' }} {{ anticipo_text }}</td>
+                <td class="td1">{{ credito_disponible?.data.anticipo?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.anticipo?.sld | number: '1.2-2' }} {{ anticipo_text }}</td>
               </tr>
               <tr>
-                <td class="td1">{{ credito_disponible.deuLoc.text }}</td>
-                <td class="th2">{{ credito_disponible.deuLoc.sld | number: '1.2-2' }} {{ deuLoc_text }}</td>
-              </tr>
-              <!-- <tr>
-              <td class="td1">{{ credito_disponible.limite.text }}</td>
-              <td class="th2">{{ credito_disponible.limite.sld | number: '1.2-2'}}</td>
-            </tr> -->
-              <!-- <tr>
-              <td class="td1">{{ credito_disponible.anticipo.text }}</td>
-              <td class="th2">{{ credito_disponible.anticipo.sld | number: '1.2-2'}}</td>
-            </tr> -->
-              <tr>
-                <td class="td1">{{ credito_disponible.profApro.text }}</td>
-                <td class="th2">{{ credito_disponible.profApro.sld | number: '1.2-2'}} {{ profApro_text }}</td>
+                <td class="td1">{{ credito_disponible?.data.deuLoc?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.deuLoc?.sld | number: '1.2-2' }} {{ deuLoc_text }}</td>
               </tr>
               <tr>
-                <td class="td1">{{ credito_disponible.profApAgs.text }}</td>
-                <td class="th2">{{ credito_disponible.profApro.sld | number: '1.2-2' }} {{ profApAgs_text }}</td>
+                <td class="td1">{{ credito_disponible?.data.profApro?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.profApro?.sld | number: '1.2-2' }} {{ profApro_text }}</td>
               </tr>
               <tr>
-                <td class="td1">{{ credito_disponible.profAct.text }}</td>
-                <td class="th2">{{ credito_disponible.profAct.sld | number: '1.2-2'}} {{ profAct_text }}</td>
+                <td class="td1">{{ credito_disponible?.data.profApAgs?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.profApAgs?.sld | number: '1.2-2' }} {{ profApAgs_text }}
+                </td>
               </tr>
-
+              <tr>
+                <td class="td1">{{ credito_disponible?.data.profAct?.text }}</td>
+                <td class="th2">{{ credito_disponible?.data.profAct?.sld | number: '1.2-2' }} {{ profAct_text }}</td>
+              </tr>
               <hr style="width: 153% !important;">
               <tr>
-                <td>{{ credito_disponible.saldo.text }} </td>
-                <td>{{ credito_disponible.saldo.sld | number: '1.2-2' }} </td>
+                <td>{{ credito_disponible?.data.saldo?.text }} </td>
+                <td>{{ credito_disponible?.data.saldo?.sld | number: '1.2-2' }} </td>
               </tr>
             </table>
+
           </div>
         </div>
       </ng-template>

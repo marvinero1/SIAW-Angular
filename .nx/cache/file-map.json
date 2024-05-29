@@ -294,6 +294,10 @@
         "hash": "194586284091667653"
       },
       {
+        "file": "servidores/servidores.txt",
+        "hash": "1287114882255785883"
+      },
+      {
         "file": "src/app/app-routing.module.ts",
         "hash": "5628558463581636797"
       },
@@ -5267,7 +5271,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "2216447066001512762"
+        "hash": "18243729721561162082"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5311,7 +5315,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.html",
-        "hash": "7453982235787068616"
+        "hash": "17918429884993111531"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.scss",
@@ -5323,7 +5327,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.ts",
-        "hash": "6397857949201842418"
+        "hash": "2445323974996117917"
       },
       {
         "file": "src/app/components/menu-item/menu-item.animations.ts",
@@ -5443,7 +5447,7 @@
       },
       {
         "file": "src/app/components/sidebar-search/sidebar-search.component.html",
-        "hash": "9886629036571413160"
+        "hash": "5180995116942110661"
       },
       {
         "file": "src/app/components/sidebar-search/sidebar-search.component.scss",
@@ -5455,7 +5459,7 @@
       },
       {
         "file": "src/app/components/sidebar-search/sidebar-search.component.ts",
-        "hash": "13181727465649842491"
+        "hash": "3096610511739285082"
       },
       {
         "file": "src/app/guards/auth.guard.spec.ts",
@@ -5571,7 +5575,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.html",
-        "hash": "13040346852497161739"
+        "hash": "12073804475359238713"
       },
       {
         "file": "src/app/modules/login/login.component.scss",
@@ -5583,7 +5587,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.ts",
-        "hash": "12658332793437146220"
+        "hash": "8121185316076930708"
       },
       {
         "file": "src/app/modules/main/control-sidebar/control-sidebar.component.html",
@@ -5603,7 +5607,7 @@
       },
       {
         "file": "src/app/modules/main/footer/footer.component.html",
-        "hash": "6160504560676713274"
+        "hash": "5818082600038698105"
       },
       {
         "file": "src/app/modules/main/footer/footer.component.scss",
@@ -5803,7 +5807,7 @@
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.html",
-        "hash": "5341248203035348532"
+        "hash": "8006031863749700667"
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.scss",
@@ -5815,7 +5819,7 @@
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.ts",
-        "hash": "764627355610477964"
+        "hash": "7643548795781309821"
       },
       {
         "file": "src/app/modules/mantenimiento/mantenimiento.component.html",
@@ -6059,7 +6063,7 @@
       },
       {
         "file": "src/app/pages/dashboard/dashboard.component.html",
-        "hash": "11236759317104252976"
+        "hash": "2133021341917518225"
       },
       {
         "file": "src/app/pages/dashboard/dashboard.component.scss",
@@ -6223,7 +6227,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "6032310371052049811"
+        "hash": "17107670520197855758"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6399,7 +6403,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "9486881279913482093"
+        "hash": "11227135926606108217"
       },
       {
         "file": "src/test.ts",
