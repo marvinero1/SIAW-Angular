@@ -190,7 +190,7 @@
                   </span>
                 </div>
                 <ng-container>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario.codalmacen"
+                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen"
                     formControlName="codalmacen" id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)"
                     [class.is-invalid]="f.codalmacen.invalid && (f.codalmacen.dirty || f.codalmacen.touched)"
                     style="margin-left: 6px;" readonly>
@@ -2359,7 +2359,7 @@
         <!-- Saldos -->
         <div class="row pl-2">
           <input type="text" class="inputsSaldos inputsSaldos2"
-            value="{{ almacn_parame_usuario.codalmacen }}: {{ saldoItem | number:'1.2-2'}}"
+            value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
             style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
             placeholder="0.00">
 

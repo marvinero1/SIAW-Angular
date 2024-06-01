@@ -1,43 +1,33 @@
 <section class="content">
-  <div class="container-fluid">
-    <div class="p-2">
-      <span style="text-align: center;"><strong><u> OBSERVACIONES DE VALIDACIÓN </u></strong></span>
-      <div style="text-align: justify !important;">
+  <div>
+    <span style="text-align: center;"><strong><u> OBSERVACIONES DE VALIDACIÓN </u></strong></span>
+    <div class="text-right">
+      <mat-icon color="primary" (click)="close();">close</mat-icon>
+    </div>
 
+    <div style="text-align: justify !important;">
+      <!-- <div class="col-md-3 float-right"></div> -->
+      <div class="mensaje">
+        <table>
+          <tbody>
+            <tr *ngFor="let row of lines; let i = index">
+              <td>{{ i }}</td>
 
-        <div class="col-md-3 float-right">
-          <div class="text-right">
-            <mat-icon color="primary" (click)="close();">close</mat-icon>
-          </div>
-        </div>
+              <td>{{ row }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
+      <div class="mensaje">
+        <p>{{ obs_contenido_get }}</p>
+        <p>{{ more_messagess }}</p>
+      </div>
 
-
-        <div class="mensaje">
-          <table>
-            <tbody>
-              <tr *ngFor="let row of lines; let i = index">
-                <td>{{ i }}</td>
-
-                <td>{{ row }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-
-
-
-
-        <div class="mensaje">
-          <p>{{ obs_contenido_get }}</p>
-        </div>
-
-        <div style="text-align: center;">
-          <button mat-raised-button class="btn btn-outline-primary form-control-sm mr-1" type="button"
-            (click)="close();"><span> Aceptar </span>
-          </button>
-        </div>
+      <div style="text-align: center;">
+        <button mat-raised-button class="btn btn-outline-primary form-control-sm mr-1" type="button"
+          (click)="close();"><span> Aceptar </span>
+        </button>
       </div>
     </div>
   </div>

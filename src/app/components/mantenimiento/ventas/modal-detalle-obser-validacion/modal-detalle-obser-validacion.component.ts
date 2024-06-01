@@ -12,19 +12,23 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
   message: string;
   titulo: any = [];
   obs_contenido_get: any = [];
+  more_messagess: any = [];
   lines: any;
 
   constructor(public dialogRef: MatDialogRef<ModalDetalleObserValidacionComponent>,
     @Inject(MAT_DIALOG_DATA) public obs_titulo: any,
-    @Inject(MAT_DIALOG_DATA) public obs_contenido: any,) {
+    @Inject(MAT_DIALOG_DATA) public obs_contenido: any,
+    @Inject(MAT_DIALOG_DATA) public more_messages: any,
+  ) {
 
     this.data = this.processMessage(obs_titulo.obs_titulo);
     this.obs_contenido_get = obs_contenido.obs_contenido;
-
+    this.more_messagess = more_messages.more_messages
 
     console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
     console.log("mensaje procesado: ", this.data);
     console.log("contenido: ?", this.obs_contenido_get);
+    console.log("mas mensajes?: ", this.more_messagess)
   }
 
   ngOnInit() {
@@ -67,8 +71,6 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
 
     return [];
   }
-
-
 
   close() {
     this.dialogRef.close();

@@ -337,7 +337,7 @@ export class ApiService {
   verificarInternet() {
     this.spinner.show();
 
-    if (navigator.onLine) {
+    if (navigator.onLine === true) {
       this.statusInternet = true;
       console.log('Tienes conexión a Internet');
     } else {

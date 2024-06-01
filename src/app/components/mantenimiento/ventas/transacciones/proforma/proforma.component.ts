@@ -51,9 +51,6 @@ import { ModalDesctDepositoClienteComponent } from '../../modal-desct-deposito-c
 import { AnticipoProformaService } from '../../anticipos-proforma/servicio-anticipo-proforma/anticipo-proforma.service';
 import { CargarExcelComponent } from '../../cargar-excel/cargar-excel.component';
 
-import JSZip from 'jszip';
-import * as xmljs from 'xml-js';
-import { read, writeFileXLSX } from "xlsx";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
@@ -909,7 +906,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       tdc: [this.dataform.tdc],
       anulada: [false],
       aprobada: [false],
-      paraaprobar: [false],
+      paraaprobar: [true],
       transferida: [false],
       fechaaut: [fecha_actual],
       fecha_confirmada: [fecha_actual],
@@ -1186,7 +1183,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
+  almacn_parame_usuario_almacen: any;
   getAlmacenParamUsuario() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -1195,7 +1192,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.almacn_parame_usuario = datav;
           console.log('data', this.almacn_parame_usuario);
 
-          this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa
+          this.almacn_parame_usuario_almacen = datav.codalmacen;
+          this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa;
           this.cod_descuento_modal_codigo = this.almacn_parame_usuario.coddescuento;
         },
         error: (err: any) => {
@@ -1551,6 +1549,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   getSaldoEmpaquePesoAlmacenLocal(item) {
+    console.log(this.agencia_logueado);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/pesoEmpaqueSaldo/";
     return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage)
       .subscribe({
@@ -1571,7 +1570,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getsaldosCompleto/";
     return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.almacn_parame_usuario + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
+      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
@@ -1753,7 +1752,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       tipo_doc_cliente_casual: tipo_doc_cliente_parse_string,
       email_cliente_casual: this.email_cliente === undefined ? this.email : this.email_cliente,
       celular_cliente_casual: this.whatsapp_cliente === undefined ? " " : this.whatsapp_cliente,
-      codalmacen: this.almacn_parame_usuario,
+      codalmacen: this.agencia_logueado,
       codvendedor: this.cod_vendedor_cliente,
       usuarioreg: usuario_logueado,
     };
@@ -1911,7 +1910,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
       this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
-        "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+        "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
           next: (datav) => {
             //this.almacenes_saldos = datav;
@@ -2014,7 +2013,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("NO ENCONTRADO VALOR DE INPUT");
       this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + "0" + "/" + element.cantidad_pedida +
-        "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+        "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
           next: (datav) => {
             //this.almacenes_saldos = datav;
@@ -2054,7 +2053,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
       this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
         + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
-        "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.almacn_parame_usuario + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+        "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
         .subscribe({
           next: (datav) => {
             //this.almacenes_saldos = datav;
@@ -2481,6 +2480,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   getSaldoItemSeleccionadoDetalle(item) {
     console.log(item);
+    console.log(this.agencia_logueado);
+    let agencia = this.agencia_logueado;
     this.item_seleccionados_catalogo_matriz_codigo = item;
 
     let agencia_concat = "AG" + this.agencia_logueado;
@@ -2580,9 +2581,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
       ...item,
-      cantaut: 0,
-      totalaut: 0,
-      obs: "",
+      cantaut: item.cantidad_pedida,
+      totalaut: item.total,
+      obs: item.obs,
     }));
 
     this.submitted = true;
@@ -2677,8 +2678,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
 
-    const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
     if (this.api.statusInternet === false) {
+      const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
+
       if (confirmacionValidacionesInternet) {
         this.detalleProformaCarritoTOExcel();
       }
@@ -2708,7 +2710,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     console.log("FORMULARIO VALIDADO");
-    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false`;
+    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/true`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, total_proforma_concat).subscribe({
@@ -2718,7 +2720,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         console.log(this.totabilizar_post);
 
         this.exportProformaExcel(this.totabilizar_post.codProf);
-        window.location.reload();
+        //window.location.reload();
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
@@ -2872,7 +2874,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         codmoneda: element.codmoneda?.toString() || '',
         subtotaldoc: element.subtotal,
         totaldoc: element.total,
-        tipo_vta: element.tipopago?.toString() || '',
+        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
         codalmacen: element.codalmacen?.toString() || '',
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
@@ -3428,9 +3430,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   pinta_empaque_minimo: boolean = false;
   empaquesMinimosPrecioValidacion() {
-    let mesagge: string;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
-    return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.almacn_parame_usuario, this.array_items_carrito_y_f4_catalogo)
+    let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
+    return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -3454,7 +3455,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         },
 
         error: (err: any) => {
-          console.log(err, errorMessage);
+          console.log(err);
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -3662,7 +3663,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let array = {
       codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
-      codalmacen: this.almacn_parame_usuario,
+      codalmacen: Number(this.agencia_logueado),
       codcliente_real: this.codigo_cliente_catalogo_real,
       codcliente: this.codigo_cliente,
       opcion_nivel: this.complementopf.toString(),
@@ -3735,7 +3736,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/aplicar_dividir_items/";
     return this.api.create('/venta/transac/veproforma/aplicar_dividir_items/' + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado
-      + "/" + this.codigo_cliente + "/" + this.desct_nivel_actual + "/" + this.almacn_parame_usuario + "/" + this.complementopf + "/" + this.moneda_get_catalogo + "/" + fecha,
+      + "/" + this.codigo_cliente + "/" + this.desct_nivel_actual + "/" + this.agencia_logueado + "/" + this.complementopf + "/" + this.moneda_get_catalogo + "/" + fecha,
       this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
@@ -3778,7 +3779,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(this.array_items_carrito_y_f4_catalogo);
     this.restablecerContadorClickSugerirCantidad();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/sugerirCantDescEsp/";
-    return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.almacn_parame_usuario
+    return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal_codigo + "/" + this.agencia_logueado
       + "/" + this.BD_storage, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
@@ -4385,6 +4386,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    console.log(this.agencia_logueado);
     // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsComponent, {
       width: 'auto',
@@ -4395,7 +4397,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         descuento: this.cod_descuento_modal_codigo,
         codcliente: this.codigo_cliente,
         codcliente_real: this.codigo_cliente_catalogo_real,
-        codalmacen: this.almacn_parame_usuario,
+        codalmacen: this.agencia_logueado,
         // ACA ES IMPORTANTE PASARLO A STRING, PORQ LA BD ESPERA STRING NO BOOLEAN habilitar_desct_sgn_solicitud
         // ESTA VARIABLE ESTA EN EL TAB DESCUENTOS DE LINEA DE SOLICITUD
         desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
@@ -4416,7 +4418,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         tarifa: this.cod_precio_venta_modal_codigo,
         descuento: this.cod_descuento_modal_codigo,
         codcliente: this.codigo_cliente,
-        codalmacen: this.almacn_parame_usuario,
+        codalmacen: this.agencia_logueado,
         desc_linea_seg_solicitud: "",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -4535,6 +4537,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         cod_moneda: this.moneda_get_catalogo,
         totalProf: this.total,
         tipoPago: this.tipopago,
+        cliente_real: this.codigo_cliente_catalogo_real,
+        codmoneda: this.moneda_get_catalogo,
+        moneda: this.moneda_get,
+        id_prof: this.cod_id_tipo_modal_id,
+        numero_id_prof: this.id_proforma_numero_id,
       }
     });
   }
@@ -4619,7 +4626,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       data: {
         // descuento_nivel: this.desct_nivel_actual,
         cod_cliente: this.codigo_cliente,
-        // cod_almacen: this.almacn_parame_usuario,
+        // cod_almacen: this.agencia_logueado,
         // cod_moneda: this.moneda_get_catalogo,
         // desc_linea: this.habilitar_desct_sgn_solicitud,
         // items: this.array_items_carrito_y_f4_catalogo,
@@ -4637,7 +4644,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       data: {
         descuento_nivel: this.desct_nivel_actual,
         cod_cliente: this.codigo_cliente,
-        cod_almacen: this.almacn_parame_usuario,
+        cod_almacen: this.agencia_logueado,
         cod_moneda: this.moneda_get_catalogo,
         desc_linea: this.habilitar_desct_sgn_solicitud,
         items: this.array_items_carrito_y_f4_catalogo,

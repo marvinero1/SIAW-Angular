@@ -162,13 +162,11 @@
           <!-- Saldos -->
           <div class="row pl-4">
             <ng-container *ngIf="saldoItem > 0; else saldo">
-              <input type="text" class="inputsSaldos"
-                value="{{ almacn_parame_usuario.codalmacen }} : {{ saldoItem | number:'2.2-2'}}"
+              <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
                 style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
             </ng-container>
             <ng-template #saldo>
-              <input type="text" class="inputsSaldos"
-                value="{{ almacn_parame_usuario.codalmacen }} : {{ saldoItem | number:'2.2-2'}}"
+              <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
                 style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
             </ng-template>
 

@@ -4387,7 +4387,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "7130943895256108551"
+        "hash": "6925230350361242977"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4399,7 +4399,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "8280753205734577357"
+        "hash": "4987049305648158172"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4547,7 +4547,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.html",
-        "hash": "11639802451782656366"
+        "hash": "10388519274012920330"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.scss",
@@ -4559,7 +4559,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component.ts",
-        "hash": "5451274946049095390"
+        "hash": "12328538148698919650"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component.html",
@@ -5259,7 +5259,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "5956359376160306417"
+        "hash": "726754028815121310"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5271,7 +5271,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "18243729721561162082"
+        "hash": "5271930938510425229"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5315,7 +5315,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.html",
-        "hash": "17918429884993111531"
+        "hash": "12929317404980362229"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.scss",
@@ -5327,7 +5327,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.ts",
-        "hash": "2445323974996117917"
+        "hash": "4345779499140502953"
       },
       {
         "file": "src/app/components/menu-item/menu-item.animations.ts",
@@ -5443,7 +5443,7 @@
       },
       {
         "file": "src/app/components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component.ts",
-        "hash": "4119649057899816285"
+        "hash": "4247242101764098713"
       },
       {
         "file": "src/app/components/sidebar-search/sidebar-search.component.html",
@@ -5575,7 +5575,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.html",
-        "hash": "12073804475359238713"
+        "hash": "4714012459703892303"
       },
       {
         "file": "src/app/modules/login/login.component.scss",
@@ -6227,7 +6227,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "17107670520197855758"
+        "hash": "7813718401096632650"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6403,7 +6403,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "11227135926606108217"
+        "hash": "13334401845106877247"
       },
       {
         "file": "src/test.ts",

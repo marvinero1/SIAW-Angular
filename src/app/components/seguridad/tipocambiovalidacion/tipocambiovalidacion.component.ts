@@ -7,7 +7,6 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LogService } from '@services/log-service.service';
-
 @Component({
   selector: 'app-tipocambiovalidacion',
   templateUrl: './tipocambiovalidacion.component.html',
@@ -163,7 +162,7 @@ export class TipocambiovalidacionComponent implements OnInit {
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this._snackBar.open('Se guardo correctamente los tipos de cambio, con los ultimos valores!', '💲', {
             duration: 3500,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+
           });
 
           location.reload();
