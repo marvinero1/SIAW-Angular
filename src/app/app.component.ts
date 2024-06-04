@@ -1,33 +1,41 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { NavigationEnd, Router } from '@angular/router';
 import { SesionExpiradaComponent } from '@pages/errors/sesion-expirada/sesion-expirada.component';
 import { BnNgIdleService } from 'bn-ng-idle';
 
-@Component({ 
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  
-  count:number=0;
+export class AppComponent implements OnInit {
+
+  count: number = 0;
   counter = 0;
   fecha_actual = new Date();
   hora_actual = new Date();
-  IP_api:any=[];
+  IP_api: any = [];
 
+  isProformaPdfPage: boolean = false;
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  
-  constructor(private bnIdle: BnNgIdleService,public dialog: MatDialog){
+
+  constructor(private bnIdle: BnNgIdleService, public dialog: MatDialog, private router: Router) {
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());
   }
-  
+
   ngOnInit(): void {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isProformaPdfPage = event.urlAfterRedirects === '/proformaPDF';
+      }
+    });
+
     // 900 = 15 minute
     // 600 = 10 minute
     // 60 = 1 minute
@@ -53,11 +61,11 @@ export class AppComponent {
     // this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  abrirModalSesionExpirada(){
-    this.dialog.open(SesionExpiradaComponent,{
+  abrirModalSesionExpirada() {
+    this.dialog.open(SesionExpiradaComponent, {
       width: '450px',
       height: 'auto',
-      disableClose: true 
+      disableClose: true
     });
   }
 }

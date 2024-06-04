@@ -1,0 +1,205 @@
+<button (click)="generatePDF()">Generar PDF</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="content">
+
+  <div class="row">
+    <div class="col-sm-3 left">
+      <p> <strong>PERTEC S.R.L</strong></p>
+    </div>
+    <div class="col-sm center">
+      <p>5:09 pm</p>
+    </div>
+    <div class="col-sm-4 center">
+      <p>3/6/2024</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm left">
+      <p> <strong>N.I.T : 1023109029</strong></p>
+    </div>
+    <div class="col-sm right">
+      <p>NR: NR311-114927</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm left">
+      <p> <strong>Inicial: </strong> 17:09 3/6/2024</p>
+    </div>
+    <div class="col-sm">
+    </div>
+    <div class="col-sm right">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm left"></div>
+    <div class="col-sm center">
+      <p><strong>PROFORMA PF311-74 NO APROBADA</strong></p>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm left">
+      <p> <strong>Tipo de Pago:</strong> CREDITO</p>
+    </div>
+    <div class="col-sm center">
+      <p><strong>Almacen:</strong> 311</p>
+    </div>
+    <div class="col-sm right">Pagina 1 de 1</div>
+  </div>
+
+
+  <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
+
+  <div class="row">
+    <div class="col-md-5 left">
+      <p>300012 GONZALO CESAR MERINO QUIROGA PERTECO I</p>
+    </div>
+    <div class="col-sm-3 left">
+      <p><strong>Vendedor: </strong>31101</p>
+    </div>
+    <div class="col-sm-1 right">
+      <p><strong>Factor:</strong>1 BS</p>
+    </div>
+    <div class="col-sm-3 center" style="color: rgb(18, 18, 197);">
+      <p><strong>Fecha:</strong>4-06-2024</p>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-5 left">
+      <p>AV. PETROLERA N 2586 ESQ. MONTERO S/N (CERCADO-CBBA)</p>
+    </div>
+    <div class="col-sm center">
+
+    </div>
+    <div class="col-sm left">
+      <p><strong>Teléfono: </strong> ---</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5 left">
+      <p><strong>Punto: </strong> 304 CERCADO - CBBA</p>
+    </div>
+    <div class="col-sm center">
+
+    </div>
+    <div class="col-sm left">
+      <p><strong>Preparación: </strong>NORMAL</p>
+    </div>
+  </div>
+
+  <div class="table_component_detalle" role="region" tabindex="0">
+    <table class="table-detalle">
+      <thead>
+        <tr>
+          <th class="center">#</th>
+          <th class="center">CODIGO</th>
+          <th width="450" class="center">DESCRIPCION</th>
+          <th class="center">UD.</th>
+          <th class="center">CANT. PEDIDA</th>
+          <th class="center">TP</th>
+          <th class="center">PRECIO UNIT.</th>
+          <th class="right">TOTAL</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of [1,2,3,4,5,6]">
+          <td class="center">1</td>
+          <td class="center">01VVAM40 </td>
+          <td width="450">VAR ROS UNC 1/2 - 13</td>
+          <td class="center">PZ</td>
+          <td class="right">1.00</td>
+          <td class="right">3</td>
+          <td class="right">14.703</td>
+          <td class="right">14.70</td>
+        </tr>
+        <!-- fijo porq es el subtotal y total -->
+        <tr>
+          <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
+          <td width="450" class="right" style="border: 0px;">
+            <strong>Peso Total:</strong>
+          </td>
+          <td class="center" style="border: 0px;">0.71 <strong>Kgr</strong></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;">Sub Total</td>
+          <td class="right" style="border: 0px;">14.70</td>
+        </tr>
+        <tr>
+          <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
+          <td width="450" class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;">Recargos: </td>
+          <td class="right" style="border: 0px;">14.70</td>
+        </tr>
+        <tr>
+          <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
+          <td width="450" class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;">Descuentos: </td>
+          <td class="right" style="border: 0px;">14.70
+            <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
+            <!-- ACA LA SUMATORIA DE TODO EL TOTAL -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <p>SON: CATORCE 70/100 BOLIVIANOS </p>
+    <p>PRECIO DE LISTA = 16.80 | DESC PROMOCION = 0.00 | DESC ESPECIAL: 0 | DESC LINEA PMINORISTA = 2.10 | DESC EXTRAS:
+      0.00 | TTL DESCTOS: 2.10</p>
+  </div>
+
+  <table class="footer-table">
+    <tbody>
+      <tr>
+        <td class="center"><strong>Medio de Transporte</strong></td>
+        <td class="center"><strong>Flete Pagado Por</strong></td>
+        <td class="center"><strong>Dirección</strong></td>
+        <td class="center"><strong>Observación</strong></td>
+        <td class="center"><strong>Facturación</strong></td>
+        <td class="center"><strong>Fecha Inicial Fecha Autorizado</strong></td>
+      </tr>
+      <tr>
+        <td>FLOTA Nombre Transporte: ERETERER</td>
+        <td class="center">OTROS</td>
+        <td>AV. PETROLERA N2586 ESQ. MONTERO (CERCADO - CBBA - PCBA)</td>
+        <td>RECOGE CLIENTE-VENTA ENTREGA CREDITO</td>
+        <td>GONZALO CESAR MERINO QUIROS - 2914245013</td>
+        <td>
+          Fecha Inicial: 3/6/2024 17:09:00 <br>
+          Fecha Autorizado: 0/0/1900 00:00:00
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -111,6 +111,7 @@ import { SucursalComponent } from '@components/mantenimiento/contabilidad/sucurs
 import { PlanCuentaComponent } from '@components/mantenimiento/contabilidad/plan-cuenta/plan-cuenta.component';
 import { NumeracionComprobantesComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
+import { ProformaPdfComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -707,6 +708,11 @@ const routes: Routes = [
                 path: 'lab',
                 component: LaboratorioComponent
             },
+            {
+                path: 'proformaPDF',
+                component: ProformaPdfComponent
+            },
+
         ]
     },
     {
