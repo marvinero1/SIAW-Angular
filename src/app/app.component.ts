@@ -30,9 +30,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const proformaPdfRoutes = ['/proformaPDF', '/etiquetasItemsProforma', '/etiquetaImpresionProforma',/* otras rutas */];
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.isProformaPdfPage = event.urlAfterRedirects === '/proformaPDF';
+        this.isProformaPdfPage = proformaPdfRoutes.includes(event.urlAfterRedirects);
       }
     });
 

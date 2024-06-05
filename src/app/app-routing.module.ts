@@ -112,6 +112,8 @@ import { PlanCuentaComponent } from '@components/mantenimiento/contabilidad/plan
 import { NumeracionComprobantesComponent } from '@components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ProformaPdfComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component';
+import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component';
+import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -633,13 +635,14 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
 
+
+
+
+
+
+
+
             // fin mantenimiento/contabilidad
-
-
-
-
-
-
 
             {
                 path: 'usuario/parametros_usuarios',
@@ -708,10 +711,32 @@ const routes: Routes = [
                 path: 'lab',
                 component: LaboratorioComponent
             },
+
+
+
+
+
+
+
+
+
+
+
+
+            //PDF REPORTES DESDE ACA
             {
                 path: 'proformaPDF',
                 component: ProformaPdfComponent
             },
+            {
+                path: 'etiquetasItemsProforma',
+                component: EtiquetasItemProformaComponent
+            },
+            {
+                path: 'etiquetaImpresionProforma',
+                component: EtiquetaImpresionProformaComponent
+            },
+
 
         ]
     },

@@ -1,0 +1,33 @@
+#content {
+    margin: 20px;
+    padding: 20px;
+    padding-right: 75px !important;
+    font-family: 'Arial' !important;
+    width: 100%;
+}
+
+p{
+    font-size: 1.22rem !important;
+    margin-bottom: 0rem !important;
+    font-family: 'Arial' !important;
+}
+
+span{
+    font-size: 1.63rem !important;
+}
+
+.cabecera p{
+ font-family: 'Courier New' !important;
+}
+
+.center{
+    text-align: center !important;
+}
+
+.right{
+    text-align: right !important;
+}
+
+.left{
+    text-align: left !important;
+}
