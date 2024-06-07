@@ -1,9 +1,11 @@
 import { AppState } from '@/store/state';
 import { ToggleSidebarMenu } from '@/store/ui/actions';
 import { UiState } from '@/store/ui/state';
-import { Component, HostBinding, OnInit, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, HostBinding, OnInit, Renderer2 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { NombreVentanaService } from './footer/servicio-nombre-ventana/nombre-ventana.service';
 @Component({
 	selector: 'app-main',
 	templateUrl: './main.component.html',
@@ -11,9 +13,30 @@ import { Observable } from 'rxjs';
 })
 export class MainComponent implements OnInit {
 	@HostBinding('class') class = 'wrapper';
+
+	public titulo_agencia: any;
 	public ui: Observable<UiState>;
 
-	constructor(private renderer: Renderer2, private store: Store<AppState>) { }
+	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma'];
+	nombre_ventana: string;
+	isProformaPdfPage = false;
+
+	constructor(private renderer: Renderer2, private store: Store<AppState>, private router: Router,
+		public nombre_ventana_service: NombreVentanaService) {
+
+		this.titulo_agencia = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+		if (this.titulo_agencia === 'Loc') {
+			this.titulo_agencia = 'Maq. Rodri'
+		}
+
+		this.nombre_ventana_service.disparadorDeNombreVentana.subscribe(data => {
+			console.log("Recibiendo Ventana: ", data.nombre_vent);
+			this.nombre_ventana = data.nombre_vent;
+			this.isProformaPdfPage = this.proformaPdfRoutes.includes(this.nombre_ventana);
+
+			console.log("VALOR BOOL:", this.isProformaPdfPage)
+		});
+	}
 
 	ngOnInit() {
 		this.ui = this.store.select('ui');
@@ -82,6 +105,7 @@ export class MainComponent implements OnInit {
 			}
 		);
 	}
+
 
 	onToggleMenuSidebar() {
 		this.store.dispatch(new ToggleSidebarMenu());

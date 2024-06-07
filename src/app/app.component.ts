@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
 import { SesionExpiradaComponent } from '@pages/errors/sesion-expirada/sesion-expirada.component';
 import { BnNgIdleService } from 'bn-ng-idle';
 
@@ -10,7 +10,7 @@ import { BnNgIdleService } from 'bn-ng-idle';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   count: number = 0;
   counter = 0;
@@ -18,25 +18,16 @@ export class AppComponent implements OnInit {
   hora_actual = new Date();
   IP_api: any = [];
 
-  isProformaPdfPage: boolean = false;
-
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-
-  constructor(private bnIdle: BnNgIdleService, public dialog: MatDialog, private router: Router) {
+  constructor(private bnIdle: BnNgIdleService, public dialog: MatDialog) {
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());
   }
 
   ngOnInit(): void {
-    const proformaPdfRoutes = ['/proformaPDF', '/etiquetasItemsProforma', '/etiquetaImpresionProforma',/* otras rutas */];
 
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.isProformaPdfPage = proformaPdfRoutes.includes(event.urlAfterRedirects);
-      }
-    });
 
     // 900 = 15 minute
     // 600 = 10 minute

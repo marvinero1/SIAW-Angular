@@ -1,34 +1,29 @@
-<button (click)="generatePDF()">Generar PDF</button>
-
-
-
-
-
 <div id="content">
   <div class="row">
     <div class="col-sm-3 left">
-      <p style="font-size: 1.45rem !important;"><strong><u>PERTEC S.R.L</u></strong></p>
+      <p style=" font-family: 'Courier New' !important;font-size: 1.22rem !important;">
+        <strong><u>{{ data_cabecera_footer_proforma.empresa }}</u></strong></p>
     </div>
     <div class="col-sm right">
-      <p>5:09 pm</p>
+      <p class="pe">{{ data_cabecera_footer_proforma.hora_impresion }}</p>
     </div>
     <div class="col-sm-4 right">
-      <p>3/6/2024</p>
+      <p class="pe">{{ data_cabecera_footer_proforma.fecha_impresion }}</p>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm left">
-      <p> <strong>N.I.T :</strong> 1023109029</p>
+      <p class="pe"> <strong>N.I.T :</strong>{{ data_cabecera_footer_proforma.rnit }} </p>
     </div>
     <div class="col-sm right">
-      <p>NR: NR311-114927</p>
+      <p class="pe">NR: {{ data_cabecera_footer_proforma.rnota_remision }} </p>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm left">
-      <p> <strong>Inicial: </strong> 17:09 3/6/2024</p>
+      <p class="pe"><strong>Inicial: </strong> {{ data_cabecera_footer_proforma.inicial }}</p>
     </div>
     <div class="col-sm">
     </div>
@@ -37,19 +32,19 @@
   </div>
 
   <div class="row">
-    <div class="col-sm left"></div>
-    <div class="col-sm center">
-      <p><strong>PROFORMA PF311-74 NO APROBADA</strong></p>
+    <div class="col-sm-3 left"></div>
+    <div class="col-sm-6 center">
+      <p class="pe"><strong>{{ data_cabecera_footer_proforma.titulo }}</strong></p>
     </div>
-    <div class="col-sm"></div>
+    <div class="col-sm-3"></div>
   </div>
 
   <div class="row">
     <div class="col-sm left">
-      <p> <strong>Tipo de Pago:</strong> CREDITO</p>
+      <p class="pe"><strong>Tipo de Pago:</strong>{{ data_cabecera_footer_proforma.tipopago }} </p>
     </div>
     <div class="col-sm center">
-      <p><strong>Almacen:</strong> 311</p>
+      <p class="pe"><strong>Almacen:</strong> {{ data_cabecera_footer_proforma.codalmacen }}</p>
     </div>
     <div class="col-sm right">Pagina 1 de 1</div>
   </div>
@@ -58,65 +53,79 @@
   <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
 
   <div class="row">
-    <div class="col-md-5 left">
-      <p>300012 GONZALO CESAR MERINO QUIROGA PERTECO I</p>
+    <div class="col-sm left" style="word-wrap: break-word;padding-right: 0px !important">
+      <span class="pe">{{ data_cabecera_footer_proforma.rcodcliente }}
+        {{ data_cabecera_footer_proforma.rcliente }} {{ data_cabecera_footer_proforma.rnombre_comercial }}</span>
+
     </div>
-    <div class="col-sm-3 left">
-      <p><strong>Vendedor: </strong>31101</p>
+    <div class="col-sm-2 left" style="padding-left: 0px !important;">
+      <p class="pe"><strong>Vendedor: </strong>{{ data_cabecera_footer_proforma.rcodvendedor }}</p>
     </div>
     <div class="col-sm-2 left">
-      <p><strong>Factor:</strong>1.00 BS</p>
+      <p class="pe">
+        <strong>Factor:</strong>{{ data_cabecera_footer_proforma.rtdc }}{{ data_cabecera_footer_proforma.rmonedabase }}
+      </p>
     </div>
-    <div class="col-sm-2 center" style="color: rgb(18, 18, 197);">
-      <p><strong>Fecha:</strong>4/06/2024</p>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col-md-8 left">
-      <p>AV. PETROLERA N 2586 ESQ. MONTERO S/N (CERCADO-CBBA)</p>
-    </div>
-    <div class="col-sm-3 left">
-      <p><strong>Teléfono: </strong> ---</p>
+    <div class="col-sm-3 left" style="color: rgb(18, 18, 197);">
+      <p class="pe"><strong>Fecha:</strong>
+        {{ data_cabecera_footer_proforma.rfecha }}
+      </p>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-8 left">
-      <p><strong>Punto: </strong> 304 CERCADO - CBBA</p>
+    <div class="col-sm-7 left" style="padding-right: 0px !important;">
+      <span class="pe">{{ data_cabecera_footer_proforma.rdireccion }}</span>
+    </div>
+    <div class="col-sm-5 left">
+      <p class="pe"><strong>Teléfono: </strong> {{ data_cabecera_footer_proforma.rtelefono }}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-7 left">
+      <p class="pe"><strong>Punto: </strong> {{ data_cabecera_footer_proforma.rptoventa }}</p>
     </div>
 
-    <div class="col-sm left">
-      <p><strong>Preparación: </strong>NORMAL</p>
+    <div class="col-sm-5 left">
+      <p class="pe"><strong>Preparación: </strong>{{ data_cabecera_footer_proforma.rpreparacion }}</p>
     </div>
   </div>
 
   <div class="table_component_detalle" role="region" tabindex="0">
     <table class="table-detalle">
-      <thead>
+      <thead style="font-family: 'Courier New' !important;line-height: 1 !important;">
         <tr>
-          <th class="center">#</th>
-          <th class="center">CODIGO</th>
-          <th width="450" class="center">DESCRIPCION</th>
-          <th class="center">UD.</th>
-          <th class="center">CANT. PEDIDA</th>
-          <th class="center">TP</th>
-          <th class="center">PRECIO UNIT.</th>
-          <th class="right">TOTAL</th>
+          <th class="center" style="font-weight: 100 !important;">#</th>
+          <th class="center" style="font-weight: 100 !important;">CODIGO</th>
+          <th width="450" class="center" style="font-weight: 100 !important;">DESCRIPCION</th>
+          <th class="center" style="font-weight: 100 !important;">UD.</th>
+          <th class="center" style="font-weight: 100 !important;">CANT. PEDIDA</th>
+          <th class="center" style="font-weight: 100 !important;">TP</th>
+          <th class="center" style="font-weight: 100 !important;">PRECIO UNIT.</th>
+          <th class="right" style="font-weight: 100 !important;">TOTAL</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of [1,2,3,4,5,6]">
-          <td class="center">1</td>
-          <td class="center">01VVAM40 </td>
-          <td width="450">VAR ROS UNC 1/2 - 13</td>
-          <td class="center">PZ</td>
-          <td class="center">1.00</td>
-          <td class="right">3</td>
-          <td class="center">14.703</td>
-          <td class="right">14.70</td>
+        <tr *ngFor="let items of data_detalle_proforma">
+          <td class="center" style="font-size: 0.8rem !important;">1</td>
+          <td class="center" style="font-family: 'Courier New' !important;">&nbsp;{{items.coditem}}&nbsp;</td>
+          <td width="450">
+            <div class="row">
+              <div class="col-md-6 left" style="font-size: 0.8rem !important;">
+                {{items.descripcion}}
+              </div>
+              <div class="col-md-6 right" style="font-size: 0.8rem !important;">
+                {{items.medida}}
+              </div>
+            </div>
+          </td>
+          <td class="center" style="font-size: 0.8rem !important;">{{ items.udm }}</td>
+          <td class="right" style="font-size: 0.8rem !important;">{{ items.cantidad }}</td>
+          <td class="center" style="font-size: 0.8rem !important;">{{ items.codtarifa }}</td>
+          <td class="right" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub(items.precioneto) }}</td>
+          <td class="right" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub2Decimals(items.total)  }}</td>
         </tr>
 
         <tr class="tr_linea"></tr>
@@ -124,14 +133,18 @@
         <tr>
           <td style="border: 0px;"></td>
           <td style="border: 0px;"></td>
-          <td width="450" class="right" style="border: 0px;">
+          <td width="450" class="right" style="border: 0px;font-family: 'Courier New' !important;">
             <strong>Peso Total:</strong>
           </td>
-          <td class="center" style="border: 0px;">0.71 <strong>Kgr</strong></td>
+          <td width="250" class="left" style="border: 0px;font-size: 0.8rem !important;">
+            {{ data_cabecera_footer_proforma.rpesototal | number:'2.2-2' }}
+            <strong style="font-family: 'Courier New' !important;">Kgr</strong>
+          </td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
-          <td class="left" style="border: 0px;"><strong>Sub Total</strong> </td>
-          <td class="right" style="border: 0px;">14.70</td>
+          <td class="left" style="border: 0px;font-family: 'Courier New' !important;"><strong>Sub Total</strong> </td>
+          <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
+            {{ data_cabecera_footer_proforma.rsubtotal }}</td>
         </tr>
         <tr>
           <td style="border: 0px;"></td>
@@ -140,8 +153,9 @@
           <td class="left" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
-          <td class="left" style="border: 0px;"><strong>Recargos:</strong> </td>
-          <td class="right" style="border: 0px;">14.70</td>
+          <td class="left" style="border: 0px;font-family: 'Courier New' !important;"><strong>Recargos:</strong> </td>
+          <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
+            {{ data_cabecera_footer_proforma.rrecargos }}</td>
         </tr>
         <tr>
           <td style="border: 0px;"></td>
@@ -150,24 +164,34 @@
           <td class="left" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
-          <td class="left" style="border: 0px;"> <strong>Descuentos:</strong>
+          <td class="left" style="border: 0px;font-family: 'Courier New' !important;"> <strong>Descuentos:</strong>
             <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
           </td>
-
-          <td class="right" style="border: 0px;">14.70
-            <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
-
-            <!-- ACA LA SUMATORIA DE TODO EL TOTAL -->
+          <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
+            {{ data_cabecera_footer_proforma.rdescuentos }}
           </td>
+        </tr>
+
+        <tr>
+          <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
+          <td width="450" class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
+          <td class="left" style="border: 0px;">
+            <!-- <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;"> -->
+          </td>
+          <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
+            {{ data_cabecera_footer_proforma.rtotalimp }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div>
-    <p>SON: CATORCE 70/100 BOLIVIANOS </p>
-    <p>PRECIO DE LISTA = 16.80 | DESC PROMOCION = 0.00 | DESC ESPECIAL: 0 | DESC LINEA PMINORISTA = 2.10 | DESC EXTRAS:
-      0.00 | TTL DESCTOS: 2.10</p>
+    <p class="pe">{{ data_cabecera_footer_proforma.rtotalliteral }} </p>
+    <p class="pe">{{ data_cabecera_footer_proforma.rdsctosdescrip }} </p>
   </div>
   <br>
 
@@ -175,36 +199,35 @@
     <tbody>
       <tr>
         <td><strong>Medio de Transporte:</strong></td>
-        <td>FLOTA</td>
-      </tr>
-      <tr>
-        <td><strong>Nombre Transporte:</strong></td>
-        <td>NACER</td>
+        <td>{{ data_cabecera_footer_proforma.rtransporte }}</td>
       </tr>
       <tr>
         <td><strong>Flete Pagado Por: </strong></td>
-        <td>OTROS</td>
+        <td>{{ data_cabecera_footer_proforma.rfletepor }}</td>
       </tr>
       <tr>
         <td><strong>Dirección: </strong></td>
-        <td>AV. PETROLERA N2586 ESQ. MONTERO (CERCADO - CBBA - PCBA)</td>
+        <td>{{ data_cabecera_footer_proforma.rdireccion }}</td>
       </tr>
       <tr>
         <td><strong>Observación: </strong></td>
-        <td>RECOGE CLIENTE-VENTA ENTREGA CREDITO </td>
+        <td>{{ data_cabecera_footer_proforma.robs }}</td>
       </tr>
       <tr>
         <td><strong>Facturación: </strong></td>
-        <td>GONZALO CESAR MERINO QUIROS - 2914245013</td>
+        <td>{{ data_cabecera_footer_proforma.rfacturacion }}</td>
       </tr>
       <tr>
         <td><strong><u>Fecha Inicial: </u></strong></td>
-        <td>3/6/2024 17:09:00 </td>
+        <td>{{ data_cabecera_footer_proforma.crfecha_hr_inicial }} </td>
       </tr>
       <tr>
         <td><strong><u>Fecha Autorizado: </u></strong></td>
-        <td>0/0/1900 00:00:00</td>
+        <td>{{ data_cabecera_footer_proforma.crfecha_hr_autoriza }}</td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
+<mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>

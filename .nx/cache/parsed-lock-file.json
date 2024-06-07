@@ -3366,6 +3366,15 @@
         "hash": "sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw=="
       }
     },
+    "npm:@types/raf": {
+      "type": "npm",
+      "name": "npm:@types/raf",
+      "data": {
+        "version": "3.4.3",
+        "packageName": "@types/raf",
+        "hash": "sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw=="
+      }
+    },
     "npm:@types/range-parser": {
       "type": "npm",
       "name": "npm:@types/range-parser",
@@ -4176,6 +4185,15 @@
         "hash": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
       }
     },
+    "npm:atob": {
+      "type": "npm",
+      "name": "npm:atob",
+      "data": {
+        "version": "2.1.2",
+        "packageName": "atob",
+        "hash": "sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg=="
+      }
+    },
     "npm:autoprefixer": {
       "type": "npm",
       "name": "npm:autoprefixer",
@@ -4581,6 +4599,15 @@
         "hash": "sha512-+DX7UKKgw2GI6ucsSCRd19VHYrxf/8znRCLs1lQVVLxz+h7EqgIOxoHcJ0/QTaaNoR9Cwg78ydo6hXIasyd3LA=="
       }
     },
+    "npm:btoa": {
+      "type": "npm",
+      "name": "npm:btoa",
+      "data": {
+        "version": "1.2.1",
+        "packageName": "btoa",
+        "hash": "sha512-SB4/MIGlsiVkMcHmT+pSmIPoNDoHg+7cMzmt3Uxt628MTz2487DKSqK/fuhFBrkuqrYv5UCEnACpF4dTFNKc/g=="
+      }
+    },
     "npm:buffer": {
       "type": "npm",
       "name": "npm:buffer",
@@ -4696,6 +4723,15 @@
         "version": "1.0.30001434",
         "packageName": "caniuse-lite",
         "hash": "sha512-aOBHrLmTQw//WFa2rcF1If9fa3ypkC1wzqqiKHgfdrXTWcU8C4gKVZT77eQAPWN1APys3+uQ0Df07rKauXGEYA=="
+      }
+    },
+    "npm:canvg": {
+      "type": "npm",
+      "name": "npm:canvg",
+      "data": {
+        "version": "3.0.10",
+        "packageName": "canvg",
+        "hash": "sha512-qwR2FRNO9NlzTeKIPIKpnTY6fqwuYSequ8Ru8c0YkYU7U0oW+hLUvWadLvAu1Rl72OMNiFhoLu4f8eUjQ7l/+Q=="
       }
     },
     "npm:caseless": {
@@ -7119,6 +7155,15 @@
         "hash": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ=="
       }
     },
+    "npm:fflate": {
+      "type": "npm",
+      "name": "npm:fflate",
+      "data": {
+        "version": "0.4.8",
+        "packageName": "fflate",
+        "hash": "sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA=="
+      }
+    },
     "npm:figures": {
       "type": "npm",
       "name": "npm:figures",
@@ -8791,6 +8836,15 @@
         "version": "1.3.1",
         "packageName": "jsonparse",
         "hash": "sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg=="
+      }
+    },
+    "npm:jspdf": {
+      "type": "npm",
+      "name": "npm:jspdf",
+      "data": {
+        "version": "2.5.1",
+        "packageName": "jspdf",
+        "hash": "sha512-hXObxz7ZqoyhxET78+XR34Xu2qFGrJJ2I2bE5w4SM8eFaFEkW2xcGRVUss360fYelwRSid/jT078kbNvmoW0QA=="
       }
     },
     "npm:jsprim": {
@@ -10602,6 +10656,15 @@
         "hash": "sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA=="
       }
     },
+    "npm:raf": {
+      "type": "npm",
+      "name": "npm:raf",
+      "data": {
+        "version": "3.4.1",
+        "packageName": "raf",
+        "hash": "sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA=="
+      }
+    },
     "npm:randombytes": {
       "type": "npm",
       "name": "npm:randombytes",
@@ -10906,6 +10969,15 @@
         "version": "1.3.0",
         "packageName": "rfdc",
         "hash": "sha512-V2hovdzFbOi77/WajaSMXk2OLm+xNIeQdMMuB7icj7bk6zi2F8GGAxigcnDFpJHbNyNcgyJDiP+8nOrY5cZGrA=="
+      }
+    },
+    "npm:rgbcolor": {
+      "type": "npm",
+      "name": "npm:rgbcolor",
+      "data": {
+        "version": "1.0.1",
+        "packageName": "rgbcolor",
+        "hash": "sha512-9aZLIrhRaD97sgVhtJOW6ckOEh6/GnvQtdVNfdZ6s67+3/XwLS9lBcQYzEEhYVeUowN7pRzMLsyGhK2i/xvWbw=="
       }
     },
     "npm:run-async": {
@@ -11340,6 +11412,15 @@
         "hash": "sha512-/9HIEs1ZXGhSPE8X6Ccm7Nam1z8KcoCqPdI7ecm1N33EzAetWahvQWVqLZtaZQ+IDKX4IyA2o0gBzqIMkAagHQ=="
       }
     },
+    "npm:stackblur-canvas": {
+      "type": "npm",
+      "name": "npm:stackblur-canvas",
+      "data": {
+        "version": "2.7.0",
+        "packageName": "stackblur-canvas",
+        "hash": "sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ=="
+      }
+    },
     "npm:streamroller": {
       "type": "npm",
       "name": "npm:streamroller",
@@ -11419,6 +11500,15 @@
         "version": "1.0.0",
         "packageName": "supports-preserve-symlinks-flag",
         "hash": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
+      }
+    },
+    "npm:svg-pathdata": {
+      "type": "npm",
+      "name": "npm:svg-pathdata",
+      "data": {
+        "version": "6.0.3",
+        "packageName": "svg-pathdata",
+        "hash": "sha512-qsjeeq5YjBZ5eMdFuUa4ZosMLxgr5RZ+F+Y1OrDhuOCEInRMA3x74XdBtggJcj9kOeInz0WE+LgCPDkZFlBYJw=="
       }
     },
     "npm:sweetalert2": {
@@ -20432,6 +20522,46 @@
       "type": "static"
     },
     {
+      "source": "npm:canvg",
+      "target": "npm:@babel/runtime",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:@types/raf",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:core-js",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:raf",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:regenerator-runtime",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:rgbcolor",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:stackblur-canvas",
+      "type": "static"
+    },
+    {
+      "source": "npm:canvg",
+      "target": "npm:svg-pathdata",
+      "type": "static"
+    },
+    {
       "source": "npm:chalk",
       "target": "npm:ansi-styles",
       "type": "static"
@@ -23697,6 +23827,46 @@
       "type": "static"
     },
     {
+      "source": "npm:jspdf",
+      "target": "npm:@babel/runtime",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:atob",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:btoa",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:fflate",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:canvg",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:core-js",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:dompurify",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf",
+      "target": "npm:html2canvas",
+      "type": "static"
+    },
+    {
       "source": "npm:jsprim",
       "target": "npm:assert-plus",
       "type": "static"
@@ -26489,6 +26659,11 @@
     {
       "source": "npm:qs",
       "target": "npm:side-channel",
+      "type": "static"
+    },
+    {
+      "source": "npm:raf",
+      "target": "npm:performance-now",
       "type": "static"
     },
     {

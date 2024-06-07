@@ -139,7 +139,7 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
     if (this.credito_disponible.resultado_func === false) {
       const confirmacionValidacionesResultadoFunc: boolean = window.confirm(`¿Desea verificar y asignar SI ES POSIBLE un CREDITO TEMPORAL?`);
       if (confirmacionValidacionesResultadoFunc) {
-        this.aplicarCreditoTempAuto();
+        //this.aplicarCreditoTempAuto();
       }
     } else {
       this.close();

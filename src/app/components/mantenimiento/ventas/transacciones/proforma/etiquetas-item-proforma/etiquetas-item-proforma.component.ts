@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ImpresionProformaEtiquetaItemsService } from '@components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service';
+import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
+import { ApiService } from '@services/api.service';
 import html2canvas from 'html2canvas';
-import * as pdfMake from 'pdfmake/build/pdfmake';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-etiquetas-item-proforma',
@@ -9,31 +12,102 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 })
 export class EtiquetasItemProformaComponent implements OnInit {
 
-  constructor() { }
+  codigo_get_proforma: any;
+  ventana: string = "etiquetasItemsProforma";
+
+  userConn: any;
+  BD_storage: any;
+  usuarioLogueado: any;
+  agencia_logueado: any;
+
+  data_cabecera_footer_proforma: any = [];
+  data_detalle_proforma: any = [];
+
+  constructor(public nombre_ventana_service: NombreVentanaService, private impresionesProforma: ImpresionProformaEtiquetaItemsService,
+    private api: ApiService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+
+    this.mandarNombre();
+    this.getDataPDF();
+  }
 
   ngOnInit() {
+    this.impresionesProforma.disparadorDeCodigoProforma.subscribe(data => {
+      console.log("Recibiendo Codigo Proforma Guardad: ", data);
+      this.codigo_get_proforma = data.codigo_proforma;
+    });
+  }
+
+  getDataPDF() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
+      .subscribe({
+        next: (datav) => {
+          console.log("DATA DEL PDF: ", datav);
+          this.data_cabecera_footer_proforma = datav.docveprofCab
+          //datav.dtveproforma1 DETALLE
+          this.data_detalle_proforma = datav.dtveproforma1;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          // this.printFunction();
+        }
+      })
   }
 
   generatePDF() {
     const content = document.getElementById('content');
-    html2canvas(content, { scale: 4 }).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdfWidth = 216; // Letter size width in mm
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    if (content) {
+      // Ajustar la escala para mejorar la calidad de la imagen
+      html2canvas(content, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
 
-      const documentDefinition = {
-        pageSize: { width: pdfWidth, height: 279 },
-        pageMargins: [5, 5, 5, 5], // No margins
-        content: [
-          {
-            image: imgData,
-            width: pdfWidth,
-            height: pdfHeight
-          }
-        ]
-      };
+        // Crear un nuevo documento PDF
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'letter' // Formato Carta (Letter)
+        });
 
-      pdfMake.createPdf(documentDefinition).download('documento.pdf');
+        // Calcular el ancho y alto del PDF con márgenes
+        const margin = 10;
+        const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+        const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
+
+        // Obtener el ancho y alto de la imagen en el canvas
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        // Calcular la relación de aspecto de la imagen
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+
+        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
+        const newWidth = imgWidth * ratio;
+        const newHeight = imgHeight * ratio;
+
+        // Agregar la imagen al PDF con márgenes
+        pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
+
+        // Descargar el PDF
+        pdf.save(this.data_cabecera_footer_proforma.hora_impresion + '.pdf');
+      });
+    }
+  }
+
+  mandarNombre() {
+    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
+      nombre_vent: this.ventana,
     });
+  }
+
+  printFunction() {
+    window.print();
   }
 }

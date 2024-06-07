@@ -1,14 +1,17 @@
-<app-header style="z-index: 10 !important;padding:0.2rem 0.2rem !important;"></app-header>
+<title>{{ titulo_agencia }} - Pertec SIAW </title>
 
-<app-menu-sidebar class="bck-azul" style="z-index: 10 !important;"></app-menu-sidebar>
-  
-<div class="content-wrapper">
-    <router-outlet></router-outlet>
+<div *ngIf="!isProformaPdfPage">
+  <app-header style="z-index: 10 !important; padding: 0.2rem 0.2rem !important;"></app-header>
+  <app-menu-sidebar class="bck-azul" style="z-index: 10 !important;"></app-menu-sidebar>
 </div>
-<style>
-   
-</style>
 
-<app-footer></app-footer>
-<app-control-sidebar></app-control-sidebar>
+<div class="content-wrapper">
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="!isProformaPdfPage">
+  <app-footer></app-footer>
+  <app-control-sidebar></app-control-sidebar>
+</div>
+
 <!-- <div id="sidebar-overlay" (click)="onToggleMenuSidebar()"></div> -->

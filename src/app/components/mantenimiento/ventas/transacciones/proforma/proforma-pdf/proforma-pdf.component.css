@@ -1,23 +1,26 @@
 #content {
-    margin: 20px;
-    padding: 20px;
-    padding-right: 75px !important;
+     /* margin: 10px; */
+    /*padding: 10px;*/
+    /* padding-right: 65px !important;  */
     font-family: 'Courier New' !important;
-    width: 100%;
+    /* width: 100%; */
+    size: auto;
+    margin: 10mm; /* Márgenes de 4mm */
 }
 
-p{
-    font-size: 1.40rem !important;
+.pe{
+    font-size: 0.9rem !important;
     margin-bottom: 0rem !important;
     font-family: 'Courier New' !important;
 }
 
 table{
     width: 100% !important;
+
 }
 .header-table td {
     width: 41% !important;
-    font-size: 1.26rem !important;
+    font-size: 0.91rem !important;
 }
 .header-table{
     width: 100% !important;
@@ -36,7 +39,10 @@ table{
 
 
 
-
+row{
+    margin-right: 0px;
+    margin-left: 0px;
+}
 
 
 
@@ -52,7 +58,9 @@ table{
 
 .table-detalle td{
     /* tamanio de letra del detalle */
-    font-size: 1.10rem !important;
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1 !important;
 }
 
 .table_component_detalle {
@@ -94,9 +102,15 @@ table{
 
 .footer-table {
     width: 100% !important;
+    font-family: 'Courier New' !important;
 }
 
 .footer-table td{
     /* border: 1px solid #c5c2c2; */
-    font-size: 1.10rem !important;
+    font-size: 0.90rem !important;
+}
+
+p{
+margin-top: 0 !important;   
+ margin-bottom: 0rem !important;
 }

@@ -54,6 +54,9 @@ import { CargarExcelComponent } from '../../cargar-excel/cargar-excel.component'
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
+import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-botones-impresion.component';
+import { Router } from '@angular/router';
+import { ImpresionProformaEtiquetaItemsService } from '../../servicio-impresion-proforma/impresion-proforma-etiqueta-items.service';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -253,6 +256,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
   public venta_cliente_oficina: boolean = false;
+  public cliente_habilitado_get: any;
 
   public transporte: any;
   public medio_transporte: any;
@@ -274,7 +278,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public selected: string = "Credito";
   public tipopago: any;
   public preparacion: any;
-  public complementopf: any = 0;
+  public complementopf: any;
   public disable_input_create: boolean;
   public isDisabled: boolean = true;
   public total_desct_precio: boolean = false;
@@ -325,7 +329,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public item_obtenido: any = [];
   porcen_item: string;
   valor_nit: any;
-
+  almacn_parame_usuario_almacen: any;
 
   // arraySacarTotal
   veproforma: any = [];
@@ -365,7 +369,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public maximo_validacion: any = [];
   public tabla_anticipos: any = [];
 
-  public tipo_complementopf_input: number = 0;
+  public tipo_complementopf_input: any = 3;
 
   // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
@@ -429,6 +433,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.decimalPipe = new DecimalPipe('en-US');
     this.FormularioData = this.createForm();
 
+
     console.log("Estado Internet: ", this.api.statusInternet);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -446,6 +451,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.disableSelect.value = false;
     console.log("Valor del Disabled:", this.disableSelect.value);
+
+
   }
 
   ngOnInit() {
@@ -807,8 +814,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getDescuento();
     this.tablaInicializada();
     this.getIDScomplementarProforma();
-
-
   }
 
   onNoClick(event: Event): void {
@@ -949,7 +954,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
       nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? " " : this.dataform.nroidpf_complemento,//aca es para complemento de proforma
-      tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
+      tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelect.value = false }], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1045,8 +1050,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         estado_doc_vta: "NUEVO",
         codtarifadefecto: "1",
         desctoespecial: "0",
-        cliente_habilitado: "",
-        totdesctos_extras: 0,
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
         totrecargos: 0,
         idpf_complemento: "",
         nroidpf_complemento: " ",
@@ -1183,7 +1188,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-  almacn_parame_usuario_almacen: any;
+
   getAlmacenParamUsuario() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -1343,9 +1348,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.complemento_ci = this.cliente.cliente.complemento_ci
           this.nombre_comercial_razon_social = this.nombre_comercial_cliente;
           this.tipo_doc_cliente = this.cliente.cliente.tipo_docid;
-          this.nit_cliente = this.cliente.cliente.nit;
+          this.nit_cliente = this.cliente.cliente.nit_fact;
           this.email_cliente = this.cliente.cliente.email;
           this.cliente_casual = this.cliente.cliente.casual;
+          this.cliente_habilitado_get = this.cliente.cliente.habilitado;
+          this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial;
 
           this.cod_vendedor_cliente = this.cliente.cliente.codvendedor;
           this.moneda = this.cliente.cliente.moneda;
@@ -2425,8 +2432,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         estado_doc_vta: "NUEVO",
         codtarifadefecto: "1",
         desctoespecial: "0",
-        cliente_habilitado: "",
-        totdesctos_extras: 0,
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
         totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
@@ -2534,7 +2541,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   //accion de btn grabar
   submitData() {
     this.spinner.show();
-    //this.validarProformaAll();
     //this.totabilizar();
 
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
@@ -2719,7 +2725,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.totabilizar_post = datav;
         console.log(this.totabilizar_post);
 
-        this.exportProformaExcel(this.totabilizar_post.codProf);
+        this.exportProformaZIP(this.totabilizar_post.codProf);
+        this.modalBtnImpresiones(this.totabilizar_post.codProf);
+
         //window.location.reload();
         setTimeout(() => {
           this.spinner.hide();
@@ -2860,6 +2868,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
+    let tipo_complemento
+    console.log(this.tipo_complementopf_input);
+    switch (this.tipo_complementopf_input) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
+
     this.valor_formulario.map((element: any) => {
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
@@ -2870,7 +2892,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         nitfactura: element.nit?.toString() || '',
         tipo_doc_id: element.tipo_docid?.toString() || '',
         codcliente_real: element.codcliente_real?.toString() || '',
-        nomcliente_real: element.nomcliente_real?.toString() || '',
+        nomcliente_real: this.nombre_cliente_catalogo_real,
         codmoneda: element.codmoneda?.toString() || '',
         subtotaldoc: element.subtotal,
         totaldoc: element.total,
@@ -2894,7 +2916,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
@@ -2911,14 +2933,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         estado_doc_vta: "NUEVO",
         codtarifadefecto: "1",
         desctoespecial: "0",
-        cliente_habilitado: "",
-        totdesctos_extras: 0,
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
         totrecargos: 0,
         idpf_complemento: "",
         nroidpf_complemento: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: this.fecha_actual,
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -2928,10 +2950,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: [],
-      detalleDescuentos: [],
+      detalleDescuentos: this.array_de_descuentos_ya_agregados,
       detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: [],
+      detalleRecargos: this.recargo_de_recargos,
     }
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
@@ -3049,6 +3071,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
+    let tipo_complemento
+    console.log(this.complementopf);
+    switch (this.complementopf) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
+
     this.valor_formulario.map((element: any) => {
       return this.valor_formulario_negativos = {
         coddocumento: 0,
@@ -3083,7 +3119,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
@@ -3100,8 +3136,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         estado_doc_vta: "NUEVO",
         codtarifadefecto: "1",
         desctoespecial: "0",
-        cliente_habilitado: "",
-        totdesctos_extras: 0,
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
         totrecargos: 0,
         idpf_complemento: "",
         nroidpf_complemento: "",
@@ -3219,6 +3255,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
+    let tipo_complemento
+    console.log(this.complementopf);
+    switch (this.complementopf) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
+
     this.valor_formulario.map((element: any) => {
       return this.validacion_post_max_ventas = {
         coddocumento: 0,
@@ -3253,7 +3303,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
@@ -3270,8 +3320,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         estado_doc_vta: "NUEVO",
         codtarifadefecto: "1",
         desctoespecial: "0",
-        cliente_habilitado: "",
-        totdesctos_extras: 0,
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
         totrecargos: 0,
         idpf_complemento: "",
         nroidpf_complemento: "",
@@ -4076,7 +4126,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   // Exportar a EXCEL
-  exportProformaExcel(cod_proforma: any) {
+  exportProformaZIP(cod_proforma: any) {
     const resultado: boolean = window.confirm("Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id
       + " con Exito. ¿Desea Exportar el Documento? ");
     if (resultado) {
@@ -4140,27 +4190,30 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(this.array_items_carrito_y_f4_catalogo);
     // console.log([this.array_items_carrito_y_f4_catalogo].length);
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
-
+    const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
     const resultado: boolean = window.confirm("¿ Desea Exportar El Detalle Del Documento a Excel ?");
+
     if (resultado) {
       // Convertir los datos a una hoja de cálculo
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
       const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+
       // Generar el archivo Excel
       const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
 
       // Guardar el archivo
-      this.saveAsExcelFile(excelBuffer, 'DetalleProforma');
+      this.saveAsExcelFile(excelBuffer, nombre_archivo);
     } else {
       console.log("El usuario hizo clic en Cancelar.");
     }
   }
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
+    const cod_clien = this.codigo_cliente;
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const data: Blob = new Blob([buffer], { type: EXCEL_TYPE });
     const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
-    const fullFileName = `${timestamp}_${fileName}.xlsx`;
+    const fullFileName = `${timestamp}_${fileName}_${cod_clien}.xlsx`;
 
     saveAs(data, fullFileName);
   }
@@ -4832,6 +4885,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+  modalBtnImpresiones(codigo_proforma_submitdata) {
+    this.dialog.open(ModalBotonesImpresionComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: {
+        codigo_proforma: codigo_proforma_submitdata
+      },
+    });
+  }
 
 
 

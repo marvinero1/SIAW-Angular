@@ -1,23 +1,23 @@
 #content {
-    margin: 20px;
-    padding: 20px;
-    padding-right: 75px !important;
+    margin: 18px;
+    padding: 18px;
+    /* padding-right: 75px !important; */
     font-family: 'Arial' !important;
-    width: 100%;
 }
 
 p{
-    font-size: 1.22rem !important;
+    font-size: 1.05rem !important;
     margin-bottom: 0rem !important;
     font-family: 'Arial' !important;
 }
 
 span{
-    font-size: 1.63rem !important;
+    font-size: 1.40rem !important;
 }
 
 .cabecera p{
  font-family: 'Courier New' !important;
+  font-size: 0.91rem !important;
 }
 
 .center{
@@ -31,3 +31,9 @@ span{
 .left{
     text-align: left !important;
 }
+
+.col-3{
+    flex: 0 0 25% !important;
+    max-width: 23% !important;
+}
+

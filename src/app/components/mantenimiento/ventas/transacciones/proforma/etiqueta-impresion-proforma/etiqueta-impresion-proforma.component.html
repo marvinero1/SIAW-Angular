@@ -1,25 +1,25 @@
-<button (click)="generatePDF()">Generar PDF</button>
-
-
 <div id="content">
-
-
-
   <div class="row">
-    <div class="col-md-3 p-1" style="border: 5px solid black; width: 250px;height: auto;margin-right: 5px;text-align: center;margin-bottom:
-      4px;word-wrap: break-word;">
-      <p><strong>GONZALO CESAR MERINO QUIROZ</strong></p><br>
-
-      <span><strong>AV. PETROLERA N 2586 ESQ. MENTERO S/N (CERCADO-CBBA)</strong></span>
-
+    <div class="col-md-4 p-1 content-box">
+      <p class="pe"><strong>{{ data_etiqueta.linea1 }}</strong></p><br>
+      <span class="espan"><strong>{{ data_etiqueta.representante }}</strong></span>
       <div style="text-align: left !important;">
-        <p><strong>TEL: 4217993</strong></p>
-        <p><strong>CEL:77925000</strong></p>
-        <p><strong>CBA PCBA CERCADO - CBBA</strong></p>
-        <p><strong>lINEA SINDICAL FLOTA UNIFICADO</strong></p>
+        <div class="row">
+          <div class="col">
+            <p class="pe"><strong>TEL: {{ data_etiqueta.telefono }}</strong></p>
+            <p class="pe"><strong>CEL: {{ data_etiqueta.celular }}</strong></p>
+          </div>
+          <div class="col">
+            <div style="border: 4px solid black; height: 50px !important;"></div>
+          </div>
+        </div>
+        <p class="pe"><strong>{{ data_etiqueta.ciudad }}</strong></p>
       </div>
-
-
+      <div class="row p-2">
+        <strong>{{ data_etiqueta.nom_factura }}</strong>
+      </div>
     </div>
   </div>
+  <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
+  <mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>
 </div>

@@ -27,6 +27,7 @@
     "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
     "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "luxon": "3.0.3",
     "moment": "^2.29.4",
@@ -253,7 +254,7 @@
       },
       {
         "file": "angular.json",
-        "hash": "8767603112080395479"
+        "hash": "3692600519621476282"
       },
       {
         "file": "e2e/protractor.conf.js",
@@ -285,11 +286,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "11104974031377623008"
+        "hash": "16302520982055220004"
       },
       {
         "file": "package.json",
-        "hash": "10468877485930959807"
+        "hash": "12772493103983788250"
       },
       {
         "file": "proxy.conf.json",
@@ -317,11 +318,11 @@
       },
       {
         "file": "src/app/app.component.ts",
-        "hash": "17473679917459690426"
+        "hash": "7493917406939449343"
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "10805372223065822590"
+        "hash": "15741072765742870117"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4389,11 +4390,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "6925230350361242977"
+        "hash": "6545071907219458195"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
-        "hash": "6306882935948130700"
+        "hash": "16423876052801016068"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.spec.ts",
@@ -5052,6 +5053,14 @@
         "hash": "8680404415462685865"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service.spec.ts",
+        "hash": "16740919619778520596"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service.ts",
+        "hash": "14774281057217806078"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/serviciocliente/serviciocliente.service.spec.ts",
         "hash": "7370890498642817338"
       },
@@ -5260,12 +5269,60 @@
         "hash": "3337746005075703778"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.css",
+        "hash": "9965119520331338384"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.html",
+        "hash": "1798100179215910053"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.spec.ts",
+        "hash": "5709840801697145296"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.ts",
+        "hash": "10358731255723807924"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.css",
+        "hash": "8661727647138354637"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.html",
+        "hash": "12250396958873856704"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.spec.ts",
+        "hash": "6858244166239858862"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.ts",
+        "hash": "9687285084280155800"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.html",
+        "hash": "1503103854938877400"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.spec.ts",
+        "hash": "6086622061195713776"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.ts",
+        "hash": "12949895274556910845"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.css",
-        "hash": "7147981608785956541"
+        "hash": "6024771429543230409"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.html",
-        "hash": "4433716504137214406"
+        "hash": "6418443384860737319"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.spec.ts",
@@ -5273,11 +5330,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.ts",
-        "hash": "4505252839956893558"
+        "hash": "18218325037477981734"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "726754028815121310"
+        "hash": "18406694337865686001"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5289,7 +5346,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "5271930938510425229"
+        "hash": "12522341929816365581"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5345,7 +5402,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/verificar-credito-disponible/verificar-credito-disponible.component.ts",
-        "hash": "4345779499140502953"
+        "hash": "12371641841303790132"
       },
       {
         "file": "src/app/components/menu-item/menu-item.animations.ts",
@@ -5809,7 +5866,7 @@
       },
       {
         "file": "src/app/modules/main/main.component.html",
-        "hash": "7249684928490034179"
+        "hash": "11327475486757036835"
       },
       {
         "file": "src/app/modules/main/main.component.scss",
@@ -5821,11 +5878,11 @@
       },
       {
         "file": "src/app/modules/main/main.component.ts",
-        "hash": "9110547809006348293"
+        "hash": "4286527042210965577"
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.html",
-        "hash": "8006031863749700667"
+        "hash": "16791381189655745458"
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.scss",
@@ -5837,7 +5894,7 @@
       },
       {
         "file": "src/app/modules/main/menu-sidebar/menu-sidebar.component.ts",
-        "hash": "7643548795781309821"
+        "hash": "16596364851461856539"
       },
       {
         "file": "src/app/modules/mantenimiento/mantenimiento.component.html",
@@ -6245,7 +6302,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "7813718401096632650"
+        "hash": "1378476826421802797"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6393,11 +6450,11 @@
       },
       {
         "file": "src/environments/environment.prod.ts",
-        "hash": "16961550095598814730"
+        "hash": "16270878011066952282"
       },
       {
         "file": "src/environments/environment.ts",
-        "hash": "10376004015019092048"
+        "hash": "5285328233302061532"
       },
       {
         "file": "src/favicon.ico",
@@ -6405,7 +6462,7 @@
       },
       {
         "file": "src/index.html",
-        "hash": "17211463461353668809"
+        "hash": "14873314911756909197"
       },
       {
         "file": "src/main.ts",
@@ -6442,38 +6499,6 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.spec.ts",
-        "hash": "6858244166239858862"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.html",
-        "hash": "1242576312285659533"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.ts",
-        "hash": "11153618724271104856"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.css",
-        "hash": "3141849195567269194"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.spec.ts",
-        "hash": "5709840801697145296"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.ts",
-        "hash": "9707444185155829416"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.html",
-        "hash": "4238451827691067740"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.css",
-        "hash": "17036677438039739691"
       }
     ],
     "projectFileMap": {}

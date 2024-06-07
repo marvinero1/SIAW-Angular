@@ -40,7 +40,8 @@ export class ApiService {
   public periodo_abierto;
   public statusInternet: boolean = true;
 
-  private readonly API_URL = 'https://192.168.31.240/API_SIAW/api';
+  private readonly API_URL = 'http://192.168.30.6/API_SIAW/api';
+  // private readonly API_URL = 'https://192.168.31.240/API_SIAW/api';
 
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
@@ -65,6 +66,15 @@ export class ApiService {
 
   getAll(url: string): Observable<any> {
     return this.http.get<object[]>(this.API_URL + url).pipe(
+      catchError((err) => {
+        console.log('getAll Servicio')
+        return throwError(() => new Error());
+      })
+    )
+  }
+
+  getSimple(url: string): Observable<any> {
+    return this.http.get<object[]>(url).pipe(
       catchError((err) => {
         console.log('getAll Servicio')
         return throwError(() => new Error());

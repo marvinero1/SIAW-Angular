@@ -49,6 +49,7 @@
     "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
     "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "luxon": "3.0.3",
     "moment": "^2.29.4",

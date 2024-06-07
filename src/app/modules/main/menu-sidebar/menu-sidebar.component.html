@@ -53,6 +53,22 @@
             </tr>
           </thead>
         </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td rowspan="2">
+                <mat-icon style="font-size: 21px !important;">vpn_lock</mat-icon>
+              </td>
+              <td>&nbsp; IP VPN: &nbsp; {{ ip_vpn }}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mat-icon (click)="verificarIP_VPN();"
+                  style="font-size: 20px !important;float: right !important;">vpn_key
+                </mat-icon>
+              </td>
+            </tr>
+          </thead>
+        </table>
+
         <table>
           <thead>
             <tr>

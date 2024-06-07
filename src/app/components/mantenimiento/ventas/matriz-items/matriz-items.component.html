@@ -1,74 +1,72 @@
-<section>
-  <div class="container-fluid">
-    <div class="all">
-      <div class="mat-elevation-z8">
-        <div style="position: sticky;padding-top: 10px;">
-          <div class="row">
-            <div class="col-md-8" style="padding-left: 20px;">
-              <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
-                <mat-label># Hoja</mat-label>
-                <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja">
-              </mat-form-field>
-              <button mat-raised-button color="secondary" (click)="getHoja();">
-                <i class="fa fa-search"></i>
-              </button>
-              <ng-container>
-                <a (click)="pasarHoja(izquierda, num_hoja);">
-                  <mat-icon style="padding-block-start: 5px !important;">
-                    keyboard_arrow_left
-                  </mat-icon>
-                </a>
-                <a (click)="pasarHoja(derecha, num_hoja);">
-                  <mat-icon style="padding-block-start: 5px !important;">
-                    keyboard_arrow_right
-                  </mat-icon>
-                </a>
-              </ng-container>
+<div class="all mat-elevation-z8">
+  <div style="position: sticky;padding-top: 10px;">
+    <div class="row">
+      <div class="col-md-8" style="padding-left: 20px;">
+        <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
+          <mat-label># Hoja</mat-label>
+          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja">
+        </mat-form-field>
+        <button mat-raised-button color="secondary" (click)="getHoja();">
+          <i class="fa fa-search"></i>
+        </button>
+        <ng-container>
+          <a (click)="pasarHoja(izquierda, num_hoja);">
+            <mat-icon style="padding-block-start: 5px !important;">
+              keyboard_arrow_left
+            </mat-icon>
+          </a>
+          <a (click)="pasarHoja(derecha, num_hoja);">
+            <mat-icon style="padding-block-start: 5px !important;">
+              keyboard_arrow_right
+            </mat-icon>
+          </a>
+        </ng-container>
 
-              <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();"
-                [disabled]="!item_valido" id="seleccion">
-                <i class="fa fa-plus"></i> Selección
-              </button>&nbsp;
+        <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" [disabled]="!item_valido"
+          id="seleccion">
+          <i class="fa fa-plus"></i> Selección
+        </button>&nbsp;
 
-              <button mat-raised-button color="warn" (click)="limpiarMatriz();"><i class="fa fa-eraser"></i> Limpiar
-              </button>&nbsp;
+        <button mat-raised-button color="warn" (click)="limpiarMatriz();"><i class="fa fa-eraser"></i> Limpiar
+        </button>&nbsp;
 
-              <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
-                <i class="fa fa-cart-plus"></i> OK
-              </button>
-              <!-- <button mat-raised-button color="primary" (click)="focusMyInput();"><i class="fa fa-plus"></i>
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
+          <i class="fa fa-cart-plus"></i> OK
+        </button>
+
+        <!-- <button mat-raised-button color="primary" (click)="focusMyInput();"><i class="fa fa-plus"></i>
                 Focus
               </button> -->
-              <mat-menu #menu="matMenu" xPosition="after">
-                <ng-container>
-                  <table style="margin-left: 8px;">
-                    <tr>
-                      <th style="border: 1px solid #ffc107;">Item</th>
-                      <th style="border: 1px solid #ffc107;">Pedido</th>
-                      <th style="border: 1px solid #ffc107;">Cant.</th>
-                      <th style="border: 1px solid #ffc107;">
-                        <i class="fa fa-trash" aria-hidden="true" color="danger"
-                          style="font-size: 0.5rem; color: red;"></i>
-                      </th>
-                      <th style="padding-left: 10px;">
-                        <mat-icon color="primary" style="color: #ffc107;">close</mat-icon>
-                      </th>
-                    </tr>
 
-                    <tbody>
-                      <tr *ngFor="let array_items_completos of array_items_completo">
-                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
-                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
-                        <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
-                        <td>
-                          <i class="fa fa-trash" aria-hidden="true" color="danger"
-                            (click)="eliminarItemArrayPedido(array_items_completos.coditem);"
-                            style="font-size: 0.5rem; color: red;"></i>
-                        </td>
-                      </tr>
-                      <hr>
+        <mat-menu #menu="matMenu" xPosition="after">
+          <ng-container>
+            <table style="margin-left: 8px;">
+              <tr>
+                <th style="border: 1px solid #ffc107;">Item</th>
+                <th style="border: 1px solid #ffc107;">Pedido</th>
+                <th style="border: 1px solid #ffc107;">Cant.</th>
+                <th style="border: 1px solid #ffc107;">
+                  <i class="fa fa-trash" aria-hidden="true" color="danger" style="font-size: 0.5rem; color: red;"></i>
+                </th>
+                <th style="padding-left: 10px;">
+                  <mat-icon color="primary" style="color: #ffc107;">close</mat-icon>
+                </th>
+              </tr>
 
-                      <!-- <span>Items ya en carrito</span>
+              <tbody>
+                <tr *ngFor="let array_items_completos of array_items_completo">
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" color="danger"
+                      (click)="eliminarItemArrayPedido(array_items_completos.coditem);"
+                      style="font-size: 0.5rem; color: red;"></i>
+                  </td>
+                </tr>
+                <hr>
+
+                <!-- <span>Items ya en carrito</span>
                       <tr *ngFor="let array_items_proforma_matrizs of array_items_proforma_matriz">
                         <td style="border: 1px solid #ffc107;">
                           {{ array_items_proforma_matrizs.coditem }}</td>
@@ -82,165 +80,163 @@
                             style="font-size: 0.5rem; color: red;"></i>
                         </td>
                       </tr> -->
-                    </tbody>
-                  </table>
-                </ng-container>
-                <div style="text-align: center;display: block;margin: auto;">
-                  <!-- BOTON CONFIRMAR -->
-                  <button mat-raised-button class="btn btn-outline-secondary form-control-sm"
-                    (click)="mandarItemaProforma();" style="width: 100%;height: calc(1.8rem + 0px) !important;">
-                    <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
-                      <strong> Confirmar</strong></span>
-                  </button>
-                </div>
-              </mat-menu>
-            </div>
-
-            <div class="col-md-4 text-right">
-              <mat-icon color="primary" (click)="close();">close</mat-icon>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-md-6" style="padding-left: 21px;">
-              <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
-                style="width: 16%;">
-              <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
-              <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
-              <input type="text" readonly="true" [value]="porcen_item" class="input_data_item"
-                style="width: 28%;">&nbsp;
-
-              <ng-container *ngIf="item_valido === false">
-                <span style="color: rgb(227, 0, 0);">NO VENTA</span>
-              </ng-container>
-
-              <ng-container *ngIf="item_valido === true">
-                <span style="color: rgb(rgb(0, 171, 0));">SI VENTA</span>
-              </ng-container>
-              <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
-            </div>
-
-            <div class="col-md-3">
-              <span class="form-control-sm" style="border: 0 !important;">
-                <u>Calcular Empaques por Precio</u>
-                <input type="checkbox" formControlName="venta_cliente_oficina">
-              </span>
-              <div>
-                <span class="form-control-sm" style="border: 0 !important;">
-                  <u>Calcular Empaques por Descuento</u>
-                  <input type="checkbox" formControlName="venta_cliente_oficina">
-                </span>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
-                <mat-label>Pedido</mat-label>
-                <input type="number" matInput id="focusPedido" maxlength="7" min="0" style="width:100%;"
-                  [(ngModel)]="pedido" #focusPedido>
-              </mat-form-field>&nbsp;
-
-              <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
-                <mat-label>Cantidad {{pedido}}</mat-label>
-                <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7"
-                  min="0" style="width:100%;" placeholder="{{pedido}}">
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-
-        <mat-dialog-content class="dialog-matriz">
-          <ng-container *ngIf="!validacion; else valid">
-            <hot-table id="example"></hot-table>
+              </tbody>
+            </table>
           </ng-container>
-          <ng-template #valid>
-            <p>Para Agregar Items : &nbsp;<strong>{{ messages.join(', ') }}</strong></p>
-          </ng-template>
-        </mat-dialog-content>
-
-        <div mat-dialog-footer>
-          <!-- Saldos -->
-          <div class="row pl-4">
-            <ng-container *ngIf="saldoItem > 0; else saldo">
-              <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
-                style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
-            </ng-container>
-            <ng-template #saldo>
-              <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
-                style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
-            </ng-template>
-
-            <ng-container *ngIf="almacenes_saldos">
-              <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-                <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
-                <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'2.2-2'"
-                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                  (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
-
-                <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
-                <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'2.2-2'"
-                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                  (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
-
-                <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
-                <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'2.2-2'"
-                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                  (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
-
-                <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
-                <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'2.2-2'"
-                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                  (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
-
-                <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
-                <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'2.2-2'"
-                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                  (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="!almacenes_saldos"></ng-container>
+          <div style="text-align: center;display: block;margin: auto;">
+            <!-- BOTON CONFIRMAR -->
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm" (click)="mandarItemaProforma();"
+              style="width: 100%;height: calc(1.8rem + 0px) !important;">
+              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
+                <strong> Confirmar</strong></span>
+            </button>
           </div>
-          <!-- finSaldos -->
+        </mat-menu>
 
-          <!-- Empaques -->
-          <mat-dialog-content class="dialog-matriz">
-            <div class="row">
-              <div class="col-sm">
-                <div class="input-group">
-                  <span class="input-group-text form-control-sm">Empaques</span>
 
-                  <ng-container *ngIf="!empaque_view">
-                    <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-                  </ng-container>&nbsp;
-
-                  <ng-container *ngIf="empaque_view">
-                    <div *ngFor="let empaquesItems of empaquesItem">
-                      <div type="text" class="form-control form-control-sm inputsSaldos"
-                        style="width: 100% !important;">
-                        ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
-                      </div>
-                    </div>
-                  </ng-container>&nbsp;
-
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td style="float: left;">Empaque Minimo</td>
-                        <td style="float: right;"><strong>{{ data_almacen_local.empaque }}</strong></td>
-                      </tr>
-                      <tr>
-                        <td style="float: left;">Peso Minimo</td>
-                        <td style="float: right;"><strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</strong></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </mat-dialog-content>
-          <!-- finempaque -->
+        <span class="form-control-sm" style="border: 0 !important;">
+          <u>Calcular Empaques por Precio</u>
+          <input type="checkbox" formControlName="venta_cliente_oficina">
+        </span>
+        <div>
+          <span class="form-control-sm" style="border: 0 !important;">
+            <u>Calcular Empaques por Descuento</u>
+            <input type="checkbox" formControlName="venta_cliente_oficina">
+          </span>
         </div>
+
+      </div>
+
+      <div class="col-md-4 text-right">
+        <mat-icon color="primary" (click)="close();">close</mat-icon>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6" style="padding-left: 21px;">
+        <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
+          style="width: 16%;">
+        <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
+        <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
+        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 28%;">&nbsp;
+
+        <ng-container *ngIf="item_valido === false">
+          <span style="color: rgb(227, 0, 0);">NO VENTA</span>
+        </ng-container>
+
+        <ng-container *ngIf="item_valido === true">
+          <span style="color: rgb(rgb(0, 171, 0));">SI VENTA</span>
+        </ng-container>
+        <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
+      </div>
+
+
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
+          <mat-label>Pedido</mat-label>
+          <input type="number" matInput id="focusPedido" maxlength="7" min="0" style="width:100%;" [(ngModel)]="pedido"
+            #focusPedido>
+        </mat-form-field>&nbsp;
+
+        <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
+          <mat-label>Cantidad {{pedido}}</mat-label>
+          <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
+            style="width:100%;" placeholder="{{pedido}}">
+        </mat-form-field>
       </div>
     </div>
   </div>
-</section>
+
+  <mat-dialog-content class="dialog-matriz">
+    <ng-container *ngIf="!validacion; else valid">
+      <hot-table id="example"></hot-table>
+    </ng-container>
+    <ng-template #valid>
+      <p>Para Agregar Items : &nbsp;<strong>{{ messages.join(', ') }}</strong></p>
+    </ng-template>
+  </mat-dialog-content>
+
+  <div mat-dialog-footer>
+    <!-- Saldos -->
+    <div class="row pl-4">
+      <ng-container *ngIf="saldoItem > 0; else saldo">
+        <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
+          style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
+      </ng-container>
+      <ng-template #saldo>
+        <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
+          style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
+      </ng-template>
+
+      <ng-container *ngIf="almacenes_saldos">
+        <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="!almacenes_saldos"></ng-container>
+    </div>
+    <!-- finSaldos -->
+
+    <!-- Empaques -->
+    <mat-dialog-content class="dialog-matriz">
+      <div class="row">
+        <div class="col-sm">
+          <div class="input-group">
+            <span class="input-group-text form-control-sm">Empaques</span>
+
+            <ng-container *ngIf="!empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+            </ng-container>&nbsp;
+
+            <ng-container *ngIf="empaque_view">
+              <div *ngFor="let empaquesItems of empaquesItem">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
+                </div>
+              </div>
+            </ng-container>&nbsp;
+
+            <table>
+              <tbody>
+                <tr>
+                  <td style="float: left;">Empaque Minimo</td>
+                  <td style="float: right;"><strong>{{ data_almacen_local.empaque }}</strong></td>
+                </tr>
+                <tr>
+                  <td style="float: left;">Peso Minimo</td>
+                  <td style="float: right;"><strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <!-- finempaque -->
+  </div>
+
+</div>

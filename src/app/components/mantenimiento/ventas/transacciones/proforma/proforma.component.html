@@ -34,7 +34,7 @@
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="cargarDataExcel();">
-              <span><i class="fa fa-file-excel green" aria-hidden="true" style="color: #ffc107;"></i>
+              <span><i class="fa fa-file-excel green" aria-hidden="true" style="color: #05970c;"></i>
                 Cargar</span>
             </button>
 
@@ -112,6 +112,11 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button"
             (click)="detalleProformaCarritoTOExcel();" matTooltipClass="custom-tooltip" matTooltip="Detalle a Excel">
             <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalBtnImpresiones(0);"
+            matTooltipClass="custom-tooltip" matTooltip="Mandar Imprimir">
+            <i class="fa fa-print" aria-hidden="true"></i>
           </button>
           <!-- [disabled]="[array_items_carrito_y_f4_catalogo].length !== 1" {{ [array_items_carrito_y_f4_catalogo].length  }} -->
         </div>
@@ -292,7 +297,7 @@
 
         <!-- segundaColumna -->
         <div class="col col-lg-4">
-          <div class="input-group">
+          <div class="row">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="border: 0 !important;">
                 <u>Venta Cliente en Oficina</u>
@@ -302,7 +307,22 @@
               <div class="input-group-text" style="border: 0;">
                 <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
               </div>
-            </div>
+            </div> |
+            <span class="input-group-text form-control-sm" style="border: 0 !important;"><u>Cliente:</u></span>
+            <ng-container *ngIf="cliente_habilitado_get; else no_habilitado">
+              <span class="input-group-text form-control-sm"
+                style="border: 2px solid #149b31 !important;color: #149b31;">
+                <strong>HABILITADO</strong>
+              </span>
+            </ng-container>
+            <ng-template #no_habilitado>
+              <span class="input-group-text form-control-sm"
+                style="border: 2px solid #ef4d4d !important;color: #ef4d4d;">
+                <strong>DES-HABILITADO</strong>
+              </span>
+            </ng-template>
+
+
           </div>
 
           <div class="input-group">
@@ -1662,11 +1682,13 @@
                           </div>
                           <mat-checkbox class="example-margin" [formControl]="disableSelect">
                           </mat-checkbox>
+                          {{ disableSelect.value }}
                         </div>
                         <mat-form-field>
                           <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf"
-                            [disabled]="disableSelect.value === false">
+                          <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
+                            formControlName="tipo_complementopf">
+                            <mat-option [value]=3>Elija una opcion...</mat-option>
                             <mat-option [value]=0>1. Dimediado - Precio Mayorista Para Cumplir
                               Monto Minimo
                             </mat-option>
@@ -1680,9 +1702,8 @@
                       <div class="col-md-8">
                         <div class="col-md-8">
                           <div class="input-group">
-                            <mat-form-field style="width: 265px !important;">
-                              <mat-select [(ngModel)]="idpf_complemento_view" formControlName="idpf_complemento"
-                                [disabled]="disableSelect.value === false">
+                            <mat-form-field style="width: 265px !important;" [disabled]="disableSelect.value === false">
+                              <mat-select [(ngModel)]="idpf_complemento_view" formControlName="idpf_complemento">
                                 <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
                                   [value]="ids_complementar_proformas.id">
                                   {{ ids_complementar_proformas.id }} -

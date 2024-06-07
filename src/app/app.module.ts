@@ -418,6 +418,9 @@ import { ModalDesctDepositoClienteComponent } from '@components/mantenimiento/ve
 import { ModalTransfeNotaRemisionComponent } from '@components/mantenimiento/ventas/modal-transfe-nota-remision/modal-transfe-nota-remision.component';
 import { CargarExcelComponent } from '@components/mantenimiento/ventas/cargar-excel/cargar-excel.component';
 import { ProformaPdfComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component';
+import { ModalBotonesImpresionComponent } from '@components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component';
+import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component';
+import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -500,7 +503,8 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent,
-
+        ModalBotonesImpresionComponent, EtiquetasItemProformaComponent,
+        EtiquetaImpresionProformaComponent,
 
 
 
