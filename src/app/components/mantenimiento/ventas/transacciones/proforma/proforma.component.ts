@@ -696,6 +696,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       //this.vendedor_cliente_catalogo_real = data.cliente.codvendedor;
       this.cod_vendedor_cliente = data.cliente.codvendedor;
       console.log(this.codigo_cliente_catalogo_real);
+
+      this.modalClientesDireccion(data.cliente.codigo);
+
+
+
     });
     //
 

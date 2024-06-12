@@ -2007,15 +2007,6 @@
         "hash": "sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w=="
       }
     },
-    "npm:@fingerprintjs/fingerprintjs": {
-      "type": "npm",
-      "name": "npm:@fingerprintjs/fingerprintjs",
-      "data": {
-        "version": "3.3.0",
-        "packageName": "@fingerprintjs/fingerprintjs",
-        "hash": "sha512-2kw2yVrfMKd0YvmYAdNxhGytNhhLvChqNAbBZWMglYVw2J95Jm50ketK5yS1C8SJmqG2nFJgeuWvYXeZEh+b8g=="
-      }
-    },
     "npm:@foliojs-fork/fontkit": {
       "type": "npm",
       "name": "npm:@foliojs-fork/fontkit",
@@ -5463,15 +5454,6 @@
         "hash": "sha512-jRFi8UDGo6j+odZiEpjazZaWqEal3w/basFjQHQEwVtZJGDpxbH1MeYluwCS8Xq5wmLJooDlMgvVarmWfGM44g=="
       }
     },
-    "npm:data-uri-to-buffer": {
-      "type": "npm",
-      "name": "npm:data-uri-to-buffer",
-      "data": {
-        "version": "3.0.1",
-        "packageName": "data-uri-to-buffer",
-        "hash": "sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og=="
-      }
-    },
     "npm:datatables.net": {
       "type": "npm",
       "name": "npm:datatables.net",
@@ -7146,15 +7128,6 @@
         "hash": "sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g=="
       }
     },
-    "npm:fetch-blob": {
-      "type": "npm",
-      "name": "npm:fetch-blob",
-      "data": {
-        "version": "3.2.0",
-        "packageName": "fetch-blob",
-        "hash": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ=="
-      }
-    },
     "npm:fflate": {
       "type": "npm",
       "name": "npm:fflate",
@@ -8685,15 +8658,6 @@
         "hash": "sha512-O6Jr7AGiut9iNJMelPdy8pH83tNXadOqmhJm5FZy9gtaZ5uuhZK3VNu+YLFuTpXeZI8YXUvlFUYbJJi5XHA+tw=="
       }
     },
-    "npm:js-base64": {
-      "type": "npm",
-      "name": "npm:js-base64",
-      "data": {
-        "version": "3.7.3",
-        "packageName": "js-base64",
-        "hash": "sha512-PAr6Xg2jvd7MCR6Ld9Jg3BmTcjYsHEBx1VlwEwULb/qowPf5VD9kEMagj23Gm7JRnSvE/Da/57nChZjnvL8v6A=="
-      }
-    },
     "npm:js-tokens": {
       "type": "npm",
       "name": "npm:js-tokens",
@@ -9637,24 +9601,6 @@
         "version": "3.2.1",
         "packageName": "node-addon-api",
         "hash": "sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A=="
-      }
-    },
-    "npm:node-domexception": {
-      "type": "npm",
-      "name": "npm:node-domexception",
-      "data": {
-        "version": "1.0.0",
-        "packageName": "node-domexception",
-        "hash": "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="
-      }
-    },
-    "npm:node-fetch": {
-      "type": "npm",
-      "name": "npm:node-fetch",
-      "data": {
-        "version": "3.0.0",
-        "packageName": "node-fetch",
-        "hash": "sha512-bKMI+C7/T/SPU1lKnbQbwxptpCrG9ashG+VkytmXCPZyuM9jB6VU+hY0oi4lC8LxTtAeWdckNCTa3nrGsAdA3Q=="
       }
     },
     "npm:node-forge": {
@@ -12004,15 +11950,6 @@
         "version": "1.0.1",
         "packageName": "wcwidth",
         "hash": "sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg=="
-      }
-    },
-    "npm:web-streams-polyfill": {
-      "type": "npm",
-      "name": "npm:web-streams-polyfill",
-      "data": {
-        "version": "3.2.1",
-        "packageName": "web-streams-polyfill",
-        "hash": "sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q=="
       }
     },
     "npm:webdriver-js-extender": {
@@ -15820,11 +15757,6 @@
     {
       "source": "npm:js-yaml@4.1.0",
       "target": "npm:argparse@2.0.1",
-      "type": "static"
-    },
-    {
-      "source": "npm:@fingerprintjs/fingerprintjs",
-      "target": "npm:tslib",
       "type": "static"
     },
     {
@@ -22583,16 +22515,6 @@
       "type": "static"
     },
     {
-      "source": "npm:fetch-blob",
-      "target": "npm:node-domexception",
-      "type": "static"
-    },
-    {
-      "source": "npm:fetch-blob",
-      "target": "npm:web-streams-polyfill",
-      "type": "static"
-    },
-    {
       "source": "npm:figures",
       "target": "npm:escape-string-regexp",
       "type": "static"
@@ -24950,16 +24872,6 @@
     {
       "source": "npm:nice-napi",
       "target": "npm:node-gyp-build",
-      "type": "static"
-    },
-    {
-      "source": "npm:node-fetch",
-      "target": "npm:data-uri-to-buffer",
-      "type": "static"
-    },
-    {
-      "source": "npm:node-fetch",
-      "target": "npm:fetch-blob",
       "type": "static"
     },
     {

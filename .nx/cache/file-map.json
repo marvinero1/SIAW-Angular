@@ -45,7 +45,7 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xml-js": "^1.6.11",
     "zone.js": "~0.11.8",
-    "@angular-devkit/build-angular": "15.0.1",
+    "@angular-devkit/build-angular": "^15.0.1",
     "@angular-eslint/builder": "14.0.3",
     "@angular-eslint/eslint-plugin": "14.0.3",
     "@angular-eslint/eslint-plugin-template": "14.0.3",
@@ -114,7 +114,6 @@
   },
   "nxJsonPlugins": [],
   "fileMap": {
-    "projectFileMap": {},
     "nonProjectFiles": [
       {
         "file": ".browserslistrc",
@@ -170,7 +169,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "15323593315444896368"
+        "hash": "9199870624348560988"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -210,7 +209,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "13511190238382235933"
+        "hash": "18396480699363608943"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -286,11 +285,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "4739425214430067176"
+        "hash": "5689370936015248399"
       },
       {
         "file": "package.json",
-        "hash": "6775878543331786131"
+        "hash": "8166368116986816266"
       },
       {
         "file": "proxy.conf.json",
@@ -4194,7 +4193,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.html",
-        "hash": "4822111492397979177"
+        "hash": "7522225773059434464"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/cargar-excel/cargar-excel.component.scss",
@@ -4602,7 +4601,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component.html",
-        "hash": "8217976766812581865"
+        "hash": "16278833148072754144"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component.scss",
@@ -4614,7 +4613,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component.ts",
-        "hash": "1635448783652122046"
+        "hash": "16088879197930058157"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-items/modal-items.component.html",
@@ -5322,7 +5321,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "5278890729052039420"
+        "hash": "14602190434679864322"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5334,7 +5333,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "2256562043067729487"
+        "hash": "8787503918555936462"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6298,7 +6297,7 @@
       },
       {
         "file": "src/app/services/app.service.ts",
-        "hash": "9474176613760906919"
+        "hash": "9881199481859842465"
       },
       {
         "file": "src/app/services/interceptor.ts",
@@ -6454,7 +6453,7 @@
       },
       {
         "file": "src/main.ts",
-        "hash": "5655928146945693241"
+        "hash": "13918444296413030738"
       },
       {
         "file": "src/material.module.ts",
@@ -6488,6 +6487,7 @@
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
       }
-    ]
+    ],
+    "projectFileMap": {}
   }
 }
