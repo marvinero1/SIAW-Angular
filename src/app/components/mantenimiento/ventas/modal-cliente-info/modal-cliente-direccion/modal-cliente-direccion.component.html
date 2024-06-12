@@ -1,5 +1,5 @@
  <div class="p-1" style="font-size: 0.8rem;">
-   <div class="tittle"> Direcciones Cliente</div>
+   <div class="tittle"> Direcciones Cliente AAAA</div>
    <div class="p-1 mat-elevation-z8">
      <div class="row p-2 text-center">
        <div class="col-md-6 pt-2">
@@ -20,7 +20,7 @@
      </div>
      <div class="row">
        <div class="col-md-8" style="padding: 15px 20px 2px;">
-         <p><strong>Direccion:</strong> &nbsp; {{ direccion_view }}</p>
+         <p><strong>Direccion:</strong> &nbsp; {{ cliente_real_array.direccion }}</p>
        </div>
        <div class="col-md-4 text-center p-2">
          <button mat-stroked-button color="primary" (click)="mandarDireccion();">
@@ -43,8 +43,8 @@
 
              <ng-container matColumnDef="direccion">
                <th mat-header-cell *matHeaderCellDef> Dirección </th>
-               <td mat-cell *matCellDef="let element" style="text-align: center;"
-                 (click)="getDireccionView(element.direccion);">{{ element.direccion }}</td>
+               <td mat-cell *matCellDef="let element" style="text-align: center;" (click)="getDireccionView(element);">
+                 {{ element.direccion }}</td>
              </ng-container>
 
              <ng-container matColumnDef="central">

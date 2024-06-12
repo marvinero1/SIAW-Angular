@@ -59,9 +59,10 @@ export class ModalEtiquetaComponent implements OnInit {
     // ENVIA VALOR FALSE 0, 0 RESPECTIVAMENTE
     this.getDataEtiquetaClientesinDescuento();
   }
-
+  data_array: any = {}
   getDataEtiquetaClientesinDescuento() {
     let a = {
+      // codcliente_real: this.cliente_real_proforma,
       codcliente_real: this.cliente_real_proforma,
       id: this.id_proforma_get,
       numeroid: this.numero_id_proforma,
@@ -85,6 +86,14 @@ export class ModalEtiquetaComponent implements OnInit {
           console.log(err, errorMessage);
         },
         complete: () => {
+
+          this.data_array = [this.data].map(element => ({
+            ...element,
+            codcliente: this.cod_cliente_proforma
+          }));
+
+          console.log("Data Etiqueta Mapeada: ", this.data_array);
+
           this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.data.latitud_entrega + "%2C" + this.data.longitud_entrega;
         }
       })
@@ -92,7 +101,7 @@ export class ModalEtiquetaComponent implements OnInit {
 
   enviarArrayToProforma() {
     this.servicioEtiqueta.disparadorDeEtiqueta.emit({
-      etiqueta: this.data,
+      etiqueta: this.data_array,
     });
 
     this.close();

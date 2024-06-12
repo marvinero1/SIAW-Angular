@@ -40,7 +40,8 @@
             <table style="margin-left: 8px;">
               <tr>
                 <th style="border: 1px solid #ffc107;">Item</th>
-                <th style="border: 1px solid #ffc107;">Descrip.</th>
+                <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
+                <th style="border: 1px solid #ffc107;" width="175">Medida</th>
                 <th style="border: 1px solid #ffc107;">Pedido</th>
                 <th style="border: 1px solid #ffc107;">Cant.</th>
                 <th style="border: 1px solid #ffc107;">
@@ -54,7 +55,9 @@
               <tbody>
                 <tr *ngFor="let array_items_completos of array_items_completo">
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
-                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.descripcion }}</td>
+                  <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
+                  <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
+                    {{ array_items_completos.medida }} </td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
                   <td>

@@ -39,6 +39,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   recargos_array_get: any = [];
   map_table: any = [];
   cmtipo_complementopf_get: any;
+  cliente_real_get: any;
   array_de_descuentos_con_descuentos: any = [];
 
   contra_entrega_get: any;
@@ -56,7 +57,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public desct: any, @Inject(MAT_DIALOG_DATA) public recargos_del_total: any,
     @Inject(MAT_DIALOG_DATA) public contra_entrega: any, @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
     @Inject(MAT_DIALOG_DATA) public recargos_array: any, @Inject(MAT_DIALOG_DATA) public array_de_descuentos_ya_agregados_a_modal: any,
-    @Inject(MAT_DIALOG_DATA) public cmtipo_complementopf: any) {
+    @Inject(MAT_DIALOG_DATA) public cmtipo_complementopf: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
     this.items_de_proforma = items.items;
     this.cabecera_proforma = cabecera.cabecera;
@@ -66,6 +67,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.cod_moneda_get = cod_moneda.cod_moneda;
     this.recargos_array_get = recargos_array.recargos_array
     this.cmtipo_complementopf_get = cmtipo_complementopf.cmtipo_complementopf;
+    this.cliente_real_get = cliente_real.cliente_real
     this.array_de_descuentos;
 
     //aca llega los descuentos q ya pusiste, esto se pinta en la su tabla
@@ -361,7 +363,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     //al darle al boton OK tiene consultar al backend validando los recargos y re calculando los total, subtotal.
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/recarcularDescuentos/"
     this.api.create('/venta/transac/veproforma/recarcularDescuentos/' + this.userConn + "/" + this.BD_storage + "/" +
-      this.recargos_del_total_get + "/" + this.cmtipo_complementopf_get, total_proforma_concat)
+      this.recargos_del_total_get + "/" + this.cmtipo_complementopf_get + "/" + this.cliente_real_get, total_proforma_concat)
       .subscribe({
         next: (datav) => {
           console.log(datav);

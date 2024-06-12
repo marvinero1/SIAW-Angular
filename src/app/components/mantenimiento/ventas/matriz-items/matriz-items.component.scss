@@ -137,7 +137,11 @@ th.mat-column-position, td.mat-column-position {
     cursor: pointer;
     max-width: max-content;
     max-height: min-content;
-}
+  }
+
+  .mat-mdc-menu-panel.mat-mdc-menu-panel{
+    max-width: 375px;
+  }
 }
 
 .cdk-global-overlay-wrapper, .cdk-overlay-container, .cdk-global-overlay-wrapper{

@@ -28,6 +28,7 @@ export class ModalRecargosComponent implements OnInit {
   mont: number;
   moneda: any;
   confirmacion_get_recargo: any;
+  cliente_real_get: any;
 
   cabecera_proforma: any = [];
   items_de_proforma: any = [];
@@ -48,7 +49,7 @@ export class ModalRecargosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public recargos: any, @Inject(MAT_DIALOG_DATA) public des_extra_del_total: any,
     @Inject(MAT_DIALOG_DATA) public array_cabe_cuerpo: any, @Inject(MAT_DIALOG_DATA) public cabecera: any,
     @Inject(MAT_DIALOG_DATA) public items: any, @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
-    @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any) {
+    @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
     this.recargos_ya_en_array = recargos.recargos;
 
@@ -63,6 +64,7 @@ export class ModalRecargosComponent implements OnInit {
     this.cabecera_proforma = cabecera.cabecera;
     this.items_de_proforma = items.items;
     this.cod_moneda_get = cod_moneda.cod_moneda
+    this.cliente_real_get = cliente_real.cliente_real
 
     this.des_extra_del_total_get = des_extra_del_total.des_extra_del_total;
     this.array_cabe_cuerpo_get = array_cabe_cuerpo.array_cabe_cuerpo
@@ -200,7 +202,7 @@ export class ModalRecargosComponent implements OnInit {
     console.log(total_proforma_concat);
     //al darle al boton OK tiene consultar al backend validando los recargos y re calculando los total, subtotal.
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/recarcularRecargos/"
-    this.api.create('/venta/transac/veproforma/recarcularRecargos/' + this.userConn + "/" + this.BD_storage + "/" + this.des_extra_del_total_get, total_proforma_concat)
+    this.api.create('/venta/transac/veproforma/recarcularRecargos/' + this.userConn + "/" + this.BD_storage + "/" + this.des_extra_del_total_get + "/" + this.cliente_real_get, total_proforma_concat)
       .subscribe({
         next: (datav) => {
           console.log(datav);

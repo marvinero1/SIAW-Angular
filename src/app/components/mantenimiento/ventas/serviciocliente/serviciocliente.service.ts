@@ -8,6 +8,7 @@ export class ServicioclienteService {
   @Output() disparadorDeClientes: EventEmitter<any> = new EventEmitter();
   @Output() disparadorDeDireccionesClientes: EventEmitter<any> = new EventEmitter();
   @Output() disparadorDeClienteReal: EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDeClienteReaLInfo: EventEmitter<any> = new EventEmitter();
 
   constructor() {
   }

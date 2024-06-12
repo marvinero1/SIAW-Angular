@@ -14,38 +14,38 @@ import { ServicioclienteService } from '../serviciocliente/serviciocliente.servi
 })
 export class ModalClienteDireccionComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarDireccion();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarDireccion();
   };
 
-  direccion:any=[];
+  direccion: any = [];
+  cliente_real_array: any = [];
   public direccion_view: any = [];
   userConn: any;
 
-  displayedColumns = ['telefono','direccion','central'];
-  dataSourceDirecciones = new MatTableDataSource<veTiendaDireccion>();
+  displayedColumns = ['telefono', 'direccion', 'central'];
+  dataSource = new MatTableDataSource<veTiendaDireccion>();
   dataSourceWithPageSize = new MatTableDataSource();
-  
+
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
+
   options: veTiendaDireccion[] = [];
   filteredOptions: Observable<veTiendaDireccion[]>;
   myControlDireccion = new FormControl<string | veTiendaDireccion>('');
   myControlTelefono = new FormControl<string | veTiendaDireccion>('');
 
-  constructor(public dialogRef: MatDialogRef<ModalClienteDireccionComponent>,private api:ApiService,
-    public servicioCliente:ServicioclienteService, @Inject(MAT_DIALOG_DATA) public cod_cliente: any){
-    
+  constructor(public dialogRef: MatDialogRef<ModalClienteDireccionComponent>, private api: ApiService,
+    public servicioCliente: ServicioclienteService, @Inject(MAT_DIALOG_DATA) public cod_cliente: any) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
-  ngOnInit(){
-    
+  ngOnInit() {
     this.getDireccionCentral(this.cod_cliente.cod_cliente);
 
     this.filteredOptions = this.myControlDireccion.valueChanges.pipe(
@@ -64,58 +64,62 @@ export class ModalClienteDireccionComponent implements OnInit {
       }),
     );
   }
-  
+
   private _filter(name: string): veTiendaDireccion[] {
     const filterValue = name.toLowerCase();
 
     return this.options.filter(option => option.direccion.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceDirecciones.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSourceDirecciones.filter);
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    console.log(this.dataSource.filter);
   }
 
   displayFn(user: veTiendaDireccion): string {
     return user && user.direccion ? user.direccion : '';
   }
 
-  getDireccionCentral(cod_cliente){
-    let errorMessage:string;
+  getDireccionCentral(cod_cliente) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vetienda/catalogo/'+this.userConn+"/"+cod_cliente)
+    return this.api.getAll('/venta/mant/vetienda/catalogo/' + this.userConn + "/" + cod_cliente)
       .subscribe({
         next: (datav) => {
           this.direccion = datav;
           console.log(this.direccion);
 
-          this.dataSourceDirecciones = new MatTableDataSource(this.direccion);
-          this.dataSourceDirecciones.paginator = this.paginator;
+          this.dataSource = new MatTableDataSource(this.direccion);
+          this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getDireccionView(nombre){
-    this.direccion_view = nombre;
-    console.log(nombre);
+  getDireccionView(element) {
+    this.cliente_real_array = element;
+    console.log(this.cliente_real_array);
   }
 
-  mandarDireccion(){
+  mandarDireccion() {
+    this.servicioCliente.disparadorDeClienteReal.emit({
+      cliente_data: this.cliente_real_array,
+    });
+
     this.servicioCliente.disparadorDeDireccionesClientes.emit({
-      direccion:this.direccion_view,
+      direccion: this.direccion_view,
     });
 
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

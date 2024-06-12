@@ -55,6 +55,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-botones-impresion.component';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-proforma',
@@ -223,7 +224,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   saldo_modal_total_5: any;
 
   ubicacion_central: any;
-  direccion_central: any;
   userConn: any;
   BD_storage: any;
   orden_creciente: number = 1;
@@ -312,13 +312,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   array_ultimas_proformas: any = [];
 
   public codigo_cliente_catalogo: string;
-  public codigo_cliente_catalogo_direccion: string;
   public cliente_catalogo_real: any = [];
   public nombre_cliente_catalogo_real: string;
   public vendedor_cliente_catalogo_real: string;
   public id_solicitud_desct: string;
   public numero_id_solicitud_desct: string;
-  public etiqueta_get_modal_etiqueta: [] = [];
+  public etiqueta_get_modal_etiqueta: any[] = [];
 
   public codigo_item_catalogo: any = [];
   public cantidad_item_matriz: number;
@@ -441,6 +440,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     console.log(this.BD_storage);
 
+    console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);
     this.mandarNombre();
 
@@ -682,27 +682,35 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //modalClientesDireccion
     this.servicioCliente.disparadorDeDireccionesClientes.subscribe(data => {
       console.log("Recibiendo Direccion Cliente: ", data);
-      this.codigo_cliente_catalogo_direccion = data.direccion;
-      console.log(this.codigo_cliente_catalogo_direccion);
+      this.direccion = data.direccion;
+      console.log(this.direccion);
     });
     //
 
     //modalClientesParaSeleccionarClienteReal
+    //aca le llega del catalogo cliente
     this.servicioCliente.disparadorDeClienteReal.subscribe(data => {
-      console.log("Recibiendo Direccion Cliente Real: ", data);
-      this.cliente_catalogo_real = data.cliente;
+      console.log("Recibiendo Cliente Real: ", data);
       this.codigo_cliente_catalogo_real = data.cliente.codigo;
       this.nombre_cliente_catalogo_real = data.cliente.nombre;
-      //this.vendedor_cliente_catalogo_real = data.cliente.codvendedor;
-      this.cod_vendedor_cliente = data.cliente.codvendedor;
+
       console.log(this.codigo_cliente_catalogo_real);
-
-      this.modalClientesDireccion(data.cliente.codigo);
-
-
-
+      this.modalClientesDireccion(this.codigo_cliente_catalogo_real);
     });
     //
+
+
+    //modalClientesParaSeleccionarClienteReal
+    this.servicioCliente.disparadorDeClienteReaLInfo.subscribe(data => {
+      console.log("Recibiendo Cliente Real Info: ", data.cliente_real_info);
+      // this.cliente_catalogo_real = data.cliente;
+      this.direccion = data.cliente_real_info.direccion;
+
+      this.latitud_cliente = data.cliente_real_info.latitud;
+      this.longitud_cliente = data.cliente_real_info.longitud;
+    });
+    //
+
 
     //Monedas
     this.serviciMoneda.disparadorDeMonedas.subscribe(data => {
@@ -936,7 +944,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       obs2: [""],
       direccion: [this.dataform.direccion],
       peso: Number(this.peso),
-      codcliente_real: [this.dataform.cliente_real === null ? this.codigo_cliente : this.dataform.cliente_real],
+      codcliente_real: this.codigo_cliente,
       latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
@@ -1368,7 +1376,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.venta_cliente_oficina = this.cliente.cliente.venta_cliente_oficina;
           this.tipo_cliente = this.cliente.cliente.tipo;
 
-          this.direccion = this.cliente.vivienda.direccion;
+          // this.direccion = this.cliente.vivienda.direccion;
           this.whatsapp_cliente = this.cliente.vivienda.celular;
           this.latitud_cliente = this.cliente.vivienda.latitud;
           this.longitud_cliente = this.cliente.vivienda.longitud;
@@ -1531,13 +1539,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   getDireccionCentral(cod_usuario) {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vetienda/getCentral/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vetienda/getCentral/";
     return this.api.getAll('/venta/mant/vetienda/getCentral/' + this.userConn + "/" + cod_usuario)
       .subscribe({
         next: (datav) => {
-          this.direccion_central = datav;
-          this.direccion_central_input = this.direccion_central.direccion;
+          console.log(datav);
+          this.direccion = datav.direccion;
         },
 
         error: (err: any) => {
@@ -1678,13 +1685,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.tipo = "";
       this.latitud_cliente = "";
       this.longitud_cliente = "";
-      this.direccion_central_input = "";
       this.transporte = "";
       this.medio_transporte = "";
       this.fletepor = "";
       this.tipoentrega = "";
       this.peso = 0;
-      this.codigo_cliente_catalogo_direccion = "";
       this.obs = "";
 
       this.tipo_cliente = "";
@@ -2628,6 +2633,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     data = {
       ...data,
+      codcliente_real: this.codigo_cliente,
       descuentos: this.des_extra,
       idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
       nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
@@ -2651,7 +2657,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       dt_anticipo_pf: this.tabla_anticipos,
       vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
       verecargoprof: this.recargo_de_recargos, //array de recargos,
-      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta, // array de etiqueta
+      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
       veproforma_iva: this.veproforma_iva, //array de iva
     };
 
@@ -2703,7 +2709,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     console.log("FORMULARIO VALIDADO");
-    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false`;
+    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, total_proforma_concat).subscribe({
@@ -2777,7 +2783,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
       return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-        this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual, total_proforma_concat)
+        this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat)
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
@@ -2947,12 +2953,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: [],
       detalleDescuentos: this.array_de_descuentos_ya_agregados,
-      detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
+      detalleContoles: this.validacion_post.length > 1 ? this.validacion_post : [{}],
     }
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
+    console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
 
     this.spinner.show();
     this.submitted = true;
@@ -3755,6 +3763,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           }, 1000);
         },
         complete: () => {
+          this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -4717,6 +4726,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         des_extra_del_total: this.des_extra,
         cod_moneda: this.moneda_get_catalogo,
         tamanio_recargos: a,
+        cliente_real: this.codigo_cliente_catalogo_real
       },
     });
   }
@@ -4779,6 +4789,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           recargos_array: this.recargo_de_recargos,
           array_de_descuentos_ya_agregados_a_modal: this.array_de_descuentos_ya_agregados,
           cmtipo_complementopf: this.disableSelect.value === false ? 0 : 1,
+          cliente_real: this.codigo_cliente_catalogo_real
         }
       });
     } else {
@@ -4804,7 +4815,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         cod_cliente: cod_cliente,
         id_proforma: this.id_tipo_view_get_codigo,
         numero_id: this.id_proforma_numero_id,
-        nom_cliente: this.razon_social,
+        nom_cliente: this.nombre_cliente_catalogo_real,
         desc_linea: this.habilitar_desct_sgn_solicitud,
         id_sol_desct: this.id_solicitud_desct,
         nro_id_sol_desct: this.numero_id_solicitud_desct,

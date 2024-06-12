@@ -24,7 +24,9 @@ export class ModalClienteDireccionComponent implements OnInit {
 
   direccion: any = [];
   public direccion_view: any = [];
+  cliente_real_array: any = [];
   userConn: any;
+  codigo_clien: any;
 
   displayedColumns = ['telefono', 'direccion', 'central'];
   dataSourceDirecciones = new MatTableDataSource<veTiendaDireccion>();
@@ -41,12 +43,13 @@ export class ModalClienteDireccionComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModalClienteDireccionComponent>, private api: ApiService,
     public servicioCliente: ServicioclienteService, @Inject(MAT_DIALOG_DATA) public cod_cliente: any) {
 
+    this.codigo_clien = cod_cliente.cod_cliente;
+    console.log(this.codigo_clien);
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {
-
-    this.getDireccionCentral(this.cod_cliente.cod_cliente);
+    this.getDireccionCentral(this.codigo_clien);
 
     this.filteredOptions = this.myControlDireccion.valueChanges.pipe(
       startWith(''),
@@ -102,14 +105,14 @@ export class ModalClienteDireccionComponent implements OnInit {
       })
   }
 
-  getDireccionView(nombre) {
-    this.direccion_view = nombre;
-    console.log(nombre);
+  getDireccionView(element) {
+    this.cliente_real_array = element;
+    console.log(element);
   }
 
   mandarDireccion() {
-    this.servicioCliente.disparadorDeDireccionesClientes.emit({
-      direccion: this.direccion_view,
+    this.servicioCliente.disparadorDeClienteReaLInfo.emit({
+      cliente_real_info: this.cliente_real_array,
     });
 
     this.close();

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './item-seleccion-cantidad.component.html',
   styleUrls: ['./item-seleccion-cantidad.component.scss']
 })
-export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
+export class ItemSeleccionCantidadComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler() {
     const focusedElement = document.activeElement as HTMLElement;
@@ -106,6 +106,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getTarifa();
     this.getDescuentos();
+    this.myInputField.nativeElement.focus();
 
     // descuentos
     this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
@@ -124,10 +125,6 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
       this.cod_descuento_modal_codigo = data.precio_sugerido;
     });
     // fin_precio_venta
-  }
-
-  ngAfterViewInit() {
-    this.myInputField.nativeElement.focus();
   }
 
   getTarifa() {
@@ -240,7 +237,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
     if (!this.isCheckedCantidad) {
       const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
 
-      console.log("CHECK DE PRECIO Y DESCT ACTIVADO");
+      console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
       this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
         .subscribe({
           next: (datav) => {

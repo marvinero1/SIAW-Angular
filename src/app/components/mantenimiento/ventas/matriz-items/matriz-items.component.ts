@@ -628,7 +628,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
-      descripcion: this.descripcion_item
+      descripcion: this.descripcion_item,
+      medida: this.medida_item
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
