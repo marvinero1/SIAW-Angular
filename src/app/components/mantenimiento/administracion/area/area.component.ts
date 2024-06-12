@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
@@ -19,43 +19,43 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   templateUrl: './area.component.html',
   styleUrls: ['./area.component.scss']
 })
-export class AreaComponent{
+export class AreaComponent implements OnInit {
 
-  area:any=[]; 
-  data:[];
+  area: any = [];
+  data: [];
 
-  displayedColumns = ['codigo','ciudad' ,'descripcion','horareg','fechareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'ciudad', 'descripcion', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | Area>('');
   options: Area[] = [];
   filteredOptions: Observable<Area[]>;
-  userConn:string;
-  usuarioLogueado:string;
-  
-  nombre_ventana:string="abmadarea.vb";
-  public ventana="Area"
-  public detalle="area-delete";
-  public tipo="area-DELETE";
+  userConn: string;
+  usuarioLogueado: string;
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
+  nombre_ventana: string = "abmadarea.vb";
+  public ventana = "Area"
+  public detalle = "area-delete";
+  public tipo = "area-DELETE";
+
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
-    
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;    
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.mandarNombre();
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
     this.getAllArea();
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -65,9 +65,9 @@ export class AreaComponent{
     );
   }
 
-  getAllArea(){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adarea/'+this.userConn)
+  getAllArea() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/seg_adm/mant/adarea/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.area = datav;
@@ -81,18 +81,18 @@ export class AreaComponent{
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(AreaCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -111,47 +111,47 @@ export class AreaComponent{
     return user && user.codigo ? user.codigo : '';
   }
 
-  editar(dataAreaEdit){
+  editar(dataAreaEdit) {
     this.data = dataAreaEdit;
     this.dialog.open(AreaEditComponent, {
-      data: {dataAreaEdit:dataAreaEdit},
+      data: { dataAreaEdit: dataAreaEdit },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/adarea/'+this.userConn+"/"+ element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adarea/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

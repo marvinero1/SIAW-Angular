@@ -17,7 +17,6 @@ import { ModalPrecioControlComponent } from './modal-precioControl/modal-precioC
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-item',
   templateUrl: './item.component.html',
@@ -25,11 +24,11 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class ItemComponent implements OnInit {
 
-  nombre_ventana:string="abminitem.vb"; 
+  nombre_ventana: string = "abminitem.vb";
 
-  public item=[]; 
-  public data=[];
-  displayedColumns = ['codigo','descripcion','descripcorta','descripabr','medida','unidad','accion'];
+  public item = [];
+  public data = [];
+  displayedColumns = ['codigo', 'descripcion', 'descripcorta', 'descripabr', 'medida', 'unidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -37,26 +36,25 @@ export class ItemComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  
+
   myControl = new FormControl<string | Item>('');
   options: Item[] = [];
   filteredOptions: Observable<Item[]>;
-  userConn:any;
+  userConn: any;
 
-  public ventana="Item"
-	public detalle="initem-detalle";
-	public tipo="transaccion-initem-DELETE";
+  public ventana = "Item"
+  public detalle = "initem-detalle";
+  public tipo = "transaccion-initem-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
-    this.mandarNombre();
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllitem();
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -67,11 +65,11 @@ export class ItemComponent implements OnInit {
       }),
     );
   }
-  
+
   private _filter(name: string): Item[] {
-    const filterValue = name.toLowerCase(); 
+    const filterValue = name.toLowerCase();
     let a = this.options.filter(option => option.codigo.toLowerCase().includes(filterValue))
-    
+
     return a;
   }
 
@@ -85,11 +83,11 @@ export class ItemComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getAllitem(){
+  getAllitem() {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/'+user_conn)
+    return this.api.getAll('/inventario/mant/initem/' + user_conn)
       .subscribe({
         next: (datav) => {
           this.item = datav;
@@ -103,43 +101,43 @@ export class ItemComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/initem/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            this.toastr.success('! SE ELIMINO EXITOSAMENTE !');
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/initem/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.toastr.success('! SE ELIMINO EXITOSAMENTE !');
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! NO SE ELIMINO !');
       }
     });
@@ -148,7 +146,7 @@ export class ItemComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(ItemCreateComponent, {
       width: '1100px',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -156,47 +154,47 @@ export class ItemComponent implements OnInit {
 
   editar(item): void {
     this.data = item;
-      const dialogRef = this.dialog.open(ItemEditComponent, {
-        data: {dataItem:item},
-        width: '750px',
+    const dialogRef = this.dialog.open(ItemEditComponent, {
+      data: { dataItem: item },
+      width: '750px',
     });
   }
 
-  saldosAcubrir(item){
+  saldosAcubrir(item) {
     this.data = item;
-      const dialogRef = this.dialog.open(ModalSaldoCubrirComponent, {
-        data: {dataItem:item},
-        width: '750px',
+    const dialogRef = this.dialog.open(ModalSaldoCubrirComponent, {
+      data: { dataItem: item },
+      width: '750px',
     });
   }
 
-  componentesArmarKit(item){
+  componentesArmarKit(item) {
     this.data = item;
-      const dialogRef = this.dialog.open(ModalComponenteskitComponent, {
-        data: {dataItem:item},
-        width: '750px',
+    const dialogRef = this.dialog.open(ModalComponenteskitComponent, {
+      data: { dataItem: item },
+      width: '750px',
     });
   }
 
-  maximoVentas(item){
+  maximoVentas(item) {
     this.data = item;
-      const dialogRef = this.dialog.open(ModalMaximoVentasComponent, {
-        data: {dataItem:item},
-        width: '1050px',
-    });
-  }
-  
-  controPrecio(item){
-    this.data = item;
-      const dialogRef = this.dialog.open(ModalPrecioControlComponent, {
-        data: {dataItem:item},
-        width: '750px',
+    const dialogRef = this.dialog.open(ModalMaximoVentasComponent, {
+      data: { dataItem: item },
+      width: '1050px',
     });
   }
 
-  mandarNombre(){
+  controPrecio(item) {
+    this.data = item;
+    const dialogRef = this.dialog.open(ModalPrecioControlComponent, {
+      data: { dataItem: item },
+      width: '750px',
+    });
+  }
+
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

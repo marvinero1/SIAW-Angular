@@ -18,7 +18,6 @@ import { CatalogoPuntoVentaComponent } from '../punto-venta/catalogo-punto-venta
 import { ProvinciasService } from '@components/mantenimiento/administracion/provinciadptopais/services-provincias/provincias.service';
 import { PuntoventaService } from '../punto-venta/servicio-punto-venta/puntoventa.service';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
-
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
@@ -68,11 +67,9 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService, public log_module: LogService, private datePipe: DatePipe, private toastr: ToastrService,
     public servicioCliente: ServicioclienteService, public servicesPuntoVenta: PuntoventaService,
     public nombre_ventana_service: NombreVentanaService, public servicioRubro: ServiciorubroService,
-    public servicioZona: ServiciozonaService, public provinciaService: ProvinciasService,) {
+    public servicioZona: ServiciozonaService, public provinciaService: ProvinciasService) {
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     this.FormularioData = this.createForm();
 
     this.mandarNombre();
@@ -80,7 +77,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     this.getVendedor();
     this.getAllmoneda();
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {

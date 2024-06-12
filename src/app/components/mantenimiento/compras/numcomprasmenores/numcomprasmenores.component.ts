@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { cmtipocompra } from '@services/modelos/objetos';
 import { NumcomprasmenoresCreateComponent } from './numcomprasmenores-create/numcomprasmenores-create.component';
 import { NumcomprasmenoresEditComponent } from './numcomprasmenores-edit/numcomprasmenores-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -15,57 +13,47 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
-
 @Component({
   selector: 'app-numcomprasmenores',
   templateUrl: './numcomprasmenores.component.html',
   styleUrls: ['./numcomprasmenores.component.scss']
 })
-export class NumcomprasmenoresComponent {
+export class NumcomprasmenoresComponent implements OnInit {
 
-  numCmpMen:any=[]; 
-  data:[];
+  numCmpMen: any = [];
+  data: [];
   datanumCmpMenEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','codunidad','descUnidad','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | cmtipocompra>('');
   options: cmtipocompra[] = [];
   filteredOptions: Observable<cmtipocompra[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmcmtipocompra.vb";
-  public ventana="numComprasMenores"
-  public detalle="numComprasMenores-delete";
-  public tipo="numComprasMenores-DELETE";
+  nombre_ventana: string = "abmcmtipocompra.vb";
+  public ventana = "numComprasMenores"
+  public detalle = "numComprasMenores-delete";
+  public tipo = "numComprasMenores-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-
-
-
 
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllNumComprasMeno(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -75,11 +63,9 @@ export class NumcomprasmenoresComponent {
     );
   }
 
-
-
-  getAllNumComprasMeno(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/compras/mant/cmtipocompra/'+userConn)
+  getAllNumComprasMeno(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/compras/mant/cmtipocompra/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numCmpMen = datav;
@@ -93,18 +79,18 @@ export class NumcomprasmenoresComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumcomprasmenoresCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -123,54 +109,52 @@ export class NumcomprasmenoresComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumCmpMenEdit){
-    this.datanumCmpMenEdit_copied ={...datanumCmpMenEdit};
+  editar(datanumCmpMenEdit) {
+    this.datanumCmpMenEdit_copied = { ...datanumCmpMenEdit };
     console.log(this.datanumCmpMenEdit_copied);
-    
+
     this.data = datanumCmpMenEdit;
     this.dialog.open(NumcomprasmenoresEditComponent, {
-      data: {datanumCmpMenEdit:this.datanumCmpMenEdit_copied},
+      data: { datanumCmpMenEdit: this.datanumCmpMenEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  compras/mant/cmtipocompra/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  compras/mant/cmtipocompra/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/compras/mant/cmtipocompra/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/compras/mant/cmtipocompra/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
-
-
 }

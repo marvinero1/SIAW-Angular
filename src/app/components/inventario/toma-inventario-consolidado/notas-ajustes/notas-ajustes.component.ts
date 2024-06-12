@@ -39,13 +39,13 @@ export class NotasAjustesComponent implements OnInit {
   concepto_movimiento_descripcion: string;
   concepto_movimiento_factor: any;
   concepto_movimiento_concat: string;
-  userConn:any;
+  userConn: any;
   dataform: any = '';
-  sobrantesFisicos=false;
-  faltantesFisicos=false;
+  sobrantesFisicos = false;
+  faltantesFisicos = false;
   disabled = false;
   disabled_FF = false;
-  cabecera: any = []; 
+  cabecera: any = [];
   cabecera_items: any = [];
   cod_almacen_cliente: any = [];
   cod_almacen_cliente_origen: any = [];
@@ -54,34 +54,32 @@ export class NotasAjustesComponent implements OnInit {
   items_negativos: any = [];
   save_ajustes: any = [];
 
-  nombre_ventana:string="prggeneraajuste.vb";
+  nombre_ventana: string = "prggeneraajuste.vb";
   public ventana = "Generar Notas de Ajuste"
-  
+
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<NotasAjustesComponent>,
     private api: ApiService, @Inject(MAT_DIALOG_DATA) public dataInventario: any,
     @Inject(MAT_DIALOG_DATA) public item_ajustes: any, public log_module: LogService,
-    private _formBuilder: FormBuilder, public nombre_ventana_service:NombreVentanaService,
+    private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService,
     private toastr: ToastrService, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     public serviciovendedor: VendedorService, public notasMovimientoService: NotasMovimientoService,
     public servicioMovimientoMercaderia: MovimientomercaderiaService, public almacenservice: ServicioalmacenService,
     private refreshItemSer: ServiceRefreshItemsService) {
-    
+
     this.cabecera = this.dataInventario.dataInventario;
     this.cabecera_items = this.item_ajustes.item_ajustes
     console.log(this.cabecera, this.cabecera_items);
-    
+
     this.FormularioData = this.createForm();
-    
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     console.log("Sobrantes: " + this.sobrantesFisicos, "Faltantes Fisicos: " + this.faltantesFisicos);
-    
-    this.notasMovimientoService.disparadorDeNotasMovimiento.subscribe(data =>{
+
+    this.notasMovimientoService.disparadorDeNotasMovimiento.subscribe(data => {
       console.log("Recibiendo Notas de Movimiento: ", data);
       this.notas_movimiento_get = data.movimiento;
       this.notas_movimiento_get_codigo = data.movimiento.codigo;
@@ -89,49 +87,49 @@ export class NotasAjustesComponent implements OnInit {
       console.log(this.notas_movimiento_get);
     });
 
-    this.servicioMovimientoMercaderia.disparadorDeConceptos.subscribe(data =>{
+    this.servicioMovimientoMercaderia.disparadorDeConceptos.subscribe(data => {
       console.log("Recibiendo Concepto Mercaderia: ", data);
-      console.log("Factor Concepto"+data.concepto.factor);
-      
+      console.log("Factor Concepto" + data.concepto.factor);
+
       this.concepto_movimiento_codigo = data.concepto.codigo;
       this.concepto_movimiento_descripcion = data.concepto.descripcion;
       this.concepto_movimiento_factor = data.concepto.factor;
-      this.concepto_movimiento_concat = data.concepto.codigo +" - "+ data.concepto.descripcion;
+      this.concepto_movimiento_concat = data.concepto.codigo + " - " + data.concepto.descripcion;
       console.log(this.concepto_movimiento_factor);
     });
 
-    this.serviciovendedor.disparadorDeVendedores.subscribe(data =>{
-      console.log("Recibiendo Vendedor: " , data);
+    this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
+      console.log("Recibiendo Vendedor: ", data);
       this.cod_vendedor_cliente_modal = data.vendedor;
     });
 
-    this.almacenservice.disparadorDeAlmacenes.subscribe(data =>{
+    this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
       this.cod_almacen_cliente = data.almacen;
     });
 
-    this.almacenservice.disparadorDeAlmacenesOrigen.subscribe(data =>{
+    this.almacenservice.disparadorDeAlmacenesOrigen.subscribe(data => {
       console.log("Recibiendo Almacen Origen: ", data);
       this.cod_almacen_cliente_origen = data.almacen;
     });
-    
-    this.almacenservice.disparadorDeAlmacenesDestino.subscribe(data =>{
+
+    this.almacenservice.disparadorDeAlmacenesDestino.subscribe(data => {
       console.log("Recibiendo Almacen Destino: ", data);
       this.cod_almacen_cliente_destinado = data.almacen;
     });
   }
-  
-  createForm(): FormGroup{
+
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     console.log(usuario_logueado);
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       id: [this.dataform.id, Validators.compose([Validators.required])],
-      numeroid: [{value:this.dataform.numeroid, disabled:true}, Validators.compose([Validators.required]) ],
+      numeroid: [{ value: this.dataform.numeroid, disabled: true }, Validators.compose([Validators.required])],
       codconcepto: [this.concepto_movimiento_codigo],
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       fecha: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
@@ -163,13 +161,13 @@ export class NotasAjustesComponent implements OnInit {
     });
   }
 
-  submitData(){
+  submitData() {
     let ventana = "Generar Notas de Ajustes";
     let detalle = "Generar Notas de Ajustes-POST";
     let tipo = "GenerarNotasAjustes-POST";
 
     // let data = this.FormularioData.value;
-    console.log("Faltantes Fisicos"+this.faltantesFisicos, "Sobrantes Fisicos"+this.sobrantesFisicos);    
+    console.log("Faltantes Fisicos" + this.faltantesFisicos, "Sobrantes Fisicos" + this.sobrantesFisicos);
     //cuando los items son negativos van con esta variable en TRUE
     this.sobrantesFisicos
     //cuando los items son positivos van con esta variable en TRUE
@@ -177,62 +175,39 @@ export class NotasAjustesComponent implements OnInit {
     //filtro de positivos y megativos de los items.
     this.items_positivos = this.cabecera_items.filter(entry => entry.dif >= 0);
     this.items_negativos = this.cabecera_items.filter(entry => entry.dif < 0);
-    
+
     console.log(this.items_positivos);
     console.log(this.items_negativos);
 
     let data_items_positivos = {
       inmovimientoCab: this.FormularioData.value,
-      detalleInvConsol:this.items_positivos
+      detalleInvConsol: this.items_positivos
     }
 
     let data_items_negativos = {
       inmovimientoCab: this.FormularioData.value,
-      detalleInvConsol:this.items_negativos
+      detalleInvConsol: this.items_negativos
     }
     // console.log(data_items_positivos);
     // console.log(data_items_negativos);
-        
+
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/transac/prggeneraajuste/";
 
     const dialogRef = this.dialog.open(ConfirmacionNotasAjustesComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
         if (this.faltantesFisicos) {
-          return this.api.create("/inventario/transac/prggeneraajuste/"+this.userConn, data_items_positivos)
-          .subscribe({
-            next: (datav) => {
-              console.log(datav);
-              this.save_ajustes = datav;        
-              this.log_module.guardarLog(ventana, detalle, tipo);
-
-              this.spinner.show();
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1500);
-
-              this.toastr.success('Guardado con Exito! 🎉');
-              this.close();  
-            },
-        
-            error: (err) => { 
-              console.log(err, errorMessage);
-              this.toastr.error('! NO SE GUARDO !');
-            },
-            complete: () => { }
-        })
-        } else {
-          return this.api.create("/inventario/transac/prggeneraajuste/"+this.userConn, data_items_negativos)
+          return this.api.create("/inventario/transac/prggeneraajuste/" + this.userConn, data_items_positivos)
             .subscribe({
               next: (datav) => {
                 console.log(datav);
                 this.save_ajustes = datav;
                 this.log_module.guardarLog(ventana, detalle, tipo);
-                
+
                 this.spinner.show();
                 setTimeout(() => {
                   this.spinner.hide();
@@ -241,27 +216,50 @@ export class NotasAjustesComponent implements OnInit {
                 this.toastr.success('Guardado con Exito! 🎉');
                 this.close();
               },
-          
-              error: (err) => { 
+
+              error: (err) => {
                 console.log(err, errorMessage);
                 this.toastr.error('! NO SE GUARDO !');
               },
               complete: () => { }
-          })
+            })
+        } else {
+          return this.api.create("/inventario/transac/prggeneraajuste/" + this.userConn, data_items_negativos)
+            .subscribe({
+              next: (datav) => {
+                console.log(datav);
+                this.save_ajustes = datav;
+                this.log_module.guardarLog(ventana, detalle, tipo);
+
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+
+                this.toastr.success('Guardado con Exito! 🎉');
+                this.close();
+              },
+
+              error: (err) => {
+                console.log(err, errorMessage);
+                this.toastr.error('! NO SE GUARDO !');
+              },
+              complete: () => { }
+            })
         }
-      }else{
+      } else {
         this.toastr.error('! SE CANCELO EL AJUSTE !');
       }
     })
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  modalNotasMovimiento() { 
+  modalNotasMovimiento() {
     this.dialog.open(CatalogoNotasMovimientoComponent, {
       width: 'auto',
       height: 'auto',
@@ -272,23 +270,23 @@ export class NotasAjustesComponent implements OnInit {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{almacen:"almacen"}
+      data: { almacen: "almacen" }
     });
   }
 
-  modalAlmacenOrigen() { 
+  modalAlmacenOrigen() {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{origen:"origen"}
+      data: { origen: "origen" }
     });
   }
 
-  modalAlmacenDestino() { 
+  modalAlmacenDestino() {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{destino:"destino"}
+      data: { destino: "destino" }
     });
   }
 
@@ -299,14 +297,14 @@ export class NotasAjustesComponent implements OnInit {
     });
   }
 
-  modalcatalogoConcepto() { 
+  modalcatalogoConcepto() {
     this.dialog.open(CatalogoMovimientoMercaderiaComponent, {
       width: 'auto',
       height: 'auto',
     });
   }
 
-  close(){ 
+  close() {
     this.dialogRef.close();
     this.refreshItemSer.callItemFunction();
   }

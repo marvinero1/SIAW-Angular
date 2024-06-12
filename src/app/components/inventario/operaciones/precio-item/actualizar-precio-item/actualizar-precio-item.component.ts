@@ -14,47 +14,46 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ActualizarPrecioItemComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  userConn:any;
+  dataform: any = '';
+  userConn: any;
 
-  tarifa_save:any=[];
-  codigo_item_catalogo:any=[];
-  cod_precio_venta_modal:any=[];
-  codigo_item_catalogo_get:any=[];
+  tarifa_save: any = [];
+  codigo_item_catalogo: any = [];
+  cod_precio_venta_modal: any = [];
+  codigo_item_catalogo_get: any = [];
 
-  nombre_ventana:string="prgindefinir_precioitem.vb";
+  nombre_ventana: string = "prgindefinir_precioitem.vb";
 
-  public ventana="PrecioItem"
-  public detalle="PrecioItem-UPDATE";
-  public tipo="PrecioItem-UPDATE";
-  
-  constructor(private api:ApiService, public dialog: MatDialog, private _formBuilder: FormBuilder, private toastr: ToastrService,
-     public log_module:LogService, public servicioPrecioVenta:ServicioprecioventaService ){ 
-      
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+  public ventana = "PrecioItem"
+  public detalle = "PrecioItem-UPDATE";
+  public tipo = "PrecioItem-UPDATE";
+
+  constructor(private api: ApiService, public dialog: MatDialog, private _formBuilder: FormBuilder, private toastr: ToastrService,
+    public log_module: LogService, public servicioPrecioVenta: ServicioprecioventaService) {
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
   }
 
   ngOnInit() {
 
-     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data =>{
+    this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Precio Venta: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
     });
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
-  
+
     return this._formBuilder.group({
       item: [this.dataform.item],
       codtarifa: [this.dataform.codtarifa],
@@ -62,23 +61,23 @@ export class ActualizarPrecioItemComponent implements OnInit {
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/oper/prgcrearinv/";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgcrearinv/";
     console.log(data);
-    
-    return this.api.update("/inventario/oper/prgindefinir_precioitem/updateTarifa1/"+this.userConn, data)
+
+    return this.api.update("/inventario/oper/prgindefinir_precioitem/updateTarifa1/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.tarifa_save = datav;
-        
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.toastr.success('Guardado con Exito! 🎉');
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },

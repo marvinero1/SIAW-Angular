@@ -10,6 +10,9 @@ import { SaldoItemMatrizService } from './services-saldo-matriz/saldo-item-matri
 import { ItemSeleccionCantidadComponent } from './item-seleccion-cantidad/item-seleccion-cantidad.component';
 import { ServicioF9Service } from './stock-actual-f9/servicio-f9.service';
 import { DatePipe } from '@angular/common';
+import { ModalPrecioVentaComponent } from '../modal-precio-venta/modal-precio-venta.component';
+import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
+
 import Handsontable from 'handsontable';
 @Component({
   selector: 'app-matriz-items',
@@ -124,6 +127,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   contador: number = 0;
   codigo_item_celda: any;
 
+  tarifa_get_unico: any = [];
+  tarifa_get_unico_copied: any = [];
+  cod_precio_venta_modal_codigo: any;
+
   izquierda: string = "izquierda";
   derecha: string = "derecha";
 
@@ -134,13 +141,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2,
     private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
-    public serviciof9: ServicioF9Service, private datePipe: DatePipe,
+    public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
 
     @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any
+  ) {
 
     this.array_items_proforma_matriz = items.items;
 
@@ -243,6 +251,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // });
     //
 
+    this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
+      console.log("Recibiendo Precio de Venta: ", data);
+      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
+    });
+
     //this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length; //aca pone la longitud del carrito con los items concatenados del detalle de la proforma
     this.array_items_seleccionados_length = this.array_items_seleccionado.length;
     console.log(this.tamanio_lista_item_pedido, this.array_items_seleccionados_length);
@@ -264,6 +277,46 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //this.myInputField.nativeElement.focus();
     this.focusMyInput();
   }
+
+  simulateEnterKey(): void {
+    this.focusPedido();
+  }
+
+  agregarCarritoMobile() {
+    this.addItemArray();
+  }
+
+  onLeavePrecioVenta(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  getTarifa() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET /inventario/mant/intarifa/catalogo/";
+    return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuario_logueado)
+      .subscribe({
+        next: (datav) => {
+          this.tarifa_get_unico = datav;
+          this.tarifa_get_unico_copied = this.tarifa_get_unico.slice();
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
 
   onCellClick1(item: any): void {
     console.log("adentro");
@@ -319,7 +372,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           // LETRA
           this.id_tipo[1].forEach(element => {
             if (element.descripcion === 'Total Saldo') {
-              this.saldoItem = element.valor;
+              if (element.valor < 0) {
+                this.saldoItem = 0;
+              } else {
+                this.saldoItem = element.valor;
+              }
+
               console.log(this.saldoItem);
             }
           });
@@ -457,6 +515,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           readOnly: true,
         },
         {
+          data: 'k',
+          type: 'text',
+          readOnly: true,
+        },
+        {
           data: 'l',
           type: 'text',
           readOnly: true,
@@ -466,6 +529,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           type: 'text',
           readOnly: true,
         },
+
       ],
       className: 'my-custom-row-class',
 
@@ -564,6 +628,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
+      descripcion: this.descripcion_item
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
@@ -897,6 +962,15 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     });
 
     console.log(this.dataItemsSeleccionadosMultiple);
+  }
+
+  modalPrecioVenta(): void {
+    this.dialog.open(ModalPrecioVentaComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { detalle: false }
+    });
   }
 
   close() {

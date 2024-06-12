@@ -22,14 +22,14 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LineaproductoComponent implements OnInit {
 
-  public ingrupo=[];
-  public data_edit=[];
-  displayedColumns = ['codigo','descripcion','codgrupomer','codgrupomer','codgrupo','codsubgrupo_vta','descdetallada',
-                      'porcentaje_comis','accion'];
+  public ingrupo = [];
+  public data_edit = [];
+  displayedColumns = ['codigo', 'descripcion', 'codgrupomer', 'codgrupomer', 'codgrupo', 'codsubgrupo_vta', 'descdetallada',
+    'porcentaje_comis', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
-  userConn:any;
+  userConn: any;
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
@@ -38,19 +38,19 @@ export class LineaproductoComponent implements OnInit {
   options: inLineaProducto[] = [];
   filteredOptions: Observable<inLineaProducto[]>;
 
-  nombre_ventana:string="abminlinea.vb";
-  public ventana="Linea Producto"
-	public detalle="lineaProd-detalle";
+  nombre_ventana: string = "abminlinea.vb";
+  public ventana = "Linea Producto"
+  public detalle = "lineaProd-detalle";
   public tipo = "transaccion-lineaProd-DELETE";
-  
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, 
-    public _snackBar: MatSnackBar, public log_module: LogService,private toastr: ToastrService, 
-    public nombre_ventana_service: NombreVentanaService) {
-      this.mandarNombre();
-      let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-      this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public _snackBar: MatSnackBar, public log_module: LogService, private toastr: ToastrService,
+    public nombre_ventana_service: NombreVentanaService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
@@ -68,15 +68,15 @@ export class LineaproductoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
   }
-  
+
   displayFn(user: inLineaProducto): string {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getAlllineaProducto(){
-    let errorMessage:string;
+  getAlllineaProducto() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inlinea/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inlinea/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.ingrupo = datav;
@@ -91,8 +91,8 @@ export class LineaproductoComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -101,56 +101,56 @@ export class LineaproductoComponent implements OnInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(LineaproductoCreateComponent, {
-      width: '950px',
+      width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- /inventario/mant/inlinea Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /inventario/mant/inlinea Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
-      width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      width: 'auto',
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/inlinea/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: ()=>{
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            this._snackBar.open('Se elimino correctamente!', 'Ok', {
-              duration: 3000,
-            });
-            this.toastr.success('Eliminado con Exito! 🎉'); 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/inlinea/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this._snackBar.open('Se elimino correctamente!', 'Ok', {
+                duration: 3000,
+              });
+              this.toastr.success('Eliminado con Exito! 🎉');
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  catalogoLineas() { 
+  catalogoLineas() {
     this.dialog.open(LineaProductoCatalogoComponent, {
       width: 'auto',
       height: 'auto',

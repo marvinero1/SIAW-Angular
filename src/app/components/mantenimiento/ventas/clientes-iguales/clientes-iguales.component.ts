@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,17 +22,17 @@ import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/alma
   templateUrl: './clientes-iguales.component.html',
   styleUrls: ['./clientes-iguales.component.scss']
 })
-  
-export class ClientesIgualesComponent implements OnInit {
 
-  @HostListener("document:keydown.F4", []) unloadHandler(event: KeyboardEvent){
+export class ClientesIgualesComponent implements OnInit, AfterContentInit {
+
+  @HostListener("document:keydown.F4", []) unloadHandler(event: KeyboardEvent) {
     console.log("Hola Lola F4");
     const focusedElement = document.activeElement as HTMLElement;
-    if(focusedElement){
+    if (focusedElement) {
       const elementTagName = focusedElement.id;
       console.log(`Elemento enfocado: ${elementTagName}`);
 
-      switch(elementTagName){
+      switch (elementTagName) {
         case "clienteA":
           this.modalClientes();
           break;
@@ -43,56 +43,57 @@ export class ClientesIgualesComponent implements OnInit {
           this.modalAlmacen();
           break;
       }
-  }};  
-  
-  FormularioData:FormGroup;
-  dataform:any='';
+    }
+  };
+
+  FormularioData: FormGroup;
+  dataform: any = '';
 
   userConn: any;
   usuarioLogueado: any;
   codigo_cliente_catalogo_nombreA: any;
   codigo_cliente_catalogo_nombreB: any;
   almacen_id: any;
-  almacen_descripcion:string;
-  
-  clientesIguales:any=[]; 
+  almacen_descripcion: string;
+
+  clientesIguales: any = [];
   data: [];
   codigo_cliente_catalogo: any = [];
   codigo_cliente_catalogo_2: any = [];
   cod_almacen_cliente: any = [];
   area_clientes_iguales: any = [];
-  cliente:any = []; 
+  cliente: any = [];
   agencia_get: any = [];
-  cliente_id: any = []; 
+  cliente_id: any = [];
 
   er: string;
-  displayedColumns = ['codcliente_a','razonsocial_a' ,'codcliente_b','razonsocial_b','accion'];
+  displayedColumns = ['codcliente_a', 'razonsocial_a', 'codcliente_b', 'razonsocial_b', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
+
   myControl = new FormControl<string | veClientesIguales>('');
   options: veClientesIguales[] = [];
   filteredOptions: Observable<veClientesIguales[]>;
 
   nombre_ventana: string = "abmveclientesiguales.vb";
-  public ventana="Clientes Iguales"
-  public detalle="clientes-iguales"; 
-  public tipo="clientes-iguales-CREATE";
+  public ventana = "Clientes Iguales"
+  public detalle = "clientes-iguales";
+  public tipo = "clientes-iguales-CREATE";
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
     public servicioCliente: ClientesIgulesService, public almacenservice: ServicioalmacenService,
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public interc: Interceptor) {
-    
+
     this.er = this.interc.err;
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
   }
@@ -104,24 +105,24 @@ export class ClientesIgualesComponent implements OnInit {
 
   ngAfterContentInit(): void {
     this.getAlmacen();
-    
+
     //Called after ngOnInit when the component's or directive's content has been initialized.
     //Add 'implements AfterContentInit' to the class.
-    this.servicioCliente.disparadorDeClienteA.subscribe(data =>{
-      console.log("Recibiendo Cliente: " , data.cliente);
+    this.servicioCliente.disparadorDeClienteA.subscribe(data => {
+      console.log("Recibiendo Cliente: ", data.cliente);
       this.codigo_cliente_catalogo = data.cliente;
       this.codigo_cliente_catalogo_nombreA = data.cliente.nombre;
       console.log(this.codigo_cliente_catalogo_nombreA);
     });
 
-    this.almacenservice.disparadorDeAlmacenes.subscribe(data =>{
+    this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
       this.cod_almacen_cliente = data.almacen;
       this.almacen_descripcion = this.cod_almacen_cliente.descripcion
     });
 
-    this.servicioCliente.disparadorDeClienteB.subscribe(data2 =>{
-      console.log("Recibiendo Cliente: " , data2.cliente);
+    this.servicioCliente.disparadorDeClienteB.subscribe(data2 => {
+      console.log("Recibiendo Cliente: ", data2.cliente);
       this.codigo_cliente_catalogo_2 = data2.cliente;
       this.codigo_cliente_catalogo_nombreB = data2.cliente.nombre;
     });
@@ -141,45 +142,45 @@ export class ClientesIgualesComponent implements OnInit {
   displayFn(user: veClientesIguales): string {
     return user && user.codcliente_a ? user.codcliente_a : '';
   }
-  
-  createForm(): FormGroup{
+
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codcliente_a: [this.dataform.codcliente_a, Validators.compose([Validators.required])],
-      codcliente_b: [this.dataform.codcliente_b,  Validators.compose([Validators.required])],
+      codcliente_b: [this.dataform.codcliente_b, Validators.compose([Validators.required])],
       codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /venta/mant/veclientesiguales/";
-    
-    return this.api.create("/venta/mant/veclientesiguales/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/veclientesiguales/";
+
+    return this.api.create("/venta/mant/veclientesiguales/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.area_clientes_iguales = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
-          this.getClientesIguales();               
+          this.getClientesIguales();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
   }
 
-  getClientesIguales() { 
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/veclientesiguales/'+this.userConn)
+  getClientesIguales() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/venta/mant/veclientesiguales/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.clientesIguales = datav;
           console.log(this.clientesIguales);
-          
+
           this.dataSource = new MatTableDataSource(this.clientesIguales);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
@@ -189,48 +190,48 @@ export class ClientesIgualesComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   eliminar(element) {
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/venta/mant/veclientesiguales/'+this.userConn+"/"+element.codcliente_a+"/"+element.codcliente_b)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/venta/mant/veclientesiguales/' + this.userConn + "/" + element.codcliente_a + "/" + element.codcliente_b)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
@@ -238,7 +239,7 @@ export class ClientesIgualesComponent implements OnInit {
     this.dialog.open(CatalogoClientesIgualesComponent, {
       width: 'auto',
       height: 'auto',
-      data:{dataCatalogo:'A'}
+      data: { dataCatalogo: 'A' }
     });
   }
 
@@ -246,37 +247,37 @@ export class ClientesIgualesComponent implements OnInit {
     this.dialog.open(CatalogoClientesIgualesComponent, {
       width: 'auto',
       height: 'auto',
-      data:{dataCatalogo:'B'}
+      data: { dataCatalogo: 'B' }
     });
   }
-  
-  getClienteCatalogo(){
-    let errorMessage:string;
+
+  getClienteCatalogo() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vecliente/catalogo/'+this.userConn)
+    return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cliente = datav;
           console.log('data', datav);
 
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getClienteId(id:string, id_input){
+  getClienteId(id: string, id_input) {
     let nombre_comercial;
     let razonsocial;
-    return this.api.getAll('/venta/mant/vecliente/'+this.userConn+"/"+id)
+    return this.api.getAll('/venta/mant/vecliente/' + this.userConn + "/" + id)
       .subscribe({
         next: (datav) => {
           this.cliente_id = datav;
           console.log('data', this.cliente_id.cliente);
-         
+
           if (id_input === "clienteA") {
             this.cliente_id.cliente.nombre_comercial;
 
@@ -285,7 +286,7 @@ export class ClientesIgualesComponent implements OnInit {
 
             this.codigo_cliente_catalogo_nombreA = nombre_comercial + razonsocial;
 
-          } if(id_input === "clienteB"){
+          } if (id_input === "clienteB") {
             this.cliente_id.cliente.nombre_comercial;
 
             nombre_comercial = this.cliente_id.cliente.nombre_comercial;
@@ -294,32 +295,32 @@ export class ClientesIgualesComponent implements OnInit {
             this.codigo_cliente_catalogo_nombreB = nombre_comercial + razonsocial;
           }
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err);
         },
         complete: () => { }
       })
   }
 
-  getAlmacen(){
+  getAlmacen() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/mant/inalmacen/catalogo/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.agencia_get = datav;
           console.log(this.agencia_get);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAlmacenId(id:any){
-    return this.api.getAll('/inventario/mant/inalmacen/consultaAlm/'+this.userConn+"/"+id)
+  getAlmacenId(id: any) {
+    return this.api.getAll('/inventario/mant/inalmacen/consultaAlm/' + this.userConn + "/" + id)
       .subscribe({
         next: (datav) => {
           this.almacen_id = datav;
@@ -327,8 +328,8 @@ export class ClientesIgualesComponent implements OnInit {
 
           this.almacen_descripcion = this.almacen_id.descripcion;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err);
         },
         complete: () => { }
@@ -339,17 +340,17 @@ export class ClientesIgualesComponent implements OnInit {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{almacen:"almacen"}
+      data: { almacen: "almacen" }
     });
   }
 
-  onLeave(event: any, id_input:any){
+  onLeave(event: any, id_input: any) {
     const inputValue = event.target.value;
-        
+
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.clientesIguales.some(objeto => objeto.codcliente_a === inputValue);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -357,7 +358,7 @@ export class ClientesIgualesComponent implements OnInit {
       if (id_input === "clienteA") {
         this.getClienteId(inputValue, 'clienteA');
       } else {
-         this.getClienteId(inputValue, 'clienteB');
+        this.getClienteId(inputValue, 'clienteB');
       }
     }
 
@@ -366,19 +367,19 @@ export class ClientesIgualesComponent implements OnInit {
   }
 
   onLeaveAlmacen(event: any) {
-    const inputValue = event.target.value;   
-    
+    const inputValue = event.target.value;
+
     let miNumero = parseInt(inputValue, 10);
     console.log(inputValue, this.agencia_get);
     const encontrado = this.agencia_get.some(objeto => objeto.codigo === miNumero);
 
-      if(!encontrado) {
-        // Si el valor no está en el array, dejar el campo vacío
-        event.target.value = '';
-        console.log("NO ENCONTRADO INPUT");
-      } else {
-        this.getAlmacenId(inputValue);
-      }
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO INPUT");
+    } else {
+      this.getAlmacenId(inputValue);
+    }
 
     // Puedes realizar otras acciones según tus necesidades
     console.log('Input perdió el foco', miNumero);

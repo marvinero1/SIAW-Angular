@@ -1,7 +1,7 @@
 <div class="all mat-elevation-z8">
   <div style="position: sticky;padding-top: 10px;">
     <div class="row">
-      <div class="col-md-8" style="padding-left: 20px;">
+      <div class="col-md-9" style="padding-left: 20px;">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
           <mat-label># Hoja</mat-label>
           <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja">
@@ -9,6 +9,7 @@
         <button mat-raised-button color="secondary" (click)="getHoja();">
           <i class="fa fa-search"></i>
         </button>
+
         <ng-container>
           <a (click)="pasarHoja(izquierda, num_hoja);">
             <mat-icon style="padding-block-start: 5px !important;">
@@ -32,17 +33,14 @@
 
         <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
           <i class="fa fa-cart-plus"></i> OK
-        </button>
-
-        <!-- <button mat-raised-button color="primary" (click)="focusMyInput();"><i class="fa fa-plus"></i>
-                Focus
-              </button> -->
-
+        </button>&nbsp;
+        <!-- MENU CARRITO DE COMPRAS-->
         <mat-menu #menu="matMenu" xPosition="after">
           <ng-container>
             <table style="margin-left: 8px;">
               <tr>
                 <th style="border: 1px solid #ffc107;">Item</th>
+                <th style="border: 1px solid #ffc107;">Descrip.</th>
                 <th style="border: 1px solid #ffc107;">Pedido</th>
                 <th style="border: 1px solid #ffc107;">Cant.</th>
                 <th style="border: 1px solid #ffc107;">
@@ -56,6 +54,7 @@
               <tbody>
                 <tr *ngFor="let array_items_completos of array_items_completo">
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
                   <td>
@@ -65,21 +64,20 @@
                   </td>
                 </tr>
                 <hr>
-
                 <!-- <span>Items ya en carrito</span>
-                      <tr *ngFor="let array_items_proforma_matrizs of array_items_proforma_matriz">
-                        <td style="border: 1px solid #ffc107;">
-                          {{ array_items_proforma_matrizs.coditem }}</td>
-                        <td style="border: 1px solid #ffc107;">
-                          {{ array_items_proforma_matrizs.cantidad_pedida }}</td>
-                        <td style="border: 1px solid #ffc107;">
-                          {{ array_items_proforma_matrizs.cantidad }}</td>
-                        <td>
-                          <i class="fa fa-trash" aria-hidden="true" color="danger"
-                            (click)="eliminarItemArrayPedido(array_items_proforma_matrizs.coditem);"
-                            style="font-size: 0.5rem; color: red;"></i>
-                        </td>
-                      </tr> -->
+                <tr *ngFor="let array_items_proforma_matrizs of array_items_proforma_matriz">
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.coditem }}</td>
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.cantidad_pedida }}</td>
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.cantidad }}</td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" color="danger"
+                      (click)="eliminarItemArrayPedido(array_items_proforma_matrizs.coditem);"
+                      style="font-size: 0.5rem; color: red;"></i>
+                  </td>
+                </tr> -->
               </tbody>
             </table>
           </ng-container>
@@ -93,21 +91,50 @@
           </div>
         </mat-menu>
 
+        <div style="float: right !important;">
+          <mat-icon>mobile_friendly</mat-icon>
+          <button mat-raised-button color="primary" (click)="simulateEnterKey()" style="margin-block-end: 9px;"
+            #myButton>
+            <mat-icon>subdirectory_arrow_right</mat-icon> Enter
+          </button>
 
-        <span class="form-control-sm" style="border: 0 !important;">
-          <u>Calcular Empaques por Precio</u>
-          <input type="checkbox" formControlName="venta_cliente_oficina">
-        </span>
-        <div>
+          <button mat-raised-button color="primary" (click)="agregarCarritoMobile()" style="margin-block-end: 9px;"
+            #myButton>
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Ventas</u> </span>
+          </div>
+
+          <ng-container>
+            <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo"
+              (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta"
+              style="width: 14% !important;flex: none !important;">
+          </ng-container>
+
+          <div class="input-group-append">
+            <a class="btn btn-outline-primary form-control-sm" style="border-color: #093070;"
+              (click)="modalPrecioVenta();"> <i class="fa fa-search"></i>
+            </a>
+          </div>
+
           <span class="form-control-sm" style="border: 0 !important;">
-            <u>Calcular Empaques por Descuento</u>
+            <u>Calcular Empa. por Precio</u>
+            <input type="checkbox" formControlName="venta_cliente_oficina">
+          </span>
+
+          <span class="form-control-sm" style="border: 0 !important;">
+            <u>Calcular Empa. por Descuento</u>
             <input type="checkbox" formControlName="venta_cliente_oficina">
           </span>
         </div>
-
       </div>
 
-      <div class="col-md-4 text-right">
+      <div class="col-md-3 text-right">
         <mat-icon color="primary" (click)="close();">close</mat-icon>
       </div>
     </div>
@@ -116,6 +143,7 @@
       <div class="col-md-6" style="padding-left: 21px;">
         <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
           style="width: 16%;">
+
         <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
         <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
         <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 28%;">&nbsp;
@@ -129,8 +157,6 @@
         </ng-container>
         <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
       </div>
-
-
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
@@ -238,5 +264,4 @@
     </mat-dialog-content>
     <!-- finempaque -->
   </div>
-
 </div>

@@ -24,7 +24,6 @@
     "core-js": "3.25.0",
     "date-fns": "^3.6.0",
     "file-saver": "^2.0.5",
-    "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
@@ -115,6 +114,7 @@
   },
   "nxJsonPlugins": [],
   "fileMap": {
+    "projectFileMap": {},
     "nonProjectFiles": [
       {
         "file": ".browserslistrc",
@@ -170,7 +170,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "14257132803220803504"
+        "hash": "15323593315444896368"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -210,7 +210,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "10054864617172579136"
+        "hash": "13511190238382235933"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -286,19 +286,15 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "16302520982055220004"
+        "hash": "4739425214430067176"
       },
       {
         "file": "package.json",
-        "hash": "12772493103983788250"
+        "hash": "6775878543331786131"
       },
       {
         "file": "proxy.conf.json",
-        "hash": "194586284091667653"
-      },
-      {
-        "file": "servidores/servidores.txt",
-        "hash": "1287114882255785883"
+        "hash": "11230416426679622939"
       },
       {
         "file": "src/app/app-routing.module.ts",
@@ -386,7 +382,7 @@
       },
       {
         "file": "src/app/components/archivo/paramempresa/paramempresa.component.ts",
-        "hash": "9481995970369266199"
+        "hash": "15269843258107933403"
       },
       {
         "file": "src/app/components/inventario/catalogo-inventario/catalogo-inventario.component.html",
@@ -418,7 +414,7 @@
       },
       {
         "file": "src/app/components/inventario/crear-toma-inventario/crear-toma-inventario.component.ts",
-        "hash": "2166671475969608295"
+        "hash": "2087108607759341616"
       },
       {
         "file": "src/app/components/inventario/exportar-importar-saldos/exportar-importar-saldos.component.html",
@@ -434,7 +430,7 @@
       },
       {
         "file": "src/app/components/inventario/exportar-importar-saldos/exportar-importar-saldos.component.ts",
-        "hash": "8047972964710102123"
+        "hash": "5832435806234100610"
       },
       {
         "file": "src/app/components/inventario/matriz-inventario/matriz-inventario.component.html",
@@ -466,7 +462,7 @@
       },
       {
         "file": "src/app/components/inventario/operaciones/precio-item/actualizar-precio-item/actualizar-precio-item.component.ts",
-        "hash": "3795107342355611965"
+        "hash": "15643946628820223282"
       },
       {
         "file": "src/app/components/inventario/operaciones/precio-item/precio-item.component.html",
@@ -482,7 +478,7 @@
       },
       {
         "file": "src/app/components/inventario/operaciones/precio-item/precio-item.component.ts",
-        "hash": "12293681174323759725"
+        "hash": "3924771669454484023"
       },
       {
         "file": "src/app/components/inventario/operaciones/precio-item/validar-permiso-item/validar-permiso-item.component.html",
@@ -530,7 +526,7 @@
       },
       {
         "file": "src/app/components/inventario/registrar-inventario-grupo/registrar-inventario-grupo.component.ts",
-        "hash": "12214173374648074273"
+        "hash": "12638445026827007105"
       },
       {
         "file": "src/app/components/inventario/saldos-inventario/actualizar-stock-actual/actualizar-stock-actual.component.html",
@@ -546,7 +542,7 @@
       },
       {
         "file": "src/app/components/inventario/saldos-inventario/actualizar-stock-actual/actualizar-stock-actual.component.ts",
-        "hash": "10927162641443390561"
+        "hash": "7361105854186065024"
       },
       {
         "file": "src/app/components/inventario/servicio-inventario/servicio-inventario.service.spec.ts",
@@ -634,7 +630,7 @@
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/notas-ajustes/notas-ajustes.component.ts",
-        "hash": "6066955995900211457"
+        "hash": "11815694486199386386"
       },
       {
         "file": "src/app/components/inventario/toma-inventario-consolidado/saldos/saldos-inventario-consolidado/saldos-inventario-consolidado.component.html",
@@ -754,7 +750,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area.component.ts",
-        "hash": "7840526082206843111"
+        "hash": "4454035322164004755"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/dptopais/dptopais-create/dptopais-create.component.html",
@@ -802,7 +798,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/dptopais/dptopais.component.ts",
-        "hash": "15036575421932350625"
+        "hash": "4337163478337379796"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/empresa/empresa-create/empresa-create.component.html",
@@ -834,7 +830,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/empresa/empresa.component.ts",
-        "hash": "6721044285817169216"
+        "hash": "850290964151744021"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/id-proforma-usuario/id-proforma-usuario.component.html",
@@ -850,7 +846,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/id-proforma-usuario/id-proforma-usuario.component.ts",
-        "hash": "18113246402932291555"
+        "hash": "9042385751885396920"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/id-proforma-usuario/modal-catalogo-numeracion-proforma/modal-catalogo-numeracion-proforma.component.html",
@@ -922,7 +918,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/localidades/localidades.component.ts",
-        "hash": "18082108773279903055"
+        "hash": "17618749419587988454"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component.html",
@@ -970,7 +966,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/moneda.component.ts",
-        "hash": "10512004644355177808"
+        "hash": "10555387308801866819"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/moneda/servicio-moneda/moneda-servicio.service.spec.ts",
@@ -994,7 +990,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/periodos-sistema/periodos-sistema.component.ts",
-        "hash": "12423145800801607612"
+        "hash": "13022138479477190573"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/provinciadptopais/provinciadptopais-create/provinciadptopais-create.component.html",
@@ -1026,7 +1022,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/provinciadptopais/provinciadptopais.component.ts",
-        "hash": "4678495880719065792"
+        "hash": "17639620307906182469"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/provinciadptopais/provincias-catalogo/provincias-catalogo.component.html",
@@ -1066,7 +1062,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/tarifa-permitidas-usuario/tarifa-permitidas-usuario.component.ts",
-        "hash": "10857812409557380507"
+        "hash": "440143786851851096"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/tipocambio/tipocambio-create/tipocambio-create.component.html",
@@ -1098,7 +1094,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/tipocambio/tipocambio.component.ts",
-        "hash": "14682407296797481122"
+        "hash": "1406761098277799323"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/unidadnegocio/unidadnegocio-create/unidadnegocio-create.component.html",
@@ -1130,7 +1126,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/unidadnegocio/unidadnegocio.component.ts",
-        "hash": "3244547696061755992"
+        "hash": "6312825113358231397"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/vehiculo/vehiculo-create/vehiculo-create.component.html",
@@ -1178,7 +1174,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/administracion/vehiculo/vehiculo.component.ts",
-        "hash": "8513580583434339865"
+        "hash": "4390037277074131359"
       },
       {
         "file": "src/app/components/mantenimiento/compras/compradores/compradores.component.html",
@@ -1242,7 +1238,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/compras/numcomprasmenores/numcomprasmenores.component.ts",
-        "hash": "4159040445958058050"
+        "hash": "8674996984993924403"
       },
       {
         "file": "src/app/components/mantenimiento/compras/numeracion-de-pago/numeracion-de-pago-create/numeracion-de-pago-create.component.html",
@@ -1338,7 +1334,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/compras/numprovisioncompra/numprovisioncompra.component.ts",
-        "hash": "17447933097347174091"
+        "hash": "11147249479876267092"
       },
       {
         "file": "src/app/components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones-create/percepcionesretenciones-create.component.html",
@@ -1386,7 +1382,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/compras/percepcionesretenciones/percepcionesretenciones.component.ts",
-        "hash": "11398982277890705175"
+        "hash": "7923901036652011009"
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes-create/numeracion-comprobantes-create.component.html",
@@ -1434,7 +1430,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/numeracion-comprobantes/numeracion-comprobantes.component.ts",
-        "hash": "10710994982693527030"
+        "hash": "10479038103275606888"
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/plan-cuenta/plan-cuenta-create/plan-cuenta-create.component.html",
@@ -1482,7 +1478,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/plan-cuenta/plan-cuenta.component.ts",
-        "hash": "3527950602169678111"
+        "hash": "10362331613468717526"
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/sucursal/sucursal-create/sucursal-create.component.html",
@@ -1530,7 +1526,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/contabilidad/sucursal/sucursal.component.ts",
-        "hash": "14281454952121501855"
+        "hash": "8905833670603815011"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/catalogoCuentas/catalogoCuentas.component.html",
@@ -1594,7 +1590,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-anticipo/numeracion-anticipo.component.ts",
-        "hash": "10626725664890377037"
+        "hash": "11639086363985571629"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza-create/numeracion-cobranza-create.component.html",
@@ -1642,7 +1638,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-cobranza/numeracion-cobranza.component.ts",
-        "hash": "3104910121470803279"
+        "hash": "3339915957566272724"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos-create/numeracion-desct-varios-directos-create.component.html",
@@ -1690,7 +1686,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-desct-varios-directos/numeracion-desct-varios-directos.component.ts",
-        "hash": "9870179622523270956"
+        "hash": "7561930426664032835"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora-create/numeracion-descuento-por-mora-create.component.html",
@@ -1738,7 +1734,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-descuento-por-mora/numeracion-descuento-por-mora.component.ts",
-        "hash": "11629647214159979110"
+        "hash": "1001061533149024019"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devoclucion-anticipo-create/numeracion-devoclucion-anticipo-create.component.html",
@@ -1786,7 +1782,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-devolucion-anticipos/numeracion-devolucion-anticipos.component.ts",
-        "hash": "15089245233081539787"
+        "hash": "6096640885480028376"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora-create/numeracion-pagos-mora-create.component.html",
@@ -1834,7 +1830,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-pagos-mora/numeracion-pagos-mora.component.ts",
-        "hash": "3358744308299908496"
+        "hash": "6969585502359398268"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste-create/numeracion-tipo-ajuste-create.component.html",
@@ -1882,7 +1878,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/numeracion-tipo-ajuste/numeracion-tipo-ajuste.component.ts",
-        "hash": "5667435254618493968"
+        "hash": "11627586994523994463"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos-create/talonario-recibos-create.component.html",
@@ -1930,7 +1926,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/talonario-recibos/talonario-recibos.component.ts",
-        "hash": "18415914149551859714"
+        "hash": "7229643442805829850"
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago-create/tipo-pago-create.component.html",
@@ -1978,7 +1974,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/cuentas-cobrar/tipo-pago/tipo-pago.component.ts",
-        "hash": "738546220981577128"
+        "hash": "673241831967996344"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/banco/banco-create/banco-create.component.html",
@@ -2026,7 +2022,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/banco/banco.component.ts",
-        "hash": "17938431738316385074"
+        "hash": "15404774773726736313"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/cuentas-bancarias/cuentas-bancarias.component.html",
@@ -2090,7 +2086,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivo.component.ts",
-        "hash": "9798638857058408841"
+        "hash": "7189146747545495977"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/cuentas-efectivo/cuentas-efectivos-edit/cuentas-efectivos-edit.component.html",
@@ -2210,7 +2206,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/deudores/deudores.component.ts",
-        "hash": "6847534034932418264"
+        "hash": "12143723048726417448"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/deudores-compuestos/deudores-comp-create/deudores-comp-create.component.html",
@@ -2258,7 +2254,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/deudores-compuestos/deudores-compuestos.component.ts",
-        "hash": "9556981256961923155"
+        "hash": "6282756782678205631"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/deudores-compuestos/deudores-integrantes/deudores-integrantes.component.html",
@@ -2322,7 +2318,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numchequesclientes/numchequesclientes.component.ts",
-        "hash": "16509685443531570205"
+        "hash": "16144881546743291174"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdepositosbancarios/numdepositosbancarios-create/numdepositosbancarios-create.component.html",
@@ -2370,7 +2366,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdepositosbancarios/numdepositosbancarios.component.ts",
-        "hash": "4045798569557622942"
+        "hash": "17767205676525274024"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdepositoscliente/numdepositoscliente-create/numdepositoscliente-create.component.html",
@@ -2418,7 +2414,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdepositoscliente/numdepositoscliente.component.ts",
-        "hash": "7016829229397083317"
+        "hash": "1339984964962370151"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdevolucionesdeudor/numdevolucionesdeudor-create/numdevolucionesdeudor-create.component.html",
@@ -2466,7 +2462,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numdevolucionesdeudor/numdevolucionesdeudor.component.ts",
-        "hash": "7357258496671963920"
+        "hash": "4400097325505739726"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numentregascargo/numentregascargo-create/numentregascargo-create.component.html",
@@ -2514,7 +2510,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numentregascargo/numentregascargo.component.ts",
-        "hash": "6205677445070920045"
+        "hash": "7734751209117367739"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numeraciontransferencias/numeraciontransferencias-create/numeraciontransferencias-create.component.html",
@@ -2562,7 +2558,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numeraciontransferencias/numeraciontransferencias.component.ts",
-        "hash": "12493084226204100088"
+        "hash": "9069303367319751145"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numlibrosbancos/numlibrosbancos-create/numlibrosbancos-create.component.html",
@@ -2610,7 +2606,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numlibrosbancos/numlibrosbancos.component.ts",
-        "hash": "10468661663497136517"
+        "hash": "14837257327188345354"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/nummovfondos/nummovfondos-create/nummovfondos-create.component.html",
@@ -2658,7 +2654,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/nummovfondos/nummovfondos.component.ts",
-        "hash": "10501113389313082041"
+        "hash": "18321813056653846860"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numpagodeudor/numpagodeudor-create/numpagodeudor-create.component.html",
@@ -2706,7 +2702,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numpagodeudor/numpagodeudor.component.ts",
-        "hash": "17723513387882248018"
+        "hash": "5014680027876011621"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numreposicion/numreposicion-create/numreposicion-create.component.html",
@@ -2754,7 +2750,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numreposicion/numreposicion.component.ts",
-        "hash": "18128348988577344504"
+        "hash": "18314180916862419907"
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numretirobancario/numretirobancario-create/numretirobancario-create.component.html",
@@ -2802,7 +2798,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/fondos/numretirobancario/numretirobancario.component.ts",
-        "hash": "17759744608058706042"
+        "hash": "457888215980661622"
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-embarque-importacion/num-embarque-importacion-create/num-embarque-importacion-create.component.html",
@@ -2850,7 +2846,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-embarque-importacion/num-embarque-importacion.component.ts",
-        "hash": "13788906502782561148"
+        "hash": "6437859895638156859"
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-ord-compra/num-ord-compra-create/num-ord-compra-create.component.html",
@@ -2898,7 +2894,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-ord-compra/num-ord-compra.component.ts",
-        "hash": "16146510023573183385"
+        "hash": "13283647874888922044"
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-pedidos-importacion/num-pedidos-importacion-create/num-pedidos-importacion-create.component.html",
@@ -2946,7 +2942,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-pedidos-importacion/num-pedidos-importacion.component.ts",
-        "hash": "2653456148918746388"
+        "hash": "15387740637136035820"
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-proforma-importacion/num-proforma-importacion-create/num-proforma-importacion-create.component.html",
@@ -2994,7 +2990,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-proforma-importacion/num-proforma-importacion.component.ts",
-        "hash": "5444307441022193027"
+        "hash": "8307544693722398582"
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-recepcion-importacion/num-recepcion-importacion-create/num-recepcion-importacion-create.component.html",
@@ -3042,7 +3038,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/importaciones/numeracion/num-recepcion-importacion/num-recepcion-importacion.component.ts",
-        "hash": "2355217606470150801"
+        "hash": "8545395840046310382"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/almacen/almacen-create/almacen-create.component.html",
@@ -3074,7 +3070,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/almacen/almacen.component.ts",
-        "hash": "15060812013049447526"
+        "hash": "310103967914000870"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component.html",
@@ -3162,7 +3158,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/conceptosmovimientosmercaderia/catalogo-movimiento-mercaderia/catalogo-movimiento-mercaderia.component.ts",
-        "hash": "501160657664396744"
+        "hash": "4877658822530791275"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/conceptosmovimientosmercaderia/conceptosmovimientosmercaderia-create/conceptosmovimientosmercaderia-create.component.html",
@@ -3210,7 +3206,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/conceptosmovimientosmercaderia/conceptosmovimientosmercaderia.component.ts",
-        "hash": "13025880833505137928"
+        "hash": "1949240627425635697"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/conceptosmovimientosmercaderia/serviciomovimientomercaderia/movimientomercaderia.service.spec.ts",
@@ -3250,7 +3246,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/gruposlineas/gruposlineas.component.ts",
-        "hash": "16474097526775737138"
+        "hash": "9044170332921296737"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/gruposlineasdescuentos/gruposlineasdescuentos-create/gruposlineasdescuentos-create.component.html",
@@ -3282,7 +3278,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/gruposlineasdescuentos/gruposlineasdescuentos.component.ts",
-        "hash": "18184007274723625566"
+        "hash": "14755427282540667086"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/item/item-create/item-create.component.html",
@@ -3330,7 +3326,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/item/item.component.ts",
-        "hash": "12891043733119999802"
+        "hash": "15764303894532348651"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/item/modal-componenteskit/modal-componenteskit.component.html",
@@ -3442,7 +3438,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/lineaproducto/lineaproducto.component.ts",
-        "hash": "13199700363416050439"
+        "hash": "17674982293240584620"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/lineaproducto/service-linea/servicio-linea-producto.service.spec.ts",
@@ -3514,7 +3510,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/numnotasdemovimiento/numnotasdemovimiento.component.ts",
-        "hash": "2752888019865145340"
+        "hash": "7335979274708729871"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/numnotasdemovimiento/serviciocatalogonotasmovimiento/notas-movimiento.service.spec.ts",
@@ -3570,7 +3566,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/numpedidomercaderia/numpedidomercaderia.component.ts",
-        "hash": "16464494546269723396"
+        "hash": "6883878177784676797"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/numsolicitudurgente/numsolicitudurgente-create/numsolicitudurgente-create.component.html",
@@ -3618,7 +3614,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/numsolicitudurgente/numsolicitudurgente.component.ts",
-        "hash": "2147083015383428614"
+        "hash": "1630112670612375363"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/resistencia/resistencia-create/resistencia-create.component.html",
@@ -3666,7 +3662,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/resistencia/resistencia.component.ts",
-        "hash": "17849563387703026209"
+        "hash": "3414211843806232083"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/rosca/rosca-create/rosca-create.component.html",
@@ -3714,7 +3710,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/rosca/rosca.component.ts",
-        "hash": "15407382356925170432"
+        "hash": "6837109360440413618"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/terminacion/terminacion-create/terminacion-create.component.html",
@@ -3746,7 +3742,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/terminacion/terminacion.component.ts",
-        "hash": "13074427438353199611"
+        "hash": "2053201015353414172"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/tipoconocimientocarga/tipoconocimientocarga-create/tipoconocimientocarga-create.component.html",
@@ -3794,7 +3790,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/tipoconocimientocarga/tipoconocimientocarga.component.ts",
-        "hash": "9729236157770365539"
+        "hash": "5828586190737876022"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/tipoinventario/tipoinventario-create/tipoinventario-create.component.html",
@@ -3842,7 +3838,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/tipoinventario/tipoinventario.component.ts",
-        "hash": "14816649725320257941"
+        "hash": "8122310510476658398"
       },
       {
         "file": "src/app/components/mantenimiento/inventario/unidadmedida/unidadmedida-create/unidadmedida-create.component.html",
@@ -3874,7 +3870,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/inventario/unidadmedida/unidadmedida.component.ts",
-        "hash": "2883024379768617755"
+        "hash": "18006408948370109604"
       },
       {
         "file": "src/app/components/mantenimiento/persona-catalogo/persona-catalogo.component.html",
@@ -3914,7 +3910,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/roles-component/roles-component.component.ts",
-        "hash": "10609159795420299570"
+        "hash": "15330125608067554353"
       },
       {
         "file": "src/app/components/mantenimiento/roles-component/roles-create/roles-create.component.html",
@@ -4010,7 +4006,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/rubro/rubro.component.ts",
-        "hash": "15227984158430653478"
+        "hash": "9734336819236655216"
       },
       {
         "file": "src/app/components/mantenimiento/rubro/servicio/serviciorubro.service.spec.ts",
@@ -4066,7 +4062,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/seguridad/permisos-especiales/permisos-especiales.component.ts",
-        "hash": "9307297179924515901"
+        "hash": "13319525695914400116"
       },
       {
         "file": "src/app/components/mantenimiento/siat/parametros-facturacion-SIAT/parametros-facturacion-SIAT.component.html",
@@ -4170,7 +4166,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/usuario/usuario.component.ts",
-        "hash": "15033719519485898162"
+        "hash": "13978809610475211789"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component.html",
@@ -4226,7 +4222,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes/clientes.component.ts",
-        "hash": "3471593352233996991"
+        "hash": "8257696796450218147"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes-iguales/catalogo-clientes-iguales/catalogo-clientes-iguales.component.html",
@@ -4258,7 +4254,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes-iguales/clientes-iguales.component.ts",
-        "hash": "6605983573201391975"
+        "hash": "16693474607083358817"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/clientes-iguales/servicio-clientes-iguales/clientes-igules.service.spec.ts",
@@ -4282,7 +4278,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/descuentos-especiales.component.ts",
-        "hash": "11023182395415696506"
+        "hash": "9740750059211520126"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/descuentos-especiales/lineas-porcentaje-desct/lineas-porcentaje-desct.component.html",
@@ -4370,7 +4366,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/lugares/lugares.component.ts",
-        "hash": "15394027613624207876"
+        "hash": "12804014926796349793"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.html",
@@ -4390,11 +4386,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "6545071907219458195"
+        "hash": "2184157001802826629"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
-        "hash": "16423876052801016068"
+        "hash": "7456864440168039589"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.spec.ts",
@@ -4402,7 +4398,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "4987049305648158172"
+        "hash": "14158434766221325975"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4466,7 +4462,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente/modal-cliente.component.ts",
-        "hash": "11399262250897911977"
+        "hash": "2482567110386342510"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.html",
@@ -4850,7 +4846,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/niveles-descuentos/niveles-descuentos.component.ts",
-        "hash": "4526147344572075156"
+        "hash": "6378736733132842484"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/num-tipo-documento-venta/catalogo-documento-venta/catalogo-documento-venta.component.html",
@@ -4890,7 +4886,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/num-tipo-documento-venta/num-tipo-documento-venta.component.ts",
-        "hash": "6264375346859681105"
+        "hash": "11099893133131070387"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/observaciones-hoja-ruta/obser-hoja-ruta-edit/obser-hoja-ruta-edit.component.html",
@@ -4938,7 +4934,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/observaciones-hoja-ruta/observaciones-hoja-ruta.component.ts",
-        "hash": "12615806767118391948"
+        "hash": "149874590775794347"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/plan-pago-clientes/plan-pago-clientes.component.html",
@@ -4986,7 +4982,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/punto-venta/punto-venta.component.ts",
-        "hash": "7141473508336076501"
+        "hash": "100918329821396867"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/punto-venta/servicio-punto-venta/puntoventa.service.spec.ts",
@@ -5010,7 +5006,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento-create/recargo-documento-create.component.ts",
-        "hash": "11247208174655319570"
+        "hash": "14028699142719109974"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/recargo-documento-edit/recargo-documento-edit.component.html",
@@ -5051,14 +5047,6 @@
       {
         "file": "src/app/components/mantenimiento/ventas/recargo-documento/service-recargo/recargo-servicio.service.ts",
         "hash": "8680404415462685865"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service.spec.ts",
-        "hash": "16740919619778520596"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service.ts",
-        "hash": "14774281057217806078"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/serviciocliente/serviciocliente.service.spec.ts",
@@ -5186,7 +5174,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/tipos-credito/tipos-credito.component.ts",
-        "hash": "11804356172158652678"
+        "hash": "14205938221023430995"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/cotizacion/catalogo-cotizacion/catalogo-cotizacion.component.html",
@@ -5234,7 +5222,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/factura-nota-remision/factura-nota-remision.component.ts",
-        "hash": "14703515801227100027"
+        "hash": "5544978364888074528"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.html",
@@ -5250,7 +5238,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.ts",
-        "hash": "6081869811838131928"
+        "hash": "18250112156236528722"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component.html",
@@ -5282,7 +5270,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component.ts",
-        "hash": "10358731255723807924"
+        "hash": "10633915209403088263"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.css",
@@ -5298,11 +5286,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component.ts",
-        "hash": "9687285084280155800"
+        "hash": "1173105474870618398"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.html",
-        "hash": "1503103854938877400"
+        "hash": "7918097253523096708"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.scss",
@@ -5314,7 +5302,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component.ts",
-        "hash": "12949895274556910845"
+        "hash": "9333897556998553559"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.css",
@@ -5330,15 +5318,15 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.ts",
-        "hash": "18218325037477981734"
+        "hash": "8302034780854361245"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "18406694337865686001"
+        "hash": "5278890729052039420"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "14922961724354499008"
+        "hash": "5299482761331476702"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5346,7 +5334,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "12522341929816365581"
+        "hash": "2256562043067729487"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5554,7 +5542,7 @@
       },
       {
         "file": "src/app/modules/admin/log/log.component.html",
-        "hash": "2884460500792797889"
+        "hash": "13652713470687090718"
       },
       {
         "file": "src/app/modules/admin/log/log.component.scss",
@@ -5566,7 +5554,7 @@
       },
       {
         "file": "src/app/modules/admin/log/log.component.ts",
-        "hash": "2522275537067883359"
+        "hash": "4139827542538432944"
       },
       {
         "file": "src/app/modules/admin/log-usuario/log-usuario.component.html",
@@ -5582,7 +5570,7 @@
       },
       {
         "file": "src/app/modules/admin/log-usuario/log-usuario.component.ts",
-        "hash": "9352211848668213710"
+        "hash": "12895960339741038526"
       },
       {
         "file": "src/app/modules/cambiar-password/cambiar-password.component.html",
@@ -5650,7 +5638,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.html",
-        "hash": "4714012459703892303"
+        "hash": "13535158658399162985"
       },
       {
         "file": "src/app/modules/login/login.component.scss",
@@ -5662,7 +5650,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.ts",
-        "hash": "8121185316076930708"
+        "hash": "10748425100040606872"
       },
       {
         "file": "src/app/modules/main/control-sidebar/control-sidebar.component.html",
@@ -5738,11 +5726,11 @@
       },
       {
         "file": "src/app/modules/main/header/header.component.html",
-        "hash": "12618968293155704843"
+        "hash": "14429578668479119818"
       },
       {
         "file": "src/app/modules/main/header/header.component.scss",
-        "hash": "12205252210363046692"
+        "hash": "5433988177674478694"
       },
       {
         "file": "src/app/modules/main/header/header.component.spec.ts",
@@ -5750,7 +5738,7 @@
       },
       {
         "file": "src/app/modules/main/header/header.component.ts",
-        "hash": "11489575627287119669"
+        "hash": "2112979340319217638"
       },
       {
         "file": "src/app/modules/main/header/herramientas/herramientas.component.html",
@@ -5846,7 +5834,7 @@
       },
       {
         "file": "src/app/modules/main/header/user/user.component.ts",
-        "hash": "3531449038588654619"
+        "hash": "10155273981023798323"
       },
       {
         "file": "src/app/modules/main/header/ventanas/ventanas.component.html",
@@ -6302,7 +6290,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "1378476826421802797"
+        "hash": "8248940976708455723"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6314,7 +6302,7 @@
       },
       {
         "file": "src/app/services/interceptor.ts",
-        "hash": "5567976742792877139"
+        "hash": "2942584006597055541"
       },
       {
         "file": "src/app/services/log-service.service.spec.ts",
@@ -6478,7 +6466,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "10221133728622041912"
+        "hash": "15312562836011854780"
       },
       {
         "file": "src/test.ts",
@@ -6500,7 +6488,6 @@
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
       }
-    ],
-    "projectFileMap": {}
+    ]
   }
 }

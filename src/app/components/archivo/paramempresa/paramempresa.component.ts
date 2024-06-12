@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '@services/api.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalMinimoComplementariasComponent } from './modales/modalMinimoComplementarias/modalMinimoComplementarias.component';
 import { ModalCreditoAutorizacionComponent } from './modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component';
@@ -39,33 +38,31 @@ export class ParamempresaComponent implements OnInit {
   public detalle = "paramempresa-edit";
   public tipo = "transaccion-paramempresa-PUT";
 
-  constructor(private api: ApiService, private spinner: NgxSpinnerService, public dialog: MatDialog, public log_module: LogService,
-    public _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private toastr: ToastrService,
-    public nombre_ventana_service: NombreVentanaService) {
-    this.mandarNombre();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+  constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
+    public _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
-    this.getParametroSegunCodigoAdEmpresa(this.userConn, this.BD_storage);
-    this.getEmpresa(this.userConn);
-    this.getinTarifa(this.userConn);
-    this.getAllmoneda(this.userConn);
-    this.getcnCuenta(this.userConn);
-    this.getveplanPago(this.userConn);
+    this.getParametroSegunCodigoAdEmpresa();
+    this.getEmpresa();
+    this.getinTarifa();
+    this.getAllmoneda();
+    this.getcnCuenta();
+    this.getveplanPago();
 
     this.FormularioDataParamEmpresa = this.createForm();
   }
 
-  getEmpresa(userConn) {
+  getEmpresa() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /seg_adm/mant/adempresa/";
-    return this.api.getAll('/seg_adm/mant/adempresa/' + userConn)
+    return this.api.getAll('/seg_adm/mant/adempresa/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -79,9 +76,9 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  getinTarifa(userConn) {
+  getinTarifa() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /inventario/mant/intarifa/";
-    return this.api.getAll('/inventario/mant/intarifa/' + userConn)
+    return this.api.getAll('/inventario/mant/intarifa/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.intarifa = datav;
@@ -95,9 +92,9 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  getveplanPago(userConn) {
+  getveplanPago() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /venta/mant/veplanpago/";
-    return this.api.getAll('/venta/mant/veplanpago/' + userConn)
+    return this.api.getAll('/venta/mant/veplanpago/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.planpago = datav;
@@ -111,9 +108,9 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  getcnCuenta(userConn) {
+  getcnCuenta() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros '/contab/mant/cncuenta/";
-    return this.api.getAll('/contab/mant/cncuenta/' + userConn)
+    return this.api.getAll('/contab/mant/cncuenta/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cncuenta = datav;
@@ -127,17 +124,13 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  getParametroSegunCodigoAdEmpresa(userConn, codigo: string) {
+  getParametroSegunCodigoAdEmpresa() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET en la ruta --parametros /seg_adm/mant/adparametros/";
-    return this.api.getAll('/seg_adm/mant/adparametros/' + userConn + "/" + codigo)
+    return this.api.getAll('/seg_adm/mant/adparametros/' + this.userConn + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.parametros = datav;
           console.log('parametrosEmpresa: ', datav);
-          // this.spinner.show();
-          // setTimeout(() => {
-          //   this.spinner.hide();
-          // }, 1500);
         },
 
         error: (err: any) => {
@@ -147,9 +140,9 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  getAllmoneda(userConn) {
+  getAllmoneda() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/admoneda";
-    return this.api.getAll('/seg_adm/mant/admoneda/' + userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;

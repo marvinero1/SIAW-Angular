@@ -25,35 +25,32 @@ export class DeudoresComponent implements OnInit {
   options: fndeudor[] = [];
   filteredOptions: Observable<fndeudor[]>;
   userConn: any;
-  deudor_get:any=[]; 
-  data:[];
+  deudor_get: any = [];
+  data: [];
   dataDeudorEdit_copied: any = [];
 
-  displayedColumns = ['id', 'descripcion', 'persona', 'fechareg','accion'];
+  displayedColumns = ['id', 'descripcion', 'persona', 'fechareg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abmfndeudor.vb";
-  public ventana="Deudor"
-  public detalle="Deudor-delete";
-  public tipo="Deudor-DELETE";
+  nombre_ventana: string = "abmfndeudor.vb";
+  public ventana = "Deudor"
+  public detalle = "Deudor-delete";
+  public tipo = "Deudor-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
-    
-    this.mandarNombre();
-    
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;    
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
     this.getAllDeudores();
-
-    this.cuentasContablesModal({id:"a"});
+    this.mandarNombre();
+    this.cuentasContablesModal({ id: "a" });
   }
 
   ngOnInit(): void {
@@ -66,29 +63,29 @@ export class DeudoresComponent implements OnInit {
     );
   }
 
-  getAllDeudores(){
+  getAllDeudores() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
-    return this.api.getAll('/fondos/mant/fndeudor/'+this.userConn)
+    return this.api.getAll('/fondos/mant/fndeudor/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.deudor_get = datav;
           console.log(this.deudor_get);
-          
+
           this.dataSource = new MatTableDataSource(this.deudor_get);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(DeudoresCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -107,60 +104,60 @@ export class DeudoresComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  editar(dataDeudorEdit){
-    this.dataDeudorEdit_copied ={...dataDeudorEdit};
-    
+  editar(dataDeudorEdit) {
+    this.dataDeudorEdit_copied = { ...dataDeudorEdit };
+
     this.data = dataDeudorEdit;
     this.dialog.open(DeudoresEditComponent, {
-      data: {dataDeudorEdit_copied:this.dataDeudorEdit_copied},
+      data: { dataDeudorEdit_copied: this.dataDeudorEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  cuentasContablesModal(dataDeudorEdit){ 
-    this.dataDeudorEdit_copied ={...dataDeudorEdit};
-    
+  cuentasContablesModal(dataDeudorEdit) {
+    this.dataDeudorEdit_copied = { ...dataDeudorEdit };
+
     this.data = dataDeudorEdit;
     this.dialog.open(CuentasContablesComponent, {
-      data: {dataDeudorEdit_copied:this.dataDeudorEdit_copied},
+      data: { dataDeudorEdit_copied: this.dataDeudorEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fndeudor/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fndeudor/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

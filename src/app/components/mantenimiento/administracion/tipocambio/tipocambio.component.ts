@@ -50,7 +50,7 @@ export class TipocambioComponent implements OnInit {
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
 
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {

@@ -16,11 +16,8 @@ import { ModalIdtipoComponent } from '../../modal-idtipo/modal-idtipo.component'
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
 import { ModalDescuentosComponent } from '../../descuentos-especiales/modal-descuentos/modal-descuentos.component';
 import { MatrizItemsComponent } from '../../matriz-items/matriz-items.component';
-import { ModalItemsComponent } from '../../modal-items/modal-items.component';
 import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-cliente-info.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
-import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
-import { ModalTransfeProformaComponent } from '../../modal-transfe-proforma/modal-transfe-proforma.component';
 import { ModalTransfeNotaRemisionComponent } from '../../modal-transfe-nota-remision/modal-transfe-nota-remision.component';
 @Component({
   selector: 'app-nota-remision',
@@ -124,7 +121,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public iva: number;
   public total: number;
 
-
   selectTPago: string = "Credito";
   selectedCountryControl = new FormControl(this.selectTPago);
 
@@ -150,8 +146,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
-
+    this.api.getRolUserParaVentana(this.nombre_ventana);
     this.FormularioData = this.createForm();
   }
 

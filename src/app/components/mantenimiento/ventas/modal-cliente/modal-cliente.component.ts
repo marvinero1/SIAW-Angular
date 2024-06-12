@@ -7,6 +7,7 @@ import { ApiService } from '@services/api.service';
 import { veCliente } from '@services/modelos/objetos';
 import { Observable, map, startWith } from 'rxjs';
 import { ServicioclienteService } from '../serviciocliente/serviciocliente.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-modal-cliente',
   templateUrl: './modal-cliente.component.html',
@@ -50,7 +51,8 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   filteredOptions: Observable<veCliente[]>;
 
   constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService,
-    public servicioCliente: ServicioclienteService, @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any) {
+    public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
+    @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
 
@@ -67,8 +69,6 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.getClienteCatalogo();
-
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -103,6 +103,7 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+    this.getClienteCatalogo();
     this.input.nativeElement.focus();
   }
 
@@ -123,6 +124,8 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   getClienteCatalogo() {
+    this.spinner.show();
+
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
@@ -134,12 +137,22 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
           this.dataSource = new MatTableDataSource(this.cliente);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
-        complete: () => { }
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
       })
   }
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,19 +11,19 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { RolesEditComponent } from './roles-edit/roles-edit.component';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-roles-component',
   templateUrl: './roles-component.component.html',
   styleUrls: ['./roles-component.component.scss']
 })
-export class RolesComponent {
+export class RolesComponent implements OnInit {
 
-  roles:any=[];
-  semodulo:any=[];
-  data_accesos:any=[];
-  seclasificacion:any=[];
+  roles: any = [];
+  semodulo: any = [];
+  data_accesos: any = [];
+  seclasificacion: any = [];
   cheked: any = [];
+
   array_ventanas_permiso_true: any = [{
     codprograma: 0,
     codrol: "",
@@ -36,11 +36,11 @@ export class RolesComponent {
     codigo: 0,
   }];
 
-  userConn:string;
-  visible:boolean=false;
-  rol_select:any;
+  userConn: string;
+  visible: boolean = false;
+  rol_select: any;
 
-  displayedColumns = ['codigo','descripcion','dias_cambio','fechareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'dias_cambio', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -48,21 +48,19 @@ export class RolesComponent {
   @ViewChild("dialogD") dialogD: ElementRef;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
+
   myControl = new FormControl<string | Roles>('');
   options: Roles[] = [];
   filteredOptions: Observable<Roles[]>;
 
   nombre_ventana: string = "abmserol.vb";
-  public ventana="Roles Usuarios"
+  public ventana = "Roles Usuarios"
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService) {
-    this.mandarNombre();
-
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
@@ -82,12 +80,10 @@ export class RolesComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
   }
-  
+
   displayFn(roles: Roles): string {
     return roles && roles.codigo ? roles.codigo : '';
   }
-
-
 
   pasarCheked(element_check, modulo) {
     let fal: boolean = false;
@@ -95,48 +91,43 @@ export class RolesComponent {
 
     console.log(element_check);
     let check = element_check.activo;
-        
+
     if (check === true) {
       element_check.activo = fal;
       this.array_ventanas_permiso_true.push({
         codprograma: element_check.codigo,
         codrol: this.rol_select,
-        codigo:modulo
+        codigo: modulo
       });
 
-    } if(check === false){
+    } if (check === false) {
       element_check.activo = ved;
       this.array_ventanas_permiso_false.push({
         codprograma: element_check.codigo,
         codrol: this.rol_select,
-        codigo:modulo
+        codigo: modulo
       });
     }
 
     console.log("Array de ventanas a guardar con check TRUE" + JSON.stringify(this.array_ventanas_permiso_true));
-    console.log("Array de ventanas a guardar con check FALSE"+ JSON.stringify(this.array_ventanas_permiso_false) );
-    
-  }
-
-  submitData() { 
+    console.log("Array de ventanas a guardar con check FALSE" + JSON.stringify(this.array_ventanas_permiso_false));
 
   }
 
-  
+  submitData() {
+  }
 
-
-
-  getAllRoles(){
-    let errorMessage:string;
+  getAllRoles() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/serol/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/serol/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.roles = datav;
           console.log(this.roles);
-          
+
           this.spinner.show();
- 
+
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -145,101 +136,101 @@ export class RolesComponent {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllModulos(){
-    let errorMessage:string;
+  getAllModulos() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/oper/prgaccesosrol/semodulo/'+this.userConn)
+    return this.api.getAll('/seg_adm/oper/prgaccesosrol/semodulo/' + this.userConn)
       .subscribe({
         next: (datav) => {
-          this.semodulo=datav;
+          this.semodulo = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllClasificacion(){
-    let errorMessage:string;
+  getAllClasificacion() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/oper/prgaccesosrol/seclasificacion/'+this.userConn)
+    return this.api.getAll('/seg_adm/oper/prgaccesosrol/seclasificacion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.seclasificacion = datav;
           console.log(this.seclasificacion);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  verOpciones(modulo, clasificacion){
+  verOpciones(modulo, clasificacion) {
     console.log(modulo, clasificacion, this.rol_select);
-    
+
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/oper/prgaccesorol/seprograma/";
-    return this.api.getById('/seg_adm/oper/prgaccesosrol/serolprogs/rolGetCheck/'+this.userConn+"/"+this.rol_select+"/"+clasificacion+'/'+modulo)
+    return this.api.getById('/seg_adm/oper/prgaccesosrol/serolprogs/rolGetCheck/' + this.userConn + "/" + this.rol_select + "/" + clasificacion + '/' + modulo)
       .subscribe({
         next: (datav) => {
           this.cheked = datav;
           console.log(this.cheked);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  verAcceso(codigo){
+  verAcceso(codigo) {
     this.rol_select = codigo;
-    if(this.visible == false){
+    if (this.visible == false) {
       this.visible = true;
-    }else{
-      this.visible=false;
+    } else {
+      this.visible = false;
     }
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /moneda Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /moneda Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data:{dataUsuarioEdit:element},
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/serol/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/serol/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
@@ -255,17 +246,16 @@ export class RolesComponent {
   openDialogEditar(dataRolEdit): void {
     this.data_accesos = dataRolEdit;
     //console.log(this.data);
-      const dialogRef = this.dialog.open(RolesEditComponent, {
-        data: {dataRolEdit:dataRolEdit},
-        width: 'auto',
-        height:'auto',
+    const dialogRef = this.dialog.open(RolesEditComponent, {
+      data: { dataRolEdit: dataRolEdit },
+      width: 'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
-
 }

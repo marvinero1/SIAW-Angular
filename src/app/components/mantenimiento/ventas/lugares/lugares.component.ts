@@ -74,7 +74,7 @@ export class LugaresComponent implements OnInit, AfterViewInit {
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.mandarNombre();
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
   }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
@@ -18,13 +18,13 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   templateUrl: './moneda.component.html',
   styleUrls: ['./moneda.component.scss']
 })
-export class MonedaComponent {
+export class MonedaComponent implements OnInit {
 
-  nombre_ventana:string="abmadmoneda.vb";
+  nombre_ventana: string = "abmadmoneda.vb";
   moneda: any = [];
   userConn: string;
 
-  displayedColumns = ['codigo','descripcion','horareg','fechareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -36,22 +36,21 @@ export class MonedaComponent {
   myControl = new FormControl<string | Moneda>('');
   options: Moneda[] = [];
   filteredOptions: Observable<Moneda[]>;
-  
-  public ventana="Moneda"
-	public detalle="moneda-detalle";
-	public tipo="transaccion-moneda-DELETE";
+
+  public ventana = "Moneda"
+  public detalle = "moneda-detalle";
+  public tipo = "transaccion-moneda-DELETE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
-    this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllmoneda();
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -79,19 +78,19 @@ export class MonedaComponent {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getAllmoneda(){
+  getAllmoneda() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/admoneda/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)
       .subscribe({
         next: (datav) => {
-          this.moneda = datav;    
-          
+          this.moneda = datav;
+
           this.dataSource = new MatTableDataSource(this.moneda);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -101,47 +100,47 @@ export class MonedaComponent {
   openDialog(): void {
     this.dialog.open(MonedaCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion"+"Ruta:--seg_adm/mant/admoneda/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion" + "Ruta:--seg_adm/mant/admoneda/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete("/seg_adm/mant/admoneda/"+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete("/seg_adm/mant/admoneda/" + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! NO SE ELIMINO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

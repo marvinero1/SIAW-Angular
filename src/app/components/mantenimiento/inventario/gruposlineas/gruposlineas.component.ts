@@ -17,9 +17,9 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class GruposlineasComponent implements OnInit {
 
-  public grupo_linea:any=[];
-  public data:any=[];
-  userConn:any;
+  public grupo_linea: any = [];
+  public data: any = [];
+  userConn: any;
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -27,35 +27,35 @@ export class GruposlineasComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  displayedColumns = ['codigo','descripcion','fechareg','horareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'fechareg', 'horareg', 'usuarioreg', 'accion'];
 
-  nombre_ventana:string="abmingrupomer.vb";
-  public ventana="Grupos de Lineas"
-	public detalle="lineasgrupos-detalle";
-	public tipo="transaccion-lineasgrupos-DELETE";
+  nombre_ventana: string = "abmingrupomer.vb";
+  public ventana = "Grupos de Lineas"
+  public detalle = "lineasgrupos-detalle";
+  public tipo = "transaccion-lineasgrupos-DELETE";
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
-    this.mandarNombre();
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     this.getAllGrupoLineas();
   }
 
-  getAllGrupoLineas(){
-    let errorMessage:string;
+  getAllGrupoLineas() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/ingrupomer/'+this.userConn)
+    return this.api.getAll('/inventario/mant/ingrupomer/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.grupo_linea = datav;
           // console.log('gruposLineas', datav);
-          
+
           this.dataSource = new MatTableDataSource(this.grupo_linea);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
@@ -65,8 +65,8 @@ export class GruposlineasComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -76,53 +76,53 @@ export class GruposlineasComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(GruposlineasCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if(result) {
-        return this.api.delete('/inventario/mant/ingrupomer/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            this._snackBar.open('Se ha eliminado correctamente!', 'Ok', {
-              duration: 3000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-            });
+      if (result) {
+        return this.api.delete('/inventario/mant/ingrupomer/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this._snackBar.open('Se ha eliminado correctamente!', 'Ok', {
+                duration: 3000,
+                panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              });
 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
-  
-  mandarNombre(){
+
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

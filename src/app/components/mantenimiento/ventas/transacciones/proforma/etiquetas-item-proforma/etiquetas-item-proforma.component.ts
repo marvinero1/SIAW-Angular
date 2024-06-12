@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ImpresionProformaEtiquetaItemsService } from '@components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
 @Component({
   selector: 'app-etiquetas-item-proforma',
   templateUrl: './etiquetas-item-proforma.component.html',
@@ -14,6 +12,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "etiquetasItemsProforma";
+  public data_impresion: any = [];
 
   userConn: any;
   BD_storage: any;
@@ -23,26 +22,45 @@ export class EtiquetasItemProformaComponent implements OnInit {
   data_cabecera_footer_proforma: any = [];
   data_detalle_proforma: any = [];
 
-  constructor(public nombre_ventana_service: NombreVentanaService, private impresionesProforma: ImpresionProformaEtiquetaItemsService,
-    private api: ApiService) {
+  constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
     this.mandarNombre();
     this.getDataPDF();
   }
 
   ngOnInit() {
-    this.impresionesProforma.disparadorDeCodigoProforma.subscribe(data => {
-      console.log("Recibiendo Codigo Proforma Guardad: ", data);
-      this.codigo_get_proforma = data.codigo_proforma;
-    });
+
   }
 
   getDataPDF() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" + this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + "PORCANCELAR")
+      .subscribe({
+        next: (datav) => {
+          console.log("DATA DEL PDF: ", datav);
+          //datav.docveprofCab CABECERA Y FOOTER
+          this.data_cabecera_footer_proforma = datav.docveprofCab
+
+          //datav.dtveproforma1 DETALLE
+          this.data_detalle_proforma = datav.dtveproforma1;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.printFunction();
+        }
+      })
+  }
+
+  getDataPDFHardcodiado() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
       .subscribe({
@@ -67,36 +85,35 @@ export class EtiquetasItemProformaComponent implements OnInit {
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
       html2canvas(content, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/png', 1.2); // Pre-escalar para la calidad
 
         // Crear un nuevo documento PDF
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
-          format: 'letter' // Formato Carta (Letter)
+          format: 'letter',
         });
 
-        // Calcular el ancho y alto del PDF con márgenes
-        const margin = 10;
+        const margin = 4; // Ajustar para los márgenes deseados
         const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
         const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
 
-        // Obtener el ancho y alto de la imagen en el canvas
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
 
-        // Calcular la relación de aspecto de la imagen
         const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
-        const newWidth = imgWidth * ratio;
-        const newHeight = imgHeight * ratio;
+        const newWidth = imgWidth * ratio * 0.7; // Reducir en un 0.7 para un 70%
+        const newHeight = imgHeight * ratio * 0.7;
 
         // Agregar la imagen al PDF con márgenes
         pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
 
-        // Descargar el PDF
-        pdf.save(this.data_cabecera_footer_proforma.hora_impresion + '.pdf');
+        // Configurar la impresión con márgenes mínimos
+        pdf.autoPrint(); // Establecer márgenes en mm
+
+        // Desencadenar el diálogo de impresión
+        window.print();
       });
     }
   }

@@ -25,37 +25,37 @@ export class NivelesDescuentosComponent implements OnInit {
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
   userConn: any;
-  
-   displayedColumns = ['codigo','descripcion','accion'];
+
+  displayedColumns = ['codigo', 'descripcion', 'accion'];
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
 
-  nombre_ventana:string="abmvedesnivel.vb";
-  public ventana="Linea Producto"
-	public detalle="lineaProd-detalle";
+  nombre_ventana: string = "abmvedesnivel.vb";
+  public ventana = "Linea Producto"
+  public detalle = "lineaProd-detalle";
   public tipo = "transaccion-lineaProd-DELETE";
-  
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, 
-    public _snackBar: MatSnackBar, public log_module: LogService,private toastr: ToastrService,
+
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public _snackBar: MatSnackBar, public log_module: LogService, private toastr: ToastrService,
     public nombre_ventana_service: NombreVentanaService) {
-      this.mandarNombre();
-      let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-      this.getAllNivelesDesct();
-      this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.mandarNombre();
+    this.getAllNivelesDesct();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
   }
 
-  getAllNivelesDesct(){
-    let errorMessage:string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vedesnivel/'+this.userConn)
+  getAllNivelesDesct() {
+    let errorMessage: string;
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/vedesnivel/";
+    return this.api.getAll('/venta/mant/vedesnivel/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.niveles_desct = datav;
@@ -70,47 +70,47 @@ export class NivelesDescuentosComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- /inventario/mant/inlinea Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /inventario/mant/inlinea Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
-      width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      width: 'auto',
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/venta/mant/vedesnivel/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: ()=>{
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            this._snackBar.open('Se elimino correctamente!', 'Ok', {
-              duration: 3000,
-            });
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/venta/mant/vedesnivel/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this._snackBar.open('Se elimino correctamente!', 'Ok', {
+                duration: 3000,
+              });
 
-            this.toastr.success('Eliminado con Exito! 🎉'); 
+              this.toastr.success('Eliminado con Exito! 🎉');
 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
@@ -119,25 +119,25 @@ export class NivelesDescuentosComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(NivelesDescuentosCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  clasificacionClientes(enterAnimationDuration: string, exitAnimationDuration: string, element:object): void {
+  clasificacionClientes(enterAnimationDuration: string, exitAnimationDuration: string, element: object): void {
     this.dialog.open(ClasificacionClientesComponent, {
       width: 'auto',
       height: 'auto',
-      data:{nivel:element},
+      data: { nivel: element },
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
-  
-  mandarNombre(){
+
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

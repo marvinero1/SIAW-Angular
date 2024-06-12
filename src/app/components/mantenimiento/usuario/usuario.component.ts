@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl } from '@angular/forms';
@@ -14,43 +14,42 @@ import { map, startWith } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-usuario',
   templateUrl: './usuario.component.html',
   styleUrls: ['./usuario.component.scss']
 })
-export class UsuarioComponent{
+export class UsuarioComponent implements OnInit {
 
-  usuarios:any=[];
-  data:any='';
-  userConn:any;
-  displayedColumns = ['login', 'persona', 'vencimiento','activo','codrol','horareg','fechareg','usuarioreg','accion'];
+  usuarios: any = [];
+  data: any = '';
+  userConn: any;
+  displayedColumns = ['login', 'persona', 'vencimiento', 'activo', 'codrol', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
+
   myControl = new FormControl<string | adUsuario>('');
   options: adUsuario[] = [];
   filteredOptions: Observable<adUsuario[]>;
 
-  nombre_ventana:string="abmadusuario.vb";
-  public ventana="Usuarios"
-  public detalle="usuario-delete";
-  public tipo="usuario-DELETE";
+  nombre_ventana: string = "abmadusuario.vb";
+  public ventana = "Usuarios"
+  public detalle = "usuario-delete";
+  public tipo = "usuario-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog,private spinner: NgxSpinnerService,public log_module:LogService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
-    this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllUsers();
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -73,21 +72,20 @@ export class UsuarioComponent{
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
   }
-  
+
   displayFn(user: adUsuario): string {
     return user && user.login ? user.login : '';
   }
 
-  getAllUsers(){
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  getAllUsers() {
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adusuario/'+this.userConn)    
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adusuario/";
+    return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.usuarios = datav;
           console.log(this.usuarios);
-                
+
           this.spinner.show();
 
           this.dataSource = new MatTableDataSource(this.usuarios);
@@ -98,8 +96,8 @@ export class UsuarioComponent{
             this.spinner.hide();
           }, 1500);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -109,52 +107,52 @@ export class UsuarioComponent{
   openDialog(): void {
     this.dialog.open(UsuarioCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  editar(dataUsuarioEdit:any){
+  editar(dataUsuarioEdit: any) {
     this.data = dataUsuarioEdit;
-      const dialogRef = this.dialog.open(UsuarioEditComponent, {
-        data: {dataUsuarioEdit:dataUsuarioEdit},
-        width: 'auto',
-        height:'auto',
+    const dialogRef = this.dialog.open(UsuarioEditComponent, {
+      data: { dataUsuarioEdit: dataUsuarioEdit },
+      width: 'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(dataUsuarioEliminar:any){
+  eliminar(dataUsuarioEliminar: any) {
     this.data = dataUsuarioEliminar;
-      const dialogRef = this.dialog.open(UsuarioDeleteComponent, {
-        data: {dataUsuarioEliminar:dataUsuarioEliminar},
-        width: 'auto',
-        height:'auto',
+    const dialogRef = this.dialog.open(UsuarioDeleteComponent, {
+      data: { dataUsuarioEliminar: dataUsuarioEliminar },
+      width: 'auto',
+      height: 'auto',
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/adarea/'+this.userConn+"/"+ dataUsuarioEliminar.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adarea/' + this.userConn + "/" + dataUsuarioEliminar.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

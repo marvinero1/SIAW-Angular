@@ -12,7 +12,6 @@ import { PeriodoSistemaService } from './periodoSistema/periodo-sistema.service'
 @Injectable({
   providedIn: 'root'
 })
-
 export class ApiService {
 
   public ventana_estado: any = [{
@@ -24,6 +23,7 @@ export class ApiService {
   data: any = [];
   rol: any;
   code_error: number;
+
   @Output() newItemEvent = new EventEmitter<string>();
 
   public dato_local_storage;
@@ -32,8 +32,11 @@ export class ApiService {
   public agencia;
   public usuario_logueado: any;
   public session: any;
+
   public userConn: any;
   public BD_storage: any;
+  public usuarioLogueado: any;
+
   public monedaBase: any;
   public usuario_storage;
   public agencia_storage;
@@ -41,12 +44,13 @@ export class ApiService {
   public statusInternet: boolean = true;
 
   private readonly API_URL = 'http://192.168.30.6/API_SIAW/api';
-  // private readonly API_URL = 'https://192.168.31.240/API_SIAW/api';
+  // private readonly API_URL = 'http://192.168.31.240/API_SIAW/api';
 
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
     public periodoSistemaService: PeriodoSistemaService) {
 
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
@@ -199,20 +203,7 @@ export class ApiService {
       })
   }
 
-  eliminarToken() {
-    let token = localStorage.getItem('token');
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    return this.delete('/seg_adm/login/logout/' + useConn + "/" + token)
-      .subscribe({
-        next: (datav) => {
-        },
-        error: (err: any) => {
-          console.log(err, 'No se pudo eliminar el token, revise la ruta!');
-        },
-        complete: () => { }
-      })
-  }
 
   //Funcion que verifica la accesibilidad de las ventanas
   //cod_rol, seprograma
@@ -252,11 +243,9 @@ export class ApiService {
     });
   }
 
-  getRolUserParaVentana(user, ventana) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
+  getRolUserParaVentana(ventana) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
-    return this.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + user)
+    return this.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.rol = datav.codrol;
@@ -378,6 +367,22 @@ export class ApiService {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
 
+    localStorage.removeItem("data_impresion");
     return this.router.navigate(['/login']);
+  }
+
+  eliminarToken() {
+    let token = localStorage.getItem('token');
+    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    return this.delete('/seg_adm/login/logout/' + useConn + "/" + token)
+      .subscribe({
+        next: (datav) => {
+        },
+        error: (err: any) => {
+          console.log(err, 'No se pudo eliminar el token, revise la ruta!');
+        },
+        complete: () => { }
+      })
   }
 }

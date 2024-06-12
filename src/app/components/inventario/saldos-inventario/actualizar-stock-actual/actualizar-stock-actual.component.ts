@@ -18,26 +18,25 @@ import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/alma
 })
 export class ActualizarStockActualComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  almacen_get:any=[];
-  inventario_save:any=[];
-  dataform:any='';
-  userConn:any;
+  almacen_get: any = [];
+  inventario_save: any = [];
+  dataform: any = '';
+  userConn: any;
 
   nombre_ventana: string = "prgactstoactual.vb";
-  
-  public ventana="Actualizar Stock Actual"
-  public detalle="ActualizarStock-create";
-  public tipo="ActualizarStock-CREATE";
-    
-  constructor(private api:ApiService, public dialog: MatDialog, public servicioInventario:ServicioInventarioService, 
-    public servicioPersona:ServicePersonaService, public servicioAlmacen:ServicioalmacenService,private _formBuilder: FormBuilder,
-    private datePipe: DatePipe, private toastr: ToastrService, public log_module:LogService,public nombre_ventana_service:NombreVentanaService){ 
-      
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+
+  public ventana = "Actualizar Stock Actual"
+  public detalle = "ActualizarStock-create";
+  public tipo = "ActualizarStock-CREATE";
+
+  constructor(private api: ApiService, public dialog: MatDialog, public servicioInventario: ServicioInventarioService,
+    public servicioPersona: ServicePersonaService, public servicioAlmacen: ServicioalmacenService, private _formBuilder: FormBuilder,
+    private datePipe: DatePipe, private toastr: ToastrService, public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
   }
@@ -45,46 +44,46 @@ export class ActualizarStockActualComponent implements OnInit {
   ngOnInit() {
     this.mandarNombre();
 
-    this.servicioAlmacen.disparadorDeAlmacenes.subscribe(data =>{
-      console.log("Recibiendo Persona: " , data);
+    this.servicioAlmacen.disparadorDeAlmacenes.subscribe(data => {
+      console.log("Recibiendo Persona: ", data);
       this.almacen_get = data.almacen;
     });
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
-  
+
     return this._formBuilder.group({
       id: [this.dataform.id],
       fecha: [this.datePipe.transform(this.dataform.fecha, "yyyy-MM-dd")],
       codalmacen: [this.dataform.codalmacen],
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/oper/prgcrearinv/";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgcrearinv/";
     console.log(data);
-    
-    return this.api.create("/inventario/oper/prgcrearinv/"+this.userConn, data)
+
+    return this.api.create("/inventario/oper/prgcrearinv/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.inventario_save = datav;
-        
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.toastr.success('Guardado con Exito! 🎉');
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -99,9 +98,9 @@ export class ActualizarStockActualComponent implements OnInit {
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
-}
+  }
 }

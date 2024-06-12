@@ -10,20 +10,19 @@ import { NumpedidomercaderiaEditComponent } from './numpedidomercaderia-edit/num
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-numpedidomercaderia',
   templateUrl: './numpedidomercaderia.component.html',
   styleUrls: ['./numpedidomercaderia.component.scss']
 })
 export class NumpedidomercaderiaComponent implements OnInit {
-  
-  public pedido_mercaderia:any=[];
-  public data:any=[];
-  data_edit=[];
-  userConn:any;
 
-  displayedColumns = ['id','descripcion','nroactual','fechareg','horareg','usuarioreg','accion'];
+  public pedido_mercaderia: any = [];
+  public data: any = [];
+  data_edit = [];
+  userConn: any;
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'fechareg', 'horareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -31,30 +30,28 @@ export class NumpedidomercaderiaComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abmintipopedido.vb";
-  public ventana="Numeración Tipos de Pedidos de Mercaderia"
-	public detalle="nts-movpedmerca-detalle";
-	public tipo="transaccion-nts-movpedmerca-DELETE";
+  nombre_ventana: string = "abmintipopedido.vb";
+  public ventana = "Numeración Tipos de Pedidos de Mercaderia"
+  public detalle = "nts-movpedmerca-detalle";
+  public tipo = "transaccion-nts-movpedmerca-DELETE";
 
-
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,private toastr: ToastrService,
-    public log_module: LogService,public nombre_ventana_service:NombreVentanaService) {
-    this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+    public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.mandarNombre();
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     this.getAllPedidoMercaderia();
   }
 
-  getAllPedidoMercaderia(){
-    let errorMessage:string;
+  getAllPedidoMercaderia() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/intipopedido/'+this.userConn)
+    return this.api.getAll('/inventario/mant/intipopedido/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.pedido_mercaderia = datav;
@@ -69,8 +66,8 @@ export class NumpedidomercaderiaComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -80,57 +77,57 @@ export class NumpedidomercaderiaComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(NumpedidomercaderiaCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  editar(dataMercaderiaEdit){
+  editar(dataMercaderiaEdit) {
     this.data_edit = dataMercaderiaEdit;
     // console.log(this.data_edit);
-      const dialogRef = this.dialog.open(NumpedidomercaderiaEditComponent, {
-        data: {dataMercaderiaEdit:dataMercaderiaEdit},
-        width: 'auto',
-        height:'auto',
+    const dialogRef = this.dialog.open(NumpedidomercaderiaEditComponent, {
+      data: { dataMercaderiaEdit: dataMercaderiaEdit },
+      width: 'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result) {
-        return this.api.delete('/inventario/mant/intipopedido/'+this.userConn+"/"+element.id)
-        .subscribe({
-          next: () => {
-            this.toastr.success('! Eliminado Exitosamente !');
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+      if (result) {
+        return this.api.delete('/inventario/mant/intipopedido/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.toastr.success('! Eliminado Exitosamente !');
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            this.toastr.error('! NO SE ELIMINO !');
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              this.toastr.error('! NO SE ELIMINO !');
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

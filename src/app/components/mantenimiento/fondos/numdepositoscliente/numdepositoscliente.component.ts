@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { fnTipoDepositoCliente } from '@services/modelos/objetos';
 import { NumdepositosclienteCreateComponent } from './numdepositoscliente-create/numdepositoscliente-create.component';
 import { NumdepositosclienteEditComponent } from './numdepositoscliente-edit/numdepositoscliente-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -21,42 +19,42 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   templateUrl: './numdepositoscliente.component.html',
   styleUrls: ['./numdepositoscliente.component.scss']
 })
-export class NumdepositosclienteComponent {
+export class NumdepositosclienteComponent implements OnInit {
 
-  numDepCli:any=[]; 
-  data:[];
+  numDepCli: any = [];
+  data: [];
   datanumDepCliEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','codunidad','descUnidad','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | fnTipoDepositoCliente>('');
   options: fnTipoDepositoCliente[] = [];
   filteredOptions: Observable<fnTipoDepositoCliente[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmfntipodeposito_cliente.vb";
-  public ventana="TipoDepositosCliente"
-  public detalle="TipoDepositosCliente-delete";
-  public tipo="TipoDepositosCliente-DELETE";
+  nombre_ventana: string = "abmfntipodeposito_cliente.vb";
+  public ventana = "TipoDepositosCliente"
+  public detalle = "TipoDepositosCliente-delete";
+  public tipo = "TipoDepositosCliente-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllnumDepClierencias(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -66,9 +64,9 @@ export class NumdepositosclienteComponent {
     );
   }
 
-  getAllnumDepClierencias(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/fondos/mant/fntipodeposito_cliente/'+userConn)
+  getAllnumDepClierencias(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/fondos/mant/fntipodeposito_cliente/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numDepCli = datav;
@@ -82,18 +80,18 @@ export class NumdepositosclienteComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumdepositosclienteCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -112,50 +110,50 @@ export class NumdepositosclienteComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumDepCliEdit){
-    this.datanumDepCliEdit_copied ={...datanumDepCliEdit};
+  editar(datanumDepCliEdit) {
+    this.datanumDepCliEdit_copied = { ...datanumDepCliEdit };
     console.log(this.datanumDepCliEdit_copied);
-    
+
     this.data = datanumDepCliEdit;
     this.dialog.open(NumdepositosclienteEditComponent, {
-      data: {datanumDepCliEdit:this.datanumDepCliEdit_copied},
+      data: { datanumDepCliEdit: this.datanumDepCliEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fntipodeposito_cliente/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fntipodeposito_cliente/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fntipodeposito_cliente/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fntipodeposito_cliente/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

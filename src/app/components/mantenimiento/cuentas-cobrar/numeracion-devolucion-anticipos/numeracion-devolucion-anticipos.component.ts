@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { cotipodevanticipo } from '@services/modelos/objetos';
 import { NumeracionDevoclucionAnticipoCreateComponent } from './numeracion-devoclucion-anticipo-create/numeracion-devoclucion-anticipo-create.component';
 import { NumeracionDevoclucionAnticipoEditComponent } from './numeracion-devoclucion-anticipo-edit/numeracion-devoclucion-anticipo-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -16,57 +14,46 @@ import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 
-
-
 @Component({
   selector: 'app-numeracion-devolucion-anticipos',
   templateUrl: './numeracion-devolucion-anticipos.component.html',
   styleUrls: ['./numeracion-devolucion-anticipos.component.scss']
 })
-export class NumeracionDevolucionAnticiposComponent {
+export class NumeracionDevolucionAnticiposComponent implements OnInit {
 
-  numDevAnti:any=[]; 
-  data:[];
+  numDevAnti: any = [];
+  data: [];
   datanumDevAntiEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','codunidad','descUnidad','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | cotipodevanticipo>('');
   options: cotipodevanticipo[] = [];
   filteredOptions: Observable<cotipodevanticipo[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmcotipodevanticipo.vb";
-  public ventana="numDevAnticipos"
-  public detalle="numDevAnticipos-delete";
-  public tipo="numDevAnticipos-DELETE";
+  nombre_ventana: string = "abmcotipodevanticipo.vb";
+  public ventana = "numDevAnticipos"
+  public detalle = "numDevAnticipos-delete";
+  public tipo = "numDevAnticipos-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-
-
-
-
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllnumDevAnti(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -76,11 +63,9 @@ export class NumeracionDevolucionAnticiposComponent {
     );
   }
 
-
-
-  getAllnumDevAnti(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/ctsxcob/mant/cotipodevanticipo/'+userConn)
+  getAllnumDevAnti(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/ctsxcob/mant/cotipodevanticipo/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numDevAnti = datav;
@@ -94,18 +79,18 @@ export class NumeracionDevolucionAnticiposComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumeracionDevoclucionAnticipoCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -124,50 +109,50 @@ export class NumeracionDevolucionAnticiposComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumDevAntiEdit){
-    this.datanumDevAntiEdit_copied ={...datanumDevAntiEdit};
+  editar(datanumDevAntiEdit) {
+    this.datanumDevAntiEdit_copied = { ...datanumDevAntiEdit };
     console.log(this.datanumDevAntiEdit_copied);
-    
+
     this.data = datanumDevAntiEdit;
     this.dialog.open(NumeracionDevoclucionAnticipoEditComponent, {
-      data: {datanumDevAntiEdit:this.datanumDevAntiEdit_copied},
+      data: { datanumDevAntiEdit: this.datanumDevAntiEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  ctsxcob/mant/cotipodevanticipo/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  ctsxcob/mant/cotipodevanticipo/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/ctsxcob/mant/cotipodevanticipo/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/ctsxcob/mant/cotipodevanticipo/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

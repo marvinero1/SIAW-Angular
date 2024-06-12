@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ImpresionProformaEtiquetaItemsService } from '@components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import html2canvas from 'html2canvas';
@@ -15,6 +14,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "etiquetaImpresionProforma";
+  public data_impresion: any = [];
 
   userConn: any;
   BD_storage: any;
@@ -23,14 +23,14 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
 
   data_etiqueta: any = [];
   data_detalle_proforma: any = [];
+  data_cabecera_footer_proforma: any = [];
 
-  constructor(public nombre_ventana_service: NombreVentanaService, private impresionesProforma: ImpresionProformaEtiquetaItemsService,
-    private api: ApiService) {
-
+  constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
     this.getDataPDF();
 
@@ -42,6 +42,25 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   }
 
   getDataPDF() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" + this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + "PORCANCELAR")
+      .subscribe({
+        next: (datav) => {
+          console.log("DATA DEL PDF: ", datav);
+          //datav.docveprofCab CABECERA Y FOOTER
+          this.data_etiqueta = datav.dt_etiqueta
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.printFunction();
+        }
+      })
+  }
+
+  getDataPDFHARDCORE() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
       .subscribe({
@@ -69,7 +88,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     const content = document.getElementById('content');
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
-      html2canvas(content, { scale: 2 }).then((canvas) => {
+      html2canvas(content, { scale: 4 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
 
         // Crear un nuevo documento PDF

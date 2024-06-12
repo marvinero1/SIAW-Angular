@@ -21,10 +21,10 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class VehiculoComponent implements OnInit {
 
-  vehiculo:any=[]; 
-  data:[];
+  vehiculo: any = [];
+  data: [];
 
-  displayedColumns = ['placa','descripcion','activo','horareg','fechareg','usuarioreg','accion'];
+  displayedColumns = ['placa', 'descripcion', 'activo', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -37,20 +37,19 @@ export class VehiculoComponent implements OnInit {
   filteredOptions: Observable<Vehiculo[]>;
   userConn: any;
 
-  nombre_ventana:string="abmadvehiculo.vb";
-  public ventana="Vehiculo"
-  public detalle="vehiculo-delete";
-  public tipo="vehiculo-DELETE";
+  nombre_ventana: string = "abmadvehiculo.vb";
+  public ventana = "Vehiculo"
+  public detalle = "vehiculo-delete";
+  public tipo = "vehiculo-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module:LogService,
-    private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
-    
-    this.mandarNombre();
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
+    private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-   
+
+    this.mandarNombre();
     this.getAllVehiculos();
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
@@ -63,10 +62,10 @@ export class VehiculoComponent implements OnInit {
     );
   }
 
-  getAllVehiculos(){
-    let errorMessage:string;
+  getAllVehiculos() {
+    let errorMessage: string;
     errorMessage = "La Ruta presenta fallos al hacer peticion GET /seg_adm/mant/advehiculo/";
-    return this.api.getAll('/seg_adm/mant/advehiculo/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/advehiculo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.vehiculo = datav;
@@ -80,18 +79,18 @@ export class VehiculoComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(VehiculoCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -110,49 +109,49 @@ export class VehiculoComponent implements OnInit {
     return user && user.placa ? user.placa : '';
   }
 
-  editar(dataVehiculoEdit){
+  editar(dataVehiculoEdit) {
     this.data = dataVehiculoEdit;
-      const dialogRef = this.dialog.open(VehiculoEditComponent, {
-        data: {dataVehiculoEdit:dataVehiculoEdit},
-        width: 'auto',
-        height:'auto'
+    const dialogRef = this.dialog.open(VehiculoEditComponent, {
+      data: { dataVehiculoEdit: dataVehiculoEdit },
+      width: 'auto',
+      height: 'auto'
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /seg_adm/mant/advehiculo/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/advehiculo/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/advehiculo/'+this.userConn+"/"+element.placa)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/advehiculo/' + this.userConn + "/" + element.placa)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

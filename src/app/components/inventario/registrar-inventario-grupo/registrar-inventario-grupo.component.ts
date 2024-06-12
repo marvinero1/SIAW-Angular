@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { CatalogoInventarioComponent } from '../catalogo-inventario/catalogo-inventario.component';
 import { ApiService } from '@services/api.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,18 +17,18 @@ import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-item
   templateUrl: './registrar-inventario-grupo.component.html',
   styleUrls: ['./registrar-inventario-grupo.component.scss']
 })
-export class RegistrarInventarioGrupoComponent implements OnInit {
+export class RegistrarInventarioGrupoComponent implements OnInit, AfterViewInit {
 
-  @HostListener("document:keydown.F4", []) unloadHandler(event: KeyboardEvent) { 
+  @HostListener("document:keydown.F4", []) unloadHandler(event: KeyboardEvent) {
     this.modalCatalogoProductos();
   }
 
-  cod_inventario:any = [];
+  cod_inventario: any = [];
   get_observaciones: any = [];
   codigo_item_catalogo: any = [];
-  list_item_inventario:any[] = [];
+  list_item_inventario: any[] = [];
   item_obtenido = [];
-  
+
   fecha_actual = new Date();
   hora_actual = new Date();
   userConn: any;
@@ -37,37 +37,37 @@ export class RegistrarInventarioGrupoComponent implements OnInit {
   userLogueado: any;
   verificacion_grupo: string;
   zona: number = 0;
-  cantidad_item_matriz:number;
-  
+  cantidad_item_matriz: number;
+
   displayedColumns = ['item', 'descripcion', 'medida', 'unidad', 'zona', 'cantidad'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  nombre_ventana:string="abmadarea.vb";
-  public ventana="Registro de Inventario por Grupo"
-  public detalle="area-delete";
+  nombre_ventana: string = "abmadarea.vb";
+  public ventana = "Registro de Inventario por Grupo"
+  public detalle = "area-delete";
   public tipo = "area-DELETE";
-  
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
-    private servicioInventario:ServicioInventarioService, private datePipe: DatePipe, public itemservice:ItemServiceService,){
-    this.mandarNombre();
+    private servicioInventario: ServicioInventarioService, private datePipe: DatePipe, public itemservice: ItemServiceService) {
 
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(this.userLogueado, this.nombre_ventana);
+
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
-    this.servicioInventario.disparadorDeInventarios.subscribe(data =>{
-      console.log("Recibiendo Inventario: " , data);
+  ngOnInit() {
+
+    this.servicioInventario.disparadorDeInventarios.subscribe(data => {
+      console.log("Recibiendo Inventario: ", data);
       this.cod_inventario = data.inventario;
     });
 
-    this.itemservice.disparadorDeItems.subscribe(data =>{
+    this.itemservice.disparadorDeItems.subscribe(data => {
       console.log("Recibiendo Item: ", data);
       this.list_item_inventario.push(data);
       this.codigo_item_catalogo = data.item;
@@ -76,10 +76,9 @@ export class RegistrarInventarioGrupoComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource(this.list_item_inventario);
   }
-  
-  ngAfterViewInit():void {
-    this.list_item_inventario = [];
 
+  ngAfterViewInit(): void {
+    this.list_item_inventario = [];
   }
 
 
@@ -99,43 +98,42 @@ export class RegistrarInventarioGrupoComponent implements OnInit {
   // a datosCabecera docinfisico
 
 
-  
-  refrescar() { 
+  refrescar() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/mant/ingrupoper/getObs/'+this.userConn+"/"+this.cod_inventario.id+"/"+this.numero_id+"/"+this.nro)
+    return this.api.getAll('/inventario/mant/ingrupoper/getObs/' + this.userConn + "/" + this.cod_inventario.id + "/" + this.numero_id + "/" + this.nro)
       .subscribe({
         next: (datav) => {
           this.get_observaciones = datav;
           console.log(this.get_observaciones);
           this.spinner.show();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  crearCabecera(){ 
+  crearCabecera() {
     let data = [];
     let fecha_now = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /seg_adm/mant/adarea/";
-    return this.api.create("/inventario/transac/docinfisico/validaInvGrup/"+this.userConn+"/"+this.cod_inventario.id+"/"+this.numero_id+"/"+this.nro+"/"+hora_actual_complete+"/"+fecha_now+"/"+"dpd2", data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/mant/adarea/";
+    return this.api.create("/inventario/transac/docinfisico/validaInvGrup/" + this.userConn + "/" + this.cod_inventario.id + "/" + this.numero_id + "/" + this.nro + "/" + hora_actual_complete + "/" + fecha_now + "/" + "dpd2", data)
       .subscribe({
         next: (datav) => {
           this.verificacion_grupo = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! Ya se registro esa toma de inventario, Para llevar a cabo modificaciones por favor entre a Revision de Toma de Inventario. !');
         },
@@ -145,34 +143,34 @@ export class RegistrarInventarioGrupoComponent implements OnInit {
 
   limpiar() {
     this.cod_inventario.id = "";
-    this.numero_id= "";
+    this.numero_id = "";
     this.get_observaciones.obs = "";
     this.nro = "";
   }
 
   limpiarCantidades() {
-    
-  }
-
-  matrizModal() { 
 
   }
 
-  guardarInventario() { 
+  matrizModal() {
+
+  }
+
+  guardarInventario() {
 
 
   }
-  
-  catalogoInventario() { 
+
+  catalogoInventario() {
     this.dialog.open(CatalogoInventarioComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
@@ -182,7 +180,7 @@ export class RegistrarInventarioGrupoComponent implements OnInit {
       height: 'auto',
     });
   }
-  
+
   modalMatrizProductos(): void {
     this.dialog.open(MatrizInventarioComponent, {
       width: 'auto',

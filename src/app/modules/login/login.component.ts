@@ -165,14 +165,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this._snackBar.open('¡ No se pudo Iniciar Sesion, verifique su conexion !', '🤖', {
           duration: 3000,
-          panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+          panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
         });
       }
     }
     if (agencia == null) {
       this._snackBar.open('¡ Agencia no encontrada o sin conexion !', '📡', {
         duration: 3000,
-        panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+        panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
       });
     }
   }
@@ -210,7 +210,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this._snackBar.open('¡ Bienvenido al SIAW !', '🎉', {
               duration: 2500,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             }),
 
               console.log("DATOS CORRECTOS");
@@ -268,7 +268,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(err, errorMessage);
           this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
         },
         complete: () => { }
@@ -288,7 +288,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(err, errorMessage);
           this._snackBar.open('¡ La Agencia NO ESTA DISPONIBLE !', '⚠️', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           })
         },
         complete: () => { }
@@ -312,7 +312,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
           this._snackBar.open('¡ El usuario existe !', 'Ok', {
             duration: 2000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           return this.existe_usuario = true;
         },
@@ -322,7 +322,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
           this._snackBar.open('¡ No se encontro el usuario !', '=(', {
             duration: 2500,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           return this.existe_usuario = false;
         },
@@ -355,7 +355,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(err, errorMessage);
           this._snackBar.open('¡ EL USUARIO BD NO ESTA DISPONIBLE !', '⚠️', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           })
           setTimeout(() => {
             this.spinner.hide();

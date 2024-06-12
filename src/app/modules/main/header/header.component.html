@@ -14,7 +14,7 @@
     </div>
 </form> -->
 
-<div class="col">
+<div class="col" *ngIf="isNavbarVisible">
   <div class="row">
     <!--<div class="col">
             <a class="nav-link" (click)="onToggleMenuSidebar()" role="button" style="text-align: center;">
@@ -173,12 +173,28 @@
           </li>
         </ul>
 
-        <ul class="nav flex-column flex-nowrap overflow-hidden" style="float: right;">
+        <ul class="nav flex-column flex-nowrap overflow-hidden" style="float: right;" matTooltip="Menu"
+          matTooltipClass="custom-tooltip" matTooltipPosition="above">
           <a class="nav-link" (click)="onToggleMenuSidebar()" role="button" style="text-align: center;color: #093070;">
             <i class="fas fa-bars" style="font-size: 1.3rem;"></i>
           </a>
         </ul>
+
+        <ul class="nav flex-column flex-nowrap overflow-hidden" style="float: right;" matTooltip="Ocultar Menu"
+          matTooltipClass="custom-tooltip" matTooltipPosition="above">
+          <a class="nav-link" (click)="toggleNavbar()" role="button" style="text-align: center;color: #093070;">
+            <mat-icon style="font-size: 1.3rem;">vertical_align_top</mat-icon>
+          </a>
+        </ul>
       </div>
     </div>
+  </div>
+</div>
+<div class="col" *ngIf="!isNavbarVisible">
+  <div style="float: left;">
+    <span>Menu Oculto </span>
+  </div>
+  <div style="float: right;">
+    <mat-icon (click)="toggleNavbar()" style="color: black;cursor: pointer;"> vertical_align_bottom</mat-icon>
   </div>
 </div>

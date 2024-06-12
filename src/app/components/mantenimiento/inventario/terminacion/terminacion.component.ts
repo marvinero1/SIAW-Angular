@@ -16,12 +16,12 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class TerminacionComponent implements OnInit {
 
-  public terminacion:any=[];
-  public data:any=[];
-  userConn:any;
+  public terminacion: any = [];
+  public data: any = [];
+  userConn: any;
   usuarioLogueado: any;
 
-  displayedColumns = ['codigo','descripcion','fechareg','horareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'fechareg', 'horareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -30,29 +30,30 @@ export class TerminacionComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   nombre_ventana: string = "abminterminacion.vb";
-  public ventana="Terminación Item"
-	public detalle="terminacion-detalle";
-	public tipo="transaccion-terminacion-DELETE";
+  public ventana = "Terminación Item"
+  public detalle = "terminacion-detalle";
+  public tipo = "transaccion-terminacion-DELETE";
 
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService,public _snackBar: MatSnackBar, public nombre_ventana_service:NombreVentanaService){
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, public _snackBar: MatSnackBar, public nombre_ventana_service: NombreVentanaService) {
+
     this.mandarNombre();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     this.getAllTerminacion();
   }
 
-  getAllTerminacion(){
-    let errorMessage:string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/interminacion/'+this.userConn)
+  getAllTerminacion() {
+    let errorMessage: string;
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/interminacion/";
+    return this.api.getAll('/inventario/mant/interminacion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.terminacion = datav;
@@ -67,8 +68,8 @@ export class TerminacionComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -78,49 +79,49 @@ export class TerminacionComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(TerminacionCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: -/inventario/mant/interminacion/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result){
-        return this.api.delete('/inventario/mant/interminacion/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
+      if (result) {
+        return this.api.delete('/inventario/mant/interminacion/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
 
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-            });
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+              });
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

@@ -21,10 +21,10 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class LocalidadesComponent implements OnInit {
 
-  localidad:any=[]; 
-  data:[];
+  localidad: any = [];
+  data: [];
 
-  displayedColumns = ['codigo','descripcion', 'provincia','codigo_postal','horareg','fechareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'provincia', 'codigo_postal', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -33,20 +33,20 @@ export class LocalidadesComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   nombre_ventana: string = "abmadlocalidad.vb";
-  public ventana="Localidades"
+  public ventana = "Localidades"
 
   myControl = new FormControl<string | Localidades>('');
   options: Localidades[] = [];
   filteredOptions: Observable<Localidades[]>;
-  userConn:any;
+  userConn: any;
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module:LogService,
-    private toastr: ToastrService,public nombre_ventana_service:NombreVentanaService){
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
+    private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
-    
+
     let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
@@ -62,9 +62,9 @@ export class LocalidadesComponent implements OnInit {
     );
   }
 
-  getAllArea(userConn){
+  getAllArea(userConn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/abmadlocalidad/'+userConn)
+    return this.api.getAll('/seg_adm/mant/abmadlocalidad/' + userConn)
       .subscribe({
         next: (datav) => {
           this.localidad = datav;
@@ -78,18 +78,18 @@ export class LocalidadesComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(LocalidadesCreateComponent, {
       width: '750px',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -110,53 +110,53 @@ export class LocalidadesComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  editar(dataLocalidadEdit){
+  editar(dataLocalidadEdit) {
     this.data = dataLocalidadEdit;
-      this.dialog.open(LocalidadesEditComponent, {
-        data: {dataLocalidadEdit:dataLocalidadEdit},
-        width: '750px',
-        height:'auto',
+    this.dialog.open(LocalidadesEditComponent, {
+      data: { dataLocalidadEdit: dataLocalidadEdit },
+      width: '750px',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let ventana="loaclaidades"
-    let detalle="localidades-delete";
-    let tipo="localidades-DELETE";
+  eliminar(element): void {
+    let ventana = "loaclaidades"
+    let detalle = "localidades-delete";
+    let tipo = "localidades-DELETE";
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/abmadlocalidad/'+this.userConn+"/"+ element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(ventana, detalle, tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/abmadlocalidad/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 

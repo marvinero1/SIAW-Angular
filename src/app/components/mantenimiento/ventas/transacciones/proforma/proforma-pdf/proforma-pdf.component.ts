@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ImpresionProformaEtiquetaItemsService } from '@components/mantenimiento/ventas/servicio-impresion-proforma/impresion-proforma-etiqueta-items.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import jsPDF from 'jspdf';
@@ -14,6 +13,8 @@ export class ProformaPdfComponent implements OnInit {
   codigo_get_proforma: any;
   ventana: string = "proformaPDF";
 
+  public data_impresion: any = [];
+
   userConn: any;
   BD_storage: any;
   usuarioLogueado: any;
@@ -22,28 +23,45 @@ export class ProformaPdfComponent implements OnInit {
   data_cabecera_footer_proforma: any = [];
   data_detalle_proforma: any = [];
 
-  constructor(public nombre_ventana_service: NombreVentanaService, private impresionesProforma: ImpresionProformaEtiquetaItemsService,
-    private api: ApiService) {
-
+  constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-
-    this.getDataPDF();
+    this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
     this.mandarNombre();
+
+    console.log("data impresion:", this.data_impresion);
+    this.getDataPDF();
   }
 
   ngOnInit() {
-    this.impresionesProforma.disparadorDeCodigoProforma.subscribe(data => {
-      console.log("Recibiendo Codigo Proforma Guardad: ", data);
-      this.codigo_get_proforma = data.codigo_proforma;
-    });
   }
 
-
   getDataPDF() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" + this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + "PORCANCELAR")
+      .subscribe({
+        next: (datav) => {
+          console.log("DATA DEL PDF: ", datav);
+          //datav.docveprofCab CABECERA Y FOOTER
+          this.data_cabecera_footer_proforma = datav.docveprofCab
+
+          //datav.dtveproforma1 DETALLE
+          this.data_detalle_proforma = datav.dtveproforma1;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.printFunction();
+        }
+      })
+  }
+
+  getDataPDFHarcode() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
       .subscribe({
@@ -61,7 +79,7 @@ export class ProformaPdfComponent implements OnInit {
           console.log(err, errorMessage);
         },
         complete: () => {
-          this.printFunction();
+          //this.printFunction();
         }
       })
   }

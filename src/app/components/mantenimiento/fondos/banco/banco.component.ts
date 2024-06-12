@@ -6,14 +6,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
-import { banco, fnTipoRetiro } from '@services/modelos/objetos';
+import { banco } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, startWith } from 'rxjs';
 import { BancoEditComponent } from './banco-edit/banco-edit.component';
 import { BancoCreateComponent } from './banco-create/banco-create.component';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
-
 @Component({
   selector: 'app-banco',
   templateUrl: './banco.component.html',
@@ -21,37 +20,35 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 })
 export class BancoComponent implements OnInit {
 
-  banco:any=[]; 
-  data:[];
+  banco: any = [];
+  data: [];
   dataBancoEdit_copied: any = [];
-  
-  displayedColumns = ['codigo','nombre','direccion','nit','fechareg','accion'];
+
+  displayedColumns = ['codigo', 'nombre', 'direccion', 'nit', 'fechareg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | banco>('');
   options: banco[] = [];
   filteredOptions: Observable<banco[]>;
-  userConn:any;
+  userConn: any;
   inputValue: number | null = null;
-  
-  nombre_ventana:string="abmcobanco.vb";
-  public ventana="Banco"
-  public detalle="Banco-delete";
-  public tipo="Banco-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
-    this.mandarNombre();
+  nombre_ventana: string = "abmcobanco.vb";
+  public ventana = "Banco"
+  public detalle = "Banco-delete";
+  public tipo = "Banco-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
@@ -66,14 +63,14 @@ export class BancoComponent implements OnInit {
     );
   }
 
-  getAllBanco(){
-    let errorMessage:string = "La Ruta presenta fallos al hacer peticion GET --/ctsxcob/mant/cobanco/";
-    return this.api.getAll('/ctsxcob/mant/cobanco/'+this.userConn)
+  getAllBanco() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/ctsxcob/mant/cobanco/";
+    return this.api.getAll('/ctsxcob/mant/cobanco/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.banco = datav;
           console.log(this.banco);
-          
+
           this.dataSource = new MatTableDataSource(this.banco);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
@@ -83,19 +80,19 @@ export class BancoComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(BancoCreateComponent, {
       width: 'auto',
       height: 'auto',
-      
+
     });
   }
 
@@ -114,50 +111,50 @@ export class BancoComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  editar(datanumRetBancEdit){
-    this.dataBancoEdit_copied ={...datanumRetBancEdit};
+  editar(datanumRetBancEdit) {
+    this.dataBancoEdit_copied = { ...datanumRetBancEdit };
     console.log(this.dataBancoEdit_copied);
-    
+
     this.data = datanumRetBancEdit;
     this.dialog.open(BancoEditComponent, {
-      data: {datanumRetBancEdit:this.dataBancoEdit_copied},
+      data: { datanumRetBancEdit: this.dataBancoEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fntiporetiro/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fntiporetiro/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/ctsxcob/mant/cobanco/'+this.userConn+"/"+ element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/ctsxcob/mant/cobanco/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

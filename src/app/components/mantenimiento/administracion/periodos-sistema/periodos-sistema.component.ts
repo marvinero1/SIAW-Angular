@@ -16,12 +16,12 @@ import { ToastrService } from 'ngx-toastr';
   encapsulation: ViewEncapsulation.None
 })
 export class PeriodosSistemaComponent implements OnInit {
-  
+
   fecha_actual = new Date();
   hora_actual = new Date();
 
   userConn: string;
-  usuarioLogueado:string;
+  usuarioLogueado: string;
   fecha_apertura: any = [];
   modulo_apertura: any = [];
   sin_detalle: any = [];
@@ -94,7 +94,7 @@ export class PeriodosSistemaComponent implements OnInit {
       "codigo": 12,
       "descripcion": "FONDOS",
     }];
-  
+
   administracion: any;
   ultimoElementoMes: number;
   ultimoElementoCodigo: number;
@@ -106,14 +106,14 @@ export class PeriodosSistemaComponent implements OnInit {
   public tipo = "ActualizarStock-CREATE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    private toastr: ToastrService, private _formBuilder: FormBuilder, public _snackBar: MatSnackBar,private datePipe: DatePipe,
+    private toastr: ToastrService, private _formBuilder: FormBuilder, public _snackBar: MatSnackBar, private datePipe: DatePipe,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
-   
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.mandarNombre();
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
@@ -183,7 +183,7 @@ export class PeriodosSistemaComponent implements OnInit {
     let codigo = element.codigo;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET- /seg_adm/mant/abmadapertura/getdetalle/";
-    return this.api.getAll('/seg_adm/mant/abmadapertura/getdetalle/'+this.userConn+"/"+codigo)
+    return this.api.getAll('/seg_adm/mant/abmadapertura/getdetalle/' + this.userConn + "/" + codigo)
       .subscribe({
         next: (datav) => {
           //ACA MODULO DE MES EXISTENTE
@@ -227,9 +227,9 @@ export class PeriodosSistemaComponent implements OnInit {
           this.ultimoElementoMes = this.fecha_apertura[0].mes;
           this.ultimoElementoCodigo = this.fecha_apertura[0].codigo;
           this.ultimoElementoAnio = this.fecha_apertura[0].ano;
-          
+
           console.log(this.ultimoElementoAnio, this.ultimoElementoCodigo, this.ultimoElementoMes);
-          
+
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
@@ -271,13 +271,13 @@ export class PeriodosSistemaComponent implements OnInit {
         ano: this.ultimoElementoAnio + 1,
         mes: 1,
         horareg: hora_actual_complete,
-        fechareg: this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd"),
+        fechareg: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         usuarioreg: this.usuarioLogueado,
       }
       console.log("Anio: ", dataAnioNuevo);
 
       let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/abmadapertura/";
-      return this.api.create("/seg_adm/mant/abmadapertura/addPeriodo/"+this.userConn, dataAnioNuevo)
+      return this.api.create("/seg_adm/mant/abmadapertura/addPeriodo/" + this.userConn, dataAnioNuevo)
         .subscribe({
           next: (datav) => {
             this.periodo_save = datav;
@@ -292,7 +292,7 @@ export class PeriodosSistemaComponent implements OnInit {
 
             this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
               duration: 3000,
-               panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
             });
 
             this.getFechaApertura();
@@ -309,14 +309,14 @@ export class PeriodosSistemaComponent implements OnInit {
         ano: this.ultimoElementoAnio,
         mes: this.ultimoElementoMes + 1,
         horareg: hora_actual_complete,
-        fechareg: this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd"),
+        fechareg: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         usuarioreg: this.usuarioLogueado,
       }
 
       console.log(data);
 
       let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/abmadapertura/";
-      return this.api.create("/seg_adm/mant/abmadapertura/addPeriodo/"+this.userConn, data)
+      return this.api.create("/seg_adm/mant/abmadapertura/addPeriodo/" + this.userConn, data)
         .subscribe({
           next: (datav) => {
             this.periodo_save = datav;
@@ -333,7 +333,7 @@ export class PeriodosSistemaComponent implements OnInit {
 
             this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
               duration: 3000,
-               panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
             });
 
             this.getFechaApertura();

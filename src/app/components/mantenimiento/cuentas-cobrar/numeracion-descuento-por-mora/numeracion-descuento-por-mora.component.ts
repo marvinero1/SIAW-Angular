@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { cotipodescuento_mora } from '@services/modelos/objetos';
 import { NumeracionDescuentoPorMoraCreateComponent } from './numeracion-descuento-por-mora-create/numeracion-descuento-por-mora-create.component';
 import { NumeracionDescuentoPorMoraEditComponent } from './numeracion-descuento-por-mora-edit/numeracion-descuento-por-mora-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -15,57 +13,46 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
-
 @Component({
   selector: 'app-numeracion-descuento-por-mora',
   templateUrl: './numeracion-descuento-por-mora.component.html',
   styleUrls: ['./numeracion-descuento-por-mora.component.scss']
 })
-export class NumeracionDescuentoPorMoraComponent {
+export class NumeracionDescuentoPorMoraComponent implements OnInit {
 
-  numDescMora:any=[]; 
-  data:[];
+  numDescMora: any = [];
+  data: [];
   datanumDescMoraEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','codunidad','descUnidad','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | cotipodescuento_mora>('');
   options: cotipodescuento_mora[] = [];
   filteredOptions: Observable<cotipodescuento_mora[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmcotipodescuento_mora.vb";
-  public ventana="numDescuentosporMora"
-  public detalle="numDescuentosporMora-delete";
-  public tipo="numDescuentosporMora-DELETE";
+  nombre_ventana: string = "abmcotipodescuento_mora.vb";
+  public ventana = "numDescuentosporMora"
+  public detalle = "numDescuentosporMora-delete";
+  public tipo = "numDescuentosporMora-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-
-
-
-
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllnumDescMora(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -75,11 +62,9 @@ export class NumeracionDescuentoPorMoraComponent {
     );
   }
 
-
-
-  getAllnumDescMora(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/ctsxcob/mant/cotipodescuento_mora/'+userConn)
+  getAllnumDescMora(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/ctsxcob/mant/cotipodescuento_mora/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numDescMora = datav;
@@ -93,18 +78,18 @@ export class NumeracionDescuentoPorMoraComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumeracionDescuentoPorMoraCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -123,50 +108,50 @@ export class NumeracionDescuentoPorMoraComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumDescMoraEdit){
-    this.datanumDescMoraEdit_copied ={...datanumDescMoraEdit};
+  editar(datanumDescMoraEdit) {
+    this.datanumDescMoraEdit_copied = { ...datanumDescMoraEdit };
     console.log(this.datanumDescMoraEdit_copied);
-    
+
     this.data = datanumDescMoraEdit;
     this.dialog.open(NumeracionDescuentoPorMoraEditComponent, {
-      data: {datanumDescMoraEdit:this.datanumDescMoraEdit_copied},
+      data: { datanumDescMoraEdit: this.datanumDescMoraEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  ctsxcob/mant/cotipodescuento_mora/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  ctsxcob/mant/cotipodescuento_mora/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/ctsxcob/mant/cotipodescuento_mora/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/ctsxcob/mant/cotipodescuento_mora/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

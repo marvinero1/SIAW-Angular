@@ -45,13 +45,11 @@ export class ConceptosmovimientosmercaderiaComponent implements OnInit {
     public _snackBar: MatSnackBar, public nombre_ventana_service: NombreVentanaService, private toastr: ToastrService,) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
     this.getAllConcepto();
     this.mandarNombre();
   }
-
 
   ngOnInit() {
   }

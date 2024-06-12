@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ServicioInventarioService } from '../servicio-inventario/servicio-inventario.service';
 import { ServicePersonaService } from '@components/mantenimiento/persona-catalogo/service-persona/service-persona.service';
-import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
@@ -16,34 +15,31 @@ import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/alma
   styleUrls: ['./exportar-importar-saldos.component.scss']
 })
 export class ExportarImportarSaldosComponent implements OnInit {
-  
-  FormularioData:FormGroup;
+
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  almacen_get:any=[];
-  inventario_save:any=[];
-  dataform:any='';
-  userConn:any;
+  almacen_get: any = [];
+  inventario_save: any = [];
+  dataform: any = '';
+  userConn: any;
 
-  nombre_ventana:string="prgeximsaldo.vb";
+  nombre_ventana: string = "prgeximsaldo.vb";
 
-  public ventana="ExportarStock"
-  public detalle="ExportarStock-create";
-  public tipo="ExportarStock-CREATE";
-    
-  constructor(private api:ApiService, public dialog: MatDialog, public servicioInventario:ServicioInventarioService, 
-    public servicioPersona:ServicePersonaService, public servicioAlmacen:ServicioalmacenService, private _formBuilder: FormBuilder,
-    private datePipe: DatePipe, private toastr: ToastrService, public log_module:LogService){ 
-      
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+  public ventana = "ExportarStock"
+  public detalle = "ExportarStock-create";
+  public tipo = "ExportarStock-CREATE";
 
-    // this.FormularioData = this.createForm();
+  constructor(private api: ApiService, public dialog: MatDialog, public servicioInventario: ServicioInventarioService,
+    public servicioPersona: ServicePersonaService, public servicioAlmacen: ServicioalmacenService, private toastr: ToastrService,
+    public log_module: LogService) {
+
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
-    this.servicioAlmacen.disparadorDeAlmacenes.subscribe(data =>{
-      console.log("Recibiendo Persona: " , data);
+    this.servicioAlmacen.disparadorDeAlmacenes.subscribe(data => {
+      console.log("Recibiendo Persona: ", data);
       this.almacen_get = data.almacen;
     });
   }

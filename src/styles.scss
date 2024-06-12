@@ -86,7 +86,7 @@ input::placeholder {
 
 ::-webkit-scrollbar {
   width: 4.8px;
-  height: 3.2px;
+  height: 5px;
 }
 
 //para colocarle background al scroll
@@ -195,13 +195,13 @@ body {
 //     background-size: cover;
 // }
 
-.coorporativo-snackbar {
+.coorporativo-snackbarBlue {
   background: #093070;
   --mdc-snackbar-container-color: 093070 !important;
-  color: white;
+  color: #fbd800;
 }
 
-.coorporativo-snackbar {
+.coorporativo-snackbarYellow {
   background-color: #fbd800;
   color: black;
   border: none;
@@ -488,8 +488,6 @@ select, textarea {
   .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label{
     color: #093070;
   }
-
-
 }
 
   input[type=number]::-webkit-inner-spin-button, 

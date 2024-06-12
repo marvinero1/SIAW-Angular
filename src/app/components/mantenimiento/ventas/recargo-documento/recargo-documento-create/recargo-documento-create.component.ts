@@ -59,8 +59,7 @@ export class RecargoDocumentoCreateComponent implements OnInit {
     this.mandarNombre();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
@@ -84,7 +83,7 @@ export class RecargoDocumentoCreateComponent implements OnInit {
   }
 
   getAllTipoCredito() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/mant/verubro/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/mant/verecargo/";
     return this.api.getAll('/venta/mant/verecargo/' + this.userConn)
       .subscribe({
         next: (datav) => {

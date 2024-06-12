@@ -20,15 +20,15 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class IdProformaUsuarioComponent implements OnInit {
 
-  idproforma:any=[]; 
-  id_proforma_service:any;
-  cod_usuario:any;
+  idproforma: any = [];
+  id_proforma_service: any;
+  cod_usuario: any;
   guardar_proforma: any = [];
   usuario_get: any = [];
-  usuarioLogueado:any;
-  data:[];
-  userConn:any;
-  
+  usuarioLogueado: any;
+  data: [];
+  userConn: any;
+
   displayedColumns = ['id', 'usuario', 'idproforma', 'grupo', 'accion'];
 
   dataSource = new MatTableDataSource();
@@ -37,14 +37,13 @@ export class IdProformaUsuarioComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
+  nombre_ventana: string = "prgadusuario_idproforma.vb";
+  public ventana = "ID de Proformas Por Usuario"
+  public detalle = "id-proforma-detalle";
+  public tipo = "transaccion-id-proforma-POST";
 
-  nombre_ventana:string="prgadusuario_idproforma.vb";
-  public ventana="ID de Proformas Por Usuario"
-  public detalle="id-proforma-detalle";
-  public tipo="transaccion-id-proforma-POST";
-
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module:LogService,
-    private toastr: ToastrService, private servicioIDProforma: ServicioidproformaService,public nombre_ventana_service:NombreVentanaService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
+    private toastr: ToastrService, private servicioIDProforma: ServicioidproformaService, public nombre_ventana_service: NombreVentanaService,
     public usuarioservice: ServicioUsuarioService) {
 
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -52,30 +51,30 @@ export class IdProformaUsuarioComponent implements OnInit {
 
     this.getAllIdProformaUsuario();
     this.getUsuario();
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
     this.mandarNombre();
   }
 
   ngOnInit(): void {
-    this.usuarioservice.disparadorDeUsuarios.subscribe(data =>{
+    this.usuarioservice.disparadorDeUsuarios.subscribe(data => {
       console.log("Recibiendo Usuario: ", data);
       this.cod_usuario = data.usuario;
     });
 
-    this.servicioIDProforma.disparadorDeIDProformas.subscribe(data =>{
-      console.log("Recibiendo ID Proforma: " , data);
+    this.servicioIDProforma.disparadorDeIDProformas.subscribe(data => {
+      console.log("Recibiendo ID Proforma: ", data);
       this.id_proforma_service = data.id_proforma;
     });
   }
 
-  getAllIdProformaUsuario(){
+  getAllIdProformaUsuario() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adusuario_idproforma/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adusuario_idproforma/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.idproforma = datav;
           console.log(this.idproforma);
-          
+
           this.dataSource = new MatTableDataSource(this.idproforma);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
@@ -85,50 +84,50 @@ export class IdProformaUsuarioComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getUsuario(){
+  getUsuario() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/adusuario/catalogo/"
-    return this.api.getAll('/seg_adm/mant/adusuario/catalogo/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adusuario/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.usuario_get = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  submitData(){
+  submitData() {
     let data = {
       usuario: this.cod_usuario,
       idproforma: this.id_proforma_service,
       grupo: "",
     };
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- /seg_adm/mant/adusuario_idproforma/";
-    return this.api.create("/seg_adm/mant/adusuario_idproforma/"+this.userConn, data)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/mant/adusuario_idproforma/";
+    return this.api.create("/seg_adm/mant/adusuario_idproforma/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.guardar_proforma = datav;
           console.log(this.guardar_proforma);
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.spinner.show();
           this.toastr.success(this.guardar_proforma.usuario_idasignado);
           this.getAllIdProformaUsuario();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
           this.toastr.error(this.guardar_proforma.usuario_idasignado);
@@ -137,49 +136,49 @@ export class IdProformaUsuarioComponent implements OnInit {
       })
   }
 
-  eliminar(element): void{
-    let ventana="idproforma"
-    let detalle="idproforma-delete";
-    let tipo="idproforma-DELETE";
+  eliminar(element): void {
+    let ventana = "idproforma"
+    let detalle = "idproforma-delete";
+    let tipo = "idproforma-DELETE";
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/seg_adm/mant/adusuario_idproforma/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(ventana, detalle, tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adusuario_idproforma/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  onLeaveUsuario(event: any){
-	  const inputValue = event.target.value;
+  onLeaveUsuario(event: any) {
+    const inputValue = event.target.value;
     let mayus = inputValue.toUpperCase();
-    
+
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.usuario_get.some(objeto => objeto.login === mayus);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -190,7 +189,7 @@ export class IdProformaUsuarioComponent implements OnInit {
     // Puedes realizar otras acciones según tus necesidades
     console.log('Input perdió el foco', mayus);
   }
-  
+
   modalUsuario(): void {
     this.dialog.open(ModalUsuarioComponent, {
       width: 'auto',
@@ -204,10 +203,10 @@ export class IdProformaUsuarioComponent implements OnInit {
       height: 'auto',
     });
   }
-  
-  mandarNombre(){
+
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

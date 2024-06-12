@@ -14,7 +14,6 @@ import { DeudoresCompCreateComponent } from './deudores-comp-create/deudores-com
 import { DeudoresCompEditComponent } from './deudores-comp-edit/deudores-comp-edit.component';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
 import { DeudoresIntegrantesComponent } from './deudores-integrantes/deudores-integrantes.component';
-
 @Component({
   selector: 'app-deudores-compuestos',
   templateUrl: './deudores-compuestos.component.html',
@@ -22,37 +21,35 @@ import { DeudoresIntegrantesComponent } from './deudores-integrantes/deudores-in
 })
 export class DeudoresCompuestosComponent implements OnInit {
 
-  deudores_compuestos:any=[]; 
-  data:[];
+  deudores_compuestos: any = [];
+  data: [];
   dataBancoEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion','fechareg','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'fechareg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | fndeudor_compuesto>('');
   options: fndeudor_compuesto[] = [];
   filteredOptions: Observable<fndeudor_compuesto[]>;
-  userConn:any;
+  userConn: any;
   inputValue: number | null = null;
-  
-  nombre_ventana:string="abmfndeudor_compuesto.vb";
-  public ventana="Deudores Compuestos"
-  public detalle="Deudores Compuestos-delete";
-  public tipo="Deudores Compuestos-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
-    this.mandarNombre();
+  nombre_ventana: string = "abmfndeudor_compuesto.vb";
+  public ventana = "Deudores Compuestos"
+  public detalle = "Deudores Compuestos-delete";
+  public tipo = "Deudores Compuestos-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
@@ -67,14 +64,14 @@ export class DeudoresCompuestosComponent implements OnInit {
     );
   }
 
-  getAllDeudoresCompuestos(){
-    let errorMessage:string = "La Ruta presenta fallos al hacer peticion GET --/fondos/mant/fndeudor_compuesto/";
-    return this.api.getAll('/fondos/mant/fndeudor_compuesto/'+this.userConn)
+  getAllDeudoresCompuestos() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/fondos/mant/fndeudor_compuesto/";
+    return this.api.getAll('/fondos/mant/fndeudor_compuesto/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.deudores_compuestos = datav;
           console.log(this.deudores_compuestos);
-          
+
           this.dataSource = new MatTableDataSource(this.deudores_compuestos);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
@@ -84,14 +81,14 @@ export class DeudoresCompuestosComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(DeudoresCompCreateComponent, {
       width: 'auto',
@@ -114,62 +111,62 @@ export class DeudoresCompuestosComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumRetBancEdit){
-    this.dataBancoEdit_copied ={...datanumRetBancEdit};
+  editar(datanumRetBancEdit) {
+    this.dataBancoEdit_copied = { ...datanumRetBancEdit };
     console.log(this.dataBancoEdit_copied);
-    
+
     this.data = datanumRetBancEdit;
     this.dialog.open(DeudoresCompEditComponent, {
-      data: {dataDeudorCompEdit:this.dataBancoEdit_copied},
+      data: { dataDeudorCompEdit: this.dataBancoEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  integrantes(datanumRetBancEdit) { 
-    this.dataBancoEdit_copied ={...datanumRetBancEdit};
+  integrantes(datanumRetBancEdit) {
+    this.dataBancoEdit_copied = { ...datanumRetBancEdit };
     console.log(this.dataBancoEdit_copied);
-    
+
     this.data = datanumRetBancEdit;
     this.dialog.open(DeudoresIntegrantesComponent, {
-      data: {dataIntegrantes:this.dataBancoEdit_copied},
+      data: { dataIntegrantes: this.dataBancoEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fntiporetiro/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fntiporetiro/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fndeudor_compuesto/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fndeudor_compuesto/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

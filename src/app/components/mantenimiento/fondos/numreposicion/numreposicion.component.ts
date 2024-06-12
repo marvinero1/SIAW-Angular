@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { fnTipoReposicion } from '@services/modelos/objetos';
 import { NumreposicionCreateComponent } from './numreposicion-create/numreposicion-create.component';
 import { NumreposicionEditComponent } from './numreposicion-edit/numreposicion-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -16,56 +14,46 @@ import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 
-
 @Component({
   selector: 'app-numreposicion',
   templateUrl: './numreposicion.component.html',
   styleUrls: ['./numreposicion.component.scss']
 })
-export class NumreposicionComponent {
+export class NumreposicionComponent implements OnInit {
 
-  numRepo:any=[]; 
-  data:[];
+  numRepo: any = [];
+  data: [];
   dataNumRepoEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','codunidad','descUnidad','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | fnTipoReposicion>('');
   options: fnTipoReposicion[] = [];
   filteredOptions: Observable<fnTipoReposicion[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmfntiporeposicion.vb";
-  public ventana="TipoReposicion"
-  public detalle="TipoReposicion-delete";
-  public tipo="TipoReposicion-DELETE";
+  nombre_ventana: string = "abmfntiporeposicion.vb";
+  public ventana = "TipoReposicion"
+  public detalle = "TipoReposicion-delete";
+  public tipo = "TipoReposicion-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-
-
-
-
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllNumReposiciones(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -75,11 +63,9 @@ export class NumreposicionComponent {
     );
   }
 
-
-
-  getAllNumReposiciones(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/fondos/mant/fntiporeposicion/'+userConn)
+  getAllNumReposiciones(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/fondos/mant/fntiporeposicion/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numRepo = datav;
@@ -93,18 +79,18 @@ export class NumreposicionComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumreposicionCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -123,53 +109,52 @@ export class NumreposicionComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(dataNumRepoEdit){
-    this.dataNumRepoEdit_copied ={...dataNumRepoEdit};
+  editar(dataNumRepoEdit) {
+    this.dataNumRepoEdit_copied = { ...dataNumRepoEdit };
     console.log(this.dataNumRepoEdit_copied);
-    
+
     this.data = dataNumRepoEdit;
     this.dialog.open(NumreposicionEditComponent, {
-      data: {dataNumRepoEdit:this.dataNumRepoEdit_copied},
+      data: { dataNumRepoEdit: this.dataNumRepoEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fntiporeposicion/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fntiporeposicion/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fntiporeposicion/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fntiporeposicion/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
-
 }

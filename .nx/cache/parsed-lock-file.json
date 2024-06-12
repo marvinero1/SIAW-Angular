@@ -6,7 +6,7 @@
       "data": {
         "version": "2.2.0",
         "packageName": "@ampproject/remapping",
-        "hash": "sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w=="
+        "hash": "11561802565396944501"
       }
     },
     "npm:@angular-devkit/architect": {
@@ -7477,15 +7477,6 @@
         "version": "1.2.3",
         "packageName": "functions-have-names",
         "hash": "sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ=="
-      }
-    },
-    "npm:gatekeeper-client-sdk": {
-      "type": "npm",
-      "name": "npm:gatekeeper-client-sdk",
-      "data": {
-        "version": "0.4.2",
-        "packageName": "gatekeeper-client-sdk",
-        "hash": "sha512-W/jZWz7vIr2fVdLmItq0H3rdOsI7gxdUlhp8fvFMsN56knr3NeXt5v47RdaItI2iXklPgkSg1CogZW5WnE+UUg=="
       }
     },
     "npm:gauge": {
@@ -22754,31 +22745,6 @@
     {
       "source": "npm:fs-minipass",
       "target": "npm:minipass",
-      "type": "static"
-    },
-    {
-      "source": "npm:gatekeeper-client-sdk",
-      "target": "npm:@fingerprintjs/fingerprintjs",
-      "type": "static"
-    },
-    {
-      "source": "npm:gatekeeper-client-sdk",
-      "target": "npm:dotenv",
-      "type": "static"
-    },
-    {
-      "source": "npm:gatekeeper-client-sdk",
-      "target": "npm:js-base64",
-      "type": "static"
-    },
-    {
-      "source": "npm:gatekeeper-client-sdk",
-      "target": "npm:node-fetch",
-      "type": "static"
-    },
-    {
-      "source": "npm:gatekeeper-client-sdk",
-      "target": "npm:tslib@2.3.1",
       "type": "static"
     },
     {

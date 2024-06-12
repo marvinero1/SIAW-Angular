@@ -120,7 +120,7 @@ mat-row, mat-header-row, mat-footer-row{
 }
 .wrapper .content-wrapper{
   background-color: #CEFFFF !important;
-  min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
+ // min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
 }
 .mat-mdc-tab.mdc-tab{
   height: 27px !important;
@@ -250,6 +250,9 @@ mat-row, mat-header-row, mat-footer-row{
     font-size: 80%;
     color: #dc3545;
   }
+  th{
+  font-size: 0.7rem !important;
+}
   .mat-mdc-tab.mdc-tab{
     height: 20px !important;
     padding-right: 13px !important;

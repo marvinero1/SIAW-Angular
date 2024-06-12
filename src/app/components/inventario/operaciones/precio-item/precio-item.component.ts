@@ -22,86 +22,86 @@ import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-item
 })
 export class PrecioItemComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
+  dataform: any = '';
   userConn: any;
   usuarioLogueado: any;
 
   tarifa_save: any = [];
   tarifa_get: any = []
-  codigo_item_catalogo:any=[];
-  cod_precio_venta_modal:any=[];
+  codigo_item_catalogo: any = [];
+  cod_precio_venta_modal: any = [];
   codigo_item_catalogo_get: any = [];
   precio_actual: any = [];
-  
-  public item=[]; 
+
+  public item = [];
   public data = [];
-  
-  displayedColumns = ['codigo','descripcion','descripcorta','descripabr','medida','unidad','accion'];
+
+  displayedColumns = ['codigo', 'descripcion', 'descripcorta', 'descripabr', 'medida', 'unidad', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
-  public nombre_ventana: string = "prgindefinir_precioitem.vb"; 
-  public ventana="Definir Precio Item"
-  public detalle="PrecioItem-UPDATE";
+
+  public nombre_ventana: string = "prgindefinir_precioitem.vb";
+  public ventana = "Definir Precio Item"
+  public detalle = "PrecioItem-UPDATE";
   public tipo = "PrecioItem-UPDATE";
-  
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
-    public log_module: LogService, private _formBuilder: FormBuilder,public itemservice:ItemServiceService, 
+
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+    public log_module: LogService, private _formBuilder: FormBuilder, public itemservice: ItemServiceService,
     public servicioPrecioVenta: ServicioprecioventaService, public nombre_ventana_service: NombreVentanaService) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.FormularioData = this.createForm();
     this.mandarNombre();
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllitem();
     this.getTarifa();
-    
+
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Precio Venta: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
     });
 
-    this.itemservice.disparadorDeItems.subscribe(data =>{
-      console.log("Recibiendo Item: " , data);
+    this.itemservice.disparadorDeItems.subscribe(data => {
+      console.log("Recibiendo Item: ", data);
       this.codigo_item_catalogo = data.item;
     });
   }
 
-  getAllitem(){
+  getAllitem() {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/catalogo/'+user_conn)
+    return this.api.getAll('/inventario/mant/initem/catalogo/' + user_conn)
       .subscribe({
         next: (datav) => {
           this.item = datav;
           // console.log(this.item);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  onLeaveItem(event: any){
+  onLeaveItem(event: any) {
     const inputValue = event.target.value;
-      
+
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.item.some(objeto => objeto.codigo === inputValue);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -113,28 +113,28 @@ export class PrecioItemComponent implements OnInit {
     console.log('Input perdió el foco', inputValue);
   }
 
-  getTarifa(){ 
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/intarifa/catalogo/'+this.userConn+"/"+this.usuarioLogueado)
+  getTarifa() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.tarifa_get = datav;
           // console.log(this.tarifa_get);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  onLeaveTarifa(event: any){
+  onLeaveTarifa(event: any) {
     const inputValue = event.target.value;
     let num = Number(inputValue);
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.tarifa_get.some(objeto => objeto.codigo === num);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -145,37 +145,37 @@ export class PrecioItemComponent implements OnInit {
     console.log('Input perdió el foco', num);
   }
 
-  getPrecio(){
+  getPrecio() {
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    let item_form = data.item; 
+    let item_form = data.item;
     let codtarifa_form = data.codtarifa;
 
     if (item_form !== undefined && codtarifa_form !== undefined) {
-      return this.api.getAll('/inventario/oper/prgindefinir_precioitem/getTarifaItem/'+this.userConn+"/"+this.codigo_item_catalogo.codigo+"/"+this.cod_precio_venta_modal.codigo)
+      return this.api.getAll('/inventario/oper/prgindefinir_precioitem/getTarifaItem/' + this.userConn + "/" + this.codigo_item_catalogo.codigo + "/" + this.cod_precio_venta_modal.codigo)
         .subscribe({
           next: (datav) => {
             this.precio_actual = datav;
             console.log(this.precio_actual);
-            
-            
+
+
             this.spinner.show();
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);
           },
-                  
-          error: (err: any) => { 
+
+          error: (err: any) => {
             console.log(err, errorMessage);
           },
           complete: () => { }
         })
     } else {
-        this.toastr.warning('INGRESE TODOS LOS CAMPOS');
-      }
+      this.toastr.warning('INGRESE TODOS LOS CAMPOS');
+    }
   }
 
-  createForm(): FormGroup{ 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codtarifa: [this.dataform.codtarifa, Validators.compose([Validators.required])],
       item: [this.dataform.item, Validators.compose([Validators.required])],
@@ -183,17 +183,17 @@ export class PrecioItemComponent implements OnInit {
     });
   }
 
-  validarPrecioConfirmacion() { 
+  validarPrecioConfirmacion() {
     let data = this.FormularioData.value;
 
     const dialogRef = this.dialog.open(ValidarPrecioItemComponent, {
       width: 'auto',
       height: 'auto',
-      data:{dataItem:data}
+      data: { dataItem: data }
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if (result){
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
         console.log("Validar Confirmado");
 
         if (result) {
@@ -201,23 +201,23 @@ export class PrecioItemComponent implements OnInit {
         } else {
           this.toastr.error('! NO SE CONFIRMADO !');
         }
-      }else{
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  validarPrecioItemPassword(data) { 
-      const dialogRef = this.dialog.open(ValidarPermisoItemComponent, {
+  validarPrecioItemPassword(data) {
+    const dialogRef = this.dialog.open(ValidarPermisoItemComponent, {
       width: 'auto',
-      height:'auto',
-      data:{data:data}
+      height: 'auto',
+      data: { data: data }
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
         this.modalPassword(data);
-      }else{
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
@@ -226,7 +226,7 @@ export class PrecioItemComponent implements OnInit {
   modalPassword(data): void {
     let precio = this.precio_actual.precio
     console.log(precio);
-    
+
     const dialogRefModalPasswordConfirm = this.dialog.open(PermisoEspecialPasswordComponent, {
       width: 'auto',
       height: 'auto',
@@ -234,39 +234,39 @@ export class PrecioItemComponent implements OnInit {
         dataA: precio, //dato A
         dataB: data.precio, //dato B 
         permiso_id: "106", //esto es fijo siempre
-        permiso_text:"CAMBIAR PRECIO DE ITEM", //esto es fijo siempre
+        permiso_text: "CAMBIAR PRECIO DE ITEM", //esto es fijo siempre
       }
     });
 
     dialogRefModalPasswordConfirm.afterClosed().subscribe((result: any) => {
       console.log(result);
-      if(result) {
+      if (result) {
         this.submitData();
-      }else{
+      } else {
         this.toastr.error('! CANCELADO NO SE GUARDO !');
       }
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/oper/prgindefinir_precioitem/updateTarifa1/";    
-    return this.api.update("/inventario/oper/prgindefinir_precioitem/updateTarifa1/"+this.userConn, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgindefinir_precioitem/updateTarifa1/";
+    return this.api.update("/inventario/oper/prgindefinir_precioitem/updateTarifa1/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
-          if(data){
+          if (data) {
             this.tarifa_save = datav;
             this.getPrecio();
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
             this.toastr.success('Guardado con Exito! 🎉');
           } else {
             this.toastr.error('! ERROR AL GUARDAR !');
           }
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -288,9 +288,9 @@ export class PrecioItemComponent implements OnInit {
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

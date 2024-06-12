@@ -19,13 +19,13 @@ import { RubroEditComponent } from './rubro-edit/rubro-edit.component';
 })
 export class RubroComponent implements OnInit {
 
-  rubro:any=[]; 
-  data:[];
+  rubro: any = [];
+  data: [];
   userConn: any;
-  
-  public codigo:string='';
 
-  displayedColumns = ['codigo','descripcion','horareg','fechareg','usuarioreg','accion'];
+  public codigo: string = '';
+
+  displayedColumns = ['codigo', 'descripcion', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -33,32 +33,27 @@ export class RubroComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abmverubro.vb";
-  public ventana="Rubro"
-  public detalle="rubro-delete";
-  public tipo="rubro-DELETE";
+  nombre_ventana: string = "abmverubro.vb";
+  public ventana = "Rubro"
+  public detalle = "rubro-delete";
+  public tipo = "rubro-DELETE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module: LogService,public dialogRef: MatDialogRef<RubroComponent>,
-    private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService, public servicioRubro: ServiciorubroService)
-  {
+    public log_module: LogService, public dialogRef: MatDialogRef<RubroComponent>,
+    private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService, public servicioRubro: ServiciorubroService) {
     this.mandarNombre();
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
     this.getAllRubro();
-
-    // this.openDialogCatalogo();
   }
 
-  getAllRubro(){
+  getAllRubro() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/mant/verubro/";
-    return this.api.getAll('/venta/mant/verubro/'+this.userConn)
+    return this.api.getAll('/venta/mant/verubro/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.rubro = datav;
@@ -72,18 +67,18 @@ export class RubroComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(RubroCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -92,63 +87,64 @@ export class RubroComponent implements OnInit {
   openDialogCatalogo(): void {
     this.dialog.open(ModalRubroComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/venta/mant/verubro/'+this.userConn+"/"+ element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/venta/mant/verubro/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
-      }});
+      }
+    });
   }
 
-  editar(dataRubroEdit) { 
+  editar(dataRubroEdit) {
     this.data = dataRubroEdit;
     this.dialog.open(RubroEditComponent, {
-      data: {dataRubroEdit:dataRubroEdit},
+      data: { dataRubroEdit: dataRubroEdit },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
-  
+
   mandarRubro() {
     this.servicioRubro.disparadorDeRubro.emit({
-      rubro:this.codigo,
+      rubro: this.codigo,
     });
     this.close();
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

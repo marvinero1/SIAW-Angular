@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
@@ -18,42 +18,42 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   templateUrl: './numchequesclientes.component.html',
   styleUrls: ['./numchequesclientes.component.scss']
 })
-export class NumchequesclientesComponent {
+export class NumchequesclientesComponent implements OnInit {
 
-  numChecCli:any=[]; 
-  data:[];
+  numChecCli: any = [];
+  data: [];
   datanumChecCliEdit_copied: any = [];
-  
+
   displayedColumns = ['id', 'descripcion', 'codcuentab', 'nroactual', 'nrodesde', 'nrohasta', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | fnNumeracionChequeCliente>('');
   options: fnNumeracionChequeCliente[] = [];
   filteredOptions: Observable<fnNumeracionChequeCliente[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmfnnumeracioncheque_cliente.vb";
-  public ventana="numeracionChequeCliente"
-  public detalle="numeracionChequeCliente-delete";
-  public tipo="numeracionChequeCliente-DELETE";
+  nombre_ventana: string = "abmfnnumeracioncheque_cliente.vb";
+  public ventana = "numeracionChequeCliente"
+  public detalle = "numeracionChequeCliente-delete";
+  public tipo = "numeracionChequeCliente-DELETE";
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
     this.mandarNombre();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;    
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
     this.getAllNumChequesClientes();
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -63,9 +63,9 @@ export class NumchequesclientesComponent {
     );
   }
 
-  getAllNumChequesClientes(){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/fondos/mant/fnchequera/'+this.userConn)
+  getAllNumChequesClientes() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/fondos/mant/fnchequera/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.numChecCli = datav;
@@ -79,18 +79,18 @@ export class NumchequesclientesComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumchequesclientesCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -109,50 +109,50 @@ export class NumchequesclientesComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumChecCliEdit){
-    this.datanumChecCliEdit_copied ={...datanumChecCliEdit};
+  editar(datanumChecCliEdit) {
+    this.datanumChecCliEdit_copied = { ...datanumChecCliEdit };
     console.log(this.datanumChecCliEdit_copied);
-    
+
     this.data = datanumChecCliEdit;
     this.dialog.open(NumchequesclientesEditComponent, {
-      data: {datanumChecCliEdit:this.datanumChecCliEdit_copied},
+      data: { datanumChecCliEdit: this.datanumChecCliEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fnchequera/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fnchequera/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

@@ -64,7 +64,7 @@ export class Interceptor implements HttpInterceptor {
 				case "202":
 					this._snackBar.open('¡ Guardado con Exito !', '✅', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
@@ -72,21 +72,21 @@ export class Interceptor implements HttpInterceptor {
 				case "201":
 					this._snackBar.open('¡ No se encontro los datos proporcionados !', '🤨', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "203":
 					this._snackBar.open('¡ Contraseña Erronea !', '😠', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "205":
 					this._snackBar.open('¡ Su contraseña ya vencio, registre una nueva !', '🛡️', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					this.api.refrescarContrasenia();
 					break;
@@ -94,56 +94,56 @@ export class Interceptor implements HttpInterceptor {
 				case "207":
 					this._snackBar.open('¡ Usuario NO ACTIVO, Informe al Dpto. de Sistemas !', '😥', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "209":
 					this._snackBar.open('¡ La contraseña  no cumple los requisitos !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "211":
 					this._snackBar.open('¡ La contraseña no puede ser la misma !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "213":
 					this._snackBar.open('¡ No se encontro un registro con los datos proporcionados (rol). !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "215":
 					this._snackBar.open('¡ La Contraseña ah expirado su VENCIMIENTO, favor consulte al DIOS DEL SISTEMA !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "701":
 					this._snackBar.open('¡ No hay Tipo de Cambio para el dia de Hoy!', '😥', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "713":
 					this._snackBar.open('¡ Contraseña Incorrecta !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "715":
 					this._snackBar.open('¡ PERSONA YA ESTA EN LA LISTA !', '❌', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 			}
@@ -154,7 +154,7 @@ export class Interceptor implements HttpInterceptor {
 
 					this._snackBar.open('¡ Usuario SIN AUTORIZACION, Falta de Token !', '🚫', {
 						duration: 3000,
-						panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 			}
@@ -163,7 +163,7 @@ export class Interceptor implements HttpInterceptor {
 			//     case 404:
 			//         this._snackBar.open('¡ Usuario SIN AUTORIZACION, Falta de Token !', '🚫', {
 			//             duration: 3000,
-			//             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+			//             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 			//         });
 			//         break;
 			// }

@@ -18,12 +18,12 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class ResistenciaComponent implements OnInit {
 
-  public resistencia:any=[];
-  public data:any=[];
-  usuarioLogueado:any;
-  userConn:any;
+  public resistencia: any = [];
+  public data: any = [];
+  usuarioLogueado: any;
+  userConn: any;
 
-  displayedColumns = ['codigo','descripcion','fechareg','horareg','usuarioreg','accion'];
+  displayedColumns = ['codigo', 'descripcion', 'fechareg', 'horareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -31,28 +31,28 @@ export class ResistenciaComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abminresistencia.vb";
-  public ventana="Resistencia Item"
-	public detalle="resistencia-detalle";
+  nombre_ventana: string = "abminresistencia.vb";
+  public ventana = "Resistencia Item"
+  public detalle = "resistencia-detalle";
   public tipo = "transaccion-resistencia-DELETE";
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     this.getAllResistencia();
   }
 
-  getAllResistencia(){
-    let errorMessage:string;
+  getAllResistencia() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inresistencia/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inresistencia/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.resistencia = datav;
@@ -67,8 +67,8 @@ export class ResistenciaComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -83,53 +83,53 @@ export class ResistenciaComponent implements OnInit {
     });
   }
 
-  editar(dataRoscaEdit){
+  editar(dataRoscaEdit) {
     this.data = dataRoscaEdit;
     //console.log(this.data);
     this.dialog.open(ResistenciaEditComponent, {
-      data: {dataRoscaEdit:dataRoscaEdit},
+      data: { dataRoscaEdit: dataRoscaEdit },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result) {
-        return this.api.delete('/inventario/mant/inresistencia/'+this.userConn+"/"+element.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this.toastr.success('! Eliminado Exitosamente !');
-            
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-            this.toastr.error('! NO SE Eliminado !');
+      if (result) {
+        return this.api.delete('/inventario/mant/inresistencia/' + this.userConn + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-          },
-          complete: () => { }
-        })
-      }else{
+              this.toastr.success('! Eliminado Exitosamente !');
+
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+              this.toastr.error('! NO SE Eliminado !');
+
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

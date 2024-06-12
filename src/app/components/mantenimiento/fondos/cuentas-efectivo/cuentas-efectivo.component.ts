@@ -14,7 +14,6 @@ import { CuentasEfectivoCreateComponent } from './cuentas-efectivo-create/cuenta
 import { CuentasEfectivosEditComponent } from './cuentas-efectivos-edit/cuentas-efectivos-edit.component';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
 import { CuentaEfectivoCuentasContablesComponent } from './cuenta-efectivo-cuentas-contables/cuenta-efectivo-cuentas-contables.component';
-
 @Component({
   selector: 'app-cuentas-efectivo',
   templateUrl: './cuentas-efectivo.component.html',
@@ -22,36 +21,36 @@ import { CuentaEfectivoCuentasContablesComponent } from './cuenta-efectivo-cuent
 })
 export class CuentasEfectivoComponent implements OnInit {
 
-  cuentas_efectivo:any=[]; 
-  data:[];
+  cuentas_efectivo: any = [];
+  data: [];
   datacuentasefectivoEdit: any = [];
-  
+
   displayedColumns = ['id', 'descripcion', 'balance', 'fecha', 'tipo_movimiento', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | fncuenta>('');
   options: fncuenta[] = [];
   filteredOptions: Observable<fncuenta[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmfncuenta.vb";
-  public ventana="Cuentas Efectivo"
-  public detalle="uentas Efectivo-delete";
-  public tipo="uentas Efectivo-DELETE";
+  nombre_ventana: string = "abmfncuenta.vb";
+  public ventana = "Cuentas Efectivo"
+  public detalle = "uentas Efectivo-delete";
+  public tipo = "uentas Efectivo-DELETE";
 
 
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
     this.mandarNombre();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;    
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
     this.getAllCuentas();
   }
 
@@ -65,29 +64,29 @@ export class CuentasEfectivoComponent implements OnInit {
     );
   }
 
-  getAllCuentas(){
+  getAllCuentas() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
-    return this.api.getAll('/fondos/mant/fncuenta/'+this.userConn)
+    return this.api.getAll('/fondos/mant/fncuenta/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cuentas_efectivo = datav;
           console.log(this.cuentas_efectivo);
-          
+
           this.dataSource = new MatTableDataSource(this.cuentas_efectivo);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(CuentasEfectivoCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -106,62 +105,62 @@ export class CuentasEfectivoComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumChecCliEdit){
-    this.datacuentasefectivoEdit ={...datanumChecCliEdit};
+  editar(datanumChecCliEdit) {
+    this.datacuentasefectivoEdit = { ...datanumChecCliEdit };
     console.log(this.datacuentasefectivoEdit);
-    
+
     this.data = datanumChecCliEdit;
     this.dialog.open(CuentasEfectivosEditComponent, {
-      data: {datacuentasefectivoEdit:this.datacuentasefectivoEdit},
+      data: { datacuentasefectivoEdit: this.datacuentasefectivoEdit },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
   cuentasContablesModal(datanumChecCliEdit) {
-    this.datacuentasefectivoEdit ={...datanumChecCliEdit};
+    this.datacuentasefectivoEdit = { ...datanumChecCliEdit };
     console.log(this.datacuentasefectivoEdit);
-    
+
     this.data = datanumChecCliEdit;
     this.dialog.open(CuentaEfectivoCuentasContablesComponent, {
-      data: {datacuentasefectivoEdit:this.datacuentasefectivoEdit},
+      data: { datacuentasefectivoEdit: this.datacuentasefectivoEdit },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  fondos/mant/fnnumeracioncheque_cliente/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fncuenta/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fncuenta/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });

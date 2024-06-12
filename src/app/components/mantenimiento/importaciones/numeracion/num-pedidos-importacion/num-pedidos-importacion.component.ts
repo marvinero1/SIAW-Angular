@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { cpidpedido } from '@services/modelos/objetos';
 import { NumPedidosImportacionCreateComponent } from './num-pedidos-importacion-create/num-pedidos-importacion-create.component';
 import { NumPedidosImportacionEditComponent } from './num-pedidos-importacion-edit/num-pedidos-importacion-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -15,54 +13,47 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
-
-
 @Component({
   selector: 'app-num-pedidos-importacion',
   templateUrl: './num-pedidos-importacion.component.html',
   styleUrls: ['./num-pedidos-importacion.component.scss']
 })
-export class NumPedidosImportacionComponent {
+export class NumPedidosImportacionComponent implements OnInit {
 
-  numPediCmp:any=[]; 
-  data:[];
+  numPediCmp: any = [];
+  data: [];
   datanumPediCmpEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | cpidpedido>('');
   options: cpidpedido[] = [];
   filteredOptions: Observable<cpidpedido[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmcpidpedido.vb";
-  public ventana="numPedidosCompra"
-  public detalle="numPedidosCompra-delete";
-  public tipo="numPedidosCompra-DELETE";
+  nombre_ventana: string = "abmcpidpedido.vb";
+  public ventana = "numPedidosCompra"
+  public detalle = "numPedidosCompra-delete";
+  public tipo = "numPedidosCompra-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.getAllnumPediCmp(this.userConn);
-    
+    this.getAllnumPediCmp();
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -72,9 +63,9 @@ export class NumPedidosImportacionComponent {
     );
   }
 
-  getAllnumPediCmp(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/importaciones/mant/cpidpedido/'+userConn)
+  getAllnumPediCmp() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/importaciones/mant/cpidpedido/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.numPediCmp = datav;
@@ -88,18 +79,18 @@ export class NumPedidosImportacionComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumPedidosImportacionCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -118,54 +109,52 @@ export class NumPedidosImportacionComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumPediCmpEdit){
-    this.datanumPediCmpEdit_copied ={...datanumPediCmpEdit};
+  editar(datanumPediCmpEdit) {
+    this.datanumPediCmpEdit_copied = { ...datanumPediCmpEdit };
     console.log(this.datanumPediCmpEdit_copied);
-    
+
     this.data = datanumPediCmpEdit;
     this.dialog.open(NumPedidosImportacionEditComponent, {
-      data: {datanumPediCmpEdit:this.datanumPediCmpEdit_copied},
+      data: { datanumPediCmpEdit: this.datanumPediCmpEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  importaciones/mant/cpidpedido/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  importaciones/mant/cpidpedido/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/importaciones/mant/cpidpedido/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/importaciones/mant/cpidpedido/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
-
-
 }

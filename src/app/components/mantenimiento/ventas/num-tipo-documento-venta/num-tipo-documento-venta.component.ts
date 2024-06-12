@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +17,7 @@ import { DocumentoVentaService } from './documento-venta-service/documento-venta
   templateUrl: './num-tipo-documento-venta.component.html',
   styleUrls: ['./num-tipo-documento-venta.component.scss']
 })
-export class NumTipoDocumentoVentaComponent implements OnInit {
+export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -56,7 +56,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit {
     }
 
     this.mandarNombre();
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
   }

@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
-
 import { cpidrecepcion } from '@services/modelos/objetos';
 import { NumRecepcionImportacionCreateComponent } from './num-recepcion-importacion-create/num-recepcion-importacion-create.component';
 import { NumRecepcionImportacionEditComponent } from './num-recepcion-importacion-edit/num-recepcion-importacion-edit.component';
-
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormControl } from '@angular/forms';
@@ -16,53 +14,46 @@ import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 
-
-
 @Component({
   selector: 'app-num-recepcion-importacion',
   templateUrl: './num-recepcion-importacion.component.html',
   styleUrls: ['./num-recepcion-importacion.component.scss']
 })
-export class NumRecepcionImportacionComponent {
+export class NumRecepcionImportacionComponent implements OnInit {
 
-  numRecepc:any=[]; 
-  data:[];
+  numRecepc: any = [];
+  data: [];
   datanumRecepcEdit_copied: any = [];
-  
-  displayedColumns = ['id','descripcion' ,'nroactual','horareg','fechareg','usuarioreg','accion'];
+
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;  
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   myControl = new FormControl<string | cpidrecepcion>('');
   options: cpidrecepcion[] = [];
   filteredOptions: Observable<cpidrecepcion[]>;
-  userConn:any;
+  userConn: any;
 
-  nombre_ventana:string="abmcpidrecepcion.vb";
-  public ventana="numRecepciones"
-  public detalle="numRecepciones-delete";
-  public tipo="numRecepciones-DELETE";
+  nombre_ventana: string = "abmcpidrecepcion.vb";
+  public ventana = "numRecepciones"
+  public detalle = "numRecepciones-delete";
+  public tipo = "numRecepciones-DELETE";
 
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-
-
-
-  constructor(private api:ApiService,public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module:LogService, private toastr: ToastrService, public nombre_ventana_service:NombreVentanaService){
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllnumRecepc(this.userConn);
-    
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -72,9 +63,9 @@ export class NumRecepcionImportacionComponent {
     );
   }
 
-  getAllnumRecepc(userConn){
-    let errorMessage:string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/importaciones/mant/cpidrecepcion/'+userConn)
+  getAllnumRecepc(userConn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.getAll('/importaciones/mant/cpidrecepcion/' + userConn)
       .subscribe({
         next: (datav) => {
           this.numRecepc = datav;
@@ -88,18 +79,18 @@ export class NumRecepcionImportacionComponent {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   openDialog(): void {
     this.dialog.open(NumRecepcionImportacionCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -118,54 +109,52 @@ export class NumRecepcionImportacionComponent {
     return user && user.id ? user.id : '';
   }
 
-  editar(datanumRecepcEdit){
-    this.datanumRecepcEdit_copied ={...datanumRecepcEdit};
+  editar(datanumRecepcEdit) {
+    this.datanumRecepcEdit_copied = { ...datanumRecepcEdit };
     console.log(this.datanumRecepcEdit_copied);
-    
+
     this.data = datanumRecepcEdit;
     this.dialog.open(NumRecepcionImportacionEditComponent, {
-      data: {datanumRecepcEdit:this.datanumRecepcEdit_copied},
+      data: { datanumRecepcEdit: this.datanumRecepcEdit_copied },
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  importaciones/mant/cpidrecepcion/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  importaciones/mant/cpidrecepcion/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/importaciones/mant/cpidrecepcion/'+this.userConn+"/"+ element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/importaciones/mant/cpidrecepcion/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
-
-
 }

@@ -18,12 +18,12 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 })
 export class NumnotasdemovimientoComponent implements OnInit {
 
-  public movimiento=[];
-  public data_edit=[];
-  usuarioLogueado:any;
-  userConn:any;
+  public movimiento = [];
+  public data_edit = [];
+  usuarioLogueado: any;
+  userConn: any;
 
-  displayedColumns = ['id','descripcion','nroactual','horareg','fechareg','usuarioreg','accion'];
+  displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -31,10 +31,10 @@ export class NumnotasdemovimientoComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abmintipomovimiento.vb";
-  public ventana="Numeración de Notas de Movimiento"
-	public detalle="nts-movimiento-detalle";
-	public tipo="transaccion-nts-movimiento-DELETE";
+  nombre_ventana: string = "abmintipomovimiento.vb";
+  public ventana = "Numeración de Notas de Movimiento"
+  public detalle = "nts-movimiento-detalle";
+  public tipo = "transaccion-nts-movimiento-DELETE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
@@ -42,17 +42,17 @@ export class NumnotasdemovimientoComponent implements OnInit {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(this.usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     this.getAllmovimiento();
   }
 
-  getAllmovimiento(){ 
-    let errorMessage:string;
+  getAllmovimiento() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/intipomovimiento/'+this.userConn )
+    return this.api.getAll('/inventario/mant/intipomovimiento/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.movimiento = datav;
@@ -66,8 +66,8 @@ export class NumnotasdemovimientoComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -77,60 +77,60 @@ export class NumnotasdemovimientoComponent implements OnInit {
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.dialog.open(NumnotasdemovimientoCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
     });
   }
 
-  editar(dataAreaEdit){
+  editar(dataAreaEdit) {
     this.data_edit = dataAreaEdit;
     console.log(this.data_edit);
-      this.dialog.open(NumnotasdemovimientoEditComponent, {
-        data: {dataAreaEdit:dataAreaEdit},
-        width: 'auto',
-        height:'auto',
+    this.dialog.open(NumnotasdemovimientoEditComponent, {
+      data: { dataAreaEdit: dataAreaEdit },
+      width: 'auto',
+      height: 'auto',
     });
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-- /inventario/mant/intipomovimiento Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /inventario/mant/intipomovimiento Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result) {
-        return this.api.delete('/inventario/mant/intipomovimiento/'+this.userConn+"/"+element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
-            });
+      if (result) {
+        return this.api.delete('/inventario/mant/intipomovimiento/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+                panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              });
+
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
-  
-  mandarNombre(){
+
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }

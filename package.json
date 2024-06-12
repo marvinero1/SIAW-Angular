@@ -46,7 +46,6 @@
     "core-js": "3.25.0",
     "date-fns": "^3.6.0",
     "file-saver": "^2.0.5",
-    "gatekeeper-client-sdk": "0.4.2",
     "handsontable": "^14.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
@@ -70,7 +69,7 @@
     "zone.js": "~0.11.8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "15.0.1",
+    "@angular-devkit/build-angular": "^15.0.1",
     "@angular-eslint/builder": "14.0.3",
     "@angular-eslint/eslint-plugin": "14.0.3",
     "@angular-eslint/eslint-plugin-template": "14.0.3",

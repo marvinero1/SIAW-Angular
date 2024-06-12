@@ -16,20 +16,20 @@ import { MovimientomercaderiaService } from '../serviciomovimientomercaderia/mov
 })
 export class CatalogoMovimientoMercaderiaComponent implements OnInit {
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarConcepto();
   };
-    
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarConcepto();
-  }; 
+  };
 
   concepto: any = [];
-  public concepto_view:any=[];
-  data:any=[];
-  userConn:any;
+  public concepto_view: any = [];
+  data: any = [];
+  userConn: any;
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -41,20 +41,18 @@ export class CatalogoMovimientoMercaderiaComponent implements OnInit {
 
   options: inConcepto[] = [];
   myControlCodigo = new FormControl<string | inConcepto>('');
-  myControlDescrip= new FormControl<string | inConcepto>('');
+  myControlDescrip = new FormControl<string | inConcepto>('');
 
   nombre_ventana: string = "abminconcepto.vb";
-  public ventana="Numeración de Concepto de Notas de Movimiento de Mercaderia"
-  public detalle="ActualizarStock-create";
-  public tipo="ActualizarStock-CREATE";
+  public ventana = "Numeración de Concepto de Notas de Movimiento de Mercaderia"
+  public detalle = "ActualizarStock-create";
+  public tipo = "ActualizarStock-CREATE";
 
   constructor(private api: ApiService, public dialog: MatDialog, public _snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<CatalogoMovimientoMercaderiaComponent>, public movimientoMercaderia:MovimientomercaderiaService) {
+    public dialogRef: MatDialogRef<CatalogoMovimientoMercaderiaComponent>, public movimientoMercaderia: MovimientomercaderiaService) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
@@ -77,9 +75,9 @@ export class CatalogoMovimientoMercaderiaComponent implements OnInit {
     );
   }
 
-  getAllConceptoCatalogo(){
+  getAllConceptoCatalogo() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inconcepto/";
-    return this.api.getAll('/inventario/mant/inconcepto/catalogo/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inconcepto/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.concepto = datav;
@@ -88,21 +86,21 @@ export class CatalogoMovimientoMercaderiaComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   private _filter(name: string): inConcepto[] {
     const filterValue = name.toLowerCase();
 
     return this.options.filter(option => option.codigo.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -112,19 +110,19 @@ export class CatalogoMovimientoMercaderiaComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  mandarConcepto() { 
+  mandarConcepto() {
     this.movimientoMercaderia.disparadorDeConceptos.emit({
-      concepto:this.concepto_view,
+      concepto: this.concepto_view,
     });
 
     this.close();
   }
-  
-  close(){
+
+  close() {
     this.dialogRef.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.concepto_view = element;
     console.log(this.concepto_view);
   }

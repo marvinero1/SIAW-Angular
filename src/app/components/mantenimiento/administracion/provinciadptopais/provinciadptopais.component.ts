@@ -15,25 +15,24 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   styleUrls: ['./provinciadptopais.component.scss']
 })
 export class ProvinciadptopaisComponent implements OnInit {
-  
+
   provincias_dpto: any = [];
   provincia_get: any = [];
   userConn;
-  
-  displayedColumns = ['codigo','nombre','coddepto','horareg','fechareg','accion'];
+
+  displayedColumns = ['codigo', 'nombre', 'coddepto', 'horareg', 'fechareg', 'accion'];
   dataSource = new MatTableDataSource();
 
-  nombre_ventana:string="abmadprovincia.vb";
-  public ventana="Provincias de Dpto."
-	public detalle="provdpto-delete";
-	public tipo="transaccion-provdpto-DELETE";
+  nombre_ventana: string = "abmadprovincia.vb";
+  public ventana = "Provincias de Dpto."
+  public detalle = "provdpto-delete";
+  public tipo = "transaccion-provdpto-DELETE";
 
-  constructor(private api:ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,public nombre_ventana_service:NombreVentanaService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService,
     public log_module: LogService, private toastr: ToastrService) {
-    this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.api.getRolUserParaVentana(usuarioLogueado, this.nombre_ventana);
+    this.mandarNombre();
+    this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
@@ -43,15 +42,15 @@ export class ProvinciadptopaisComponent implements OnInit {
   openDialog(): void {
     this.dialog.open(ProvinciadptopaisCreateComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
-  getAllprovincias_dpto(){
+  getAllprovincias_dpto() {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adprovincia/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adprovincia/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.provincias_dpto = datav;
@@ -61,53 +60,53 @@ export class ProvinciadptopaisComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element){
+  eliminar(element) {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la eliminacion"+"Ruta:--  /seg_adm/mant/adprovincia Delete";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la eliminacion" + "Ruta:--  /seg_adm/mant/adprovincia Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      
-      if(result){
-        return this.api.delete('/seg_adm/mant/adprovincia/'+user_conn+'/'+ element.codigo)
-        .subscribe({
-          next:()=>{
-            this.log_module.guardarLog(this.ventana,this.detalle,this.tipo);
-            this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adprovincia/' + user_conn + '/' + element.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! ELIMINACION CANCELADA !');
       }
     });
   }
 
-  mandarNombre(){
+  mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent:this.ventana,
+      nombre_vent: this.ventana,
     });
   }
 }
