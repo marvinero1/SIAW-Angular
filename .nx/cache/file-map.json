@@ -4589,7 +4589,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.ts",
-        "hash": "18167810405452399631"
+        "hash": "13737226615099163683"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/servicio-etiqueta/etiqueta.service.spec.ts",
@@ -5317,7 +5317,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma-pdf/proforma-pdf.component.ts",
-        "hash": "8302034780854361245"
+        "hash": "16133020568085188008"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
@@ -5333,7 +5333,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "11138129287020298693"
+        "hash": "6539094142855322362"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6486,6 +6486,14 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.ts",
+        "hash": "14561335836140733543"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.spec.ts",
+        "hash": "8801356639812396051"
       }
     ],
     "projectFileMap": {}

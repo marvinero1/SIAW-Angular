@@ -56,6 +56,7 @@ import { saveAs } from 'file-saver';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-botones-impresion.component';
 import { element } from 'protractor';
+import { ComunicacionproformaService } from '../../serviciocomunicacionproforma/comunicacionproforma.service';
 
 @Component({
   selector: 'app-proforma',
@@ -427,7 +428,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService, private spinner: NgxSpinnerService, private log_module: LogService, private saldoItemServices: SaldoItemMatrizService,
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
-    private anticipo_servicio: AnticipoProformaService, public nombre_ventana_service: NombreVentanaService) {
+    private anticipo_servicio: AnticipoProformaService, public nombre_ventana_service: NombreVentanaService,
+    private communicationService: ComunicacionproformaService) {
 
     this.decimalPipe = new DecimalPipe('en-US');
     this.FormularioData = this.createForm();
@@ -812,6 +814,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log(this.tabla_anticipos);
     });
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
+
+
+    this.communicationService.triggerFunction$.subscribe(() => {
+      this.aplicarDesctPorDeposito();
+    });
+
   }
 
   ngAfterViewInit() {
@@ -2595,7 +2603,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           return;
         }
       }
-
     } else {
       console.error('validacion_post o validacion_post_negativos no están definidos');
     }
@@ -2605,7 +2612,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       codcontrol: item.CodControl || "string",
       nroitems: parseInt(item.NroItems) || 0,
       nit: item.Nit || "string",
-      subtotal: parseFloat(item.Subtotal.replace(',', '')) || 0,
+      subtotal: parseFloat(item.Subtotal) || 0,
       descuentos: parseFloat(item.Descuentos) || 0,
       recargos: parseFloat(item.Recargos) || 0,
       total: item.Total || 0,
@@ -2661,7 +2668,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       veproforma_iva: this.veproforma_iva, //array de iva
     };
 
-    console.log("Formulario que se envia al backend: ", total_proforma_concat);
+    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
 
     if (!this.FormularioData.valid) {
       this.toastr.info("VALIDACION ACTIVA 🚨");
@@ -2695,18 +2702,19 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
-    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
-    if (confirmacionValidaciones) {
-      this.aplicarDesctPorDeposito();
+    // ESTA FUNCION SE MOVIO A ETIQUETACOMPONENT DONDE AL GRABAR LA ETIQUETA YA TE PREGUNTA SI DESEAS APLICAR ESTE DESCT.
+    // const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
+    // if (confirmacionValidaciones) {
+    //   this.aplicarDesctPorDeposito();
 
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    }
+    //   setTimeout(() => {
+    //     this.spinner.hide();
+    //   }, 1000);
+    // } else {
+    //   setTimeout(() => {
+    //     this.spinner.hide();
+    //   }, 1000);
+    // }
 
     console.log("FORMULARIO VALIDADO");
     const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
@@ -2956,8 +2964,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
-      detalleContoles: this.validacion_post.length > 1 ? this.validacion_post : [{}],
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
     }
+
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
@@ -3535,7 +3544,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     console.log(a);
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
@@ -3545,7 +3554,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
 
           this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
-          //  this.totabilizar();
+          this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -4899,6 +4908,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalBotonesImpresionComponent, {
       width: 'auto',
       height: 'auto',
+      disableClose: true,
     });
     this.guardarDataImpresion(codigo_proforma_submitdata);
   }

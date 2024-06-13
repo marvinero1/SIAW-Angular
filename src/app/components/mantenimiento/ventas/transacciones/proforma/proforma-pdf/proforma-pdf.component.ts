@@ -122,7 +122,7 @@ export class ProformaPdfComponent implements OnInit {
         pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
 
         // Descargar el PDF
-        pdf.save(this.data_cabecera_footer_proforma.titulo + '.pdf');
+        pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
       });
     }
   }
