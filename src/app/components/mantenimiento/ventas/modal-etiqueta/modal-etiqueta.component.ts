@@ -108,7 +108,7 @@ export class ModalEtiquetaComponent implements OnInit {
     });
 
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
-    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
+    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
     if (confirmacionValidaciones) {
 
       //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO

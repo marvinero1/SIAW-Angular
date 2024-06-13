@@ -42,6 +42,7 @@
                 <th style="border: 1px solid #ffc107;">Item</th>
                 <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
                 <th style="border: 1px solid #ffc107;" width="175">Medida</th>
+                <th style="border: 1px solid #ffc107;">Empaque</th>
                 <th style="border: 1px solid #ffc107;">Pedido</th>
                 <th style="border: 1px solid #ffc107;">Cant.</th>
                 <th style="border: 1px solid #ffc107;">
@@ -58,6 +59,8 @@
                   <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
                     {{ array_items_completos.medida }} </td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
+
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
                   <td>
@@ -114,7 +117,7 @@
           </div>
 
           <ng-container>
-            <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo"
+            <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo1"
               (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta"
               style="width: 14% !important;flex: none !important;">
           </ng-container>
@@ -127,12 +130,12 @@
 
           <span class="form-control-sm" style="border: 0 !important;">
             <u>Calcular Empa. por Precio</u>
-            <input type="checkbox" formControlName="venta_cliente_oficina">
+            <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
           </span>
 
           <span class="form-control-sm" style="border: 0 !important;">
             <u>Calcular Empa. por Descuento</u>
-            <input type="checkbox" formControlName="venta_cliente_oficina">
+            <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
           </span>
         </div>
       </div>
@@ -149,7 +152,7 @@
 
         <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
         <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
-        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 28%;">&nbsp;
+        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 33%;">&nbsp;
 
         <ng-container *ngIf="item_valido === false">
           <span style="color: rgb(227, 0, 0);">NO VENTA</span>
@@ -161,18 +164,26 @@
         <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
       </div>
 
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
-          <mat-label>Pedido</mat-label>
-          <input type="number" matInput id="focusPedido" maxlength="7" min="0" style="width:100%;" [(ngModel)]="pedido"
-            #focusPedido>
-        </mat-form-field>&nbsp;
+      <div class="col-md-6">
+        <div class="row">
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Empaque</mat-label>
+            <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" style="width:50%;"
+              [(ngModel)]="cant_empaque" #focusEmpaque>
+          </mat-form-field>&nbsp;
 
-        <mat-form-field appearance="outline" class="example-full-width" style="width: 35%;">
-          <mat-label>Cantidad {{pedido}}</mat-label>
-          <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-            style="width:100%;" placeholder="{{pedido}}">
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Pedido</mat-label>
+            <input type="number" matInput id="focusPedido" maxlength="7" min="0" style="width:50%;" [(ngModel)]="pedido"
+              #focusPedido>
+          </mat-form-field>&nbsp;
+
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Cantidad </mat-label>
+            <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
+              style="width:50%;" placeholder="{{pedido}}">
+          </mat-form-field>
+        </div>
       </div>
     </div>
   </div>

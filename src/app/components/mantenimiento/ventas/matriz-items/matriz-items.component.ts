@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -32,6 +43,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
 
     switch (nombre_input) {
+      case 'focusEmpaque':
+        this.getEmpaqueItem();
+        this.pedido = undefined;
+        break;
       case 'focusPedido':
         this.addItemArray();
         this.pedido = undefined;
@@ -66,6 +81,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   cantidad: number;
   pedido: number;
   pedidoInicial: number;
+  cant_empaque: number;
   saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
@@ -129,14 +145,18 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   tarifa_get_unico: any = [];
   tarifa_get_unico_copied: any = [];
-  cod_precio_venta_modal_codigo: any;
+  cod_precio_venta_modal_codigo1: any;
+  output: string;
 
   izquierda: string = "izquierda";
   derecha: string = "derecha";
 
-  output: string;
+  precio: any = true;
+  desct: any = false;
 
   @ViewChild("focusPedido") focusPedido1: ElementRef;
+  @ViewChild("focusEmpaque") focusEmpaque1: ElementRef;
+
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2,
@@ -147,8 +167,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any
-  ) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any) {
 
     this.array_items_proforma_matriz = items.items;
 
@@ -188,6 +207,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.getHojaPorDefecto();
     }
     this.listaHojas();
+    this.getTarifa();
   }
 
   ngOnInit() {
@@ -253,7 +273,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
-      this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
+      this.cod_precio_venta_modal_codigo1 = data.precio_venta.codigo;
     });
 
     //this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length; //aca pone la longitud del carrito con los items concatenados del detalle de la proforma
@@ -278,8 +298,26 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.focusMyInput();
   }
 
+  togglePrecio() {
+    if (this.precio) {
+      this.precio = false;
+    } else {
+      this.precio = true;
+      this.desct = false; // Asegura que desct sea false cuando precio es true
+    }
+  }
+
+  toggleDescuento() {
+    if (this.desct) {
+      this.desct = false;
+    } else {
+      this.desct = true;
+      this.precio = false; // Asegura que precio sea false cuando desct es true
+    }
+  }
+
   simulateEnterKey(): void {
-    this.focusPedido();
+    this.focusEmpaque();
   }
 
   agregarCarritoMobile() {
@@ -302,12 +340,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   getTarifa() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET /inventario/mant/intarifa/catalogo/";
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/intarifa/catalogo/";
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
           this.tarifa_get_unico = datav;
-          this.tarifa_get_unico_copied = this.tarifa_get_unico.slice();
+          this.cod_precio_venta_modal_codigo1 = this.tarifa_get_unico[0].codigo;
+          console.log(this.cod_precio_venta_modal_codigo1);
         },
 
         error: (err: any) => {
@@ -316,7 +355,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
 
   onCellClick1(item: any): void {
     console.log("adentro");
@@ -331,10 +369,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.item = cleanText.toUpperCase();
     this.getlineaProductoID(cleanText);
     this.validarItemParaVenta(cleanText);
-    this.getEmpaqueItem(cleanText);
     this.getAlmacenesSaldos();
     this.getEmpaquePesoAlmacenLocal(cleanText);
-    this.getSaldoItem(cleanText)
+    this.getSaldoItem(cleanText);
+    this.getEmpaqueItemInfoCantidades(cleanText);
+
+    this.pedido = undefined;
+    this.cantidad = undefined;
   }
 
   getEmpaquePesoAlmacenLocal(item) {
@@ -542,8 +583,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             // this.render.selectRootElement('#focusPedido').focus();
             // this.input1.nativeElement.focus();
             // this.setFocus();
-            self.focusPedido();
-            this.focusPedido();
+            self.focusEmpaque();
+            this.focusEmpaque();
             break;
           case 'backspace':
             console.log("Hola lola BACKSPACE");
@@ -603,12 +644,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.renderer.selectRootElement('#focusPedido').focus();
   }
 
+  focusEmpaque() {
+    this.renderer.selectRootElement('#focusEmpaque').focus();
+  }
+
+
   focusCantidad() {
     this.renderer.selectRootElement('#focusCantidad').focus();
   }
 
   focusMyInput() {
-    this.focusPedido1.nativeElement.focus();
+    this.focusEmpaque1.nativeElement.focus();
   }
 
   addItemArray() {
@@ -629,7 +675,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       codmoneda: this.codmoneda_get,
       fecha: this.fecha_get,
       descripcion: this.descripcion_item,
-      medida: this.medida_item
+      medida: this.medida_item,
+      cantidad_empaque: this.cant_empaque,
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
@@ -716,6 +763,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
+        empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque
       }
     });
     console.log(a);
@@ -847,13 +895,15 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       })
   }
 
-  getEmpaqueItem(item) {
+  getEmpaqueItemInfoCantidades(item) {
+    console.log("EMPAQUE");
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getempaques/' + this.userConn + "/" + item)
       .subscribe({
         next: (datav) => {
           this.empaquesItem = datav;
-          //console.log(this.empaquesItem);
+          console.log(this.empaquesItem);
           this.empaque_view = true;
 
           this.empaque_item_codigo = this.empaquesItem.codigo;
@@ -867,6 +917,36 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           console.log(err, errorMessage);
         },
         complete: () => { }
+      })
+  }
+
+  getEmpaqueItem() {
+    const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
+    var d_tipo_precio_desct: string;
+
+    if (this.precio === true) {
+      d_tipo_precio_desct = "Precio";
+    } else {
+      d_tipo_precio_desct = "Descuento"
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
+    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+      .subscribe({
+        next: (datav) => {
+          console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+          this.pedido = datav.total;
+          this.cantidad = datav.total;
+
+          console.log(this.pedido);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          this.addItemArray();
+        }
       })
   }
 
@@ -959,6 +1039,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         desct_nivel: this.descuento_nivel_get,
         items: this.array_items_completo,
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
+        precio_venta: this.cod_precio_venta_modal_codigo1
       },
     });
 

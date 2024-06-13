@@ -4369,7 +4369,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.html",
-        "hash": "17338691986468778320"
+        "hash": "5275021170622547692"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.scss",
@@ -4381,11 +4381,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "3709962972536715209"
+        "hash": "10177857243279119834"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "18222545678524840341"
+        "hash": "15696468420685202332"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4397,7 +4397,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "7793731549174450537"
+        "hash": "17952493210346548291"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4589,7 +4589,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.ts",
-        "hash": "13737226615099163683"
+        "hash": "15799172795011737290"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/servicio-etiqueta/etiqueta.service.spec.ts",
@@ -5056,6 +5056,14 @@
         "hash": "15842851565289103438"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.spec.ts",
+        "hash": "8801356639812396051"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.ts",
+        "hash": "14561335836140733543"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/serviciodescuento/descuento.service.spec.ts",
         "hash": "9973665897003145454"
       },
@@ -5321,7 +5329,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "5042916868832990247"
+        "hash": "3332092966038473028"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5333,7 +5341,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "6539094142855322362"
+        "hash": "1365580590911971635"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6289,7 +6297,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "8248940976708455723"
+        "hash": "12615999517033628475"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6486,14 +6494,6 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.ts",
-        "hash": "14561335836140733543"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/serviciocomunicacionproforma/comunicacionproforma.service.spec.ts",
-        "hash": "8801356639812396051"
       }
     ],
     "projectFileMap": {}

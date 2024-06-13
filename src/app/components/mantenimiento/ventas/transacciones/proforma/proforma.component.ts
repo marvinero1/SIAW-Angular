@@ -418,6 +418,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   dataSource__venta_23_dias = new MatTableDataSource();
   dataSourceWithPageSize__venta_23_dias = new MatTableDataSource();
 
+  precio: any = true;
+  desct: any = false;
+
   decimalPipe: any;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
@@ -695,6 +698,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Cliente Real: ", data);
       this.codigo_cliente_catalogo_real = data.cliente.codigo;
       this.nombre_cliente_catalogo_real = data.cliente.nombre;
+      this.cod_vendedor_cliente = data.cliente.codvendedor;
 
       console.log(this.codigo_cliente_catalogo_real);
       this.modalClientesDireccion(this.codigo_cliente_catalogo_real);
@@ -1839,24 +1843,88 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.selectedRowIndex = index;
   }
 
-  cantidadChangeMatrix(element: any, newValue: number) {
+  empaqueChangeMatrix(element: any, newValue: number) {
+    console.log(element);
+    // element.cantidad_empaque
+    // element.coditem
+    // element.cantidad
+    // element.cantidad_pedida
+
+    var d_tipo_precio_desct: string;
+
+    if (this.precio === true) {
+      d_tipo_precio_desct = "Precio";
+    } else {
+      d_tipo_precio_desct = "Descuento"
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
+    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + element.empaque)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav)
+          // this.empaquesItem = datav;
+          // this.pedido = datav.total;
+          // this.cantidad = datav.total;
+
+          // Actualizar la cantidad en el elemento correspondiente en tu array de datos
+          element.cantidad_empaque = Number(newValue);
+
+          element.cantidad = Number(datav.total);
+          element.cantidad_pedida = Number(datav.total);
+
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
+
+          //guardar en el carrito ya modificado, para enviar a totalizar
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  cantidadChangeMatrix(elemento: any, newValue: number) {
     this.total = 0;
     this.subtotal = 0;
     this.iva = 0
     this.des_extra = 0;
     this.recargos = 0;
 
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
+
     this.total_desct_precio = false;
     this.total_X_PU = true;
 
-    // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-    element.cantidad = Number(newValue);
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
+      + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
+      "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+          elemento.coddescuento = Number(datav.coddescuento);
+          elemento.preciolista = Number(datav.preciolista);
+          elemento.preciodesc = Number(datav.preciodesc);
+          elemento.precioneto = Number(datav.precioneto);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
 
-    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        },
 
-    //guardar en el carrito ya modificado, para enviar a totalizar
-    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.simularTab();
+        }
+      });
   }
 
   pedidoChangeMatrix(element: any, newValue: number) {
@@ -1866,17 +1934,36 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.des_extra = 0;
     this.recargos = 0;
 
-    this.total_desct_precio = true;
     element.cantidad = element.cantidad_pedida;
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    this.total_desct_precio = true;
 
-    // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-    element.cantidad = Number(newValue);
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
+      + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
+      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el element correspondiente en tu array de datos
+          element.coddescuento = Number(datav.coddescuento);
+          element.preciolista = Number(datav.preciolista);
+          element.preciodesc = Number(datav.preciodesc);
+          element.precioneto = Number(datav.precioneto);
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
 
-    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        },
 
-    //guardar en el carrito ya modificado, para enviar a totalizar
-    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.simularTab();
+        }
+      });
   }
 
   // PRECIO VENTA DETALLE
@@ -4818,8 +4905,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalClienteEtiqueta(cod_cliente): void {
     this.dialog.open(ModalEtiquetaComponent, {
-      width: 'auto',
+      width: '505px',
       height: 'auto',
+      disableClose: true,
       data: {
         cod_cliente: cod_cliente,
         id_proforma: this.id_tipo_view_get_codigo,
@@ -4931,7 +5019,23 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+  togglePrecio() {
+    if (this.precio) {
+      this.precio = false;
+    } else {
+      this.precio = true;
+      this.desct = false; // Asegura que desct sea false cuando precio es true
+    }
+  }
 
+  toggleDescuento() {
+    if (this.desct) {
+      this.desct = false;
+    } else {
+      this.desct = true;
+      this.precio = false; // Asegura que precio sea false cuando desct es true
+    }
+  }
 
 
 

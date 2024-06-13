@@ -30,16 +30,22 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         case "descuento_input":
           this.agregarItems();
           break;
+        case "empaques_input":
+          this.agregarItems();
+          break;
       }
     }
   };
 
   @ViewChild("cant_input") myInputField: ElementRef;
+  @ViewChild("empaques_input") myInputField1: ElementRef;
+
 
   cod_precio_venta_modal_codigo: number;
   cod_descuento_modal_codigo: number;
   num_hoja: number;
   cantidad_input: number;
+  empaques_input: number;
 
   tarifa_get_unico: any = [];
   descuentos_get: any = [];
@@ -55,6 +61,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   isCheckedCantidad: boolean = true;
   isCheckedEmpaque: boolean = false;
+  isCheckedEmpaques: boolean = false;
 
   userConn: any;
   usuarioLogueado: any;
@@ -70,8 +77,12 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   fecha_get: any;
   codmoneda_get: any;
   desct_nivel_get: any;
+  precio_venta_get: any;
   items_get_carrito: [];
   tamanio_carrito: any;
+
+  precio: any = false;
+  desct: any = false;
 
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ItemSeleccionCantidadComponent>,
     public itemservice: ItemServiceService, private spinner: NgxSpinnerService,
@@ -80,7 +91,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService,
-    @Inject(MAT_DIALOG_DATA) public desct_nivel: any, @Inject(MAT_DIALOG_DATA) public items: any) {
+    @Inject(MAT_DIALOG_DATA) public desct_nivel: any, @Inject(MAT_DIALOG_DATA) public items: any,
+    @Inject(MAT_DIALOG_DATA) public precio_venta: any) {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
@@ -98,16 +110,13 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.codmoneda_get = codmoneda.codmoneda;
     this.desct_nivel_get = desct_nivel.desct_nivel;
     this.items_get_carrito = items.items;
+    this.precio_venta_get = precio_venta.precio_venta;
     this.tamanio_carrito = this.items_get_carrito.length;
 
     console.log("Items de carrito: " + JSON.stringify(this.items_get_carrito), "Tamanio: " + this.tamanio_carrito)
   }
 
   ngOnInit() {
-    this.getTarifa();
-    this.getDescuentos();
-    this.myInputField.nativeElement.focus();
-
     // descuentos
     this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
       console.log("Recibiendo Descuento: ", data);
@@ -119,12 +128,16 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     // precio_venta
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
-      console.log("Recibiendo Vendedor: ", data);
+      console.log("Recibiendo Precio: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
       this.cod_precio_venta_modal_codigo = data.precio_venta.codigo;
       this.cod_descuento_modal_codigo = data.precio_sugerido;
     });
     // fin_precio_venta
+
+    this.getTarifa();
+    this.getDescuentos();
+    this.myInputField.nativeElement.focus();
   }
 
   getTarifa() {
@@ -163,23 +176,37 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   empaqueHabilitar() {
     console.log(this.isCheckedEmpaque);
 
-    if (!this.isCheckedEmpaque) {
-      this.isCheckedCantidad = true;
-    } else {
+    if (this.isCheckedEmpaque) {
+      this.isCheckedEmpaques = false;
       this.isCheckedCantidad = false;
+    } else {
+      this.isCheckedEmpaque = true;
+    }
+  }
+
+  empaquesHabilitar() {
+    console.log(this.isCheckedEmpaques);
+
+    if (this.isCheckedEmpaques) {
+      this.precio = true;
+      this.isCheckedEmpaque = false;
+      this.isCheckedCantidad = false;
+    } else {
+      this.isCheckedEmpaques = true;
     }
   }
 
   cantidadHabilitar() {
     console.log(this.isCheckedCantidad);
 
-    if (this.isCheckedEmpaque) {
+    if (this.isCheckedCantidad) {
       this.isCheckedEmpaque = false;
-
+      this.isCheckedEmpaques = false;
     } else {
-      this.isCheckedEmpaque = true;
+      this.isCheckedCantidad = true;
     }
   }
+
 
   onLeavePrecioVenta(event: any) {
     const inputValue = event.target.value;
@@ -214,12 +241,22 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   }
 
   agregarItems() {
-    let a;
+    let a: any;
+    var d_tipo_precio_desct: string;
+
+    const errorMessage1 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
+    const errorMessage2 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+
+    if (this.precio === true) {
+      d_tipo_precio_desct = "Precio";
+    } else {
+      d_tipo_precio_desct = "Descuento"
+    }
 
     const nuevosItems: [] = this.dataItemSeleccionados_get.map((elemento) => {
       return {
         coditem: elemento,
-        tarifa: this.cod_precio_venta_modal_codigo, //cod_precio_venta_modal_codigo
+        tarifa: this.precio_venta_get, //cod_precio_venta viene de precio venta de la matriz xD
         descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, //cod_descuento_modal_codigo
         cantidad_pedida: this.cantidad_input,
         cantidad: this.cantidad_input,
@@ -229,78 +266,198 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
+        empaque: this.empaques_input
       };
     });
 
-    console.log("Items para enviar a /venta/transac/veproforma/getCantfromEmpaque/ O getItemMatriz_AnadirbyGroup : " + JSON.stringify(nuevosItems));
+    console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
 
-    if (!this.isCheckedCantidad) {
-      const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
 
-      console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
-      this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
-        .subscribe({
-          next: (datav) => {
-            if (this.tamanio_carrito > 0) {
-              console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-              a = this.items_post.concat(datav, this.items_get_carrito);
-            } else {
-              console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-              a = this.items_post = datav;
+
+    // if (!this.isCheckedCantidad) {
+    //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
+
+    //   console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
+    //   this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+    //     .subscribe({
+    //       next: (datav) => {
+    //         if (this.tamanio_carrito > 0) {
+    //           console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+    //           a = this.items_post.concat(datav, this.items_get_carrito);
+    //         } else {
+    //           console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+    //           a = this.items_post = datav;
+    //         }
+    //         console.log('data', datav);
+
+    //         this.spinner.show();
+    //         setTimeout(() => {
+    //           this.spinner.hide();
+    //         }, 1500);
+    //       },
+    //       error: (err) => {
+    //         console.log(err, errorMessage);
+    //       },
+    //       complete: () => {
+    //         // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
+    //         this.enviarItemsAlServicio(a);
+    //         this.dialogRef.close();
+    //         // this.num_hoja = 0;
+    //       }
+    //     });
+    // } else {
+    //   console.log("SOLO CANTIDAD");
+    //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+
+    //   this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
+    //     .subscribe({
+    //       next: (datav) => {
+    //         if (this.tamanio_carrito > 0) {
+    //           console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+    //           a = this.items_post.concat(datav, this.items_get_carrito);
+    //         } else {
+    //           console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+    //           a = this.items_post = datav;
+    //         }
+    //         console.log('data', datav);
+
+    //         this.spinner.show();
+    //         setTimeout(() => {
+    //           this.spinner.hide();
+    //         }, 1500);
+    //       },
+    //       error: (err) => {
+    //         console.log(err, errorMessage);
+    //       },
+    //       complete: () => {
+    //         // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
+    //         this.enviarItemsAlServicio(a);
+    //         this.dialogRef.close();
+    //         // this.num_hoja = 0;
+    //       }
+    //     });
+    // }
+    switch (true) {
+      case this.isCheckedCantidad:
+        console.log("SOLO CANTIDAD");
+        this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
+          .subscribe({
+            next: (datav) => {
+              if (this.tamanio_carrito > 0) {
+                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                a = this.items_post.concat(datav, this.items_get_carrito);
+              } else {
+                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                a = this.items_post = datav;
+              }
+              console.log('data', datav);
+
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+            },
+            error: (err) => {
+              console.log(err, errorMessage2);
+            },
+            complete: () => {
+              this.enviarItemsAlServicio(a);
+              this.dialogRef.close();
             }
-            console.log('data', datav);
+          });
+        break;
 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-          },
-          error: (err) => {
-            console.log(err, errorMessage);
-          },
-          complete: () => {
-            // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
-            this.enviarItemsAlServicio(a);
-            this.dialogRef.close();
-            // this.num_hoja = 0;
-          }
-        });
-    } else {
-      console.log("SOLO CANTIDAD");
-      const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+      case this.isCheckedEmpaque:
+        console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
+        this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+          .subscribe({
+            next: (datav) => {
+              if (this.tamanio_carrito > 0) {
+                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                a = this.items_post.concat(datav, this.items_get_carrito);
+              } else {
+                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                a = this.items_post = datav;
+              }
+              console.log('data', datav);
 
-      this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
-        .subscribe({
-          next: (datav) => {
-            if (this.tamanio_carrito > 0) {
-              console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-              a = this.items_post.concat(datav, this.items_get_carrito);
-            } else {
-              console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-              a = this.items_post = datav;
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+            },
+            error: (err) => {
+              console.log(err, errorMessage1);
+            },
+            complete: () => {
+              this.enviarItemsAlServicio(a);
+              this.dialogRef.close();
             }
-            console.log('data', datav);
+          });
+        break;
 
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-          },
-          error: (err) => {
-            console.log(err, errorMessage);
-          },
-          complete: () => {
-            // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
-            this.enviarItemsAlServicio(a);
-            this.dialogRef.close();
-            // this.num_hoja = 0;
-          }
-        });
+      case this.isCheckedEmpaques:
+        console.log("SOLO EMPAQUES");
+        // Assuming similar API call and logic for empaques
+        this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
+          .subscribe({
+            next: (datav) => {
+              if (this.tamanio_carrito > 0) {
+                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                a = this.items_post.concat(datav, this.items_get_carrito);
+              } else {
+                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                a = this.items_post = datav;
+              }
+              console.log('data', datav);
+
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+            },
+            error: (err) => {
+              console.log(err, errorMessage1);
+            },
+            complete: () => {
+              const updatedItems = a.map(item => {
+                const { empaque, ...rest } = item;
+                return { ...rest, cantidad_empaque: empaque };
+              });
+              this.enviarItemsAlServicio(updatedItems);
+              this.dialogRef.close();
+            }
+          });
+        break;
+
+      default:
+        console.log("Ninguna opción seleccionada");
+        break;
     }
+
+
   }
 
   enviarItemsAlServicio(items: any[]) {
     this.itemservice.enviarItemsDeSeleccionAMatriz(items);
+  }
+
+  togglePrecio() {
+    if (this.precio) {
+      this.precio = false;
+    } else {
+      this.precio = true;
+      this.desct = false; // Asegura que desct sea false cuando precio es true
+    }
+  }
+
+  toggleDescuento() {
+    if (this.desct) {
+      this.desct = false;
+    } else {
+      this.desct = true;
+      this.precio = false; // Asegura que precio sea false cuando desct es true
+    }
   }
 
   modalPrecioVenta(): void {

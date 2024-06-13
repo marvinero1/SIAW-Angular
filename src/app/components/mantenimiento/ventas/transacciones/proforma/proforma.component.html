@@ -282,7 +282,8 @@
                   <u>Calcular Empa por Precio</u>
                 </span>
                 <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorPrecio" (change)="changeValueCheck('precio')">
+                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorPrecio" [checked]="precio"
+                    (change)="togglePrecio()">
                 </div>
               </div>
             </div>
@@ -292,8 +293,8 @@
                   <u>Calcular Empa por Descuento</u>
                 </span>
                 <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento"
-                    (change)="changeValueCheck('descuento')">
+                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento" [checked]="desct"
+                    (change)="toggleDescuento()">
                 </div>
               </div>
             </div>
@@ -740,6 +741,10 @@
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Empaque </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
+
+                  <input #inputEmpaque matInput type="number" class="pedido" [(ngModel)]="element.empaque" min="0"
+                    (input)="empaqueChangeMatrix(element, $event.target.value)" style="text-align: center !important;">
+
                 </td>
               </ng-container>
 
