@@ -43,6 +43,7 @@
                 <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
                 <th style="border: 1px solid #ffc107;" width="175">Medida</th>
                 <th style="border: 1px solid #ffc107;">Empaque</th>
+                <th style="border: 1px solid #ffc107;">Precio</th>
                 <th style="border: 1px solid #ffc107;">Pedido</th>
                 <th style="border: 1px solid #ffc107;">Cant.</th>
                 <th style="border: 1px solid #ffc107;">
@@ -59,6 +60,7 @@
                   <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
                     {{ array_items_completos.medida }} </td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
 
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
@@ -179,12 +181,14 @@
           </mat-form-field>&nbsp;
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
-            <mat-label>Cantidad </mat-label>
+            <mat-label>Cantidad</mat-label>
             <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
               style="width:50%;" placeholder="{{pedido}}">
           </mat-form-field>
+          <mat-icon (click)="loseFocus()">bug_report</mat-icon>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -199,7 +203,7 @@
 
   <div mat-dialog-footer>
     <!-- Saldos -->
-    <div class="row pl-4">
+    <div class="row pl-4 pt-1 ">
       <ng-container *ngIf="saldoItem > 0; else saldo">
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
           style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
@@ -242,7 +246,7 @@
     <!-- finSaldos -->
 
     <!-- Empaques -->
-    <mat-dialog-content class="dialog-matriz">
+    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
         <div class="col-sm">
           <div class="input-group">
@@ -272,6 +276,30 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <!-- finempaque -->
+
+    <!-- Precio Item  -->
+    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
+      <div class="row">
+        <div class="col-sm">
+          <div class="input-group">
+            <span class="input-group-text form-control-sm">Precios</span>
+
+            <ng-container *ngIf="!empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+            </ng-container>&nbsp;
+
+            <ng-container *ngIf="empaque_view">
+              <div>
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                  {{precioItem.precios}}
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
       </div>

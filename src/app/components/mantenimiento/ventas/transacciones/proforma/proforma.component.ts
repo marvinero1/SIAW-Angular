@@ -57,6 +57,7 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-botones-impresion.component';
 import { element } from 'protractor';
 import { ComunicacionproformaService } from '../../serviciocomunicacionproforma/comunicacionproforma.service';
+import { ModalSolicitarUrgenteComponent } from '../../modal-solicitar-urgente/modal-solicitar-urgente.component';
 
 @Component({
   selector: 'app-proforma',
@@ -326,10 +327,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public URL_maps: string;
   public estado_contra_entrega_input: any;
 
+  public calcularEmpaquePorPrecio: boolean = true;
+  public calcularEmpaquePorDescuento: boolean = false;
+
   public item_obtenido: any = [];
   porcen_item: string;
   valor_nit: any;
   almacn_parame_usuario_almacen: any;
+
 
   // arraySacarTotal
   veproforma: any = [];
@@ -455,8 +460,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.disableSelect.value = false;
     console.log("Valor del Disabled:", this.disableSelect.value);
-
-
   }
 
   ngOnInit() {
@@ -705,7 +708,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
-
     //modalClientesParaSeleccionarClienteReal
     this.servicioCliente.disparadorDeClienteReaLInfo.subscribe(data => {
       console.log("Recibiendo Cliente Real Info: ", data.cliente_real_info);
@@ -818,7 +820,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log(this.tabla_anticipos);
     });
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
-
 
     this.communicationService.triggerFunction$.subscribe(() => {
       this.aplicarDesctPorDeposito();
@@ -1116,6 +1117,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          this.toastr.error("Formulario T. Entrega Error");
         },
         complete: () => { }
       });
@@ -2860,7 +2862,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
-      veproforma1: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
+      veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
       veproforma_anticipo: [],
       vedesextraprof: this.array_de_descuentos_ya_agregados, //array de descuentos
@@ -2955,6 +2957,22 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
+    // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
+    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
+    if (confirmacionValidaciones) {
+
+      //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
+      this.aplicarDesctPorDeposito()
+
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    }
+
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
     // VACIO - TODOS LOS CONTROLES
     this.valor_formulario = [this.FormularioData.value];
@@ -4991,7 +5009,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   modalBtnImpresiones(codigo_proforma_submitdata) {
     this.dialog.open(ModalBotonesImpresionComponent, {
       width: 'auto',
@@ -4999,6 +5016,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       disableClose: true,
     });
     this.guardarDataImpresion(codigo_proforma_submitdata);
+  }
+
+  modalSolicitudUrgente() {
+    this.dialog.open(ModalSolicitarUrgenteComponent, {
+      disableClose: true,
+      width: 'auto',
+      height: 'auto',
+      data: {},
+    });
   }
 
   guardarDataImpresion(codigo_proforma_submitdata) {
@@ -5187,6 +5213,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       // Filtrar los elementos de array1 que no están presentes en array2
       const elementosDiferentes = this.validacion_no_validos.filter(item1 => !this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.find(item2 => item1.Codigo === item2.Codigo));
 
+
+
+
       //UNA VEZ QUE ESTE APROBADO POR LA CONTRASEÑA, MAPEAR LA COPIA DEL ARRAY ORIGINAL
       //(ORIGINAL)this.validacion_post, (COPIA)array_original_de_validaciones_copied 
       //cambiando los valores de Valido NO a Valido SI y el valor de ClaveServicio a "AUTORIZADO" 
@@ -5240,9 +5269,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
-  public calcularEmpaquePorPrecio: boolean = true;
-  public calcularEmpaquePorDescuento: boolean = false;
 
   changeValueCheck(type: string) {
     if (type === 'precio') {

@@ -96,7 +96,7 @@ th.mat-column-position, td.mat-column-position {
 
 ::ng-deep {
   .mat-mdc-text-field-wrapper {
-    height: 30px !important;
+    // height: 30px !important;
   }
 
   .mat-mdc-dialog-content {
@@ -212,7 +212,7 @@ td{
 }
 
 .dialog-matriz {
-  max-height: 74vh;  /* Ajusta la altura máxima según tus necesidades */
+  // max-height: 74vh;  /* Ajusta la altura máxima según tus necesidades */
   overflow-y: none;  /* Habilita el scroll vertical */
   scrollbar-width: none;  /* Para navegadores que soportan esta propiedad */
 }

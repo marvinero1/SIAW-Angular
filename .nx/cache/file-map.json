@@ -317,7 +317,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "15741072765742870117"
+        "hash": "10846532744491226046"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -4381,15 +4381,15 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component.ts",
-        "hash": "10177857243279119834"
+        "hash": "2909315407362865047"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "15696468420685202332"
+        "hash": "6087799501935462928"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
-        "hash": "9491520168092401869"
+        "hash": "5033876414567389229"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.spec.ts",
@@ -4397,7 +4397,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "17952493210346548291"
+        "hash": "60163700405348705"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -4589,7 +4589,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component.ts",
-        "hash": "15799172795011737290"
+        "hash": "2399351697665278011"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-etiqueta/servicio-etiqueta/etiqueta.service.spec.ts",
@@ -5329,7 +5329,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "3332092966038473028"
+        "hash": "5633580342613996787"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5341,7 +5341,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "1365580590911971635"
+        "hash": "15236366264383440080"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6297,7 +6297,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "12615999517033628475"
+        "hash": "8248940976708455723"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6494,6 +6494,22 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.ts",
+        "hash": "15969333252201020957"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.spec.ts",
+        "hash": "7546274967000856209"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.html",
+        "hash": "6486682364213361734"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.scss",
+        "hash": "3244421341483603138"
       }
     ],
     "projectFileMap": {}

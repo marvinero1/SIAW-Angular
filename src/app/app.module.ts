@@ -421,6 +421,7 @@ import { ProformaPdfComponent } from '@components/mantenimiento/ventas/transacci
 import { ModalBotonesImpresionComponent } from '@components/mantenimiento/ventas/transacciones/proforma/modal-botones-impresion/modal-botones-impresion.component';
 import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component';
 import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
+import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component';
 
 registerLocaleData(es);
 defineCustomElements();
@@ -463,7 +464,7 @@ registerPlugin(UndoRedo);
         ParametrosFacturacionSIATComponent, CrearTomaInventarioComponent, TomaInventarioConsolidadoComponent, CatalogoInventarioComponent,
         PrecioItemComponent, ActualizarPrecioItemComponent, ActualizarStockActualComponent, ExportarImportarSaldosComponent,
         GruposInventariosComponent, SaldosInventarioConsolidadoComponent, CatalogoPersonaComponent, CambiarPasswordComponent,
-        ConsolidarInventarioComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent,
+        ConsolidarInventarioComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent, NumdevolucionesdeudorCreateComponent,
         ValidarPrecioItemComponent, ValidarPermisoItemComponent, PermisoEspecialPasswordComponent, ModalZonaComponent,
         ParametroUsuarioComponent, NotasAjustesComponent, CatalogoNotasMovimientoComponent, CatalogoMovimientoMercaderiaComponent,
         ValidarComponent, RegistrarInventarioGrupoComponent, ConfirmacionNotasAjustesComponent, CatalogoPuntoVentaComponent,
@@ -475,7 +476,7 @@ registerPlugin(UndoRedo);
         NumeraciontransferenciasCreateComponent, NumeraciontransferenciasEditComponent, NumretirobancarioComponent, NumretirobancarioCreateComponent,
         NumretirobancarioEditComponent, NumreposicionComponent, NumreposicionCreateComponent, NumreposicionEditComponent, NumpagodeudorComponent,
         NumpagodeudorCreateComponent, NumpagodeudorEditComponent, NummovfondosComponent, NummovfondosCreateComponent, NummovfondosEditComponent,
-        NumentregascargoComponent, NumentregascargoCreateComponent, NumentregascargoEditComponent, NumdevolucionesdeudorComponent, NumdevolucionesdeudorCreateComponent,
+        NumentregascargoComponent, NumentregascargoCreateComponent, NumentregascargoEditComponent, NumdevolucionesdeudorComponent,
         NumdevolucionesdeudorEditComponent, NumdepositosclienteComponent, NumdepositosclienteCreateComponent, NumdepositosclienteEditComponent,
         NumdepositosbancariosComponent, NumdepositosbancariosCreateComponent, NumdepositosbancariosEditComponent, NumchequesclientesComponent,
         NumchequesclientesCreateComponent, NumchequesclientesEditComponent, NumlibrosbancosEditComponent, NumlibrosbancosComponent,
@@ -497,14 +498,14 @@ registerPlugin(UndoRedo);
         NumProformaImportacionCreateComponent, NumProformaImportacionEditComponent, NumOrdCompraComponent, NumOrdCompraEditComponent,
         NumOrdCompraCreateComponent, NumEmbarqueImportacionComponent, NumEmbarqueImportacionCreateComponent, NumEmbarqueImportacionEditComponent,
         NumRecepcionImportacionComponent, NumRecepcionImportacionCreateComponent, NumRecepcionImportacionEditComponent, SucursalComponent,
-        SucursalEditComponent, SucursalCreateComponent, PlanCuentaComponent, PlanCuentaCreateComponent, PlanCuentaEditComponent,
+        SucursalEditComponent, SucursalCreateComponent, PlanCuentaComponent, PlanCuentaCreateComponent, PlanCuentaEditComponent, ModalBotonesImpresionComponent,
         CuentaEfectivoCuentasContablesComponent, CuentasContablesComponent, CuentasCatalogoComponent, NumeracionComprobantesComponent,
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
-        VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent,
-        ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent,
-        ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent,
-        ModalBotonesImpresionComponent, EtiquetasItemProformaComponent,
-        EtiquetaImpresionProformaComponent,
+        VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent, ModalSolicitarUrgenteComponent,
+        ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
+        ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
+
+
 
 
 

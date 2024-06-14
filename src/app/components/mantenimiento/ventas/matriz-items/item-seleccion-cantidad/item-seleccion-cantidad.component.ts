@@ -59,7 +59,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   cod_precio_venta_modal: any = [];
   array_items_completo: [];
 
-  isCheckedCantidad: boolean = true;
+  isCheckedCantidad: boolean = false;
   isCheckedEmpaque: boolean = false;
   isCheckedEmpaques: boolean = false;
 
@@ -187,11 +187,10 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   empaquesHabilitar() {
     console.log(this.isCheckedEmpaques);
 
-    if (this.isCheckedEmpaques) {
-      this.precio = true;
+    if (!this.isCheckedEmpaques) {
       this.isCheckedEmpaque = false;
-      this.isCheckedCantidad = false;
     } else {
+
       this.isCheckedEmpaques = true;
     }
   }

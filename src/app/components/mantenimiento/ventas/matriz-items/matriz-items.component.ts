@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -43,19 +32,25 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
 
     switch (nombre_input) {
+      case '':
+        this.getEmpaqueItem();
+        break;
       case 'focusEmpaque':
         this.getEmpaqueItem();
-        this.pedido = undefined;
         break;
       case 'focusPedido':
         this.addItemArray();
+        this.cant_empaque = undefined;
         this.pedido = undefined;
+        this.cantidad = undefined;
         break;
       case 'focusCantidad':
         // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
         // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
         this.addItemArray();
+        this.cant_empaque = undefined;
         this.pedido = undefined;
+        this.cantidad = undefined;
         break;
       case 'idBuscadorHoja':
         this.getHoja();
@@ -155,8 +150,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   desct: any = false;
 
   @ViewChild("focusPedido") focusPedido1: ElementRef;
-  @ViewChild("focusEmpaque") focusEmpaque1: ElementRef;
-
+  @ViewChild('focusEmpaque') focusEmpaqueElement: ElementRef;
+  @ViewChild('example') focusTabla: ElementRef;
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2,
@@ -373,6 +368,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.getEmpaquePesoAlmacenLocal(cleanText);
     this.getSaldoItem(cleanText);
     this.getEmpaqueItemInfoCantidades(cleanText);
+    this.getPrecioItemSeleccionado(cleanText);
 
     this.pedido = undefined;
     this.cantidad = undefined;
@@ -583,8 +579,20 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             // this.render.selectRootElement('#focusPedido').focus();
             // this.input1.nativeElement.focus();
             // this.setFocus();
+
+            const focusedElement = document.activeElement as HTMLElement;
+            let nombre_input = focusedElement.id;
+            console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
+
+            // if (nombre_input === "focusPedido") {
+            // }
+
             self.focusEmpaque();
             this.focusEmpaque();
+
+            // const focusElement = this.focusEmpaqueElement.nativeElement;
+            // focusElement.focus();
+
             break;
           case 'backspace':
             console.log("Hola lola BACKSPACE");
@@ -645,7 +653,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   focusEmpaque() {
-    this.renderer.selectRootElement('#focusEmpaque').focus();
+    // this.renderer.selectRootElement('#focusEmpaque').focus();
+    const focusElement = this.focusEmpaqueElement.nativeElement;
+    focusElement.focus();
   }
 
 
@@ -654,7 +664,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   focusMyInput() {
-    this.focusEmpaque1.nativeElement.focus();
+    this.focusEmpaqueElement.nativeElement.focus();
   }
 
   addItemArray() {
@@ -664,7 +674,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.array_items_seleccionado;
     let array = {
       coditem: cleanText,
-      tarifa: this.tarifa_get,
+      tarifa: this.cod_precio_venta_modal_codigo1,
       descuento: this.descuento_get,
       cantidad_pedida: this.pedido,
       cantidad: this.cantidad === undefined ? this.pedido : this.cantidad,
@@ -724,8 +734,21 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
+    // const focusElement = this.focusTabla.nativeElement;
+    // focusElement.focus();
+
+    let nombre_input: string = ""
+    const focusedElement = document.activeElement as HTMLElement;
+    focusedElement.id = nombre_input;
+
+    console.log(focusedElement.id);
+
     console.log("array_items_completo", this.array_items_completo, "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
       "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
@@ -895,9 +918,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       })
   }
 
+  loseFocus() {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }
+
   getEmpaqueItemInfoCantidades(item) {
     console.log("EMPAQUE");
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getempaques/' + this.userConn + "/" + item)
       .subscribe({
@@ -919,10 +947,39 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
+  precioItem: any = [];
+  getPrecioItemSeleccionado(item) {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getPreciosItem/";
+    return this.api.getAll('/venta/transac/veproforma/getPreciosItem/' + this.userConn + "/" + item + "/" + this.codalmacen_get + "/" + this.codmoneda_get)
+      .subscribe({
+        next: (datav) => {
+          this.precioItem = datav;
+          console.log(this.precioItem);
+          // this.empaque_view = true;
+
+          // this.empaque_item_codigo = this.empaquesItem.codigo;
+          // this.empaque_item_descripcion = this.empaquesItem.descripcion;
+          // this.cantidad = this.empaquesItem.cantidad;
+
+          // this.empaque_descripcion_concat = "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
+
+
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   getEmpaqueItem() {
+
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
     var d_tipo_precio_desct: string;
+    let nombre_input: string = "focusPedido"
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
+
 
     if (this.precio === true) {
       d_tipo_precio_desct = "Precio";
@@ -930,24 +987,40 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Descuento"
     }
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
-    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
-      .subscribe({
-        next: (datav) => {
-          console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
-          this.pedido = datav.total;
-          this.cantidad = datav.total;
+    if (this.cant_empaque === 0) {
+      const focusedElement = document.activeElement as HTMLElement;
+      focusedElement.id = nombre_input;
 
-          console.log(this.pedido);
-        },
+      const focusElement = this.focusPedido1.nativeElement;
+      this.renderer.selectRootElement(focusElement).focus();
+      focusElement.click();
+    } else {
+      return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+        .subscribe({
+          next: (datav) => {
+            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+            this.pedido = datav.total;
+            this.cantidad = datav.total;
 
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          this.addItemArray();
-        }
-      })
+            console.log(this.pedido);
+
+          },
+
+          error: (err: any) => {
+            console.log(err, errorMessage);
+          },
+          complete: () => {
+            // this.addItemArray();
+            const focusedElement = document.activeElement as HTMLElement;
+            focusedElement.id = nombre_input;
+
+            const focusElement = this.focusPedido1.nativeElement;
+            this.renderer.selectRootElement(focusElement).focus();
+            focusElement.click();
+          }
+        })
+    }
+
   }
 
   getAlmacenesSaldos() {

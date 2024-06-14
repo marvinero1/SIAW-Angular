@@ -665,6 +665,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-orden"
                   style="padding: 0 0px 0 0px !important;text-align: center !important;"> Orden </th>
                 <td mat-cell *matCellDef="let element; let i = index" class="td" class="mat-column-orden"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: center !important; padding: 0px 0px 0px 0px !important">
 
                   <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
@@ -708,6 +709,7 @@
                 </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="width: 40%;text-align: left !important;padding: 0px 0px 0px 0px;">
                   {{ element?.descripcion }} </td>
               </ng-container>
@@ -717,6 +719,7 @@
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Medida </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" class="medida"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: center !important;padding: 0 0px 0 5px;"> {{ element?.medida }} </td>
               </ng-container>
 
@@ -724,6 +727,7 @@
               <ng-container matColumnDef="unidad">
                 <th mat-header-cell *matHeaderCellDef> Ud </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"> {{ element?.udm }} </td>
               </ng-container>
 
@@ -731,6 +735,7 @@
               <ng-container matColumnDef="iva">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> %IVA </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
                   {{ element?.porceniva }}
                 </td>
@@ -740,6 +745,7 @@
               <ng-container matColumnDef="empaque">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> Empaque </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
 
                   <input #inputEmpaque matInput type="number" class="pedido" [(ngModel)]="element.empaque" min="0"
@@ -753,6 +759,7 @@
                 <th mat-header-cell *matHeaderCellDef> Pedido </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
                   <ng-container *ngIf="element?.cumpleEmp === true && element?.cumpleMin === true">
@@ -779,6 +786,7 @@
                 <th mat-header-cell *matHeaderCellDef> Cantidad </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: right !important;padding: 0px 0px 0px 0px;">
 
                   <ng-container *ngIf="element?.cumpleEmp === true && element?.cumpleMin === true">
@@ -804,6 +812,7 @@
               <ng-container matColumnDef="sld">
                 <th mat-header-cell *matHeaderCellDef style="text-align: center !important;"> % SLD</th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
                   {{ element?.porcen_mercaderia }}
                 </td>
@@ -814,6 +823,7 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> TP
                 </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" min="0" id="inputCatalogoPrecioVentaDetalle"
                     (blur)="onLeavePrecioVentaDetalle($event, element)" [value]="element?.codtarifa"
@@ -826,6 +836,7 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center;"> DE
                 </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="padding: 0px 0px 0px 0px !important">
                   <input matInput type="number" class="pedido" min="0" id="inputCatalogoDescuentoEspecialDetalle"
                     (blur)="onLeaveDescuentoEspecialDetalle($event, element)" [value]="element?.coddescuento"
@@ -837,6 +848,7 @@
               <ng-container matColumnDef="pul">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right !important;"> PUL </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
                   {{ element?.preciolista }} </td>
               </ng-container>
@@ -845,6 +857,7 @@
               <ng-container matColumnDef="niv">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> NIV </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: right !important;">
                   {{ element?.niveldesc }}
                 </td>
@@ -854,6 +867,7 @@
               <ng-container matColumnDef="porcentaje">
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: center !important;"> % </th>
                 <td mat-cell *matCellDef="let element; let i = index"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"> {{ element?.porcendesc | json }} </td>
               </ng-container>
 
@@ -862,6 +876,7 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PD </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: right !important;padding: 0px 0px 0px 0px !important">
                   {{ element?.preciodesc?.toString()?.replace(',', '.') }}
                 </td>
@@ -872,6 +887,7 @@
                 <th mat-header-cell *matHeaderCellDef style="width: 5%;text-align: right;"> PU </th>
                 <td mat-cell *matCellDef="let element; let i = index"
                   [ngClass]="{'selected-row': selectedRowIndex === i}"
+                  (click)="itemDataAll(element?.coditem); selectRow(i)"
                   style="text-align: right !important;padding: 0px 0px 0px 0px !important">
                   {{ element?.precioneto?.toString().replace(',', '.') }} </td>
               </ng-container>
@@ -883,6 +899,7 @@
                     Total </th>
                   <td mat-cell *matCellDef="let element; let i = index"
                     [ngClass]="{'selected-row': selectedRowIndex === i}"
+                    (click)="itemDataAll(element?.coditem); selectRow(i)"
                     style="text-align: right;padding: 0px 0px 0px 0px !important;">
                     {{ calcularTotalCantidadXPU(element?.cantidad_pedida, element?.cantidad, element?.precioneto) }}
                     <!-- {{ calcularTotalCantidadXPU(element.cantidad_pedida, element.cantidad, element.preciolista) | number:'1.2-2' }} -->
@@ -2463,7 +2480,8 @@
         </div>
 
         <div style="float: right !important;margin-right: 22px !important;">
-          <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+          <button mat-raised-button (click)="modalSolicitudUrgente();"
+            style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
             <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
             Solicitar Urgente
           </button>

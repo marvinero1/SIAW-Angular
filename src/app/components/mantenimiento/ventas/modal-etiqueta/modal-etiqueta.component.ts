@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
-import { ToastrService } from 'ngx-toastr';
 import { EtiquetaService } from './servicio-etiqueta/etiqueta.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ComunicacionproformaService } from '../serviciocomunicacionproforma/comunicacionproforma.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-modal-etiqueta',
   templateUrl: './modal-etiqueta.component.html',
@@ -33,7 +33,7 @@ export class ModalEtiquetaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalEtiquetaComponent>, private spinner: NgxSpinnerService,
     private api: ApiService, public _snackBar: MatSnackBar, public servicioEtiqueta: EtiquetaService,
-    private communicationService: ComunicacionproformaService,
+    private communicationService: ComunicacionproformaService, private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
     @Inject(MAT_DIALOG_DATA) public numero_id: any, @Inject(MAT_DIALOG_DATA) public nom_cliente: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea: any, @Inject(MAT_DIALOG_DATA) public id_sol_desct: any,
@@ -106,24 +106,9 @@ export class ModalEtiquetaComponent implements OnInit {
     this.servicioEtiqueta.disparadorDeEtiqueta.emit({
       etiqueta: this.data_array,
     });
+    this.close();
 
-    // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
-    const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
-    if (confirmacionValidaciones) {
-
-      //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
-      this.communicationService.aplicarDesct23ComunicacionEtiquetaAProforma();
-
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-      this.close();
-    } else {
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-      this.close();
-    }
+    this.toastr.success("ETIQUETA RGABADA CON EXITO");
   }
 
   close() {
