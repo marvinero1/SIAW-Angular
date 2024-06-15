@@ -1,5 +1,169 @@
-<section class="content">
-  <div class="row">
+<section style="background-color: #ffe0c0;">
+  <div class="container-fluid">
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;">Solicitud de Mercaderia Urgente: <strong></strong>
+          </mat-card-title>
+        </div>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
 
+      <!-- fila de botones -->
+      <div class="row">
+        <div class="col-md">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span> <i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Grabar </span>
+          </button>
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span> <i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Limpiar </span>
+          </button>
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span><i class="fa fa-file-excel green" aria-hidden="true" style="color: #05970c;"></i>
+              Cargar Excel</span>
+          </button>
+        </div>
+
+
+        <!-- <div class="col-md-4">
+          <mat-label style="padding-right: 5px;"><u>Hasta Fecha</u></mat-label>
+          <input type="date">
+        </div>
+
+        <div class="col-md-6">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <span>
+              <mat-icon style="color: #ffc107;height: 16px !important;width: 21px !important;overflow: hidden !important;
+                font-size: 19px !important;">
+                refresh
+              </mat-icon>Refrescar
+            </span>
+          </button>
+          <span>&nbsp;<strong>Número de Urgentes esta semana: </strong></span>
+        </div> -->
+      </div>
+
+
+
+
+      <div class="row mat-elevation-z2">
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="row">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID Tipo </u></span>
+              </div>
+
+              <ng-container>
+                <input type="text" class="form-control form-control-sm">
+              </ng-container>
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                  <!-- <div *ngIf="submitted && f.codvendedor.invalid" class="invalid-feedback">
+                    <mat-icon style="height: 22px !important;" matTooltipClass="custom-tooltip"
+                      matTooltip="Validar Vendedor">info</mat-icon>
+                  </div> -->
+                  <u>Vendedor</u>
+                </span>
+              </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor">
+              </ng-container>
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="input-group">
+              AAA
+              <input type="text" class="form-control form-control-sm" [readonly]="true">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <mat-tab-group style="background-color: #ffe0c0;">
+        <mat-tab label="Pagos">
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Cheques Pendientes">
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+
+        <mat-tab label="Anticipos">
+          <mat-card style="background-color: #ffe0c0;">
+            <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+
+            </mat-card-content>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="row">
+        <div class="col-md-5">
+          <span><u>Total Seleccionado: &nbsp;</u></span>
+          <input type="text" class="right" style="width: 25% !important;" [readOnly]="true">
+        </div>
+
+        <div class="col-md-3" style="text-align: end !important;">
+          <span><u>Total Adeudado &nbsp;</u></span>
+          <input type="text" class="right" style="width: 45% !important;" [readOnly]="true">
+        </div>
+
+        <div class="col-md-4" style="text-align: end !important;">
+          <span><u>Credito &nbsp;</u></span>
+          <input type="text" class="right" style="width: 35% !important;" [readOnly]="true">
+        </div>
+      </div>
+    </ng-container>
   </div>
 </section>

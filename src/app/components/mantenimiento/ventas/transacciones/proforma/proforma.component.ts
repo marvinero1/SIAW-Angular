@@ -460,6 +460,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.disableSelect.value = false;
     console.log("Valor del Disabled:", this.disableSelect.value);
+
+    // this.modalSolicitudUrgente();
   }
 
   ngOnInit() {

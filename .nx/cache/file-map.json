@@ -4385,7 +4385,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "6087799501935462928"
+        "hash": "9442960084286508750"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
@@ -4686,6 +4686,22 @@
       {
         "file": "src/app/components/mantenimiento/ventas/modal-recargos/recargo-to-proforma-services/recargo-to-proforma.service.ts",
         "hash": "13381689113714936585"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.html",
+        "hash": "9066082791928968712"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.spec.ts",
+        "hash": "7546274967000856209"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.ts",
+        "hash": "15969333252201020957"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-stock-actual/modal-stock-actual.component.html",
@@ -5329,7 +5345,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "5633580342613996787"
+        "hash": "10456054461040704693"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
@@ -5341,7 +5357,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "15236366264383440080"
+        "hash": "13423047751579704719"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -5645,7 +5661,7 @@
       },
       {
         "file": "src/app/modules/login/login.component.html",
-        "hash": "13535158658399162985"
+        "hash": "2249038920834589568"
       },
       {
         "file": "src/app/modules/login/login.component.scss",
@@ -6297,7 +6313,7 @@
       },
       {
         "file": "src/app/services/api.service.ts",
-        "hash": "8248940976708455723"
+        "hash": "12615999517033628475"
       },
       {
         "file": "src/app/services/app.service.spec.ts",
@@ -6494,22 +6510,6 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.ts",
-        "hash": "15969333252201020957"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.spec.ts",
-        "hash": "7546274967000856209"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.html",
-        "hash": "6486682364213361734"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component.scss",
-        "hash": "3244421341483603138"
       }
     ],
     "projectFileMap": {}
