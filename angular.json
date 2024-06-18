@@ -33,7 +33,11 @@
                             "node_modules/ngx-spinner/animations/line-scale-pulse-out-rapid.css",
                             "node_modules/ngx-spinner/animations/square-loader.css",
                             "node_modules/ngx-spinner/animations/ball-spin-fade-rotating.css",
-                            "node_modules/ngx-spinner/animations/timer.css"
+                            "node_modules/ngx-spinner/animations/timer.css",
+                            "node_modules/ag-grid-community/styles/ag-grid.css",
+                            "node_modules/ag-grid-community/styles/ag-theme-alpine.css",
+                            "node_modules/ag-grid-community/styles/ag-theme-quartz.css"
+
                         ],
                         "scripts": [],
                         
@@ -119,7 +123,9 @@
                         "styles": [
                             "src/styles.scss",
                             "node_modules/ngx-toastr/toastr.css",
-                            "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
+                            "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+                            "node_modules/ag-grid-community/styles/ag-grid.css",
+                            "node_modules/ag-grid-community/styles/ag-theme-alpine.css"
                         ],
                         "scripts": []
                     }

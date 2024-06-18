@@ -50,6 +50,14 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
 
 @import 'ngx-toastr/toastr';
 
+
+@import '/node_modules/ag-grid-community/styles/ag-grid.css';
+@import '/node_modules/ag-grid-community/styles/ag-theme-alpine.css';
+
+@import '~ag-grid-community/styles/ag-grid.css';
+@import '~ag-grid-community/styles/ag-theme-alpine.css';
+
+
 body {
   width: 100vw;
   height: 100vh;
@@ -433,10 +441,10 @@ select, textarea {
   padding: 20px 20px 10px 20px !important;
 }
 
-.mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell{
-  // position: sticky;
-  // top: 0;
-}
+// .mat-mdc-table tbody, .mat-mdc-table tfoot, .mat-mdc-table thead, .mat-mdc-cell, .mat-mdc-footer-cell, .mat-mdc-header-row, .mat-mdc-row, .mat-mdc-footer-row, .mat-mdc-table .mat-mdc-header-cell{
+//   // position: sticky;
+//   // top: 0;
+// }
 
 .mdc-list-item.mdc-list-item--with-one-line .mdc-list-item__end{
   display: none !important;
@@ -478,9 +486,16 @@ select, textarea {
   color: black;
 }
 
-
+  .ag-root-wrapper-body.ag-layout-normal{
+    height: 100% !important;
+  }
 
 ::ng-deep{
+ 
+  .ag-root-wrapper-body.ag-layout-normal{
+    height: 100% !important;
+  }
+ 
   .bg-yellow .mat-dialog-container{
   --mdc-dialog-container-color: #ffffc0 !important;
   }

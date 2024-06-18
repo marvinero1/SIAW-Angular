@@ -18,6 +18,8 @@
     "@ngrx/store": "14.3.0",
     "@profabric/angular-components": "0.1.2",
     "@syncfusion/ej2-popups": "^21.2.3",
+    "ag-grid-angular": "^31.3.2",
+    "ag-grid-community": "^31.3.2",
     "angular-vertical-tabs": "github:SamuelMarks/angular-vertical-material-tabs",
     "bn-ng-idle": "^2.0.5",
     "bootstrap": "4.6.1",
@@ -61,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "admin-lte": "3.2.0",
+    "css-loader": "^7.1.2",
     "eslint": "8.23.0",
     "fs-web": "1.0.1",
     "husky": "8.0.1",
@@ -78,6 +81,7 @@
     "prettier": "2.7.1",
     "pretty-quick": "3.1.3",
     "protractor": "7.0.0",
+    "style-loader": "^4.0.0",
     "ts-node": "10.9.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.3.0",
@@ -169,7 +173,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "7723291925809202495"
+        "hash": "12061876620965912025"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -209,7 +213,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "10344925790173776122"
+        "hash": "5557093945842373200"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -253,7 +257,7 @@
       },
       {
         "file": "angular.json",
-        "hash": "15991516977551406464"
+        "hash": "14816224466135245488"
       },
       {
         "file": "e2e/protractor.conf.js",
@@ -285,11 +289,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "5689370936015248399"
+        "hash": "17313042153515112395"
       },
       {
         "file": "package.json",
-        "hash": "8166368116986816266"
+        "hash": "60076998383275113"
       },
       {
         "file": "proxy.conf.json",
@@ -317,7 +321,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "15940202090446128674"
+        "hash": "10604520356008610394"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -689,11 +693,11 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.html",
-        "hash": "14063471018757937034"
+        "hash": "4800522203972686141"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.scss",
-        "hash": "1560139184250061619"
+        "hash": "14068258443377509625"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.spec.ts",
@@ -701,7 +705,7 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.ts",
-        "hash": "14012890237643079681"
+        "hash": "10082233410655215624"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.html",
@@ -6489,7 +6493,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "15312562836011854780"
+        "hash": "2340972013604733726"
       },
       {
         "file": "src/test.ts",
@@ -6510,6 +6514,22 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
+      },
+      {
+        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.spec.ts",
+        "hash": "9487991577643264519"
+      },
+      {
+        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.ts",
+        "hash": "15467249556621351846"
+      },
+      {
+        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.html",
+        "hash": "16122344889096621048"
       }
     ],
     "projectFileMap": {}

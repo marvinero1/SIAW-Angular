@@ -423,6 +423,9 @@ import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas
 import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component';
 
+
+
+import { AgGridModule } from 'ag-grid-angular';
 registerLocaleData(es);
 defineCustomElements();
 registerAllModules();
@@ -577,6 +580,7 @@ registerPlugin(UndoRedo);
         PortalModule,
         NgPipesModule,
         HotTableModule,
+        AgGridModule,
 
         ToastrModule.forRoot({
             timeOut: 3000,

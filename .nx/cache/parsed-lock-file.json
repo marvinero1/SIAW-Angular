@@ -81,6 +81,24 @@
         "hash": "sha512-oOeS4++bgjxQZlV69p0gOAarHYgn3kO6Ub3HO0IxDiiYSiWdMILGmam7uXSKhDK+NJp3ZETivrm2pxgUihMpfg=="
       }
     },
+    "npm:css-loader@6.7.1": {
+      "type": "npm",
+      "name": "npm:css-loader@6.7.1",
+      "data": {
+        "version": "6.7.1",
+        "packageName": "css-loader",
+        "hash": "sha512-yB5CNFa14MbPJcomwNh3wLThtkZgcNyI2bNMRt8iE5Z8Vwl7f8vQXFAzn2HDOJvtDq2NTZBUGMSUNNyrv3/+cw=="
+      }
+    },
+    "npm:css-loader": {
+      "type": "npm",
+      "name": "npm:css-loader",
+      "data": {
+        "version": "7.1.2",
+        "packageName": "css-loader",
+        "hash": "sha512-6WvYYn7l/XEGN8Xu2vWFt9nVzrCn39vKyTEFf/ExEyoksJjjSZV/0/35XPlMbpnr6VGhZIUg5yJrL8tGfes/FA=="
+      }
+    },
     "npm:@angular-devkit/build-webpack": {
       "type": "npm",
       "name": "npm:@angular-devkit/build-webpack",
@@ -457,6 +475,15 @@
         "version": "6.3.0",
         "packageName": "semver",
         "hash": "sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw=="
+      }
+    },
+    "npm:semver@7.6.2": {
+      "type": "npm",
+      "name": "npm:semver@7.6.2",
+      "data": {
+        "version": "7.6.2",
+        "packageName": "semver",
+        "hash": "sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w=="
       }
     },
     "npm:semver@5.7.1": {
@@ -3825,6 +3852,24 @@
         "hash": "sha512-IDUfoU8jo9DVlB59lDEASAJXTesAEXDZ68DOHI3qg93r5ehVTkMl2x0ixgIyff8NiHeNYXpcOZh3tr6oGbvu9g=="
       }
     },
+    "npm:ag-grid-angular": {
+      "type": "npm",
+      "name": "npm:ag-grid-angular",
+      "data": {
+        "version": "31.3.2",
+        "packageName": "ag-grid-angular",
+        "hash": "sha512-k8nMrOGcoZeTNY7lXoPIWgn2ANE+v169v9X6XqddlJgYWoRrommG1Av2zSxPYUqayLzV0z/mKTHv7UjdLtnCGw=="
+      }
+    },
+    "npm:ag-grid-community": {
+      "type": "npm",
+      "name": "npm:ag-grid-community",
+      "data": {
+        "version": "31.3.2",
+        "packageName": "ag-grid-community",
+        "hash": "sha512-GxqFRD0OcjaVRE1gwLgoP0oERNPH8Lk8wKJ1txulsxysEQ5dZWHhiIoXXSiHjvOCVMkK/F5qzY6HNrn6VeDMTQ=="
+      }
+    },
     "npm:agent-base": {
       "type": "npm",
       "name": "npm:agent-base",
@@ -5400,13 +5445,22 @@
         "hash": "sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w=="
       }
     },
-    "npm:css-loader": {
+    "npm:postcss@8.4.38": {
       "type": "npm",
-      "name": "npm:css-loader",
+      "name": "npm:postcss@8.4.38",
       "data": {
-        "version": "6.7.1",
-        "packageName": "css-loader",
-        "hash": "sha512-yB5CNFa14MbPJcomwNh3wLThtkZgcNyI2bNMRt8iE5Z8Vwl7f8vQXFAzn2HDOJvtDq2NTZBUGMSUNNyrv3/+cw=="
+        "version": "8.4.38",
+        "packageName": "postcss",
+        "hash": "sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A=="
+      }
+    },
+    "npm:postcss": {
+      "type": "npm",
+      "name": "npm:postcss",
+      "data": {
+        "version": "8.4.19",
+        "packageName": "postcss",
+        "hash": "sha512-h+pbPsyhlYj6N2ozBmHhHrs9DzGmbaarbLvWipMRO7RLS+v4onj26MPFXA5OBYFxyqYhUJK456SwDcY9H2/zsA=="
       }
     },
     "npm:css-select": {
@@ -9499,9 +9553,9 @@
       "type": "npm",
       "name": "npm:nanoid",
       "data": {
-        "version": "3.3.4",
+        "version": "3.3.7",
         "packageName": "nanoid",
-        "hash": "sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw=="
+        "hash": "sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g=="
       }
     },
     "npm:natural-compare": {
@@ -10278,15 +10332,6 @@
         "hash": "sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ=="
       }
     },
-    "npm:postcss": {
-      "type": "npm",
-      "name": "npm:postcss",
-      "data": {
-        "version": "8.4.19",
-        "packageName": "postcss",
-        "hash": "sha512-h+pbPsyhlYj6N2ozBmHhHrs9DzGmbaarbLvWipMRO7RLS+v4onj26MPFXA5OBYFxyqYhUJK456SwDcY9H2/zsA=="
-      }
-    },
     "npm:postcss-loader": {
       "type": "npm",
       "name": "npm:postcss-loader",
@@ -10300,27 +10345,27 @@
       "type": "npm",
       "name": "npm:postcss-modules-extract-imports",
       "data": {
-        "version": "3.0.0",
+        "version": "3.1.0",
         "packageName": "postcss-modules-extract-imports",
-        "hash": "sha512-bdHleFnP3kZ4NYDhuGlVK+CMrQ/pqUm8bx/oGL93K6gVwiclvX5x0n76fYMKuIGKzlABOy13zsvqjb0f92TEXw=="
+        "hash": "sha512-k3kNe0aNFQDAZGbin48pL2VNidTF0w4/eASDsxlyspobzU3wZQLOGj7L9gfRe0Jo9/4uud09DsjFNH7winGv8Q=="
       }
     },
     "npm:postcss-modules-local-by-default": {
       "type": "npm",
       "name": "npm:postcss-modules-local-by-default",
       "data": {
-        "version": "4.0.0",
+        "version": "4.0.5",
         "packageName": "postcss-modules-local-by-default",
-        "hash": "sha512-sT7ihtmGSF9yhm6ggikHdV0hlziDTX7oFoXtuVWeDd3hHObNkcHRo9V3yg7vCAY7cONyxJC/XXCmmiHHcvX7bQ=="
+        "hash": "sha512-6MieY7sIfTK0hYfafw1OMEG+2bg8Q1ocHCpoWLqOKj3JXlKu4G7btkmM/B7lFubYkYWmRSPLZi5chid63ZaZYw=="
       }
     },
     "npm:postcss-modules-scope": {
       "type": "npm",
       "name": "npm:postcss-modules-scope",
       "data": {
-        "version": "3.0.0",
+        "version": "3.2.0",
         "packageName": "postcss-modules-scope",
-        "hash": "sha512-hncihwFA2yPath8oZ15PZqvWGkWf+XUfQgUGamS4LqoP1anQLOsOJw0vr7J7IwLpoY9fatA2qiGUGmuZL0Iqlg=="
+        "hash": "sha512-oq+g1ssrsZOsx9M96c5w8laRmvEu9C3adDSjI8oTcbfkrTE8hx/zfyobUoWIxaKPO8bt6S62kxpw5GqypEw1QQ=="
       }
     },
     "npm:postcss-modules-values": {
@@ -10336,9 +10381,9 @@
       "type": "npm",
       "name": "npm:postcss-selector-parser",
       "data": {
-        "version": "6.0.11",
+        "version": "6.1.0",
         "packageName": "postcss-selector-parser",
-        "hash": "sha512-zbARubNdogI9j7WY4nQJBiNqQf3sLS3wCP4WfOidu+p28LofJqDH1tcXypGrcmMHhDk2t9wGhCsYe/+szLTy1g=="
+        "hash": "sha512-UMz42UD0UY0EApS0ZL9o1XnLhSTtvvvLe5Dc2H2O56fvRZi+KulDyf5ctDhhtYJBGKStV2FL1fy6253cmLgqVQ=="
       }
     },
     "npm:postcss-value-parser": {
@@ -11245,9 +11290,9 @@
       "type": "npm",
       "name": "npm:source-map-js",
       "data": {
-        "version": "1.0.2",
+        "version": "1.2.0",
         "packageName": "source-map-js",
-        "hash": "sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw=="
+        "hash": "sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg=="
       }
     },
     "npm:source-map-loader": {
@@ -11428,6 +11473,15 @@
         "version": "2.1.0",
         "packageName": "strong-log-transformer",
         "hash": "sha512-B3Hgul+z0L9a236FAUC9iZsL+nVHgoCJnqCbN588DjYxvGXaXaaFbfmQ/JhvKjZwsOukuR72XbHv71Qkug0HxA=="
+      }
+    },
+    "npm:style-loader": {
+      "type": "npm",
+      "name": "npm:style-loader",
+      "data": {
+        "version": "4.0.0",
+        "packageName": "style-loader",
+        "hash": "sha512-1V4WqhhZZgjVAVJyt7TdDPZoPBPNHbekX4fWnCJL1yQukhCeZhJySUL+gL9y6sNdN95uEOS83Y55SqHcP7MzLA=="
       }
     },
     "npm:supports-preserve-symlinks-flag": {
@@ -12351,7 +12405,7 @@
     },
     {
       "source": "npm:@angular-devkit/build-angular",
-      "target": "npm:css-loader",
+      "target": "npm:css-loader@6.7.1",
       "type": "static"
     },
     {
@@ -12527,6 +12581,51 @@
     {
       "source": "npm:@angular-devkit/build-angular",
       "target": "npm:esbuild",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:webpack",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:icss-utils",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss-modules-extract-imports",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss-modules-local-by-default",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss-modules-scope",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss-modules-values",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:postcss-value-parser",
+      "type": "static"
+    },
+    {
+      "source": "npm:css-loader@6.7.1",
+      "target": "npm:semver",
       "type": "static"
     },
     {
@@ -19540,6 +19639,26 @@
       "type": "static"
     },
     {
+      "source": "npm:ag-grid-angular",
+      "target": "npm:@angular/common",
+      "type": "static"
+    },
+    {
+      "source": "npm:ag-grid-angular",
+      "target": "npm:@angular/core",
+      "type": "static"
+    },
+    {
+      "source": "npm:ag-grid-angular",
+      "target": "npm:ag-grid-community",
+      "type": "static"
+    },
+    {
+      "source": "npm:ag-grid-angular",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
       "source": "npm:agent-base",
       "target": "npm:debug",
       "type": "static"
@@ -20916,7 +21035,7 @@
     },
     {
       "source": "npm:css-loader",
-      "target": "npm:postcss",
+      "target": "npm:postcss@8.4.38",
       "type": "static"
     },
     {
@@ -20946,7 +21065,22 @@
     },
     {
       "source": "npm:css-loader",
-      "target": "npm:semver",
+      "target": "npm:semver@7.6.2",
+      "type": "static"
+    },
+    {
+      "source": "npm:postcss@8.4.38",
+      "target": "npm:nanoid",
+      "type": "static"
+    },
+    {
+      "source": "npm:postcss@8.4.38",
+      "target": "npm:picocolors",
+      "type": "static"
+    },
+    {
+      "source": "npm:postcss@8.4.38",
+      "target": "npm:source-map-js",
       "type": "static"
     },
     {
@@ -27667,6 +27801,11 @@
     {
       "source": "npm:strong-log-transformer",
       "target": "npm:through",
+      "type": "static"
+    },
+    {
+      "source": "npm:style-loader",
+      "target": "npm:webpack",
       "type": "static"
     },
     {
