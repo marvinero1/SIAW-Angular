@@ -518,12 +518,10 @@ registerPlugin(UndoRedo);
 
 
 
-
-
         RoscaCreateComponent, RoscaEditComponent, ResistenciaCreateComponent, ResistenciaEditComponent,
         TerminacionCreateComponent, NumpedidomercaderiaComponent, NumpedidomercaderiaCreateComponent,
         NumnotasdemovimientoComponent, NumnotasdemovimientoCreateComponent, ItemCreateComponent, RolesComponent,
-        BancoCreateComponent
+        BancoCreateComponent,
     ],
 
     imports: [
@@ -579,7 +577,6 @@ registerPlugin(UndoRedo);
         PortalModule,
         NgPipesModule,
         HotTableModule,
-
 
         ToastrModule.forRoot({
             timeOut: 3000,

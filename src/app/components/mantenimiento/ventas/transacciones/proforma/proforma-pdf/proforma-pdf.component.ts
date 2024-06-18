@@ -33,7 +33,7 @@ export class ProformaPdfComponent implements OnInit {
     this.mandarNombre();
 
     console.log("data impresion:", this.data_impresion);
-    this.getDataPDF();
+    this.getDataPDFHarcode();
   }
 
   ngOnInit() {
@@ -93,7 +93,7 @@ export class ProformaPdfComponent implements OnInit {
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
       html2canvas(content, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
         // Crear un nuevo documento PDF
         const pdf = new jsPDF({
@@ -119,7 +119,7 @@ export class ProformaPdfComponent implements OnInit {
         const newHeight = imgHeight * ratio;
 
         // Agregar la imagen al PDF con márgenes
-        pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
+        pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
         // Descargar el PDF
         pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');

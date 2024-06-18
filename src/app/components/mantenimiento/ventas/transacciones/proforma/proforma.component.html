@@ -103,27 +103,52 @@
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
           </button> -->
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
-          </button>
+          </button> -->
 
-          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Ultimas Proformas"
-            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
-            (click)="ultimasProformas()">
-            <i class="fa fa-clone green" aria-hidden="true"></i>
-          </button>
 
-          <button class="btn btn-outline-secondary form-control-sm" type="button"
-            (click)="detalleProformaCarritoTOExcel();" matTooltipClass="custom-tooltip" matTooltip="Detalle a Excel">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i>
-          </button>
 
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalBtnImpresiones(0);"
-            matTooltipClass="custom-tooltip" matTooltip="Mandar Imprimir">
-            <i class="fa fa-print" aria-hidden="true"></i>
-          </button>
+
+
+
           <!-- [disabled]="[array_items_carrito_y_f4_catalogo].length !== 1" {{ [array_items_carrito_y_f4_catalogo].length  }} -->
+
+          <button mat-button [matMenuTriggerFor]="beforeMenu">
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #beforeMenu="matMenu" xPosition="before">
+            <mat-list role="list">
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                  matTooltip="Ultimas Proformas"
+                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
+                  (click)="ultimasProformas()">
+                  <i class="fa fa-clone green" aria-hidden="true"></i> Ultimas Proformas
+                </button>
+              </mat-list-item>
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button"
+                  (click)="modalBtnImpresiones(0);" matTooltipClass="custom-tooltip" matTooltip="Mandar Imprimir">
+                  <i class="fa fa-print" aria-hidden="true"></i> Mandar Imprimir
+                </button>
+              </mat-list-item>
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button"
+                  (click)="detalleProformaCarritoTOExcel();" matTooltipClass="custom-tooltip"
+                  matTooltip="Detalle a Excel">
+                  <i class="fa fa-paper-plane" aria-hidden="true"></i> Detalle a Excel
+                </button>
+              </mat-list-item>
+
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                  matTooltip="Orden Pedido">
+                  <i class="fa fa-bars" aria-hidden="true"></i> Orden Pedido
+                </button>
+              </mat-list-item>
+            </mat-list>
+          </mat-menu>
         </div>
       </div>
     </div>
@@ -747,10 +772,16 @@
                 <td mat-cell *matCellDef="let element; let i = index"
                   (click)="itemDataAll(element?.coditem); selectRow(i)"
                   [ngClass]="{'selected-row': selectedRowIndex === i}" style="text-align: center !important;">
-
-                  <input #inputEmpaque matInput type="number" class="pedido" [(ngModel)]="element.empaque" min="0"
-                    (input)="empaqueChangeMatrix(element, $event.target.value)" style="text-align: center !important;">
-
+                  <ng-container *ngIf="element.empaque === null;else enp">
+                    <input #inputEmpaque matInput type="number" class="pedido" [value]="0" min="0"
+                      (input)="empaqueChangeMatrix(element, $event.target.value)"
+                      style="text-align: center !important;">
+                  </ng-container>
+                  <ng-template #enp>
+                    <input #inputEmpaque matInput type="number" class="pedido" [(ngModel)]="element.empaque" min="0"
+                      (input)="empaqueChangeMatrix(element, $event.target.value)"
+                      style="text-align: center !important;">
+                  </ng-template>
                 </td>
               </ng-container>
 
@@ -2443,7 +2474,11 @@
         <!-- finTotales -->
       </div>
 
-      <div mat-dialog-footer>
+      <div mat-dialog-footer style="position: sticky !important;
+    bottom: 0 !important;
+    background: #CEFFFF !important;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1 !important;">
         <!-- Saldos -->
         <div class="row pl-2">
           <input type="text" class="inputsSaldos inputsSaldos2"

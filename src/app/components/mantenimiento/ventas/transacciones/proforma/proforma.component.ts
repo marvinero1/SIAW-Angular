@@ -2959,6 +2959,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
+    this.spinner.show();
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
     if (confirmacionValidaciones) {
@@ -3639,6 +3640,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   aplicarDesctPorDeposito() {
+    this.spinner.show();
+
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
@@ -3647,8 +3650,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       tabladescuentos: this.array_de_descuentos_ya_agregados,
       tblcbza_deposito: [],
     };
-
-    this.spinner.show();
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
@@ -4565,8 +4566,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(this.agencia_logueado);
     // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsComponent, {
-      width: 'auto',
-      height: 'auto',
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-modal',
       disableClose: true,
       data: {
         tarifa: this.cod_precio_venta_modal_codigo,

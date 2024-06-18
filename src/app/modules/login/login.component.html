@@ -108,7 +108,17 @@
                     <mat-select placeholder="Base de Datos" formControlName="bd" style="padding-top: 7px !important;"
                       required>
                       <mat-option *ngFor="let agenciass of agencias" [value]="agenciass.codigo">
-                        <strong>{{ agenciass.codigo }}</strong>- {{ agenciass.descripcion }}
+                        <ng-container *ngIf="agenciass.codigo === 'PE'else agn">
+                          <div style="background-color: #093070;color: white !important;">
+                            <u>
+                              <strong>{{ agenciass.codigo }}</strong> -
+                              {{ agenciass.descripcion }}
+                            </u>
+                          </div>
+                        </ng-container>
+                        <ng-template #agn>
+                          <div><strong>{{ agenciass.codigo }}</strong>- {{ agenciass.descripcion }} </div>
+                        </ng-template>
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

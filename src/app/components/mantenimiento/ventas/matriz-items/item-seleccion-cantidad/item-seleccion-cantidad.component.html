@@ -23,31 +23,43 @@
         </div>
       </div>
 
+
       <hr>
+
+
       <div class="row">
         <div class="col-md-3">
           <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaques" (click)="empaquesHabilitar();">
             Cantidad por Empaques
           </mat-slide-toggle>
         </div>
-        <div class="col-md-3">
+
+        <div class="col-md-4">
           <input type="number" [disabled]="!isCheckedEmpaques" [(ngModel)]="empaques_input" min="0" #empaquesInput
             id="empaques_input">
         </div>
-        <div class="col-md-4">
-          <span class="form-control-sm" style="border: 0 !important;">
-            <u>Calcular Empa. por Precio</u>
-            <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
-          </span>
-          <span class="form-control-sm" style="border: 0 !important;">
-            <u>Calcular Empa. por Descuento</u>
-            <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
-          </span>
+
+        <div class="col-md-5">
+          <table>
+            <tbody>
+              <tr>
+                <td style="float: left;"><u>Calcular Empa. por Precio</u></td>
+                <td style="float: right;"><input type="checkbox" [disabled]="!isCheckedEmpaques" [checked]="precio"
+                    (change)="togglePrecio()"></td>
+              </tr>
+              <tr>
+                <td style="float: left;"> <u>Calcular Empa. por Descuento &nbsp;&nbsp;&nbsp;</u></td>
+                <td style="float: right;"><input type="checkbox" [disabled]="!isCheckedEmpaques" [checked]="desct"
+                    (change)="toggleDescuento()"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <hr>
 
+
+      <hr>
 
 
 

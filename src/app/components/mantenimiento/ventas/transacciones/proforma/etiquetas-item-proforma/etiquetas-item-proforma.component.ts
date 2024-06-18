@@ -85,7 +85,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
       html2canvas(content, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png', 1.2); // Pre-escalar para la calidad
+        const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
         // Crear un nuevo documento PDF
         const pdf = new jsPDF({
@@ -107,7 +107,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
         const newHeight = imgHeight * ratio * 0.7;
 
         // Agregar la imagen al PDF con márgenes
-        pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
+        pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
         // Configurar la impresión con márgenes mínimos
         pdf.autoPrint(); // Establecer márgenes en mm

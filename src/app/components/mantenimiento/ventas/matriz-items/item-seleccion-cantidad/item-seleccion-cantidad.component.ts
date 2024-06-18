@@ -189,9 +189,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     if (!this.isCheckedEmpaques) {
       this.isCheckedEmpaque = false;
-    } else {
-
-      this.isCheckedEmpaques = true;
+      this.isCheckedCantidad = false;
     }
   }
 

@@ -1,10 +1,13 @@
-import { Component, OnInit, Directive, ElementRef, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Directive, ElementRef, QueryList, ViewChild, ViewChildren, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ModalGenerarAutorizacionComponent } from '@components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component';
 import { FormControl } from '@angular/forms';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
+import { MatRow } from '@angular/material/table';
+import { FocusKeyManager } from '@angular/cdk/a11y';
+
 export interface UserData {
   id: string;
   name: string;
@@ -27,6 +30,7 @@ export class LaboratorioComponent implements OnInit {
   ngOnInit(): void {
 
   }
+
 
   displayedColumns: string[] = ['id', 'name'];
   dataSource: UserData[] = [
@@ -57,6 +61,8 @@ export class LaboratorioComponent implements OnInit {
   printInfo(index: number) {
     console.log(this.dataSource[index]); // Imprime la información de la fila seleccionada
   }
+
+
 
   openDialogMatriz() {
     this.dialog.open(ModalVendedorComponent, {

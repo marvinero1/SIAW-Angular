@@ -89,7 +89,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
       html2canvas(content, { scale: 4 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
         // Crear un nuevo documento PDF
         const pdf = new jsPDF({
@@ -115,7 +115,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
         const newHeight = imgHeight * ratio;
 
         // Agregar la imagen al PDF con márgenes
-        pdf.addImage(imgData, 'PNG', margin, margin, newWidth, newHeight);
+        pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
         // Descargar el PDF
         pdf.save(this.data_etiqueta.linea1 + '.pdf');

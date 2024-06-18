@@ -1,4 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '@services/api.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-modal-solicitar-urgente',
@@ -7,9 +12,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModalSolicitarUrgenteComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialogRef: MatDialogRef<ModalSolicitarUrgenteComponent>, private toastr: ToastrService,
+    private api: ApiService, public _snackBar: MatSnackBar, private datePipe: DatePipe) {
+
+  }
 
   ngOnInit() {
   }
 
+  close() {
+    this.dialogRef.close();
+  }
 }

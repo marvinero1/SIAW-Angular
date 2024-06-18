@@ -14,6 +14,7 @@ import { ModalPrecioVentaComponent } from '../modal-precio-venta/modal-precio-ve
 import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
 
 import Handsontable from 'handsontable';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-matriz-items',
   templateUrl: './matriz-items.component.html',
@@ -40,17 +41,16 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         break;
       case 'focusPedido':
         this.addItemArray();
-        this.cant_empaque = undefined;
-        this.pedido = undefined;
-        this.cantidad = undefined;
+        // this.cant_empaque = undefined;
+        // this.cantidad = undefined;
         break;
       case 'focusCantidad':
         // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
         // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
         this.addItemArray();
-        this.cant_empaque = undefined;
-        this.pedido = undefined;
-        this.cantidad = undefined;
+        // this.cant_empaque = undefined;
+        // this.pedido = undefined;
+        // this.cantidad = undefined;
         break;
       case 'idBuscadorHoja':
         this.getHoja();
@@ -150,11 +150,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   desct: any = false;
 
   @ViewChild("focusPedido") focusPedido1: ElementRef;
-  @ViewChild('focusEmpaque') focusEmpaqueElement: ElementRef;
+  @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
   @ViewChild('example') focusTabla: ElementRef;
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
-    public itemservice: ItemServiceService, public renderer: Renderer2,
+    public itemservice: ItemServiceService, public renderer: Renderer2, private spinner: NgxSpinnerService,
     private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
     public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
 
@@ -293,6 +293,38 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.focusMyInput();
   }
 
+  focusInput() {
+    this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
+    this.focusEmpaqueElement.nativeElement.focus();
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    // para borrar los inputs
+    if (event.key === 'Backspace') {
+
+      const focusedElement = document.activeElement as HTMLElement;
+      let nombre_input = focusedElement.id;
+      console.log(`Elemento enfocado Matriz: ${nombre_input}`);
+
+      console.log("Hola Lola en el input", nombre_input);
+
+      if (nombre_input === 'focusEmpaque') {
+        this.cant_empaque = undefined;
+      }
+
+      if (nombre_input === '') {
+        this.cant_empaque = undefined;
+      }
+
+      if (nombre_input === 'focusPedido') {
+        this.pedido = undefined;
+      }
+
+      if (nombre_input === 'focusCantidad') {
+        this.pedido = undefined;
+      }
+    }
+  }
   togglePrecio() {
     if (this.precio) {
       this.precio = false;
@@ -489,7 +521,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     const container = document.getElementById('example');
     const hot = new Handsontable(container, {
-
       data: hojas,
       manualRowResize: false,
       manualColumnResize: false,
@@ -588,7 +619,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             // }
 
             self.focusEmpaque();
-            this.focusEmpaque();
+            const focusElement = this.focusEmpaqueElement.nativeElement;
+            focusElement.focus();
+            // this.focusEmpaque();
 
             // const focusElement = this.focusEmpaqueElement.nativeElement;
             // focusElement.focus();
@@ -656,8 +689,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // this.renderer.selectRootElement('#focusEmpaque').focus();
     const focusElement = this.focusEmpaqueElement.nativeElement;
     focusElement.focus();
-  }
 
+
+  }
 
   focusCantidad() {
     this.renderer.selectRootElement('#focusCantidad').focus();
@@ -692,12 +726,20 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //ARRAY DE 1 ITEM SELECCIONADO
     console.log(array);
 
-    let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
+    let existe = this.array_items_completo.some
+      (item => item.coditem === array.coditem);
     console.log(this.valorCelda, cleanText);
 
     if (existe) {
       console.log("El item ya existe en el array.");
-      //this.toastr.warning('¡EL ITEM YA ESTA EN PEDIDO!');
+      this.toastr.warning('¡EL ITEM YA ESTA EN CARRITO!');
+
+      this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
+      this.focusEmpaqueElement.nativeElement.focus();
+
+      this.cant_empaque = undefined;
+      this.pedido = undefined;
+      this.cantidad = undefined;
       return;
     }
 
@@ -707,10 +749,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (this.pedido === 0 || this.pedido === undefined) {
-      // this.toastr.warning('¡La cantidad y el pedido no pueden ser 0!');
-      return;
-    }
+    // if (this.pedido === 0 || this.pedido === undefined) {
+    // this.toastr.warning('¡La cantidad y el pedido no pueden ser 0!');
+    //return;
+    //}
 
     // //CUANDO NO HAY NADA EN EL CARRITO Y ES EL PRIMER ITEM SE AGREGA ACA,
     // //Y SI YA TIENE ITEMS SE TIENEN QUE IR AGREGANDO AL ARRAY SIN BORRARSE
@@ -746,9 +788,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log("array_items_completo", this.array_items_completo, "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
       "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
 
+
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
+
+    this.cant_empaque = undefined;
+    this.pedido = undefined;
+    this.cantidad = undefined;
   }
 
   addItemArraySeleccion(items_seleccionados_seleccion) {
@@ -768,6 +815,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   mandarItemaProforma() {
+    this.spinner.show();
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
     console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
@@ -797,10 +845,18 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.items_post = datav;
           console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
         },
 
         error: (err) => {
           console.log(err, errorMessage);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
         },
         complete: () => {
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
@@ -813,6 +869,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           }
           this.dialogRef.close();
           this.num_hoja = 0;
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
         }
       })
   }
@@ -974,12 +1034,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   getEmpaqueItem() {
-
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
     var d_tipo_precio_desct: string;
     let nombre_input: string = "focusPedido"
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
-
 
     if (this.precio === true) {
       d_tipo_precio_desct = "Precio";
@@ -1003,19 +1061,18 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             this.cantidad = datav.total;
 
             console.log(this.pedido);
-
           },
 
           error: (err: any) => {
             console.log(err, errorMessage);
           },
           complete: () => {
-            // this.addItemArray();
             const focusedElement = document.activeElement as HTMLElement;
             focusedElement.id = nombre_input;
 
             const focusElement = this.focusPedido1.nativeElement;
             this.renderer.selectRootElement(focusElement).focus();
+            // this.focusPedido();
             focusElement.click();
           }
         })

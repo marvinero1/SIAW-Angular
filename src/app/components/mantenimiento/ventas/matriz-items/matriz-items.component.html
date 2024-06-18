@@ -1,5 +1,5 @@
-<div class="all mat-elevation-z8">
-  <div style="position: sticky;padding-top: 10px;">
+<section class="all mat-elevation-z8 p-2">
+  <div style="position: sticky;padding-top: 6px;">
     <div class="row">
       <div class="col-md-9" style="padding-left: 20px;">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
@@ -37,7 +37,7 @@
         <!-- MENU CARRITO DE COMPRAS-->
         <mat-menu #menu="matMenu" xPosition="after">
           <ng-container>
-            <table style="margin-left: 8px;">
+            <table style="padding: 8px 8px !important;">
               <tr>
                 <th style="border: 1px solid #ffc107;">Item</th>
                 <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
@@ -60,9 +60,8 @@
                   <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
                     {{ array_items_completos.medida }} </td>
-                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
-
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
                   <td>
@@ -170,20 +169,20 @@
         <div class="row">
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Empaque</mat-label>
-            <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" style="width:50%;"
-              [(ngModel)]="cant_empaque" #focusEmpaque>
+            <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
+              #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
           </mat-form-field>&nbsp;
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
-            <input type="number" matInput id="focusPedido" maxlength="7" min="0" style="width:50%;" [(ngModel)]="pedido"
-              #focusPedido>
+            <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
+              (keydown)="handleKeyDown($event)" #focusPedido>
           </mat-form-field>&nbsp;
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
             <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              style="width:50%;" placeholder="{{pedido}}">
+              (keydown)="handleKeyDown($event)" placeholder="{{pedido}}">
           </mat-form-field>
           <mat-icon (click)="loseFocus()">bug_report</mat-icon>
         </div>
@@ -191,18 +190,67 @@
     </div>
   </div>
 
+
   <mat-dialog-content class="dialog-matriz">
-    <ng-container *ngIf="!validacion; else valid">
-      <hot-table id="example"></hot-table>
-    </ng-container>
-    <ng-template #valid>
-      <p>Para Agregar Items : &nbsp;<strong>{{ messages.join(', ') }}</strong></p>
-    </ng-template>
+    <div class="row">
+      <div class="col-lg-9" style="max-width: 80% !important;">
+        <hot-table id="example"></hot-table>
+      </div>
+
+      <div class="col-sm-3" style="padding: 0px !important;max-width: 21%;">
+        <mat-dialog-content style="border: 1px solid #fbd800;max-height: 58vh !important;padding: 0px !important;">
+          <table style="letter-spacing: 0px !important">
+            <tr>
+              <th style="border: 1px solid #ffc107;">Item</th>
+              <th style="border: 1px solid #ffc107;" width="300">Descrip</th>
+              <th style="border: 1px solid #ffc107;" width="200">Medida</th>
+              <th style="border: 1px solid #ffc107;">Empa</th>
+              <th style="border: 1px solid #ffc107;">Prec</th>
+              <th style="border: 1px solid #ffc107;">Pedi</th>
+              <!-- <th style="border: 1px solid #ffc107;">Cant.</th> -->
+              <th style="border: 1px solid #ffc107;">
+                <!-- <i class="fa fa-trash" aria-hidden="true" color="danger" style="font-size: 0.5rem; color: red;"></i> -->
+              </th>
+            </tr>
+
+            <tbody>
+              <tr *ngFor="let array_items_completos of array_items_completo">
+                <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
+                <td style="border: 1px solid #ffc107;" width="300">{{ array_items_completos.descripcion }}
+                </td>
+                <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="200">
+                  {{ array_items_completos.medida }} </td>
+                <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
+                <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
+                <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
+                <!-- <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td> -->
+                <td>
+                  <i class="fa fa-trash" aria-hidden="true" color="danger"
+                    (click)="eliminarItemArrayPedido(array_items_completos.coditem);"
+                    style="font-size: 0.4rem; color: red;"></i>
+                </td>
+              </tr>
+              <hr>
+            </tbody>
+          </table>
+          <div class="row" style="text-align: center;display: block;margin: auto;">
+            <!-- BOTON CONFIRMAR -->
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm" (click)="mandarItemaProforma();"
+              style="width: 100%;height: calc(1.8rem + 0px) !important;">
+              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
+                <strong> Confirmar</strong></span>
+            </button>
+          </div>
+        </mat-dialog-content>
+
+        TOTAL ITEMS: {{ tamanio_lista_item_pedido }}
+      </div>
+    </div>
   </mat-dialog-content>
 
   <div mat-dialog-footer>
     <!-- Saldos -->
-    <div class="row pl-4 pt-1 ">
+    <div class="row pl-2 pt-1">
       <ng-container *ngIf="saldoItem > 0; else saldo">
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
           style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
@@ -250,10 +298,9 @@
         <div class="col-sm">
           <div class="input-group">
             <span class="input-group-text form-control-sm">Empaques</span>
-
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-            </ng-container>&nbsp;
+            </ng-container>
 
             <ng-container *ngIf="empaque_view">
               <div *ngFor="let empaquesItems of empaquesItem">
@@ -261,20 +308,7 @@
                   ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
                 </div>
               </div>
-            </ng-container>&nbsp;
-
-            <table>
-              <tbody>
-                <tr>
-                  <td style="float: left;">Empaque Minimo</td>
-                  <td style="float: right;"><strong>{{ data_almacen_local.empaque }}</strong></td>
-                </tr>
-                <tr>
-                  <td style="float: left;">Peso Minimo</td>
-                  <td style="float: right;"><strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</strong></td>
-                </tr>
-              </tbody>
-            </table>
+            </ng-container>
           </div>
         </div>
       </div>
@@ -284,25 +318,37 @@
     <!-- Precio Item  -->
     <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
-        <div class="col-sm">
+        <div class="col-md-8">
           <div class="input-group">
             <span class="input-group-text form-control-sm">Precios</span>
-
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-            </ng-container>&nbsp;
+            </ng-container>
 
             <ng-container *ngIf="empaque_view">
-              <div>
-                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
-                  {{precioItem.precios}}
-                </div>
+              <div type="text" class="form-control form-control-sm inputsSaldos">
+                {{precioItem.precios}}
               </div>
             </ng-container>
           </div>
+        </div>
+
+        <div class="col-md">
+          <table>
+            <tbody>
+              <tr>
+                <td style="float: left;">Empaque Minimo</td>
+                <td style="float: right;"><strong>{{ data_almacen_local.empaque }}</strong></td>
+              </tr>
+              <tr>
+                <td style="float: left;">Peso Minimo</td>
+                <td style="float: right;"><strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</strong></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </mat-dialog-content>
     <!-- finempaque -->
   </div>
-</div>
+</section>
