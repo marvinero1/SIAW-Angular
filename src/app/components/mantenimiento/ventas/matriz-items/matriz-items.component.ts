@@ -125,7 +125,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   item_seleccionados_catalogo_matriz: any = [];
   array_items_completo_multiple: any = [];
 
-  tarifa_get: any;
   descuento_get: any;
   codcliente_get: any;
   codalmacen_get: any;
@@ -158,11 +157,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
     public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
 
-    @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
+    @Inject(MAT_DIALOG_DATA) public descuento: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
 
     this.array_items_proforma_matriz = items.items;
 
@@ -185,7 +184,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.agencia = '311'
     }
 
-    this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
     this.codcliente_get = codcliente.codcliente;
     this.codalmacen_get = codalmacen.codalmacen;
@@ -208,7 +206,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     console.log(
       "CODCLIENTE" + this.codcliente_get,
-      "TARIFA: " + this.tarifa_get,
+      "TARIFA: " + this.cod_precio_venta_modal_codigo1,
       "DESCT: " + this.descuento_get,
       "CODALM: " + this.codalmacen_get,
       "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
@@ -408,7 +406,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + item + "/" + this.agencia + "/" + this.BD_storage)
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo1 + "/" + this.descuento_get + "/" + item + "/" + this.agencia + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
@@ -824,7 +822,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       return {
         coditem: elemento.coditem,
         // tarifa: this.tarifa_get,
-        tarifa: elemento.tarifa === undefined ? this.tarifa_get : elemento.tarifa,
+        tarifa: elemento.tarifa === undefined ? this.cod_precio_venta_modal_codigo1 : elemento.tarifa,
         descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
@@ -956,7 +954,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inmatriz/infoItemRes/";
     return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + item1 + "/" +
-      this.tarifa_get + "/" + this.descuento_get + "/" + this.codcliente_real_get)
+      this.cod_precio_venta_modal_codigo1 + "/" + this.descuento_get + "/" + this.codcliente_real_get)
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
@@ -1160,7 +1158,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       height: 'auto',
       data: {
         dataItemSeleccionados: this.dataItemsSeleccionadosMultiple,
-        tarifa: this.tarifa_get,
+        tarifa: this.cod_precio_venta_modal_codigo1,
         descuento: this.descuento_get,
         codcliente: this.codcliente_get,
         codalmacen: this.codalmacen_get,

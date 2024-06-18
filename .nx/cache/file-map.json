@@ -701,7 +701,7 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.ts",
-        "hash": "11001646744979197044"
+        "hash": "14012890237643079681"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.html",
@@ -4397,7 +4397,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.ts",
-        "hash": "9654826169340547976"
+        "hash": "11549257300854236722"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component.html",
@@ -5357,7 +5357,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "12858623363167512863"
+        "hash": "15083233831568947991"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",

@@ -1,12 +1,7 @@
-import { Component, OnInit, Directive, ElementRef, QueryList, ViewChild, ViewChildren, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ModalGenerarAutorizacionComponent } from '@components/seguridad/modal-generar-autorizacion/modal-generar-autorizacion.component';
-import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
-import { MatRow } from '@angular/material/table';
-import { FocusKeyManager } from '@angular/cdk/a11y';
 
 export interface UserData {
   id: string;
@@ -24,7 +19,6 @@ export class LaboratorioComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog) {
     // this.getHojaPorDefecto();
-
   }
 
   ngOnInit(): void {

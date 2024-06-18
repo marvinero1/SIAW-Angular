@@ -4573,7 +4573,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       panelClass: 'full-screen-modal',
       disableClose: true,
       data: {
-        tarifa: this.cod_precio_venta_modal_codigo,
+        //esta info tarifa ya esta en la matriz xd
+        // tarifa: this.cod_precio_venta_modal_codigo,
         descuento: this.cod_descuento_modal_codigo,
         codcliente: this.codigo_cliente,
         codcliente_real: this.codigo_cliente_catalogo_real,
