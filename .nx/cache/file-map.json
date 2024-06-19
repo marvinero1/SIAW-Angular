@@ -37,7 +37,6 @@
     "ngx-spinner": "^15.0.1",
     "ngx-toastr": "16.0.1",
     "pdfmake": "^0.2.10",
-    "primeng": "^17.18.1",
     "process": "0.11.10",
     "public-ip": "^6.0.1",
     "rxjs": "7.5.6",
@@ -289,11 +288,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "13212714351307177166"
+        "hash": "17723652713516637772"
       },
       {
         "file": "package.json",
-        "hash": "4491213545909754192"
+        "hash": "4126905503223006911"
       },
       {
         "file": "proxy.conf.json",

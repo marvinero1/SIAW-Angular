@@ -10431,15 +10431,6 @@
         "hash": "sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA=="
       }
     },
-    "npm:primeng": {
-      "type": "npm",
-      "name": "npm:primeng",
-      "data": {
-        "version": "17.18.1",
-        "packageName": "primeng",
-        "hash": "sha512-pMuXOgLQw5Xz0w9d3YTp2DAlYR8svK1Jz5gSWAhk6AyH7u7akwL1JX96RXVzLS8v2YeLUCvkMM+QROOvR3yKug=="
-      }
-    },
     "npm:process": {
       "type": "npm",
       "name": "npm:process",
@@ -26326,11 +26317,6 @@
     {
       "source": "npm:supports-color@7.2.0",
       "target": "npm:has-flag@4.0.0",
-      "type": "static"
-    },
-    {
-      "source": "npm:primeng",
-      "target": "npm:tslib",
       "type": "static"
     },
     {
