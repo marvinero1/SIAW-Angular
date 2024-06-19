@@ -36,6 +36,8 @@ export class LaboratorioComponent implements OnInit {
   ngOnInit() {
     this.productService.getProductsMini().then((data) => {
       this.products = data;
+
+      console.log(data);
     });
   }
 

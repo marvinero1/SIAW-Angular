@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ProductService {
+
   getProductsData() {
     return [
       {
@@ -1202,7 +1203,7 @@ export class ProductService {
   }
 
   getProductsMini() {
-    return Promise.resolve(this.getProductsData().slice(0, 5));
+    return Promise.resolve(this.getProductsData().slice(0, 10));
   }
 
   getProductsSmall() {

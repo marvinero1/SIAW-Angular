@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
-import { veCliente } from '@services/modelos/objetos';
+import { ItemDetalle, veCliente } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ServicioclienteService } from '../../serviciocliente/serviciocliente.service';
@@ -151,6 +151,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabGroupfooter') tabGroup1: MatTabGroup;
+
+
+  products!: ItemDetalle[];
+  selectedProducts!: ItemDetalle;
+
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -589,6 +594,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
       // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
       this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+
     });
     //
 
@@ -2916,6 +2923,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
             this.tablaIva = this.totabilizar_post.totales?.tablaIva;
             const item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
+            // Agregar el número de orden a los objetos de datos
+            this.totabilizar_post?.detalleProf.forEach((element, index) => {
+              element.orden = index + 1;
+            });
+
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
             this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
           }
@@ -4349,6 +4361,54 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  onRowSelect(event: any) {
+    console.log(event);
+    this.itemDataAll(event.data.coditem)
+  }
+
+  onRowUnselect(event: any) {
+    // this.messageService.add({ severity: 'info', summary: 'Product Unselected', detail: event.data.name });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4438,6 +4498,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
       return item.orden !== orden || item.coditem !== coditem;
+    });
+
+    // Agregar el número de orden a los objetos de datos
+    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+      element.orden = index + 1;
     });
 
     // Actualizar el origen de datos del MatTableDataSource

@@ -6,7 +6,7 @@
   color: black;
 }
 .btn-outline-secondary:hover {
-  color: #fff !important;
+  color: #fff;
   background-color: #093070;
   border-color: #093070;
 }
@@ -49,10 +49,19 @@ mat-mdc-tab, mdc-tab {
 
 
 // Tabla SCSS
-table {
+p-table {
   border-collapse: collapse;
   width: 100%;
 }
+
+
+
+.iconGrid .p-icon .p-sortable-column-icon{
+  width: 11px !important;
+}
+
+
+
 .mat-mdc-row:nth-child(odd) {
   background-color: #80808017;
 }
@@ -133,6 +142,9 @@ mat-row, mat-header-row, mat-footer-row{
 }
 .center1{
   text-align: center !important;
+}
+.left{
+  text-align: left !important;
 }
 .mat-column-negativos {
   /* Aplica bordes solo en los lados derecho e izquierdo */
@@ -227,6 +239,46 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 ::ng-deep {
+  .p-icon {
+    width: 0.7rem !important;
+    height: 0.7rem !important;
+  }
+
+  .p-datatable .p-datatable-thead > tr > th{
+    padding: 0rem 0rem !important;
+    position: sticky;
+    top: 0;
+    background-color: #fbd800;
+    min-height: 25px !important;
+  }
+
+  .p-treetable .p-datatable-wrapper .p-datatable-tbody {
+    height: 12px !important;
+  }
+
+  .p-datatable .p-datatable-tbody > tr > td{
+    padding: 0rem 0rem !important;
+  }
+
+
+  .p-datatable .p-datatable-tbody > tr.p-highlight{
+    color: #fff !important;
+    background-color: #093070 !important;
+  }
+
+  .p-inputtext{
+    padding: 0rem 0rem !important;
+    color: black;
+  }
+
+  .p-cell-editing {
+    color: #fff !important;
+  }
+
+
+
+
+
   .btn-outline-primary:hover{
     color: black;
   }

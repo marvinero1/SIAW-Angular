@@ -6,7 +6,7 @@
     "@angular/cdk": "^16.2.14",
     "@angular/common": "18.0.3",
     "@angular/compiler": "18.0.3",
-    "@angular/core": "18.0.3",
+    "@angular/core": "^18.0.3",
     "@angular/forms": "18.0.3",
     "@angular/localize": "18.0.3",
     "@angular/material": "^16.2.14",
@@ -37,6 +37,7 @@
     "ngx-spinner": "^15.0.1",
     "ngx-toastr": "16.0.1",
     "pdfmake": "^0.2.10",
+    "primeng": "^17.18.1",
     "process": "0.11.10",
     "public-ip": "^6.0.1",
     "rxjs": "7.5.6",
@@ -59,8 +60,8 @@
     "@types/jasminewd2": "2.0.10",
     "@types/jszip": "^3.4.1",
     "@types/node": "^18.7.14",
-    "@typescript-eslint/eslint-plugin": "5.36.1",
-    "@typescript-eslint/parser": "5.36.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "admin-lte": "3.2.0",
     "css-loader": "^7.1.2",
     "eslint": "8.23.0",
@@ -117,7 +118,6 @@
   },
   "nxJsonPlugins": [],
   "fileMap": {
-    "projectFileMap": {},
     "nonProjectFiles": [
       {
         "file": ".browserslistrc",
@@ -173,7 +173,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "2244662878505279660"
+        "hash": "14487480791367782318"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "15411278393257793075"
+        "hash": "10259880195394958318"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -257,7 +257,7 @@
       },
       {
         "file": "angular.json",
-        "hash": "4448573370374518876"
+        "hash": "8335742704174507603"
       },
       {
         "file": "e2e/protractor.conf.js",
@@ -289,11 +289,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "5840045167918226280"
+        "hash": "16185438898536732167"
       },
       {
         "file": "package.json",
-        "hash": "9925947830890431190"
+        "hash": "10981871556612378252"
       },
       {
         "file": "proxy.conf.json",
@@ -321,7 +321,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "1109210124878755234"
+        "hash": "5637697867041025421"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -693,11 +693,11 @@
       },
       {
         "file": "src/app/components/laboratorio/import.ts",
-        "hash": "14859869167334071580"
+        "hash": "13010447915211092133"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.html",
-        "hash": "4972273906091333362"
+        "hash": "2339994086763604803"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.scss",
@@ -709,7 +709,15 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.ts",
-        "hash": "3048063493736562895"
+        "hash": "13474793958566931463"
+      },
+      {
+        "file": "src/app/components/laboratorio/product.service.spec.ts",
+        "hash": "8965867455790732849"
+      },
+      {
+        "file": "src/app/components/laboratorio/product.service.ts",
+        "hash": "4516190221013999766"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.html",
@@ -5353,11 +5361,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "9816635479634362096"
+        "hash": "2153815935975068296"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "6594557472197137309"
+        "hash": "16425092187992170419"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5365,7 +5373,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "15083233831568947991"
+        "hash": "12422556995146190092"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6333,7 +6341,7 @@
       },
       {
         "file": "src/app/services/interceptor.ts",
-        "hash": "2942584006597055541"
+        "hash": "14144452223632748214"
       },
       {
         "file": "src/app/services/log-service.service.spec.ts",
@@ -6345,7 +6353,7 @@
       },
       {
         "file": "src/app/services/modelos/objetos.ts",
-        "hash": "10507960833094851766"
+        "hash": "4232759716082026795"
       },
       {
         "file": "src/app/services/periodoSistema/periodo-sistema.service.spec.ts",
@@ -6519,6 +6527,7 @@
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
       }
-    ]
+    ],
+    "projectFileMap": {}
   }
 }
