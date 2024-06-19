@@ -117,6 +117,7 @@
   },
   "nxJsonPlugins": [],
   "fileMap": {
+    "projectFileMap": {},
     "nonProjectFiles": [
       {
         "file": ".browserslistrc",
@@ -172,7 +173,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "5588220519086051785"
+        "hash": "14978357469750401720"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -212,7 +213,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "12223302591305206059"
+        "hash": "5050549245028488828"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -6518,7 +6519,6 @@
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
       }
-    ],
-    "projectFileMap": {}
+    ]
   }
 }
