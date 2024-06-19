@@ -3406,9 +3406,9 @@
       "type": "npm",
       "name": "npm:@ngrx/store",
       "data": {
-        "version": "14.3.0",
+        "version": "17.2.0",
         "packageName": "@ngrx/store",
-        "hash": "sha512-pGH7wGS8pTtt6w+IY+OvSwNFFeD6YYYGJnDM+1+qKzl3nfHMBhFVUGX9u2eYV9vAKxx7TUJt80crCARjdo3U5g=="
+        "hash": "sha512-7wKgZ59B/6yQSvvsU0DQXipDqpkAXv7LwcXLD5Ww7nvqN0fQoRPThMh4+Wv55DCJhE0bQc1NEMciLA47uRt7Wg=="
       }
     },
     "npm:@ngtools/webpack": {
@@ -19029,6 +19029,11 @@
     {
       "source": "npm:@material/typography",
       "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@ngrx/store",
+      "target": "npm:@angular/core",
       "type": "static"
     },
     {

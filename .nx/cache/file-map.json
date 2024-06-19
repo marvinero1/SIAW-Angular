@@ -2,18 +2,18 @@
   "version": "6.0",
   "nxVersion": "17.1.1",
   "deps": {
-    "@angular/animations": "^17.3.11",
+    "@angular/animations": "^18.0.3",
     "@angular/cdk": "^16.2.14",
-    "@angular/common": "17.3.11",
-    "@angular/compiler": "17.3.11",
-    "@angular/core": "17.3.11",
-    "@angular/forms": "17.3.11",
-    "@angular/localize": "17.3.11",
+    "@angular/common": "18.0.3",
+    "@angular/compiler": "18.0.3",
+    "@angular/core": "18.0.3",
+    "@angular/forms": "18.0.3",
+    "@angular/localize": "18.0.3",
     "@angular/material": "^16.2.14",
     "@angular/material-moment-adapter": "^16.2.14",
-    "@angular/platform-browser": "17.3.11",
-    "@angular/platform-browser-dynamic": "17.3.11",
-    "@angular/router": "17.3.11",
+    "@angular/platform-browser": "18.0.3",
+    "@angular/platform-browser-dynamic": "18.0.3",
+    "@angular/router": "18.0.3",
     "@handsontable/angular": "^14.1.0",
     "@ngrx/store": "17.2.0",
     "@profabric/angular-components": "0.1.2",
@@ -46,15 +46,15 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xml-js": "^1.6.11",
     "zone.js": "~0.14.7",
-    "@angular-devkit/build-angular": "^17.3.8",
+    "@angular-devkit/build-angular": "^18.0.4",
     "@angular-eslint/builder": "14.0.3",
     "@angular-eslint/eslint-plugin": "14.0.3",
     "@angular-eslint/eslint-plugin-template": "14.0.3",
     "@angular-eslint/schematics": "14.0.3",
     "@angular-eslint/template-parser": "14.0.3",
-    "@angular/cli": "^17.3.8",
-    "@angular/compiler-cli": "^17.3.11",
-    "@angular/language-service": "17.3.11",
+    "@angular/cli": "^18.0.4",
+    "@angular/compiler-cli": "^18.0.3",
+    "@angular/language-service": "18.0.3",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "2.0.10",
     "@types/jszip": "^3.4.1",
@@ -173,7 +173,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "14978357469750401720"
+        "hash": "2244662878505279660"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "5050549245028488828"
+        "hash": "15411278393257793075"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -289,11 +289,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "9969861429785207503"
+        "hash": "5840045167918226280"
       },
       {
         "file": "package.json",
-        "hash": "4438480319655045383"
+        "hash": "9925947830890431190"
       },
       {
         "file": "proxy.conf.json",

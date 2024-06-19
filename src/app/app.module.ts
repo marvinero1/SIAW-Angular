@@ -1,5 +1,5 @@
 import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { LocationStrategy, DecimalPipe } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -433,8 +433,7 @@ defineCustomElements();
 registerAllModules();
 registerCellType(NumericCellType);
 registerPlugin(UndoRedo);
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent, VentanasComponent, MainComponent, LoginComponent, HeaderComponent, FooterComponent, MenuSidebarComponent, BlankComponent,
         ProfileComponent, VentanaValidacionesComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
         ForgotPasswordComponent, RecoverPasswordComponent, LanguageComponent, MainMenuComponent, SubMenuComponent, MenuItemComponent,
@@ -509,30 +508,16 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         RoscaCreateComponent, RoscaEditComponent, ResistenciaCreateComponent, ResistenciaEditComponent,
         TerminacionCreateComponent, NumpedidomercaderiaComponent, NumpedidomercaderiaCreateComponent,
         NumnotasdemovimientoComponent, NumnotasdemovimientoCreateComponent, ItemCreateComponent, RolesComponent,
         BancoCreateComponent,
     ],
-
-    imports: [
-        BrowserModule,
+    bootstrap: [AppComponent],
+    schemas: [
+        CUSTOM_ELEMENTS_SCHEMA
+    ], imports: [BrowserModule,
         StoreModule.forRoot({ auth: authReducer, ui: uiReducer }),
-        HttpClientModule,
         AppRoutingModule,
         MatTableModule,
         MatMenuModule,
@@ -582,31 +567,17 @@ registerPlugin(UndoRedo);
         PortalModule,
         NgPipesModule,
         HotTableModule,
-
-
-
         ToastrModule.forRoot({
             timeOut: 3000,
             positionClass: 'toast-top-right',
             preventDuplicates: true
-        }),
-    ],
-
-    providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
+        })], providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
         MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
         TomaInventarioConsolidadoComponent,
-
         { provide: ServiceRefreshItemsService },
         { provide: LOCALE_ID, useValue: 'es-BO' },
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
-        { provide: MatDialogRef, useValue: {} }
-    ],
-
-    bootstrap: [AppComponent],
-    schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-    ]
-})
+        { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())] })
 
 export class AppModule { }
