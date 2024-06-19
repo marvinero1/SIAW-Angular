@@ -37,7 +37,7 @@
     "@angular/platform-browser-dynamic": "17.3.11",
     "@angular/router": "17.3.11",
     "@handsontable/angular": "^14.1.0",
-    "@ngrx/store": "14.3.0",
+    "@ngrx/store": "17.2.0",
     "@profabric/angular-components": "0.1.2",
     "@syncfusion/ej2-popups": "^21.2.3",
     "ag-grid-community": "^31.3.2",
