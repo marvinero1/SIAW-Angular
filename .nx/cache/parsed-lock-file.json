@@ -3852,15 +3852,6 @@
         "hash": "sha512-IDUfoU8jo9DVlB59lDEASAJXTesAEXDZ68DOHI3qg93r5ehVTkMl2x0ixgIyff8NiHeNYXpcOZh3tr6oGbvu9g=="
       }
     },
-    "npm:ag-grid-angular": {
-      "type": "npm",
-      "name": "npm:ag-grid-angular",
-      "data": {
-        "version": "31.3.2",
-        "packageName": "ag-grid-angular",
-        "hash": "sha512-k8nMrOGcoZeTNY7lXoPIWgn2ANE+v169v9X6XqddlJgYWoRrommG1Av2zSxPYUqayLzV0z/mKTHv7UjdLtnCGw=="
-      }
-    },
     "npm:ag-grid-community": {
       "type": "npm",
       "name": "npm:ag-grid-community",
@@ -10438,6 +10429,15 @@
         "version": "3.1.3",
         "packageName": "pretty-quick",
         "hash": "sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA=="
+      }
+    },
+    "npm:primeng": {
+      "type": "npm",
+      "name": "npm:primeng",
+      "data": {
+        "version": "17.18.1",
+        "packageName": "primeng",
+        "hash": "sha512-pMuXOgLQw5Xz0w9d3YTp2DAlYR8svK1Jz5gSWAhk6AyH7u7akwL1JX96RXVzLS8v2YeLUCvkMM+QROOvR3yKug=="
       }
     },
     "npm:process": {
@@ -19639,26 +19639,6 @@
       "type": "static"
     },
     {
-      "source": "npm:ag-grid-angular",
-      "target": "npm:@angular/common",
-      "type": "static"
-    },
-    {
-      "source": "npm:ag-grid-angular",
-      "target": "npm:@angular/core",
-      "type": "static"
-    },
-    {
-      "source": "npm:ag-grid-angular",
-      "target": "npm:ag-grid-community",
-      "type": "static"
-    },
-    {
-      "source": "npm:ag-grid-angular",
-      "target": "npm:tslib",
-      "type": "static"
-    },
-    {
       "source": "npm:agent-base",
       "target": "npm:debug",
       "type": "static"
@@ -26346,6 +26326,11 @@
     {
       "source": "npm:supports-color@7.2.0",
       "target": "npm:has-flag@4.0.0",
+      "type": "static"
+    },
+    {
+      "source": "npm:primeng",
+      "target": "npm:tslib",
       "type": "static"
     },
     {

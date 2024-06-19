@@ -51,11 +51,9 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
 @import 'ngx-toastr/toastr';
 
 
-@import '/node_modules/ag-grid-community/styles/ag-grid.css';
-@import '/node_modules/ag-grid-community/styles/ag-theme-alpine.css';
+@import "/node_modules/primeng/resources/themes/saga-blue/theme.css";
+@import "/node_modules/primeng/resources/primeng.css";
 
-@import '~ag-grid-community/styles/ag-grid.css';
-@import '~ag-grid-community/styles/ag-theme-alpine.css';
 
 
 body {

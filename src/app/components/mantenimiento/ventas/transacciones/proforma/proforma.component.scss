@@ -296,5 +296,50 @@ mat-row, mat-header-row, mat-footer-row{
     top: 50% !important;
     height: 19px !important;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Cambiar el tamaño de la fuente y el fondo de la tabla AG Grid */
+  .ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row, .ag-theme-alpine-auto-dark .ag-row .ag-header-cell{
+    font-size: 0.7rem !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+
+    white-space: pre !important;
+    white-space: nowrap;
+    line-height: 1.5;
+  }
+
+
+  .custom-ag-grid .ag-row {
+    background-color: #e9ecef;
+  }
+
+  .custom-ag-grid .ag-row-odd {
+    background-color: #f8f9fa;
+  }
+
+  .custom-ag-grid .ag-row-even {
+    background-color: #e9ecef;
+  }
 }
 

@@ -18,7 +18,6 @@
     "@ngrx/store": "14.3.0",
     "@profabric/angular-components": "0.1.2",
     "@syncfusion/ej2-popups": "^21.2.3",
-    "ag-grid-angular": "^31.3.2",
     "ag-grid-community": "^31.3.2",
     "angular-vertical-tabs": "github:SamuelMarks/angular-vertical-material-tabs",
     "bn-ng-idle": "^2.0.5",
@@ -38,6 +37,7 @@
     "ngx-spinner": "^15.0.1",
     "ngx-toastr": "16.0.1",
     "pdfmake": "^0.2.10",
+    "primeng": "^17.18.1",
     "process": "0.11.10",
     "public-ip": "^6.0.1",
     "rxjs": "7.5.6",
@@ -173,7 +173,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "12061876620965912025"
+        "hash": "3869719887904675287"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -213,7 +213,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "5557093945842373200"
+        "hash": "4848912619486079308"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -257,7 +257,7 @@
       },
       {
         "file": "angular.json",
-        "hash": "14816224466135245488"
+        "hash": "11827020224568914552"
       },
       {
         "file": "e2e/protractor.conf.js",
@@ -289,11 +289,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "17313042153515112395"
+        "hash": "13212714351307177166"
       },
       {
         "file": "package.json",
-        "hash": "60076998383275113"
+        "hash": "4491213545909754192"
       },
       {
         "file": "proxy.conf.json",
@@ -321,7 +321,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "10604520356008610394"
+        "hash": "6315697547238315945"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -692,12 +692,16 @@
         "hash": "14724504614545245818"
       },
       {
+        "file": "src/app/components/laboratorio/import.ts",
+        "hash": "3275019819098283427"
+      },
+      {
         "file": "src/app/components/laboratorio/laboratorio.component.html",
-        "hash": "4800522203972686141"
+        "hash": "12133531460869040444"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.scss",
-        "hash": "14068258443377509625"
+        "hash": "3244421341483603138"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.spec.ts",
@@ -705,7 +709,7 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.ts",
-        "hash": "10082233410655215624"
+        "hash": "13816378892082188684"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.html",
@@ -5353,7 +5357,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "2838973694111304016"
+        "hash": "6594557472197137309"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -6493,7 +6497,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "2340972013604733726"
+        "hash": "8773122970958480932"
       },
       {
         "file": "src/test.ts",
@@ -6514,22 +6518,6 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
-      },
-      {
-        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.spec.ts",
-        "hash": "9487991577643264519"
-      },
-      {
-        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.ts",
-        "hash": "15467249556621351846"
-      },
-      {
-        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.scss",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "src/app/components/laboratorio/CustomButtonRenderer/CustomButtonRenderer.component.html",
-        "hash": "16122344889096621048"
       }
     ],
     "projectFileMap": {}

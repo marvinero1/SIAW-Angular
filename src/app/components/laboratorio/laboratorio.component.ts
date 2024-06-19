@@ -2,18 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
+import { ImportsModule } from '@components/laboratorio/import';
 
+import { ButtonModule } from 'primeng/button';
 
-
-import { AgGridAngular } from "ag-grid-angular";
-import "/node_modules/ag-grid-community/styles/ag-grid.css";
-import "/node_modules/ag-grid-community/styles/ag-theme-quartz.css";
-import { CellClickedEvent, ColDef, ColGroupDef, GridApi, GridOptions, GridReadyEvent, INumberCellEditorParams, createGrid } from "ag-grid-community";
-
-
-export interface UserData {
-  id: string;
-  name: string;
+export interface Product {
+  id?: string;
+  code?: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  quantity?: number;
+  inventoryStatus?: string;
+  category?: string;
+  image?: string;
+  rating?: number;
 }
 @Component({
   selector: 'app-laboratorio',
@@ -22,11 +25,10 @@ export interface UserData {
 })
 
 export class LaboratorioComponent implements OnInit {
+  products!: Product[];
+  selectedProducts!: Product;
 
-  selectedRowIndex: number = -1;
-  selectedRow: number = -1;
-
-  gridDiv = document.querySelector<HTMLElement>("#myGrid")!;
+  metaKey: boolean = true;
 
   public rowData: any[] | null = [
     {
@@ -259,116 +261,6 @@ export class LaboratorioComponent implements OnInit {
   itemDataAll() {
     console.log("HOLA LOLA");
   }
-
-  public columnDefs: ColDef[] = [
-    {
-      field: "orden",
-      checkboxSelection: true,
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "coditem",
-      suppressMenu: true,
-      width: 110,
-      cellEditor: "agNumberCellEditor",
-      cellEditorParams: {
-        min: 0,
-      } as INumberCellEditorParams,
-      onCellClicked: (event: CellClickedEvent) =>
-        console.log('HOLA LOLA'),
-    },
-    {
-      field: "descripcion",
-      suppressMenu: true,
-    },
-    {
-      field: "medida",
-      suppressMenu: true,
-      width: 80,
-    },
-    {
-      field: "udm",
-      suppressMenu: true,
-      width: 65,
-    },
-    {
-      headerName: "IVA",
-      field: "porceniva",
-      suppressMenu: true,
-      width: 65,
-    },
-    {
-      field: "empaque",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "cantidad_pedida",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "cantidad",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "sld",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "codtarifa",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "coddescuento",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "preciolista",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "niveldesc",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "porcentaje",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "preciodesc",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "preciolista",
-      suppressMenu: true,
-      width: 75,
-    },
-    {
-      field: "total",
-      suppressMenu: true,
-      width: 75,
-    },
-  ];
-
-  public defaultColDef: ColDef = {
-    filter: "agTextColumnFilter",
-    floatingFilter: false,
-  };
-
-  public rowSelection: "single" | "multiple" = "multiple";
-  public themeClass: string = "ag-theme-alpine";
-
-
 
 
   openDialogMatriz() {

@@ -18,9 +18,27 @@
   [defaultColDef]="defaultColDef" [rowSelection]="rowSelection" [suppressRowClickSelection]="true" [pagination]="true"
   [paginationPageSize]="paginationPageSize" [paginationPageSizeSelector]="paginationPageSizeSelector"
   [class]="themeClass"></ag-grid-angular> -->
+<!-- <div class="flex justify-content-center align-items-center mb-4 gap-2">
+  <p-inputSwitch [(ngModel)]="metaKey" inputId="input-metakey" />
+  <label for="input-metakey">MetaKey</label>
+</div> -->
 
-
-<ag-grid-angular style="width: 100%; height: 100%;" [rowData]="rowData" [columnDefs]="columnDefs"
-  class="ag-theme-alpine custom-ag-grid" [defaultColDef]="defaultColDef" [rowSelection]="rowSelection"
-  [suppressRowClickSelection]="true" [class]="themeClass">
-</ag-grid-angular>
+<p-table [value]="rowData" selectionMode="multiple" [(selection)]="rowData" [metaKeySelection]="metaKey" dataKey="code"
+  [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Quantity</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+    <tr>
+      <td>{{ product.code }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.quantity }}</td>
+    </tr>
+  </ng-template>
+</p-table>
