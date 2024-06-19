@@ -2,18 +2,18 @@
   "version": "6.0",
   "nxVersion": "17.1.1",
   "deps": {
-    "@angular/animations": "^16.2.12",
+    "@angular/animations": "^17.3.11",
     "@angular/cdk": "^16.2.14",
-    "@angular/common": "16.2.12",
-    "@angular/compiler": "16.2.12",
-    "@angular/core": "16.2.12",
-    "@angular/forms": "16.2.12",
-    "@angular/localize": "16.2.12",
+    "@angular/common": "17.3.11",
+    "@angular/compiler": "17.3.11",
+    "@angular/core": "17.3.11",
+    "@angular/forms": "17.3.11",
+    "@angular/localize": "17.3.11",
     "@angular/material": "^16.2.14",
     "@angular/material-moment-adapter": "^16.2.14",
-    "@angular/platform-browser": "16.2.12",
-    "@angular/platform-browser-dynamic": "16.2.12",
-    "@angular/router": "16.2.12",
+    "@angular/platform-browser": "17.3.11",
+    "@angular/platform-browser-dynamic": "17.3.11",
+    "@angular/router": "17.3.11",
     "@handsontable/angular": "^14.1.0",
     "@ngrx/store": "14.3.0",
     "@profabric/angular-components": "0.1.2",
@@ -45,16 +45,16 @@
     "uuid": "8.3.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xml-js": "^1.6.11",
-    "zone.js": "~0.13.3",
-    "@angular-devkit/build-angular": "^16.2.14",
+    "zone.js": "~0.14.7",
+    "@angular-devkit/build-angular": "^17.3.8",
     "@angular-eslint/builder": "14.0.3",
     "@angular-eslint/eslint-plugin": "14.0.3",
     "@angular-eslint/eslint-plugin-template": "14.0.3",
     "@angular-eslint/schematics": "14.0.3",
     "@angular-eslint/template-parser": "14.0.3",
-    "@angular/cli": "16.2.14",
-    "@angular/compiler-cli": "16.2.12",
-    "@angular/language-service": "16.2.12",
+    "@angular/cli": "17.3.8",
+    "@angular/compiler-cli": "17.3.11",
+    "@angular/language-service": "17.3.11",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "2.0.10",
     "@types/jszip": "^3.4.1",
@@ -84,7 +84,7 @@
     "ts-node": "10.9.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.3.0",
-    "typescript": "5.1.6"
+    "typescript": "5.4.5"
   },
   "pathMappings": {
     "path": [
@@ -292,7 +292,7 @@
       },
       {
         "file": "package.json",
-        "hash": "11172197919435295809"
+        "hash": "7004699685581362659"
       },
       {
         "file": "proxy.conf.json",
