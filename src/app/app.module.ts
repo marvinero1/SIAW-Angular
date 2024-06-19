@@ -426,6 +426,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
+import { TableModule } from 'primeng/table';
+import { ImportsModule } from '@components/laboratorio/import';
+import { ProductService } from '@components/laboratorio/product.service';
 
 
 registerLocaleData(es);
@@ -433,7 +436,8 @@ defineCustomElements();
 registerAllModules();
 registerCellType(NumericCellType);
 registerPlugin(UndoRedo);
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent, VentanasComponent, MainComponent, LoginComponent, HeaderComponent, FooterComponent, MenuSidebarComponent, BlankComponent,
         ProfileComponent, VentanaValidacionesComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
         ForgotPasswordComponent, RecoverPasswordComponent, LanguageComponent, MainMenuComponent, SubMenuComponent, MenuItemComponent,
@@ -567,17 +571,20 @@ registerPlugin(UndoRedo);
         PortalModule,
         NgPipesModule,
         HotTableModule,
+        ImportsModule,
+
         ToastrModule.forRoot({
             timeOut: 3000,
             positionClass: 'toast-top-right',
             preventDuplicates: true
         })], providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
-        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
-        TomaInventarioConsolidadoComponent,
-        { provide: ServiceRefreshItemsService },
-        { provide: LOCALE_ID, useValue: 'es-BO' },
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
-        { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
-        { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())] })
+            MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
+            TomaInventarioConsolidadoComponent, ProductService,
+            { provide: ServiceRefreshItemsService },
+            { provide: LOCALE_ID, useValue: 'es-BO' },
+            { provide: LocationStrategy, useClass: PathLocationStrategy },
+            { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
+            { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
+})
 
 export class AppModule { }
