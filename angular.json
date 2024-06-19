@@ -28,8 +28,7 @@
                         ],
                         "styles": [
                             "src/styles.scss",
-                            "node_modules/primeng/resources/themes/saga-blue/theme.css",
-                            "node_modules/primeng/resources/primeng.min.css",
+                          
                             "node_modules/ngx-toastr/toastr.css",
                             "node_modules/ngx-spinner/animations/pacman.css",
                             "node_modules/ngx-spinner/animations/line-scale-pulse-out-rapid.css",

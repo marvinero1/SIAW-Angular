@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
-import { ImportsModule } from '@components/laboratorio/import';
 
 // import { ButtonModule } from 'primeng/button';
 

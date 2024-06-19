@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
@@ -12,9 +11,7 @@ import { HeaderComponent } from '@modules/main/header/header.component';
 import { FooterComponent } from '@modules/main/footer/footer.component';
 import { MenuSidebarComponent } from '@modules/main/menu-sidebar/menu-sidebar.component';
 import { BlankComponent } from '@pages/blank/blank.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from '@pages/profile/profile.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterComponent } from '@modules/register/register.component';
 import { DashboardComponent } from '@pages/dashboard/dashboard.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -422,7 +419,10 @@ import { ModalBotonesImpresionComponent } from '@components/mantenimiento/ventas
 import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component';
 import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component';
-import { ImportsModule } from '@components/laboratorio/import';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 
@@ -582,7 +582,7 @@ registerPlugin(UndoRedo);
         PortalModule,
         NgPipesModule,
         HotTableModule,
-        ImportsModule,
+
 
 
         ToastrModule.forRoot({
