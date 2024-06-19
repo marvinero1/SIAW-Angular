@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
 import { ImportsModule } from '@components/laboratorio/import';
 
-import { ButtonModule } from 'primeng/button';
+// import { ButtonModule } from 'primeng/button';
 
 export interface Product {
   id?: string;

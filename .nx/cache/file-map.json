@@ -2,18 +2,18 @@
   "version": "6.0",
   "nxVersion": "17.1.1",
   "deps": {
-    "@angular/animations": "^15.0.1",
+    "@angular/animations": "^16.2.12",
     "@angular/cdk": "^15.2.8",
-    "@angular/common": "15.0.1",
-    "@angular/compiler": "15.0.1",
-    "@angular/core": "15.0.1",
-    "@angular/forms": "15.0.1",
-    "@angular/localize": "15.0.1",
+    "@angular/common": "16.2.12",
+    "@angular/compiler": "16.2.12",
+    "@angular/core": "16.2.12",
+    "@angular/forms": "16.2.12",
+    "@angular/localize": "16.2.12",
     "@angular/material": "^15.2.8",
     "@angular/material-moment-adapter": "^15.2.8",
-    "@angular/platform-browser": "15.0.1",
-    "@angular/platform-browser-dynamic": "15.0.1",
-    "@angular/router": "15.0.1",
+    "@angular/platform-browser": "16.2.12",
+    "@angular/platform-browser-dynamic": "16.2.12",
+    "@angular/router": "16.2.12",
     "@handsontable/angular": "^14.1.0",
     "@ngrx/store": "14.3.0",
     "@profabric/angular-components": "0.1.2",
@@ -45,16 +45,16 @@
     "uuid": "8.3.2",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
     "xml-js": "^1.6.11",
-    "zone.js": "~0.11.8",
-    "@angular-devkit/build-angular": "^15.0.1",
+    "zone.js": "~0.13.3",
+    "@angular-devkit/build-angular": "^16.2.14",
     "@angular-eslint/builder": "14.0.3",
     "@angular-eslint/eslint-plugin": "14.0.3",
     "@angular-eslint/eslint-plugin-template": "14.0.3",
     "@angular-eslint/schematics": "14.0.3",
     "@angular-eslint/template-parser": "14.0.3",
-    "@angular/cli": "15.0.1",
-    "@angular/compiler-cli": "15.0.1",
-    "@angular/language-service": "15.0.1",
+    "@angular/cli": "16.2.14",
+    "@angular/compiler-cli": "16.2.12",
+    "@angular/language-service": "16.2.12",
     "@types/jasmine": "~4.3.0",
     "@types/jasminewd2": "2.0.10",
     "@types/jszip": "^3.4.1",
@@ -84,7 +84,7 @@
     "ts-node": "10.9.1",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.3.0",
-    "typescript": "4.8.2"
+    "typescript": "5.1.6"
   },
   "pathMappings": {
     "path": [
@@ -172,7 +172,7 @@
       },
       {
         "file": ".nx/cache/lockfile.hash",
-        "hash": "3869719887904675287"
+        "hash": "5588220519086051785"
       },
       {
         "file": ".nx/cache/nx-console-project-graph/project-graph.html",
@@ -212,7 +212,7 @@
       },
       {
         "file": ".nx/cache/parsed-lock-file.json",
-        "hash": "4848912619486079308"
+        "hash": "12223302591305206059"
       },
       {
         "file": ".nx/cache/project-graph.json~c7a4c6bd",
@@ -288,11 +288,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "17723652713516637772"
+        "hash": "9236023711097307884"
       },
       {
         "file": "package.json",
-        "hash": "4126905503223006911"
+        "hash": "12393543591219505616"
       },
       {
         "file": "proxy.conf.json",
@@ -692,11 +692,11 @@
       },
       {
         "file": "src/app/components/laboratorio/import.ts",
-        "hash": "3275019819098283427"
+        "hash": "14859869167334071580"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.html",
-        "hash": "12133531460869040444"
+        "hash": "4972273906091333362"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.scss",
@@ -708,7 +708,7 @@
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.ts",
-        "hash": "13816378892082188684"
+        "hash": "5093863351508175302"
       },
       {
         "file": "src/app/components/mantenimiento/administracion/area/area-create/area-create.component.html",
@@ -5560,7 +5560,7 @@
       },
       {
         "file": "src/app/guards/auth.guard.ts",
-        "hash": "16262775169964300462"
+        "hash": "7892103346373944783"
       },
       {
         "file": "src/app/guards/non-auth.guard.spec.ts",
@@ -5568,7 +5568,7 @@
       },
       {
         "file": "src/app/guards/non-auth.guard.ts",
-        "hash": "5708881483554085004"
+        "hash": "6708445659395006421"
       },
       {
         "file": "src/app/modules/admin/log/log.component.html",

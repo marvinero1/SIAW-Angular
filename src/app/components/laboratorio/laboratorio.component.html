@@ -22,23 +22,3 @@
   <p-inputSwitch [(ngModel)]="metaKey" inputId="input-metakey" />
   <label for="input-metakey">MetaKey</label>
 </div> -->
-
-<p-table [value]="rowData" selectionMode="multiple" [(selection)]="rowData" [metaKeySelection]="metaKey" dataKey="code"
-  [tableStyle]="{ 'min-width': '50rem' }">
-  <ng-template pTemplate="header">
-    <tr>
-      <th>Code</th>
-      <th>Name</th>
-      <th>Category</th>
-      <th>Quantity</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-    <tr>
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.quantity }}</td>
-    </tr>
-  </ng-template>
-</p-table>
