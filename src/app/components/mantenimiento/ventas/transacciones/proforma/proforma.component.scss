@@ -49,19 +49,6 @@ mat-mdc-tab, mdc-tab {
 
 
 // Tabla SCSS
-p-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-
-
-.iconGrid .p-icon .p-sortable-column-icon{
-  width: 11px !important;
-}
-
-
-
 .mat-mdc-row:nth-child(odd) {
   background-color: #80808017;
 }
@@ -120,7 +107,7 @@ mat-row, mat-header-row, mat-footer-row{
   background-color: #80808017;
   //color: black;
   border: 0;
-  width: 100%;
+  width: 40%;
   margin: auto;
 }
 .pedido::placeholder {
@@ -240,18 +227,18 @@ mat-row, mat-header-row, mat-footer-row{
 
 ::ng-deep {
   .p-icon {
-    width: 0.7rem !important;
-    height: 0.7rem !important;
+    width: 0.55rem !important;
+    height: 0.55rem !important;
   }
-
-  .p-datatable .p-datatable-thead > tr > th{
+  .tablitaDetalle{
+   .p-datatable-thead > tr > th {
     padding: 0rem 0rem !important;
     position: sticky;
     top: 0;
     background-color: #fbd800;
     min-height: 25px !important;
   }
-
+}
   .p-treetable .p-datatable-wrapper .p-datatable-tbody {
     height: 12px !important;
   }
@@ -259,7 +246,6 @@ mat-row, mat-header-row, mat-footer-row{
   .p-datatable .p-datatable-tbody > tr > td{
     padding: 0rem 0rem !important;
   }
-
 
   .p-datatable .p-datatable-tbody > tr.p-highlight{
     color: #fff !important;

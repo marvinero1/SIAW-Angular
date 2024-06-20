@@ -683,18 +683,18 @@
         <mat-tab-group style="height: 32vh !important; max-height: 34vh;" class="miTabGroupDetalle" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
-              sortMode="multiple" selectionMode="multiple" [(metaKeySelection)]="selectedProducts">
+              styleClass="p-datatable-striped tablitaDetalle" sortMode="multiple">
               <ng-template pTemplate="header">
                 <tr>
                   <th pSortableColumn="orden" class="center1">
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:12%" class="center1">
+                  <th pSortableColumn="item" style="width:10%" class="center1">
                     <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:15%" class="center">
+                  <th pSortableColumn="descripcion" style="width:12%" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
@@ -763,15 +763,6 @@
                   </td>
 
 
-
-
-
-
-
-
-
-
-
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}
                   </td>
@@ -780,15 +771,35 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
+
                     <p-cellEditor>
                       <ng-template pTemplate="input">
+                        <ng-container *ngIf="products.empaque === null;else enp">
+                          <input pInputText type="number" class="pedido" min="0" [value]="0"
+                            (input)="empaqueChangeMatrix(products, $event.target.value)"
+                            style="text-align: center !important;">
+                        </ng-container>
+                        <ng-template #enp>
+                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque" min="0"
+                            (input)="empaqueChangeMatrix(products, $event.target.value)"
+                            style="text-align: center !important;">
+                        </ng-template>
 
-                        <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque"
-                          (input)="empaqueChangeMatrix(products, $event.target.value)" />
+                        <!-- <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque"
+                          (input)="empaqueChangeMatrix(products, $event.target.value)" /> -->
 
                       </ng-template>
                       <ng-template pTemplate="output">
-                        {{ products.empaque }}
+                        <ng-container *ngIf="products.empaque === null;else enp">
+                          <input pInputText type="number" class="pedido" min="0" [value]="0"
+                            (input)="empaqueChangeMatrix(products, $event.target.value)"
+                            style="text-align: center !important;">
+                        </ng-container>
+                        <ng-template #enp>
+                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque" min="0"
+                            (input)="empaqueChangeMatrix(products, $event.target.value)"
+                            style="text-align: center !important;">
+                        </ng-template>
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -818,7 +829,25 @@
                         </ng-container>
                       </ng-template>
                       <ng-template pTemplate="output">
-                        {{ products.cantidad_pedida }}
+                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
+                          <input #inputCantidad matInput type="number" class="pedido"
+                            [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="pedidoChangeMatrix(products, $event.target.value)">
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleEmp === false">
+                          <input #inputCantidad matInput type="number" class="pedido"
+                            [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                            style="color: rgba(0, 0, 255, 0.824);">
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleMin === false">
+                          <input #inputCantidad matInput type="number" class="pedido"
+                            [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                            style="color: rgba(255, 0, 0, 0.824);">
+                        </ng-container>
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -845,7 +874,24 @@
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        {{ products.cantidad }}
+                        <!-- {{ products.cantidad }} -->
+                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
+                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
+                            (input)="cantidadChangeMatrix(products, $event.target.value);">
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleEmp === false">
+                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
+                            (input)="cantidadChangeMatrix(products, $event.target.value)"
+                            style="color: rgba(0, 0, 255, 0.824);">
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleMin === false">
+                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                            style="color: rgba(255, 0, 0, 0.824);">
+                        </ng-container>
+
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -862,11 +908,33 @@
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        {{ products.codtarifa }}
+                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoPrecioVentaDetalle"
+                          (blur)="onLeavePrecioVentaDetalle($event, products)" [value]="products?.codtarifa"
+                          (input)="TPChangeMatrix(products, $event.target.value)"
+                          (click)="inputClickedPrecioVenta(products)">
+                        <!-- {{ products.codtarifa }} -->
                       </ng-template>
                     </p-cellEditor>
                   </td>
-                  <td class="center1">{{ products.coddescuento }}</td>
+
+                  <td class="center1">
+                    <p-cellEditor>
+                      <ng-template pTemplate="input">
+                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoDescuentoEspecialDetalle"
+                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)" [value]="products?.coddescuento"
+                          (input)="DEChangeMatrix(products, $event.target.value)"
+                          (click)="inputClickedDescuento(products)">
+                      </ng-template>
+
+                      <ng-template pTemplate="output">
+                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoDescuentoEspecialDetalle"
+                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)" [value]="products?.coddescuento"
+                          (input)="DEChangeMatrix(products, $event.target.value)"
+                          (click)="inputClickedDescuento(products)">
+                        <!-- {{ products.coddescuento }} -->
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
                   <td class="right">{{ products.preciolista }}</td>
                   <td class="right">{{ products.niveldesc }}</td>
                   <td class="right">{{ products.porcendesc  | json}}</td>
@@ -877,10 +945,9 @@
                   <td class="right">
                     {{  calcularTotalCantidadXPU(products?.cantidad_pedida, products?.cantidad, products?.precioneto) }}
                   </td>
-
                 </tr>
               </ng-template>
-            </p-table> <br>
+            </p-table>
           </mat-tab>
 
           <mat-tab label="Negativos">
@@ -2214,150 +2281,92 @@
         <div class="col-md-2" style="padding-block-start: 2px;">
           <form class="example-form" [formGroup]="FormularioData">
             <div class="row" style="height: calc(1.4rem + 2px) !important;">
-              <table>
-                <tr>
-                  <td>
-                    <div class="col">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub Total</u>
-                        </span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col text-right">
-                      <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
-                      <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col" style="text-align: right !important;">
-                      <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #093070;" (click)="modalSubTotal();">
-                        <mat-icon>monetization_on</mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub Total</u>
+                </span>
+              </div>
+
+              <div class="col text-right">
+                <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
+                <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
+              </div>
+
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="modalSubTotal();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
             <div class="row">
-              <table>
-                <tr>
-                  <td>
-                    <div class="col">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Recargos</u></span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col text-right">
-                      <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
-                      <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col" style="text-align: right !important;">
-                      <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #093070;" (click)="modalRecargos();">
-                        <!-- [disabled]="total === 0" -->
-                        <mat-icon>monetization_on</mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Recargos</u></span>
+              </div>
+              <div class="col text-right">
+                <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
+                <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="modalRecargos();">
+                  <!-- [disabled]="total === 0" -->
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
             <div class="row">
-              <table>
-                <tr>
-                  <td>
-                    <div class="col">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Descuento</u></span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col text-right">
-                      <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
-                      <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col" style="text-align: right !important;">
-                      <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #093070;" (click)="modalDescuentosTotales();">
-                        <mat-icon>monetization_on</mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Descuento</u></span>
+              </div>
+              <div class="col text-right">
+                <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
+                <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="modalDescuentosTotales();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
             <div class="row">
-              <table>
-                <tr>
-                  <td>
-                    <div class="col">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>IVA</u></span>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="padding-left: 33px;">
-                    <div class="col text-right">
-                      <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
-                      <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col" style="text-align: right !important;">
-                      <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #093070;" (click)="modalIva();">
-                        <mat-icon>monetization_on</mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>IVA</u></span>
+              </div>
+              <div class="col text-right">
+                <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
+                <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="modalIva();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
             <div class="row" style="height: calc(1.4rem + 2px) !important;">
-              <table>
-                <tr>
-                  <td>
-                    <div class="col">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="padding-left: 33px;">
-                    <div class="col text-right">
-                      <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
-                      <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
-                    </div>
-                  </td>
-                  <td>
-                    <div class="col" style="text-align: right !important;">
-                      <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #093070;" (click)="totabilizar();">
-                        <mat-icon>monetization_on</mat-icon>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
+              </div>
+              <div class="col text-right">
+                <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
+                <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="totabilizar();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
           </form>
 

@@ -23,7 +23,6 @@ import { MatrizItemsComponent } from '../../matriz-items/matriz-items.component'
 import { ModalItemsComponent } from '../../modal-items/modal-items.component';
 import { ModalClienteComponent } from '../../modal-cliente/modal-cliente.component';
 import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-cliente-info.component';
-import { ModalClienteDireccionComponent } from '../../modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
 import { ServicioprecioventaService } from '../../servicioprecioventa/servicioprecioventa.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
@@ -58,6 +57,7 @@ import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-
 import { element } from 'protractor';
 import { ComunicacionproformaService } from '../../serviciocomunicacionproforma/comunicacionproforma.service';
 import { ModalSolicitarUrgenteComponent } from '../../modal-solicitar-urgente/modal-solicitar-urgente.component';
+import { ModalClienteDireccionComponent } from '../../modal-cliente-direccion/modal-cliente-direccion.component';
 
 @Component({
   selector: 'app-proforma',
@@ -137,6 +137,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         case "inputCatalogoCliente":
           this.mandarCodCliente(this.codigo_cliente);
           break;
+
+
       }
     }
   };
@@ -257,7 +259,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public latitud_cliente: string;
   public complemento_ci: string
   public cod_vendedor_cliente: string;
-  public cod_vendedor_cliente_modal: string;
   public cod_id_tipo_modal_id: string;
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
@@ -509,8 +510,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //Vendedor
     this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
-      this.cod_vendedor_cliente_modal = data.vendedor;
-
+      this.cod_vendedor_cliente = data.vendedor;
       //si se cambia de vendedor, los totales tambien se cambian
       this.total = 0.00;
       this.subtotal = 0.00;

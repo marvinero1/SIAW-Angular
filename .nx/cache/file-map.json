@@ -3,13 +3,13 @@
   "nxVersion": "17.1.1",
   "deps": {
     "@angular/animations": "^18.0.3",
-    "@angular/cdk": "^16.2.14",
+    "@angular/cdk": "^18.0.4",
     "@angular/common": "18.0.3",
     "@angular/compiler": "18.0.3",
     "@angular/core": "^18.0.3",
     "@angular/forms": "18.0.3",
     "@angular/localize": "18.0.3",
-    "@angular/material": "^16.2.14",
+    "@angular/material": "^18.0.4",
     "@angular/material-moment-adapter": "^16.2.14",
     "@angular/platform-browser": "18.0.3",
     "@angular/platform-browser-dynamic": "18.0.3",
@@ -257,7 +257,7 @@
       },
       {
         "file": "angular.json",
-        "hash": "8335742704174507603"
+        "hash": "9386295240919769422"
       },
       {
         "file": "e2e/protractor.conf.js",
@@ -289,11 +289,11 @@
       },
       {
         "file": "package-lock.json",
-        "hash": "16185438898536732167"
+        "hash": "16065980680268569403"
       },
       {
         "file": "package.json",
-        "hash": "10981871556612378252"
+        "hash": "5620017713620291254"
       },
       {
         "file": "proxy.conf.json",
@@ -301,7 +301,7 @@
       },
       {
         "file": "src/app/app-routing.module.ts",
-        "hash": "11511631359816119892"
+        "hash": "12125451316276936668"
       },
       {
         "file": "src/app/app.component.html",
@@ -321,7 +321,7 @@
       },
       {
         "file": "src/app/app.module.ts",
-        "hash": "5637697867041025421"
+        "hash": "11648129524489949741"
       },
       {
         "file": "src/app/components/archivo/paramempresa/modales/modalCreditoAutorizacion/modalCreditoAutorizacion.component.html",
@@ -693,7 +693,7 @@
       },
       {
         "file": "src/app/components/laboratorio/import.ts",
-        "hash": "13010447915211092133"
+        "hash": "10542231735606262462"
       },
       {
         "file": "src/app/components/laboratorio/laboratorio.component.html",
@@ -4401,11 +4401,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.html",
-        "hash": "8954318862235988927"
+        "hash": "15514043080904270944"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.scss",
-        "hash": "4246300763397902768"
+        "hash": "17627627035449743214"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/matriz-items/matriz-items.component.spec.ts",
@@ -4493,23 +4493,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component.ts",
-        "hash": "2080378699278564500"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.html",
-        "hash": "11685499357395708368"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.scss",
-        "hash": "3430539653876371457"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.spec.ts",
-        "hash": "18090717021990082525"
-      },
-      {
-        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.ts",
-        "hash": "10498403685488198673"
+        "hash": "2844249318334430387"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-info.component.html",
@@ -4801,11 +4785,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.html",
-        "hash": "5458576517686320215"
+        "hash": "2785351603322368825"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.scss",
-        "hash": "11423885386137617952"
+        "hash": "7177143335443898724"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.spec.ts",
@@ -4813,7 +4797,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component.ts",
-        "hash": "9886154853058356164"
+        "hash": "14221273573195072972"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/modal-zona/modal-zona.component.html",
@@ -5264,6 +5248,22 @@
         "hash": "5544978364888074528"
       },
       {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component.html",
+        "hash": "13952419524686975406"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component.spec.ts",
+        "hash": "10941546846583121653"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component.ts",
+        "hash": "13026269503808808570"
+      },
+      {
         "file": "src/app/components/mantenimiento/ventas/transacciones/nota-remision/nota-remision.component.html",
         "hash": "11444123898016753652"
       },
@@ -5361,11 +5361,11 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.html",
-        "hash": "2153815935975068296"
+        "hash": "5852250696637418084"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.scss",
-        "hash": "16425092187992170419"
+        "hash": "12016453392153870444"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.spec.ts",
@@ -5373,7 +5373,7 @@
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/proforma.component.ts",
-        "hash": "12422556995146190092"
+        "hash": "15474897784236522831"
       },
       {
         "file": "src/app/components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service.spec.ts",
@@ -6069,7 +6069,7 @@
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.html",
-        "hash": "16680021684946003101"
+        "hash": "14548180495682338709"
       },
       {
         "file": "src/app/modules/menu-ventas/menu-ventas.component.scss",
@@ -6505,7 +6505,7 @@
       },
       {
         "file": "src/styles.scss",
-        "hash": "12167102847118024422"
+        "hash": "5426158391527324945"
       },
       {
         "file": "src/test.ts",
@@ -6526,6 +6526,22 @@
       {
         "file": "tsconfig.spec.json",
         "hash": "3283524862186230838"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.scss",
+        "hash": "3430539653876371457"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.spec.ts",
+        "hash": "18090717021990082525"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.html",
+        "hash": "11685499357395708368"
+      },
+      {
+        "file": "src/app/components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component.ts",
+        "hash": "10498403685488198673"
       }
     ],
     "projectFileMap": {}

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,7 +7,7 @@ import { ApiService } from '@services/api.service';
 import { veVendedor } from '@services/modelos/objetos';
 import { Observable } from 'rxjs';
 import { VendedorService } from '../serviciovendedor/vendedor.service';
-
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-modal-vendedor',
   templateUrl: './modal-vendedor.component.html',
@@ -35,8 +35,14 @@ export class ModalVendedorComponent implements OnInit {
   dataSource = new MatTableDataSource<veVendedor>();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('tabla') tabla: Table;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+
+  vendedors!: veVendedor[];
+  selectevendedors: veVendedor[];
+  loading: boolean = false;
+  filteredVendedors: any[] = [];
+  searchValue: string | undefined;
 
   options: veVendedor[] = [];
   filteredOptions: Observable<veVendedor[]>;
@@ -44,30 +50,14 @@ export class ModalVendedorComponent implements OnInit {
   myControlDescripcion = new FormControl<string | veVendedor>('');
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalVendedorComponent>,
-    private serviciVendedor: VendedorService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    private serviciVendedor: VendedorService, private elementRef: ElementRef) {
 
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {
-
     this.getVendedorCatalogo();
-  }
-
-  private _filter(name: string): veVendedor[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(option => option.codigo.toString().includes(filterValue));
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: veVendedor): any {
-    return user && user.codigo ? user.codigo : '';
   }
 
   getVendedorCatalogo() {
@@ -77,24 +67,21 @@ export class ModalVendedorComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.vendedor_get = datav;
-
-          this.dataSource = new MatTableDataSource(this.vendedor_get);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+          this.vendedors = this.vendedor_get;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => {
-
+          // this.selectevendedors = this.vendedor_get[0];
         }
       })
   }
 
-  getveVendedorbyId(codigo) {
-    this.vendedor_view = codigo;
-    console.log(codigo);
+  getveVendedorbyId(element) {
+    this.vendedor_view = element?.data.codigo;
+    console.log(this.vendedor_view);
   }
 
   mandarVendedor() {
@@ -106,24 +93,5 @@ export class ModalVendedorComponent implements OnInit {
 
   close() {
     this.dialogRef.close();
-  }
-  selectedRowIndex: number = -1;
-  selectRow(row) {
-    this.selectedRowIndex = row.codigo;
-    // Aquí puedes manejar la lógica de lo que quieres hacer cuando se selecciona una fila
-  }
-
-  handleKeyDown(event: KeyboardEvent, row) {
-    if (event.key === 'ArrowDown') {
-      const index = this.dataSource.data.findIndex(item => item.codigo === row.codigo);
-      if (index < this.dataSource.data.length - 1) {
-        this.selectRow(this.dataSource.data[index + 1]);
-      }
-    } else if (event.key === 'ArrowUp') {
-      const index = this.dataSource.data.findIndex(item => item.codigo === row.codigo);
-      if (index > 0) {
-        this.selectRow(this.dataSource.data[index - 1]);
-      }
-    }
   }
 }

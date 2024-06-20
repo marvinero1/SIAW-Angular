@@ -187,7 +187,7 @@ import { NgModule } from '@angular/core';
         SplitButtonModule,
         StepsModule,
         TableModule,
-
+        AutoFocusModule
     ],
     exports: [
         AvatarModule,
@@ -270,6 +270,7 @@ import { NgModule } from '@angular/core';
         SplitButtonModule,
         StepsModule,
         TableModule,
+        AutoFocusModule
     ],
     providers: []
 })

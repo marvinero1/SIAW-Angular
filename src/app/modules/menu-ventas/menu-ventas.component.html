@@ -7,8 +7,8 @@
 
 <mat-menu #mantenimiento="matMenu">
   <a mat-menu-item [matMenuTriggerFor]="transacacciones_ventas">Transacciones</a>
-  <a mat-menu-item [matMenuTriggerFor]="operaciones_ventas">Operaciones</a>
   <a mat-menu-item [matMenuTriggerFor]="modificaciones_ventas">Modificaciones</a>
+  <a mat-menu-item [matMenuTriggerFor]="operaciones_ventas">Operaciones</a>
   <a mat-menu-item [matMenuTriggerFor]="despachos_ventas">Despachos</a>
   <a mat-menu-item [matMenuTriggerFor]="solicitudes_ventas">Solicitudes</a>
   <a mat-menu-item>Ver Datos Notas de Remisión</a>
@@ -32,6 +32,18 @@
   <a mat-menu-item>Arreglar Facturas Sin CodControl</a>
   <a mat-menu-item>Envio Paquete de Facturas al SIN</a>
   <a mat-menu-item>Facturación Mostrador Fuera de Linea</a>
+</mat-menu>
+
+<mat-menu #modificaciones_ventas="matMenu">
+  <a mat-menu-item>Cotización</a>
+  <a mat-menu-item (click)="guardarRutaLOG('modificar-proforma','/venta/modificaciones/proforma');">Proforma 🟡</a>
+  <a mat-menu-item> Notas de Remisión</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Cambiar Datos de Facturacion</a>
+  <a mat-menu-item>Reimpresion / Anulacion de Facturas (FEL)</a>
+  <a mat-menu-item>Regenerar Facturas de Notas de Remision</a>
+  <mat-divider class="p-2"></mat-divider>
+  <a mat-menu-item>Proforma (Liviana)</a>
 </mat-menu>
 
 <mat-menu #operaciones_ventas="matMenu">
@@ -58,20 +70,20 @@
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Cálculo de Ventas por Cliente por Mercaderia</a>
   <a mat-menu-item>Cálculo de Ventas Semanales por Clientes</a>
-
-</mat-menu>
-
-<mat-menu #modificaciones_ventas="matMenu">
 </mat-menu>
 
 <mat-menu #despachos_ventas="matMenu">
+
 </mat-menu>
 
 <mat-menu #solicitudes_ventas="matMenu">
+
 </mat-menu>
 
 <mat-menu #autorizaciones_ventas="matMenu">
+
 </mat-menu>
 
 <mat-menu #censo_ventas="matMenu">
+
 </mat-menu>

@@ -228,7 +228,6 @@ import { DescuentosEspecialesComponent } from '@components/mantenimiento/ventas/
 import { CatalogoLugarComponent } from '@components/mantenimiento/ventas/lugares/catalogo-lugar/catalogo-lugar.component';
 import { LugaresComponent } from '@components/mantenimiento/ventas/lugares/lugares.component';
 import { MatrizItemsComponent } from '@components/mantenimiento/ventas/matriz-items/matriz-items.component';
-import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas/modal-cliente-info/modal-cliente-direccion/modal-cliente-direccion.component';
 import { ModalClienteInfoComponent } from '@components/mantenimiento/ventas/modal-cliente-info/modal-cliente-info.component';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
 import { ModalDescuentosComponent } from '@components/mantenimiento/ventas/descuentos-especiales/modal-descuentos/modal-descuentos.component';
@@ -426,9 +425,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
-import { TableModule } from 'primeng/table';
 import { ImportsModule } from '@components/laboratorio/import';
 import { ProductService } from '@components/laboratorio/product.service';
+import { ModificarProformaComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component';
+import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component';
 
 
 registerLocaleData(es);
@@ -463,24 +463,24 @@ registerPlugin(UndoRedo);
         HerramientasComponent, ReportesComponent, AyudaComponent, SesionExpiradaComponent, ModalVendedorComponent, ModalPasswordComponent,
         FacturaNotaRemisionComponent, InterbancosComponent, ClientesComponent, ClientesIgualesComponent, PermisosEspecialesParametrosComponent,
         MenuComprasComponent, RefreshPasswordComponent, TransformacionDigitalComponent, PageNotFoundComponent, ModalClienteComponent,
-        ModalClienteInfoComponent, ModalClienteDireccionComponent, DocumentationErrorsComponent, ModalAlmacenComponent,
+        ModalClienteInfoComponent, DocumentationErrorsComponent, ModalAlmacenComponent, NumeraciontransferenciasComponent, NumpedidomercaderiaCreateComponent,
         ModalPrecioVentaComponent, ModalDescuentosComponent, ModalItemsComponent, ModalIdtipoComponent, ModalSaldosComponent,
         VehiculoComponent, ModalCatalogoNumeracionProformaComponent, ModalUsuarioComponent, RubroComponent, RubroCreateComponent,
         ModalRubroComponent, VehiculoCreateComponent, VehiculoEditComponent, PeriodosSistemaComponent, TarifaPermitidasUsuarioComponent,
         PermisosEspecialesComponent, PermisosEspecialesCreateComponent, PersonaCatalogoComponent, PermisosEspecialesEditComponent,
         LogUsuarioComponent, ReservaAlmacenesComponent, UrgentesAlmacenesComponent, StockAlmacenesComponent, ModificarParametroAComponent,
         ParametrosFacturacionSIATComponent, CrearTomaInventarioComponent, TomaInventarioConsolidadoComponent, CatalogoInventarioComponent,
-        PrecioItemComponent, ActualizarPrecioItemComponent, ActualizarStockActualComponent, ExportarImportarSaldosComponent,
-        GruposInventariosComponent, SaldosInventarioConsolidadoComponent, CatalogoPersonaComponent, CambiarPasswordComponent,
+        PrecioItemComponent, ActualizarPrecioItemComponent, ActualizarStockActualComponent, ExportarImportarSaldosComponent, BancoCreateComponent,
+        GruposInventariosComponent, SaldosInventarioConsolidadoComponent, CatalogoPersonaComponent, CambiarPasswordComponent, ItemCreateComponent,
         ConsolidarInventarioComponent, CatalogoClientesIgualesComponent, ModalDesctExtrasComponent, NumdevolucionesdeudorCreateComponent,
-        ValidarPrecioItemComponent, ValidarPermisoItemComponent, PermisoEspecialPasswordComponent, ModalZonaComponent,
-        ParametroUsuarioComponent, NotasAjustesComponent, CatalogoNotasMovimientoComponent, CatalogoMovimientoMercaderiaComponent,
-        ValidarComponent, RegistrarInventarioGrupoComponent, ConfirmacionNotasAjustesComponent, CatalogoPuntoVentaComponent,
-        PuntoVentaComponent, ProvinciasCatalogoComponent, MatrizInventarioComponent, DescuentosEspecialesComponent,
+        ValidarPrecioItemComponent, ValidarPermisoItemComponent, PermisoEspecialPasswordComponent, ModalZonaComponent, RolesComponent,
+        ParametroUsuarioComponent, NotasAjustesComponent, CatalogoNotasMovimientoComponent, CatalogoMovimientoMercaderiaComponent, NumpedidomercaderiaComponent,
+        ValidarComponent, RegistrarInventarioGrupoComponent, ConfirmacionNotasAjustesComponent, CatalogoPuntoVentaComponent, ResistenciaCreateComponent,
+        PuntoVentaComponent, ProvinciasCatalogoComponent, MatrizInventarioComponent, DescuentosEspecialesComponent, ModificarProformaComponent,
         NivelesDescuentosComponent, NivelesDescuentosCreateComponent, ClasificacionClientesComponent, LugaresComponent, CatalogoLugarComponent,
-        RecargoDocumentoComponent, PlanPagoClientesComponent, ObservacionesHojaRutaComponent, TiposCreditoCreateComponent,
+        RecargoDocumentoComponent, PlanPagoClientesComponent, ObservacionesHojaRutaComponent, TiposCreditoCreateComponent, ResistenciaEditComponent,
         ObservHojaRutaCreateComponent, RecargoDocumentoCreateComponent, TiposCreditoEditComponent, RecargoDocumentoEditComponent,
-        PreciosPermitidoDesctComponent, LineasPorcentajeDesctComponent, LineaProductoCatalogoComponent, RubroEditComponent, NumeraciontransferenciasComponent,
+        PreciosPermitidoDesctComponent, LineasPorcentajeDesctComponent, LineaProductoCatalogoComponent, RubroEditComponent, NumnotasdemovimientoComponent,
         NumeraciontransferenciasCreateComponent, NumeraciontransferenciasEditComponent, NumretirobancarioComponent, NumretirobancarioCreateComponent,
         NumretirobancarioEditComponent, NumreposicionComponent, NumreposicionCreateComponent, NumreposicionEditComponent, NumpagodeudorComponent,
         NumpagodeudorCreateComponent, NumpagodeudorEditComponent, NummovfondosComponent, NummovfondosCreateComponent, NummovfondosEditComponent,
@@ -488,10 +488,10 @@ registerPlugin(UndoRedo);
         NumdevolucionesdeudorEditComponent, NumdepositosclienteComponent, NumdepositosclienteCreateComponent, NumdepositosclienteEditComponent,
         NumdepositosbancariosComponent, NumdepositosbancariosCreateComponent, NumdepositosbancariosEditComponent, NumchequesclientesComponent,
         NumchequesclientesCreateComponent, NumchequesclientesEditComponent, NumlibrosbancosEditComponent, NumlibrosbancosComponent,
-        NumlibrosbancosCreateComponent, CuentasEfectivoComponent, CuentasEfectivoCreateComponent, CuentasEfectivosEditComponent,
+        NumlibrosbancosCreateComponent, CuentasEfectivoComponent, CuentasEfectivoCreateComponent, CuentasEfectivosEditComponent, RoscaEditComponent,
         DeudoresComponent, DeudoresEditComponent, DeudoresCreateComponent, NumcomprasmenoresComponent, NumcomprasmenoresCreateComponent,
         NumcomprasmenoresEditComponent, NumprovisioncompraComponent, NumprovisioncompraCreateComponent, NumprovisioncompraEditComponent,
-        PercepcionesretencionesComponent, PercepcionesretencionesCreateComponent, PercepcionesretencionesEditComponent,
+        PercepcionesretencionesComponent, PercepcionesretencionesCreateComponent, PercepcionesretencionesEditComponent, TerminacionCreateComponent,
         ObserHojaRutaEditComponent, DeudoresCompuestosComponent, CuentasBancariasComponent, NumeracionAnticipoComponent, NumeracionAnticipoCreateComponent,
         NumeracionAnticipoEditComponent, NumeracionCobranzaComponent, NumeracionCobranzaCreateComponent, NumeracionCobranzaEditComponent,
         NumeracionDevolucionAnticiposComponent, NumeracionDevoclucionAnticipoCreateComponent, NumeracionDevoclucionAnticipoEditComponent,
@@ -501,9 +501,9 @@ registerPlugin(UndoRedo);
         NumeracionDescuentoPorMoraEditComponent, NumeracionDesctVariosDirectosComponent, NumeracionDesctVariosDirectosCreateComponent,
         NumeracionDesctVariosDirectosEditComponent, NumeracionDePagoComponent, NumeracionDePagoCreateComponent, NumeracionDePagoEditComponent,
         CompradoresComponent, DeudoresCompCreateComponent, DeudoresCompEditComponent, DeudoresIntegrantesComponent, DeudoresCatalogoComponent,
-        TipoPagoComponent, NumTipoDocumentoVentaComponent, SolicitudesDescuentoComponent, CatalogoDocumentoVentaComponent,
+        TipoPagoComponent, NumTipoDocumentoVentaComponent, SolicitudesDescuentoComponent, CatalogoDocumentoVentaComponent, NumnotasdemovimientoCreateComponent,
         NumPedidosImportacionComponent, NumPedidosImportacionCreateComponent, NumPedidosImportacionEditComponent, NumProformaImportacionComponent,
-        NumProformaImportacionCreateComponent, NumProformaImportacionEditComponent, NumOrdCompraComponent, NumOrdCompraEditComponent,
+        NumProformaImportacionCreateComponent, NumProformaImportacionEditComponent, NumOrdCompraComponent, NumOrdCompraEditComponent, RoscaCreateComponent,
         NumOrdCompraCreateComponent, NumEmbarqueImportacionComponent, NumEmbarqueImportacionCreateComponent, NumEmbarqueImportacionEditComponent,
         NumRecepcionImportacionComponent, NumRecepcionImportacionCreateComponent, NumRecepcionImportacionEditComponent, SucursalComponent,
         SucursalEditComponent, SucursalCreateComponent, PlanCuentaComponent, PlanCuentaCreateComponent, PlanCuentaEditComponent, ModalBotonesImpresionComponent,
@@ -512,18 +512,31 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-        RoscaCreateComponent, RoscaEditComponent, ResistenciaCreateComponent, ResistenciaEditComponent,
-        TerminacionCreateComponent, NumpedidomercaderiaComponent, NumpedidomercaderiaCreateComponent,
-        NumnotasdemovimientoComponent, NumnotasdemovimientoCreateComponent, ItemCreateComponent, RolesComponent,
-        BancoCreateComponent,
+        ModalClienteDireccionComponent,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ],
     bootstrap: [AppComponent],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA
-    ], imports: [BrowserModule,
+    ], imports: [
+        BrowserModule,
         StoreModule.forRoot({ auth: authReducer, ui: uiReducer }),
         AppRoutingModule,
         MatTableModule,
+
         MatMenuModule,
         ReactiveFormsModule,
         FormsModule,
@@ -577,14 +590,16 @@ registerPlugin(UndoRedo);
             timeOut: 3000,
             positionClass: 'toast-top-right',
             preventDuplicates: true
-        })], providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
-            MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
-            TomaInventarioConsolidadoComponent, ProductService,
-            { provide: ServiceRefreshItemsService },
-            { provide: LOCALE_ID, useValue: 'es-BO' },
-            { provide: LocationStrategy, useClass: PathLocationStrategy },
-            { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
-            { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
+        })],
+
+    providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
+        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
+        TomaInventarioConsolidadoComponent, ProductService,
+        { provide: ServiceRefreshItemsService },
+        { provide: LOCALE_ID, useValue: 'es-BO' },
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
+        { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
 })
 
 export class AppModule { }

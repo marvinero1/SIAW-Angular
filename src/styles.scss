@@ -11,18 +11,18 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$adminlte-primary: mat.define-palette(mat.$indigo-palette);
-$adminlte-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+//$adminlte-primary: mat.define-palette(mat.$indigo-palette);
+//$adminlte-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$adminlte-warn: mat.define-palette(mat.$red-palette);
+//$adminlte-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
-  accent: $adminlte-accent,
-  warn: $adminlte-warn,
-)));
+// $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
+//   accent: $adminlte-accent,
+//   warn: $adminlte-warn,
+// )));
 
 [_nghost-wmk-c219] {
   display: list-item !important;
@@ -31,7 +31,7 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($adminlte-theme);
+// @include mat.all-component-themes($adminlte-theme);
 @import '~handsontable/dist/handsontable.full.css';
 
 /* You can add global styles to this file, and also import other style files */
@@ -49,9 +49,6 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
 @import '~admin-lte/dist/css/adminlte.min.css';
 
 @import 'ngx-toastr/toastr';
-
-
-
 
 
 body {
