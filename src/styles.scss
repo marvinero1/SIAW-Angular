@@ -1,6 +1,6 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material'as mat;
+@use '@angular/material' as mat;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -11,18 +11,30 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-//$adminlte-primary: mat.define-palette(mat.$indigo-palette);
-//$adminlte-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$adminlte-primary: mat.define-palette(mat.$indigo-palette);
+$adminlte-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// Define the theme
+$my-app-theme: mat.define-light-theme((
+  color: (
+    primary: $adminlte-primary,
+    accent: $adminlte-accent,
+  )
+));
+
+// Include all component themes
+@include mat.all-component-themes($my-app-theme);
+
 
 // The warn palette is optional (defaults to red).
-//$adminlte-warn: mat.define-palette(mat.$red-palette);
+$adminlte-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-// $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
-//   accent: $adminlte-accent,
-//   warn: $adminlte-warn,
-// )));
+$adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
+  accent: $adminlte-accent,
+  warn: $adminlte-warn,
+)));
 
 [_nghost-wmk-c219] {
   display: list-item !important;
@@ -31,7 +43,7 @@
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-// @include mat.all-component-themes($adminlte-theme);
+@include mat.all-component-themes($adminlte-theme);
 @import '~handsontable/dist/handsontable.full.css';
 
 /* You can add global styles to this file, and also import other style files */
@@ -311,7 +323,7 @@ body {
 }
 
 .mat-mdc-text-field-wrapper {
-  height: calc(1.8rem + 0px) !important;
+  height: calc(1.6rem + 0px) !important;
 }
 
 .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
@@ -444,7 +456,7 @@ select, textarea {
 }
 
 .mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix{
-  padding-top: 10px !important;
+  padding-top: 3px !important;
   padding-bottom: 0px !important;
 }
 

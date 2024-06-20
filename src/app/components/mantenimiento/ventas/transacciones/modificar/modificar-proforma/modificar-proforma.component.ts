@@ -849,7 +849,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getDescuento();
     this.tablaInicializada();
     this.getIDScomplementarProforma();
+
+    this.getUltimaProformaGuardada();
   }
+
+
 
   onNoClick(event: Event): void {
     event.preventDefault();
@@ -1025,6 +1029,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getSaldoItem(codigo);
     this.getPorcentajeVentaItem(codigo);
 
+
     this.saldo_modal_total_1 = "";
     this.saldo_modal_total_2 = "";
     this.saldo_modal_total_3 = "";
@@ -1134,6 +1139,80 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   get f() {
     return this.FormularioData.controls;
   }
+
+  getUltimaProformaGuardada() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/getUltiProfId/";
+    return this.api.getAll('/venta/modif/docmodifveproforma/getUltiProfId/' + this.userConn + "/" + 0 + "/" + 0 + "/" + this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.transferirProformaUltima(datav.id, datav.numeroid);
+
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+
+  transferirProformaUltima(id, numero_id) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
+
+    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + id + "/" + numero_id + "/" + this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+          console.log("DATA ULTIMA PROFORMA: ", datav)
+          this.imprimir_proforma_tranferida(datav);
+
+          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+          this.spinner.show();
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+        },
+        complete: () => {
+        }
+      })
+  }
+
+  transferirProforma(id, numero_id) {
+    this.spinner.show()
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
+
+    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + id + "/" + numero_id + "/" + this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+
+          this.imprimir_proforma_tranferida(datav);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      })
+  }
+
+
+
 
   getIdTipo() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
@@ -2317,7 +2396,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       console.log(result);
       if (result) {
-        this.tranferirProforma();
+        this.tranferirProformaModal();
         this.log_module.guardarLog(ventana, detalle, tipo);
       } else {
         this.toastr.error('! CANCELADO !');
@@ -2328,8 +2407,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
 
-    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
-    this.id_proforma_numero_id = this.id_proforma_numero_id;
+    this.cod_id_tipo_modal_id = proforma.cabecera.id;
+    this.id_proforma_numero_id = proforma.cabecera.numeroid;
     this.fecha_actual = this.fecha_actual;
     // this.fecha_actual = proforma.cabecera.fecha;
     this.almacn_parame_usuario = proforma.cabecera.codalmacen;
@@ -4310,9 +4389,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
-
   cargarDataExcel() {
     //funcion para traer data de excel abierto dando los datos pestania, celdas
     this.dialog.open(CargarExcelComponent, {
@@ -4855,7 +4931,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  tranferirProforma() {
+  tranferirProformaModal() {
     this.dialog.open(ModalTransfeProformaComponent, {
       width: 'auto',
       height: 'auto',
@@ -5047,7 +5123,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       console.log(result);
       if (result) {
-        this.tranferirProforma();
+        this.tranferirProformaModal();
         //this.log_module.guardarLog(ventana, detalle, tipo);
       } else {
         this.toastr.error('! CANCELADO !');
