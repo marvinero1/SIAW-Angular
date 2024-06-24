@@ -59,7 +59,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   cod_precio_venta_modal: any = [];
   array_items_completo: [];
 
-  isCheckedCantidad: boolean = false;
+  isCheckedCantidad: boolean = true;
   isCheckedEmpaque: boolean = false;
   isCheckedEmpaques: boolean = false;
 
@@ -187,7 +187,9 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   empaquesHabilitar() {
     console.log(this.isCheckedEmpaques);
 
-    if (!this.isCheckedEmpaques) {
+    if (this.isCheckedEmpaques === false) {
+      this.isCheckedEmpaques = false;
+    } else {
       this.isCheckedEmpaque = false;
       this.isCheckedCantidad = false;
     }
@@ -196,11 +198,12 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   cantidadHabilitar() {
     console.log(this.isCheckedCantidad);
 
-    if (this.isCheckedCantidad) {
+    if (this.isCheckedCantidad === false) {
+      this.isCheckedCantidad = true;
+    } else {
+
       this.isCheckedEmpaque = false;
       this.isCheckedEmpaques = false;
-    } else {
-      this.isCheckedCantidad = true;
     }
   }
 

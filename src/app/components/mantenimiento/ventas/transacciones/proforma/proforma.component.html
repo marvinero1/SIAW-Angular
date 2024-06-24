@@ -100,17 +100,14 @@
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
+
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
           </button> -->
+
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
           </button> -->
-
-
-
-
-
 
           <!-- [disabled]="[array_items_carrito_y_f4_catalogo].length !== 1" {{ [array_items_carrito_y_f4_catalogo].length  }} -->
 
@@ -159,7 +156,7 @@
     <form class="example-form" [formGroup]="FormularioData">
       <div class="mat-elevation-z2 row">
         <!-- primeraColumna -->
-        <div class="col-md">
+        <div class="col-md-3 col-lg-3  col-sm-4">
           <div class="row">
             <div class="col-md-7" style="padding-right: 0px;padding-left: 6.5px;">
               <div class="input-group">
@@ -327,10 +324,10 @@
         </div>
 
         <!-- segundaColumna -->
-        <div class="col col-lg-4">
+        <div class="col-md-3 col-lg-3  col-sm-4">
           <div class="row">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="border: 0 !important;">
+              <span class="input-group-text form-control-sm" style="border: 0 !important;padding-left: 0px !important;">
                 <u>Venta Cliente en Oficina</u>
               </span>
             </div>
@@ -339,7 +336,8 @@
                 <input type="checkbox" [(value)]="venta_cliente_oficina" formControlName="venta_cliente_oficina">
               </div>
             </div> |
-            <span class="input-group-text form-control-sm" style="border: 0 !important;"><u>Cliente:</u></span>
+            <span class="input-group-text form-control-sm"
+              style="border: 0 !important;padding: 0px 0px 0px 0px;"><u>Cliente:</u></span>
             <ng-container *ngIf="cliente_habilitado_get; else no_habilitado">
               <span class="input-group-text form-control-sm"
                 style="border: 2px solid #149b31 !important;color: #149b31;">
@@ -481,8 +479,10 @@
           </ng-container> -->
         </div>
 
+        <div class="col-md-2 col-lg-2  col-sm-0"></div>
+
         <!-- terceraColumna -->
-        <div class="col col-lg-4" style="float: right;">
+        <div class="col-md-4 col-lg-4 col-sm-4" style="float: right;">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="padding: 9px 0px 0px 18px;border: 0 !important;">
@@ -683,15 +683,19 @@
         <mat-tab-group style="height: 32vh !important; max-height: 34vh;" class="miTabGroupDetalle" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
-              styleClass="p-datatable-striped tablitaDetalle" sortMode="multiple">
+              styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
+              [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
+              (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
                 <tr>
-                  <th pSortableColumn="orden" class="center1">
+                  <th pSortableColumn="orden" class="center1" style="width:5%">
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:10%" class="center1">
-                    <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
+                  <th pSortableColumn="item" style="width:10%" class="center1"
+                    style="text-align: center !important; cursor: pointer;">
+                    <i (click)="modalCatalogoProductos()" class="fa fa-plus"
+                      style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
                   <th pSortableColumn="descripcion" style="width:12%" class="center">
@@ -707,7 +711,6 @@
                   </th>
                   <th pSortableColumn="iva" class="center1">
                     %IVA
-
                   </th>
                   <th pSortableColumn="empaque" class="center1">
                     Empaque
@@ -732,37 +735,36 @@
                     DE
                     <p-sortIcon field="DE" />
                   </th>
-                  <th pSortableColumn="PUL" class="right">
+                  <th pSortableColumn="PUL" class="right1">
                     PUL
                   </th>
-                  <th pSortableColumn="NIV" class="right">
+                  <th pSortableColumn="NIV" class="right1">
                     NIV
                   </th>
-                  <th pSortableColumn="%" class="right">
+                  <th pSortableColumn="%" class="right1">
                     %
                   </th>
-                  <th pSortableColumn="PD" class="right">
+                  <th pSortableColumn="PD" class="right1" style="width:5%">
                     PD
                   </th>
-                  <th pSortableColumn="PU" class="right">
+                  <th pSortableColumn="PU" class="right1" style="width:5%">
                     PU
                   </th>
-                  <th pSortableColumn="%" class="right">
+                  <th pSortableColumn="%" class="right1" style="width:6%">
                     Total
                     <p-sortIcon field="Total" />
                   </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}">
+                <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
+                  (click)="itemDataAll(products?.coditem)">
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
                       padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
                     </i>
                     {{ products.orden }}
                   </td>
-
-
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}
                   </td>
@@ -771,35 +773,16 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
-
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <ng-container *ngIf="products.empaque === null;else enp">
-                          <input pInputText type="number" class="pedido" min="0" [value]="0"
-                            (input)="empaqueChangeMatrix(products, $event.target.value)"
-                            style="text-align: center !important;">
-                        </ng-container>
-                        <ng-template #enp>
-                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque" min="0"
-                            (input)="empaqueChangeMatrix(products, $event.target.value)"
+                        <ng-template>
+                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque"
+                            (change)="empaqueChangeMatrix(products, $event.target.value)"
                             style="text-align: center !important;">
                         </ng-template>
-
-                        <!-- <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque"
-                          (input)="empaqueChangeMatrix(products, $event.target.value)" /> -->
-
                       </ng-template>
                       <ng-template pTemplate="output">
-                        <ng-container *ngIf="products.empaque === null;else enp">
-                          <input pInputText type="number" class="pedido" min="0" [value]="0"
-                            (input)="empaqueChangeMatrix(products, $event.target.value)"
-                            style="text-align: center !important;">
-                        </ng-container>
-                        <ng-template #enp>
-                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque" min="0"
-                            (input)="empaqueChangeMatrix(products, $event.target.value)"
-                            style="text-align: center !important;">
-                        </ng-template>
+                        {{ products.empaque }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -809,45 +792,27 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input #inputCantidad matInput type="number" class="pedido"
+                          <input #inputCantidad pInputText type="number" class="pedido"
                             [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)">
+                            (change)="pedidoChangeMatrix(products, $event.target.value)">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input #inputCantidad matInput type="number" class="pedido"
+                          <input #inputCantidad pInputText type="number" class="pedido"
                             [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                            (change)="pedidoChangeMatrix(products, $event.target.value)"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
-                          <input #inputCantidad matInput type="number" class="pedido"
+                          <input #inputCantidad pInputText type="number" class="pedido"
                             [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                            (change)="pedidoChangeMatrix(products, $event.target.value)"
                             style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
                       <ng-template pTemplate="output">
-                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input #inputCantidad matInput type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input #inputCantidad matInput type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input #inputCantidad matInput type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container>
+                        {{ products.cantidad_pedida }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -856,42 +821,25 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);">
+                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
+                            (change)="cantidadChangeMatrix(products, $event.target.value);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (input)="cantidadChangeMatrix(products, $event.target.value)"
+                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
+                            (change)="cantidadChangeMatrix(products, $event.target.value)"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
+                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad_pedida" min="0"
+                            (change)="pedidoChangeMatrix(products, $event.target.value)"
                             style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        <!-- {{ products.cantidad }} -->
-                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (input)="cantidadChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input matInput type="number" class="pedido" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container>
-
+                        {{ products.cantidad }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -901,48 +849,41 @@
                   <td class="center1" [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoPrecioVentaDetalle"
-                          (blur)="onLeavePrecioVentaDetalle($event, products)" [value]="products?.codtarifa"
-                          (input)="TPChangeMatrix(products, $event.target.value)"
+                        <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.codtarifa"
+                          id="inputCatalogoPrecioVentaDetalle" (blur)="onLeavePrecioVentaDetalle($event, products)"
+                          [value]="products?.codtarifa" (change)="TPChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedPrecioVenta(products)">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoPrecioVentaDetalle"
-                          (blur)="onLeavePrecioVentaDetalle($event, products)" [value]="products?.codtarifa"
-                          (input)="TPChangeMatrix(products, $event.target.value)"
-                          (click)="inputClickedPrecioVenta(products)">
-                        <!-- {{ products.codtarifa }} -->
+                        {{ products.codtarifa }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1">
+                  <td class="center1" [pEditableColumn]="products.coddescuento" pEditableColumnField="coddescuento">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoDescuentoEspecialDetalle"
+                        <input pInputText type="number" class="pedido" min="0"
+                          id="inputCatalogoDescuentoEspecialDetalle" [(ngModel)]="products.coddescuento"
                           (blur)="onLeaveDescuentoEspecialDetalle($event, products)" [value]="products?.coddescuento"
-                          (input)="DEChangeMatrix(products, $event.target.value)"
+                          (change)="DEChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedDescuento(products)">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        <input matInput type="number" class="pedido" min="0" id="inputCatalogoDescuentoEspecialDetalle"
-                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)" [value]="products?.coddescuento"
-                          (input)="DEChangeMatrix(products, $event.target.value)"
-                          (click)="inputClickedDescuento(products)">
-                        <!-- {{ products.coddescuento }} -->
+                        {{ products?.coddescuento }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
-                  <td class="right">{{ products.preciolista }}</td>
-                  <td class="right">{{ products.niveldesc }}</td>
-                  <td class="right">{{ products.porcendesc  | json}}</td>
-                  <td class="right">
+                  <td class="right1">{{ products.preciolista }}</td>
+                  <td class="right1">{{ products.niveldesc }}</td>
+                  <td class="right1">{{ products.porcendesc  | json}}</td>
+                  <td class="right1">
                     {{ products.preciodesc?.toString()?.replace(',', '.') }}</td>
-                  <td class="right">
+                  <td class="right1">
                     {{ products.precioneto?.toString().replace(',', '.') }}</td>
-                  <td class="right">
+                  <td class="right1">
                     {{  calcularTotalCantidadXPU(products?.cantidad_pedida, products?.cantidad, products?.precioneto) }}
                   </td>
                 </tr>
@@ -2287,7 +2228,7 @@
                 </span>
               </div>
 
-              <div class="col text-right">
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
                 <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
               </div>
@@ -2305,7 +2246,7 @@
                 <span class="input-group-text form-control-sm"
                   style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Recargos</u></span>
               </div>
-              <div class="col text-right">
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
                 <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
               </div>
@@ -2323,7 +2264,7 @@
                 <span class="input-group-text form-control-sm"
                   style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Descuento</u></span>
               </div>
-              <div class="col text-right">
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
                 <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
               </div>
@@ -2340,7 +2281,7 @@
                 <span class="input-group-text form-control-sm"
                   style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>IVA</u></span>
               </div>
-              <div class="col text-right">
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
                 <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
               </div>
@@ -2357,7 +2298,7 @@
                 <span class="input-group-text form-control-sm"
                   style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
               </div>
-              <div class="col text-right">
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
                 <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
               </div>
@@ -2509,7 +2450,7 @@
         <!-- Empaques -->
         <div class="row">
           <div class="input-group" style="padding-left: 7px;">
-            <span class="input-group-text form-control-sm">Empaques</span>
+            <span class="input-group-text form-control-sm">Empaques Item : {{ item }}</span>
 
             <ng-container *ngIf="!empaque_view; else empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>

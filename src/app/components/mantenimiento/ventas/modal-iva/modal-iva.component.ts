@@ -11,7 +11,7 @@ export class ModalIvaComponent implements OnInit {
 
   tabla_iva_get_proformas: any = [];
 
-  constructor(private api: ApiService, public dialog: MatDialog,
+  constructor(private api: ApiService,
     public dialogRef: MatDialogRef<ModalIvaComponent>, @Inject(MAT_DIALOG_DATA) public tablaIva: any) {
 
     this.tabla_iva_get_proformas = tablaIva.tablaIva;

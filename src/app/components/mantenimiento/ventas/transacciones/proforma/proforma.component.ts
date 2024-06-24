@@ -149,6 +149,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.toastr.warning('TECLA DESHABILITADA ⚠️');
   }
 
+  @HostListener("document:keydown.Delete", []) unloadHandler7(event: Event) {
+    console.log("Borrar items de detalle de carrito");
+    this.onRowSelectForDelete();
+  }
+
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
@@ -156,7 +161,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   products!: ItemDetalle[];
-  selectedProducts!: ItemDetalle;
+  selectedProducts: ItemDetalle[] = [];
 
 
   FormularioData: FormGroup;
@@ -590,6 +595,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       // Agregar el número de orden a los objetos de datos
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
         element.orden = index + 1;
+        if (element.empaque === null) {
+          element.empaque = 0;
+        }
       });
 
       // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
@@ -1645,6 +1653,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  item: any;
+
   getEmpaqueItem(item) {
     console.log("EMPAQUE");
 
@@ -1655,12 +1665,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.empaquesItem = datav;
           console.log(this.empaquesItem);
           this.empaque_view = true;
+          this.item = item;
 
           this.empaque_item_codigo = this.empaquesItem.codigo;
           this.empaque_item_descripcion = this.empaquesItem.descripcion;
           this.cantidad = this.empaquesItem.cantidad;
 
-          this.empaque_descripcion_concat = "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
+          this.empaque_descripcion_concat = item + "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
         },
 
         error: (err: any) => {
@@ -1869,6 +1880,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Descuento"
     }
 
+    if (element.empaque === null) {
+      element.empaque = 0
+    }
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + element.empaque)
       .subscribe({
@@ -1879,7 +1894,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           // this.cantidad = datav.total;
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-          element.cantidad_empaque = Number(newValue);
+          element.empaque = Number(newValue);
 
           element.cantidad = Number(datav.total);
           element.cantidad_pedida = Number(datav.total);
@@ -1893,6 +1908,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
+
         },
         complete: () => { }
       })
@@ -4362,12 +4378,40 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
   onRowSelect(event: any) {
-    console.log(event);
-    this.itemDataAll(event.data.coditem)
+    console.log('Row Selected:', event.data);
+    this.updateSelectedProducts();
   }
 
+  onRowSelectForDelete() {
+    console.log('Array de Items para eliminar: ', this.selectedProducts);
+
+    // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+      return !this.selectedProducts.some(selectedItem =>
+        selectedItem.orden === item.orden && selectedItem.coditem === item.coditem);
+    });
+
+    // Actualizar el número de orden de los objetos de datos restantes
+    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+      element.orden = index + 1;
+    });
+
+    // Actualizar el origen de datos del MatTableDataSource
+    this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+    // Limpiar el array de productos seleccionados
+    this.selectedProducts = [];
+  }
+
+
+
   onRowUnselect(event: any) {
-    // this.messageService.add({ severity: 'info', summary: 'Product Unselected', detail: event.data.name });
+    console.log('Row Unselected:', event.data);
+    this.updateSelectedProducts();
+  }
+
+  updateSelectedProducts() {
+    console.log('Selected Products:', this.selectedProducts);
   }
 
 

@@ -56,6 +56,7 @@ import { ModalBotonesImpresionComponent } from '../../proforma/modal-botones-imp
 import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component';
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { CargarExcelComponent } from '@components/mantenimiento/ventas/cargar-excel/cargar-excel.component';
+import { BuscadorAvanzadoComponent } from '@components/uso-general/buscador-avanzado/buscador-avanzado.component';
 
 
 @Component({
@@ -1190,8 +1191,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + id + "/" + numero_id + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
-
           this.imprimir_proforma_tranferida(datav);
+
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -5169,6 +5170,15 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalSolicitarUrgenteComponent, {
       disableClose: true,
       width: 'auto',
+      height: 'auto',
+      data: {},
+    });
+  }
+
+  modalBuscadorAvanzado() {
+    this.dialog.open(BuscadorAvanzadoComponent, {
+      disableClose: true,
+      width: '750px',
       height: 'auto',
       data: {},
     });

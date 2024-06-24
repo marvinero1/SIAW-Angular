@@ -429,6 +429,7 @@ import { ImportsModule } from '@components/laboratorio/import';
 import { ProductService } from '@components/laboratorio/product.service';
 import { ModificarProformaComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component';
 import { ModalClienteDireccionComponent } from '@components/mantenimiento/ventas/modal-cliente-direccion/modal-cliente-direccion.component';
+import { BuscadorAvanzadoComponent } from '@components/uso-general/buscador-avanzado/buscador-avanzado.component';
 
 
 registerLocaleData(es);
@@ -512,7 +513,7 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-        ModalClienteDireccionComponent,
+        ModalClienteDireccionComponent, BuscadorAvanzadoComponent,
 
 
 

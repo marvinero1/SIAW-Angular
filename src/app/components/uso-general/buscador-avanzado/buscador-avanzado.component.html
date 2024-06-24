@@ -1,0 +1,117 @@
+<section style="background-color: #f9f9f9;">
+  <div class="container-fluid">
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="timer" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;"><strong>Busqueda Avanzada</strong></mat-card-title>
+        </div>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
+    </ng-container>
+
+
+
+
+    <div class="p-2">
+      <div class="row">
+        <div class="col-md-2">
+          <span>ID: </span>
+          <mat-slide-toggle class="example-margin" [(ngModel)]="todas" (click)="habilitarTodo();">
+            Todas
+          </mat-slide-toggle>
+        </div>
+        <div class="col-md-2">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();">
+            Desde:
+          </mat-slide-toggle>
+        </div>
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID </u></span>
+            </div>
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" (blur)="onLeaveIDTipo($event)"
+                [(ngModel)]="id_tipo_view_get_codigo" [disabled]="!id_bool" style="margin-left: 16px;">
+            </ng-container>
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta: </u></span>
+            </div>
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" (blur)="onLeaveIDTipo($event)"
+                [disabled]="!id_bool" style="margin-left: 16px;">
+            </ng-container>
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-md-2">
+          <span>Fecha: </span>
+          <mat-slide-toggle class="example-margin" [(ngModel)]="todas" (click)="habilitarTodo();">
+            Todas
+          </mat-slide-toggle>
+        </div>
+        <div class="col-md-2">
+          <mat-slide-toggle class="example-margin" (click)="habilitarFecha();">
+            Desde
+          </mat-slide-toggle>
+        </div>
+
+        <div class="col-md-4">
+          <div class="input-group-">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Desde: </u></span>
+          </div>
+          <input type="date" [(ngModel)]="fecha_desde_input">
+        </div>
+        <div class="col-md-4">
+          <span class="input-group-text form-control-sm"
+            style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta
+            </u></span>
+          <input type="date" [(ngModel)]="fecha_hasta_input">
+        </div>
+      </div>
+
+
+      <hr>
+
+
+
+
+
+
+
+    </div>
+  </div>
+</section>
