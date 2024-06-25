@@ -45,8 +45,8 @@ export class ModalPrecioVentaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalPrecioVentaComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     public servicioPrecioVenta: ServicioprecioventaService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
-    this.detalle_get = detalle.detalle;
-    console.log(this.detalle_get, detalle.detalle);
+    // this.detalle_get = detalle.detalle;
+    console.log(detalle);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;

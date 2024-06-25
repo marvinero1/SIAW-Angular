@@ -1,6 +1,12 @@
+<div class="no-printme">
+  <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
+  <mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>
+</div>
+
 <div id="content">
   <div class="row">
     <div class="col-md-4 p-1 content-box">
+
       <p class="pe"><strong>{{ data_etiqueta.linea1 }}</strong></p><br>
       <span class="espan"><strong>{{ data_etiqueta.representante }}</strong></span>
       <div style="text-align: left !important;">
@@ -15,11 +21,10 @@
         </div>
         <p class="pe"><strong>{{ data_etiqueta.ciudad }}</strong></p>
       </div>
+
       <div class="row p-2">
         <strong>{{ data_etiqueta.nom_factura }}</strong>
       </div>
     </div>
   </div>
-  <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
-  <mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>
 </div>

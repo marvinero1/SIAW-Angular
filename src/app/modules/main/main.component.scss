@@ -10,3 +10,15 @@
     background-color: #093070 !important;
     color: white !important;
 }
+
+.printme {
+	display: none;
+}
+@media print {
+	.no-printme  {
+		display: none;
+	}
+	.printme  {
+		display: block;
+	}
+}

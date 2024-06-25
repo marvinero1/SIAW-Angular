@@ -854,8 +854,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getUltimaProformaGuardada();
   }
 
-
-
   onNoClick(event: Event): void {
     event.preventDefault();
   }
@@ -1158,11 +1156,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-
   transferirProformaUltima(id, numero_id) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + id + "/" + numero_id + "/" + this.BD_storage)
+    return this.api.getAll('/venta/modif/docmodifveproforma/obtProfxModif/' + this.userConn + "/" + id + "/" + numero_id + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           console.log("DATA ULTIMA PROFORMA: ", datav)
@@ -1211,9 +1208,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       })
   }
-
-
-
 
   getIdTipo() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
@@ -2405,8 +2399,21 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+  public codigo_proforma: any;
+  public descrip_confirmada: string;
+  public anulada: boolean;
+  public transferida: boolean;
+  public aprobada: boolean;
+
   imprimir_proforma_tranferida(proforma) {
-    console.log(proforma);
+    console.log(proforma, proforma.habilitado);
+
+    this.codigo_proforma = proforma.cabecera.codigo
+    this.descrip_confirmada = proforma.descConfirmada;
+    this.anulada = proforma.cabecera.anulada;
+    this.transferida = proforma.cabecera.transferida;
+    this.aprobada = proforma.cabecera.aprobada;
+    this.cliente_habilitado_get = proforma.habilitado;
 
     this.cod_id_tipo_modal_id = proforma.cabecera.id;
     this.id_proforma_numero_id = proforma.cabecera.numeroid;
@@ -2463,8 +2470,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //this.cod_descuento_total = proforma.descuentos;
     //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = proforma.cabecera
+
     //el cuerpo del detalle asignado al carrito
     this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+    this.etiqueta_get_modal_etiqueta = proforma.etiquetaProf[0];
+    this.recargo_de_recargos = proforma.recargos;
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
@@ -2922,7 +2932,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST");
 
         //aca manda a imprimir la proforma guardada
-        this.modalBtnImpresiones(this.totabilizar_post.codProf);
+        // this.modalBtnImpresiones(this.totabilizar_post.codProf);
 
         setTimeout(() => {
           this.spinner.hide();
@@ -5078,7 +5088,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         cod_cliente: cod_cliente,
         id_proforma: this.id_tipo_view_get_codigo,
         numero_id: this.id_proforma_numero_id,
-        nom_cliente: this.nombre_cliente_catalogo_real,
+        nom_cliente: this.nombre_cliente,
         desc_linea: this.habilitar_desct_sgn_solicitud,
         id_sol_desct: this.id_solicitud_desct,
         nro_id_sol_desct: this.numero_id_solicitud_desct,
@@ -5157,13 +5167,25 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  modalBtnImpresiones(codigo_proforma_submitdata) {
+  modalBtnImpresiones() {
     this.dialog.open(ModalBotonesImpresionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
     });
-    this.guardarDataImpresion(codigo_proforma_submitdata);
+    this.guardarDataImpresion();
+  }
+
+  guardarDataImpresion() {
+    let data = [{
+      codigo_proforma: this.codigo_proforma,
+      cod_cliente: this.codigo_cliente,
+      cod_cliente_real: this.codigo_cliente_catalogo_real,
+      cmbestado_contra_entrega: this.contra_entrega,
+      estado_contra_entrega: this.estado_contra_entrega_input,
+    }];
+
+    localStorage.setItem('data_impresion', JSON.stringify(data));
   }
 
   modalSolicitudUrgente() {
@@ -5184,17 +5206,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  guardarDataImpresion(codigo_proforma_submitdata) {
-    let data = [{
-      codigo_proforma: codigo_proforma_submitdata,
-      cod_cliente: this.codigo_cliente,
-      cod_cliente_real: this.codigo_cliente_catalogo_real,
-      cmbestado_contra_entrega: this.contra_entrega,
-      estado_contra_entrega: this.estado_contra_entrega_input,
-    }];
 
-    localStorage.setItem('data_impresion', JSON.stringify(data));
-  }
 
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({

@@ -2744,49 +2744,23 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
       ...item,
-      cantaut: item.cantidad_pedida,
+      cantaut: item.cantidad,
       totalaut: item.total,
       obs: item.obs,
     }));
 
     this.submitted = true;
-    let data = this.FormularioData.value;
-
-    data = {
-      ...data,
-      codcliente_real: this.codigo_cliente,
-      descuentos: this.des_extra,
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
-      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
-    };
-
-    const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
-      this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? ");
-    if (confirmar_proforma) {
-      data = {
-        ...data,
-        confirmada: true,
-      };
-    }
-
-    console.log("Data Form Mapeado: ", data);
-
-    total_proforma_concat = {
-      veproforma: data,
-      veproforma1: this.array_items_carrito_y_f4_catalogo,
-      veproforma_valida: transformedArray,
-      dt_anticipo_pf: this.tabla_anticipos,
-      vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
-      verecargoprof: this.recargo_de_recargos, //array de recargos,
-      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
-      veproforma_iva: this.veproforma_iva, //array de iva
-    };
-
-    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
 
     if (!this.FormularioData.valid) {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    }
+
+    if (this.validacion_post.length === 0) {
+      this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
       setTimeout(() => {
         this.spinner.hide();
       }, 1000);
@@ -2815,6 +2789,38 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     }
 
+    let data = this.FormularioData.value;
+
+    data = {
+      ...data,
+      codcliente_real: this.codigo_cliente,
+      descuentos: this.des_extra,
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
+      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
+    };
+
+    const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
+      this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? ");
+    if (confirmar_proforma) {
+      data = {
+        ...data,
+        confirmada: true,
+      };
+    }
+
+    console.log("Data Form Mapeado: ", data);
+    total_proforma_concat = {
+      veproforma: data,
+      veproforma1: this.array_items_carrito_y_f4_catalogo,
+      veproforma_valida: transformedArray,
+      dt_anticipo_pf: this.tabla_anticipos,
+      vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
+      verecargoprof: this.recargo_de_recargos, //array de recargos,
+      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
+      veproforma_iva: this.veproforma_iva, //array de iva
+    };
+
+    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     // ESTA FUNCION SE MOVIO A ETIQUETACOMPONENT DONDE AL GRABAR LA ETIQUETA YA TE PREGUNTA SI DESEAS APLICAR ESTE DESCT.
     // const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
@@ -2991,17 +2997,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
     if (confirmacionValidaciones) {
-
       //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
-      this.aplicarDesctPorDeposito()
-
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
+      this.aplicarDesctPorDeposito();
+      return;
     }
 
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
@@ -3107,7 +3105,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
 
-    this.spinner.show();
     this.submitted = true;
 
     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;

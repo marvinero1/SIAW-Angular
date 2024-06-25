@@ -65,37 +65,39 @@
 
         <div class="input-group-append text-center" style="float: right;">
           <button class="btn btn-outline-secondary form-control-sm" matTooltip="Matriz Item" type="button"
-            (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip">
+            (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
-            matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip">
+            matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-inbox gray" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Estado Mora"
-            matTooltipClass="custom-tooltip" (click)="estadoMoraValidacion()">
+            matTooltipClass="custom-tooltip" (click)="estadoMoraValidacion()" matTooltipPosition="above">
             <mat-icon class="red">photo_size_select_small</mat-icon>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Pagos Cliente"
-            matTooltipClass="custom-tooltip" [disabled]="!codigo_cliente" (click)="estadoPagoClientes();">
+            matTooltipClass="custom-tooltip" [disabled]="!codigo_cliente" matTooltipPosition="above"
+            (click)="estadoPagoClientes();">
             <mat-icon class="blue">photo_size_select_small</mat-icon>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
-            matTooltipClass="custom-tooltip" (click)="validarProformaSoloNegativos();">
+            matTooltipClass="custom-tooltip" matTooltipPosition="above" (click)="validarProformaSoloNegativos();">
             <i class="fa fa-inbox blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-question-circle black" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()">
+            matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()"
+            matTooltipPosition="above">
             <i class="fa fa-inbox red" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-window-restore blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente"
+            matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
             [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
@@ -117,8 +119,7 @@
           <mat-menu #beforeMenu="matMenu" xPosition="before">
             <mat-list role="list">
               <mat-list-item role="listitem" class="list-button">
-                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-                  matTooltip="Ultimas Proformas"
+                <button class="btn btn-outline-secondary form-control-sm" type="button"
                   [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
                   (click)="ultimasProformas()">
                   <i class="fa fa-clone green" aria-hidden="true"></i> Ultimas Proformas
@@ -126,14 +127,13 @@
               </mat-list-item>
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  (click)="modalBtnImpresiones(0);" matTooltipClass="custom-tooltip" matTooltip="Mandar Imprimir">
+                  (click)="modalBtnImpresiones(0);">
                   <i class="fa fa-print" aria-hidden="true"></i> Mandar Imprimir
                 </button>
               </mat-list-item>
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  (click)="detalleProformaCarritoTOExcel();" matTooltipClass="custom-tooltip"
-                  matTooltip="Detalle a Excel">
+                  (click)="detalleProformaCarritoTOExcel();">
                   <i class="fa fa-paper-plane" aria-hidden="true"></i> Detalle a Excel
                 </button>
               </mat-list-item>
@@ -312,7 +312,7 @@
             <div class="col">
               <div class="input-group">
                 <span class="form-control-sm" style="border: 0 !important;">
-                  <u>Calcular Empa por Descuento</u>
+                  <u>Calcular Empa por Descto</u>
                 </span>
                 <div class="input-group-text" style="border: 0;">
                   <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento" [checked]="desct"
@@ -692,24 +692,24 @@
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:10%" class="center1"
+                  <th pSortableColumn="item" style="width:9%" class="center1"
                     style="text-align: center !important; cursor: pointer;">
                     <i (click)="modalCatalogoProductos()" class="fa fa-plus"
                       style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:12%" class="center">
+                  <th pSortableColumn="descripcion" style="width:14%" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
-                  <th pSortableColumn="medida" class="center1">
+                  <th pSortableColumn="medida" class="center1" style="width:5%">
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
-                  <th pSortableColumn="ud" class="center1">
+                  <th pSortableColumn="ud" class="center1" style="width:4%">
                     Ud
                   </th>
-                  <th pSortableColumn="iva" class="center1">
+                  <th pSortableColumn="iva" class="center1" style="width:3%">
                     %IVA
                   </th>
                   <th pSortableColumn="empaque" class="center1">
@@ -735,22 +735,22 @@
                     DE
                     <p-sortIcon field="DE" />
                   </th>
-                  <th pSortableColumn="PUL" class="right1">
+                  <th pSortableColumn="PUL" class="right1" style="width:4%">
                     PUL
                   </th>
-                  <th pSortableColumn="NIV" class="right1">
+                  <th pSortableColumn="NIV" class="right1" style="width:4%">
                     NIV
                   </th>
-                  <th pSortableColumn="%" class="right1">
+                  <th pSortableColumn="%" class="right1" style="width:3%">
                     %
                   </th>
-                  <th pSortableColumn="PD" class="right1" style="width:5%">
+                  <th pSortableColumn="PD" class="right1" style="width:4%">
                     PD
                   </th>
-                  <th pSortableColumn="PU" class="right1" style="width:5%">
+                  <th pSortableColumn="PU" class="right1" style="width:4%">
                     PU
                   </th>
-                  <th pSortableColumn="%" class="right1" style="width:6%">
+                  <th pSortableColumn="%" class="right1" style="width:4%">
                     Total
                     <p-sortIcon field="Total" />
                   </th>

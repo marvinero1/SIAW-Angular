@@ -1,8 +1,8 @@
 <title>{{ titulo_agencia }} - Pertec SIAW </title>
 
 <div *ngIf="!isProformaPdfPage">
-  <app-header style="z-index: 10 !important; padding: 0.2rem 0.2rem !important;"></app-header>
-  <app-menu-sidebar class="bck-azul" style="z-index: 10 !important;"></app-menu-sidebar>
+  <app-header style="z-index: 10 !important; padding: 0.2rem 0.2rem !important;" class="no-printme"></app-header>
+  <app-menu-sidebar class="bck-azul" style="z-index: 10 !important;" class="no-printme"></app-menu-sidebar>
 </div>
 
 <div class="content-wrapper">
@@ -10,8 +10,8 @@
 </div>
 
 <div *ngIf="!isProformaPdfPage">
-  <app-footer></app-footer>
-  <app-control-sidebar></app-control-sidebar>
+  <app-footer class="no-printme"></app-footer>
+  <app-control-sidebar class="no-printme"></app-control-sidebar>
 </div>
 
 <!-- <div id="sidebar-overlay" (click)="onToggleMenuSidebar()"></div> -->

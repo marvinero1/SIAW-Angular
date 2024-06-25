@@ -1,4 +1,9 @@
-<div id="content">
+<div class="no-printme">
+  <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
+  <mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>
+</div>
+
+<div id="content" style="background-color: white !important;">
   <div class="row">
     <div class="col-sm-3 left">
       <p style=" font-family: 'Courier New' !important;font-size: 1.22rem !important;">
@@ -113,10 +118,10 @@
           <td class="center" style="font-family: 'Courier New' !important;">&nbsp;{{items.coditem}}&nbsp;</td>
           <td width="450">
             <div class="row">
-              <div class="col-md-6 left" style="font-size: 0.8rem !important;">
+              <div class="col-md-8 left" style="font-size: 0.8rem !important;">
                 {{items.descripcion}}
               </div>
-              <div class="col-md-6 right" style="font-size: 0.8rem !important;">
+              <div class="col-md-4 right" style="font-size: 0.8rem !important;">
                 {{items.medida}}
               </div>
             </div>
@@ -228,6 +233,3 @@
     </tbody>
   </table>
 </div>
-
-<mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
-<mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>

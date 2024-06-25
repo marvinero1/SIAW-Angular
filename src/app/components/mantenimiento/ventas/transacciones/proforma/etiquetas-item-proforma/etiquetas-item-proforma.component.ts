@@ -62,7 +62,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
 
   getDataPDFHardcodiado() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/120028/801406/801406/PE/PORCANCELAR")
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
@@ -91,29 +91,30 @@ export class EtiquetasItemProformaComponent implements OnInit {
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
-          format: 'letter',
+          format: 'letter' // Formato Carta (Letter)
         });
 
-        const margin = 4; // Ajustar para los márgenes deseados
+        // Calcular el ancho y alto del PDF con márgenes
+        const margin = 10;
         const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
         const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
 
+        // Obtener el ancho y alto de la imagen en el canvas
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
 
+        // Calcular la relación de aspecto de la imagen
         const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-        const newWidth = imgWidth * ratio * 0.7; // Reducir en un 0.7 para un 70%
-        const newHeight = imgHeight * ratio * 0.7;
+        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
+        const newWidth = imgWidth * ratio;
+        const newHeight = imgHeight * ratio;
 
         // Agregar la imagen al PDF con márgenes
         pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
-        // Configurar la impresión con márgenes mínimos
-        pdf.autoPrint(); // Establecer márgenes en mm
-
-        // Desencadenar el diálogo de impresión
-        window.print();
+        // Descargar el PDF
+        pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + "- ETIQUETAS" + '.pdf');
       });
     }
   }

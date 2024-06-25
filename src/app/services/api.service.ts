@@ -368,6 +368,8 @@ export class ApiService {
     sessionStorage.removeItem("token");
 
     localStorage.removeItem("data_impresion");
+
+    localStorage.removeItem("data_impresion");
     return this.router.navigate(['/login']);
   }
 

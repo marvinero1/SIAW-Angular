@@ -3,7 +3,6 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { ApiService } from '@services/api.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import * as pdfMake from 'pdfmake/build/pdfmake';
 
 @Component({
   selector: 'app-etiqueta-impresion-proforma',
@@ -20,6 +19,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   BD_storage: any;
   usuarioLogueado: any;
   agencia_logueado: any;
+  nombre_guardar: string;
 
   data_etiqueta: any = [];
   data_detalle_proforma: any = [];
@@ -33,12 +33,10 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
     this.getDataPDF();
-
     this.mandarNombre();
   }
 
   ngOnInit(): void {
-
   }
 
   getDataPDF() {
@@ -49,6 +47,8 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
           console.log("DATA DEL PDF: ", datav);
           //datav.docveprofCab CABECERA Y FOOTER
           this.data_etiqueta = datav.dt_etiqueta
+
+          this.nombre_guardar = datav.docveprofCab.titulo + "-" + datav.docveprofCab.rcodcliente;
         },
 
         error: (err: any) => {
@@ -62,13 +62,12 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
 
   getDataPDFHARDCORE() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/120028/801406/801406/PE/PORCANCELAR")
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
           //datav.docveprofCab CABECERA Y FOOTER
           this.data_etiqueta = datav.dt_etiqueta
-
 
           //datav.dtveproforma1 DETALLE
           this.data_detalle_proforma = datav.dtveproforma1;
@@ -88,7 +87,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     const content = document.getElementById('content');
     if (content) {
       // Ajustar la escala para mejorar la calidad de la imagen
-      html2canvas(content, { scale: 4 }).then((canvas) => {
+      html2canvas(content, { scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
         // Crear un nuevo documento PDF
@@ -118,7 +117,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
         pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
         // Descargar el PDF
-        pdf.save(this.data_etiqueta.linea1 + '.pdf');
+        pdf.save(this.nombre_guardar + '.pdf');
       });
     }
   }

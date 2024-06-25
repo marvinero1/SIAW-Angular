@@ -37,3 +37,15 @@ span{
     max-width: 23% !important;
 }
 
+/* para imprimir */
+.content {
+	display: none;
+}
+@media print {
+	.no-printme  {
+		display: none;
+	}
+	.content  {
+		display: block;
+	}
+}

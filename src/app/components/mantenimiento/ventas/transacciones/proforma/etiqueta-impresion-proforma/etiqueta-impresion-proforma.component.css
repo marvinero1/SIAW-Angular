@@ -24,3 +24,16 @@
   margin-bottom: 4px;
   overflow: hidden;
 }
+
+/* para imprimir */
+.content {
+	display: none;
+}
+@media print {
+	.no-printme  {
+		display: none;
+	}
+	.content  {
+		display: block;
+	}
+}

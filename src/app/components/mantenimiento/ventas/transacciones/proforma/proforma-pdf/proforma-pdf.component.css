@@ -91,13 +91,9 @@ row{
   /* padding: 5px; */
 }
 
-
-
 .tr_linea{
   border: 1px solid black !important;
 }
-
-
 
 .footer-table {
   width: 100% !important;
@@ -112,4 +108,20 @@ row{
 p{
   margin-top: 0 !important;   
   margin-bottom: 0rem !important;
+}
+
+
+
+
+/* para imprimir */
+.content {
+	display: none;
+}
+@media print {
+	.no-printme  {
+		display: none;
+	}
+	.content  {
+		display: block;
+	}
 }

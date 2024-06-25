@@ -30,10 +30,9 @@ export class ProformaPdfComponent implements OnInit {
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
-    this.mandarNombre();
+    this.getDataPDF();
 
-    console.log("data impresion:", this.data_impresion);
-    this.getDataPDFHarcode();
+    console.log("data impresion: ", this.data_impresion);
   }
 
   ngOnInit() {
@@ -63,7 +62,7 @@ export class ProformaPdfComponent implements OnInit {
 
   getDataPDFHarcode() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/127601/303529/300012/PE/PORCANCELAR")
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/120028/801406/801406/PE/PORCANCELAR")
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
@@ -85,6 +84,7 @@ export class ProformaPdfComponent implements OnInit {
   }
 
   printFunction() {
+
     window.print();
   }
 
