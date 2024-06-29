@@ -27,6 +27,7 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   cliente_send: any = [];
   cliente_referencia_proforma_get: boolean = false;
   userConn: string;
+  origen: string;
 
   public codigo: string = '';
   public nombre: string = '';
@@ -52,10 +53,10 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService,
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
-    @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any) {
+    @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any, @Inject(MAT_DIALOG_DATA) public ventana: any) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-
+    this.origen = ventana.ventana;
     // Verificar si cliente_referencia_proforma es null
     if (this.cliente_referencia_proforma != null) {
       // Accede a las propiedades del objeto aquí
@@ -161,16 +162,35 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   mandarCliente() {
+    console.log("Cliente enviado:", this.cliente_send, "Origen:", this.origen);
+
+    if (this.origen === "ventana_buscador") {
+      this.servicioCliente.disparadorDeClienteBuscadorGeneral.emit({
+        cliente: this.cliente_send,
+      });
+      this.close();
+    }
+
+    if (this.origen === "ventana_catalogo") {
+      this.servicioCliente.disparadorDeClientes.emit({
+        cliente: this.cliente_send,
+      });
+      this.close();
+    }
+
+    if (this.origen === "ventana_cliente_referencia") {
+      this.servicioCliente.disparadorDeClienteReal.emit({
+        cliente: this.cliente_send,
+      });
+      this.close();
+    }
+
     if (this.cliente_referencia_proforma_get === false) {
       this.servicioCliente.disparadorDeClientes.emit({
         cliente: this.cliente_send,
       });
-    } else {
-      this.servicioCliente.disparadorDeClienteReal.emit({
-        cliente: this.cliente_send,
-      });
+      this.close();
     }
-    this.close();
   }
 
   close() {

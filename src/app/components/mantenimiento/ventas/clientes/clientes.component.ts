@@ -511,6 +511,9 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     this.dialog.open(ModalClienteComponent, {
       width: 'auto',
       height: 'auto',
+      data: {
+        ventana: "ventana_catalogo"
+      }
     });
   }
 

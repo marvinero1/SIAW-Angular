@@ -19,13 +19,13 @@ import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-v
 })
 export class TalonarioRecibosCreateComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  talon:any=[];
-  userConn:any;
-  userLogueado:any=[];
+  dataform: any = '';
+  talon: any = [];
+  userConn: any;
+  userLogueado: any = [];
 
   inputValue: number | null = null;
   inputValue1: number | null = null;
@@ -33,45 +33,45 @@ export class TalonarioRecibosCreateComponent implements OnInit {
 
 
   vendedor_get: any = [];
-  cod_vendedor:any;
+  cod_vendedor: any;
 
-  public ventana="talonario-create"
-  public detalle="talonario-detalle";
-  public tipo="transaccion-talonario-POST";
+  public ventana = "talonario-create"
+  public detalle = "talonario-detalle";
+  public tipo = "transaccion-talonario-POST";
 
   constructor(private _formBuilder: FormBuilder, public dialog: MatDialog, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<TalonarioRecibosCreateComponent>, public _snackBar: MatSnackBar,
+    private api: ApiService, public dialogRef: MatDialogRef<TalonarioRecibosCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService, public serviciovendedor: VendedorService) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
-  } 
+  }
 
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-  
+
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataform.codigo,Validators.compose([Validators.required])],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
+      codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
 
-      TalDel: [this.dataform.TalDel,Validators.pattern(/^-?\d+$/)],
-      TalAl: [this.dataform.TalAl,Validators.pattern(/^-?\d+$/)],
-      nroactual: [this.dataform.nroactual,Validators.pattern(/^-?\d+$/)],
-      Fecha: [this.dataform.Fecha,Validators.compose([Validators.required])],
+      TalDel: [this.dataform.TalDel, Validators.pattern(/^-?\d+$/)],
+      TalAl: [this.dataform.TalAl, Validators.pattern(/^-?\d+$/)],
+      nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
+      Fecha: [this.dataform.Fecha, Validators.compose([Validators.required])],
 
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       Usuarioreg: [usuario_logueado],
 
-      codvendedor: [this.dataform.codvendedor,Validators.compose([Validators.required])],
+      codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
     });
   }
 
@@ -81,11 +81,11 @@ export class TalonarioRecibosCreateComponent implements OnInit {
       this.cod_vendedor = data.vendedor;
     });
   }
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.getVendedorCatalogo();
   }
 
-  
+
   getVendedorCatalogo() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/vevendedor/catalogo/";
@@ -94,11 +94,11 @@ export class TalonarioRecibosCreateComponent implements OnInit {
         next: (datav) => {
           this.vendedor_get = datav;
         },
-                
+
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
 
@@ -106,6 +106,9 @@ export class TalonarioRecibosCreateComponent implements OnInit {
     this.dialog.open(ModalVendedorComponent, {
       width: 'auto',
       height: 'auto',
+      data: {
+        ventana: "ventana"
+      }
     });
   }
 
@@ -127,24 +130,24 @@ export class TalonarioRecibosCreateComponent implements OnInit {
 
 
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /ctsxcob/mant/cotalonario/";
-    
-    return this.api.create("/ctsxcob/mant/cotalonario/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /ctsxcob/mant/cotalonario/";
+
+    return this.api.create("/ctsxcob/mant/cotalonario/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.talon = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },

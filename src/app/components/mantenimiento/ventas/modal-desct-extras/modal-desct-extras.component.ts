@@ -347,7 +347,7 @@ export class ModalDesctExtrasComponent implements OnInit {
         "codcobranza": 0,
         "descrip": "string"
       }], //array de recargos
-      tabladescuentos: array_de_descuentos_map_for_backend, //array de iva
+      tabladescuentos: array_de_descuentos_map_for_backend, //array de descuentos
     }
     console.log(total_proforma_concat);
 

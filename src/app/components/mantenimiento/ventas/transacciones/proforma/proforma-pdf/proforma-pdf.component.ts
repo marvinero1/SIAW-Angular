@@ -30,22 +30,22 @@ export class ProformaPdfComponent implements OnInit {
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
-    this.getDataPDF();
-
     console.log("data impresion: ", this.data_impresion);
   }
 
   ngOnInit() {
+    this.getDataPDF();
   }
 
   getDataPDF() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" + this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + "PORCANCELAR")
+    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" +
+      this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + this.data_impresion[0].estado_contra_entrega_input)
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
           //datav.docveprofCab CABECERA Y FOOTER
-          this.data_cabecera_footer_proforma = datav.docveprofCab
+          this.data_cabecera_footer_proforma = datav.docveprofCab;
 
           //datav.dtveproforma1 DETALLE
           this.data_detalle_proforma = datav.dtveproforma1;

@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
@@ -29,6 +29,7 @@ export class ModalVendedorComponent implements OnInit {
   public codigo: string = '';
   public nombre: string = '';
   userConn: string;
+  origen: string;
 
   displayedColumns = ['codigo', 'descripcion'];
 
@@ -40,6 +41,7 @@ export class ModalVendedorComponent implements OnInit {
 
   vendedors!: veVendedor[];
   selectevendedors: veVendedor[];
+
   loading: boolean = false;
   filteredVendedors: any[] = [];
   searchValue: string | undefined;
@@ -49,15 +51,18 @@ export class ModalVendedorComponent implements OnInit {
   myControlCodigo = new FormControl<string | veVendedor>('');
   myControlDescripcion = new FormControl<string | veVendedor>('');
 
+  @ViewChild('firstRow', { static: false }) firstRow: ElementRef;
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalVendedorComponent>,
-    private serviciVendedor: VendedorService, private elementRef: ElementRef) {
-
-
+    private serviciVendedor: VendedorService, @Inject(MAT_DIALOG_DATA) public ventana: any) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.origen = ventana.ventana;
   }
 
   ngOnInit() {
     this.getVendedorCatalogo();
+    if (this.firstRow) {
+      this.firstRow.nativeElement.focus();
+    }
   }
 
   getVendedorCatalogo() {
@@ -68,6 +73,11 @@ export class ModalVendedorComponent implements OnInit {
         next: (datav) => {
           this.vendedor_get = datav;
           this.vendedors = this.vendedor_get;
+
+          // Selecciona el primer elemento si `vendedors` no está vacío
+          if (this.vendedors && this.vendedors.length > 0) {
+            this.selectevendedors = [this.vendedors[0]];
+          }
         },
 
         error: (err: any) => {
@@ -85,9 +95,16 @@ export class ModalVendedorComponent implements OnInit {
   }
 
   mandarVendedor() {
-    this.serviciVendedor.disparadorDeVendedores.emit({
-      vendedor: this.vendedor_view,
-    });
+    if (this.origen === "ventana_buscador") {
+      this.serviciVendedor.disparadorDeVendedoresBuscadorGeneral.emit({
+        vendedor: this.vendedor_view,
+      });
+    } else {
+      this.serviciVendedor.disparadorDeVendedores.emit({
+        vendedor: this.vendedor_view,
+      });
+    }
+
     this.close();
   }
 

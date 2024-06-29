@@ -10,11 +10,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ModalBotonesImpresionComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<ModalBotonesImpresionComponent>, private dialog: MatDialog,
-    private router: Router, private api: ApiService, private toastr: ToastrService) {
+  userConn: any;
+  usuarioLogueado: any;
+  agencia_logueado: any;
+  BD_storage: any;
+  public data_impresion: any = [];
+
+  constructor(public dialogRef: MatDialogRef<ModalBotonesImpresionComponent>, private router: Router,
+    private toastr: ToastrService) {
+
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
+
   }
 
   ngOnInit() {
+    this.btnCorreo();
   }
 
   proformaImpresion() {
@@ -31,6 +45,11 @@ export class ModalBotonesImpresionComponent implements OnInit {
 
     const url_items = this.router.serializeUrl(this.router.createUrlTree(['/etiquetasItemsProforma']));
     window.open(url_items, '_blank');
+  }
+
+  btnCorreo() {
+    const url_proforma = this.router.serializeUrl(this.router.createUrlTree(['/proformaPDFCorreo']));
+    window.open(url_proforma, '_blank');
   }
 
   close() {

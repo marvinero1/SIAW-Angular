@@ -9,6 +9,9 @@
     .mdc-text-field--filled:not(.mdc-text-field--disabled){
         background-color: white !important;
     }
+    .mdc-text-field__input{
+        padding: 7px;
+    }
 }  
 
 

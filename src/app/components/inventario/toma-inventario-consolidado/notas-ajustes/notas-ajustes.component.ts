@@ -294,6 +294,9 @@ export class NotasAjustesComponent implements OnInit {
     this.dialog.open(ModalVendedorComponent, {
       width: 'auto',
       height: 'auto',
+      data: {
+        ventana: "ventana"
+      }
     });
   }
 

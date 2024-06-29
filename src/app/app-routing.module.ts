@@ -115,6 +115,7 @@ import { ProformaPdfComponent } from '@components/mantenimiento/ventas/transacci
 import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiquetas-item-proforma/etiquetas-item-proforma.component';
 import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 import { ModificarProformaComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component';
+import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf-email/proforma-pdf-email.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -735,6 +736,11 @@ const routes: Routes = [
                 path: 'proformaPDF',
                 component: ProformaPdfComponent
             },
+            {
+                path: 'proformaPDFCorreo',
+                component: ProformaPdfEmailComponent
+            },
+
             {
                 path: 'etiquetasItemsProforma',
                 component: EtiquetasItemProformaComponent

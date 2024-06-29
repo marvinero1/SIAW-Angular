@@ -10,56 +10,114 @@
         <div class="input-group-append text-center" style="float: left;">
           <!-- BOTONES -->
           <div class="input-group-append">
-            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
-              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
-            </button> -->
-            <!-- 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="submitDataModificarProforma();">
+              <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
+            </button>
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="submitDataModificarProformaAprobar();">
               <span>
                 <mat-icon
                   style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  done_outline</mat-icon>Aprobar
+                  done_outline</mat-icon>Grabar y Aprobar
               </span>
-            </button> -->
-
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="limpiar();">
-              <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
             </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente &&
-              id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''">
-              <span><i class="fa fa-clone" aria-hidden="true" style="color: #ffc107;"></i> Transferir</span>
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="anularProformar();">
+              <span>
+                <mat-icon
+                  style="color: #ff0707;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  highlight_off</mat-icon>Anular
+              </span>
             </button>
 
             <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="exportProformaExcel();">
-              <span>Exportar Proforma</span>
-            </button> -->
-
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="cargarDataExcel();">
-              <span><i class="fa fa-file-excel green" aria-hidden="true" style="color: #05970c;"></i>
-                Cargar</span>
-            </button>
-
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="validarProformaAll();">
-              <span> <i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Validar</span>
-            </button>
+              <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i> Validar</span>
+            </button> -->
+            <div>
+              <ng-container *ngIf="estado_proforma === 'ANULADA'">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                  matTooltip="La Proforma es: ANULADA por tanto NO SE PUEDE VALIDAR" matTooltipClass="custom-tooltip"
+                  matTooltipPosition="above" disabled="true">
+                  <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i> Validar</span>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="estado_proforma === 'APROBADA'">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                  matTooltip="La Proforma es: APROBADA por tanto NO SE PUEDE VALIDAR" matTooltipClass="custom-tooltip"
+                  matTooltipPosition="above" disabled="true">
+                  <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i>
+                    Validar</span>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA'">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                  matTooltip="La Proforma es: TRANSFERIDA por tanto NO SE PUEDE VALIDAR"
+                  matTooltipClass="custom-tooltip" matTooltipPosition="above" disabled="true">
+                  <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i>
+                    Validar</span>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="estado_proforma === 'NO APROBADA'">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                  matTooltip="Validar" matTooltipClass="custom-tooltip" matTooltipPosition="above"
+                  (click)="validarProformaAll();">
+                  <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i>
+                    Validar</span>
+                </button>
+              </ng-container>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="modalVerificarCreditoDisponible();">
               <span>
                 <mat-icon
-                  style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  style="color: #664f09d7;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
                   account_balance_wallet</mat-icon> Verificar Crédito Disponible
               </span>
             </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+
+            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
               <i class="fa fa-bars" aria-hidden="true" style="color: #ffc107;"></i> Orden Pedido
-            </button>
+            </button> -->
           </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;
           <div class="pt-1" style="padding-left: 85px !important;">
             <h3><strong><u>MODIFICAR PROFORMA</u></strong></h3>
           </div>
@@ -700,24 +758,24 @@
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:9%" class="center1"
+                  <th pSortableColumn="item" style="width:8%" class="center1"
                     style="text-align: center !important; cursor: pointer;">
                     <i (click)="modalCatalogoProductos()" class="fa fa-plus"
                       style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:14%" class="center">
+                  <th pSortableColumn="descripcion" style="width:17%" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
-                  <th pSortableColumn="medida" class="center1" style="width:5%">
+                  <th pSortableColumn="medida" class="center1" style="width:7%">
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
                   <th pSortableColumn="ud" class="center1" style="width:4%">
                     Ud
                   </th>
-                  <th pSortableColumn="iva" class="center1" style="width:3%">
+                  <th pSortableColumn="iva" class="center1" style="width:2%">
                     %IVA
                   </th>
                   <th pSortableColumn="empaque" class="center1">
@@ -2348,25 +2406,25 @@
             </button>
 
             <div>
-              <ng-container *ngIf="anulada">
+              <ng-container *ngIf="estado_proforma === 'ANULADA'">
                 <span class="form-control-sm"
                   style="border: 0 !important;background-color: black;color:#ef4d4d; padding: 5px;">
                   <strong>ANULADA</strong></span>
               </ng-container>
 
-              <ng-container *ngIf="transferida">
+              <ng-container *ngIf="estado_proforma === 'APROBADA'">
                 <span class="form-control-sm"
                   style="padding: 5px;border: 0 !important;background-color: black;color:#bfff00">
-                  <strong>TRANSFERIDA</strong> </span>
-              </ng-container>
-
-              <ng-container *ngIf="aprobada">
-                <span class="form-control-sm"
-                  style="padding: 5px;border: 0 !important;background-color: black;color:#1ab61d">
                   <strong>APROBADA</strong></span>
               </ng-container>
 
-              <ng-container *ngIf="!aprobada">
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA'">
+                <span class="form-control-sm"
+                  style="padding: 5px;border: 0 !important;background-color: black;color:#00ff00">
+                  <strong>TRANSFERIDA</strong></span>
+              </ng-container>
+
+              <ng-container *ngIf="estado_proforma === 'NO APROBADA'">
                 <span class="form-control-sm"
                   style="padding: 5px;border: 0 !important;background-color: black;color:#40E0D0">
                   <strong>NO APROBADA</strong></span>

@@ -1,53 +1,49 @@
 .tittle{
-    text-align: center;
-    border-style: solid;
-    border-color: #ffc107;
-    background: #093070;
-    color: white;
+  text-align: center;
+  border-style: solid;
+  border-color: #ffc107;
+  background: #093070;
+  color: white;
 }
 .mat-mdc-header-row{
-    background: #093070;
-    position: sticky;
-    top: 0;
+  background: #093070;
+  position: sticky;
+  top: 0;
 }
 th{
-    text-align: center;
-    color: #fff; 
+  text-align: center;
+  color: #fff; 
 }
 td{
-    text-align: left;
-    cursor: pointer;
+  text-align: left;
+  cursor: pointer;
 }
 .mat-mdc-table .mdc-data-table__row{
-    height: calc(0rem + 0px) !important;
+  height: calc(0rem + 0px) !important;
 }
 .mat-mdc-header-row{
-    height: calc(0rem + 0px) !important;
+  height: calc(0rem + 0px) !important;
 }
 .mat-mdc-form-field{
-    flex-direction: inherit !important;
+  flex-direction: inherit !important;
 }
 .mat-mdc-table .mdc-data-table__header-row {
-    height: 21px;
+  height: 21px;
 }
-
-
 
 .mdc-data-table__row:hover {
   background-color:  #093070;
 }
+
 .mdc-data-table__row{
   color: rgb(0, 0, 0);
 }
+
 td:hover{
   color: black;
 }
 
 
-.focus-row {
-  background-color: #f5f5f5; // O el color que necesites para indicar el foco
-  // Otros estilos para indicar el foco
-}
 ::ng-deep {
   .tablita {
     .p-datatable-thead > tr > th {
@@ -55,10 +51,10 @@ td:hover{
       position: sticky;
       top: 0;
       background-color: #093070;
-      min-height: 25px !important;
+      min-height: 25px;
     }
     .p-icon{
-      color: white;
+      color: black;
     }
     // .p-datatable .p-datatable-header{
     //   padding: 0rem 0rem !important;
@@ -75,24 +71,18 @@ td:hover{
     margin-bottom: 15px;
   }
 
-
-
-
-
-
-
   .p-inputtext{
     margin-top: 15px;
   }
 
   .p-icon {
-    width: 0.7rem !important;
-    height: 0.7rem !important;
+    width: 0.55rem !important;
+    height: 0.55rem !important;
   }
 
-  .p-treetable .p-datatable-wrapper .p-datatable-tbody {
-    height: 12px !important;
-  }
+  //.p-treetable .p-datatable-wrapper .p-datatable-tbody {
+  //  height: 12px;
+  //}
 
   .p-datatable .p-datatable-tbody > tr > td{
     padding: 0rem 0rem !important;

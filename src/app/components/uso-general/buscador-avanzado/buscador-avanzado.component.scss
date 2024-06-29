@@ -8,4 +8,23 @@
     .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
         width: 150px !important;
     }
+
+    .tablita {
+        .p-datatable-thead > tr > th {
+        padding: 0rem 0rem !important;
+        position: sticky;
+        top: 0;
+        background-color: #093070;
+        min-height: 25px !important;
+        color: white;
+        }
+        .p-icon{
+        color: black !important;
+        }
+        // .p-datatable .p-datatable-header{
+        //   padding: 0rem 0rem !important;
+        //   text-align: center;
+        // }
+
+    }
 }

@@ -115,7 +115,7 @@ export class ModalClienteDireccionComponent implements OnInit {
     });
 
     this.servicioCliente.disparadorDeDireccionesClientes.emit({
-      direccion: this.direccion_view,
+      direccion: this.cliente_real_array.direccion,
     });
 
     this.close();

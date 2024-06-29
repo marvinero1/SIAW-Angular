@@ -16,14 +16,14 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TalonarioRecibosEditComponent implements OnInit {
 
-  FormularioDataEdit:FormGroup;
+  FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  talon_edit:any=[];
-  dataform:any='';
-  talon:any=[];
-  usuario_logueado:any;
-  user_conn:any;
+  talon_edit: any = [];
+  dataform: any = '';
+  talon: any = [];
+  usuario_logueado: any;
+  user_conn: any;
   errorMessage;
 
   inputValue: number | null = null;
@@ -31,15 +31,15 @@ export class TalonarioRecibosEditComponent implements OnInit {
   inputValue2: number | null = null;
 
   vendedor_get: any = [];
-  cod_vendedor:any;
+  cod_vendedor: any;
 
-  public ventana="talonario"
-  public detalle="talonario-edit";
-  public tipo="talonario-edit-PUT";
+  public ventana = "talonario"
+  public detalle = "talonario-edit";
+  public tipo = "talonario-edit-PUT";
 
-  constructor(private _formBuilder: FormBuilder, public dialog: MatDialog, public log_module:LogService, public dialogRef: MatDialogRef<TalonarioRecibosEditComponent>, 
-    @Inject(MAT_DIALOG_DATA) public datatalonEdit: any, private api:ApiService, private datePipe: DatePipe,private toastr: ToastrService,
-    public _snackBar: MatSnackBar, public serviciovendedor: VendedorService){
+  constructor(private _formBuilder: FormBuilder, public dialog: MatDialog, public log_module: LogService, public dialogRef: MatDialogRef<TalonarioRecibosEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public datatalonEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
+    public _snackBar: MatSnackBar, public serviciovendedor: VendedorService) {
     this.FormularioDataEdit = this.createForm();
   }
 
@@ -55,11 +55,11 @@ export class TalonarioRecibosEditComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.getVendedorCatalogo();
   }
 
-  
+
   getVendedorCatalogo() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/vevendedor/catalogo/";
@@ -68,18 +68,21 @@ export class TalonarioRecibosEditComponent implements OnInit {
         next: (datav) => {
           this.vendedor_get = datav;
         },
-                
+
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
-  
+
   modalVendedor(): void {
     this.dialog.open(ModalVendedorComponent, {
       width: 'auto',
       height: 'auto',
+      data: {
+        ventana: "ventana"
+      }
     });
   }
 
@@ -104,30 +107,30 @@ export class TalonarioRecibosEditComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.datatalonEdit.datatalonEdit.codigo],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
 
-      TalDel: [this.dataform.TalDel,Validators.pattern(/^-?\d+$/)],
-      TalAl: [this.dataform.TalAl,Validators.pattern(/^-?\d+$/)],
-      nroactual: [this.dataform.nroactual,Validators.pattern(/^-?\d+$/)],
-      Fecha: [this.dataform.Fecha,Validators.compose([Validators.required])],
+      TalDel: [this.dataform.TalDel, Validators.pattern(/^-?\d+$/)],
+      TalAl: [this.dataform.TalAl, Validators.pattern(/^-?\d+$/)],
+      nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
+      Fecha: [this.dataform.Fecha, Validators.compose([Validators.required])],
 
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       Usuarioreg: [usuario_logueado],
 
-      codvendedor: [this.dataform.codvendedor,Validators.compose([Validators.required])],
+      codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
     });
-  } 
+  }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /ctsxcob/mant/cotalonario/ Update";
-    return this.api.update('/ctsxcob/mant/cotalonario/'+this.user_conn+"/"+this.talon_edit.codigo, data)
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /ctsxcob/mant/cotalonario/ Update";
+    return this.api.update('/ctsxcob/mant/cotalonario/' + this.user_conn + "/" + this.talon_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.talon = datav;
@@ -136,8 +139,8 @@ export class TalonarioRecibosEditComponent implements OnInit {
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           this.toastr.error('! NO SE EDITO !');
           console.log(err, this.errorMessage);
         },

@@ -137,8 +137,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         case "inputCatalogoCliente":
           this.mandarCodCliente(this.codigo_cliente);
           break;
-
-
       }
     }
   };
@@ -159,10 +157,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   @ViewChild('tabGroupfooter') tabGroup1: MatTabGroup;
 
-
   products!: ItemDetalle[];
   selectedProducts: ItemDetalle[] = [];
-
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -473,6 +469,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Valor del Disabled:", this.disableSelect.value);
 
     // this.modalSolicitudUrgente();
+
+    //ACA COLOCAR EL ARRAY DE ITEMS PARA EXPORTA A EXCEL 
+    //this.array_items_carrito_y_f4_catalogo = 
   }
 
   ngOnInit() {
@@ -613,10 +612,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Item Procesados De Catalogo F4: ", data);
       this.item_seleccionados_catalogo_matriz = data;
 
-      if (this.item_seleccionados_catalogo_matriz.length > 0) {
-        this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
-      } else {
+      if (this.item_seleccionados_catalogo_matriz.length === 0) {
         this.array_items_carrito_y_f4_catalogo.push(this.item_seleccionados_catalogo_matriz);
+      } else {
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
       }
 
       console.log("ARRAY COMPLETO DE MATRIZ Y F4: " + this.array_items_carrito_y_f4_catalogo);
@@ -628,10 +627,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
         element.orden = index + 1;
       });
-
-      //ACA SE DIBUJA LA TABLA CON LA INFO DEL CARRITO DE COMPRAS YA CON LOS ITEM TRABAJADOS EN EL BACKEND
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-      this.inputCantidad.nativeElement.focus();
     });
     //
 
@@ -639,8 +634,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsCatalogo.subscribe(data => {
       console.log("Recibiendo Item Sin Procesar de Catalogo F4: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar_catalogo = data;
-
-      this.ponerFocoEnInput();
     });
     //FIN CATALOGO F4 ITMES
 
@@ -864,9 +857,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     event.preventDefault();
   }
 
-  ponerFocoEnInput() {
-    this.inputCantidad.nativeElement.focus();
-  }
 
   tablaInicializada() {
     this.orden_creciente = 0;
@@ -1764,7 +1754,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   guardarCorreo() {
-    let ventana = "proforma-edit"
+    let ventana = "proforma"
     let detalle = "proforma-actualizoEmail";
     let tipo_transaccion = "transacc-proforma-PUT";
 
@@ -1895,7 +1885,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
           element.empaque = Number(newValue);
-
           element.cantidad = Number(datav.total);
           element.cantidad_pedida = Number(datav.total);
 
@@ -1912,6 +1901,46 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         },
         complete: () => { }
       })
+  }
+
+
+  pedidoChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
+    element.cantidad = element.cantidad_pedida;
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    this.total_desct_precio = true;
+
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
+      + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
+      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el element correspondiente en tu array de datos
+          element.coddescuento = Number(datav.coddescuento);
+          element.preciolista = Number(datav.preciolista);
+          element.preciodesc = Number(datav.preciodesc);
+          element.precioneto = Number(datav.precioneto);
+
+          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+          console.log(this.dataSource.filteredData);
+
+          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      });
   }
 
   cantidadChangeMatrix(elemento: any, newValue: number) {
@@ -1949,46 +1978,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           console.log(err, errorMessage);
         },
         complete: () => {
-          //this.simularTab();
-        }
-      });
-  }
-
-  pedidoChangeMatrix(element: any, newValue: number) {
-    this.total = 0;
-    this.subtotal = 0;
-    this.iva = 0
-    this.des_extra = 0;
-    this.recargos = 0;
-
-    element.cantidad = element.cantidad_pedida;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
-    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    this.total_desct_precio = true;
-
-    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
-      + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
-      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
-      .subscribe({
-        next: (datav) => {
-          //this.almacenes_saldos = datav;
-          console.log("Total al cambio de DE en el detalle: ", datav);
-          // Actualizar la coddescuento en el element correspondiente en tu array de datos
-          element.coddescuento = Number(datav.coddescuento);
-          element.preciolista = Number(datav.preciolista);
-          element.preciodesc = Number(datav.preciodesc);
-          element.precioneto = Number(datav.precioneto);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          //this.simularTab();
         }
       });
   }
@@ -2853,6 +2842,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       error: (err) => {
         console.log(err, errorMessage);
         this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -2861,11 +2851,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       complete: () => {
         //aca exporta a ZIP
         this.exportProformaZIP(this.totabilizar_post.codProf);
-
         this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST");
 
         //aca manda a imprimir la proforma guardada
-        this.modalBtnImpresiones(this.totabilizar_post.codProf);
+        this.modalBtnImpresiones();
+        this.guardarDataImpresion(this.totabilizar_post.codProf);
 
         setTimeout(() => {
           this.spinner.hide();
@@ -2993,13 +2983,18 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
+    this.totabilizar();
     this.spinner.show();
+
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
-    if (confirmacionValidaciones) {
-      //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
+    if (!confirmacionValidaciones) {
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+    } else {
+      // ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
       this.aplicarDesctPorDeposito();
-      return;
     }
 
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
@@ -3112,7 +3107,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     if (this.total === 0) {
       this.toastr.error("EL TOTAL NO PUEDE SER 0");
-
       setTimeout(() => {
         this.spinner.hide();
       }, 1500);
@@ -4373,7 +4367,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
 
 
-
+  // eventos de seleccion en la tabla
   onRowSelect(event: any) {
     console.log('Row Selected:', event.data);
     this.updateSelectedProducts();
@@ -4400,8 +4394,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.selectedProducts = [];
   }
 
-
-
   onRowUnselect(event: any) {
     console.log('Row Unselected:', event.data);
     this.updateSelectedProducts();
@@ -4410,6 +4402,29 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   updateSelectedProducts() {
     console.log('Selected Products:', this.selectedProducts);
   }
+  // fin eventos de seleccion en la tabla
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4580,6 +4595,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+      data: {
+        ventana: "ventana"
+      }
     });
   }
 
@@ -4720,6 +4738,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+      data: {
+        ventana: "ventana_catalogo"
+      }
     });
   }
 
@@ -4728,7 +4749,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       width: 'auto',
       height: 'auto',
       data: {
-        cliente_referencia_proforma: true
+        cliente_referencia_proforma: true,
+        ventana: "ventana_cliente_referencia"
       }
     });
   }
@@ -5122,13 +5144,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  modalBtnImpresiones(codigo_proforma_submitdata) {
+  modalBtnImpresiones() {
     this.dialog.open(ModalBotonesImpresionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
     });
-    this.guardarDataImpresion(codigo_proforma_submitdata);
+    // this.guardarDataImpresion(codigo_proforma_submitdata);
   }
 
   modalSolicitudUrgente() {
@@ -5147,6 +5169,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       cod_cliente_real: this.codigo_cliente_catalogo_real,
       cmbestado_contra_entrega: this.contra_entrega,
       estado_contra_entrega: this.estado_contra_entrega_input,
+      codigo_vendedor: this.cod_vendedor_cliente
     }];
 
     localStorage.setItem('data_impresion', JSON.stringify(data));

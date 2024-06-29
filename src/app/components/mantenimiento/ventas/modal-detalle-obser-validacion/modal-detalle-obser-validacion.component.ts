@@ -21,7 +21,8 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public more_messages: any,
   ) {
 
-    this.data = this.processMessage(obs_titulo.obs_titulo);
+    // this.data = this.processMessage(obs_titulo.obs_titulo);
+    this.data = obs_titulo.obs_titulo;
     this.obs_contenido_get = obs_contenido.obs_contenido;
     this.more_messagess = more_messages.more_messages
 
@@ -33,7 +34,9 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
 
   ngOnInit() {
     // Procesar el mensaje para crear la estructura de datos
-    this.data = this.processMessage(this.message);
+    // this.data = this.processMessage(this.message);
+
+    this.data = this.message;
   }
 
 
