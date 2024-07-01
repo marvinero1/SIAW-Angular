@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
+import { ToastrService } from 'ngx-toastr';
+
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { ToastrService } from 'ngx-toastr';
-import { stringify } from 'handsontable/helpers';
-
 @Component({
   selector: 'app-proforma-pdf-email',
   templateUrl: './proforma-pdf-email.component.html',
@@ -150,6 +149,7 @@ export class ProformaPdfEmailComponent implements OnInit {
         console.log(err, errormesagge);
         console.log(pdfBlob);
       },
+
       complete: () => {
         window.close();
       }
