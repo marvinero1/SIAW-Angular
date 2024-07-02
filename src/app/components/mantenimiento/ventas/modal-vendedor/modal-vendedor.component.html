@@ -16,49 +16,45 @@
   <div class="row">
     <div class="col-lg">
       <div class="team bg-white scrollmenu">
-        <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
-          <p-table #dt1 [value]="vendedors" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
-            selectionMode="single" styleClass="p-datatable-striped" [paginator]="true"
-            [(selectedRow)]="selectevendedors" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]"
-            [(selection)]="selectevendedors" (onRowSelect)="getveVendedorbyId($event)"
-            styleClass="p-datatable-striped tablita" [loading]="loading"
-            [globalFilterFields]="['codigo', 'descripcion']">
+        <p-table #dt1 [value]="vendedors" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
+          selectionMode="single" styleClass="p-datatable-striped" [paginator]="true" [(selectedRow)]="selectevendedors"
+          [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [(selection)]="selectevendedors"
+          (onRowSelect)="getveVendedorbyId($event)" styleClass="p-datatable-striped tablita"
+          [globalFilterFields]="['codigo', 'descripcion']">
 
-            <ng-template pTemplate="caption" styleClass="p-datatable-striped">
-              <div class="flex">
-                <span class="p-input-icon-left ml-auto">
-                  <i class="pi pi-search"></i>
-                  <input pInputText type="text" [(ngModel)]="searchValue" [autofocus]="false"
-                    (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Buscador Vendedor" />
-                </span>
-              </div>
-            </ng-template>
+          <ng-template pTemplate="caption" styleClass="p-datatable-striped">
+            <div class="flex">
+              <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <!-- <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)" /> -->
+                <input pInputText type="text" #input [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)">
+              </span>
+            </div>
+          </ng-template>
 
-            <ng-template pTemplate="header">
-              <tr style="background-color: #093070 !important;">
-                <th pSortableColumn="codigo" class="text-center">
-                  Código
-                  <p-sortIcon field="codigo"></p-sortIcon>
-                </th>
-                <th pSortableColumn="descripcion" class="text-center">
-                  Descripción
-                </th>
-              </tr>
-            </ng-template>
+          <ng-template pTemplate="header">
+            <tr style="background-color: #093070 !important;">
+              <th pSortableColumn="codigo" class="text-center">
+                Código
+                <p-sortIcon field="codigo"></p-sortIcon>
+              </th>
+              <th pSortableColumn="descripcion" class="text-center">
+                Descripción
+              </th>
+            </tr>
+          </ng-template>
 
-            <ng-template pTemplate="body" let-vendedors let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="vendedors" [pSelectableRowIndex]="rowIndex">
-                <td class="text-center" [autofocus]="true" pAutoFocus>
-                  {{ vendedors.codigo }}
-                </td>
-                <td class="text-center" [autofocus]="true" pAutoFocus>
-                  {{ vendedors.descripcion }}
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-
-        </div>
+          <ng-template pTemplate="body" let-vendedors let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="vendedors" [pSelectableRowIndex]="rowIndex" pAutoFocus [autofocus]="true">
+              <td class="text-center">
+                {{ vendedors.codigo }}
+              </td>
+              <td class="text-center">
+                {{ vendedors.descripcion }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   </div>

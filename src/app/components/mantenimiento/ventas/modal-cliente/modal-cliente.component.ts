@@ -1,13 +1,11 @@
 import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild, AfterViewInit, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { veCliente } from '@services/modelos/objetos';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ServicioclienteService } from '../serviciocliente/serviciocliente.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-modal-cliente',
   templateUrl: './modal-cliente.component.html',
@@ -29,27 +27,16 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   userConn: string;
   origen: string;
 
-  public codigo: string = '';
-  public nombre: string = '';
-
   @Output() codigoEvento = new EventEmitter<string>();
-
-  displayedColumns = ['codigo', 'nombre', 'nit', 'direccion_titular'];
-
-  dataSource = new MatTableDataSource<veCliente>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
-
-  myControlCodigo = new FormControl<string | veCliente>('');
-  myControlNombre = new FormControl<string | veCliente>('');
-  myControlNIT = new FormControl<string | veCliente>('');
-  myControlDireccion = new FormControl<string | veCliente>('');
+  @ViewChild('dt1') dt1: Table;
 
   options: veCliente[] = [];
   filteredOptions: Observable<veCliente[]>;
+
+  clientes!: veCliente[];
+  selecteclientes: veCliente[];
+  searchValue: string | undefined;
 
   constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService,
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
@@ -70,74 +57,27 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.codigo;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
-
-    this.filteredOptions = this.myControlNombre.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.nombre_comercial;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
-
-    this.filteredOptions = this.myControlNIT.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.nit;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
-
-    this.filteredOptions = this.myControlDireccion.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.direccion_titular;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
+    this.input.nativeElement.focus();
   }
 
   ngAfterViewInit() {
     this.getClienteCatalogo();
+
     this.input.nativeElement.focus();
-  }
-
-  private _filter(name: string): veCliente[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(option => option.codigo.toLowerCase().includes(filterValue));
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: veCliente): string {
-    return user && user.codigo ? user.codigo : '';
   }
 
   getClienteCatalogo() {
     this.spinner.show();
 
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
     return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cliente = datav;
+          this.clientes = this.cliente;
           console.log('data', datav);
 
-          this.dataSource = new MatTableDataSource(this.cliente);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -158,7 +98,17 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   }
 
   getveClienteByID(cliente) {
-    this.cliente_send = cliente;
+    console.log(cliente?.data.codigo)
+    this.cliente_send = cliente?.data;
+  }
+
+  private debounceTimer: any;
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+    }, 750); // 300 ms de retardo
   }
 
   mandarCliente() {

@@ -37,7 +37,6 @@ export class ProformaPdfEmailComponent implements OnInit {
 
   ngOnInit() {
     this.getDataPDF();
-
   }
 
   getDataPDF() {

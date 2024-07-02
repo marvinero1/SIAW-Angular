@@ -54,11 +54,9 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ModalBotonesImpresionComponent } from './modal-botones-impresion/modal-botones-impresion.component';
-import { element } from 'protractor';
 import { ComunicacionproformaService } from '../../serviciocomunicacionproforma/comunicacionproforma.service';
 import { ModalSolicitarUrgenteComponent } from '../../modal-solicitar-urgente/modal-solicitar-urgente.component';
 import { ModalClienteDireccionComponent } from '../../modal-cliente-direccion/modal-cliente-direccion.component';
-
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -137,6 +135,15 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         case "inputCatalogoCliente":
           this.mandarCodCliente(this.codigo_cliente);
           break;
+
+        case "inputCantidad":
+          this.pedidoChangeMatrix('', 0);
+          break;
+
+        case "input_cantidad":
+          this.cantidadChangeMatrix('', 0);
+          break;
+
       }
     }
   };
@@ -151,6 +158,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Borrar items de detalle de carrito");
     this.onRowSelectForDelete();
   }
+
+  @ViewChild("input_cantidad_pedida") inputCantidadPedida: ElementRef;
+
 
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
@@ -960,7 +970,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       etiqueta_impresa: [false],
       es_sol_urgente: [false],
 
-      obs: [this.dataform.obs],
+      obs: this.dataform.obs ? this.dataform.obs.trim() : '',
       obs2: [""],
       direccion: [this.dataform.direccion],
       peso: Number(this.peso),
@@ -1902,7 +1912,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
+  private debounceTimer: any;
 
   pedidoChangeMatrix(element: any, newValue: number) {
     this.total = 0;
@@ -1941,6 +1951,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => {
         }
       });
+  }
+
+  onInputChange(products: any, value: any) {
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.pedidoChangeMatrix(products, value);
+    }, 3000); // 300 ms de retardo
   }
 
   cantidadChangeMatrix(elemento: any, newValue: number) {
