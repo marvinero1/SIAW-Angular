@@ -10,11 +10,13 @@ import { ToastrService } from 'ngx-toastr';
 import { AnticipoProformaService } from './servicio-anticipo-proforma/anticipo-proforma.service';
 import { subMonths } from 'date-fns';
 import { MatTabGroup } from '@angular/material/tabs';
+
 @Component({
   selector: 'app-anticipos-proforma',
   templateUrl: './anticipos-proforma.component.html',
   styleUrls: ['./anticipos-proforma.component.scss']
 })
+
 export class AnticiposProformaComponent implements OnInit {
 
   public fecha_desde = new Date();
@@ -27,6 +29,7 @@ export class AnticiposProformaComponent implements OnInit {
   array_tabla_anticipos_get: any = [];
   public arraya_asignacion_anticipo: any = [];
 
+  agencia_logueado: any;
   cod_cliente_proforma: any;
   cod_moneda_proforma: any;
   totalProf_proforma: any;
@@ -94,6 +97,11 @@ export class AnticiposProformaComponent implements OnInit {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+
+    if (this.agencia_logueado === "Loc") {
+      this.agencia_logueado = "311";
+    }
 
     this.id_get = id.id;
     this.numero_id_get = numero_id.numero_id;
@@ -111,6 +119,8 @@ export class AnticiposProformaComponent implements OnInit {
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf, this.tipo_de_pago_proforma,
       this.nombre_cliente_get, this.nit_get, this.vendedor_get, this.array_tabla_anticipos_get);
+
+    this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
   }
 
   ngOnInit() {
@@ -134,8 +144,26 @@ export class AnticiposProformaComponent implements OnInit {
 
     // Resta 4 meses a la fecha actual
     this.fecha_desde = subMonths(this.fecha_desde, 4);
-    this.anticiposAsignadosInicioCargaTabla();
     this.getAnticipo();
+    // this.anticiposAsignadosInicioCargaTabla();
+  }
+
+  getAnticipo() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/ctsxcob/mant/cotipoanticipo/";
+    return this.api.getAll('/ctsxcob/mant/cotipoanticipo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.anticipo = datav[0].id; //sacar de la primera posicion
+          this.get_anticipos_desc = datav[0].descripcion; //sacar de la primera posicion
+          console.log('data', datav, this.anticipo, this.get_anticipos_desc);
+          // this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   anticiposAsignadosInicioCargaTabla() {
@@ -144,10 +172,9 @@ export class AnticiposProformaComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.anticipos_asignados_table = datav;
-          console.log('data', this.anticipos_asignados_table);
+          console.log(this.anticipos_asignados_table);
           this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
-
-          this.dataSource = new MatTableDataSource(this.anticipos_asignados_table.concat(this.array_tabla_anticipos_get));
+          // this.dataSource = new MatTableDataSource(this.anticipos_asignados_table.concat(this.array_tabla_anticipos_get));
         },
 
         error: (err: any) => {
@@ -206,7 +233,13 @@ export class AnticiposProformaComponent implements OnInit {
       })
   }
 
-  asignarMontoAlArray(monto_del_input) {
+  asignarMontoAlArray(monto_del_input: number) {
+    console.log(this.array_tabla_anticipos_get, this.anticipos_asignados_table);
+    this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
+    let hour = this.hora_actual.getHours();
+    let minuts = this.hora_actual.getMinutes();
+    let hora_actual_complete = hour + ":" + minuts;
+
     if (monto_del_input == 0) {
       this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
       return;
@@ -217,78 +250,87 @@ export class AnticiposProformaComponent implements OnInit {
       return;
     }
 
-    this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
-    let hour = this.hora_actual.getHours();
-    let minuts = this.hora_actual.getMinutes();
-
-    let hora_actual_complete = hour + ":" + minuts;
-
-    let array_monto = {
-      codproforma: this.cod_anticipo,
-      codanticipo: 0,
-      id_anticipo: "",
-      docanticipo: "AN311",
-      nroid_anticipo: this.anticipo,
-      fechareg: this.fecha_formateada1,
-      monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
-      usuarioreg: this.usuarioLogueado,
-      horareg: hora_actual_complete,
-      tdc: this.tdc_get,
-      codmoneda: this.cod_moneda_proforma,
-      codvendedor: this.vendedor_get.toString(),
-    };
-    console.log(array_monto);
-
     if (this.monto_a_asignar === undefined) {
       this.monto_a_asignar = 0;
     }
 
-    const existe_en_array = this.array_tabla_anticipos_get.some(item => item.nroid_anticipo === array_monto.nroid_anticipo);
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/";
-    return this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
-      this.moneda + "/" + this.monto_a_asignar + "/" + this.totalProf, [array_monto])
+    let arrayTRUE: any = [];
+    let i: any = [];
+    if (this.anticipos_asignados_table.length === 0) {
+      this.anticipos_asignados_table = [{
+        codproforma: this.cod_anticipo,
+        codanticipo: 0,
+        id_anticipo: "",
+        docanticipo: "",
+        nroid_anticipo: 0,
+        fechareg: this.fecha_formateada1,
+        monto: 0,
+        usuarioreg: this.usuarioLogueado,
+        horareg: hora_actual_complete,
+        tdc: this.tdc_get,
+        codmoneda: this.cod_moneda_proforma,
+        codvendedor: "",
+      }];
+    } else {
+      this.anticipos_asignados_table = [{
+        codproforma: this.cod_anticipo,
+        codanticipo: 0,
+        id_anticipo: "",
+        docanticipo: "AN" + this.agencia_logueado,
+        nroid_anticipo: this.anticipo,
+        fechareg: this.fecha_formateada1,
+        monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
+        usuarioreg: this.usuarioLogueado,
+        horareg: hora_actual_complete,
+        tdc: this.tdc_get,
+        codmoneda: this.cod_moneda_proforma,
+        codvendedor: this.vendedor_get.toString(),
+      }];
+    }
+
+    //array vacio
+    console.log(this.anticipos_asignados_table);
+
+    this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
+      this.moneda + "/" + this.monto_a_asignar + "/" + this.monto_restante + "/" + this.totalProf + "/" + this.BD_storage, this.anticipos_asignados_table)
       .subscribe({
         next: (datav) => {
           console.log(datav);
           if (datav.value === true) {
-            //verificar si ya esta en el array
-            if (existe_en_array) {
-              this.toastr.warning("EL ANTICIPO YA ESTA AGREGADO !")
-            } else {
-              if (this.monto_a_asignar > this.totalProf) {
-                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR ES MAYOR AL TOTAL !")
-                return;
-              }
-              if (this.monto_a_asignar > this.monto_restante) {
-                this.toastr.warning("¡ EL MONTO QUE DESEA ASIGNAR NO PUEDE SER MAYOR AL SALDO DEL ANTICIPO !")
-                return;
-              }
-              if (this.monto_a_asignar === 0) {
-                this.toastr.warning("¡ NO PUEDE ASIGNAR UN MONTO IGUAL A 0!")
-                return;
-              }
-              this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + array_monto.docanticipo);
-              this.array_tabla_anticipos_get.push(array_monto);
-              this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
-              this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+            arrayTRUE = {
+              codproforma: this.cod_anticipo,
+              codanticipo: 0,
+              id_anticipo: "",
+              docanticipo: "AN" + this.agencia_logueado,
+              nroid_anticipo: this.anticipo,
+              fechareg: this.fecha_formateada1,
+              monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
+              usuarioreg: this.usuarioLogueado,
+              horareg: hora_actual_complete,
+              tdc: this.tdc_get,
+              codmoneda: this.cod_moneda_proforma,
+              codvendedor: this.vendedor_get.toString(),
             };
-            console.log(this.array_anticipos, this.array_tabla_anticipos_get);
-          } else {
-            if (datav.resp === undefined) {
-              this.toastr.error('NO SE AÑADIO ');
-            } else {
-              this.toastr.error('NO SE AÑADIO ' + datav.resp);
-            }
-          }
+            console.log(this.anticipos_asignados_table, arrayTRUE, arrayTRUE.length);
 
+            i.push(arrayTRUE);
+            // i.concat(arrayTRUE);
+
+            this.total_anticipos = i.reduce((total, currentItem) => total + currentItem?.monto, 0);
+            // this.array_tabla_anticipos_get = this.array_tabla_anticipos_get.filter(item => item !== null && item !== undefined);
+            this.array_tabla_anticipos_get = i;
+            this.dataSource = new MatTableDataSource(i);
+            console.log(this.array_tabla_anticipos_get, arrayTRUE, i);
+          } else {
+            this.toastr.error('NO SE AÑADIO ' + (datav.resp || ''));
+          }
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
         },
-
         error: (err) => {
-          console.log(err, errorMessage);
+          console.log(err);
           this.toastr.error('! Anticipo NO Agregado !');
           setTimeout(() => {
             this.spinner.hide();
@@ -299,25 +341,7 @@ export class AnticiposProformaComponent implements OnInit {
             this.spinner.hide();
           }, 1000);
         }
-      })
-  }
-
-  getAnticipo() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/ctsxcob/mant/cotipoanticipo/";
-    return this.api.getAll('/ctsxcob/mant/cotipoanticipo/' + this.userConn)
-      .subscribe({
-        next: (datav) => {
-          this.anticipo = datav[0].id; //sacar de la primera posicion
-          this.get_anticipos_desc = datav[0].descripcion; //sacar de la primera posicion
-          console.log('data', datav, this.anticipo, this.get_anticipos_desc);
-          this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
+      });
   }
 
   elegirAnticipo(element) {
@@ -362,7 +386,8 @@ export class AnticiposProformaComponent implements OnInit {
   abrirTabPorLabel(label: string) {
     //abre tab por el id de su etiqueta, muy buena funcion xD
     const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
-    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    console.log(tabs[0].textLabel.replace(/\s*-\s*/, '-'), label);
+    const index = tabs.findIndex(tab => tab.textLabel.replace(/\s*-\s*/, '-') === label); // Encontrar el índice del mat-tab con el label dado
     if (index !== -1) {
       this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
     }
@@ -381,11 +406,54 @@ export class AnticiposProformaComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
   }
 
-  close() {
+  mandarProforma() {
     this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
       anticipos: this.array_tabla_anticipos_get,
       totalAnticipo: this.total_anticipos,
     });
+
+    this.dialogRef.close();
+  }
+
+  close() {
+    // if (this.monto_a_asignar > this.monto_restante) {
+    //   this.toastr.error("EL MONTO QUE DESEA ASIGNAR SOBRE PASA EL MONTO RESTANTE DEL ANTICIPO.");
+    //   return
+    // }
+
+    // monto a asignar - monto restante
+    // let diferencia = this.monto_a_asignar - this.monto_restante;
+    // if (this.monto_a_asignar < this.monto_restante) {
+    //   if (Math.abs(diferencia) <= 0.1) {
+    //     console.log(diferencia, Math.abs(diferencia));
+    //     this.toastr.error("EXISTE UNA DIFERENCIA DE" + " " + diferencia + " " + "DEBE APPLICAR EL TOTAL DEL ANTICIPO, MODIFIQUE EL MONTO A APLICAR");
+    //     return;
+    //   }
+    // } else {
+    //   if (Math.abs(diferencia) < 0.5) {
+    //     console.log(diferencia, Math.abs(diferencia));
+
+    //     this.toastr.error("EXISTE UNA DIFERENCIA DE" + " " + diferencia + " " + "DEBE APPLICAR EL TOTAL DEL ANTICIPO, MODIFIQUE EL MONTO A APLICAR");
+    //     return;
+    //   }
+    // }
+    // fin monto a asignar - monto restante
+
+    // total
+    // this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem.monto, 0);
+    // if (Math.abs(this.total_anticipos) > 0.1) {
+    //   this.toastr.error("EL MONTO QUE DESEA ASIGNAR MAS EL MONTO YA ASIGNADO SUPERA EL TOTAL DE LA PROFORMA PERMITIDA");
+    //   return;
+    // }
+
+    // if (Math.abs(this.total_anticipos) > 0.5) {
+    //   this.toastr.error("EL MONTO QUE DESEA ASIGNAR MAS EL MONTO YA ASIGNADO SUPERA EL TOTAL DE LA PROFORMA PERMITIDA");
+    //   return;
+    // }
+    // fin total
+    this.array_tabla_anticipos_get = [];
+
+
 
     this.dialogRef.close();
   }

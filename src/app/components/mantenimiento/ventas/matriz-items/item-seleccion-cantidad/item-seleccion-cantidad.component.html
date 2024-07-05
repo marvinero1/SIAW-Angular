@@ -14,22 +14,21 @@
     <div class="p-2">
       <div class="row">
         <div class="col-md-3">
-          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedCantidad" (click)="cantidadHabilitar();">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedCantidad" (change)="cantidadHabilitar()">
             Cantidad Fija
           </mat-slide-toggle>
         </div>
         <div class="col-md-9">
-          <input type="number" [disabled]="isCheckedEmpaque" [(ngModel)]="cantidad_input" min="0" id="cant_input">
+          <input type="number" min="0" [disabled]="!isCheckedCantidad" [(ngModel)]="cantidad_input" #cantInput
+            id="cantInput">
         </div>
       </div>
 
-
       <hr>
-
 
       <div class="row">
         <div class="col-md-3">
-          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaques" (click)="empaquesHabilitar();">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaques" (change)="empaquesHabilitar();">
             Cantidad por Empaques
           </mat-slide-toggle>
         </div>
@@ -57,15 +56,11 @@
         </div>
       </div>
 
-
-
       <hr>
-
-
 
       <div class="row">
         <div class="col-md-3">
-          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaque" (click)="empaqueHabilitar();">
+          <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedEmpaque" (change)="empaqueHabilitar();">
             Empaque Minimo
           </mat-slide-toggle>
         </div>
@@ -75,7 +70,7 @@
               <span class="form-control-sm" style="margin-right: 5px;"><u>Precio de Ventas</u></span>
             </div>
             <input type="text" [(ngModel)]="cod_precio_venta_modal_codigo" (blur)="onLeavePrecioVenta($event)"
-              [disabled]="isCheckedCantidad" min="0" id="precio_input">
+              [disabled]="!isCheckedEmpaque" min="0" id="precio_input">
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button"
                 style="border-color: #093070;padding: 5px;" (click)="modalPrecioVenta();">
@@ -88,7 +83,7 @@
             <div class="input-group-prepend">
               <span class="form-control-sm" style="margin-right: 0px;"><u>Desct. Especiales</u></span>
             </div>
-            <input type="text" [(ngModel)]="cod_descuento_modal_codigo" [disabled]="isCheckedCantidad"
+            <input type="text" [(ngModel)]="cod_descuento_modal_codigo" [disabled]="!isCheckedEmpaque"
               (blur)="onLeaveDesctEspecial($event)" min="0" id="descuento_input">
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button"

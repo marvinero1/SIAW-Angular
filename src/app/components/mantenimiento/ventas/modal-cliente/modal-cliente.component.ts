@@ -2,7 +2,6 @@ import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, View
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { veCliente } from '@services/modelos/objetos';
-import { Observable } from 'rxjs';
 import { ServicioclienteService } from '../serviciocliente/serviciocliente.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Table } from 'primeng/table';
@@ -30,9 +29,6 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
   @Output() codigoEvento = new EventEmitter<string>();
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ViewChild('dt1') dt1: Table;
-
-  options: veCliente[] = [];
-  filteredOptions: Observable<veCliente[]>;
 
   clientes!: veCliente[];
   selecteclientes: veCliente[];

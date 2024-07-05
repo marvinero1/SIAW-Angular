@@ -1719,88 +1719,82 @@
 
             <mat-tab label="Complementar Proforma"><br>
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 0px 8px 6px 5px;;border: 0 !important;">
+                        <u>Complementar Proforma</u></span>
+                    </div>
+
+                    <mat-slide-toggle class="example-margin" [(ngModel)]="disableSelectComplemetarProforma"
+                      (change)="habilitarComplementarProforma()">
+                    </mat-slide-toggle>
+
+                    Valor: {{ disableSelectComplemetarProforma }}
+                  </div>
+                </div>
+
+                <div class="col-md-8">
                   <form class="example-form" [formGroup]="FormularioData">
-                    <div class="row"><br>
-                      <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 5px;border: 0 !important;">
-                              <u>Complementar Proforma</u></span>
-                          </div>
-                          <mat-checkbox class="example-margin" [formControl]="disableSelect">
-                          </mat-checkbox>
-                          {{ disableSelect.value }}
-                        </div>
-                        <mat-form-field>
-                          <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
-                            formControlName="tipo_complementopf">
-                            <mat-option [value]=0>Elija una opcion...</mat-option>
-                            <mat-option [value]=1>1. Dimediado - Precio Mayorista Para Cumplir
-                              Monto Minimo
-                            </mat-option>
-                            <mat-option [value]=2>2. Para Cumplir Monto Minimo Para Aplicar
-                              Descuento Extra
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
+                    <mat-label>Eliga una Opción</mat-label>
+                    <mat-select class="custom-select1 form-control-sm" [disabled]="!disableSelectComplemetarProforma"
+                      [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
+                      <mat-option [value]=0>Elija una opcion...</mat-option>
+                      <mat-option [value]=1>1. Dimediado - Precio Mayorista Para Cumplir
+                        Monto Minimo
+                      </mat-option>
+                      <mat-option [value]=2>2. Para Cumplir Monto Minimo Para Aplicar
+                        Descuento Extra
+                      </mat-option>
+                    </mat-select>
+
+                    <div class="input-group">
+                      <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
+                        formControlName="idpf_complemento" [disabled]="!disableSelectComplemetarProforma">
+                        <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                          [value]="ids_complementar_proformas.id">
+                          {{ ids_complementar_proformas.id }} -
+                          {{ ids_complementar_proformas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+
+                      <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
+                        formControlName="nroidpf_complemento" placeholder="0"
+                        [disabled]="!disableSelectComplemetarProforma" [(ngModel)]="input_complemento_view">
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;" [disabled]="!disableSelectComplemetarProforma"
+                          (click)="buscadorIDComplementarProforma(idpf_complemento_view, input_complemento_view);">
+                          <i class="fa fa-search"></i>
+                        </button>
                       </div>
+                    </div>
 
-                      <div class="col-md-8">
-                        <div class="col-md-8">
-                          <div class="input-group">
-                            <mat-form-field style="width: 265px !important;" [disabled]="disableSelect.value === false">
-                              <mat-select [(ngModel)]="idpf_complemento_view" formControlName="idpf_complemento">
-                                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
-                                  [value]="ids_complementar_proformas.id">
-                                  {{ ids_complementar_proformas.id }} -
-                                  {{ ids_complementar_proformas.descripcion }}
-                                  <hr>
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>Fecha Aut
+                            Proforma:
+                          </u></span>{{ complemento_proforma?.fechaaut_pfcomplemento | date:'yyyy-mm-dd'}}
+                      </div>
+                    </div>
 
-                            <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
-                              formControlName="nroidpf_complemento" placeholder="0"
-                              [(ngModel)]="input_complemento_view">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>SubTotal Proforma: </u></span>
+                        {{ complemento_proforma?.subtotal_pfcomplemento | number:'1.2-2' }}
+                      </div>
+                    </div>
 
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-primary form-control-sm" type="button"
-                                style="border-color: #ffc107;" [disabled]="disableSelect.value === false"
-                                (click)="buscadorIDComplementarProforma(idpf_complemento_view, input_complemento_view);">
-                                <i class="fa fa-search"></i>
-                              </button>
-                            </div>
-                          </div>
-
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Fecha Aut
-                                  Proforma:
-                                </u></span>{{ complemento_proforma?.fechaaut_pfcomplemento | date:'yyyy-mm-dd'}}
-                            </div>
-
-                          </div>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>SubTotal Proforma: </u></span>
-                              {{ complemento_proforma?.subtotal_pfcomplemento | number:'1.2-2' }}
-                            </div>
-                          </div>
-
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Total Proforma: </u></span>
-                              {{  complemento_proforma?.total_pfcomplemento | number:'1.2-2'}}
-                              {{ complemento_proforma?.moneda_total_pfcomplemento }}
-                            </div>
-                          </div>
-                        </div>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>Total Proforma: </u></span>
+                        {{  complemento_proforma?.total_pfcomplemento | number:'1.2-2'}}
+                        {{ complemento_proforma?.moneda_total_pfcomplemento }}
                       </div>
                     </div>
                   </form>
@@ -2236,7 +2230,8 @@
             <div class="row" style="height: calc(1.4rem + 2px) !important;">
               <div class="col">
                 <span class="input-group-text form-control-sm"
-                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub Total</u>
+                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub
+                    Total</u>
                 </span>
               </div>
 
@@ -2352,125 +2347,128 @@
         <!-- finTotales -->
       </div>
 
-      <div style="display: flex; flex-direction: column; height: 16vh;">
-        <div class="main-footer" style="position: fixed !important;  background: #CEFFFF !important;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important; z-index: 1 !important;margin-bottom: 24px;">
-          <!-- Saldos -->
-          <div class=" row pl-2">
-            <input type="text" class="inputsSaldos inputsSaldos2"
-              value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
-              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
-              placeholder="0.00">
 
-            <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
-              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+      <div mat-dialog-footer class="footersito">
+        <div class="row">
+          <div class="col-md-10">
+            <!-- Saldos -->
+            <div class="row pl-2">
+              <input type="text" class="inputsSaldos inputsSaldos2"
+                value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
+                style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+                placeholder="0.00">
 
-              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
-              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+              <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
 
-              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
-              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
 
-              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
-              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
 
-              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
-              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
-            </ng-container>
-          </div>
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
 
-          <div style="float: right !important;margin-right: 22px !important;">
-            <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
-            style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
-            <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
-            Solicitar Urgente
-          </button> -->
-
-            <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
-                class="fa fa-file-archive " aria-hidden="true" matTooltipClass="custom-tooltip"
-                matTooltip="Cargar ZIP"></i>
-            </button>
-
-            <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
-              <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
-              Solicitar Urgente
-            </button>
-          </div>
-          <!-- finSaldos -->
-
-          <!-- Empaques Minimo-->
-          <div class="row">
-            <div class="input-group" style="width: 65% !important;">
-              <span class="input-group-text form-control-sm">Empaque Minimo</span>
-
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 1% !important;text-align: right;">
-                {{ item_obtenido.empaqueminimo }}
-              </div> &nbsp;|&nbsp;
-
-              <span class="input-group-text form-control-sm">Peso Minimo</span>
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 1% !important;text-align: right;">
-                {{ item_obtenido.pesominimo | number:'1.3-3' }}
-              </div>
-
-              <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
-                <div type="text" class="form-control form-control-sm inputsSaldos"
-                  style="width: 1% !important;text-align: right;">
-                  no penalizado
-                </div> &nbsp;|&nbsp;
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
               </ng-container>
+            </div>
+            <!-- finSaldos -->
 
-              <ng-template #penalizado>
+            <!-- Empaques Minimo-->
+            <div class="row">
+              <div class="input-group" style="width: 65% !important;">
+                <span class="input-group-text form-control-sm">Empaque Minimo</span>
+
                 <div type="text" class="form-control form-control-sm inputsSaldos"
                   style="width: 1% !important;text-align: right;">
-                  {{ item_obtenido.penalizadoText }}
+                  {{ item_obtenido.empaqueminimo }}
                 </div> &nbsp;|&nbsp;
-              </ng-template>
 
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 8.5% !important;text-align: center;">
-                {{ porcen_item }}
+                <span class="input-group-text form-control-sm">Peso Minimo</span>
+                <div type="text" class="form-control form-control-sm inputsSaldos"
+                  style="width: 1% !important;text-align: right;">
+                  {{ item_obtenido.pesominimo | number:'1.3-3' }}
+                </div>
+
+                <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
+                  <div type="text" class="form-control form-control-sm inputsSaldos"
+                    style="width: 1% !important;text-align: right;">
+                    no penalizado
+                  </div> &nbsp;|&nbsp;
+                </ng-container>
+
+                <ng-template #penalizado>
+                  <div type="text" class="form-control form-control-sm inputsSaldos"
+                    style="width: 1% !important;text-align: right;">
+                    {{ item_obtenido.penalizadoText }}
+                  </div> &nbsp;|&nbsp;
+                </ng-template>
+
+                <div type="text" class="form-control form-control-sm inputsSaldos"
+                  style="width: 8.5% !important;text-align: center;">
+                  {{ porcen_item }}
+                </div>
               </div>
             </div>
-          </div>
-          <!-- finempaque Minimo-->
+            <!-- finempaque Minimo-->
 
-          <!-- Empaques -->
-          <div class="row">
-            <div class="input-group" style="padding-left: 7px;">
-              <span class="input-group-text form-control-sm">Empaques Item : {{ item }}</span>
+            <!-- Empaques -->
+            <div class="row">
+              <div class="input-group" style="padding-left: 7px;">
+                <span class="input-group-text form-control-sm">Empaques</span>
 
-              <ng-container *ngIf="!empaque_view; else empaque_view">
-                <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-              </ng-container>&nbsp;
+                <ng-container *ngIf="!empaque_view; else empaque_view">
+                  <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+                </ng-container>&nbsp;
 
-              <ng-template #empaque_view>
-                <div *ngFor="let empaquesItems of empaquesItem">
-                  <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
-                    ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'1.2-5' }}
+                <ng-template #empaque_view>
+                  <div *ngFor="let empaquesItems of empaquesItem">
+                    <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                      ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'1.2-5' }}
+                    </div>
                   </div>
-                </div>
-              </ng-template>
+                </ng-template>
+              </div>
+            </div>
+            <!-- finempaque -->
+          </div>
+
+          <div class="col-md-2">
+            <div style="text-align: center !important;margin-right: 22px !important;">
+              <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+                padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
+                  class="fa fa-file-archive " aria-hidden="true"></i>
+              </button>
+              <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
+
+
+              <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
+                style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
+                Solicitar Urgente
+              </button> -->
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
+                Solicitar Urgente
+              </button>
             </div>
           </div>
-          <!-- finempaque -->
         </div>
       </div>
-
     </div>
     <!-- finpiePagina -->
   </div>

@@ -208,6 +208,13 @@ mat-row, mat-header-row, mat-footer-row{
   padding-right: 7px;
 }
 
+.footersito{
+  position: sticky !important;
+  bottom: 0 !important;
+  background: #ffffc0 !important;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
+  z-index: 1 !important;
+}
 
 
 
@@ -248,8 +255,8 @@ mat-row, mat-header-row, mat-footer-row{
   }
 
   .p-datatable .p-datatable-tbody > tr.p-highlight{
-    color: #fff !important;
-    background-color: #093070 !important;
+    color: black !important;
+    background-color: #fbd800 !important;
   }
 
   .p-inputtext{
@@ -276,7 +283,7 @@ mat-row, mat-header-row, mat-footer-row{
   }
   .miTabGroupProformaFooter .mat-mdc-tab-body{
     //height: 14rem !important;
-    height: 195px !important;
+    height: 164px !important;
   }
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 10px 0px 10px !important;

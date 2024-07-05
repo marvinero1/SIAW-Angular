@@ -208,7 +208,14 @@ mat-row, mat-header-row, mat-footer-row{
   padding-right: 7px;
 }
 
-
+.footersito{
+  position: sticky !important;
+  bottom: 0 !important;
+  background: #ceffff !important;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
+  z-index: 1 !important;
+  height: 16vh;
+}
 
 
 

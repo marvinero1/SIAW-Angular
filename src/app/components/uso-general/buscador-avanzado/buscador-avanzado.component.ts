@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
 import { ApiService } from '@services/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,6 +30,14 @@ interface buscadorGeneral {
 })
 export class BuscadorAvanzadoComponent implements OnInit {
 
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+    this.mandarAModificarProforma();
+  };
+
+  @HostListener('dblclick') onDoubleClicked2() {
+    this.mandarAModificarProforma();
+  };
+
   public id_tipo_view_get_codigo1: string;
   public id_tipo_view_get_codigo2: string;
 
@@ -46,12 +54,17 @@ export class BuscadorAvanzadoComponent implements OnInit {
   public codigo_cliente2: string;
 
   todas: boolean = true;
+  todas_id: boolean = false;
+  todas_fecha: boolean = false;
+  todas_cliente: boolean = false;
+  todas_almacen: boolean = false;
+  todas_vendedor: boolean = false;
 
   id_bool: boolean = false;
   fecha_bool: boolean = false;
   almacen_bool: boolean = false;
   vendedor_bool: boolean = false;
-  codigo_cliente_bool: boolean = false;
+  cliente_bool: boolean = false;
 
   id_tipo_view_get_array: any = [];
   almacen_get: any = [];
@@ -146,74 +159,105 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.fecha_bool = false;
     this.almacen_bool = false;
     this.vendedor_bool = false;
-    this.codigo_cliente_bool = false;
+    this.cliente_bool = false;
   }
+
+
 
   habilitarID() {
     if (this.todas) {
-      this.todas = false;
+      this.todas_id = false;
     } else {
       this.id_bool = true;
     }
   }
 
+  habilitarTodoID() {
+    if (!this.todas_id) {
+      this.todas_id = true;
+    } else {
+      this.id_bool = false;
+    }
+  }
+
   habilitarFecha() {
-    console.log(this.todas, this.fecha_bool);
-
-    if (this.todas) {
-      this.todas = false;
-    }
-
-    if (!this.todas) {
+    if (this.todas_fecha) {
+      this.todas_fecha = false;
+    } else {
       this.fecha_bool = true;
-      // this.id_bool = false;
     }
   }
 
-  habilitarAlmacen() {
-    console.log(this.todas);
-
-    if (this.todas) {
-      this.todas = false;
-    }
-
-    if (!this.todas) {
-      this.todas = true;
-      // this.fecha_bool = false;
-      // this.id_bool = false;
-    }
-  }
-
-  habilitarVendedor() {
-    console.log(this.todas);
-
-    if (this.todas) {
-      this.todas = false;
-    }
-
-    if (!this.todas) {
-      this.vendedor_bool = true;
-      // this.almacen_bool = false;
-      // this.fecha_bool = false;
-      // this.id_bool = false;
+  habilitarFechaTodo() {
+    if (!this.todas_fecha) {
+      this.todas_fecha = false;
+    } else {
+      this.fecha_bool = false;
     }
   }
 
   habilitarCliente() {
-    console.log(this.todas, this.codigo_cliente_bool);
-
-    if (this.todas) {
-      this.todas = false;
-    }
-
-    if (!this.codigo_cliente_bool) {
-      this.codigo_cliente_bool = true;
-      // this.vendedor_bool = false;
-      // this.almacen_bool = false;
-      // this.fecha_bool = false;
-      // this.id_bool = false;
+    if (this.todas_cliente) {
+      this.todas_cliente = false;
+    } else {
+      this.cliente_bool = true;
     }
   }
+
+  habilitarClienteTodo() {
+    if (this.todas_cliente) {
+      this.todas_cliente = false;
+    } else {
+      this.cliente_bool = false;
+    }
+  }
+
+  habilitarAlmacen() {
+    if (this.todas_almacen) {
+      this.todas_almacen = false;
+    } else {
+      this.almacen_bool = true;
+    }
+  }
+
+  habilitarAlmacenTodo() {
+    if (!this.todas_almacen) {
+      this.todas_almacen = false;
+    } else {
+      this.almacen_bool = false;
+    }
+  }
+
+  habilitarVendedor() {
+    if (this.todas_vendedor) {
+      this.todas_vendedor = false;
+    } else {
+      this.vendedor_bool = true;
+    }
+  }
+
+  habilitarVendedorTodo() {
+    if (!this.todas_vendedor) {
+      this.todas_vendedor = false;
+    } else {
+      this.vendedor_bool = false;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //id tipo
   getIdTipo() {
@@ -351,7 +395,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
       codvendedor1: this.cod_vendedor_cliente1,
       codvendedor2: this.cod_vendedor_cliente2,
 
-      ctodos1: this.codigo_cliente_bool,
+      ctodos1: this.cliente_bool,
       codcliente1: this.codigo_cliente1,
       codcliente2: this.codigo_cliente2,
     };

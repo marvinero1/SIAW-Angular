@@ -497,19 +497,21 @@ select, textarea {
   }
 
 ::ng-deep{
- 
   .ag-root-wrapper-body.ag-layout-normal{
     height: 100% !important;
   }
  
   .bg-yellow .mat-dialog-container{
-  --mdc-dialog-container-color: #ffffc0 !important;
+    --mdc-dialog-container-color: #ffffc0 !important;
   }
   
   .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label{
     color: #093070;
   }
 }
+  .mdc-tab{
+    text-decoration: underline !important;
+  }
 
   input[type=number]::-webkit-inner-spin-button, 
   input[type=number]::-webkit-outer-spin-button { 
@@ -521,7 +523,6 @@ select, textarea {
   .cdk-overlay-pane{
     max-width: 95vw !important;
   }
-
 
   .custom-tooltip {
     font-size: 0.7rem !important;

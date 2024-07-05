@@ -7,6 +7,7 @@ import { ApiService } from '@services/api.service';
 import { inAlmacen } from '@services/modelos/objetos';
 import { Observable, map, startWith } from 'rxjs';
 import { ServicioalmacenService } from '../servicioalmacen/servicioalmacen.service';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-modal-almacen',
@@ -15,42 +16,43 @@ import { ServicioalmacenService } from '../servicioalmacen/servicioalmacen.servi
 })
 export class ModalAlmacenComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarAlmacen();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarAlmacen();
   };
+
+  public agencia_view: any = [];
+
 
   agencia_get: any = [];
-  origen_get:string;
+  origen_get: string;
   destino_get: string;
   almacen_get: string;
-  public agencia_view: any = [];
   userConn: any;
 
-  displayedColumns = ['codigo','descripcion'];
-
-  dataSource = new MatTableDataSource<inAlmacen>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+  almacenes!: inAlmacen[];
+  selectealmacenes: inAlmacen[];
+  searchValue: string | undefined;
 
   options: inAlmacen[] = [];
   filteredOptions: Observable<inAlmacen[]>;
   myControlCodigo = new FormControl<string | inAlmacen>('');
   myControlDescripcion = new FormControl<string | inAlmacen>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ModalAlmacenComponent>,
+  @ViewChild('dt1') dt1: Table;
+  @ViewChild('tbb') dt11: Table;
+
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalAlmacenComponent>,
     private servicioAlmacen: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public origen: any,
     @Inject(MAT_DIALOG_DATA) public destino: any, @Inject(MAT_DIALOG_DATA) public almacen: any) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAlmacen();
 
     this.origen_get = this.origen.origen;
@@ -58,83 +60,61 @@ export class ModalAlmacenComponent implements OnInit {
     this.almacen_get = this.almacen.almacen;
 
     console.log(this.origen_get, this.destino_get);
-    
-    this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.codigo;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
-
-    this.filteredOptions = this.myControlDescripcion.valueChanges.pipe(
-      startWith(''),
-      map(value => {
-        const name = typeof value === 'string' ? value : value?.descripcion;
-        return name ? this._filter(name as string) : this.options.slice();
-      }),
-    );
   }
 
-  private _filter(name: string): inAlmacen[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(option => option.direccion.toLowerCase().includes(filterValue));
-  }
-
-  applyFilter(event: Event){
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: inAlmacen): string {
-    return user && user.direccion ? user.direccion : '';
-  }
-
-  getAlmacen(){
+  getAlmacen() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo2/"
-    return this.api.getAll('/inventario/mant/inalmacen/catalogo2/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo2/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.agencia_get = datav;
+          this.almacenes = datav;
           console.log(this.agencia_get);
-
-          this.dataSource = new MatTableDataSource(this.agencia_get);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarAlmacen(){
+  mandarAlmacen() {
     if (this.origen_get) {
       this.servicioAlmacen.disparadorDeAlmacenesOrigen.emit({
-        almacen:this.agencia_view,
+        almacen: this.agencia_view,
       });
-    }if(this.destino_get){
+    } if (this.destino_get) {
       this.servicioAlmacen.disparadorDeAlmacenesDestino.emit({
-        almacen:this.agencia_view,
+        almacen: this.agencia_view,
       });
-    } if (this.almacen_get){
+    } if (this.almacen_get) {
       this.servicioAlmacen.disparadorDeAlmacenes.emit({
-        almacen:this.agencia_view,
+        almacen: this.agencia_view,
       });
     }
-   this.close();
+
+    this.close();
   }
 
-  getDescripcionView(element){
-    this.agencia_view = element;
+  private debounceTimer: any;
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+    }, 750); // 750 ms de retardo
+
+    let tableElement = this.dt11.el.nativeElement;
+    tableElement.focus();
+  }
+
+  getDescripcionView(element) {
+    this.agencia_view = element.data;
     console.log(this.agencia_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

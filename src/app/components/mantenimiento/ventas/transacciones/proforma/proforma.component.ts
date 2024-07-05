@@ -303,7 +303,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public anticipo_button: boolean;
   public cliente_casual: boolean;
   public total_X_PU: boolean = false;
-  public disableSelect: any = new FormControl(false);
+  public disableSelectComplemetarProforma: boolean = false;
   public habilitar_desct_sgn_solicitud: boolean = false;
   public empaque_view = false;
   public submitted = false;
@@ -389,7 +389,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   public negativos_validacion: any = [];
   public maximo_validacion: any = [];
-  public tabla_anticipos: any = [];
+  public tabla_anticipos: any;
 
   public tipo_complementopf_input: any;
 
@@ -475,13 +475,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       this.agencia_logueado = '311'
     }
 
-    this.disableSelect.value = false;
-    console.log("Valor del Disabled:", this.disableSelect.value);
-
     // this.modalSolicitudUrgente();
-
-    //ACA COLOCAR EL ARRAY DE ITEMS PARA EXPORTA A EXCEL 
-    //this.array_items_carrito_y_f4_catalogo = 
   }
 
   ngOnInit() {
@@ -509,7 +503,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
-      //this.almacn_parame_usuario = data.almacen.codigo;
+      this.almacn_parame_usuario_almacen = data.almacen.codigo;
 
       //si se cambia de almacen, los totales tambien se cambian
       this.total = 0.00;
@@ -524,7 +518,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //Vendedor
     this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
-      this.cod_vendedor_cliente = data.vendedor;
+      this.cod_vendedor_cliente = data.vendedor.codigo;
       //si se cambia de vendedor, los totales tambien se cambian
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -837,7 +831,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Tabla de Anticipos Agregados: ", data);
       this.tabla_anticipos = data.anticipos;
       this.monto_anticipo = data.totalAnticipo;
+
       console.log(this.tabla_anticipos);
+      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
     });
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
 
@@ -867,6 +863,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     event.preventDefault();
   }
 
+  habilitarComplementarProforma() {
+    console.log('Toggle clicked, current state:', this.disableSelectComplemetarProforma);
+    // this.disableSelectComplemetarProforma = true;
+  }
 
   tablaInicializada() {
     this.orden_creciente = 0;
@@ -995,13 +995,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
+      nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? "" : this.dataform.nroidpf_complemento,
       idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
-
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
       monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
-      tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelect.value = false }], //aca es para complemento de proforma
+      tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelectComplemetarProforma = false }], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1452,6 +1452,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   mandarCodCliente(cod_cliente) {
     this.total = 0.00;
     this.subtotal = 0.00;
+    this.monto_anticipo = 0.00
+    this.tabla_anticipos = [];
     this.servicioCliente.disparadorDeClientes.emit({
       cliente: { codigo: cod_cliente }
     });
@@ -2522,7 +2524,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   buscadorIDComplementarProforma(complemento_id, complemento_numero_id) {
     console.log(complemento_id, complemento_numero_id);
 
-    if (this.disableSelect.value === false) {
+    if (this.disableSelectComplemetarProforma === false) {
       this.complementopf = 0;
     } else {
       this.complementopf = 1;
@@ -2547,9 +2549,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         preparacion: this.preparacion?.toString() || '',
-        contra_entrega: element.contra_entrega?.toString() === true ? "SI" : "NO",
+        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
         vta_cliente_en_oficina: element.venta_cliente_oficina,
-        estado_contra_entrega: element.estado_contra_entrega,
+        estado_contra_entrega: this.estado_contra_entrega_input === undefined ? " " : this.estado_contra_entrega_input,
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
         pago_con_anticipo: element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
@@ -2598,7 +2600,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       preparacion: this.preparacion,
     }
+
     console.log(proforma_validar);
+
+    if (this.total === 0) {
+      this.toastr.error("TOTALICE ANTES DE COMPLEMENTAR");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    }
 
     return this.api.create("/venta/transac/veproforma/recuperarPfComplemento/" + this.userConn + "/" + complemento_id + "/" +
       complemento_numero_id + "/" + this.complementopf + "/" + this.BD_storage, proforma_validar)
@@ -2885,7 +2896,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let total_proforma_concat: any = [];
 
     //valor del check en el mat-tab complementar proforma
-    if (this.disableSelect.value === false) { //valor del check en el mat-tab complementar proforma this.disableSelect.value 
+    if (this.disableSelectComplemetarProforma === false) { //valor del check en el mat-tab complementar proforma this.disableSelectComplemetarProforma.value 
       this.complementopf = 0;
     } else {
       this.complementopf = 1;
@@ -3860,7 +3871,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
-    if (this.disableSelect.value === false) {
+    if (this.disableSelectComplemetarProforma === false) {
       this.complementopf = 0;
     } else {
       this.complementopf = 1;
@@ -3934,7 +3945,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     this.spinner.show();
 
-    if (this.disableSelect.value === false) {
+    if (this.disableSelectComplemetarProforma === false) {
       this.complementopf = 0;
     } else {
       this.complementopf = 1;
@@ -4878,29 +4889,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // tipopago === contado
     // total != 0
 
-    if (this.codigo_cliente === '' && this.codigo_cliente === undefined) {
-      this.dialog.open(VentanaValidacionesComponent, {
-        width: 'auto',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          message: "INGRESE CODIGO DE USUARIO EN PROFORMA",
-        }
-      });
-      return;
-    }
-
-    if (this.tipopago === 1 || this.tipopago === undefined) {
-      this.dialog.open(VentanaValidacionesComponent, {
-        width: 'auto',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
-        }
-      });
-      return;
-    }
+    // if (this.tipopago === 1 || this.tipopago === undefined) {
+    //   this.dialog.open(VentanaValidacionesComponent, {
+    //     width: 'auto',
+    //     height: 'auto',
+    //     disableClose: true,
+    //     data: {
+    //       message: "EL TIPO DE PAGO EN LA PROFORMA TIENE QUE SER CONTADO",
+    //     }
+    //   });
+    //   return;
+    // }
 
     if (this.total === 0) {
       this.dialog.open(VentanaValidacionesComponent, {
@@ -5054,7 +5053,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           cod_moneda: this.moneda_get_catalogo,
           recargos_array: this.recargo_de_recargos,
           array_de_descuentos_ya_agregados_a_modal: this.array_de_descuentos_ya_agregados,
-          cmtipo_complementopf: this.disableSelect.value === false ? 0 : 1,
+          cmtipo_complementopf: this.disableSelectComplemetarProforma === false ? 0 : 1,
           cliente_real: this.codigo_cliente_catalogo_real
         }
       });

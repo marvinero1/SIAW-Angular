@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './item-seleccion-cantidad.component.html',
   styleUrls: ['./item-seleccion-cantidad.component.scss']
 })
-export class ItemSeleccionCantidadComponent implements OnInit {
+export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler() {
     const focusedElement = document.activeElement as HTMLElement;
@@ -21,7 +21,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
       console.log(`Elemento enfocado: ${elementTagName}`);
 
       switch (elementTagName) {
-        case "cant_input":
+        case "cantInput":
           this.agregarItems();
           break;
         case "precio_input":
@@ -39,7 +39,6 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   @ViewChild("cant_input") myInputField: ElementRef;
   @ViewChild("empaques_input") myInputField1: ElementRef;
-
 
   cod_precio_venta_modal_codigo: number;
   cod_descuento_modal_codigo: number;
@@ -137,6 +136,9 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.getTarifa();
     this.getDescuentos();
+  }
+
+  ngAfterViewInit() {
     this.myInputField.nativeElement.focus();
   }
 
@@ -176,37 +178,23 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   empaqueHabilitar() {
     console.log(this.isCheckedEmpaque);
 
-    if (this.isCheckedEmpaque) {
-      this.isCheckedEmpaques = false;
-      this.isCheckedCantidad = false;
-    } else {
-      this.isCheckedEmpaque = true;
-    }
+    this.isCheckedCantidad = false;
+    this.isCheckedEmpaques = false;
   }
 
   empaquesHabilitar() {
     console.log(this.isCheckedEmpaques);
 
-    if (this.isCheckedEmpaques === false) {
-      this.isCheckedEmpaques = false;
-    } else {
-      this.isCheckedEmpaque = false;
-      this.isCheckedCantidad = false;
-    }
+    this.isCheckedCantidad = false;
+    this.isCheckedEmpaque = false;
   }
 
   cantidadHabilitar() {
     console.log(this.isCheckedCantidad);
 
-    if (this.isCheckedCantidad === false) {
-      this.isCheckedCantidad = true;
-    } else {
-
-      this.isCheckedEmpaque = false;
-      this.isCheckedEmpaques = false;
-    }
+    this.isCheckedEmpaque = false;
+    this.isCheckedEmpaques = false
   }
-
 
   onLeavePrecioVenta(event: any) {
     const inputValue = event.target.value;
@@ -272,11 +260,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
 
-
-
     // if (!this.isCheckedCantidad) {
     //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
-
     //   console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
     //   this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
     //     .subscribe({
@@ -434,8 +419,6 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         console.log("Ninguna opción seleccionada");
         break;
     }
-
-
   }
 
   enviarItemsAlServicio(items: any[]) {

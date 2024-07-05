@@ -3,7 +3,7 @@
         background-color: #f9f9f9 !important;
     }
     .mat-mdc-tab-header{
-        border: 1px #093070 solid;
+        border: 1px #fbd800 solid;
     }
     .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
         width: 150px !important;
@@ -18,13 +18,21 @@
         min-height: 25px !important;
         color: white;
         }
+
         .p-icon{
         color: black !important;
         }
-        // .p-datatable .p-datatable-header{
-        //   padding: 0rem 0rem !important;
-        //   text-align: center;
-        // }
-
     }
+    .mdc-text-field__input{
+        padding-top: 6px;
+    }
+
+    .tablita .p-datatable-tbody > tr.p-highlight{
+        color: white !important;
+        background-color: #093070 !important;
+    }
+}
+
+.input-group{
+    width: 45% !important;
 }

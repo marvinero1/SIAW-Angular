@@ -343,6 +343,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   simulateEnterKey(): void {
     this.focusEmpaque();
+
+    const focusedElement = document.activeElement as HTMLElement;
+    let nombre_input = focusedElement.id;
+    console.log(`Elemento enfocado Matriz: ${nombre_input}`);
+
+    switch (nombre_input) {
+      case 'focusEmpaque':
+        this.getEmpaqueItem();
+        break;
+
+    }
   }
 
   agregarCarritoMobile() {

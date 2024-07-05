@@ -20,7 +20,7 @@ export class ModalVendedorComponent implements OnInit {
   };
 
   vendedor_get: any = [];
-  public vendedor_view: string;
+  public vendedor_view: any = [];
 
   public codigo: string = '';
   public nombre: string = '';
@@ -28,7 +28,6 @@ export class ModalVendedorComponent implements OnInit {
   userConn: string;
   origen: string;
 
-  @ViewChild('tabla') tabla: Table;
   @ViewChild('dt1') dt1: Table;
 
   vendedors!: veVendedor[];
@@ -48,12 +47,12 @@ export class ModalVendedorComponent implements OnInit {
 
   getVendedorCatalogo() {
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --catalogoVendedor";
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/vevendedor/catalogo/";
     return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.vendedor_get = datav;
-          this.vendedors = this.vendedor_get;
+          this.vendedors = datav;
           console.log(datav);
         },
 
@@ -65,7 +64,7 @@ export class ModalVendedorComponent implements OnInit {
   }
 
   getveVendedorbyId(element) {
-    this.vendedor_view = element?.data.codigo;
+    this.vendedor_view = element?.data;
     console.log(this.vendedor_view);
   }
 

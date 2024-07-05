@@ -18,7 +18,7 @@
 
     <ng-template #val>
       <mat-tab-group style="background-color: #ffe0c0;" #tabGroup>
-        <mat-tab label="{{ id_get }}-{{ numero_id_get }}">
+        <mat-tab label="{{ id_get }} - {{ numero_id_get }}">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 5px 0px 0px 0px !important;">
               <table class="tg" style="margin-bottom: 4.5px;">
@@ -111,36 +111,36 @@
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            {{ element.docanticipo }} - {{ element.nroid_anticipo }}
+                            {{ element?.docanticipo }} - {{ element?.nroid_anticipo }}
                           </td>
                         </ng-container>
 
                         <ng-container matColumnDef="monto">
                           <th mat-header-cell *matHeaderCellDef class="white"> Monto </th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            {{ formatNumberTotalSubTOTALES(element.monto) }}</td>
+                            {{ formatNumberTotalSubTOTALES(element?.monto) }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="usuario">
                           <th mat-header-cell *matHeaderCellDef class="white"> Usuario </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.usuarioreg}}
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.usuarioreg}}
                           </td>
                         </ng-container>
 
                         <ng-container matColumnDef="fecha">
                           <th mat-header-cell *matHeaderCellDef class="white"> Fecha </th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
-                            {{ element.fechareg | date:'yyyy-MM-dd'}}</td>
+                            {{ element?.fechareg | date:'yyyy-MM-dd'}}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="hora">
                           <th mat-header-cell *matHeaderCellDef class="white"> Hora Reg </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.horareg }}</td>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.horareg }}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="vendedor">
                           <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
-                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.codvendedor }}
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.codvendedor }}
                           </td>
                         </ng-container>
 
@@ -161,7 +161,7 @@
 
                   <div style="float: left;text-align: start;">
                     <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-                      (click)="close();">
+                      (click)="mandarProforma();">
                       <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> OK</span>
                     </button>
                   </div>
@@ -346,7 +346,7 @@
                           <td mat-cell *matCellDef="let element" style="text-align: center;">
                             <ng-container *ngIf="element.montorest !== 0;else montorest1">
                               <button mat-raised-button class="secondary" (click)="elegirAnticipo(element);">
-                                <i class="fa fa-minus" style="color: rgba(24, 187, 34, 0.834);"></i>
+                                <i class="fa fa-plus-square" style="color: rgba(24, 187, 34, 0.834);"></i>
                                 Elegir Anticipo
                               </button>
                             </ng-container>

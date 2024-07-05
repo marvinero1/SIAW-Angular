@@ -30,7 +30,68 @@ td{
 .mat-mdc-table .mdc-data-table__header-row {
     height: 21px;
 }
-td:hover {
+tr:hover {
     background-color:  #093070;
     color: white;
+}
+
+
+::ng-deep {
+  .tablita {
+    .p-datatable-thead > tr > th {
+      padding: 0rem 0rem !important;
+      position: sticky;
+      top: 0;
+      background-color: #093070;
+      min-height: 25px;
+      color: #fff;
+    }
+    .p-icon{
+      color: black;
+    }
+    // .p-datatable .p-datatable-header{
+    //   padding: 0rem 0rem !important;
+    //   text-align: center;
+    // }
+  }
+
+  .p-datatable .p-datatable-header{
+    padding: 0rem 0rem !important;
+    text-align: center;
+  }
+
+  .p-inputtext{
+    margin-bottom: 15px;
+  }
+
+  .p-inputtext{
+    margin-top: 15px;
+  }
+
+  .p-icon {
+    width: 0.55rem !important;
+    height: 0.55rem !important;
+  }
+
+  //.p-treetable .p-datatable-wrapper .p-datatable-tbody {
+  //  height: 12px;
+  //}
+
+  .p-datatable .p-datatable-tbody > tr > td{
+    padding: 0rem 0rem !important;
+  }
+
+  .p-datatable .p-datatable-tbody > tr.p-highlight{
+    color: #fff !important;
+    background-color: #093070 !important;
+  }
+
+  .p-inputtext{
+    padding: 0rem 0rem !important;
+    color: black;
+  }
+
+  .p-cell-editing {
+    color: #fff !important;
+  }
 }

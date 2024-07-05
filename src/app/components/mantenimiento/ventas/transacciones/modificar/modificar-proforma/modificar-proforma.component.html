@@ -358,31 +358,6 @@
             <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente"
               [readOnly]="true">
           </div>
-
-          <div class="row">
-            <div class="col">
-              <div class="input-group">
-                <span class="form-control-sm" style="border: 0 !important;">
-                  <u>Calcular Empa por Precio</u>
-                </span>
-                <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorPrecio" [checked]="precio"
-                    (change)="togglePrecio()">
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="input-group">
-                <span class="form-control-sm" style="border: 0 !important;">
-                  <u>Calcular Empa por Descto</u>
-                </span>
-                <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento" [checked]="desct"
-                    (change)="toggleDescuento()">
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- segundaColumna -->
@@ -545,7 +520,33 @@
           </ng-container> -->
         </div>
 
-        <div class="col-md-2 col-lg-2  col-sm-0"></div>
+        <div class="col-md-2 col-lg-2 col-sm-0">
+          <div class="col">
+            <div class="input-group">
+              <div class="input-group-text" style="border: 0;padding: 0px !important;">
+                <input type="checkbox" [(ngModel)]="calcularEmpaquePorPrecio" [checked]="precio"
+                  (change)="togglePrecio()">
+              </div>
+
+              <span class="form-control-sm" style="border: 0 !important;">
+                <u>Calcular Empa por Precio</u>
+              </span>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="input-group">
+              <div class="input-group-text" style="border: 0;padding: 0px !important;">
+                <input type="checkbox" [(ngModel)]="calcularEmpaquePorDescuento" [checked]="desct"
+                  (change)="toggleDescuento()">
+              </div>
+
+              <span class="form-control-sm" style="border: 0 !important;">
+                <u>Calcular Empa por Descto</u>
+              </span>
+            </div>
+          </div>
+        </div>
 
         <!-- terceraColumna -->
         <div class="col-md-4 col-lg-4 col-sm-4" style="float: right;">
@@ -1618,7 +1619,7 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <div class="row">
                       <div class="col">
                         <div class="input-group">
@@ -1632,10 +1633,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <div class="row">
                       <div class="col">
                         <div class="input-group">
@@ -2394,197 +2392,203 @@
               <!-- [disabled]="!codigo_cliente" -->
               <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
             </button>
-
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              min-width: 45px !important;" (click)="limpiarEtiqueta();">
-              <i class="fa fa-eraser"></i>
-            </button>
-
-            <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
-                class="fa fa-file-archive " aria-hidden="true"></i>
-            </button>
-
-            <div>
-              <ng-container *ngIf="estado_proforma === 'ANULADA'">
-                <span class="form-control-sm"
-                  style="border: 0 !important;background-color: black;color:#ef4d4d; padding: 5px;">
-                  <strong>ANULADA</strong></span>
-              </ng-container>
-
-              <ng-container *ngIf="estado_proforma === 'APROBADA'">
-                <span class="form-control-sm"
-                  style="padding: 5px;border: 0 !important;background-color: black;color:#bfff00">
-                  <strong>APROBADA</strong></span>
-              </ng-container>
-
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA'">
-                <span class="form-control-sm"
-                  style="padding: 5px;border: 0 !important;background-color: black;color:#00ff00">
-                  <strong>TRANSFERIDA</strong></span>
-              </ng-container>
-
-              <ng-container *ngIf="estado_proforma === 'NO APROBADA'">
-                <span class="form-control-sm"
-                  style="padding: 5px;border: 0 !important;background-color: black;color:#40E0D0">
-                  <strong>NO APROBADA</strong></span>
-              </ng-container>
-            </div>
-
-            <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
           </div>
           <!-- FIN BTN ABAJO TOTAL -->
         </div>
         <!-- finTotales -->
       </div>
 
-      <div mat-dialog-footer style="position: sticky !important;
-          bottom: 0 !important;
-          background: #ffffc0 !important;
-          box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
-          z-index: 1 !important;">
-        <!-- Saldos -->
-        <div class="row pl-2">
-          <input type="text" class="inputsSaldos inputsSaldos2"
-            value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
-            style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
-            placeholder="0.00">
 
-          <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
-            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
-              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+      <div mat-dialog-footer class="footersito">
+        <div class="row">
+          <div class="col-md-10">
+            <!-- Saldos -->
+            <div class="row pl-2">
+              <input type="text" class="inputsSaldos inputsSaldos2"
+                value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
+                style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+                placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
-            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
-              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+              <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
-            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
-              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
-            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
-              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
 
-            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
-            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
-              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-              (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
-          </ng-container>
-        </div>
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
 
-        <div style="float: right !important;margin-right: 22px !important;">
-          <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+              </ng-container>
+            </div>
+            <!-- finSaldos -->
+
+            <!-- Empaques Minimo-->
+            <div class="row">
+              <div class="input-group" style="width: 65% !important;">
+                <span class="input-group-text form-control-sm">Empaque Minimo</span>
+
+                <div type="text" class="form-control form-control-sm inputsSaldos"
+                  style="width: 1% !important;text-align: right;">
+                  {{ item_obtenido.empaqueminimo }}
+                </div> &nbsp;|&nbsp;
+
+                <span class="input-group-text form-control-sm">Peso Minimo</span>
+                <div type="text" class="form-control form-control-sm inputsSaldos"
+                  style="width: 1% !important;text-align: right;">
+                  {{ item_obtenido.pesominimo | number:'1.3-3' }}
+                </div>
+
+                <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
+                  <div type="text" class="form-control form-control-sm inputsSaldos"
+                    style="width: 1% !important;text-align: right;">
+                    no penalizado
+                  </div> &nbsp;|&nbsp;
+                </ng-container>
+
+                <ng-template #penalizado>
+                  <div type="text" class="form-control form-control-sm inputsSaldos"
+                    style="width: 1% !important;text-align: right;">
+                    {{ item_obtenido.penalizadoText }}
+                  </div> &nbsp;|&nbsp;
+                </ng-template>
+
+                <div type="text" class="form-control form-control-sm inputsSaldos"
+                  style="width: 8.5% !important;text-align: center;">
+                  {{ porcen_item }}
+                </div>
+              </div>
+            </div>
+            <!-- finempaque Minimo-->
+
+            <!-- Empaques -->
+            <div class="row">
+              <div class="input-group" style="padding-left: 7px;">
+                <span class="input-group-text form-control-sm">Empaques</span>
+
+                <ng-container *ngIf="!empaque_view; else empaque_view">
+                  <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+                </ng-container>&nbsp;
+
+                <ng-template #empaque_view>
+                  <div *ngFor="let empaquesItems of empaquesItem">
+                    <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                      ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'1.2-5' }}
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+            <!-- finempaque -->
+
+            <!-- buscador  -->
+            <div class="row">
+              <div class="input-group" style="padding-left: 7px;">
+                <span class="input-group-text form-control-sm">ID</span>
+
+                <mat-form-field style="width:280px !important;background-color: white !important;">
+                  <mat-select [(ngModel)]="idpf_complemento_view">
+                    <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                      [value]="ids_complementar_proformas.id">
+                      {{ ids_complementar_proformas.id }} -
+                      {{ ids_complementar_proformas.descripcion }}
+                      <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <div style="width: 15% !important;padding-right: 5px;">
+                  <input type="number" class="form-control form-control-sm" style="margin-left: 5px;" placeholder="0"
+                    [(ngModel)]="input_complemento_view">
+
+                </div>
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #ffc107;"
+                    (click)="transferirProforma(idpf_complemento_view, input_complemento_view);">
+                    <i class="fa fa-search"></i>
+                  </button>
+
+                  <button mat-raised-button (click)="modalBuscadorAvanzado();"
+                    style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                    <i class="fa fa-search"></i> Busqueda Avanzada</button>
+                </div>
+
+              </div>
+            </div>
+            <!-- fin buscador -->
+          </div>
+
+          <div class="col-md-2">
+            <div style="text-align: center !important;margin-right: 22px !important;">
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+              min-width: 45px !important;" matTooltipClass="custom-tooltip" matTooltip="Limpiar Etiqueta"
+                (click)="limpiarEtiqueta();">
+                <i class="fa fa-eraser"></i>
+              </button>
+
+              <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+              padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
+                  class="fa fa-file-archive " aria-hidden="true"></i>
+              </button>
+              <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
+
+              <div>
+                <ng-container *ngIf="estado_proforma === 'ANULADA'">
+                  <span class="form-control-sm"
+                    style="border: 0 !important;background-color: black;color:#ef4d4d; padding: 5px;">
+                    <strong>ANULADA</strong></span>
+                </ng-container>
+
+                <ng-container *ngIf="estado_proforma === 'APROBADA'">
+                  <span class="form-control-sm"
+                    style="padding: 5px;border: 0 !important;background-color: black;color:#bfff00">
+                    <strong>APROBADA</strong></span>
+                </ng-container>
+
+                <ng-container *ngIf="estado_proforma === 'TRANSFERIDA'">
+                  <span class="form-control-sm"
+                    style="padding: 5px;border: 0 !important;background-color: black;color:#00ff00">
+                    <strong>TRANSFERIDA</strong></span>
+                </ng-container>
+
+                <ng-container *ngIf="estado_proforma === 'NO APROBADA'">
+                  <span class="form-control-sm"
+                    style="padding: 5px;border: 0 !important;background-color: black;color:#40E0D0">
+                    <strong>NO APROBADA</strong></span>
+                </ng-container>
+              </div>
+
+
+
+
+              <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
             style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
             <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
             Solicitar Urgente
           </button> -->
 
-          <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
-            <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
-            Solicitar Urgente
-          </button>
-        </div>
-        <!-- finSaldos -->
-
-        <!-- Empaques Minimo-->
-        <div class="row">
-          <div class="input-group" style="width: 65% !important;">
-            <span class="input-group-text form-control-sm">Empaque Minimo</span>
-
-            <div type="text" class="form-control form-control-sm inputsSaldos"
-              style="width: 1% !important;text-align: right;">
-              {{ item_obtenido.empaqueminimo }}
-            </div> &nbsp;|&nbsp;
-
-            <span class="input-group-text form-control-sm">Peso Minimo</span>
-            <div type="text" class="form-control form-control-sm inputsSaldos"
-              style="width: 1% !important;text-align: right;">
-              {{ item_obtenido.pesominimo | number:'1.3-3' }}
-            </div>
-
-            <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 1% !important;text-align: right;">
-                no penalizado
-              </div> &nbsp;|&nbsp;
-            </ng-container>
-
-            <ng-template #penalizado>
-              <div type="text" class="form-control form-control-sm inputsSaldos"
-                style="width: 1% !important;text-align: right;">
-                {{ item_obtenido.penalizadoText }}
-              </div> &nbsp;|&nbsp;
-            </ng-template>
-
-            <div type="text" class="form-control form-control-sm inputsSaldos"
-              style="width: 8.5% !important;text-align: center;">
-              {{ porcen_item }}
-            </div>
-          </div>
-        </div>
-        <!-- finempaque Minimo-->
-
-        <!-- Empaques -->
-        <div class="row">
-          <div class="input-group" style="padding-left: 7px;">
-            <span class="input-group-text form-control-sm">Empaques</span>
-
-            <ng-container *ngIf="!empaque_view; else empaque_view">
-              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
-            </ng-container>&nbsp;
-
-            <ng-template #empaque_view>
-              <div *ngFor="let empaquesItems of empaquesItem">
-                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
-                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'1.2-5' }}
-                </div>
-              </div>
-            </ng-template>
-          </div>
-        </div>
-        <!-- finempaque -->
-
-        <!-- buscador  -->
-        <div class="row">
-          <div class="input-group" style="padding-left: 7px;">
-            <span class="input-group-text form-control-sm">ID</span>
-
-            <mat-form-field style="width:280px !important;background-color: white !important;">
-              <mat-select [(ngModel)]="idpf_complemento_view">
-                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
-                  [value]="ids_complementar_proformas.id">
-                  {{ ids_complementar_proformas.id }} -
-                  {{ ids_complementar_proformas.descripcion }}
-                  <hr style="margin-top: 0rem; margin-bottom: 0rem;">
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <div style="width: 15% !important;padding-right: 5px;">
-              <input type="number" class="form-control form-control-sm" style="margin-left: 5px;" placeholder="0"
-                [(ngModel)]="input_complemento_view">
-
-            </div>
-            <div class="input-group-append">
-              <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #ffc107;"
-                (click)="transferirProforma(idpf_complemento_view, input_complemento_view);">
-                <i class="fa fa-search"></i>
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
+                <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
+                Solicitar Urgente
               </button>
-
-              <button mat-raised-button (click)="modalBuscadorAvanzado();"
-                style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
-                <i class="fa fa-search"></i> Busqueda Avanzada</button>
             </div>
-
           </div>
         </div>
-        <!-- fin buscador -->
       </div>
     </div>
     <!-- finpiePagina -->
