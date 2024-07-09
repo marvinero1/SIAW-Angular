@@ -1,14 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, HostListener, OnInit, ViewChild, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { moneda } from '@services/modelos/objetos';
-import { Observable } from 'rxjs';
 import { MonedaServicioService } from '../../servicio-moneda/moneda-servicio.service';
 import { DatePipe } from '@angular/common';
-
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-moneda-catalogo',
   templateUrl: './moneda-catalogo.component.html',
@@ -17,14 +13,14 @@ import { DatePipe } from '@angular/common';
 export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
 
   @HostListener('dblclick') onDoubleClicked2() {
-    this.mandarVendedor();
+    this.mandarMoneda();
   };
 
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
-    this.mandarVendedor();
+    this.mandarMoneda();
   };
 
-  public moneda_view: string;
+  public moneda_view: any = [];
   public codigo: string = '';
   public nombre: string = '';
 
@@ -32,29 +28,22 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
   tipo_cambio_moneda: any = [];
   monedaBase: any = [];
   fecha_actual = new Date();
+
+  private debounceTimer: any;
+  BD_storage: any;
   userConn: string;
-  displayedColumns = ['codigo', 'descripcion'];
 
+  @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
 
-  dataSource = new MatTableDataSource<moneda>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-
-  options: moneda[] = [];
-  BD_storage: any = [];
-
-  bd_logueado: any;
-  filteredOptions: Observable<moneda[]>;
-  myControlCodigo = new FormControl<string | moneda>('');
-  myControlDescripcion = new FormControl<string | moneda>('');
+  monedas!: moneda[];
+  selectemonedas: moneda[];
+  searchValue: string;
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<MonedaCatalogoComponent>,
     private serviciMoneda: MonedaServicioService, private datePipe: DatePipe) {
 
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.bd_logueado = this.BD_storage;
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
@@ -68,31 +57,13 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
     this.getAllmoneda();
   }
 
-  private _filter(name: string): moneda[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(option => option.codigo.toString().includes(filterValue));
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: moneda): any {
-    return user && user.codigo ? user.codigo : '';
-  }
-
   getAllmoneda() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/'";
     return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
-          this.dataSource = new MatTableDataSource(this.moneda);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+          this.monedas = datav;
         },
 
         error: (err: any) => {
@@ -104,8 +75,8 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
 
   getMonedaBase() {
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/getcodMon/' + this.userConn + "/" + this.bd_logueado)
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adempresa/getcodMon/";
+    return this.api.getAll('/seg_adm/mant/adempresa/getcodMon/' + this.userConn + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.monedaBase = datav;
@@ -121,7 +92,7 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
   getMonedaTipoCambio(moneda) {
     let fechareg = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/adtipocambio/getmonedaValor/";
     return this.api.getAll('/seg_adm/mant/adtipocambio/getmonedaValor/' + this.userConn + "/" + this.monedaBase.moneda + "/" + moneda + "/" + fechareg)
       .subscribe({
         next: (datav) => {
@@ -137,12 +108,37 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
   }
 
   getMonedabyId(moneda) {
-    this.moneda_view = moneda.codigo;
+    this.moneda_view = moneda.data;
     console.log(this.moneda_view);
     this.getMonedaTipoCambio(this.moneda_view);
   }
 
-  mandarVendedor() {
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+
+    // Debounce logic
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 550); // 750 ms de retardo
+  }
+
+  mandarMoneda() {
     this.serviciMoneda.disparadorDeMonedas.emit({
       moneda: this.moneda_view,
       tipo_cambio: this.tipo_cambio_moneda.valor,

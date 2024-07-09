@@ -1,14 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { IDProforma } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Observable } from 'rxjs';
 import { ServicioCatalogoProformasService } from '../sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
-
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-catalogo-proformas',
   templateUrl: './catalogo-proformas.component.html',
@@ -29,19 +25,13 @@ export class CatalogoProformasComponent implements OnInit {
   userConn: string;
   usuario: string;
 
-  displayedColumns = ['codigo', 'descripcion'];
+  @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
 
-  dataSource = new MatTableDataSource<IDProforma>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-
-  myControlCodigo = new FormControl<string | IDProforma>('');
-  myControlDescripcion = new FormControl<string | IDProforma>('');
-
-  options: IDProforma[] = [];
-  filteredOptions: Observable<IDProforma[]>;
+  proformss!: IDProforma[];
+  selectevendedors: IDProforma[];
+  searchValue: string | undefined;
+  private debounceTimer: any;
 
   constructor(public dialogRef: MatDialogRef<CatalogoProformasComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     public servicioCatalogoProformas: ServicioCatalogoProformasService) {
@@ -54,34 +44,15 @@ export class CatalogoProformasComponent implements OnInit {
     this.getProforma();
   }
 
-  private _filter(name: string): IDProforma[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter(option => option.id.toString().includes(filterValue));
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: IDProforma): any {
-    return user && user.id ? user.id : '';
-  }
-
   getProforma() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
 
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
       .subscribe({
         next: (datav) => {
+          this.proformss = datav;
           this.proforma_get = datav;
           console.log(this.proforma_get);
-
-          this.dataSource = new MatTableDataSource(this.proforma_get);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
 
         error: (err: any) => {
@@ -91,8 +62,33 @@ export class CatalogoProformasComponent implements OnInit {
       })
   }
 
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+
+    // Debounce logic
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 550); // 750 ms de retardo
+  }
+
   getProformabyId(precio_venta) {
-    this.proforma_view = precio_venta;
+    this.proforma_view = precio_venta.data;
     console.log(precio_venta);
   }
 
@@ -106,5 +102,4 @@ export class CatalogoProformasComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
-
 }

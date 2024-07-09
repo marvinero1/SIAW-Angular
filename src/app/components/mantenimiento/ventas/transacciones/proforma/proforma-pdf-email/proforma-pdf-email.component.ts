@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import { ToastrService } from 'ngx-toastr';
-
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 @Component({
@@ -14,6 +13,7 @@ export class ProformaPdfEmailComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "proformaPDF";
+  private debounceTimer: any;
 
   public data_impresion: any = [];
 
@@ -26,6 +26,7 @@ export class ProformaPdfEmailComponent implements OnInit {
   data_detalle_proforma: any = [];
 
   constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService, private toastr: ToastrService) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
@@ -126,8 +127,11 @@ export class ProformaPdfEmailComponent implements OnInit {
         // Obtener el PDF como un Blob
         const pdfBlob = pdf.output('blob');
 
-        // Enviar el correo cuando ya está generado el PDF
-        this.enviarCorreoProformaGuardada(pdfBlob);
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(() => {
+          // Enviar el correo cuando ya está generado el PDF
+          this.enviarCorreoProformaGuardada(pdfBlob);
+        }, 600); // 750 ms de retardo o más
       });
     }
   }

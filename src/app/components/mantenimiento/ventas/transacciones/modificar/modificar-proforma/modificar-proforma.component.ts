@@ -518,7 +518,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //Vendedor
     this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
-      this.cod_vendedor_cliente = data.vendedor;
+      this.cod_vendedor_cliente = data.vendedor.codigo;
       //si se cambia de vendedor, los totales tambien se cambian
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -736,7 +736,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //Monedas
     this.serviciMoneda.disparadorDeMonedas.subscribe(data => {
       console.log("Recibiendo Moneda: ", data);
-      this.moneda_get_catalogo = data.moneda;
+      this.moneda_get_catalogo = data.moneda.codigo;
       this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
 
       //si se cambia la moneda, los totales tambien se cambian
@@ -1003,7 +1003,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
 
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
-      monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
+      monto_anticipo: [0], //anticipo Ventas
       tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelect.value = false }], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1088,7 +1088,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: element.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -2347,7 +2347,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.fletepor = proforma.cabecera.fletepor;
     this.tipoentrega = proforma.cabecera.tipoentrega;
     this.peso = proforma.cabecera.peso;
-    this.codigo_cliente_catalogo_real = proforma.profEtiqueta.codcliente_real;
+    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real;
 
     this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
@@ -2369,7 +2369,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.iva = proforma.cabecera.iva;
     this.total = proforma.cabecera.total;
 
-    this.monto_anticipo = proforma.anticiposTot
+    this.monto_anticipo = 0;
     this.tabla_anticipos = proforma.anticipos
 
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
@@ -2393,11 +2393,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
       element.orden = index + 1;
     });
-
-
-    // this.dataSource = new MatTableDataSource(proforma.detalle);
-    // se dibuja los items al detalle de la proforma
-    this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
 
   }
@@ -2550,7 +2545,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -3306,7 +3301,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -3552,7 +3547,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -3736,7 +3731,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -5167,6 +5162,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         total: this.total,
         tdc: this.tipo_cambio_moneda_catalogo,
         array_tabla_anticipos: this.tabla_anticipos,
+        ventana_para_cod_proforma: "modificar-proforma"
       },
     });
   }

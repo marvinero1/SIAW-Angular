@@ -31,30 +31,30 @@
               <div class="flex">
                 <span class="p-input-icon-left ml-auto">
                   <i class="pi pi-search"></i>
-                  <input mat-input type="text" #input [(ngModel)]="searchValue"
-                    (ngModelChange)="onSearchChange($event)" />
+                  <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
+                    pAutoFocus [autofocus]="true" />
                 </span>
               </div>
             </ng-template>
 
             <ng-template pTemplate="header">
               <tr style="background-color: #093070 !important;">
-                <th pSortableColumn="codigo" class="text-center" style="width:10%">
+                <th pSortableColumn="codigo" class="text-center" style="width:15%">
                   Código
                   <p-sortIcon field="codigo"></p-sortIcon>
                 </th>
-                <th pSortableColumn="nombre" class="text-center" style="width:60%">
+                <th pSortableColumn="descripcion" class="text-center" style="width:70%">
                   Descripcion
                 </th>
               </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-almacenes let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="almacenes" [pSelectableRowIndex]="rowIndex" pAutoFocus [autofocus]="true">
-                <td class="text-center" #tbb>
+              <tr [pSelectableRow]="almacenes" #para [pSelectableRowIndex]="rowIndex" tabindex="-1">
+                <td class="text-center">
                   {{ almacenes.codigo }}
                 </td>
-                <td class="text-center" #tbb>
+                <td class="text-center">
                   {{ almacenes.descripcion }}
                 </td>
               </tr>

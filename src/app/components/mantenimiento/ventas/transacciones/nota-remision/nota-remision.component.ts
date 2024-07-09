@@ -1,16 +1,15 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
-import { veCliente } from '@services/modelos/objetos';
+import { ItemDetalle, veCliente } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ServicioclienteService } from '../../serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { TipoidService } from '../../serviciotipoid/tipoid.service';
-import { TarifaService } from '../../serviciotarifa/tarifa.service';
 import { DescuentoService } from '../../serviciodescuento/descuento.service';
 import { ModalIdtipoComponent } from '../../modal-idtipo/modal-idtipo.component';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -19,6 +18,12 @@ import { MatrizItemsComponent } from '../../matriz-items/matriz-items.component'
 import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-cliente-info.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
 import { ModalTransfeNotaRemisionComponent } from '../../modal-transfe-nota-remision/modal-transfe-nota-remision.component';
+import { DatePipe } from '@angular/common';
+import { ServicioprecioventaService } from '../../servicioprecioventa/servicioprecioventa.service';
+import { ServicioTransfeAProformaService } from '../../modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
+import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
+import { ModalIvaComponent } from '../../modal-iva/modal-iva.component';
+import { MatTabGroup } from '@angular/material/tabs';
 @Component({
   selector: 'app-nota-remision',
   templateUrl: './nota-remision.component.html',
@@ -26,16 +31,25 @@ import { ModalTransfeNotaRemisionComponent } from '../../modal-transfe-nota-remi
 })
 export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
-  @HostListener("document:keydown.F4", []) unloadHandler(event: Event) {
+  public nombre_ventana: string = "docveremision.vb";
+  public ventana: string = "Notas De Remision";
+  public detalle = "Notas De Remision";
+  public tipo = "transaccion-nota-remision-POST";
+
+  @HostListener("document:keydown.F4", []) unloadHandler() {
     this.modalMatrizProductos();
   }
 
-  @HostListener("document:keydown.enter", []) unloadHandler3(event: Event) {
-    this.enterCliente();
+  @HostListener("document:keydown.F5", []) unloadHandler2(event: Event) {
+    console.log("No se puede actualizar");
+    event.preventDefault();
+    this.toastr.warning('TECLA DESHABILITADA ⚠️');
   }
 
-  @ViewChild("cod_cliente") myInputField: ElementRef;
-
+  @HostListener("document:keydown.Delete", []) unloadHandler7() {
+    console.log("Borrar items de detalle de carrito");
+    this.onRowSelectForDelete();
+  }
 
   nrSelect: string = "Normal";
   tipoPagoSelect: string = "CREDITO";
@@ -88,7 +102,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public email_cliente: string;
   public whatsapp_cliente: string;
   public moneda: string;
-  public tipo: string;
   public parsed: string;
   public longitud: string;
   public latitud: string;
@@ -114,6 +127,80 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public idpf_complemento_view: any;
   public disableSelect = new FormControl(false);
 
+
+  precio: any = true;
+  desct: any = false;
+
+  public total_desct_precio: boolean = false;
+  public anticipo_button: boolean;
+  public cliente_casual: boolean;
+  public total_X_PU: boolean = false;
+  public submitted = false;
+  //TABLA DETALLE
+  products!: ItemDetalle[];
+  selectedProducts: ItemDetalle[] = [];
+
+  elementoSeleccionadoPrecioVenta: any;
+  elementoSeleccionadoDescuento: any;
+
+  // TRANSFERENCIA
+  moneda_get_catalogo: string;
+  cod_id_tipo_modal_id: string;
+  tipopago: string;
+  transporte: string;
+  medio_transporte: string;
+  fletepor: string;
+  tipoentrega: string;
+  peso: any;
+  desct_nivel_actual: string;
+  preparacion: string;
+  tipo_cambio_moneda_catalogo: string;
+  id_tipo_view_get_codigo: string;
+  cod_precio_venta_modal_codigo: number;
+
+  habilitar_desct_sgn_solicitud: any = [];
+  item_seleccionados_catalogo_matriz: any = [];
+  array_items_carrito_y_f4_catalogo: any = [];
+
+  public codigo_cliente_catalogo_real: string;
+  public venta_cliente_oficina: string;
+  public tipo_cliente: string;
+
+  public direccion: string;
+  public latitud_cliente: string;
+  public longitud_cliente: string;
+  public central_ubicacion: string;
+  public URL_maps: string;
+  public obs: string;
+
+  public ubicacion_central: string;
+  public ids_complementar_proforma: any = [];
+
+  decimalPipe: any;
+  private debounceTimer: any;
+
+  // NEGATIVOS
+  validacion_post_negativos_filtrados_solo_negativos: any = [];
+  validacion_post_negativos_filtrados_solo_positivos: any = [];
+
+  toggleTodosNegativos: boolean = false;
+  toggleNegativos: boolean = false;
+  togglePositivos: boolean = false;
+
+  public cliente_habilitado_get: any;
+
+  //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
+  public validacion_post: any = [];
+  public valor_formulario: any = [];
+  public validacion_post_negativos: any = [];
+
+  public valor_formulario_copied_map_all: any = {};
+  public valor_formulario_negativos: any = {};
+
+  public negativos_validacion: any = [];
+  public tabla_anticipos: any;
+
+
   // totales
   public subtotal: number;
   public recargos: number;
@@ -121,25 +208,34 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public iva: number;
   public total: number;
 
+  totabilizar_post: any = [];
+  tablaIva: any = [];
+
+  cod_descuento_modal_codigo: number = 0;
+  array_de_descuentos_ya_agregados: any = [];
+  almacn_parame_usuario_almacen: any;
+
   selectTPago: string = "Credito";
   selectedCountryControl = new FormControl(this.selectTPago);
 
   public codigo_cliente_catalogo: string;
   public codigo_item_catalogo: string;
 
-  nombre_ventana: string = "docveremision.vb";
+  dataSource_negativos = new MatTableDataSource();
+  dataSourceWithPageSize_negativos = new MatTableDataSource();
 
-  displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'pedido',
-    'cantidad', 'sld', 'tp', 'de', 'pul', 'niv', 'porcentaje', 'pd', 'pu', 'total'];
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-  dataSource = new MatTableDataSource();
-  dataSourceWithPageSize = new MatTableDataSource();
+  displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
+    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
+    'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
+
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
-    private servicioCliente: ServicioclienteService, private servicioPrecioVenta: TarifaService,
-    private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService,
+    private servicioCliente: ServicioclienteService, private _formBuilder: FormBuilder,
     private serviciotipoid: TipoidService, private toastr: ToastrService, private spinner: NgxSpinnerService,
-    private log_module: LogService) {
+    private log_module: LogService, private datePipe: DatePipe,
+    public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -153,28 +249,20 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
-      this.cod_id_tipo_modal = data.id_tipo;
+      this.cod_id_tipo_modal = data.id_tipo.id;
     });
 
-    // precio_venta
-    this.servicioPrecioVenta.disparadorDeTarifa.subscribe(data => {
-      console.log("Recibiendo Vendedor: ", data);
-      this.cod_precio_venta_modal = data.tarifa;
+    // transferencia
+    this.servicioTransfeProformaCotizacion.disparadorDeProformaTransferir.subscribe(data => {
+      console.log("Recibiendo Transferencia: ", data);
+      this.imprimir_proforma_tranferida(data.proforma_transferir);
     });
-    // fin_precio_venta
-
-    // descuentos
-    this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
-      console.log("Recibiendo Descuento: ", data);
-      this.cod_descuento_modal = data.descuento;
-    });
-    // findescuentos  
+    // fin_transferencia 
 
     this.itemservice.disparadorDeItems.subscribe(data => {
       console.log("Recibiendo Item: ", data);
       this.codigo_item_catalogo = data.item;
       this.getEmpaqueItem(this.codigo_item_catalogo);
-      this.getDetalleItem(this.codigo_item_catalogo, this.tarifa_get_unico?.codigo, this.descuentos_get_unico?.codigo);
     });
 
     this.servicioCliente.disparadorDeClientes.subscribe(data => {
@@ -185,9 +273,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.myInputField.nativeElement.focus();
     this.getIDScomplementarProforma();
-    //this.getIdTipo();
+    this.getIdTipo();
     this.getAlmacenParamUsuario();
     this.getTarifa();
     this.getDescuentos();
@@ -215,15 +302,17 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   getAlmacenParamUsuario() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getAlmacenUser/";
-    return this.api.getAll('/venta/transac/veproforma/getAlmacenUser/' + this.userConn + "/" + this.usuarioLogueado)
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
+    return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.almacn_parame_usuario = datav;
-          // console.log('data', this.almacn_parame_usuario);
-        },
+          console.log('data', this.almacn_parame_usuario);
 
+          this.almacn_parame_usuario_almacen = datav.codalmacen;
+          this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa;
+          this.cod_descuento_modal_codigo = this.almacn_parame_usuario.coddescuento;
+        },
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -280,21 +369,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
-  public codigo_cliente_catalogo_real: string;
-  public cliente_casual: string;
-  public venta_cliente_oficina: string;
-  public tipo_cliente: string;
-
-  public direccion: string;
-  public latitud_cliente: string;
-  public longitud_cliente: string;
-  public central_ubicacion: string;
-  public URL_maps: string;
-  public obs: string;
-
-  public ubicacion_central: string;
-
 
   getClientByID(codigo) {
     console.log(codigo);
@@ -412,8 +486,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       })
   }
 
-
-
   getEmpaqueItem(item) {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getempaques/";
@@ -429,44 +501,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
           this.empaque_descripcion_concat = "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
 
           console.log(this.empaquesItem);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
-
-
-
-
-
-  itemTabla: any = [];
-  arr: any[] = [];
-
-  getDetalleItem(item, tarifa, descuento) {
-    console.log(tarifa, descuento);
-
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getItemMatriz/";
-    return this.api.getAll('/venta/transac/veproforma/getItemMatriz/' + this.userConn + "/" + item + "/" + tarifa + "/" + descuento + "/" + "10")
-      .subscribe({
-        next: (datav) => {
-          this.itemTabla = datav;
-          console.log(this.itemTabla);
-
-          // aca agrega los items a un arrays de items
-          this.arr.push(datav);
-          console.log(this.arr);
-
-
-          this.dataSource = new MatTableDataSource(this.arr);
-          // this.dataSource.paginator = this.paginator;
-          // this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-
-          // this.empaque_descripcion_concat = "("+this.empaque_item_codigo+")"+ this.empaque_item_descripcion+"-"+this.cantidad+" | ";
         },
 
         error: (err: any) => {
@@ -493,41 +527,243 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       })
   }
 
-  enterCliente() {
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.cod_cliente_enter = this.myInputField.nativeElement.value;
-    // console.log(this.cod_cliente_enter);
 
-    // value[1] Seleccionas la segunda posición del array "OPERATING"
-    //EL VALOR YA ESTA PARSEADO PARA Q SIEMPRE SEA MAYUSCULA
-    const word = this.cod_cliente_enter[0].toUpperCase();
-    // Retornas la primera letra de la palabra
-    let inicio_sn = word.substring(0, 1);
+  mandarEntregar() {
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario, this.estado_contra_entrega_input);
 
-    this.getClientByID(this.cod_cliente_enter);
-    console.log(inicio_sn);
+    this.submitted = true;
+    this.valor_formulario.map((element: any) => {
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: this.preparacion?.toString() || '',
+        contra_entrega: element.contra_entrega?.toString(),
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega === "undefined" ? "NO" : "SI",
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: "",
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: element.tipo_complementopf?.toString() || '',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: 0,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: " ",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2030-04-10",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
 
-    if (inicio_sn === "S") {
-      this.email_cliente = 'true'
-      this.disable_input_create = false;
+    if (this.preparacion === undefined) {
+      this.preparacion = "NORMAL";
     } else {
-      this.disable_input_create = true;
+      this.preparacion;
     }
+
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      preparacion: this.preparacion,
+    }
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
+
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
+    return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage, proforma_validar)
+      .subscribe({
+        next: (datav) => {
+          this.tipoentrega = datav.mensaje;
+          console.log(datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error("Formulario T. Entrega Error");
+        },
+        complete: () => { }
+      });
+  }
+
+  limpiar() {
+    this.codigo_cliente = "";
+    this.nombre_cliente = "";
+    this.nombre_comercial_cliente = "";
+    this.nombre_factura = "";
+    this.razon_social = "";
+    this.nombre_comercial_razon_social = "";
+    this.tipo_doc_cliente = "";
+    this.nit_cliente = "";
+    this.email_cliente = "";
+    this.whatsapp_cliente = "";
+    this.cod_vendedor_cliente = "";
+    this.moneda = "";
+    this.tipo = "";
+    this.latitud = "";
+    this.longitud = "";
+    this.direccion_central_input = "";
+
+
+    this.subtotal = 0;
+    this.recargos = 0;
+    this.des_extra = 0;
+    this.iva = 0;
+    this.total = 0;
   }
 
   createForm(): FormGroup {
-    return this._formBuilder.group({
-      codSN: [this.dataform.codSN, Validators.compose([Validators.required])],
-      nomcliente_casual: [this.dataform.nomcliente_casual, Validators.compose([Validators.required])],
-      nit_cliente_casual: [this.dataform.nit_cliente_casual, Validators.compose([Validators.required])],
-      tipo_doc_cliente_casual: [this.dataform.tipo_doc_cliente_casual?.toString(), Validators.compose([Validators.required])],
-      email_cliente_casual: [this.dataform.email_cliente_casual, Validators.compose([Validators.required])],
-      celular_cliente_casual: [this.dataform.celular_cliente_casual?.toString(), Validators.compose([Validators.required])],
-      complemento_ci: [this.dataform.complemento_ci],
+    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    console.log(this.tipo_complementopf_input);
 
-      codalmacen: [this.almacn_parame_usuario],
-      codvendedor: [0],
-      usuarioreg: this.usuarioLogueado,
+    let hour = this.hora_actual.getHours();
+    // Asegurarse de que el valor de la hora esté en formato de 24 horas
+    let hora_inicial = hour < 10 ? '0' + hour : hour; // Agrega un 0 inicial si la hora es menor a 10
+
+    let minuts = this.hora_actual.getMinutes();
+    let hora_actual_complete = hour + ":" + minuts;
+    let fecha_actual = new Date();
+    let valor_cero: number = 0;
+
+    // if(this.tipo_complementopf_input === 0) {
+    //   this.dataform.tipo_complementopf === tipo_complementopf_val0;
+    // }
+
+    // if (this.input_complemento_view === null) {
+    //   this.input_complemento_view = valor_cero;
+    // }
+
+    return this._formBuilder.group({
+      id: "NR311",
+      numeroid: 114767,
+      codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
+      codcliente: [this.dataform.codcliente, Validators.compose([Validators.required])],
+      nomcliente: [this.razon_social, Validators.compose([Validators.required])],
+      nit: [this.dataform.nit, Validators.compose([Validators.required])],
+      codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
+      codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
+      fecha: [fecha_actual],
+      //precio venta columna segunda primera fila verificar conq nombre se guarda
+      preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
+      descuentos: [this.des_extra],
+      tipopago: [this.dataform.tipopago === 0 ? 0 : 1, Validators.required],
+      transporte: [this.dataform.transporte === "FLOTA", Validators.required],
+      nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
+      tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
+      preparacion: [this.dataform.preparacion, Validators.compose([Validators.required])],
+      tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega, Validators.compose([Validators.required])],
+      fletepor: [this.dataform.fletepor === "CLIENTE", Validators.compose([Validators.required])],
+
+      fecha_inicial: [fecha_actual],
+      tdc: [this.dataform.tdc],
+      anulada: [false],
+      aprobada: [false],
+      paraaprobar: [false],
+      transferida: [false],
+      fechaaut: ["1900-01-01"],
+      fecha_confirmada: ["1900-01-01"],
+      hora_confirmada: ["00:00"],
+      hora_inicial: [hora_inicial],
+      usuarioaut: [""],
+      confirmada: [false],
+      impresa: [false],
+      etiqueta_impresa: [false],
+      es_sol_urgente: [false],
+
+      obs: this.dataform.obs ? this.dataform.obs.trim() : '',
+      obs2: [""],
+      direccion: [this.dataform.direccion],
+      peso: Number(this.peso),
+      codcliente_real: this.codigo_cliente,
+      latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
+      longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
+      ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
+      email: [this.dataform.email],
+
+      venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
+      tipo_venta: ['0'],
+
+      contra_entrega: this.estado_contra_entrega_input,
+      estado_contra_entrega: [this.dataform.estado_contra_entrega === undefined ? "" : this.dataform.estado_contra_entrega],
+
+      odc: "",
+      desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
+
+      idanticipo: [""], //anticipo VentasL
+      numeroidanticipo: [0], //anticipo Ventas
+      pago_contado_anticipado: [false], //anticipo Ventas
+      complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
+      codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
+
+      nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? "" : this.dataform.nroidpf_complemento,
+      idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
+      nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
+
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
+      monto_anticipo: 0, //anticipo Ventas
+      tipo_complementopf: [{ value: this.dataform.tipo_complementopf }], //aca es para complemento de proforma
+
+      // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
+      // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
+      // total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
+      // moneda_total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
+
+      niveles_descuento: [this.dataform.niveles_descuento === undefined ? 'ACTUAL' : this.dataform.niveles_descuento], //niveles de descuento
+
+      // no hay mas en esta seccion xD
+      subtotal: [this.dataform.subtotal], //TOTALES
+      recargos: [this.dataform.recargos], //TOTALES
+      //des_extra: [this.dataform.des_extra], //TOTALES
+      iva: [this.dataform.iva], //TOTALES
+      total: [this.dataform.total], //TOTALES
+      porceniva: [0],
+
+      fechareg: [fecha_actual],
+      horareg: [hora_actual_complete],
+      hora: [hora_actual_complete],
+      usuarioreg: [usuario_logueado],
+      horaaut: [hora_actual_complete],
     });
   }
 
@@ -564,36 +800,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       })
   }
 
-  limpiar() {
-    this.codigo_cliente = "";
-    this.nombre_cliente = "";
-    this.nombre_comercial_cliente = "";
-    this.nombre_factura = "";
-    this.razon_social = "";
-    this.nombre_comercial_razon_social = "";
-    this.tipo_doc_cliente = "";
-    this.nit_cliente = "";
-    this.email_cliente = "";
-    this.whatsapp_cliente = "";
-    this.cod_vendedor_cliente = "";
-    this.moneda = "";
-    this.tipo = "";
-    this.latitud = "";
-    this.longitud = "";
-    this.direccion_central_input = "";
-
-
-    this.subtotal = 0;
-    this.recargos = 0;
-    this.des_extra = 0;
-    this.iva = 0;
-    this.total = 0;
-  }
-
-
-
-
-  public ids_complementar_proforma: any = [];
   getIDScomplementarProforma() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + 2)
@@ -610,31 +816,112 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       })
   }
 
-  moneda_get_catalogo: string;
-  cod_id_tipo_modal_id: string;
-  tipopago: string;
-  transporte: string;
-  medio_transporte: string;
-  fletepor: string;
-  tipoentrega: string;
-  peso: string;
-  desct_nivel_actual: string;
-  preparacion: string;
-  tipo_cambio_moneda_catalogo: string;
-  id_tipo_view_get_codigo: string;
+  totabilizar() {
+    let total_proforma_concat: any = [];
 
-  habilitar_desct_sgn_solicitud: any = [];
-  item_seleccionados_catalogo_matriz: any = [];
-  array_items_carrito_y_f4_catalogo: any = [];
+    //valor del check en el mat-tab complementar proforma
+    if (this.complementopf === false || this.complementopf === undefined) { //valor del check en el mat-tab complementar proforma this.disableSelectComplemetarProforma.value 
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
+
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+    };
+
+    if (this.habilitar_desct_sgn_solicitud === undefined) {
+      this.habilitar_desct_sgn_solicitud = false;
+    };
+
+    total_proforma_concat = {
+      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
+      veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
+      veproforma_valida: [],
+      veproforma_anticipo: [],
+      vedesextraprof: this.array_de_descuentos_ya_agregados, //array de descuentos
+      verecargoprof: [], //array de recargos
+      veproforma_iva: [], //array de iva
+    };
+
+    // console.log(total_proforma_concat);
+    // console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
+    //   this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
+
+    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+    if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
+      console.log("DATOS VALIDADOS");
+      this.spinner.show();
+      let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
+      return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
+        "false" + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat)
+        .subscribe({
+          next: (datav) => {
+            this.totabilizar_post = datav;
+            console.log(this.totabilizar_post);
+            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+
+            console.log(this.array_items_carrito_y_f4_catalogo);
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
+
+          error: (err) => {
+            console.log(err, errorMessage);
+            this.toastr.error('! NO SE TOTALIZO !');
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1500);
+          },
+          complete: () => {
+            this.mandarEntregar();
+            this.total = this.totabilizar_post.totales?.total;
+            this.subtotal = this.totabilizar_post.totales?.subtotal;
+            this.recargos = this.totabilizar_post.totales?.recargo;
+            this.des_extra = this.totabilizar_post.totales?.descuento;
+            this.iva = this.totabilizar_post.totales?.iva;
+            this.peso = Number(this.totabilizar_post.totales?.peso);
+            // this.tablaIva = this.totabilizar_post.totales?.tablaIva;
+            const item_procesados_en_total = this.totabilizar_post?.detalleProf;
+
+            // Agregar el número de orden a los objetos de datos
+            this.totabilizar_post?.detalleProf.forEach((element, index) => {
+              element.orden = index + 1;
+            });
+
+            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
+          }
+        })
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
+  }
+
+
+  tdc: any;
+  public estado_contra_entrega_input: any;
+  cod_proforma: any;
+  id_nro_id_proforma: any;
+  odc: any;
+  nroidpf_complemento: any;
+  nivel_descuento: any;
+  pago_contado_anticipado: any;
 
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
 
-    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
-    this.id_proforma_numero_id = this.id_proforma_numero_id;
-    this.fecha_actual = this.fecha_actual;
+    // this.cod_id_tipo_modal = proforma.cabecera.id;
+    // this.id_proforma_numero_id = proforma.cabecera.numeroid;
     // this.fecha_actual = proforma.cabecera.fecha;
+
+
+    this.fecha_actual = this.fecha_actual;
     this.almacn_parame_usuario = proforma.cabecera.codalmacen;
+    this.cod_vendedor_cliente_modal = proforma.cabecera.codvendedor;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
     this.codigo_cliente = proforma.cabecera.codcliente;
     this.nombre_cliente = proforma.cabecera.nomcliente;
@@ -648,15 +935,22 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.email_cliente = proforma.cabecera.email;
     this.cliente_casual = proforma.cabecera.casual;
     this.moneda_get_catalogo = proforma.cabecera.codmoneda;
+    this.tdc = proforma.cabecera.tdc;
     this.codigo_cliente = proforma.cabecera.codcliente_real;
     this.tipopago = proforma.cabecera.tipopago;
+    this.estado_contra_entrega_input = proforma.cabecera.contra_entrega;
+    this.cod_proforma = proforma.cabecera.codigo;
+    this.id_nro_id_proforma = proforma.cabecera.id + proforma.cabecera.numeroid;
 
     this.transporte = proforma.cabecera.transporte;
     this.medio_transporte = proforma.cabecera.nombre_transporte;
     this.fletepor = proforma.cabecera.fletepor;
     this.tipoentrega = proforma.cabecera.tipoentrega;
     this.peso = proforma.cabecera.peso;
-    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real
+    this.direccion_central_input = proforma.cabecera.direccion;
+    this.odc = proforma.cabecera.odc;
+
+    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real;
 
     this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
@@ -672,129 +966,49 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
     this.ubicacion_central = proforma.cabecera.ubicacion;
     this.preparacion = proforma.cabecera.preparacion;
-    this.subtotal = proforma.cabecera.subtotal;
-    this.recargos = 0;
-    this.des_extra = proforma.cabecera.descuentos;
-    this.iva = 0;
-    this.total = proforma.cabecera.total;
+
+    //Descuentos De Linea de CLiente
+    this.nivel_descuento = proforma.cabecera.niveles_descuento;
+
+    //complementarProforma
+    this.idpf_complemento_view = proforma.cabecera.idpf_complemento;
+    this.nroidpf_complemento = proforma.cabecera.nroidpf_complemento;
+
+    this.pago_contado_anticipado = proforma.cabecera.pago_contado_anticipado;
+
+    //eso nop porque se totaliza una vez transferida
+    // this.subtotal = proforma.cabecera.subtotal;
+    // this.recargos = proforma.cabecera.recargos;
+    // this.des_extra = proforma.cabecera.descuentos;
+    // this.iva = proforma.cabecera.iva;
+    // this.total = proforma.cabecera.total;
+
+    this.item_seleccionados_catalogo_matriz = proforma.detalle;
+    this.array_de_descuentos_ya_agregados = proforma.descuentos;
+    //this.cod_descuento_total = proforma.descuentos;
 
 
-    // this.item_seleccionados_catalogo_matriz = proforma.detalle;
-    // this.veproforma1 = proforma.detalle;
-    // this.array_de_descuentos_ya_agregados = proforma.descuentos;
-    // //this.cod_descuento_total = proforma.descuentos;
-    // //la cabecera asignada a this.veproforma para totalizar y grabar
-    // this.veproforma = proforma.cabecera
-    // //el cuerpo del detalle asignado al carrito
-    // this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+    //el cuerpo del detalle asignado al carrito
+    this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+
+    // Agregar el número de orden a los objetos de datos
+    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+      element.orden = index + 1;
+      if (element.empaque === null) {
+        element.empaque = 0;
+      }
+    });
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
-    //this.dataSource = new MatTableDataSource(proforma.detalle);
-    // se dibuja los items al detalle de la proforma
-    //this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+    // this.totabilizar()
   }
-
-  imprimir_cotizacion_transferida(cotizacion) {
-    console.log(cotizacion);
-    this.cod_id_tipo_modal_id = cotizacion.cabecera.id;
-    this.id_proforma_numero_id = cotizacion.cabecera.numeroid;
-    this.fecha_actual = cotizacion.cabecera.fecha;
-    this.almacn_parame_usuario = cotizacion.cabecera.codalmacen;
-    this.codigo_cliente = cotizacion.cabecera.codcliente;
-    this.nombre_comercial_razon_social = cotizacion.cabecera.nomcliente;
-    this.nit_cliente = cotizacion.cabecera.nit;
-    this.cod_vendedor_cliente = cotizacion.cabecera.codvendedor;
-    this.moneda_get_catalogo = cotizacion.cabecera.codmoneda;
-    this.tipo_cambio_moneda_catalogo = cotizacion.cabecera.tdc;
-    this.tipopago = cotizacion.cabecera.tipopago;
-    this.preparacion = cotizacion.cabecera.preparacion;
-    this.fecha_actual = cotizacion.cabecera.fecha;
-    this.subtotal = cotizacion.cabecera.subtotal;
-    this.recargos = cotizacion.cabecera.recargos;
-    this.des_extra = cotizacion.cabecera.descuentos;
-    this.iva = cotizacion.cabecera.iva;
-    this.total = cotizacion.cabecera.total;
-
-    this.direccion = cotizacion.cabecera.direccion;
-    this.obs = cotizacion.cabecera.obs;
-    this.transporte = cotizacion.cabecera.transporte;
-    this.medio_transporte = cotizacion.cabecera.nombre_transporte;
-    this.fletepor = cotizacion.cabecera.fletepor;
-    this.habilitar_desct_sgn_solicitud = cotizacion.cabecera.desclinea_segun_solicitud;
-
-    this.item_seleccionados_catalogo_matriz = cotizacion.detalle;
-
-    this.array_items_carrito_y_f4_catalogo = cotizacion.detalle;
-    this.dataSource = new MatTableDataSource(cotizacion.detalle);
-  }
-
-  public total_X_PU: boolean = false;
-  public total_desct_precio: boolean = false;
-  selectedRowIndex: number = -1; // Inicialmente ninguna celda está seleccionada
-  pedidoChangeMatrix(element: any, newValue: number) {
-    this.total = 0;
-    this.subtotal = 0;
-    this.iva = 0
-    this.des_extra = 0;
-    this.recargos = 0;
-
-    this.total_desct_precio = true;
-    element.cantidad = element.cantidad_pedida;
-
-    // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-    element.cantidad = Number(newValue);
-
-    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
-
-    //guardar en el carrito ya modificado, para enviar a totalizar
-    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-  }
-
-  selectRow(index: number) {
-    this.selectedRowIndex = index;
-  }
-
-  cantidadChangeMatrix(element: any, newValue: number) {
-    this.total = 0;
-    this.subtotal = 0;
-    this.iva = 0
-    this.des_extra = 0;
-    this.recargos = 0;
-
-    this.total_desct_precio = false;
-    this.total_X_PU = true;
-
-    // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-    element.cantidad = Number(newValue);
-
-    // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
-
-    //guardar en el carrito ya modificado, para enviar a totalizar
-    this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-  }
-
-  calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, precioneto: number) {
-    // todo despues del if ya que si no siempre esta escuchando los eventos
-    if (cantidad_pedida !== undefined && precioneto !== undefined && cantidad !== undefined) {
-      if (this.total_X_PU === true) {
-        return this.formatNumberTotalSub(cantidad * precioneto);
-      } else {
-        // console.log(input);
-        let cantidadPedida = cantidad_pedida;
-        // Realizar cálculos solo si los valores no son undefined
-        //console.log(cantidadPedida, preciolista);
-        return this.formatNumberTotalSub(cantidadPedida * precioneto);
-      }
-    } else {
-      return 0; // O algún otro valor predeterminado
-    }
-  }
-
 
   formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
@@ -821,6 +1035,294 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     // this.saldo_modal_total_4 = "";
     // this.saldo_modal_total_5 = "";
   }
+
+
+  // eventos de seleccion en la tabla
+  onRowSelect(event: any) {
+    console.log('Row Selected:', event.data);
+    this.updateSelectedProducts();
+  }
+
+  onRowSelectForDelete() {
+    console.log('Items para cambiar cantidad a 0: ', this.selectedProducts);
+
+    // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element: any) => ({
+      ...element,
+      cantidad: 0
+    }))
+
+    //si se cambia la cantidad a 0 TOTABILIZAR
+
+
+  }
+
+  onRowUnselect(event: any) {
+    console.log('Row Unselected:', event.data);
+    this.updateSelectedProducts();
+  }
+
+  updateSelectedProducts() {
+    console.log('Selected Products:', this.selectedProducts);
+  }
+  // fin eventos de seleccion en la tabla
+
+  calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, precioneto: number) {
+    // todo despues del if ya que si no siempre esta escuchando los eventos
+    if (cantidad_pedida !== undefined && precioneto !== undefined && cantidad !== undefined) {
+      if (this.total_X_PU === true) {
+        return this.formatNumberTotalSub(cantidad * precioneto);
+      } else {
+        // console.log(input);
+        let cantidadPedida = cantidad_pedida;
+        // Realizar cálculos solo si los valores no son undefined
+        //console.log(cantidadPedida, preciolista);
+        return this.formatNumberTotalSub(cantidadPedida * precioneto);
+      }
+    } else {
+      return 0; // O algún otro valor predeterminado
+    }
+  }
+
+  validarProformaSoloNegativos() {
+    // 00060 - VALIDAR SALDOS NEGATIVOS
+    // VACIO - TODOS LOS CONTROLES
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    let tipo_complemento
+    console.log(this.complementopf);
+    switch (this.complementopf) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
+
+    this.valor_formulario.map((element: any) => {
+      return this.valor_formulario_negativos = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.contra_entrega?.toString() === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega === undefined ? "SI" : "NO",
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: tipo_complemento,
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: 0,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    // boolean que verifica que el formulario este con sus data llenada
+    this.submitted = true;
+    if (this.FormularioData.valid) {
+      this.spinner.show();
+      console.log("DATOS VALIDADOS");
+      console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
+
+      let proforma_validar = {
+        datosDocVta: this.valor_formulario_negativos,
+        detalleAnticipos: [],
+        detalleDescuentos: [],
+        //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
+        detalleEtiqueta: [],
+        detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+        detalleRecargos: [],
+      }
+
+      console.log(proforma_validar);
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+          if (datav[0].Dtnegativos) {
+            this.validacion_post_negativos = datav[0].Dtnegativos;
+          }
+
+          this.abrirTabPorLabel("Negativos");
+          console.log(this.validacion_post_negativos);
+
+          this.toggleTodosNegativos = true;
+          this.toggleNegativos = false;
+          this.togglePositivos = false;
+
+          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
+      });
+    } else {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+    }
+  }
+
+  negativosTodosFilterToggle() {
+    this.toggleTodosNegativos = true;
+    this.toggleNegativos = false;
+    this.togglePositivos = false;
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+  }
+
+  negativosNegativosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = true;
+    this.togglePositivos = false;
+
+    this.validacion_post_negativos_filtrados_solo_negativos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Genera Negativo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_negativos);
+  }
+
+  negativosPositivosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = false;
+    this.togglePositivos = true;
+
+    this.validacion_post_negativos_filtrados_solo_positivos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Positivo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_positivos);
+  }
+  //FIN NEGATIVOS
+
+
+
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -880,5 +1382,29 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     });
   }
 
-
+  modalSubTotal() {
+    this.dialog.open(ModalSubTotalComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        descuento_nivel: this.desct_nivel_actual,
+        cod_cliente: this.codigo_cliente,
+        cod_almacen: this.agencia_logueado,
+        cod_moneda: this.moneda_get_catalogo,
+        desc_linea: this.habilitar_desct_sgn_solicitud,
+        items: this.array_items_carrito_y_f4_catalogo,
+        fecha: this.fecha_actual
+      },
+    });
+  }
+  modalIva() {
+    console.log(this.tablaIva);
+    this.dialog.open(ModalIvaComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { tablaIva: this.tablaIva },
+    });
+  }
 }

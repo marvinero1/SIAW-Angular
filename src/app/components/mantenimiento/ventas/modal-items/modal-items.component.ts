@@ -2,7 +2,7 @@ import { Component, HostListener, Inject, OnInit, ViewChild, AfterViewInit, Quer
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource, MatRow } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { Item } from '@services/modelos/objetos';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -73,10 +73,14 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalItemsComponent>, private toastr: ToastrService,
     private servicioItem: ItemServiceService, private datePipe: DatePipe,
-    @Inject(MAT_DIALOG_DATA) public tarifa: any, @Inject(MAT_DIALOG_DATA) public descuento: any,
-    @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
-    @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
-    @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public itemss: any,
+    @Inject(MAT_DIALOG_DATA) public tarifa: any,
+    @Inject(MAT_DIALOG_DATA) public descuento: any,
+    @Inject(MAT_DIALOG_DATA) public codcliente: any,
+    @Inject(MAT_DIALOG_DATA) public codalmacen: any,
+    @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any,
+    @Inject(MAT_DIALOG_DATA) public fecha: any,
+    @Inject(MAT_DIALOG_DATA) public codmoneda: any,
+    @Inject(MAT_DIALOG_DATA) public itemss: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -113,8 +117,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getCatalogoItems();
   }
-
-
 
   ngAfterViewInit(): void {
     //Add 'implements AfterViewInit' to the class.
@@ -256,7 +258,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
-          // console.log('item seleccionado: ', this.item_obtenido);
         },
 
         error: (err: any) => {
@@ -299,8 +300,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
         },
 
         complete: () => {
-          // this.array_items_proforma_matriz.push(dataItem);
-          // this.array_items_proforma_matriz_concat = this.array_items_proforma_matriz;
           this.enviarItemsAlServicio(this.itemParaTabla, dataItem);
           this.close();
         }
@@ -309,7 +308,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
     this.servicioItem.enviarItemCompletoAProformaF4(items);
-
     this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
   }
 

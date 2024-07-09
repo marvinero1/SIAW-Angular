@@ -160,8 +160,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   @ViewChild("input_cantidad_pedida") inputCantidadPedida: ElementRef;
-
-
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
@@ -444,6 +442,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   desct: any = false;
 
   decimalPipe: any;
+  private debounceTimer: any;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService,
@@ -603,10 +602,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         }
       });
 
-      // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-
-
+      return this.array_items_carrito_y_f4_catalogo;
     });
     //
 
@@ -733,11 +729,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
-
     //Monedas
     this.serviciMoneda.disparadorDeMonedas.subscribe(data => {
       console.log("Recibiendo Moneda: ", data);
-      this.moneda_get_catalogo = data.moneda;
+      this.moneda_get_catalogo = data.moneda.codigo;
       this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
 
       //si se cambia la moneda, los totales tambien se cambian
@@ -844,6 +839,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.myInputField.nativeElement.focus();
     this.getIdTipo();
     this.getAlmacen();
     this.getAlmacenParamUsuario();
@@ -855,7 +851,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.getTipoDocumentoIdentidadProforma();
     this.getDescuento();
-    this.tablaInicializada();
     this.getIDScomplementarProforma();
   }
 
@@ -870,7 +865,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   tablaInicializada() {
     this.orden_creciente = 0;
-    this.item_seleccionados_catalogo_matriz_false = Array(35).fill({}).map(() => ({
+    this.array_items_carrito_y_f4_catalogo = Array(35).fill({}).map(() => ({
       coditem: " ",
       descripcion: " ",
       medida: " ",
@@ -894,7 +889,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       subtotal_descto_extra: undefined
     }));
 
-    this.dataSource = new MatTableDataSource(this.item_seleccionados_catalogo_matriz_false);
     let validacion = [{
       codControl: '',
       descripcion: '',
@@ -1000,7 +994,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
-      monto_anticipo: [this.dataform.monto_anticipo === 0 ? 0 : this.dataform.monto_anticipo], //anticipo Ventas
+      monto_anticipo: 0, //anticipo Ventas
       tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelectComplemetarProforma = false }], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -1084,7 +1078,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: element.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -1914,7 +1908,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-  private debounceTimer: any;
 
   pedidoChangeMatrix(element: any, newValue: number) {
     this.total = 0;
@@ -2567,7 +2560,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -2913,7 +2906,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
-      veproforma_anticipo: [],
+      veproforma_anticipo: this.tabla_anticipos,
       vedesextraprof: this.array_de_descuentos_ya_agregados, //array de descuentos
       verecargoprof: this.recargo_de_recargos, //array de recargos
       veproforma_iva: this.veproforma_iva, //array de iva
@@ -2992,6 +2985,10 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
@@ -3055,7 +3052,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         id: element.id.toString() || '',
         numeroid: element.numeroid?.toString() || '',
         codcliente: element.codcliente?.toString() || '',
-        nombcliente: element.nombcliente?.toString() || '',
+        nombcliente: this.razon_social?.toString() || '',
         nitfactura: element.nit?.toString() || '',
         tipo_doc_id: element.tipo_docid?.toString() || '',
         codcliente_real: element.codcliente_real?.toString() || '',
@@ -3087,7 +3084,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -3116,7 +3113,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
-      detalleAnticipos: [],
+      detalleAnticipos: this.tabla_anticipos,
       detalleDescuentos: this.array_de_descuentos_ya_agregados,
       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
@@ -3291,7 +3288,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -3475,7 +3472,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: this.monto_anticipo,
+        monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
@@ -4931,6 +4928,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         total: this.total,
         tdc: this.tipo_cambio_moneda_catalogo,
         array_tabla_anticipos: this.tabla_anticipos,
+        ventana_para_cod_proforma: "proforma"
       },
     });
   }

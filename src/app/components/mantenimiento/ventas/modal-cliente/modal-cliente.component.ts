@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild, AfterViewInit, Inject } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Inject, ViewChildren, QueryList } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { veCliente } from '@services/modelos/objetos';
@@ -10,7 +10,7 @@ import { Table } from 'primeng/table';
   templateUrl: './modal-cliente.component.html',
   styleUrls: ['./modal-cliente.component.scss']
 })
-export class ModalClienteComponent implements AfterViewInit, OnInit {
+export class ModalClienteComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarCliente();
@@ -20,23 +20,25 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
     this.mandarCliente();
   };
 
+  private debounceTimer: any;
+
   cliente: any = [];
   cliente_send: any = [];
   cliente_referencia_proforma_get: boolean = false;
   userConn: string;
   origen: string;
 
-  @Output() codigoEvento = new EventEmitter<string>();
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ViewChild('dt1') dt1: Table;
-
   clientes!: veCliente[];
   selecteclientes: veCliente[];
   searchValue: string | undefined;
 
+  @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
+
   constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService,
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
-    @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any, @Inject(MAT_DIALOG_DATA) public ventana: any) {
+    @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any,
+    @Inject(MAT_DIALOG_DATA) public ventana: any) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     this.origen = ventana.ventana;
@@ -48,30 +50,22 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
       // Manejo del caso en que el objeto es null
       this.cliente_referencia_proforma_get = false;
     }
-
     console.log(this.cliente_referencia_proforma_get);
   }
 
   ngOnInit() {
-    this.input.nativeElement.focus();
-  }
-
-  ngAfterViewInit() {
     this.getClienteCatalogo();
-
-    this.input.nativeElement.focus();
   }
 
   getClienteCatalogo() {
     this.spinner.show();
 
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
     return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cliente = datav;
-          this.clientes = this.cliente;
+          this.clientes = datav;
           console.log('data', datav);
 
           setTimeout(() => {
@@ -98,13 +92,29 @@ export class ModalClienteComponent implements AfterViewInit, OnInit {
     this.cliente_send = cliente?.data;
   }
 
-  private debounceTimer: any;
   onSearchChange(searchValue: string) {
     console.log(searchValue);
+
+    // Debounce logic
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.dt1.filterGlobal(searchValue, 'contains');
-    }, 750); // 300 ms de retardo
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.trim().includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 950); // 750 ms de retardo
   }
 
   mandarCliente() {

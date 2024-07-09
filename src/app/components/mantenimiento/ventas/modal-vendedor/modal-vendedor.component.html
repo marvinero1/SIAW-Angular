@@ -1,5 +1,7 @@
 <div class="p-1">
-  <div class="tittle"><span>Catálogo de Vendedores</span></div>
+  <div class="tittle">
+    <span>Catálogo de Vendedores</span>
+  </div>
   <div class="p-1 mat-elevation-z8">
     <div class="row">
       <div class="col-md-8" style="padding: 15px 20px 2px;">
@@ -26,8 +28,8 @@
             <div class="flex">
               <span class="p-input-icon-left ml-auto">
                 <i class="pi pi-search"></i>
-                <input mat-input type="text" #input [(ngModel)]="searchValue"
-                  (ngModelChange)="onSearchChange($event)" />
+                <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
+                  pAutoFocus [autofocus]="true" />
               </span>
             </div>
           </ng-template>
@@ -45,7 +47,7 @@
           </ng-template>
 
           <ng-template pTemplate="body" let-vendedors let-rowIndex="rowIndex">
-            <tr [pSelectableRow]="vendedors" [pSelectableRowIndex]="rowIndex" pAutoFocus [autofocus]="true">
+            <tr #para [pSelectableRow]="vendedors" [pSelectableRowIndex]="rowIndex" tabindex="-1">
               <td class="text-center">
                 {{ vendedors.codigo }}
               </td>

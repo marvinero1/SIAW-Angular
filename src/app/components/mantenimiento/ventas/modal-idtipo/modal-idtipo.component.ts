@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { veNumeracion } from '@services/modelos/objetos';
@@ -9,7 +9,6 @@ import { Table } from 'primeng/table';
   templateUrl: './modal-idtipo.component.html',
   styleUrls: ['./modal-idtipo.component.scss']
 })
-
 export class ModalIdtipoComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler() {
@@ -24,7 +23,7 @@ export class ModalIdtipoComponent implements OnInit {
 
   id_tipo!: veNumeracion[];
   seletedid_tipo: veNumeracion[];
-  searchValue: string | undefined;
+  searchValue: string;
 
   public codigo: string = '';
   public tipo_view: any = [];
@@ -33,11 +32,13 @@ export class ModalIdtipoComponent implements OnInit {
   userConn: any;
   user: any;
 
+  private debounceTimer: any;
+
   @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
 
   constructor(public dialogRef: MatDialogRef<ModalIdtipoComponent>, private api: ApiService,
     public servicioTipoID: TipoidService) {
-
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.user = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
   }
@@ -69,21 +70,36 @@ export class ModalIdtipoComponent implements OnInit {
     this.tipo_view = element.data;
   }
 
-  // private debounceTimer: any;
-  // onSearchChange(searchValue: string) {
-  //   console.log(searchValue);
-  //   clearTimeout(this.debounceTimer);
-  //   this.debounceTimer = setTimeout(() => {
-  //     this.dt1.filterGlobal(searchValue, 'contains');
-  //   }, 750); // 750 ms de retardo
-  // }
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+
+    // Debounce logic
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 750); // 750 ms de retardo
+  }
 
   mandarTipoId() {
     this.servicioTipoID.disparadorDeIDTipo.emit({
       id_tipo: this.tipo_view,
       // numero_id:
     });
-
     this.close();
   }
 

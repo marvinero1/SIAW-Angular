@@ -1,14 +1,9 @@
-import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, ElementRef, HostListener, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { inAlmacen } from '@services/modelos/objetos';
-import { Observable, map, startWith } from 'rxjs';
 import { ServicioalmacenService } from '../servicioalmacen/servicioalmacen.service';
 import { Table } from 'primeng/table';
-
 @Component({
   selector: 'app-modal-almacen',
   templateUrl: './modal-almacen.component.html',
@@ -16,16 +11,18 @@ import { Table } from 'primeng/table';
 })
 export class ModalAlmacenComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+  @HostListener("document:keydown.enter", []) unloadHandler() {
     this.mandarAlmacen();
   };
 
   @HostListener('dblclick') onDoubleClicked2() {
-    this.mandarAlmacen();
+    if (this.agencia_view.length != 0) {
+      this.mandarAlmacen();
+    }
   };
 
   public agencia_view: any = [];
-
+  private debounceTimer: any;
 
   agencia_get: any = [];
   origen_get: string;
@@ -37,13 +34,8 @@ export class ModalAlmacenComponent implements OnInit {
   selectealmacenes: inAlmacen[];
   searchValue: string | undefined;
 
-  options: inAlmacen[] = [];
-  filteredOptions: Observable<inAlmacen[]>;
-  myControlCodigo = new FormControl<string | inAlmacen>('');
-  myControlDescripcion = new FormControl<string | inAlmacen>('');
-
   @ViewChild('dt1') dt1: Table;
-  @ViewChild('tbb') dt11: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalAlmacenComponent>,
     private servicioAlmacen: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public origen: any,
@@ -97,16 +89,29 @@ export class ModalAlmacenComponent implements OnInit {
     this.close();
   }
 
-  private debounceTimer: any;
   onSearchChange(searchValue: string) {
     console.log(searchValue);
+
+    // Debounce logic
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.dt1.filterGlobal(searchValue, 'contains');
-    }, 750); // 750 ms de retardo
 
-    let tableElement = this.dt11.el.nativeElement;
-    tableElement.focus();
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 550); // 750 ms de retardo
   }
 
   getDescripcionView(element) {

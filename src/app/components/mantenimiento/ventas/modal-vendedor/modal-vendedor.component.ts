@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { veVendedor } from '@services/modelos/objetos';
@@ -16,19 +16,23 @@ export class ModalVendedorComponent implements OnInit {
   };
 
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
-    this.mandarVendedor();
+    if (this.vendedor_view.length != 0) {
+      this.mandarVendedor();
+    }
   };
 
   vendedor_get: any = [];
   public vendedor_view: any = [];
-
   public codigo: string = '';
   public nombre: string = '';
+
+  private debounceTimer: any;
 
   userConn: string;
   origen: string;
 
   @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
 
   vendedors!: veVendedor[];
   selectevendedors: veVendedor[];
@@ -68,13 +72,29 @@ export class ModalVendedorComponent implements OnInit {
     console.log(this.vendedor_view);
   }
 
-  private debounceTimer: any;
   onSearchChange(searchValue: string) {
     console.log(searchValue);
+
+    // Debounce logic
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.dt1.filterGlobal(searchValue, 'contains');
-    }, 700); // 700 ms de retardo
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 550); // 750 ms de retardo
   }
 
   mandarVendedor() {

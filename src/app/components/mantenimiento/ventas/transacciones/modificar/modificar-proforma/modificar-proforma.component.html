@@ -1671,13 +1671,14 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                              <u>Total Anticipo Aplicado</u>
+                              <u>Total Anticipo Aplicado: </u> &nbsp;
+                              <strong>{{ monto_anticipo }} - {{ moneda_get_catalogo }}</strong>
                             </span>
                           </div>
-                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
+                          <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
                             width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0" value="0" disabled>
-                          {{ moneda_get_catalogo | number:'1.2-2' }}
+                            [(ngModel)]="monto_anticipo" placeholder="0.00" min="0" value="0" disabled> -->
+
                         </div><br>
                         <div style="text-align: center;">
                           <button class="btn btn-outline-primary form-control-sm" type="button"

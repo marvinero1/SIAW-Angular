@@ -1,13 +1,11 @@
-import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { inTarifa } from '@services/modelos/objetos';
 import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-modal-precio-venta',
   templateUrl: './modal-precio-venta.component.html',
@@ -23,29 +21,23 @@ export class ModalPrecioVentaComponent implements OnInit {
     this.mandarPrecioVenta();
   };
 
+  @ViewChild('dt1') dt1: Table;
+  @ViewChildren('para') paras: QueryList<ElementRef>;
+
+  private debounceTimer: any;
+
   tarifa_get: any = [];
   precio_view: any = [];
   detalle_get: any;
   userConn: string;
   usuario: string;
 
-  displayedColumns = ['codigo', 'descripcion'];
-
-  dataSource = new MatTableDataSource<inTarifa>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-
-  myControlCodigo = new FormControl<string | inTarifa>('');
-  myControlDescripcion = new FormControl<string | inTarifa>('');
-
-  options: inTarifa[] = [];
-  filteredOptions: Observable<inTarifa[]>;
+  tarifs!: inTarifa[];
+  selectevendedors: inTarifa[];
+  searchValue: string | undefined;
 
   constructor(public dialogRef: MatDialogRef<ModalPrecioVentaComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     public servicioPrecioVenta: ServicioprecioventaService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
-    // this.detalle_get = detalle.detalle;
     console.log(detalle);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -56,32 +48,14 @@ export class ModalPrecioVentaComponent implements OnInit {
     this.getTarifa();
   }
 
-  private _filter(name: string): inTarifa[] {
-    const filterValue = name.toLowerCase();
-    return this.options.filter(option => option.codigo.toString().includes(filterValue));
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    console.log(this.dataSource.filter);
-  }
-
-  displayFn(user: inTarifa): any {
-    return user && user.codigo ? user.codigo : '';
-  }
-
   getTarifa() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuario)
       .subscribe({
         next: (datav) => {
           this.tarifa_get = datav;
+          this.tarifs = datav;
           console.log(this.tarifa_get);
-
-          this.dataSource = new MatTableDataSource(this.tarifa_get);
-          this.dataSource.paginator = this.paginator;
-          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
 
         error: (err: any) => {
@@ -91,8 +65,32 @@ export class ModalPrecioVentaComponent implements OnInit {
       })
   }
 
+  onSearchChange(searchValue: string) {
+    console.log(searchValue);
+    // Debounce logic
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.dt1.filterGlobal(searchValue, 'contains');
+
+      // Focus logic
+      const elements = this.paras.toArray();
+      let focused = false;
+      for (const element of elements) {
+        if (element.nativeElement.textContent.includes(searchValue)) {
+          element.nativeElement.focus();
+          focused = true;
+          break;
+        }
+      }
+
+      if (!focused) {
+        console.warn('No se encontró ningún elemento para hacer focus');
+      }
+    }, 550); // 750 ms de retardo
+  }
+
   getTarifabyId(precio_venta) {
-    this.precio_view = precio_venta;
+    this.precio_view = precio_venta.data;
     console.log(precio_venta);
   }
 

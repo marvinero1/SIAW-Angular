@@ -46,10 +46,14 @@ export class ModalRecargosComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
     public dialogRef: MatDialogRef<ModalRecargosComponent>, private toastr: ToastrService,
     public servicioRecargo: RecargoServicioService, public servicio_recargo_proforma: RecargoToProformaService,
-    @Inject(MAT_DIALOG_DATA) public recargos: any, @Inject(MAT_DIALOG_DATA) public des_extra_del_total: any,
-    @Inject(MAT_DIALOG_DATA) public array_cabe_cuerpo: any, @Inject(MAT_DIALOG_DATA) public cabecera: any,
-    @Inject(MAT_DIALOG_DATA) public items: any, @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
-    @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
+    @Inject(MAT_DIALOG_DATA) public recargos: any,
+    @Inject(MAT_DIALOG_DATA) public des_extra_del_total: any,
+    @Inject(MAT_DIALOG_DATA) public array_cabe_cuerpo: any,
+    @Inject(MAT_DIALOG_DATA) public cabecera: any,
+    @Inject(MAT_DIALOG_DATA) public items: any,
+    @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
+    @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any,
+    @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
     this.recargos_ya_en_array = recargos.recargos;
 

@@ -11,7 +11,8 @@
       </div>
     </div>
 
-    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="large" color="#093070" type="square-loader" [fullScreen]="true">
+    <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader"
+      [fullScreen]="true">
       <br>
       <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
     </ngx-spinner>
@@ -33,12 +34,13 @@
                   class="fa fa-search"></i>
               </button>
             </div>
-            <input type="text" [(ngModel)]="numero_id_proformas" [disabled]="isCheckedCotizaciones">
+            <input type="text" [(ngModel)]="numero_id_proformas" id="inputCatalogoCliente"
+              [disabled]="isCheckedCotizaciones">
           </div>
         </div>
       </div>
 
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-4">
           <mat-slide-toggle class="example-margin" [(ngModel)]="isCheckedCotizaciones" (click)="proformaHabilitar();">
             DE COTIZACIONES:
@@ -58,7 +60,8 @@
             <input type="text" [disabled]="isCheckedProformas" [(ngModel)]="numero_id_cotizaciones">
           </div>
         </div>
-      </div><br>
+      </div>-->
+      <br>
 
       <div style="text-align: center;">
         <ng-container *ngIf="isCheckedProformas">
@@ -67,11 +70,11 @@
           </button>
         </ng-container>
 
-        <ng-container *ngIf="isCheckedCotizaciones">
+        <!-- <ng-container *ngIf="isCheckedCotizaciones">
           <button mat-raised-button color="primary" (click)="transferirCotizaciones();" [disabled]="!id_cotizaciones">
             <i class="fa fa-paper-plane" aria-hidden="true"></i> Transferir Cotización
           </button>
-        </ng-container>
+        </ng-container> -->
       </div>
     </div>
   </div>

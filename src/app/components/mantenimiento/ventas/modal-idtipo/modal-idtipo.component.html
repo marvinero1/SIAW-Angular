@@ -3,7 +3,6 @@
     <span> Catálogo ID Tipo</span>
   </div>
   <div class="mat-elevation-z8">
-
     <div class="row">
       <div class="col-md-8" style="padding: 15px 20px 2px;">
         <p><strong>Dsct. Especial:</strong> &nbsp; {{ tipo_view.id }} {{ tipo_view.descripcion }} </p>
@@ -31,7 +30,8 @@
               <div class="flex">
                 <span class="p-input-icon-left ml-auto">
                   <i class="pi pi-search"></i>
-                  <!-- <input mat-input type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)" /> -->
+                  <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
+                    pAutoFocus [autofocus]="true" />
                 </span>
               </div>
             </ng-template>
@@ -49,7 +49,7 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-id_tipo let-rowIndex="rowIndex">
-              <tr [pSelectableRow]="id_tipo" [pSelectableRowIndex]="rowIndex" pAutoFocus [autofocus]="true">
+              <tr [pSelectableRow]="id_tipo" [pSelectableRowIndex]="rowIndex" #para tabindex="-1">
                 <td class="text-center">
                   {{ id_tipo.id }}
                 </td>
