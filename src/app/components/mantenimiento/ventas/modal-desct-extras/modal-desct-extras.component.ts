@@ -68,22 +68,37 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.recargos_array_get = recargos_array.recargos_array
     this.cmtipo_complementopf_get = cmtipo_complementopf.cmtipo_complementopf;
     this.cliente_real_get = cliente_real.cliente_real
-    this.array_de_descuentos;
+    this.array_de_descuentos = array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal
 
     //aca llega los descuentos q ya pusiste, esto se pinta en la su tabla
-    console.log(this.recargos_array_get,
-      this.array_de_descuentos,
-      array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal);
+    console.log(this.recargos_array_get, this.array_de_descuentos);
 
-    this.array_de_descuentos = this.map_table = array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal.map(element => ({
+    // this.array_de_descuentos = this.array_de_descuentos.map(element => ({
+    //   codigo: element.coddesextra,
+    //   descripcion: element.descripcion === undefined ? element.descrip : element.descripcion,
+    //   porcentaje: element.porcen,
+    // }))
+
+    this.array_de_descuentos = this.array_de_descuentos.map((element) => ({
+      aplicacion: element.aplicacion,
+      codanticipo: element.codanticipo,
+      codcobranza: element.codcobranza,
+      codcobranza_contado: element.codcobranza_contado,
+      coddesextra: element.coddesextra,
+      codmoneda: element.codmoneda,
+      codproforma: element.codproforma,
+      id: element.id,
+      montodoc: element.montodoc,
+      montorest: element.montorest,
       codigo: element.coddesextra,
-      descripcion: element.descripcion === undefined ? element.descrip : element.descripcion,
+      descripcion: element.descripcion,
       porcentaje: element.porcen,
     }))
 
-    this.dataSource = new MatTableDataSource(this.map_table);
+    this.dataSource = new MatTableDataSource(this.array_de_descuentos);
+
     console.log(this.contra_entrega_get);
-    console.log("Array de descuentos que ya estaban: ", JSON.stringify(this.array_de_descuentos));
+    console.log("Array de descuentos que ya estaban: ", this.array_de_descuentos);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
@@ -316,22 +331,23 @@ export class ModalDesctExtrasComponent implements OnInit {
     console.log(this.array_de_descuentos);
 
     //mapeo para tabladescuentos
-    let array_de_descuentos_map_for_backend: any = [];
-    array_de_descuentos_map_for_backend = this.array_de_descuentos.map(element => ({
+    this.array_de_descuentos = this.array_de_descuentos.map((element) => ({
       codproforma: 0,
       coddesextra: element.codigo,
-      porcen: element.porcentaje,
-      montodoc: 0,
+      aplicacion: element.aplicacion,
+      codanticipo: 0,
       codcobranza: 0,
       codcobranza_contado: 0,
-      codanticipo: 0,
+      codmoneda: "BS",
       id: 0,
-      aplicacion: element.aplicacion,
-      codmoneda: this.cod_moneda_get,
+      montodoc: 0,
+      montorest: 0,
+      codigo: element.codigo,
       descrip: element.descripcion,
+      descripcion: element.descripcion,
+      porcen: element.porcentaje,
       total_dist: 0,
       total_desc: 0,
-      montorest: 0
     }))
 
     let total_proforma_concat = {
@@ -342,13 +358,14 @@ export class ModalDesctExtrasComponent implements OnInit {
         "codrecargo": 0,
         "porcen": 0,
         "monto": 0,
-        "moneda": "string",
+        "moneda": "",
         "montodoc": 0,
         "codcobranza": 0,
-        "descrip": "string"
-      }], //array de recargos
-      tabladescuentos: array_de_descuentos_map_for_backend, //array de descuentos
+        "descrip": ""
+      }],
+      tabladescuentos: this.array_de_descuentos, //array de descuentos
     }
+
     console.log(total_proforma_concat);
 
     // if (this.disableSelect.value === false) {
@@ -367,8 +384,16 @@ export class ModalDesctExtrasComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-          this.resultado_validacion = datav;
-          this.servicioEnviarAProforma(datav);
+          this.resultado_validacion = datav
+          console.log("array original como llega: ", datav);
+
+          // this.resultado_validacion = this.resultado_validacion.map((element) => ({
+          //   ...element,
+          //   descripcion: element.descrip
+          // }));
+
+          console.log("arraya de descuentos mapeados despies de volver del backend:", this.resultado_validacion)
+          this.servicioEnviarAProforma(this.resultado_validacion);
         },
 
         error: (err: any) => {

@@ -239,6 +239,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   BD_storage: any;
   orden_creciente: number = 1;
   fecha_actual_empaque: string;
+  num_id: any;
 
   public cod_cliente_enter;
   public codigo_cliente: string;
@@ -366,7 +367,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   elementoSeleccionadoPrecioVenta: any;
   elementoSeleccionadoDescuento: any;
 
-  monto_anticipo: number = 0;
+  monto_anticipo: any;
 
   //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
   public validacion_post: any = [];
@@ -801,12 +802,15 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.subtotal = data.resultado_validacion.subtotal;
       this.peso = data.resultado_validacion.peso;
       this.des_extra = data.resultado_validacion.descuento;
-      // this.array_de_descuentos_ya_agregados
-      this.array_de_descuentos_ya_agregados = data.tabla_descuento;
+      // this.array_de_descuentos_ya_agregados;
 
-      this.array_de_descuentos_ya_agregados = data.resultado_validacion.tablaDescuentos;
+      // ESTO DEJARLO COMENTADOR POR SI ACASO
+      // this.array_de_descuentos_ya_agregados = data.tabla_descuento;
 
-      console.log(this.des_extra);
+      this.array_de_descuentos_ya_agregados = data.desct_proforma;
+
+      //this.array_de_descuentos_ya_agregados = data.resultado_validacion.tablaDescuentos;
+      console.log("array de desct: ", this.array_de_descuentos_ya_agregados);
     });
     //finDisparador
 
@@ -992,15 +996,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       odc: "",
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
 
-      idanticipo: [""], //anticipo VentasL
-      numeroidanticipo: [0], //anticipo Ventas
-      pago_contado_anticipado: [false], //anticipo Ventas
+      idanticipo: [""], // anticipo VentasL
+      numeroidanticipo: [0], // anticipo Ventas
+      pago_contado_anticipado: [this.dataform.pago_contado_anticipado], //anticipo Ventas
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
       idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
-
 
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
       monto_anticipo: [0], //anticipo Ventas
@@ -1189,15 +1192,18 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       })
   }
-
+  num_idd: any;
   transferirProforma(id, numero_id) {
+    console.log(this.num_idd, numero_id);
+
     this.spinner.show()
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/obtProfxModif/";
 
-    return this.api.getAll('/venta/modif/docmodifveproforma/obtProfxModif/' + this.userConn + "/" + id + "/" + numero_id)
+    return this.api.getAll('/venta/modif/docmodifveproforma/obtProfxModif/' + this.userConn + "/" + this.num_idd + "/" + numero_id)
       .subscribe({
         next: (datav) => {
           this.imprimir_proforma_tranferida(datav);
+          this.toastr.success('! TRANSFERENCIA EXITOSA !');
 
           setTimeout(() => {
             this.spinner.hide();
@@ -2312,9 +2318,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  pago_contado_anticipado_view: any;
+  odc: any;
+
   imprimir_proforma_tranferida(proforma) {
     console.log("Imprimir Proforma Transferida: ", proforma, proforma.habilitado);
 
+    this.monto_anticipo = proforma.anticiposTot;
+    this.pago_contado_anticipado_view = proforma.cabecera.pago_contado_anticipado;
     this.codigo_proforma = proforma.cabecera.codigo;
     this.descrip_confirmada = proforma.descConfirmada;
     this.estado_proforma = proforma.estadodoc;
@@ -2352,12 +2363,13 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
     this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
     this.tipo_cliente = proforma.cabecera.tipo === undefined ? " " : " ";
-    this.direccion = proforma.profEtiqueta.direccion;
+    this.direccion = proforma.cabecera.direccion;
     this.whatsapp_cliente = proforma.cabecera.celular;
-    this.latitud_cliente = proforma.profEtiqueta.latitud_entrega;
-    this.longitud_cliente = proforma.profEtiqueta.longitud_entrega;
+    this.latitud_cliente = proforma.cabecera.latitud_entrega;
+    this.longitud_cliente = proforma.cabecera.longitud_entrega;
     this.central_ubicacion = proforma.cabecera.central;
     this.obs = proforma.cabecera.obs;
+    this.odc = proforma.cabecera.odc
     this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
     this.whatsapp_cliente = proforma.etiquetaProf[0].celular;
 
@@ -2368,8 +2380,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.des_extra = proforma.cabecera.descuentos;
     this.iva = proforma.cabecera.iva;
     this.total = proforma.cabecera.total;
-
-    this.monto_anticipo = 0;
+    //tabla de anticipos
     this.tabla_anticipos = proforma.anticipos
 
     this.item_seleccionados_catalogo_matriz = proforma.detalle;
@@ -2385,7 +2396,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.recargo_de_recargos = proforma.recargos;
 
     // array de validaciones
-    this.validacion_post = proforma.detalleValida;
+    // this.validacion_post = proforma.detalleValida.map((element) => ({
+    //   ...element,
+    //   codservicio: element.codservicio.toString(),
+    // }));
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
@@ -2393,8 +2407,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
       element.orden = index + 1;
     });
-
-
   }
 
   imprimir_cotizacion_transferida(cotizacion) {
@@ -2718,7 +2730,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       valido: item.Valido || "string",
       observacion: item.Observacion || "string",
       obsdetalle: item.ObsDetalle || "string",
-      codservicio: parseInt(item.CodServicio) || 0,
+      codservicio: item.CodServicio || "0",
       datoa: item.DatoA || "string",
       datob: item.DatoB || "string",
       clave_servicio: item.ClaveServicio || "string"
@@ -2763,7 +2775,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       estado_doc_vta: "",
       // tabladescuentos: this.array_de_descuentos_ya_agregados,
       // tablarecargos: this.recargo_de_recargos,
-    }
+    };
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descrip: element.descripcion,
+    }));
 
     total_proforma_concat = {
       veproforma: data,
@@ -2920,7 +2937,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       valido: item.Valido || "string",
       observacion: item.Observacion || "string",
       obsdetalle: item.ObsDetalle || "string",
-      codservicio: parseInt(item.CodServicio) || 0,
+      codservicio: item.CodServicio || "0",
       datoa: item.DatoA || "string",
       datob: item.DatoB || "string",
       clave_servicio: item.ClaveServicio || "string"
@@ -2966,6 +2983,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       // tabladescuentos: this.array_de_descuentos_ya_agregados,
       // tablarecargos: this.recargo_de_recargos,
     }
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descrip: element.descripcion,
+    }));
 
     total_proforma_concat = {
       veproforma: data,
@@ -3221,231 +3243,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
-    this.totabilizar();
-    this.spinner.show();
-
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
     if (confirmacionValidaciones) {
-      //ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
-      this.aplicarDesctPorDeposito();
-
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-      return;
-    };
-
-
-    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
-    // VACIO - TODOS LOS CONTROLES
-    this.valor_formulario = [this.FormularioData.value];
-    console.log("Valor Formulario Original: ", this.valor_formulario);
-    console.log("Valor Formulario Original Validaciones: ", this.validacion_post);
-
-    let tipo_complemento
-    console.log(this.tipo_complementopf_input);
-
-    switch (this.tipo_complementopf_input) {
-      case 3:
-        tipo_complemento = "";
-        break;
-      case 0:
-        tipo_complemento = "complemento_mayorista_dimediado";
-        break;
-      case 1:
-        tipo_complemento = "complemento_para_descto_monto_min_desextra";
-        break;
+      // ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
+      this.aplicarDesctPorDepositoYValidar();
+    } else {
+      this.validar();
     }
-
-    this.valor_formulario.map((element: any) => {
-      if (this.tipopago === 1) {
-        element.contra_entrega = false;
-        element.estado_contra_entrega = "";
-      }
-
-      this.valor_formulario_copied_map_all = {
-        coddocumento: 0,
-        id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
-        codcliente: element.codcliente?.toString() || '',
-        nombcliente: element.nombcliente?.toString() || '',
-        nitfactura: element.nit?.toString() || '',
-        tipo_doc_id: element.tipo_docid?.toString() || '',
-        codcliente_real: element.codcliente_real?.toString() || '',
-        nomcliente_real: this.nombre_cliente_catalogo_real,
-        codmoneda: element.codmoneda?.toString() || '',
-        subtotaldoc: element.subtotal,
-        totaldoc: element.total,
-        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
-        codalmacen: element.codalmacen?.toString() || '',
-        codvendedor: element.codvendedor?.toString() || '',
-        preciovta: element.preciovta?.toString() || '',
-        preparacion: element.preparacion,
-        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
-        vta_cliente_en_oficina: element.venta_cliente_oficina,
-        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
-        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
-        niveles_descuento: element.niveles_descuento,
-        transporte: element.transporte,
-        nombre_transporte: element.nombre_transporte,
-        fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
-        direccion: element.direccion,
-        ubicacion: element.ubicacion,
-        latitud: element.latitud_entrega,
-        longitud: element.longitud_entrega,
-        nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: tipo_complemento,
-        fechadoc: element.fecha,
-        idanticipo: element.idanticipo,
-        noridanticipo: element.numeroidanticipo?.toString() || '',
-        monto_anticipo: 0,
-        nrofactura: "0",
-        nroticket: "",
-        tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
-        nroautorizacion: "",
-        nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
-        version_codcontrol: "",
-        estado_doc_vta: "NUEVO",
-        codtarifadefecto: "1",
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: "",
-        idFC_complementaria: "",
-        nroidFC_complementaria: "",
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
-      }
-    });
-
-
-
-    const transformedArray = this.validacion_post.map(item => ({
-      codproforma: 0,
-      codcontrol: item.codcontrol || "",
-      nroitems: parseInt(item.nroitems) || 0,
-      nit: item.nit || "",
-      subtotal: parseFloat(item.subtotal) || 0,
-      descuentos: parseFloat(item.descuentos) || 0,
-      recargos: parseFloat(item.recargos) || 0,
-      total: item.total || 0,
-      valido: item.valido || "",
-      observacion: item.observacion || "",
-      obsdetalle: item.obsdetalle || "",
-      codservicio: item.codservicio.toString(),
-      datoa: item.datoa || "",
-      datob: item.datob || "",
-      clave_servicio: item.clave_servicio || "",
-      accion: item.accion,
-      ClaveServicio: item.clave_servicio,
-      Contra_Entrega: "",
-      DescGrabar: item.desc_grabar,
-      DescGrabarAprobar: "",
-      DescServicio: item.descservicio,
-      Descripcion: item.descripcion,
-      GrabarAprobar: item.grabar_aprobar,
-      Preparacion: "",
-      TipoVenta: "",
-    }));
-
-    this.array_de_descuentos_ya_agregados.map((element: any) => ({
-      ...element,
-      descrip: element.descripcion,
-    }));
-
-    console.log("Valor Formulario Mapeado: ", transformedArray);
-    console.log("Valor Formulario Mapeado: ", this.array_de_descuentos_ya_agregados);
-
-    let proforma_validar = {
-      datosDocVta: this.valor_formulario_copied_map_all,
-      detalleAnticipos: [],
-      detalleDescuentos: this.array_de_descuentos_ya_agregados.map((element: any) => ({
-        ...element,
-        descrip: element.descripcion,
-      })),
-      detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
-      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: this.recargo_de_recargos,
-      detalleControles: this.validacion_post.length > 1 ? transformedArray : [],
-    }
-
-    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
-    console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
-    console.log("Largo del array detalleContoles: ", [transformedArray].length);
-
-    this.spinner.show();
-    this.submitted = true;
-
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-    if (this.total === 0) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
-
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
-      return;
-    }
-
-    if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
-      this.toastr.info("VALIDACION ACTIVA 🚨");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
-      return;
-    }
-
-    this.api.create(url, proforma_validar).subscribe({
-      next: (datav) => {
-        this.toastr.info("VALIDACION EN CURSO ⚙️");
-        this.validacion_post = datav;
-        console.log("INFO VALIDACIONES:", datav);
-
-        this.abrirTabPorLabel("Resultado de Validacion");
-        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
-
-        this.toggleValidacionesAll = true;
-        this.toggleValidos = false;
-        this.toggleNoValidos = false;
-
-        // al traer todas las validaciones tambien se traen los negativos
-        this.validacion_post_negativos = datav[56]?.Dtnegativos;
-        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-
-        // maximo de ventas
-        this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
-        this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
-
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      },
-      complete: () => {
-        this.abrirTabPorLabel("Resultado de Validacion");
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
-      }
-    });
   }
 
   validacionesTodosFilterToggle() {
@@ -3945,6 +3750,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   aplicarDesctPorDeposito() {
     this.spinner.show();
 
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descripcion: element.descripcion,
+    }))
+
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
@@ -3984,6 +3794,276 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       })
   }
+
+  aplicarDesctPorDepositoYValidar() {
+    this.spinner.show();
+    console.log(this.array_de_descuentos_ya_agregados);
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descripcion: element.descripcion,
+    }));
+
+    let a = {
+      getTarifaPrincipal: {
+        tabladetalle: this.array_items_carrito_y_f4_catalogo,
+        dvta: this.FormularioData.value,
+      },
+      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tblcbza_deposito: [],
+    };
+    console.log(a);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
+    return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
+      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
+            ...element,
+            descripcion: element.descrip,
+          }));
+
+          console.log(this.array_de_descuentos_ya_agregados);
+          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+
+          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+          this.totabilizar();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          this.validar();
+        }
+      })
+  }
+
+  validar() {
+    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
+    // VACIO - TODOS LOS CONTROLES
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    let tipo_complemento
+    console.log(this.tipo_complementopf_input);
+    switch (this.tipo_complementopf_input) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
+
+    this.valor_formulario.map((element: any) => {
+      if (this.tipopago === 1) {
+        element.contra_entrega = false;
+        element.estado_contra_entrega = "";
+      }
+
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: this.razon_social?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: this.nombre_cliente_catalogo_real,
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: tipo_complemento,
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: 0,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
+    // this.validacion_post = this.validacion_post.map((element) => ({
+    //   codservicio: element.codservicio.toString(),
+    // }))
+
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    console.log("Valor Formulario Controles: ", this.validacion_post);
+
+
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleAnticipos: this.tabla_anticipos,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados,
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: this.recargo_de_recargos,
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
+    }
+
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
+    console.log(proforma_validar, "Largo del array etiqueta: ");
+    console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
+
+    this.submitted = true;
+
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    if (this.total === 0) {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    }
+
+    if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
+      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    }
+
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        this.toastr.info("VALIDACION EN CURSO ⚙️");
+        this.validacion_post = datav;
+        console.log("INFO VALIDACIONES:", datav);
+
+        this.abrirTabPorLabel("Resultado de Validacion");
+        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+
+        this.toggleValidacionesAll = true;
+        this.toggleValidos = false;
+        this.toggleNoValidos = false;
+
+        // al traer todas las validaciones tambien se traen los negativos
+        this.validacion_post_negativos = datav[56]?.Dtnegativos;
+        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+
+        // maximo de ventas
+        this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
+        this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      },
+      complete: () => {
+        this.abrirTabPorLabel("Resultado de Validacion");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+      }
+    });
+
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // MAT-TAB Ultimas Proformas
   ultimasProformas() {

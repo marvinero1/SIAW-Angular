@@ -1,4 +1,4 @@
-<section class="content" style="background-color:#CEFFFF !important">
+<section style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -29,8 +29,8 @@
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()">
-            <i class="fa fa-th blue" aria-hidden="true"></i>
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
+            [disabled]="true"> <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-inbox blue" aria-hidden="true"></i>
@@ -55,8 +55,7 @@
     </div>
   </div>
 
-
-  <div class="content">
+  <div>
     <!-- cabecera -->
     <form class="example-form" [formGroup]="FormularioData">
       <div class="mat-elevation-z2 row">
@@ -71,7 +70,7 @@
                 </div>
 
                 <input type="text" class="form-control form-control-sm" [ngModel]="cod_id_tipo_modal"
-                  style="margin-left: 5px;background-color: black;color: #ffc107;" formControlName="id" disabled>
+                  style="margin-left: 5px;background-color: black;color: #ffc107;" formControlName="id" readonly>
 
                 <div class="input-group-append">
                   <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalTipoID();"
@@ -84,7 +83,7 @@
             <div class="col-md-4" style="padding-right: 6.5px;padding-left: 0px;">
               <div class="input-group">
                 <input type="text" class="form-control form-control-sm" formControlName="numeroid"
-                  [ngModel]="id_proforma_numero_id" style="background-color: black;color: #ffc107;" disabled>
+                  [ngModel]="id_proforma_numero_id" style="background-color: black;color: #ffc107;" readonly>
               </div>
             </div>
           </div>
@@ -94,7 +93,7 @@
               <span class="input-group-text form-control-sm" style="padding: 6px 37px 0px 0px;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              value="{{fecha_actual | date:'dd/MM/yyyy'}}" formControlName="fecha" disabled>
+              value="{{ fecha_actual | date:'dd/MM/yyyy' }}" formControlName="fecha" readonly>
           </div>
 
           <div class="input-group">
@@ -102,7 +101,7 @@
               <span class="input-group-text form-control-sm" style="padding: 5px 23px 0px 0px;"><u>Almacen</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              formControlName="codalmacen" [(ngModel)]="almacn_parame_usuario_almacen" disabled>
+              formControlName="codalmacen" [(ngModel)]="almacn_parame_usuario_almacen" readonly>
 
             <div class="input-group-append">
               <button class="btn btn-outline-success form-control-sm" type="button" style="border-color: green;"
@@ -119,11 +118,11 @@
             </div>
 
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              [ngModel]="cod_vendedor_cliente_modal" disabled>
+              formControlName="codvendedor" [ngModel]="cod_vendedor_cliente_modal" readonly>
 
             <div class="input-group-append">
-              <button class="btn btn-outline-success form-control-sm" type="button" disabled
-                style="border-color: green;"><i class="fa fa-search"></i>
+              <button class="btn btn-outline-success form-control-sm" type="button" style="border-color: green;"
+                [disabled]="true"><i class="fa fa-search"></i>
               </button>
             </div>
           </div>
@@ -133,7 +132,8 @@
               <span class="input-group-text form-control-sm" style="padding: 10px 6px 0px 0px;"><u>Tipo de Pago</u>
               </span>
             </div>
-            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago">
+            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
+              formControlName="tipopago">
               <mat-option [value]=0>CONTADO</mat-option>
               <mat-option [value]=1>CREDITO</mat-option>
             </mat-select>
@@ -146,7 +146,7 @@
                   <span class="input-group-text form-control-sm" style="padding: 8px 32px 0px 0px;"><u>Moneda
                     </u></span>
                 </div>
-                <input type="text" class="form-control form-control-sm" id="inputMoneda"
+                <input type="text" class="form-control form-control-sm" id="inputMoneda" formControlName="codmoneda"
                   [(ngModel)]="moneda_get_catalogo" placeholder="Moneda" readonly>
               </div>
             </div>
@@ -157,8 +157,8 @@
                   <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;"><u>T. de C.
                     </u></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" style="margin-left: 6px;" [ngModel]="tdc"
-                  disabled>
+                <input type="number" class="form-control form-control-sm" style="margin-left: 6px;"
+                  formControlName="tdc" [ngModel]="tdc" readonly>
               </div>
             </div>
           </div>
@@ -168,13 +168,13 @@
         <div class="col col-lg-2">
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 6px;"><u>Precio de Ventas</u>
+              <span class="input-group-text form-control-sm" style="padding: 10px 1px 0px 6px;"><u>Precio de Ventas</u>
               </span>
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" [ngModel]="cod_precio_venta_modal_codigo"
-                style="margin-left: 5px;" [disabled]="true">
+              <input type="text" class="form-control form-control-sm" formControlName="preciovta"
+                [(ngModel)]="cod_precio_venta_modal_codigo" style="margin-left: 5px;" readonly>
             </ng-container>
 
             <div class="input-group-append">
@@ -187,13 +187,13 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;"><u>Desct. Especiales</u>
+              <span class="input-group-text form-control-sm" style="padding: 10px 2px 0px 0px;"><u>Desct. Especiales</u>
               </span>
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" [ngModel]="cod_descuento_modal_codigo"
-                style="margin-left: 6px;" [disabled]="true">
+              <input type="text" class="form-control form-control-sm" formControlName="descuentos"
+                [(ngModel)]="cod_descuento_modal_codigo" style="margin-left: 6px;" readonly>
             </ng-container>
 
             <div class="input-group-append">
@@ -209,15 +209,16 @@
               <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 32px;"><u>Preparación
                 </u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" [ngModel]="preparacion" style="margin-left: 5px;"
-              disabled>
+            <input type="text" class="form-control form-control-sm" formControlName="preparacion"
+              [ngModel]="preparacion" style="margin-left: 5px;" [disabled]="true" readonly>
           </div>
 
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 40px;"><u>Estado </u></span>
             </div>
-            <select class="custom-select1 form-control-sm" style="margin-left: 24px;" [disabled]="true">
+            <select class="custom-select1 form-control-sm" style="margin-left: 24px;" formControlName="estado_proforma"
+              [(ngModel)]="estado" readonly>
               <option>YA CANCELO</option>
               <option>POR CANCELAR</option>
             </select>
@@ -228,11 +229,10 @@
               <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 6px;"><u>Solicitud Urgente
                 </u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" [disabled]="true"
+            <input type="text" class="form-control form-control-sm" readonly
               style="margin-left: 6px;background-color: #ffffc0;">&nbsp;
 
-            <input type="text" class="form-control form-control-sm" [disabled]="true"
-              style="background-color: #ffffc0;">
+            <input type="text" class="form-control form-control-sm" readonly style="background-color: #ffffc0;">
           </div>
         </div>
 
@@ -242,8 +242,8 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="venta_cliente_oficina"
-                    [disabled]="true">
+                  <input type="checkbox" style="margin-left: 5px;" formControlName="venta_cliente_oficina"
+                    [(ngModel)]="venta_cliente_oficina" [disabled]="true" readonly>
                 </div>
               </div>
               <div class="input-group-prepend">
@@ -257,8 +257,8 @@
             <div class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text" style="border: 0;">
-                  <input type="checkbox" style="margin-left: 5px;" [(ngModel)]="estado_contra_entrega_input"
-                    [disabled]="true">
+                  <input type="checkbox" style="margin-left: 5px;" formControlName="contra_entrega"
+                    [(ngModel)]="estado_contra_entrega_input" [disabled]="true" readonly>
                 </div>
               </div>
               <div class="input-group-prepend">
@@ -271,7 +271,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">Total Proforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [disabled]="true">&nbsp;
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" readonly>&nbsp;
 
             <input type="text" class="form-control form-control-sm" disabled>
           </div>
@@ -280,16 +280,16 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">Cod. Proforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_proforma" style="margin-left: 6px;"
-              [disabled]="true">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_proforma"
+              formControlName="cod_proforma_form" style="margin-left: 6px;" readonly>
           </div>
 
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">ID-NrProforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" [(ngModel)]="id_nro_id_proforma"
-              style="margin-left: 6px;" [disabled]="true">
+            <input type="text" class="form-control form-control-sm" formControlName="id_nro_id_proforma_form"
+              [(ngModel)]="id_nro_id_proforma" style="margin-left: 6px;" readonly>
           </div>
         </div>
 
@@ -300,19 +300,19 @@
           <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 19px;"><u>Cod.
-                    Cliente</u></span>
+                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 18px;">
+                  <u>Cod. Cliente</u></span>
               </div>
-              <input type="text" class="form-control cliente form-control-sm" formControlName="codSN"
+              <input type="text" class="form-control cliente form-control-sm" formControlName="codcliente"
                 [ngModel]="codigo_cliente" style="margin-left: 7.5px;" readonly>
               <div class="input-group-append">
-                <span class="input-group-text form-control-sm" style="cursor: pointer;">
+                <span class="input-group-text form-control-sm" style="cursor: pointer;border:1px !important;">
                   <i class="fa fa-search" aria-hidden="true" style="color: #093070;"></i>
                 </span>
               </div>
               <div class="input-group-append">
                 <span class="input-group-text form-control-sm" type="button">
-                  <i class="fa fa-window-restore" aria-hidden="true" style="color: #093070;"></i>
+                  <i class="fa fa-window-restore" aria-hidden="true" style="color: #093070;border:1px !important;"></i>
                 </span>
               </div>
             </div>
@@ -323,8 +323,8 @@
                   </u></span>
               </div>
 
-              <input type="text" class="form-control form-control-sm" formControlName="nomcliente_casual"
-                placeholder="Nombre Cliente" [ngModel]="nombre_comercial_razon_social" readonly>
+              <input type="text" class="form-control form-control-sm" formControlName="nomcliente"
+                placeholder="Nombre Cliente" [(ngModel)]="nombre_cliente" readonly>
             </div>
 
             <div class="input-group">
@@ -333,71 +333,85 @@
                 </span>
               </div>
 
-              <input type="text" class="form-control form-control-sm" formControlName="nomcliente_casual"
-                [ngModel]="razon_social" readonly>
+              <input type="text" class="form-control form-control-sm" formControlName="nomcliente"
+                [(ngModel)]="nombre_cliente" readonly>
             </div>
 
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 2px 42px"><u>Doc. Id.
-                  </u></span>
+                <span class="input-group-text form-control-sm" style="padding: 9px 3px 2px 44px;border: 0 !important;">
+                  <u> Doc. Id.</u>
+                </span>
               </div>
 
-              <select class="custom-select1 form-control-sm" formControlName="tipo_doc_cliente_casual"
-                style="margin-left: 7px;" [(ngModel)]="tipo_doc_cliente">
-                <option *ngFor="let documento_identidads of documento_identidad"
-                  [value]="documento_identidads.codigoclasificador.toString()">
-                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</option>
-              </select>
+              <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+                [(ngModel)]="tipo_doc_cliente" [disabled]="true" readonly>
+                <mat-option *ngFor="let documento_identidads of documento_identidad"
+                  [value]="documento_identidads.codigoclasificador">
+                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+              </mat-select>
             </div>
 
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 55px"><u>N.I.T. </u></span>
-                <input type="text" class="form-control form-control-sm" formControlName="nit_cliente_casual"
-                  placeholder="N.I.T." [ngModel]="nit_cliente" style="margin-left: 5px;" readonly>
+                <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 57px;border: 0 !important;">
+                  <u> N.I.T</u>
+                </span>
+
+                <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
+                  <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
+                    [(ngModel)]="nit_cliente" style="margin-left: 3px;" [readOnly]="true">
+                </ng-container>
               </div>
 
-              <div class="col-sm" style="padding: 0px 0px 0px 0px;">
-                <container-element [ngSwitch]="tipo_doc_cliente">
-                  <ng-container *ngSwitchCase="1">
-                    <input type="text" class="form-control form-control-sm" value="CI - CEDULA DE IDENTIDAD"
-                      style="font-size: 0.55rem !important;" disabled>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="2">
-                    <input type="text" class="form-control form-control-sm"
-                      value="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO" style="font-size: 0.55rem !important;" disabled>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="3">
-                    <input type="text" class="form-control form-control-sm" value="PAS - PASAPORTE"
-                      style="font-size: 0.55rem !important;" disabled>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="4">
-                    <input type="text" class="form-control form-control-sm" value="OD - OTRO DOCUMENTO DE IDENTIDAD"
-                      style="font-size: 0.55rem !important;" disabled>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="5">
-                    <input type="text" class="form-control form-control-sm"
-                      value="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" style="font-size: 0.55rem !important;" disabled>
-                  </ng-container>
-                </container-element>
+              <div class="col-sm">
+                <ng-container *ngIf="razon_social === 'SIN NOMBRE';">
+                  <container-element [ngSwitch]="tipo_doc_cliente">
+                    <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
+                    <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
+                    <ng-container *ngSwitchCase="1">
+                      <div class="input-group-prepend">
+                        <input type="number" class="form-control form-control-sm" placeholder="CI - CEDULA DE IDENTIDAD"
+                          style="font-size: 0.55rem !important;width: 80%;" min="0">
+                        <input type="text" class="form-control-sm" formControlName="complemento_ci"
+                          [(value)]="complemento_ci" style="width: 18%;">
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="2">
+                      <input type="text" class="form-control form-control-sm"
+                        placeholder="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO"
+                        style="width: 100%;font-size: 0.55rem !important;">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="3">
+                      <input type="text" class="form-control form-control-sm" placeholder="PAS - PASAPORTE"
+                        style="font-size: 0.55rem !important;width: 100%;">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="4">
+                      <input type="text" class="form-control form-control-sm"
+                        placeholder="OD - OTRO DOCUMENTO DE IDENTIDAD"
+                        style="font-size: 0.55rem !important;width: 100%;">
+                    </ng-container>
+                    <ng-container *ngSwitchCase="5">
+                      <input type="number" class="form-control form-control-sm"
+                        placeholder="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" min="0"
+                        style="width: 100%;font-size: 0.55rem !important;">
+                    </ng-container>
+                  </container-element>
+                </ng-container>
               </div>
-
-              <!-- <input type="text" class="form-control-sm" formControlName="complemento_ci" [ngModel]="complemento_ci"
-                style="width: 23%;" readonly> -->
             </div>
 
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 55px"><u>Email </u></span>
+                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 56px"><u>Email </u></span>
               </div>
               <ng-container *ngIf="!email_cliente">
-                <input type="text" class="form-control form-control-sm" formControlName="email_cliente_casual"
+                <input type="text" class="form-control form-control-sm" formControlName="email"
                   style="margin-left: 4px;" value="facturasventas@pertec.com.bo" style="margin-left: 4px;" readonly>
               </ng-container>
 
               <ng-container *ngIf="email_cliente">
-                <input type="text" class="form-control form-control-sm" formControlName="email_cliente_casual"
+                <input type="text" class="form-control form-control-sm" formControlName="email"
                   [(ngModel)]="email_cliente" style="margin-left: 4px;" readonly>
               </ng-container>
             </div>
@@ -407,6 +421,7 @@
     </form>
     <!-- finCabezera -->
 
+    <!-- inicio Tabla -->
     <div class="row">
       <div class="col">
         <mat-tab-group style="height: 230px !important; overflow-y: scroll;overflow-x: scroll;">
@@ -531,22 +546,33 @@
                     </p-cellEditor>
                   </td> -->
 
+
+
                   <!-- COLUMNA CANTIDAD -->
                   <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad">
+                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (change)="cantidadChangeMatrix(products, $event.target.value);"
+                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
+                            (input)="cantidadChangeMatrix(products, $event.target.value);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (change)="cantidadChangeMatrix(products, $event.target.value)"
+                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
+                            (input)="cantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad" style="color: rgba(255, 0, 0, 0.824);">
+                            id="input_cantidad" (change)="cantidadChangeMatrix(products, $event.target.value)"
+                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
+                            (input)="cantidadChangeMatrix(products, $event.target.value);"
+                            style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
 
@@ -555,6 +581,9 @@
                       </ng-template>
                     </p-cellEditor>
                   </td>
+
+
+
                   <td class="center1">{{ products.porcen_mercaderia }}</td>
                   <td class="center1"> {{ products.codtarifa }} </td>
                   <td class="center1"> {{ products?.coddescuento }} </td>
@@ -734,150 +763,152 @@
         <div class="col-md-10">
           <mat-tab-group class="miTabGroupProformaFooter" style="border-style: ridge;padding: 1px;" #tabGroupfooter>
             <mat-tab label="Datos">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="row">
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="input-group">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 41px;border: 0 !important;"><u>Transporte</u>
+                        </span>
+
+                        <input type="text" class="form-control form-control-sm" formControlName="transporte"
+                          [(ngModel)]="transporte" style="margin-left: 5px;" readonly>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
                     <div class="input-group">
                       <span class="input-group-text form-control-sm"
-                        style="padding: 10px 0px 0px 41px;border: 0 !important;"><u>Transporte</u>
+                        style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Nombre
+                          Transporte</u>
                       </span>
 
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="transporte"
-                        style="margin-left: 5px;">
+                      <input type="text" class="form-control form-control-sm" formControlName="nombre_transporte"
+                        [(ngModel)]="medio_transporte" style="margin-left: 5px;" readonly>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-md-6">
-                  <div class="input-group">
-                    <span class="input-group-text form-control-sm"
-                      style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Nombre
-                        Transporte</u>
-                    </span>
+                <div class="row">
+                  <div class="col-md">
+                    <div class="row">
+                      <div class="col-md-5">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Flete Pagado Por</u>
+                          </span>
 
-                    <input type="text" class="form-control form-control-sm" [(ngModel)]="medio_transporte"
-                      style="margin-left: 5px;">
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md">
-                  <div class="row">
-                    <div class="col-md-5">
-                      <div class="input-group">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Flete Pagado Por</u>
-                        </span>
-
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="fletepor"
-                          style="margin-left: 5px;">
+                          <input type="text" class="form-control form-control-sm" formControlName="fletepor"
+                            [(ngModel)]="fletepor" style="margin-left: 5px;" readonly>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-5">
-                      <div class="input-group">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>T. Entrega</u>
-                        </span>
+                      <div class="col-md-5">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>T. Entrega</u>
+                          </span>
 
-                        <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
-                          [(ngModel)]="tipoentrega" disabled>
+                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                            formControlName="tipoentrega" [ngModel]="tipoentrega" readonly>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-2">
-                      <div class="input-group">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 0px;border: 0 !important;">Peso Total: {{ peso }} Kgr.
-                        </span>
+                      <div class="col-md-2">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;">Peso Total: {{ peso }} Kgr.
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="col-md">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="input-group">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 53px;border: 0 !important;"><u>Latitud</u>
-                        </span>
+                <div class="row">
+                  <div class="col-md">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 53px;border: 0 !important;"><u>Latitud</u>
+                          </span>
 
-                        <input type="number" class="form-control-sm" placeholder="-0.000000" style="margin-left: 7px;"
-                          [(ngModel)]="latitud_cliente" disabled>
+                          <input type="number" placeholder="-0.000000" style="margin-left: 7px;"
+                            formControlName="latitud_entrega" [(ngModel)]="latitud_cliente" readonly>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Longitud</u>
+                          </span>
+
+                          <input type="number" placeholder="-0.000000" style="margin-left: 5px;"
+                            formControlName="longitud_entrega" [(ngModel)]="longitud_cliente" readonly>
+                        </div>
+                      </div>
+
+                      <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
+                        <mat-icon> my_location</mat-icon>
+                      </a>
+
+                      <div class="col-md-5">
+                        <div class="input-group">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 47px;border: 0 !important;"><u>Ubicación</u>
+                          </span>
+                          <input type="text" class="form-control form-control-sm" [(ngModel)]="central_ubicacion"
+                            style="margin-left: 5px;" readonly>
+                        </div>
                       </div>
                     </div>
+                  </div>
+                </div>
 
-                    <div class="col-md-3">
+                <div class="row">
+                  <div class="col-md">
+                    <div class="row">
                       <div class="input-group">
                         <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Longitud</u>
-                        </span>
+                          style="height: calc(2.3rem + 5px) !important;padding: 10px 0px 0px 48px;border: 0 !important;">
+                          <u>Dirección</u></span>
 
-                        <input type="number" class="form-control-sm" [(ngModel)]="longitud_cliente"
-                          placeholder="-0.000000" style="margin-left: 5px;" disabled>
-                      </div>
-                    </div>
-
-                    <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
-                      <mat-icon> my_location</mat-icon>
-                    </a>
-
-                    <div class="col-md-4">
-                      <div class="input-group">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 47px;border: 0 !important;"><u>Ubicación</u>
-                        </span>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="central_ubicacion"
-                          style="margin-left: 5px;" disabled>
+                        <textarea class="form-control" formControlName="direccion" [(ngModel)]="direccion_central_input"
+                          rows="1" style="font-size: 0.79rem !important;margin-left: 6px;" readonly></textarea>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="row">
-                <div class="col-md">
-                  <div class="row">
-                    <div class="input-group">
-                      <span class="input-group-text form-control-sm"
-                        style="height: calc(2.3rem + 5px) !important;padding: 10px 0px 0px 48px;border: 0 !important;">
-                        <u>Dirección</u></span>
+                <div class="row">
+                  <div class="col-md">
+                    <div class="row">
+                      <div class="input-group">
+                        <span class="input-group-text form-control-sm"
+                          style="height: calc(2.3rem + 2px) !important;padding: 10px 0px 0px 32px;border: 0 !important;">
+                          <u>Observación</u>
+                        </span>
 
-                      <textarea class="form-control" [(ngModel)]="direccion_central_input" rows="1"
-                        style="font-size: 0.79rem !important;margin-left: 6px;" disabled></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                          style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs" readonly></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md">
+                    <div class="row">
+                      <div class="input-group">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 10px;border: 0 !important;"><u>Orden de Compra</u></span>
+
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="odc" readonly>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md">
-                  <div class="row">
-                    <div class="input-group">
-                      <span class="input-group-text form-control-sm"
-                        style="height: calc(2.3rem + 2px) !important;padding: 10px 0px 0px 32px;border: 0 !important;">
-                        <u>Observación</u>
-                      </span>
-
-                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" style="margin-left: 5px;"
-                        [(ngModel)]="obs"></textarea>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md">
-                  <div class="row">
-                    <div class="input-group">
-                      <span class="input-group-text form-control-sm"
-                        style="padding: 10px 0px 0px 10px;border: 0 !important;"><u>Orden de Compra</u></span>
-
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="odc">
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </form>
             </mat-tab>
 
             <mat-tab label="Descuentos de Linea de Cliente"><br>
@@ -932,12 +963,12 @@
                         </div>
                         <mat-form-field>
                           <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [disabled]="!disableSelect.value" [(ngModel)]="tipo_complementopf_input"
-                            formControlName="tipo_complementopf">
-                            <mat-option value="0">1. Dimediado - Precio Mayorista Para Cumplir
+                          <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf"
+                            [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
+                            <mat-option [value]="0">1. Dimediado - Precio Mayorista Para Cumplir
                               Monto Minimo
                             </mat-option>
-                            <mat-option value="1">2. Para Cumplir Monto Minimo Para Aplicar
+                            <mat-option [value]="1">2. Para Cumplir Monto Minimo Para Aplicar
                               Descuento Extra
                             </mat-option>
                           </mat-select>
@@ -947,11 +978,17 @@
                       <div class="col-md-8"><br><br>
                         <div class="col-md-6">
                           <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" [(ngModel)]="idpf_complemento_view"
-                              style="margin-left: 5px;" [readOnly]="true">
+                            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
+                              formControlName="idpf_complemento">
+                              <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                                [value]="ids_complementar_proformas.id">
+                                {{ ids_complementar_proformas.id }} -
+                                {{ ids_complementar_proformas.descripcion }}
+                              </mat-option>
+                            </mat-select>
 
                             <input type="text" class="form-control form-control-sm" [(ngModel)]="nroidpf_complemento"
-                              style="margin-left: 5px;" [readOnly]="true">
+                              style="margin-left: 5px;" [(ngModel)]="input_complemento_view" [readOnly]="true">
 
                             <div class="input-group-append">
                               <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1041,108 +1078,184 @@
 
         <!-- inicioTotales -->
         <div class="col-md-2" style="padding-block-start: 2px;">
-          <div class="row" style="height: calc(1.4rem + 2px) !important;">
-            <div class="col">
-              <span class="input-group-text form-control-sm"
-                style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub
-                  Total</u>
-              </span>
+          <form class="example-form" [formGroup]="FormularioData">
+            <div class="row" style="height: calc(1.4rem + 2px) !important;">
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub
+                    Total</u>
+                </span>
+              </div>
+
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+                <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
+                <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
+              </div>
+
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: green;color: green;" (click)="modalSubTotal();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
-            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ (formatNumberTotalSubTOTALES(subtotal) ) }}</span>
-              <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
+            <div class="row">
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Recargos</u></span>
+              </div>
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+                <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
+                <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: green;color: green;">
+                  <!-- [disabled]="total === 0" -->
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
 
-            <div class="col text-right">
-              <button class="btn btn-outline-primary form-control-sm" type="button"
-                style="border-color: green;color: green;" (click)="modalSubTotal();">
-                <mat-icon>monetization_on</mat-icon>
-              </button>
+            <div class="row">
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Descuento</u></span>
+              </div>
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+                <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
+                <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: green;color: green;">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>IVA</u></span>
+              </div>
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+                <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
+                <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: green;color: green;" (click)="modalIva();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="row" style="height: calc(1.4rem + 2px) !important;">
+              <div class="col">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
+              </div>
+              <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+                <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
+                <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
+              </div>
+              <div class="col text-right">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: green;color: green;" (click)="totabilizar();">
+                  <mat-icon>monetization_on</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div style="text-align: center;">
+              <input type="checkbox"><span>&nbsp; Es Venta</span>
+            </div>
+          </form>
+        </div>
+        <!-- finTotales -->
+      </div>
+
+      <div mat-dialog-footer class="footersito">
+        <div class="row">
+          <div class="col-md-10">
+            <!-- Saldos -->
+            <div class="row pl-2">
+              <input type="text" class="inputsSaldos inputsSaldos2"
+                value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem | number:'1.2-2'}}"
+                style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+                placeholder="0.00">
+
+              <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+
+                <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+                <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5 | number:'1.2-2'"
+                  style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                  (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+              </ng-container>
+            </div>
+            <!-- finSaldos -->
           </div>
+        </div>
 
-          <div class="row">
-            <div class="col">
-              <span class="input-group-text form-control-sm"
-                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Recargos</u></span>
-            </div>
-            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
-              <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
-            </div>
-            <div class="col text-right">
-              <button class="btn btn-outline-primary form-control-sm" type="button"
-                style="border-color: green;color: green;">
-                <!-- [disabled]="total === 0" -->
-                <mat-icon>monetization_on</mat-icon>
-              </button>
-            </div>
-          </div>
+        <!-- Empaques Minimo-->
+        <div class="row">
+          <div class="input-group" style="width: 65% !important;">
+            <span class="input-group-text form-control-sm">Empaque Minimo</span>
 
-          <div class="row">
-            <div class="col">
-              <span class="input-group-text form-control-sm"
-                style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Descuento</u></span>
-            </div>
-            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
-              <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
-            </div>
-            <div class="col text-right">
-              <button class="btn btn-outline-primary form-control-sm" type="button"
-                style="border-color: green;color: green;">
-                <mat-icon>monetization_on</mat-icon>
-              </button>
-            </div>
-          </div>
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 1% !important;text-align: right;">
+              {{ item_obtenido.empaqueminimo }}
+            </div> &nbsp;|&nbsp;
 
-          <div class="row">
-            <div class="col">
-              <span class="input-group-text form-control-sm"
-                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>IVA</u></span>
+            <span class="input-group-text form-control-sm">Peso Minimo</span>
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 1% !important;text-align: right;">
+              {{ item_obtenido.pesominimo | number:'1.3-3' }}
             </div>
-            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
-              <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
-            </div>
-            <div class="col text-right">
-              <button class="btn btn-outline-primary form-control-sm" type="button"
-                style="border-color: green;color: green;" (click)="modalIva();">
-                <mat-icon>monetization_on</mat-icon>
-              </button>
-            </div>
-          </div>
 
-          <div class="row" style="height: calc(1.4rem + 2px) !important;">
-            <div class="col">
-              <span class="input-group-text form-control-sm"
-                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
-            </div>
-            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
-              <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
-            </div>
-            <div class="col text-right">
-              <button class="btn btn-outline-primary form-control-sm" type="button"
-                style="border-color: green;color: green;" (click)="totabilizar();">
-                <mat-icon>monetization_on</mat-icon>
-              </button>
+            <ng-container *ngIf="item_obtenido.penalizadoText === '';else penalizado">
+              <div type="text" class="form-control form-control-sm inputsSaldos"
+                style="width: 1% !important;text-align: right;">
+                no penalizado
+              </div> &nbsp;|&nbsp;
+            </ng-container>
+
+            <ng-template #penalizado>
+              <div type="text" class="form-control form-control-sm inputsSaldos"
+                style="width: 1% !important;text-align: right;">
+                {{ item_obtenido.penalizadoText }}
+              </div> &nbsp;|&nbsp;
+            </ng-template>
+
+            <div type="text" class="form-control form-control-sm inputsSaldos"
+              style="width: 8.5% !important;text-align: center;">
+              {{ porcen_item }}
             </div>
           </div>
         </div>
-        <!-- finTotales -->
-      </div><br><br><br><br><br>
-
-
-
-
-
-
-
-
-
-
+        <!-- finempaque Minimo-->
+      </div><br>
     </div>
     <!-- finpiePagina -->
   </div>

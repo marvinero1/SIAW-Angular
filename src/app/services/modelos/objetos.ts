@@ -516,6 +516,21 @@ export interface IDProforma {
   tipo: string
 }
 
+export interface IDNotasRemision {
+  id: string,
+  descripcion: string,
+  nroactual: number,
+  tipodoc: number,
+  habilitado: boolean,
+  descarga: boolean,
+  horareg: string,
+  fechareg: string,
+  usuarioreg: string,
+  codunidad: string,
+  reversion: boolean,
+  tipo: string
+}
+
 export interface Rubro {
   codigo: string,
   descripcion: string,

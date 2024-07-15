@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,7 @@ import html2canvas from 'html2canvas';
   templateUrl: './proforma-pdf-email.component.html',
   styleUrls: ['./proforma-pdf-email.component.css']
 })
-export class ProformaPdfEmailComponent implements OnInit {
+export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
 
   codigo_get_proforma: any;
   ventana: string = "proformaPDF";
@@ -26,7 +26,6 @@ export class ProformaPdfEmailComponent implements OnInit {
   data_detalle_proforma: any = [];
 
   constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService, private toastr: ToastrService) {
-
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
@@ -36,7 +35,11 @@ export class ProformaPdfEmailComponent implements OnInit {
     console.log("data impresion: ", this.data_impresion);
   }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
     this.getDataPDF();
   }
 
@@ -131,7 +134,9 @@ export class ProformaPdfEmailComponent implements OnInit {
         this.debounceTimer = setTimeout(() => {
           // Enviar el correo cuando ya está generado el PDF
           this.enviarCorreoProformaGuardada(pdfBlob);
-        }, 600); // 750 ms de retardo o más
+
+          this.toastr.success(" CORREO ELECTRONICO ENVIADO ");
+        }, 3000); // 750 ms de retardo o más
       });
     }
   }
@@ -142,11 +147,11 @@ export class ProformaPdfEmailComponent implements OnInit {
     formData.append('pdfFile', pdfBlob, this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
     console.log(formData.get('pdfFile'));
 
-    let errormesagge = "La Ruta presenta fallos al hacer peticion GET -/notif/envioCorreoProforma/ ";
+    let errormesagge = "La Ruta presenta fallos al hacer peticion GET -/notif/envioCorreos/envioCorreoProforma/ ";
     this.api.createAllWithOutToken('/notif/envioCorreos/envioCorreoProforma/' + this.userConn + '/dpd3/31101/' + this.data_impresion[0].codigo_proforma, formData).subscribe({
       next: (datav) => {
         console.log(datav);
-        this.toastr.success("CORREO ELECTRONICO ENVIO");
+        this.toastr.success(" CORREO ELECTRONICO ENVIADO ");
       },
       error: (err: any) => {
         console.log(err, errormesagge);
@@ -158,7 +163,6 @@ export class ProformaPdfEmailComponent implements OnInit {
       }
     });
   }
-
 
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
@@ -181,5 +185,4 @@ export class ProformaPdfEmailComponent implements OnInit {
   refrsh() {
     window.location.reload();
   }
-
 }

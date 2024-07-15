@@ -1,4 +1,4 @@
-<section style="background-color:#CEFFFF !important;">
+<section style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -151,7 +151,7 @@
     </div>
   </div>
 
-  <div class="content">
+  <div>
     <!-- cabecera -->
     <form class="example-form" [formGroup]="FormularioData">
       <div class="mat-elevation-z2 row">
@@ -837,7 +837,7 @@
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad" (change)="pedidoChangeMatrix(products, $event.target.value)"
+                            id="input_cantidad" (change)="cantidadChangeMatrix(products, $event.target.value)"
                             (blur)="cantidadChangeMatrix(products, $event.target.value);"
                             (input)="cantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(255, 0, 0, 0.824);">
@@ -1017,10 +1017,8 @@
                   <ng-template #obs1>
                     <strong style="color: green;">{{ element.obs }}</strong>
                   </ng-template>
-
                 </td>
               </ng-container>
-
               <mat-header-row *matHeaderRowDef="displayedColumnsNegativos"></mat-header-row>
               <mat-row *matRowDef="let row; columns: displayedColumnsNegativos;"></mat-row>
             </table>
