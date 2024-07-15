@@ -1195,8 +1195,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   abrirTabPorLabel(label: string) {
+    console.log(label);
+
     //abre tab por el id de su etiqueta, muy buena funcion xD
     const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    console.log(tabs);
     const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
     if (index !== -1) {
       this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group

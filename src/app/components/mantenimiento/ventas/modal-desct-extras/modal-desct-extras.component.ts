@@ -98,6 +98,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.array_de_descuentos);
 
     console.log(this.contra_entrega_get);
+    console.log(this.cabecera_proforma);
     console.log("Array de descuentos que ya estaban: ", this.array_de_descuentos);
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;

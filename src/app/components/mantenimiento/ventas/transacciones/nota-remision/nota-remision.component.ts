@@ -247,6 +247,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
   public codigo_cliente_catalogo: string;
   public codigo_item_catalogo: string;
+  id_tipo: any = [];
 
   dataSource_negativos = new MatTableDataSource();
   dataSourceWithPageSize_negativos = new MatTableDataSource();
@@ -354,7 +355,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           console.log('data', datav);
-
           this.cod_id_tipo_modal = datav.id;
           this.id_proforma_numero_id = datav.numeroid;
           this.almacn_parame_usuario_almacen = datav.codalmacen;
@@ -363,8 +363,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
           this.cod_descuento_modal_codigo = datav.coddescuentodefect;
           this.cod_precio_venta_modal_codigo = datav.codtarifadefect;
           this.cod_vendedor_cliente_modal = datav.codvendedor;
-
-          // this.getIdTipoNumeracion(this.id_tipo_view_get.codigo);
         },
 
         error: (err: any) => {
@@ -411,8 +409,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   getTarifa() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/intarifa/catalogo/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/intarifa/catalogo/";
 
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
@@ -1214,10 +1211,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
             });
 
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
-
-
-
-
           }
         })
     } else {
@@ -1225,8 +1218,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
-
-
 
   formatNumberTotalSubTOTALES(numberString: number): string {
     if (numberString === null || numberString === undefined) {
@@ -1244,7 +1235,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
-
   itemDataAll(codigo) {
     // this.getSaldoEmpaquePesoAlmacenLocal(codigo);
     this.getEmpaqueItem(codigo);
@@ -1259,8 +1249,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.saldo_modal_total_4 = "";
     this.saldo_modal_total_5 = "";
   }
-
-  id_tipo: any = [];
 
   getSaldoItemSeleccionadoDetalle(item) {
     console.log(item, this.agencia_logueado);
@@ -1375,7 +1363,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
         contra_entrega: element.contra_entrega?.toString() === true ? "SI" : "NO",
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: element.estado_contra_entrega === undefined ? "SI" : "NO",
-        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud === null ? false : true,
         pago_con_anticipo: element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
@@ -1383,7 +1371,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
         tipoentrega: element.tipoentrega,
         direccion: element.direccion,
-        ubicacion: element.ubicacion,
+        ubicacion: element.ubicacion === null ? "" : element.ubicacion,
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
@@ -1444,8 +1432,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
           if (datav[0].Dtnegativos) {
             this.validacion_post_negativos = datav[0].Dtnegativos;
           }
-
-          this.abrirTabPorLabel("Negativos");
           console.log(this.validacion_post_negativos);
 
           this.toggleTodosNegativos = true;
@@ -1453,9 +1439,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
           this.togglePositivos = false;
 
           this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+
+          this.abrirTabPorLabel("Negativos");
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
+
         },
         error: (err) => {
           console.log(err, errorMessage);

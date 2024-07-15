@@ -110,7 +110,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         case "inputCatalogoDireccion":
           this.modalClientesDireccion(this.codigo_cliente_catalogo);
           break;
-
+        case "input_search":
+          this.transferirProforma(this.idpf_complemento_view, this.num_id);
+          break;
         // case "":
         //   this.modalCatalogoProductos();
         //   break;
@@ -368,6 +370,28 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   elementoSeleccionadoDescuento: any;
 
   monto_anticipo: any;
+  id_anticipo: any;
+  usuarioaut: any;
+  num_idd: any;
+  fecha_inicial: any;
+  obs2: any
+  tipo_venta: any;
+  numeroidanticipo: any;
+
+  //fechas
+  pago_contado_anticipado_view: any;
+  odc: any;
+  fecha_confirmada: any;
+  fechaaut: any;
+  fecha_reg: any;
+
+  horareg: any;
+  hora: any;
+  usuarioreg: any;
+  horaaut: any;
+  hora_confirmada: any;
+  hora_inicial: any;
+  //horas
 
   //VALIDACIONES TODOS, NEGATIVOS, MAXIMO VENTA
   public validacion_post: any = [];
@@ -919,22 +943,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.dataSource_validacion = new MatTableDataSource(validacion);
   }
 
+
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    console.log(this.tipo_complementopf_input, this.input_complemento_view);
-
-    let hour = this.hora_actual.getHours();
-    // Asegurarse de que el valor de la hora esté en formato de 24 horas
-    let hora_inicial = hour < 10 ? '0' + hour : hour; // Agrega un 0 inicial si la hora es menor a 10
-
-    let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;
-    let fecha_actual = new Date();
     let valor_cero: number = 0;
-
-    // if(this.tipo_complementopf_input === 0) {
-    //   this.dataform.tipo_complementopf === tipo_complementopf_val0;
-    // }
 
     if (this.input_complemento_view === null) {
       this.input_complemento_view = valor_cero;
@@ -949,7 +960,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       nit: [this.dataform.nit, Validators.compose([Validators.required])],
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
-      fecha: [fecha_actual],
       //precio venta columna segunda primera fila verificar conq nombre se guarda
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: [this.des_extra],
@@ -961,24 +971,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega, Validators.compose([Validators.required])],
       fletepor: [this.dataform.fletepor === "CLIENTE", Validators.compose([Validators.required])],
 
-      fecha_inicial: [fecha_actual],
       tdc: [this.dataform.tdc],
       anulada: [false],
       aprobada: [false],
       paraaprobar: [false],
       transferida: [false],
-      fechaaut: ["1900-01-01"],
-      fecha_confirmada: ["1900-01-01"],
-      hora_confirmada: ["00:00"],
-      hora_inicial: [hora_inicial],
-      usuarioaut: [""],
+
+      usuarioaut: [this.usuarioaut],
       confirmada: [false],
       impresa: [false],
       etiqueta_impresa: [false],
       es_sol_urgente: [false],
 
       obs: [this.dataform.obs],
-      obs2: [""],
+      obs2: [this.obs2],
       direccion: [this.dataform.direccion],
       peso: Number(this.peso),
       codcliente_real: this.codigo_cliente,
@@ -988,16 +994,16 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       email: [this.dataform.email],
 
       venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
-      tipo_venta: ['0'],
+      tipo_venta: [this.tipo_venta],
 
       contra_entrega: this.contra_entrega,
       estado_contra_entrega: [this.dataform.estado_contra_entrega === undefined ? "" : this.dataform.estado_contra_entrega],
 
-      odc: "",
+      odc: this.odc,
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
 
-      idanticipo: [""], // anticipo VentasL
-      numeroidanticipo: [0], // anticipo Ventas
+      idanticipo: [this.id_anticipo], // anticipo VentasL
+      numeroidanticipo: [this.numeroidanticipo], // anticipo Ventas
       pago_contado_anticipado: [this.dataform.pago_contado_anticipado], //anticipo Ventas
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
@@ -1024,11 +1030,18 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       total: [this.dataform.total], //TOTALES
       porceniva: [0],
 
-      fechareg: [fecha_actual],
-      horareg: [hora_actual_complete],
-      hora: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
-      horaaut: [hora_actual_complete],
+      fecha: this.dataform.fecha,
+      fechareg: this.dataform.fechareg,
+      fecha_confirmada: this.dataform.fecha_confirmada,
+      fechaaut: this.dataform.fechaaut,
+      fecha_inicial: this.dataform.fecha_inicial,
+
+      horareg: this.dataform.horareg,
+      hora: this.dataform.hora,
+      usuarioreg: this.dataform.usuarioreg,
+      horaaut: this.dataform.horaaut,
+      hora_inicial: this.dataform.hora_inicial,
+      hora_confirmada: this.dataform.hora_confirmada,
     });
   }
 
@@ -1089,7 +1102,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         tipo_complemento: element.tipo_complementopf?.toString() || '',
         fechadoc: element.fecha,
-        idanticipo: element.idanticipo,
+        idanticipo: element.idanticipo === null ? "" : element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
         monto_anticipo: 0,
         nrofactura: "0",
@@ -1192,7 +1205,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       })
   }
-  num_idd: any;
+
   transferirProforma(id, numero_id) {
     console.log(this.num_idd, numero_id);
 
@@ -1222,6 +1235,119 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }, 1000);
         }
       })
+  }
+
+  fecha: any
+  imprimir_proforma_tranferida(proforma) {
+    console.log("Imprimir Proforma Transferida: ", proforma, proforma.habilitado);
+    if (proforma.anticiposTot != 0) {
+      this.anticipo_button = true;
+    }
+
+    this.monto_anticipo = proforma.anticiposTot;
+
+    this.pago_contado_anticipado_view = proforma.cabecera.pago_contado_anticipado;
+    this.codigo_proforma = proforma.cabecera.codigo;
+    this.descrip_confirmada = proforma.descConfirmada;
+    this.estado_proforma = proforma.estadodoc;
+    this.cliente_habilitado_get = proforma.habilitado;
+
+    this.cod_id_tipo_modal_id = proforma.cabecera.id;
+    this.id_proforma_numero_id = proforma.cabecera.numeroid;
+
+    //fechas
+    this.fecha = this.datePipe.transform(proforma.cabecera.fecha, "yyyy-MM-dd");
+    this.fecha_inicial = this.datePipe.transform(proforma.cabecera.fecha_inicial, "yyyy-MM-dd");
+    this.fecha_confirmada = this.datePipe.transform(proforma.cabecera.fecha_confirmada, "yyyy-MM-dd");
+    this.fechaaut = this.datePipe.transform(proforma.cabecera.fechaaut, "yyyy-MM-dd");
+    this.fecha_reg = this.datePipe.transform(proforma.cabecera.fechareg, "yyyy-MM-dd");
+
+    this.hora_inicial = proforma.cabecera.hora_inicial;
+    this.horareg = proforma.cabecera.horareg;
+    this.hora = proforma.cabecera.hora;
+    this.usuarioreg = proforma.cabecera.usuarioreg;
+    this.horaaut = proforma.cabecera.horaaut;
+    this.hora_confirmada = proforma.cabecera.hora_confirmada;
+    //fin-fecha
+
+    this.id_anticipo = proforma.cabecera.idanticipo;
+    this.usuarioaut = proforma.cabecera.usuarioaut;
+
+    this.almacn_parame_usuario = proforma.cabecera.codalmacen;
+    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
+    this.codigo_cliente = proforma.cabecera.codcliente;
+    this.nombre_cliente = proforma.cabecera.nomcliente;
+    this.nombre_comercial_cliente = proforma.cabecera.nombre_comercial;
+    this.nombre_factura = proforma.cabecera.nombre_fact;
+    this.razon_social = proforma.cabecera.nomcliente;
+    this.complemento_ci = proforma.cabecera.complemento_ci;
+    this.nombre_comercial_razon_social = proforma.cabecera.nomcliente;
+    this.tipo_doc_cliente = proforma.cabecera.tipo_docid;
+    this.nit_cliente = proforma.cabecera.nit;
+    this.email_cliente = proforma.cabecera.email;
+    this.cliente_casual = proforma.cabecera.casual;
+    this.moneda_get_catalogo = proforma.cabecera.codmoneda;
+    this.codigo_cliente = proforma.cabecera.codcliente_real;
+    this.tipopago = proforma.cabecera.tipopago;
+    this.nombre_cliente_catalogo_real = proforma.cabecera.nomcliente;
+
+    this.transporte = proforma.cabecera.transporte;
+    this.medio_transporte = proforma.cabecera.nombre_transporte;
+    this.fletepor = proforma.cabecera.fletepor;
+    this.tipoentrega = proforma.cabecera.tipoentrega;
+    this.peso = proforma.cabecera.peso;
+    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real;
+
+    this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
+    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
+    this.tipo_cliente = proforma.cabecera.tipo === undefined ? " " : " ";
+    this.direccion = proforma.cabecera.direccion;
+    this.whatsapp_cliente = proforma.cabecera.celular;
+    this.latitud_cliente = proforma.cabecera.latitud_entrega;
+    this.longitud_cliente = proforma.cabecera.longitud_entrega;
+    this.central_ubicacion = proforma.cabecera.central;
+    this.obs = proforma.cabecera.obs;
+    this.odc = proforma.cabecera.odc
+    this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
+    this.whatsapp_cliente = proforma.etiquetaProf[0].celular;
+
+    this.ubicacion_central = proforma.cabecera.ubicacion;
+    this.preparacion = proforma.cabecera.preparacion;
+    this.subtotal = proforma.cabecera.subtotal;
+    this.recargos = proforma.cabecera.recargos;
+    this.des_extra = proforma.cabecera.descuentos;
+    this.iva = proforma.cabecera.iva;
+    this.total = proforma.cabecera.total;
+
+
+    this.item_seleccionados_catalogo_matriz = proforma.detalle;
+    this.veproforma1 = proforma.detalle;
+    this.array_de_descuentos_ya_agregados = proforma.descuentos;
+    //this.cod_descuento_total = proforma.descuentos;
+    //la cabecera asignada a this.veproforma para totalizar y grabar
+    this.veproforma = proforma.cabecera;
+
+    //el cuerpo del detalle asignado al carrito
+    this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+    this.etiqueta_get_modal_etiqueta = proforma.etiquetaProf;
+    this.recargo_de_recargos = proforma.recargos;
+    this.valor_formulario_copied_map_all = proforma.cabecera;
+
+    //tabla de anticipos
+    this.tabla_anticipos = proforma.anticipos
+
+    // array de validaciones
+    // this.validacion_post = proforma.detalleValida.map((element) => ({
+    //   ...element,
+    //   codservicio: element.codservicio.toString(),
+    // }));
+
+    this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
+
+    //colocar orden al detalle de la proforma
+    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+      element.orden = index + 1;
+    });
   }
 
   getIdTipo() {
@@ -1307,7 +1433,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.almacen_get = datav;
           console.log(this.almacen_get);
-
         },
 
         error: (err: any) => {
@@ -2316,103 +2441,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  pago_contado_anticipado_view: any;
-  odc: any;
-
-  imprimir_proforma_tranferida(proforma) {
-    console.log("Imprimir Proforma Transferida: ", proforma, proforma.habilitado);
-    if (proforma.anticiposTot != 0) {
-      this.anticipo_button = true;
-    }
-
-    this.monto_anticipo = proforma.anticiposTot;
-
-    this.pago_contado_anticipado_view = proforma.cabecera.pago_contado_anticipado;
-    this.codigo_proforma = proforma.cabecera.codigo;
-    this.descrip_confirmada = proforma.descConfirmada;
-    this.estado_proforma = proforma.estadodoc;
-    this.cliente_habilitado_get = proforma.habilitado;
-
-    this.cod_id_tipo_modal_id = proforma.cabecera.id;
-    this.id_proforma_numero_id = proforma.cabecera.numeroid;
-    this.fecha_actual = this.fecha_actual;
-    // this.fecha_actual = proforma.cabecera.fecha;
-    this.almacn_parame_usuario = proforma.cabecera.codalmacen;
-    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
-    this.codigo_cliente = proforma.cabecera.codcliente;
-    this.nombre_cliente = proforma.cabecera.nomcliente;
-    this.nombre_comercial_cliente = proforma.cabecera.nombre_comercial;
-    this.nombre_factura = proforma.cabecera.nombre_fact;
-    this.razon_social = proforma.cabecera.nomcliente;
-    this.complemento_ci = proforma.cabecera.complemento_ci;
-    this.nombre_comercial_razon_social = proforma.cabecera.nomcliente;
-    this.tipo_doc_cliente = proforma.cabecera.tipo_docid;
-    this.nit_cliente = proforma.cabecera.nit;
-    this.email_cliente = proforma.cabecera.email;
-    this.cliente_casual = proforma.cabecera.casual;
-    this.moneda_get_catalogo = proforma.cabecera.codmoneda;
-    this.codigo_cliente = proforma.cabecera.codcliente_real;
-    this.tipopago = proforma.cabecera.tipopago;
-    this.nombre_cliente_catalogo_real = proforma.cabecera.nomcliente;
-
-    this.transporte = proforma.cabecera.transporte;
-    this.medio_transporte = proforma.cabecera.nombre_transporte;
-    this.fletepor = proforma.cabecera.fletepor;
-    this.tipoentrega = proforma.cabecera.tipoentrega;
-    this.peso = proforma.cabecera.peso;
-    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real;
-
-    this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
-    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
-    this.tipo_cliente = proforma.cabecera.tipo === undefined ? " " : " ";
-    this.direccion = proforma.cabecera.direccion;
-    this.whatsapp_cliente = proforma.cabecera.celular;
-    this.latitud_cliente = proforma.cabecera.latitud_entrega;
-    this.longitud_cliente = proforma.cabecera.longitud_entrega;
-    this.central_ubicacion = proforma.cabecera.central;
-    this.obs = proforma.cabecera.obs;
-    this.odc = proforma.cabecera.odc
-    this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
-    this.whatsapp_cliente = proforma.etiquetaProf[0].celular;
-
-    this.ubicacion_central = proforma.cabecera.ubicacion;
-    this.preparacion = proforma.cabecera.preparacion;
-    this.subtotal = proforma.cabecera.subtotal;
-    this.recargos = proforma.cabecera.recargos;
-    this.des_extra = proforma.cabecera.descuentos;
-    this.iva = proforma.cabecera.iva;
-    this.total = proforma.cabecera.total;
-    //tabla de anticipos
-    this.tabla_anticipos = proforma.anticipos
-
-    this.item_seleccionados_catalogo_matriz = proforma.detalle;
-    this.veproforma1 = proforma.detalle;
-    this.array_de_descuentos_ya_agregados = proforma.descuentos;
-    //this.cod_descuento_total = proforma.descuentos;
-    //la cabecera asignada a this.veproforma para totalizar y grabar
-    this.veproforma = proforma.cabecera;
-
-    //el cuerpo del detalle asignado al carrito
-    this.array_items_carrito_y_f4_catalogo = proforma.detalle;
-    this.etiqueta_get_modal_etiqueta = proforma.etiquetaProf;
-    this.recargo_de_recargos = proforma.recargos;
-    this.valor_formulario_copied_map_all = proforma.cabecera;
-
-    // array de validaciones
-    // this.validacion_post = proforma.detalleValida.map((element) => ({
-    //   ...element,
-    //   codservicio: element.codservicio.toString(),
-    // }));
-
-    this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
-
-    //colocar orden al detalle de la proforma
-    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
-      element.orden = index + 1;
-    });
 
 
-  }
 
   imprimir_cotizacion_transferida(cotizacion) {
     console.log(cotizacion);
@@ -2684,8 +2714,123 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   //accion de btn grabar
   submitDataModificarProforma() {
     this.spinner.show();
-    this.totabilizar();
 
+    const transformedArray = this.validacion_post.map(item => ({
+      codproforma: this.codigo_proforma,
+      codcontrol: item.CodControl || "string",
+      nroitems: parseInt(item.NroItems) || 0,
+      nit: item.Nit || "string",
+      subtotal: parseFloat(item.Subtotal) || 0,
+      descuentos: parseFloat(item.Descuentos) || 0,
+      recargos: parseFloat(item.Recargos) || 0,
+      total: item.Total || 0,
+      valido: item.Valido || "string",
+      observacion: item.Observacion || "string",
+      obsdetalle: item.ObsDetalle || "string",
+      codservicio: item.CodServicio || "0",
+      datoa: item.DatoA || "string",
+      datob: item.DatoB || "string",
+      clave_servicio: item.ClaveServicio || "string"
+    }));
+
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
+    let tamanio_array_validaciones = this.validacion_post.length;
+    let total_proforma_concat: any = [];
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
+      ...item,
+      cantaut: item.cantidad_pedida,
+      totalaut: item.total,
+      obs: item.obs,
+    }));
+
+    this.submitted = true;
+    let data = this.FormularioData.value;
+    data = {
+      ...data,
+      codigo: this.codigo_proforma,
+      codcliente_real: this.codigo_cliente,
+      descuentos: this.des_extra,
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
+      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
+    };
+
+    console.log("Data Form Mapeado: ", data);
+    //se aumenta el array tabladescuentos y el array tablarecargos al array de validaciones
+    let form_validacion = this.valor_formulario_copied_map_all;
+    form_validacion = {
+      ...form_validacion,
+      estado_doc_vta: "",
+      // tabladescuentos: this.array_de_descuentos_ya_agregados,
+      // tablarecargos: this.recargo_de_recargos,
+    };
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descrip: element.descripcion,
+    }));
+
+    total_proforma_concat = {
+      veproforma: data,
+      veproforma1: this.array_items_carrito_y_f4_catalogo,
+      veproforma_valida: transformedArray,
+      dt_anticipo_pf: this.tabla_anticipos,
+      vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
+      verecargoprof: this.recargo_de_recargos, //array de recargos,
+      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
+      veproforma_iva: this.veproforma_iva, //array de iva
+      dvta: form_validacion, // aca el array de validacion mapeado con mas info xdxd  this.valor_formulario_copied_map_all;
+      detalleAnticipos: this.tabla_anticipos,
+      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tablarecargos: this.recargo_de_recargos,
+    };
+
+    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
+
+    if (!this.FormularioData.valid) {
+      this.toastr.info("VALIDACION ACTIVA 🚨");
+      console.log("HAY QUE VALIDAR DATOS");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    }
+
+    console.log("tamanio etiqueta:", tamanio_array_etiqueta, "tamanio validaciones:", tamanio_array_validaciones);
+
+    if (tamanio_array_etiqueta === 0) {
+      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    } else {
+      this.toastr.success("¡ ETIQUETA GRABADA!");
+    }
+
+    if (tamanio_array_validaciones === 0) {
+      this.toastr.error("¡ FALTA VALIDAR, VALIDE PORFAVOR !");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1500);
+      return;
+    } else {
+      this.toastr.success("¡ VALIDADO !");
+    }
+
+    if (this.total === 0.00) {
+      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 1000);
+    }
+
+    if (this.api.statusInternet === false) {
+      const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
+
+      if (confirmacionValidacionesInternet) {
+        this.detalleProformaCarritoTOExcel();
+      }
+    }
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (this.validacion_post && this.validacion_post_negativos) {
       let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
@@ -2719,49 +2864,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           return;
         }
       }
-    } else {
-      console.error('validacion_post o validacion_post_negativos no están definidos');
     }
-
-    const transformedArray = this.validacion_post.map(item => ({
-      codproforma: this.codigo_proforma,
-      codcontrol: item.CodControl || "string",
-      nroitems: parseInt(item.NroItems) || 0,
-      nit: item.Nit || "string",
-      subtotal: parseFloat(item.Subtotal) || 0,
-      descuentos: parseFloat(item.Descuentos) || 0,
-      recargos: parseFloat(item.Recargos) || 0,
-      total: item.Total || 0,
-      valido: item.Valido || "string",
-      observacion: item.Observacion || "string",
-      obsdetalle: item.ObsDetalle || "string",
-      codservicio: item.CodServicio || "0",
-      datoa: item.DatoA || "string",
-      datob: item.DatoB || "string",
-      clave_servicio: item.ClaveServicio || "string"
-    }));
-
-    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
-    let total_proforma_concat: any = [];
-
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(item => ({
-      ...item,
-      cantaut: item.cantidad_pedida,
-      totalaut: item.total,
-      obs: item.obs,
-    }));
-
-    this.submitted = true;
-    let data = this.FormularioData.value;
-
-    data = {
-      ...data,
-      codigo: this.codigo_proforma,
-      codcliente_real: this.codigo_cliente,
-      descuentos: this.des_extra,
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
-      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
-    };
 
     const confirmar_proforma: boolean = window.confirm("La Proforma" + this.id_tipo_view_get_codigo + "-" +
       this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? ");
@@ -2772,84 +2875,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       };
     }
 
-    console.log("Data Form Mapeado: ", data);
-    //se aumenta el array tabladescuentos y el array tablarecargos al array de validaciones
-    let form_validacion = this.valor_formulario_copied_map_all;
-    form_validacion = {
-      ...form_validacion,
-      estado_doc_vta: "",
-      // tabladescuentos: this.array_de_descuentos_ya_agregados,
-      // tablarecargos: this.recargo_de_recargos,
-    };
-
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descrip: element.descripcion,
-    }));
-
-    total_proforma_concat = {
-      veproforma: data,
-      veproforma1: this.array_items_carrito_y_f4_catalogo,
-      veproforma_valida: transformedArray,
-      dt_anticipo_pf: this.tabla_anticipos,
-      vedesextraprof: this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
-      verecargoprof: this.recargo_de_recargos, //array de recargos,
-      veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
-      veproforma_iva: this.veproforma_iva, //array de iva
-      dvta: form_validacion, // aca el array de validacion mapeado con mas info xdxd  this.valor_formulario_copied_map_all;
-      detalleAnticipos: [],
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
-      tablarecargos: this.recargo_de_recargos,
-    };
-
-    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
-
-    if (!this.FormularioData.valid) {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
-      console.log("HAY QUE VALIDAR DATOS");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    }
-
-    if (tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
-      return;
-    }
-
-    if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1000);
-    }
-
-    if (this.api.statusInternet === false) {
-      const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
-
-      if (confirmacionValidacionesInternet) {
-        this.detalleProformaCarritoTOExcel();
-      }
-    }
-
-    // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
-    // ESTA FUNCION SE MOVIO A ETIQUETACOMPONENT DONDE AL GRABAR LA ETIQUETA YA TE PREGUNTA SI DESEAS APLICAR ESTE DESCT.
-    // const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
-    // if (confirmacionValidaciones) {
-    //   this.aplicarDesctPorDeposito();
-
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 1000);
-    // } else {
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 1000);
-    // }
-
+    this.totabilizar();
     console.log("FORMULARIO VALIDADO");
     const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
@@ -2875,7 +2901,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       complete: () => {
         //aca exporta a ZIP
         this.exportProformaZIP(this.totabilizar_post.codProf);
-        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+        this.log_module.guardarLog(this.ventana, "modif_proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
         //aca manda a imprimir la proforma guardada
         // this.modalBtnImpresiones(this.totabilizar_post.codProf);
@@ -3931,7 +3957,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
-        idanticipo: element.idanticipo,
+        idanticipo: element.idanticipo === null ? "" : element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
         monto_anticipo: 0,
         nrofactura: "0",

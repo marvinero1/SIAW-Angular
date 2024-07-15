@@ -32,7 +32,8 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
             [disabled]="true"> <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
+            matTooltipClass="custom-tooltip" matTooltipPosition="above" (click)="validarProformaSoloNegativos();">
             <i class="fa fa-inbox blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button">
@@ -348,7 +349,8 @@
                 [(ngModel)]="tipo_doc_cliente" [disabled]="true" readonly>
                 <mat-option *ngFor="let documento_identidads of documento_identidad"
                   [value]="documento_identidads.codigoclasificador">
-                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}
+                </mat-option>
               </mat-select>
             </div>
 
@@ -424,7 +426,7 @@
     <!-- inicio Tabla -->
     <div class="row">
       <div class="col">
-        <mat-tab-group style="height: 230px !important; overflow-y: scroll;overflow-x: scroll;">
+        <mat-tab-group style="height: 230px !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
@@ -455,14 +457,6 @@
                   <th pSortableColumn="iva" class="center1" style="width:2%">
                     %IVA
                   </th>
-                  <!-- <th pSortableColumn="empaque" class="center1">
-                    Empaque
-                    <p-sortIcon field="empaque" />
-                  </th> -->
-                  <!-- <th pSortableColumn="pedido" class="center1">
-                    Pedido
-                    <p-sortIcon field="pedido" />
-                  </th> -->
                   <th pSortableColumn="cantidad" class="center1">
                     Cantidad
                     <p-sortIcon field="cantidad" />
@@ -484,9 +478,6 @@
                   <th pSortableColumn="NIV" class="right1" style="width:4%">
                     NIV
                   </th>
-                  <!-- <th pSortableColumn="%" class="right1" style="width:3%">
-                    %
-                  </th> -->
                   <th pSortableColumn="PD" class="right1" style="width:4%">
                     PD
                   </th>
@@ -508,45 +499,6 @@
                   <td class="center1"> {{ products.medida }} </td>
                   <td class="center1"> {{ products.udm }} </td>
                   <td class="center1"> {{ products.porceniva }} </td>
-
-                  <!-- COLUMNA EMPAQUE -->
-                  <!-- <td class="center1"> {{ products.empaque }} </td> -->
-
-                  <!-- COLUMNA PEDIDO -->
-                  <!-- <td class="center1" [pEditableColumn]="products.cantidad_pedida"
-                    pEditableColumnField="cantidad_pedida">
-                    <p-cellEditor>
-                      <ng-template pTemplate="input">
-
-                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                          id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                          (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                          (input)="onInputChange(products, $event.target.value)">
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                            (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                            (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container>
-                      </ng-template>
-
-                      <ng-template pTemplate="output">
-                        {{ products.cantidad_pedida }}
-                      </ng-template>
-                    </p-cellEditor>
-                  </td> -->
-
-
 
                   <!-- COLUMNA CANTIDAD -->
                   <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
@@ -582,8 +534,6 @@
                     </p-cellEditor>
                   </td>
 
-
-
                   <td class="center1">{{ products.porcen_mercaderia }}</td>
                   <td class="center1"> {{ products.codtarifa }} </td>
                   <td class="center1"> {{ products?.coddescuento }} </td>
@@ -601,7 +551,6 @@
               </ng-template>
             </p-table>
           </mat-tab>
-
 
           <mat-tab label="Negativos">
             <table mat-table [dataSource]="dataSource_negativos" class="mat-elevation-z8" matSort>

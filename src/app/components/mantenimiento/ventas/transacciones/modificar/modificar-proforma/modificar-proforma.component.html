@@ -222,7 +222,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
-              ngModel="{{fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true">
+              ngModel="{{ fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true">
           </div>
 
           <div class="input-group">
@@ -2245,6 +2245,18 @@
                         </button>
                       </div> -->
                     </div>
+
+                    <input type="text" [(ngModel)]="fecha" formControlName="fecha" hidden>
+                    <input type="text" [ngModel]="fecha_reg" formControlName="fechareg" hidden>
+                    <input type="text" [(ngModel)]="fecha_confirmada" formControlName="fecha_confirmada" hidden>
+                    <input type="text" [(ngModel)]="fechaaut" formControlName="fechaaut" hidden>
+                    <input type="text" [(ngModel)]="fecha_inicial" formControlName="fecha_inicial" hidden>
+                    <input type="text" [ngModel]="horareg" formControlName="horareg" hidden>
+                    <input type="text" [(ngModel)]="hora" formControlName="hora" hidden>
+                    <input type="text" [(ngModel)]="usuarioreg" formControlName="usuarioreg" hidden>
+                    <input type="text" [ngModel]="horaaut" formControlName="horaaut" hidden>
+                    <input type="text" [(ngModel)]="hora_inicial" formControlName="hora_inicial" hidden>
+                    <input type="text" [(ngModel)]="hora_confirmada" formControlName="hora_confirmada" hidden>
                   </form>
                 </div>
               </div>
@@ -2483,7 +2495,7 @@
 
               <div style="width: 15% !important; padding-right: 5px;">
                 <input type="number" placeholder="0" [(ngModel)]="num_id" class="form-control form-control-sm"
-                  style="margin-left: 5px;">
+                  style="margin-left: 5px;" id="input_search">
               </div>
               <div class="input-group-append">
                 <button type="button" class="btn btn-outline-primary form-control-sm"
@@ -2529,14 +2541,11 @@
                 <strong>NO APROBADA</strong></span>
             </ng-container>
 
-
-
             <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
               padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
                 class="fa fa-file-archive " aria-hidden="true"></i>
             </button>
             <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
-
 
             <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
                   style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
@@ -2550,7 +2559,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div><br>
     </div>
   </div>
 </section>
