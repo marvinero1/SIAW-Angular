@@ -32,11 +32,11 @@ export class GruposInventariosComponent implements OnInit {
   data_inventario: any = [];
   grupo_create: any = [];
   data: [];
-  panelOpenState = false; 
+  panelOpenState = false;
   userConn: any;
-  dataform:any='';
+  dataform: any = '';
 
-  displayedColumns = ['codigo','nombre'];
+  displayedColumns = ['codigo', 'nombre'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -45,15 +45,15 @@ export class GruposInventariosComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   nombre_ventana: string = "abmingrupoper.vb";
-   
-  public ventana="grupo-inventario"
-  public detalle="grupo-inventario-create";
+
+  public ventana = "grupo-inventario"
+  public detalle = "grupo-inventario-create";
   public tipo = "grupo-inventario-CREATE";
 
   constructor(public dialog: MatDialog, public servicioPersona: ServicePersonaService, public dialogRef: MatDialogRef<GruposInventariosComponent>,
-    private api: ApiService, @Inject(MAT_DIALOG_DATA) public dataInventario: any, public log_module: LogService,private _formBuilder: FormBuilder,
-    private toastr: ToastrService, private datePipe: DatePipe,private spinner: NgxSpinnerService) {
-    
+    private api: ApiService, @Inject(MAT_DIALOG_DATA) public dataInventario: any, public log_module: LogService, private _formBuilder: FormBuilder,
+    private toastr: ToastrService, private datePipe: DatePipe, private spinner: NgxSpinnerService) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     this.data_inventario = this.dataInventario.dataInventario;
@@ -63,8 +63,8 @@ export class GruposInventariosComponent implements OnInit {
     this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
-    this.servicioPersona.disparadorDePersonas.subscribe(data =>{
+  ngOnInit() {
+    this.servicioPersona.disparadorDePersonas.subscribe(data => {
       // console.log("Recibiendo Persona: " , data);
       this.persona_get = data;
 
@@ -76,53 +76,53 @@ export class GruposInventariosComponent implements OnInit {
 
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     console.log(usuario_logueado);
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       // codigo: [this.dataform.codigo],
       codinvconsol: [this.data_inventario.codigo],
       nro: [this.dataform.nro, Validators.compose([Validators.required])],
       obs: [this.dataform.obs],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
-  let data = this.FormularioData.value;
-  let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /inventario/mant/ingrupoper/";
-  
-  return this.api.create("/inventario/mant/ingrupoper/"+this.userConn, data)
-    .subscribe({
-      next: (datav) => {
-        this.grupo_create = datav;
-        
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+  submitData() {
+    let data = this.FormularioData.value;
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /inventario/mant/ingrupoper/";
+
+    return this.api.create("/inventario/mant/ingrupoper/" + this.userConn, data)
+      .subscribe({
+        next: (datav) => {
+          this.grupo_create = datav;
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
-            setTimeout(() => {
+          setTimeout(() => {
             this.spinner.hide();
           }, 1500);
-          this.toastr.success('Guardado con Exito! 🎉');      
-      },
-  
-      error: (err) => { 
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE GUARDO !');
+          this.toastr.success('Guardado con Exito! 🎉');
+        },
 
-      },
-      complete: () => { }
-    })
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE GUARDO !');
+
+        },
+        complete: () => { }
+      })
   }
 
-  agregarPersonas(){
+  agregarPersonas() {
     // console.log(this.array);
 
     // {
@@ -133,57 +133,57 @@ export class GruposInventariosComponent implements OnInit {
     // mapeo que cambia un valor de un array
     this.array_new.map(function (dato) {
       console.log(dato);
-      
+
       dato.codgrupoper = "store";
       dato.codpersona = "store";
 
     })
   }
 
-  cargarGrupos(){ 
+  cargarGrupos() {
     let code = this.data_inventario.codigo;
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/inventario/mant/ingrupoper/"
 
-    return this.api.getAll('/inventario/mant/ingrupoper/'+this.userConn+"/"+code)
+    return this.api.getAll('/inventario/mant/ingrupoper/' + this.userConn + "/" + code)
       .subscribe({
         next: (datav) => {
           this.grupo = datav;
           console.log(this.grupo);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  cargarIntegrantesGrupo(codigo_grupo){ 
+  cargarIntegrantesGrupo(codigo_grupo) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/inventario/mant/ingrupoper1/"
 
-    return this.api.getAll('/inventario/mant/ingrupoper1/'+this.userConn+"/"+codigo_grupo)
+    return this.api.getAll('/inventario/mant/ingrupoper1/' + this.userConn + "/" + codigo_grupo)
       .subscribe({
         next: (datav) => {
           this.integrantes_grupo = datav;
           console.log(this.integrantes_grupo);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  catalogoPepersona(codigo_grupo) { 
+  catalogoPepersona(codigo_grupo) {
     this.dialog.open(CatalogoPersonaComponent, {
       width: 'auto',
       height: 'auto',
-      data:{codigo_grupo:codigo_grupo},
+      data: { codigo_grupo: codigo_grupo },
     });
   }
 
-  eliminar(){ 
+  eliminar() {
     this.array.pop();
     console.log(this.array);
 
@@ -192,32 +192,32 @@ export class GruposInventariosComponent implements OnInit {
     this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
   }
 
-  eliminarGrupo(element){
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/mant/ingrupoper/ Delete";
+  eliminarGrupo(element) {
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/ingrupoper/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result){
-        return this.api.delete('/inventario/mant/ingrupoper/'+this.userConn+"/"+element)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            this.cargarGrupos();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/ingrupoper/' + this.userConn + "/" + element)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.cargarGrupos();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
@@ -225,36 +225,36 @@ export class GruposInventariosComponent implements OnInit {
 
   eliminarGrupoPersona(integrante_codigo) {
     console.log(integrante_codigo.codgrupoper, integrante_codigo.codpersona);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/mant/ingrupoper1/ Delete";
 
-    let ventana="grupo-inventario"
-    let detalle="grupo-inventario-delete";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/ingrupoper1/ Delete";
+
+    let ventana = "grupo-inventario"
+    let detalle = "grupo-inventario-delete";
     let tipo = "grupo-inventario-DELETE";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:integrante_codigo},
+      height: 'auto',
+      data: { dataUsuarioEdit: integrante_codigo },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/ingrupoper1/'+this.userConn+"/"+integrante_codigo.codgrupoper+"/"+integrante_codigo.codpersona)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(ventana, detalle, tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            this.cargarGrupos();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/ingrupoper1/' + this.userConn + "/" + integrante_codigo.codgrupoper + "/" + integrante_codigo.codpersona)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.cargarGrupos();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
@@ -264,7 +264,7 @@ export class GruposInventariosComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  close(){ 
+  close() {
     this.dialogRef.close();
   }
 }

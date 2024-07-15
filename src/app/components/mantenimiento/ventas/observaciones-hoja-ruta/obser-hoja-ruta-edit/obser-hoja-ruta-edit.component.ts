@@ -15,25 +15,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ObserHojaRutaEditComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  dataform:any='';
-  data_linea_producto=[];
-  public ingrupo=[];
-  public grupo_linea=[];
+  FormularioData: FormGroup;
+  dataform: any = '';
+  data_linea_producto = [];
+  public ingrupo = [];
+  public grupo_linea = [];
   public sub_grupo_linea = [];
   hoja_data_edit: any = [];
-  userConn:any;
+  userConn: any;
   usuarioLogueado: any;
   inputValue: number | null = null;
 
   fecha_actual = new Date();
   hora_actual = new Date();
 
-  public ventana="lineaProd-create"
-  public detalle="lineaProd";
-  public tipo="lineaProd-POST";
+  public ventana = "lineaProd-create"
+  public detalle = "lineaProd";
+  public tipo = "lineaProd-POST";
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ObserHojaRutaEditComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ObserHojaRutaEditComponent>,
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService,
     public _snackBar: MatSnackBar, private spinner: NgxSpinnerService, private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public hoja: any) {
@@ -44,44 +44,44 @@ export class ObserHojaRutaEditComponent implements OnInit {
     this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
   }
-  
+
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: this.hoja_data_edit.codigo,
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       tipo: [this.dataform.tipo, Validators.compose([Validators.required])],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuarioLogueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /inventario/mant/inlinea  POST";
-    return this.api.update("/venta/mant/veobs_ruta/"+this.userConn+"/"+this.hoja_data_edit.codigo, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/inlinea  POST";
+    return this.api.update("/venta/mant/veobs_ruta/" + this.userConn + "/" + this.hoja_data_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.data_linea_producto = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');  
-          
+          this.toastr.success('Guardado con Exito! 🎉');
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -100,7 +100,7 @@ export class ObserHojaRutaEditComponent implements OnInit {
       this.inputValue = 0;
     }
   }
-  
+
   close(): void {
     this.dialogRef.close();
   }

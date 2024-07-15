@@ -202,7 +202,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           if (datav != null) {
             //aca se guarda el TOKEN
             this.guardarToken(datav);
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
             this.toastr.success('Bienvenido! 🎉');
             this.isAuthLoading = false;
@@ -221,9 +221,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               this.spinner.hide();
             }, 1000);
           }
-          // console.log('data', datav);
-          // this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-          // this.appService.loginByAuth(this.loginForm.value);
         },
 
         error: (err) => {

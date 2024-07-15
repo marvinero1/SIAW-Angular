@@ -15,36 +15,36 @@ import { LogService } from '@services/log-service.service';
 })
 export class ModalSaldoCubrirComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  dataform:any='';
-  dataSaldoCubrir:any=[];
-  item_modal:any=[];
-  item_contro_tarifa:any=[];
-  item:any=[];
-  userConn:any;
+  FormularioData: FormGroup;
+  dataform: any = '';
+  dataSaldoCubrir: any = [];
+  item_modal: any = [];
+  item_contro_tarifa: any = [];
+  item: any = [];
+  userConn: any;
 
-  displayedColumns = ['item','descripcion','medida','porcentaje','accion'];
+  displayedColumns = ['item', 'descripcion', 'medida', 'porcentaje', 'accion'];
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalSaldoCubrirComponent>, 
-    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api:ApiService,
-    public _snackBar: MatSnackBar,public dialog: MatDialog, public log_module:LogService){
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalSaldoCubrirComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api: ApiService,
+    public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module: LogService) {
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-      this.FormularioData = this.createForm();
+    this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.item_modal = this.dataItem;
     this.getAllItemControlTarifa();
     this.getAllitem();
   }
 
-  createForm(): FormGroup{ 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
       porcentaje: [this.dataform.porcentaje, Validators.compose([Validators.required])],
@@ -52,14 +52,14 @@ export class ModalSaldoCubrirComponent implements OnInit {
     });
   }
 
-  submitData(){
-    let ventana="SaldoCubrirItem-create"
-    let detalle="SaldoCubrirItem-detalle";
-    let tipo="transaccion-SaldoCubrirItem-POST";
+  submitData() {
+    let ventana = "SaldoCubrirItem-create"
+    let detalle = "SaldoCubrirItem-detalle";
+    let tipo = "transaccion-SaldoCubrirItem-POST";
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /inventario/mant/inctrlstock  POST";
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/inctrlstock  POST";
     return this.api.create("/inventario/mant/inctrlstock", data)
       .subscribe({
         next: (datav) => {
@@ -67,25 +67,25 @@ export class ModalSaldoCubrirComponent implements OnInit {
 
           console.log('data', datav);
           this.onNoClick();
-          this.log_module.guardarLog(ventana,detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllItemControlTarifa(){
-    let errorMessage:string;
+  getAllItemControlTarifa() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getById('/inventario/mant/inctrlstock/initem_inctrlstock/'+this.userConn+"/"+this.dataItem.dataItem.codigo)
+    return this.api.getById('/inventario/mant/inctrlstock/initem_inctrlstock/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
       .subscribe({
         next: (datav) => {
           this.item_contro_tarifa = datav;
@@ -95,58 +95,58 @@ export class ModalSaldoCubrirComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllitem(){
-    let errorMessage:string;
+  getAllitem() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/'+this.userConn )
+    return this.api.getAll('/inventario/mant/initem/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.item = datav;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let ventana="SaldoCubrirItem-delete"
-    let detalle="SaldoCubrirItem-detalle";
-    let tipo="transaccion-SaldoCubrirItem-DELETE";
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let ventana = "SaldoCubrirItem-delete"
+    let detalle = "SaldoCubrirItem-detalle";
+    let tipo = "transaccion-SaldoCubrirItem-DELETE";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data:{dataUsuarioEdit:element},
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/inctrlstock/'+this.userConn+"/"+element.id)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(ventana,detalle, tipo);
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-            });
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/inctrlstock/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+              });
 
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });

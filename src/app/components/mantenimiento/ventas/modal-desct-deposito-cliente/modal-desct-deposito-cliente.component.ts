@@ -142,7 +142,7 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
           this.getData1Tab();
           this.toastr.success(datav.resp);
 
-          this.log_module.guardarLog("prgdesctodeposito_pendiente", "eliminarDescuentoDepositoProforma", "modalVerificarDepositoProforma");
+          this.log_module.guardarLog("prgdesctodeposito_pendiente", "eliminarDescuentoDepositoProforma", "modalVerificarDepositoProforma", "", "");
 
           setTimeout(() => {
             this.spinner.hide();

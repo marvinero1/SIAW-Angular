@@ -124,7 +124,7 @@ export class UsuarioCreateComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.serol = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           console.log('data', datav);
           this.toastr.error('! GUARDADO !');
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {

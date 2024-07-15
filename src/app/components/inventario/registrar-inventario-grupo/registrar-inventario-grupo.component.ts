@@ -128,7 +128,7 @@ export class RegistrarInventarioGrupoComponent implements OnInit, AfterViewInit 
         next: (datav) => {
           this.verificacion_grupo = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
         },

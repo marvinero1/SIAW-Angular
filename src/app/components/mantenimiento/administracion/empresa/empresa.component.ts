@@ -80,7 +80,7 @@ export class EmpresaComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/adempresa/' + user_conn + '/' + element)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.spinner.show();
               setTimeout(() => {
                 this.spinner.hide();

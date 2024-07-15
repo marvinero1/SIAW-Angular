@@ -21,15 +21,15 @@ export class ConsolidarInventarioComponent implements OnInit {
   dataConsolidar: any = [];
   postConsolidar: any = [];
   userConn: any;
-  allSelected:boolean=false;
+  allSelected: boolean = false;
   data_cabezera: any = [];
   data_items: any = [];
   cabecera: any = [];
   items: any = [];
 
-  nombre_ventana:string="prgconsolinv.vb";
+  nombre_ventana: string = "prgconsolinv.vb";
 
-  displayedColumns = ['consolidado','codigo','grupo','observaciones'];
+  displayedColumns = ['consolidado', 'codigo', 'grupo', 'observaciones'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -38,21 +38,21 @@ export class ConsolidarInventarioComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  public ventana="consolidar-inventario"
-  public detalle="consolidar-inventario-REFRESH";
-  public tipo="consolidar-inventario-REFRESH";
+  public ventana = "consolidar-inventario"
+  public detalle = "consolidar-inventario-REFRESH";
+  public tipo = "consolidar-inventario-REFRESH";
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ConsolidarInventarioComponent>,
     private api: ApiService, @Inject(MAT_DIALOG_DATA) public dataInventario: any,
     @Inject(MAT_DIALOG_DATA) public items_consolidar: any, private refreshItemSer: ServiceRefreshItemsService,
     public log_module: LogService,
-    private toastr: ToastrService, private spinner: NgxSpinnerService){
-    
+    private toastr: ToastrService, private spinner: NgxSpinnerService) {
+
     this.data_cabezera = this.dataInventario.dataInventario;
     this.data_items = this.items_consolidar.items_consolidar
 
     console.log(this.data_cabezera, this.data_items);
-    
+
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
@@ -62,9 +62,9 @@ export class ConsolidarInventarioComponent implements OnInit {
     this.cargarCabecera()
   }
 
-  getData() { 
-    let errorMessage:string = "La Ruta presenta fallos al hacer peticion GET /inventario/oper/prgconsolinv/";
-    return this.api.getAll('/inventario/oper/prgconsolinv/'+this.userConn+"/"+this.data_cabezera.codigo)
+  getData() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET /inventario/oper/prgconsolinv/";
+    return this.api.getAll('/inventario/oper/prgconsolinv/' + this.userConn + "/" + this.data_cabezera.codigo)
       .subscribe({
         next: (datav) => {
           this.data = datav;
@@ -73,8 +73,8 @@ export class ConsolidarInventarioComponent implements OnInit {
           this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-        }, 
-        error: (err: any) => { 
+        },
+        error: (err: any) => {
           console.log(err, errorMessage);
           this.toastr.error('! ERROR CABECERA !');
         },
@@ -82,9 +82,9 @@ export class ConsolidarInventarioComponent implements OnInit {
       })
   }
 
-  cargarCabecera() { 
-    let errorMessage:string = "La Ruta presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/oper/docininvconsol/cargarCabecera/'+this.userConn+"/"+this.data_cabezera.id+"/"+this.data_cabezera.numeroid)
+  cargarCabecera() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET";
+    return this.api.getAll('/inventario/oper/docininvconsol/cargarCabecera/' + this.userConn + "/" + this.data_cabezera.id + "/" + this.data_cabezera.numeroid)
       .subscribe({
         next: (datav) => {
           this.cabecera = datav;
@@ -92,8 +92,8 @@ export class ConsolidarInventarioComponent implements OnInit {
 
           this.cargarTablaItems(this.cabecera.codigo)
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
           this.toastr.error('! ERROR CABECERA !');
 
@@ -102,49 +102,49 @@ export class ConsolidarInventarioComponent implements OnInit {
       })
   }
 
-  cargarTablaItems(codigo){
+  cargarTablaItems(codigo) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/oper/docininvconsol/mostrardetalle/'+this.userConn+"/"+codigo)
+    return this.api.getAll('/inventario/oper/docininvconsol/mostrardetalle/' + this.userConn + "/" + codigo)
       .subscribe({
         next: (datav) => {
           this.items = datav;
           console.log(this.items);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  consolidar(){
+  consolidar() {
     console.log(this.data);
 
     let data_save: any = {
       "data_consolinv": this.data,
-      
+
       "detalleInvConsol": this.items,
     };
 
     console.log(data_save);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/oper/prgconsolinv/";    
-    return this.api.create('/inventario/oper/prgconsolinv/'+this.userConn+"/"+this.data_cabezera.codigo, data_save)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgconsolinv/";
+    return this.api.create('/inventario/oper/prgconsolinv/' + this.userConn + "/" + this.data_cabezera.codigo, data_save)
       .subscribe({
         next: (datav) => {
           this.postConsolidar = datav;
           this.toastr.success('!GUARDADO EXITOSAMENTE!');
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.close();
 
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);      
+          }, 1500);
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
 
@@ -155,10 +155,10 @@ export class ConsolidarInventarioComponent implements OnInit {
 
   checkUncheckAll() {
     let tama = this.data.length;
-    for (var i = 0; i < tama ; i++) {
+    for (var i = 0; i < tama; i++) {
       this.data[i].consolidado = this.allSelected;
     }
-    
+
     // mapeo que cambia un valor de un array
     this.data.map(function (dato) {
       console.log(dato);
@@ -170,20 +170,20 @@ export class ConsolidarInventarioComponent implements OnInit {
         this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
         this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
 
-      } else { 
+      } else {
         dato.consolidado = "true";
 
         this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
         this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
       }
-      
+
       return dato;
     })
   }
-  
+
   isAllSelected(data) {
     console.log(data);
-    
+
     this.allSelected = this.data.every(function (item: any) {
       return item.consolidado == true;
     });
@@ -199,7 +199,7 @@ export class ConsolidarInventarioComponent implements OnInit {
     // }
   }
 
-  close(){ 
+  close() {
     this.dialogRef.close();
     this.refreshItemSer.callItemFunction();
   }

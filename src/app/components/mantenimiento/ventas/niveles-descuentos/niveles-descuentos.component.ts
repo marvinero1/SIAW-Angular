@@ -92,7 +92,7 @@ export class NivelesDescuentosComponent implements OnInit {
         return this.api.delete('/venta/mant/vedesnivel/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this._snackBar.open('Se elimino correctamente!', 'Ok', {
                 duration: 3000,
               });

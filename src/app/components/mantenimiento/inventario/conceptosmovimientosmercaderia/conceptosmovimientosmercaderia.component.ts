@@ -110,7 +110,7 @@ export class ConceptosmovimientosmercaderiaComponent implements OnInit {
         return this.api.delete('/inventario/mant/inconcepto/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

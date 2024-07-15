@@ -159,7 +159,7 @@ export class TipocambiovalidacionComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.ultimo_registro_create = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this._snackBar.open('Se guardo correctamente los tipos de cambio, con los ultimos valores!', '💲', {
             duration: 3500,
 

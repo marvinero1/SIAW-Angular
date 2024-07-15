@@ -15,29 +15,29 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ModificarParametroAComponent implements OnInit {
 
-  nombre_ventana:string="prgmodifparametros_a.vb";
+  nombre_ventana: string = "prgmodifparametros_a.vb";
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  rosca:any=[];
-  userConn:any;
-  cod_empresa:any=[];
-  empresa:any;
+  dataform: any = '';
+  rosca: any = [];
+  userConn: any;
+  cod_empresa: any = [];
+  empresa: any;
   control: boolean;
   isChecked = true;
-  bd:any;
-  usuarioLogueado:any;
+  bd: any;
+  usuarioLogueado: any;
 
-  public ventana="prgmodifparametros_a-create"
-  public detalle="prgmodifparametros_a-detalle";
-  public tipo="transaccion-prgmodifparametros_a-POST";
+  public ventana = "prgmodifparametros_a-create"
+  public detalle = "prgmodifparametros_a-detalle";
+  public tipo = "transaccion-prgmodifparametros_a-POST";
 
-  constructor(private _formBuilder: FormBuilder,  private datePipe: DatePipe,  private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<ModificarParametroAComponent>, public _snackBar: MatSnackBar,
-    public log_module:LogService,private toastr: ToastrService,){
-      
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
+    private api: ApiService, public dialogRef: MatDialogRef<ModificarParametroAComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, private toastr: ToastrService,) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.bd = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
@@ -51,15 +51,15 @@ export class ModificarParametroAComponent implements OnInit {
     console.log();
   }
 
-  createForm(): FormGroup { 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       control: [this.dataform.control],
     });
   }
 
-  getCodEmpresa(){
+  getCodEmpresa() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adparametros/";
-    return this.api.getAll('/seg_adm/mant/adparametros/'+this.userConn+"/"+ this.bd.bd)
+    return this.api.getAll('/seg_adm/mant/adparametros/' + this.userConn + "/" + this.bd.bd)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -71,41 +71,41 @@ export class ModificarParametroAComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  submitData(){
+  submitData() {
     let bd1 = this.bd.bd;
 
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/adparametros/updateCierresDiarios UPDATE";
-    
+
     console.log(data.control);
-    
-    return this.api.update("/seg_adm/mant/adparametros/updateCierresDiarios/"+this.userConn+"/"+bd1+"/"+data.control, data)
+
+    return this.api.update("/seg_adm/mant/adparametros/updateCierresDiarios/" + this.userConn + "/" + bd1 + "/" + data.control, data)
       .subscribe({
         next: (datav) => {
           this.rosca = datav;
           console.log('data', datav);
 
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
 
           this._snackBar.open('Se Guardo Correctamente!', 'Ok', {
             duration: 3000,
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },

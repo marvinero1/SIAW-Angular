@@ -419,7 +419,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.cliente_create = datav;
-          this.log_module.guardarLog(ventana, detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
           this.toastr.success('Guardado con Exito! 🎉');
 
           this.spinner.show();
@@ -453,7 +453,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.cliente_create = datav;
-          this.log_module.guardarLog(ventana, detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
           this.spinner.show();
           setTimeout(() => {
@@ -490,7 +490,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
         return this.api.delete('/venta/mant/vecliente/' + this.userConn + "/" + element)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();
@@ -574,7 +574,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
             next: (datav) => {
               console.log(datav);
               if (datav == 206) {
-                this.log_module.guardarLog(ventana, detalle, tipo);
+                this.log_module.guardarLog(ventana, detalle, tipo, "", "");
                 this.toastr.success('!ACTUALIZADO EXITOSAMENTE!');
                 location.reload();
               } else {
@@ -621,7 +621,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
             next: (datav) => {
               console.log(datav);
               if (datav == 206) {
-                this.log_module.guardarLog(ventana, detalle, tipo);
+                this.log_module.guardarLog(ventana, detalle, tipo, "", "");
                 this.toastr.success('!ACTUALIZADO EXITOSAMENTE!');
                 location.reload();
               } else {

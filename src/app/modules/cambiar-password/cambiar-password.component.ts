@@ -14,23 +14,23 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CambiarPasswordComponent implements OnInit {
 
-  nombre_ventana:string="prgcambpass.vb";
+  nombre_ventana: string = "prgcambpass.vb";
 
-  FormularioDataRefrescarPassword:FormGroup;
-  dataform:any='';
-  login_modal_password_get:any=[];
-  public usuario_logueado:any;
-  password:any;
-  usuarioLogueado:any=[];
-  useConn:any=[];
-  
-  public ventana="refresh-pasword-update"
-  public detalle="refresh-pasword-update";
-  public tipo="transaccion-refresh-pasword-UPDATE";
+  FormularioDataRefrescarPassword: FormGroup;
+  dataform: any = '';
+  login_modal_password_get: any = [];
+  public usuario_logueado: any;
+  password: any;
+  usuarioLogueado: any = [];
+  useConn: any = [];
 
-  constructor(private _formBuilder: FormBuilder, private api:ApiService, public _snackBar: MatSnackBar, private toastr: ToastrService,
+  public ventana = "refresh-pasword-update"
+  public detalle = "refresh-pasword-update";
+  public tipo = "transaccion-refresh-pasword-UPDATE";
+
+  constructor(private _formBuilder: FormBuilder, private api: ApiService, public _snackBar: MatSnackBar, private toastr: ToastrService,
     public dialogRef: MatDialogRef<CambiarPasswordComponent>,
-    public login:LoginComponent, public log_module:LogService, @Inject(MAT_DIALOG_DATA) public login_modal_password: any){
+    public login: LoginComponent, public log_module: LogService, @Inject(MAT_DIALOG_DATA) public login_modal_password: any) {
 
     this.FormularioDataRefrescarPassword = this.createForm();
   }
@@ -39,30 +39,30 @@ export class CambiarPasswordComponent implements OnInit {
     this.useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-    this.login_modal_password_get = this.login_modal_password.login_modal_password; 
+    this.login_modal_password_get = this.login_modal_password.login_modal_password;
     console.log(this.login_modal_password_get);
-    this.toastr.error('Actualizar Contraseña');    
+    this.toastr.error('Actualizar Contraseña');
   }
 
   createForm(): FormGroup {
     return this._formBuilder.group({
-      passwordAnt: [this.dataform.codigo,Validators.compose([Validators.required])],
-      passwordNew: [this.dataform.descripcion,Validators.compose([Validators.required])],
+      passwordAnt: [this.dataform.codigo, Validators.compose([Validators.required])],
+      passwordNew: [this.dataform.descripcion, Validators.compose([Validators.required])],
     });
   }
- 
-  submitData(){
-    let data = this.FormularioDataRefrescarPassword.value;
-     console.log(data);
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-  /seg_adm/login/changePassword/";
-    return this.api.createAllWithOutToken("/seg_adm/login/changePassword/"+this.usuarioLogueado, data)
+  submitData() {
+    let data = this.FormularioDataRefrescarPassword.value;
+    console.log(data);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-  /seg_adm/login/changePassword/";
+    return this.api.createAllWithOutToken("/seg_adm/login/changePassword/" + this.usuarioLogueado, data)
       .subscribe({
         next: (datav) => {
           this.password = datav;
           console.log(this.password);
-          
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.toastr.success('! Se Actualizo Correctamente !');
           this._snackBar.open('Se Actualizo Correctamente la Contraseña!', '🙂', {
@@ -70,8 +70,8 @@ export class CambiarPasswordComponent implements OnInit {
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
           });
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE ACTUALIZO LA CONTRASEÑA !');
         },
@@ -79,7 +79,7 @@ export class CambiarPasswordComponent implements OnInit {
       })
   }
 
-  onNoClick(){
+  onNoClick() {
     this.dialogRef.close();
   }
 }

@@ -17,32 +17,32 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./clasificacion-clientes.component.scss']
 })
 export class ClasificacionClientesComponent implements OnInit {
-  
+
   userConn: any;
   usuarioLogueado: any;
   clasificacion: string;
-  
+
   nivel: any = [];
   nivel_clientes: any = [];
   add_clasificacion: any = [];
 
-  displayedColumns = ['clasificacion','accion'];
+  displayedColumns = ['clasificacion', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
-  public ventana="clasificacion-cliente-create"
-  public detalle="clasiCliente";
-  public tipo="clasiCliente-POST";
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ClasificacionClientesComponent>,
+  public ventana = "clasificacion-cliente-create"
+  public detalle = "clasiCliente";
+  public tipo = "clasiCliente-POST";
+
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ClasificacionClientesComponent>,
     private _formBuilder: FormBuilder, public log_module: LogService, private spinner: NgxSpinnerService,
     private toastr: ToastrService, public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public nivel_get: any,
     public dialog: MatDialog) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
@@ -54,10 +54,10 @@ export class ClasificacionClientesComponent implements OnInit {
     this.getNivelesClientes();
   }
 
-  getNivelesClientes(){
-    let errorMessage:string;
+  getNivelesClientes() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vedesnivel/vedesnivel_clasificacion/'+this.userConn+"/"+this.nivel.codigo)
+    return this.api.getAll('/venta/mant/vedesnivel/vedesnivel_clasificacion/' + this.userConn + "/" + this.nivel.codigo)
       .subscribe({
         next: (datav) => {
           this.nivel_clientes = datav;
@@ -67,73 +67,73 @@ export class ClasificacionClientesComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  agregarClasificacion() { 
+  agregarClasificacion() {
     let data = {
-                  codvedesnivel: this.nivel.codigo,
-                  clasificacion: this.clasificacion
-                };
+      codvedesnivel: this.nivel.codigo,
+      clasificacion: this.clasificacion
+    };
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:  /venta/mant/vedesnivel/ POST";
-    return this.api.create("/venta/mant/vedesnivel/vedesnivel_clasificacion/"+this.userConn, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:  /venta/mant/vedesnivel/ POST";
+    return this.api.create("/venta/mant/vedesnivel/vedesnivel_clasificacion/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.add_clasificacion = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');  
-          
+          this.toastr.success('Guardado con Exito! 🎉');
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/venta/mant/vedesnivel/vedesnivel_clasificacion/'+this.userConn+"/"+this.nivel.codigo+"/"+element.clasificacion)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/venta/mant/vedesnivel/vedesnivel_clasificacion/' + this.userConn + "/" + this.nivel.codigo + "/" + element.clasificacion)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
-    }
-  
-  close(){
+  }
+
+  close() {
     this.dialogRef.close();
   }
 }

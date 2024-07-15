@@ -108,7 +108,7 @@ export class NumnotasdemovimientoComponent implements OnInit {
         return this.api.delete('/inventario/mant/intipomovimiento/' + this.userConn + "/" + element.id)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
                 duration: 3000,

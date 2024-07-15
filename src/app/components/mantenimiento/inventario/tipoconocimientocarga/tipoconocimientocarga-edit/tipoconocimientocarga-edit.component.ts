@@ -14,10 +14,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TipoconocimientocargaEditComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  public unidadnegocio=[];
-  dataform:any='';
-  userConn:any;
+  FormularioData: FormGroup;
+  public unidadnegocio = [];
+  dataform: any = '';
+  userConn: any;
   num_conocimiento_carga = [];
   dataEdit: any = [];
   dataEdit_codigo: any;
@@ -25,61 +25,61 @@ export class TipoconocimientocargaEditComponent implements OnInit {
   fecha_actual = new Date();
   hora_actual = new Date();
 
-  public ventana="nts-conocimicarga-update"
-  public detalle="nts-conocimicarga";
-  public tipo="nts-conocimicarga-POST";
+  public ventana = "nts-conocimicarga-update"
+  public detalle = "nts-conocimicarga";
+  public tipo = "nts-conocimicarga-POST";
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<TipoconocimientocargaEditComponent>,
-    private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module:LogService,private toastr: ToastrService,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<TipoconocimientocargaEditComponent>,
+    private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService, private toastr: ToastrService,
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public dataConocimientoEdit: any) {
-    
+
     this.dataEdit = dataConocimientoEdit.dataConocimientoEdit;
     this.dataEdit_codigo = dataConocimientoEdit.dataConocimientoEdit.id;
-    
+
     console.log(this.dataEdit_codigo);
 
     this.FormularioData = this.createForm();
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       id: [this.dataEdit_codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
-      nroactual: [this.dataform.nroactual,Validators.pattern(/^-?\d+$/) ],
+      nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.userConn],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /inventario/mant/intipocarga/ UPDATE";
-    return this.api.update("/inventario/mant/intipocarga/"+this.userConn+"/"+this.dataEdit_codigo, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /inventario/mant/intipocarga/ UPDATE";
+    return this.api.update("/inventario/mant/intipocarga/" + this.userConn + "/" + this.dataEdit_codigo, data)
       .subscribe({
         next: (datav) => {
           this.num_conocimiento_carga = datav;
 
           console.log('data', datav);
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('Guardado con Exito! 🎉');
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

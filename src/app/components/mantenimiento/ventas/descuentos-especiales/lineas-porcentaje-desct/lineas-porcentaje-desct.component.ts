@@ -30,7 +30,7 @@ export class LineasPorcentajeDesctComponent implements OnInit {
   codigo_item_catalogo: any = [];
   linea_catalogo: any = [];
 
-  displayedColumns = ['coddescuento','descripcion','accion'];
+  displayedColumns = ['coddescuento', 'descripcion', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -39,39 +39,39 @@ export class LineasPorcentajeDesctComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-   nombre_ventana: string = "abmvedescuento1.vb";
-  public ventana="linea-porcentaje-CREATE"
-  public detalle="linea-porcentaje";
-  public tipo="linea-porcentaje-CREATE";
-  
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<LineasPorcentajeDesctComponent>, public _snackBar: MatSnackBar,
-    public log_module: LogService, @Inject(MAT_DIALOG_DATA) public descuento: any, public dialog: MatDialog,public itemservice:ItemServiceService, 
+  nombre_ventana: string = "abmvedescuento1.vb";
+  public ventana = "linea-porcentaje-CREATE"
+  public detalle = "linea-porcentaje";
+  public tipo = "linea-porcentaje-CREATE";
+
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<LineasPorcentajeDesctComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, @Inject(MAT_DIALOG_DATA) public descuento: any, public dialog: MatDialog, public itemservice: ItemServiceService,
     private spinner: NgxSpinnerService, private toastr: ToastrService, public servicioPrecioVenta: ServicioprecioventaService,
     private servicioLinea: ServicioLineaProductoService) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.descuento_edit = this.descuento.descuento;
-    this.desct_codigo= this.descuento.descuento.codigo;
+    this.desct_codigo = this.descuento.descuento.codigo;
     console.log(this.descuento_edit);
 
     this.getLineas()
-  } 
+  }
 
   ngOnInit() {
-    this.servicioLinea.disparadorDeLineaItem.subscribe(data =>{
-      console.log("Recibiendo Linea: " , data);
+    this.servicioLinea.disparadorDeLineaItem.subscribe(data => {
+      console.log("Recibiendo Linea: ", data);
       this.linea_catalogo = data.linea;
-      
+
       console.log(this.linea_catalogo);
     });
   }
 
-  getLineas(){
-    let errorMessage:string;
+  getLineas() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vedescuento/vedescuento_tarifa/";
-    return this.api.getAll('/venta/mant/vedescuento/vedescuento1/'+this.userConn+"/"+this.desct_codigo)
+    return this.api.getAll('/venta/mant/vedescuento/vedescuento1/' + this.userConn + "/" + this.desct_codigo)
       .subscribe({
         next: (datav) => {
           this.lineas = datav;
@@ -81,7 +81,7 @@ export class LineasPorcentajeDesctComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -91,29 +91,29 @@ export class LineasPorcentajeDesctComponent implements OnInit {
   submitData() {
     let data = {
       codigo: this.descuento_edit.codigo,
-      coddescuento: this.descuento_edit.codigo,      
+      coddescuento: this.descuento_edit.codigo,
       codlinea: this.linea_catalogo.codigo,
       descuento: 0
     };
 
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /venta/mant/vedescuento/vedescuento1/";
-    
-    return this.api.create("/venta/mant/vedescuento/vedescuento1/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/vedescuento/vedescuento1/";
+
+    return this.api.create("/venta/mant/vedescuento/vedescuento1/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.save_precio = datav;
           console.log(this.save_precio);
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.getLineas();
           this.spinner.show();
-           setTimeout(() => {
+          setTimeout(() => {
             this.spinner.hide();
           }, 1500);
           this.toastr.success('Guardado con Exito! 🎉');
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -121,84 +121,84 @@ export class LineasPorcentajeDesctComponent implements OnInit {
       })
   }
 
-  catalogoLineas() { 
+  catalogoLineas() {
     this.dialog.open(LineaProductoCatalogoComponent, {
       width: 'auto',
       height: 'auto',
     });
   }
 
-  eliminar(element) { 
+  eliminar(element) {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let errorMessage = "La Ruta presenta fallos al hacer peticion"+"Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
+    let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete("/venta/mant/vedescuento/vedescuento1/"+user_conn+"/"+element.codigo+"/"+this.descuento_edit.codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete("/venta/mant/vedescuento/vedescuento1/" + user_conn + "/" + element.codigo + "/" + this.descuento_edit.codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
-            this.getLineas();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
-        this.toastr.error('! NO SE ELIMINO !');
-      }
-    });
-    }
-  
-  eliminarTodo() { 
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let errorMessage = "La Ruta presenta fallos al hacer peticion"+"Ruta:--/venta/mant/vedescuento/deleteTodo_vedescuento1/ Delete";
+              this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
 
-    const dialogRef = this.dialog.open(DialogDeleteComponent, {
-      width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:""},
-    });
-
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete("/venta/mant/vedescuento/deleteTodo_vedescuento1/"+user_conn+"/"+this.desct_codigo)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
-
-            this.getLineas();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              this.getLineas();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! NO SE ELIMINO !');
       }
     });
   }
 
-  close(){
+  eliminarTodo() {
+    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/deleteTodo_vedescuento1/ Delete";
+
+    const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { dataUsuarioEdit: "" },
+    });
+
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete("/venta/mant/vedescuento/deleteTodo_vedescuento1/" + user_conn + "/" + this.desct_codigo)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+
+              this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+
+              this.getLineas();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
+        this.toastr.error('! NO SE ELIMINO !');
+      }
+    });
+  }
+
+  close() {
     this.dialogRef.close();
   }
 }

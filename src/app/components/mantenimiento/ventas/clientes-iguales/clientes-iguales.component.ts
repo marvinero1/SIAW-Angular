@@ -160,7 +160,7 @@ export class ClientesIgualesComponent implements OnInit, AfterContentInit {
         next: (datav) => {
           this.area_clientes_iguales = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
           this.getClientesIguales();
@@ -212,7 +212,7 @@ export class ClientesIgualesComponent implements OnInit, AfterContentInit {
         return this.api.delete('/venta/mant/veclientesiguales/' + this.userConn + "/" + element.codcliente_a + "/" + element.codcliente_b)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

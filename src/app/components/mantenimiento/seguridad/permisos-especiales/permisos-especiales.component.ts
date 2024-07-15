@@ -360,7 +360,7 @@ export class PermisosEspecialesComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.autorizaciones_deshabilitadas = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
@@ -420,7 +420,7 @@ export class PermisosEspecialesComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/abmadautorizacion/adautorizacion/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();
@@ -451,7 +451,7 @@ export class PermisosEspecialesComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/abmadautorizacion/adautorizacion_deshabilitadas/' + this.userConn + "/" + element.nivel)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

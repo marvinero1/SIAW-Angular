@@ -206,7 +206,7 @@ export class NotasAjustesComponent implements OnInit {
               next: (datav) => {
                 console.log(datav);
                 this.save_ajustes = datav;
-                this.log_module.guardarLog(ventana, detalle, tipo);
+                this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
                 this.spinner.show();
                 setTimeout(() => {
@@ -229,7 +229,7 @@ export class NotasAjustesComponent implements OnInit {
               next: (datav) => {
                 console.log(datav);
                 this.save_ajustes = datav;
-                this.log_module.guardarLog(ventana, detalle, tipo);
+                this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
                 this.spinner.show();
                 setTimeout(() => {

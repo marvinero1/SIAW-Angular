@@ -132,7 +132,7 @@ export class VehiculoComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/advehiculo/' + this.userConn + "/" + element.placa)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

@@ -123,7 +123,7 @@ export class ItemComponent implements OnInit {
         return this.api.delete('/inventario/mant/initem/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.toastr.success('! SE ELIMINO EXITOSAMENTE !');
               this.spinner.show();
               setTimeout(() => {

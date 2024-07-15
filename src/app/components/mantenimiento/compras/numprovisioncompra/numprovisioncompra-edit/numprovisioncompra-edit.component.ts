@@ -15,29 +15,29 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class NumprovisioncompraEditComponent implements OnInit {
 
-  FormularioDataEdit:FormGroup;
+  FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  numProvComp_edit:any=[];
-  dataform:any='';
-  unidadNegocio:[];
-  numProvComp:any=[];
-  usuario_logueado:any;
-  user_conn:any;
+  numProvComp_edit: any = [];
+  dataform: any = '';
+  unidadNegocio: [];
+  numProvComp: any = [];
+  usuario_logueado: any;
+  user_conn: any;
   errorMessage;
   inputValue: number | null = null;
 
-  public ventana="numProvisionCompra"
-  public detalle="numProvisionCompra-edit";
-  public tipo="numProvisionCompra-edit-PUT";
+  public ventana = "numProvisionCompra"
+  public detalle = "numProvisionCompra-edit";
+  public tipo = "numProvisionCompra-edit-PUT";
 
-  constructor(private _formBuilder: FormBuilder, public log_module:LogService, public dialogRef: MatDialogRef<NumprovisioncompraEditComponent>, 
-    @Inject(MAT_DIALOG_DATA) public datanumProvCompEdit: any, private api:ApiService, private datePipe: DatePipe,private toastr: ToastrService,
-    public _snackBar: MatSnackBar){
+  constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumprovisioncompraEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public datanumProvCompEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
+    public _snackBar: MatSnackBar) {
     this.FormularioDataEdit = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
@@ -45,15 +45,15 @@ export class NumprovisioncompraEditComponent implements OnInit {
     this.getAllUnidadesNegocio();
   }
 
-  getAllUnidadesNegocio(){
+  getAllUnidadesNegocio() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adunidad/catalogo/'+this.user_conn)
+    return this.api.getAll('/seg_adm/mant/adunidad/catalogo/' + this.user_conn)
       .subscribe({
         next: (datav) => {
           this.unidadNegocio = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -65,34 +65,34 @@ export class NumprovisioncompraEditComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       id: [this.datanumProvCompEdit.datanumProvCompEdit.id],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
-      nroactual: [this.dataform.nroactual,Validators.pattern(/^-?\d+$/)],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
       codunidad: [this.dataform.codunidad, Validators.compose([Validators.required])],
     });
-  } 
+  }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /compras/mant/cmtipoprovision/ Update";
-    return this.api.update('/compras/mant/cmtipoprovision/'+this.user_conn+"/"+this.numProvComp_edit.id, data)
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /compras/mant/cmtipoprovision/ Update";
+    return this.api.update('/compras/mant/cmtipoprovision/' + this.user_conn + "/" + this.numProvComp_edit.id, data)
       .subscribe({
         next: (datav) => {
           this.numProvComp = datav;
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           this.toastr.error('! NO SE EDITO !');
           console.log(err, this.errorMessage);
         },
@@ -100,12 +100,12 @@ export class NumprovisioncompraEditComponent implements OnInit {
       })
   }
 
-  onInputChange(value: string){
+  onInputChange(value: string) {
     const parsedValue = parseFloat(value);
 
     if (!isNaN(parsedValue) && Number.isInteger(parsedValue)) {
       this.inputValue = parsedValue;
-    }else{
+    } else {
       this.numProvComp_edit.nroactual = null;
     }
   }

@@ -14,28 +14,28 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TipoPagoEditComponent implements OnInit {
 
-  FormularioDataEdit:FormGroup;
+  FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  tiposPago_edit:any=[];
-  dataform:any='';
-  tiposPago:any=[];
-  usuario_logueado:any;
-  user_conn:any;
+  tiposPago_edit: any = [];
+  dataform: any = '';
+  tiposPago: any = [];
+  usuario_logueado: any;
+  user_conn: any;
   errorMessage;
   inputValue: number | null = null;
 
-  public ventana="tiposdePago"
-  public detalle="tiposdePago-edit";
-  public tipo="tiposdePago-edit-PUT";
+  public ventana = "tiposdePago"
+  public detalle = "tiposdePago-edit";
+  public tipo = "tiposdePago-edit-PUT";
 
-  constructor(private _formBuilder: FormBuilder, public log_module:LogService, public dialogRef: MatDialogRef<TipoPagoEditComponent>, 
-    @Inject(MAT_DIALOG_DATA) public datatiposPagoEdit: any, private api:ApiService, private datePipe: DatePipe,private toastr: ToastrService,
-    public _snackBar: MatSnackBar){
+  constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<TipoPagoEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public datatiposPagoEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
+    public _snackBar: MatSnackBar) {
     this.FormularioDataEdit = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
@@ -48,33 +48,33 @@ export class TipoPagoEditComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.datatiposPagoEdit.datatiposPagoEdit.codigo],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
-      tipo: [this.dataform.tipo,Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      tipo: [this.dataform.tipo, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
-  } 
+  }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /ctsxcob/mant/cotippago/ Update";
-    return this.api.update('/ctsxcob/mant/cotippago/'+this.user_conn+"/"+this.tiposPago_edit.codigo, data)
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /ctsxcob/mant/cotippago/ Update";
+    return this.api.update('/ctsxcob/mant/cotippago/' + this.user_conn + "/" + this.tiposPago_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.tiposPago = datav;
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           this.toastr.error('! NO SE EDITO !');
           console.log(err, this.errorMessage);
         },
@@ -82,12 +82,12 @@ export class TipoPagoEditComponent implements OnInit {
       })
   }
 
-  onInputChange(value: string){
+  onInputChange(value: string) {
     const parsedValue = parseFloat(value);
 
     if (!isNaN(parsedValue) && Number.isInteger(parsedValue)) {
       this.inputValue = parsedValue;
-    }else{
+    } else {
       this.tiposPago_edit.nroactual = null;
     }
   }

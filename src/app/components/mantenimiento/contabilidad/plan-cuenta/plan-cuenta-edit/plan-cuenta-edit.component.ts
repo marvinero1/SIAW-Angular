@@ -14,28 +14,28 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class PlanCuentaEditComponent implements OnInit {
 
-  FormularioDataEdit:FormGroup;
+  FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  plancuent_edit:any=[];
-  dataform:any='';
-  plancuent:any=[];
-  usuario_logueado:any;
-  user_conn:any;
+  plancuent_edit: any = [];
+  dataform: any = '';
+  plancuent: any = [];
+  usuario_logueado: any;
+  user_conn: any;
   errorMessage;
   inputValue: number | null = null;
 
-  public ventana="plandeCuenta"
-  public detalle="plandeCuenta-edit";
-  public tipo="plandeCuenta-edit-PUT";
+  public ventana = "plandeCuenta"
+  public detalle = "plandeCuenta-edit";
+  public tipo = "plandeCuenta-edit-PUT";
 
-  constructor(private _formBuilder: FormBuilder, public log_module:LogService, public dialogRef: MatDialogRef<PlanCuentaEditComponent>, 
-    @Inject(MAT_DIALOG_DATA) public dataplancuentEdit: any, private api:ApiService, private datePipe: DatePipe,private toastr: ToastrService,
-    public _snackBar: MatSnackBar){
+  constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<PlanCuentaEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataplancuentEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
+    public _snackBar: MatSnackBar) {
     this.FormularioDataEdit = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
@@ -48,32 +48,32 @@ export class PlanCuentaEditComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataplancuentEdit.dataplancuentEdit.codigo],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
-  } 
+  }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /contab/mant/cnplancuenta/ Update";
-    return this.api.update('/contab/mant/cnplancuenta/'+this.user_conn+"/"+this.plancuent_edit.codigo, data)
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /contab/mant/cnplancuenta/ Update";
+    return this.api.update('/contab/mant/cnplancuenta/' + this.user_conn + "/" + this.plancuent_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.plancuent = datav;
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           this.toastr.error('! NO SE EDITO !');
           console.log(err, this.errorMessage);
         },
@@ -81,12 +81,12 @@ export class PlanCuentaEditComponent implements OnInit {
       })
   }
 
-  onInputChange(value: string){
+  onInputChange(value: string) {
     const parsedValue = parseFloat(value);
 
     if (!isNaN(parsedValue) && Number.isInteger(parsedValue)) {
       this.inputValue = parsedValue;
-    }else{
+    } else {
       this.plancuent_edit.nroactual = null;
     }
   }

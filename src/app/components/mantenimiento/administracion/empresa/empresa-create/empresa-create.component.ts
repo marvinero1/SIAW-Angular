@@ -14,23 +14,23 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EmpresaCreateComponent {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  empresa:any=[];
-  cnplancuenta:any=[];
-  moneda:any=[];
-  almacen:any=[];
+  dataform: any = '';
+  empresa: any = [];
+  cnplancuenta: any = [];
+  moneda: any = [];
+  almacen: any = [];
   usuario_logueado;
 
-  public ventana="empresa-create"
-  public detalle="empresa-detalle";
-  public tipo="transaccion-empresa-POST";
+  public ventana = "empresa-create"
+  public detalle = "empresa-detalle";
+  public tipo = "transaccion-empresa-POST";
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe,
-    private api:ApiService, public dialogRef: MatDialogRef<EmpresaCreateComponent>, public _snackBar: MatSnackBar,
-    private toastr: ToastrService,public log_module:LogService){
+    private api: ApiService, public dialogRef: MatDialogRef<EmpresaCreateComponent>, public _snackBar: MatSnackBar,
+    private toastr: ToastrService, public log_module: LogService) {
     this.FormularioData = this.createForm();
   }
 
@@ -39,20 +39,20 @@ export class EmpresaCreateComponent {
     this.getMoneda();
     this.getAlmacen();
   }
-  
+
   createForm(): FormGroup {
     this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataform.codigo,Validators.compose([Validators.required])],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
-      nit: [this.dataform.descripcion,Validators.compose([Validators.required])],
-      actividad: [this.dataform.actividad,Validators.compose([Validators.required])],
-      
+      codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      nit: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      actividad: [this.dataform.actividad, Validators.compose([Validators.required])],
+
       direccion: [this.dataform.direccion],
       municipio: [this.dataform.municipio],
       iniciogestion: [this.dataform.iniciogestion],
@@ -63,24 +63,24 @@ export class EmpresaCreateComponent {
       monedapol: [this.dataform.moneda],
       codalmacen: [this.dataform.codalmacen],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:- /seg_adm/mant/adempresa/";
-    return this.api.create("/seg_adm/mant/adempresa/"+user_conn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/adempresa/";
+    return this.api.create("/seg_adm/mant/adempresa/" + user_conn, data)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
           console.log('data', datav);
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
           this.toastr.success('! GUARDADO EXITOSAMENTE !');
 
@@ -90,61 +90,61 @@ export class EmpresaCreateComponent {
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
-    }
+  }
 
-  getPlanCuenta(){
+  getPlanCuenta() {
     let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/cnplancuenta/'+useConn)
+    return this.api.getAll('/seg_adm/mant/cnplancuenta/' + useConn)
       .subscribe({
         next: (datav) => {
           this.cnplancuenta = datav;
           //console.log(datav);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getMoneda(){
+  getMoneda() {
     let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
-    return this.api.getAll('/seg_adm/mant/admoneda/'+useConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + useConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
           //console.log( this.moneda);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAlmacen(){
+  getAlmacen() {
     let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inalmacen/";
-    return this.api.getAll('/inventario/mant/inalmacen/'+useConn)
+    return this.api.getAll('/inventario/mant/inalmacen/' + useConn)
       .subscribe({
         next: (datav) => {
           this.almacen = datav;
-          console.log( this.almacen);
+          console.log(this.almacen);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

@@ -28,7 +28,7 @@ export class PreciosPermitidoDesctComponent implements OnInit {
   cod_precio_venta_modal: any = [];
   save_precio: any = [];
 
-  displayedColumns = ['coddescuento','descripcion','accion'];
+  displayedColumns = ['coddescuento', 'descripcion', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -36,57 +36,57 @@ export class PreciosPermitidoDesctComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-   nombre_ventana: string = "abmvedescuento2.vb";
-  public ventana="punto-venta-CREATE"
-  public detalle="punto-venta";
-  public tipo="punto-venta-CREATE";
-  
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<PreciosPermitidoDesctComponent>, public _snackBar: MatSnackBar,
-    public log_module: LogService, @Inject(MAT_DIALOG_DATA) public descuento: any, public dialog: MatDialog,private spinner: NgxSpinnerService,
-    private toastr: ToastrService, public servicioPrecioVenta:ServicioprecioventaService){
+  nombre_ventana: string = "abmvedescuento2.vb";
+  public ventana = "punto-venta-CREATE"
+  public detalle = "punto-venta";
+  public tipo = "punto-venta-CREATE";
+
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<PreciosPermitidoDesctComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, @Inject(MAT_DIALOG_DATA) public descuento: any, public dialog: MatDialog, private spinner: NgxSpinnerService,
+    private toastr: ToastrService, public servicioPrecioVenta: ServicioprecioventaService) {
 
     this.descuento_edit = this.descuento.descuento;
-    this.desct_codigo= this.descuento.descuento.codigo;
+    this.desct_codigo = this.descuento.descuento.codigo;
     console.log(this.descuento_edit);
-  } 
+  }
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.getPreciosCodigo();
 
-    this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data =>{
-      console.log("Recibiendo Precio Venta: " , data);
+    this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
+      console.log("Recibiendo Precio Venta: ", data);
       this.cod_precio_venta_modal = data.precio_venta;
     });
   }
 
-  savePrecioVenta() { 
+  savePrecioVenta() {
     let data = {
       coddescuento: this.descuento_edit.codigo,
       codtarifa: this.cod_precio_venta_modal.codigo,
     };
 
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /venta/mant/vedescuento/vedescuento_tarifa/";
-    
-    return this.api.create("/venta/mant/vedescuento/vedescuento_tarifa/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/vedescuento/vedescuento_tarifa/";
+
+    return this.api.create("/venta/mant/vedescuento/vedescuento_tarifa/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.save_precio = datav;
           console.log(this.save_precio);
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.getPreciosCodigo();
           this.spinner.show();
-           setTimeout(() => {
+          setTimeout(() => {
             this.spinner.hide();
           }, 1500);
           this.toastr.success('Guardado con Exito! 🎉');
           this.getPreciosCodigo();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -94,10 +94,10 @@ export class PreciosPermitidoDesctComponent implements OnInit {
       })
   }
 
-  getPreciosCodigo(){
-    let errorMessage:string;
+  getPreciosCodigo() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vedescuento/vedescuento_tarifa/";
-    return this.api.getAll('/venta/mant/vedescuento/vedescuento_tarifa/'+this.userConn+"/"+this.desct_codigo)
+    return this.api.getAll('/venta/mant/vedescuento/vedescuento_tarifa/' + this.userConn + "/" + this.desct_codigo)
       .subscribe({
         next: (datav) => {
           this.precios_codigo = datav;
@@ -107,56 +107,56 @@ export class PreciosPermitidoDesctComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
-  catalogoVentas():void { 
+
+  catalogoVentas(): void {
     this.dialog.open(ModalPrecioVentaComponent, {
       width: 'auto',
       height: 'auto',
     });
   }
 
-  eliminar(element) { 
+  eliminar(element) {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let errorMessage = "La Ruta presenta fallos al hacer peticion"+"Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
+    let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete("/venta/mant/vedescuento/vedescuento_tarifa/"+user_conn+"/"+this.desct_codigo+"/"+element.codtarifa)
-        .subscribe({
-          next: () => {
-            this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-            
-            this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1500);
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete("/venta/mant/vedescuento/vedescuento_tarifa/" + user_conn + "/" + this.desct_codigo + "/" + element.codtarifa)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
-            this.getPreciosCodigo();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+              this.toastr.success('!SE ELIMINO EXITOSAMENTE!');
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1500);
+
+              this.getPreciosCodigo();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! NO SE ELIMINO !');
       }
     });
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

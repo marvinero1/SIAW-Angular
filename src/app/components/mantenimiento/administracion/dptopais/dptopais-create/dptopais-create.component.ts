@@ -14,25 +14,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DptopaisCreateComponent implements OnInit {
 
-  public FormularioData:FormGroup;
+  public FormularioData: FormGroup;
   public fecha_actual = new Date();
   public hora_actual = new Date();
-  public dataform:any='';
-  public dpto:any=[];
-  public usuario_logueado:any;
+  public dataform: any = '';
+  public dpto: any = [];
+  public usuario_logueado: any;
 
-  public ventana="dptopais-create"
-	public detalle="dptopais-detalle";
-	public tipo="dptopais-POST";
+  public ventana = "dptopais-create"
+  public detalle = "dptopais-detalle";
+  public tipo = "dptopais-POST";
 
-  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module:LogService,
-    private api:ApiService, public dialogRef: MatDialogRef<DptopaisCreateComponent>, public _snackBar: MatSnackBar,
-    private toastr: ToastrService,){
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService,
+    private api: ApiService, public dialogRef: MatDialogRef<DptopaisCreateComponent>, public _snackBar: MatSnackBar,
+    private toastr: ToastrService,) {
 
     this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
   }
 
@@ -41,44 +41,44 @@ export class DptopaisCreateComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataform.codigo,Validators.compose([Validators.required])],
-      nombre: [this.dataform.nombre,Validators.compose([Validators.required])],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
+      nombre: [this.dataform.nombre, Validators.compose([Validators.required])],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /admoneda";
-    return this.api.create("/seg_adm/mant/addepto/"+userConn, data)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /admoneda";
+    return this.api.create("/seg_adm/mant/addepto/" + userConn, data)
       .subscribe({
         next: (datav) => {
           this.dpto = datav;
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
           this.toastr.success('! GUARDADO EXITOSAMENTE !');
 
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
-    }
+  }
 
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

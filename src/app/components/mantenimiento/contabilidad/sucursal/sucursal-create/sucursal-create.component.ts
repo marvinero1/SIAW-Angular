@@ -16,31 +16,31 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SucursalCreateComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  sucur:any=[];
-  userConn:any;
-  userLogueado:any=[];
+  dataform: any = '';
+  sucur: any = [];
+  userConn: any;
+  userLogueado: any = [];
 
   almacen_get: any = [];
-  cod_almacen:any=[];
+  cod_almacen: any = [];
 
-  public ventana="sucursales-create"
-  public detalle="sucursales-detalle";
-  public tipo="transaccion-sucursales-POST";
+  public ventana = "sucursales-create"
+  public detalle = "sucursales-detalle";
+  public tipo = "transaccion-sucursales-POST";
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<SucursalCreateComponent>, public _snackBar: MatSnackBar,
-    public log_module: LogService, private toastr: ToastrService, public dialog: MatDialog,  public almacenservice: ServicioalmacenService,) {
-    
+    private api: ApiService, public dialogRef: MatDialogRef<SucursalCreateComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, private toastr: ToastrService, public dialog: MatDialog, public almacenservice: ServicioalmacenService,) {
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
-  } 
-  
+  }
+
   ngOnInit() {
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
@@ -49,11 +49,11 @@ export class SucursalCreateComponent implements OnInit {
 
     this.getAlmacenCatalogo();
   }
-  
+
   getAlmacenCatalogo() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/inalmacen/catalogo/";
-    return this.api.getAll('/inventario/mant/inalmacen/catalogo/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.almacen_get = datav;
@@ -61,7 +61,7 @@ export class SucursalCreateComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
 
@@ -69,7 +69,7 @@ export class SucursalCreateComponent implements OnInit {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{almacen:"almacen"}
+      data: { almacen: "almacen" }
     });
   }
 
@@ -89,49 +89,49 @@ export class SucursalCreateComponent implements OnInit {
     }
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataform.codigo, Validators.pattern(/^-?\d+$/)],
-      codalmacen: [this.dataform.codalmacen,Validators.compose([Validators.required])],
+      codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
       descripcion: [this.dataform.descripcion,],
 
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /contab/mant/cnsucursal/";
-    
-    return this.api.create("/contab/mant/cnsucursal/"+this.userConn, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /contab/mant/cnsucursal/";
+
+    return this.api.create("/contab/mant/cnsucursal/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.sucur = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }

@@ -14,66 +14,66 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class TipoconocimientocargaCreateComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  public unidadnegocio=[];
-  dataform:any='';
-  userConn:any;
-  num_conocimiento_carga=[];
+  FormularioData: FormGroup;
+  public unidadnegocio = [];
+  dataform: any = '';
+  userConn: any;
+  num_conocimiento_carga = [];
 
   fecha_actual = new Date();
   hora_actual = new Date();
 
-  public ventana="nts-conocimicarga-create"
-  public detalle="nts-conocimicarga";
-  public tipo="nts-conocimicarga-POST";
+  public ventana = "nts-conocimicarga-create"
+  public detalle = "nts-conocimicarga";
+  public tipo = "nts-conocimicarga-POST";
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<TipoconocimientocargaCreateComponent>,
-    private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module:LogService,private toastr: ToastrService,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<TipoconocimientocargaCreateComponent>,
+    private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
-    
+
     this.FormularioData = this.createForm();
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
   }
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       id: [this.dataform.id, Validators.compose([Validators.required])],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
-      nroactual: [this.dataform.nroactual,Validators.pattern(/^-?\d+$/) ],
+      nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.userConn],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /seg_adm/mant/adunidad POST";
-    return this.api.create("/inventario/mant/intipocarga/"+this.userConn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adunidad POST";
+    return this.api.create("/inventario/mant/intipocarga/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.num_conocimiento_carga = datav;
 
           console.log('data', datav);
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('Guardado con Exito! 🎉');
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

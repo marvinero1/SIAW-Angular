@@ -25,7 +25,7 @@ export class LogService {
   //Add 'implements OnInit' to the class.
   // }
 
-  createFormLog(ventana: string, detalle: string, tipo: string): FormGroup {
+  createFormLog(ventana: string, detalle: string, tipo: string, id, numero_id): FormGroup {
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     const usuario = this.userLogueado;
@@ -39,8 +39,8 @@ export class LogService {
       hora: new UntypedFormControl(hora_actual_complete),
       entidad: new UntypedFormControl("SIAW"),
       codigo: new UntypedFormControl(""),
-      id_doc: new UntypedFormControl(""),
-      numeroid_doc: new UntypedFormControl(""),
+      id_doc: new UntypedFormControl(id),
+      numeroid_doc: new UntypedFormControl(numero_id),
       ventana: new UntypedFormControl(ventana),
       detalle: new UntypedFormControl(detalle),
       tipo: new UntypedFormControl(tipo),
@@ -69,13 +69,13 @@ export class LogService {
     });
   }
 
-  guardarLog(ventana: string, detalle: string, tipo: string) {
-    this.logData = this.createFormLog(ventana, detalle, tipo);
+  guardarLog(ventana: string, detalle: string, tipo: string, id: string, numero_id: any) {
+    this.logData = this.createFormLog(ventana, detalle, tipo, id, numero_id);
     let data = this.logData.value;
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    let errorMessage = "LOG Salio Error en guardar" + "Ruta:--  /LOG";
+    let errorMessage = "LOG Salio Error en guardar" + "Ruta:-/seg_adm/logs/selog/";
     return this.api.create("/seg_adm/logs/selog/" + this.userConn, data)
       .subscribe({
         next: (datav) => {

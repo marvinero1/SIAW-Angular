@@ -105,7 +105,7 @@ export class TipoconocimientocargaComponent implements OnInit {
         return this.api.delete('/inventario/mant/intipocarga/' + this.userConn + "/" + element.id)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.toastr.success('Eliminado Exitosamente!');
               location.reload();
             },

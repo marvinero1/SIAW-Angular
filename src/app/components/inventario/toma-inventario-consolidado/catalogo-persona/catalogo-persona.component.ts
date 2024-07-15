@@ -1,4 +1,4 @@
-import { Component,HostListener,Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -27,24 +27,24 @@ export class CatalogoPersonaComponent implements OnInit {
 
   displayedColumns = ['codigo', 'descripcion'];
 
-  dataSource = new MatTableDataSource < pePersona > ();
+  dataSource = new MatTableDataSource<pePersona>();
   dataSourceWithPageSize = new MatTableDataSource();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   options: pePersona[] = [];
-  filteredOptions: Observable < pePersona[] > ;
-  myControlCodigo = new FormControl < string | pePersona > ('');
-  myControlDescrip = new FormControl < string | pePersona > ('');
+  filteredOptions: Observable<pePersona[]>;
+  myControlCodigo = new FormControl<string | pePersona>('');
+  myControlDescrip = new FormControl<string | pePersona>('');
 
   public ventana = "grupo-inventario"
   public detalle = "grupo-inventario-create";
   public tipo = "grupo-inventario-CREATE";
 
-  constructor(private api: ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent> ,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent>,
     public log_module: LogService, private spinner: NgxSpinnerService, @Inject(MAT_DIALOG_DATA) public codigo_grupo: any,
-    private toastr: ToastrService, ) {
+    private toastr: ToastrService,) {
 
     this.cod_grupo = this.codigo_grupo.codigo_grupo;
   }
@@ -102,11 +102,11 @@ export class CatalogoPersonaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
 
-  guardarIntegrantes(codigo){
+  guardarIntegrantes(codigo) {
     let data: any = {
       "codgrupoper": this.cod_grupo,
       "codpersona": codigo,
@@ -117,8 +117,8 @@ export class CatalogoPersonaComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.add_person = datav;
-      
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
 
           setTimeout(() => {
@@ -132,7 +132,7 @@ export class CatalogoPersonaComponent implements OnInit {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
 

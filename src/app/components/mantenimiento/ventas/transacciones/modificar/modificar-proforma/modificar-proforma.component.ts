@@ -1793,7 +1793,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.update('/venta/transac/veproforma/actualizarCorreoCliente/' + this.userConn, data)
       .subscribe({
         next: (datav) => {
-          this.log_module.guardarLog(ventana, detalle, tipo_transaccion);
+          this.log_module.guardarLog(ventana, detalle, tipo_transaccion, "", "");
           this.email_save = datav;
           this.toastr.success('!CORREO GUARDADO!');
           this._snackBar.open('!CORREO GUARDADO!', 'Ok', {
@@ -1806,9 +1806,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           console.log(err, errorMessage);
           this.toastr.error('! Ingrese un correo valido ! 📧');
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -2323,8 +2321,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   imprimir_proforma_tranferida(proforma) {
     console.log("Imprimir Proforma Transferida: ", proforma, proforma.habilitado);
+    if (proforma.anticiposTot != 0) {
+      this.anticipo_button = true;
+    }
 
     this.monto_anticipo = proforma.anticiposTot;
+
     this.pago_contado_anticipado_view = proforma.cabecera.pago_contado_anticipado;
     this.codigo_proforma = proforma.cabecera.codigo;
     this.descrip_confirmada = proforma.descConfirmada;
@@ -2392,8 +2394,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     //el cuerpo del detalle asignado al carrito
     this.array_items_carrito_y_f4_catalogo = proforma.detalle;
-    this.etiqueta_get_modal_etiqueta = proforma.etiquetaProf[0];
+    this.etiqueta_get_modal_etiqueta = proforma.etiquetaProf;
     this.recargo_de_recargos = proforma.recargos;
+    this.valor_formulario_copied_map_all = proforma.cabecera;
 
     // array de validaciones
     // this.validacion_post = proforma.detalleValida.map((element) => ({
@@ -2407,6 +2410,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
       element.orden = index + 1;
     });
+
+
   }
 
   imprimir_cotizacion_transferida(cotizacion) {
@@ -2870,12 +2875,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       complete: () => {
         //aca exporta a ZIP
         this.exportProformaZIP(this.totabilizar_post.codProf);
-
-        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST");
+        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
         //aca manda a imprimir la proforma guardada
         // this.modalBtnImpresiones(this.totabilizar_post.codProf);
-
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
@@ -3079,7 +3082,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         //aca exporta a ZIP
         this.exportProformaZIP(this.totabilizar_post.codProf);
 
-        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST");
+        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", "", "");
 
         //aca manda a imprimir la proforma guardada
         // this.modalBtnImpresiones(this.totabilizar_post.codProf);
@@ -3243,12 +3246,31 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar DESCUENTO POR DEPOSITO (23), si el cliente tiene pendiente algun descuento por este concepto?`);
     if (confirmacionValidaciones) {
       // ACA ACTIVA LA FUNCION QUE ESTA EN PROFORMA SE COMUNICAN A TRAVEZ DE UN SERVICIO
       this.aplicarDesctPorDepositoYValidar();
     } else {
+
+      if (this.total === 0.00) {
+        this.toastr.error("EL TOTAL NO PUEDE SER 0");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+        return;
+      }
+
+      if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
+        this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
+        // this.toastr.info("VALIDACION ACTIVA 🚨");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500);
+        return;
+      }
+
       this.validar();
     }
   }
@@ -3867,14 +3889,13 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       case 1:
         tipo_complemento = "complemento_para_descto_monto_min_desextra";
         break;
-    }
+    };
 
     this.valor_formulario.map((element: any) => {
       if (this.tipopago === 1) {
         element.contra_entrega = false;
         element.estado_contra_entrega = "";
       }
-
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
         id: element.id.toString() || '',
@@ -3938,14 +3959,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       }
     });
 
-    // this.validacion_post = this.validacion_post.map((element) => ({
-    //   codservicio: element.codservicio.toString(),
-    // }))
-
-    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-    console.log("Valor Formulario Controles: ", this.validacion_post);
-
-
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos,
@@ -3956,32 +3969,16 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
     }
 
-    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     console.log(proforma_validar, "Largo del array etiqueta: ");
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
+
+    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    console.log("Valor Formulario Controles: ", this.validacion_post);
 
     this.submitted = true;
 
     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-    if (this.total === 0) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
-      return;
-    }
-
-    if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
-      this.toastr.info("VALIDACION ACTIVA 🚨");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
-      return;
-    }
-
     this.api.create(url, proforma_validar).subscribe({
       next: (datav) => {
         this.toastr.info("VALIDACION EN CURSO ⚙️");
@@ -4027,6 +4024,43 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.spinner.hide();
     }, 1000);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

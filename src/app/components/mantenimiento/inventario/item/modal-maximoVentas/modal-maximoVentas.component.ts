@@ -10,20 +10,21 @@ import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-modal-maximoVentas',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'modal-maximoVentas',
   templateUrl: './modal-maximoVentas.component.html',
   styleUrls: ['./modal-maximoVentas.component.scss']
 })
 export class ModalMaximoVentasComponent implements OnInit {
 
-  almacen:any=[];
-  precio_lista:any=[];
-  max_venta_item:any=[];
-  dataMaximoVentas:any=[];
-  dataform:any='';
-  userConn:any;
+  almacen: any = [];
+  precio_lista: any = [];
+  max_venta_item: any = [];
+  dataMaximoVentas: any = [];
+  dataform: any = '';
+  userConn: any;
 
-  displayedColumns = ['codalmacen','codtarifa','maximo','dias','accion'];
+  displayedColumns = ['codalmacen', 'codtarifa', 'maximo', 'dias', 'accion'];
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
@@ -31,22 +32,22 @@ export class ModalMaximoVentasComponent implements OnInit {
   dataSourceWithPageSize = new MatTableDataSource();
   FormularioData: any;
 
-  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalMaximoVentasComponent>, 
-    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api:ApiService, private toastr: ToastrService,
-    public _snackBar: MatSnackBar,public dialog: MatDialog, public log_module:LogService){
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalMaximoVentasComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api: ApiService, private toastr: ToastrService,
+    public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module: LogService) {
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-      this.FormularioData = this.createForm();
+    this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllAlmacen();
     this.getAllListaPrecio();
 
     this.getAllMaximoVentasItem()
   }
 
-  createForm(): FormGroup{ 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
       codtarifa: [this.dataform.codtarifa, Validators.compose([Validators.required])],
@@ -56,20 +57,20 @@ export class ModalMaximoVentasComponent implements OnInit {
     });
   }
 
-  submitData(){
-    let ventana="MaximoVentas-create"
-    let detalle="MaximoVentas-detalle";
-    let tipo="transaccion-MaximoVentas-POST";
+  submitData() {
+    let ventana = "MaximoVentas-create"
+    let detalle = "MaximoVentas-detalle";
+    let tipo = "transaccion-MaximoVentas-POST";
 
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:- /inventario/mant/initem_max";
-    return this.api.create("/inventario/mant/initem_max/"+this.userConn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/initem_max";
+    return this.api.create("/inventario/mant/initem_max/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.dataMaximoVentas = datav;
-          this.log_module.guardarLog(ventana,detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
 
@@ -78,8 +79,8 @@ export class ModalMaximoVentasComponent implements OnInit {
           });
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -87,9 +88,9 @@ export class ModalMaximoVentasComponent implements OnInit {
       })
   }
 
-  getAllMaximoVentasItem(){
+  getAllMaximoVentasItem() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/initem_max/initem_initemMax/";
-    return this.api.getAll('/inventario/mant/initem_max/initem_initemMax/'+this.userConn+"/"+this.dataItem.dataItem.codigo )
+    return this.api.getAll('/inventario/mant/initem_max/initem_initemMax/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
       .subscribe({
         next: (datav) => {
           this.max_venta_item = datav;
@@ -99,81 +100,81 @@ export class ModalMaximoVentasComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllAlmacen(){
-    let errorMessage:string;
+  getAllAlmacen() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inalmacen";
-    return this.api.getAll('/inventario/mant/inalmacen/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inalmacen/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.almacen = datav;
           // console.log(this.almacen);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllListaPrecio(){
-    let errorMessage:string;
+  getAllListaPrecio() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/intarifa";
-    return this.api.getAll('/inventario/mant/intarifa/'+this.userConn)
+    return this.api.getAll('/inventario/mant/intarifa/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.precio_lista = datav;
           // console.log(this.precio_lista);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let ventana="MaximoVentas-delete"
-    let detalle="MaximoVentas-detalle";
-    let tipo="transaccion-MaximoVentas-DELETE";
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let ventana = "MaximoVentas-delete"
+    let detalle = "MaximoVentas-detalle";
+    let tipo = "transaccion-MaximoVentas-DELETE";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data:{dataUsuarioEdit:element},
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/initem_max/'+this.userConn+"/"+element.id)
-        .subscribe({
-          next: ()=>{
-            this.log_module.guardarLog(ventana,detalle, tipo);
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-            });
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/initem_max/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+              });
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }

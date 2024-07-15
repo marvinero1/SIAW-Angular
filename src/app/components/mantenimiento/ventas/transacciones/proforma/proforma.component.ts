@@ -1774,7 +1774,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     return this.api.update('/venta/transac/veproforma/actualizarCorreoCliente/' + this.userConn, data)
       .subscribe({
         next: (datav) => {
-          this.log_module.guardarLog(ventana, detalle, tipo_transaccion);
+          this.log_module.guardarLog(ventana, detalle, tipo_transaccion, "", "");
           this.email_save = datav;
           this.toastr.success('!CORREO GUARDADO!');
           this._snackBar.open('!CORREO GUARDADO!', 'Ok', {
@@ -2334,7 +2334,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log(result);
       if (result) {
         this.tranferirProforma();
-        this.log_module.guardarLog(ventana, detalle, tipo);
+        this.log_module.guardarLog(ventana, detalle, tipo, "", "");
       } else {
         this.toastr.error('! CANCELADO !');
       }
@@ -2791,14 +2791,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     if (this.api.statusInternet === false) {
       const confirmacionValidacionesInternet: boolean = window.confirm(`¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?`);
-
       if (confirmacionValidacionesInternet) {
         this.detalleProformaCarritoTOExcel();
       }
     }
 
     let data = this.FormularioData.value;
-
     data = {
       ...data,
       codcliente_real: this.codigo_cliente,
@@ -2829,22 +2827,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     };
 
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
-    // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
-    // ESTA FUNCION SE MOVIO A ETIQUETACOMPONENT DONDE AL GRABAR LA ETIQUETA YA TE PREGUNTA SI DESEAS APLICAR ESTE DESCT.
-    // const confirmacionValidaciones: boolean = window.confirm(`¿Desea aplicar descuento por deposito si el cliente tiene pendiente algun descuento por este concepto?`);
-    // if (confirmacionValidaciones) {
-    //   this.aplicarDesctPorDeposito();
-
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 1000);
-    // } else {
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 1000);
-    // }
-
     console.log("FORMULARIO VALIDADO");
+
     const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
@@ -2870,7 +2854,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       complete: () => {
         //aca exporta a ZIP
         this.exportProformaZIP(this.totabilizar_post.codProf);
-        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST");
+        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
         //aca manda a imprimir la proforma guardada
         this.modalBtnImpresiones();
@@ -3105,6 +3089,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       });
 
       console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+
       let proforma_validar = {
         datosDocVta: this.valor_formulario_copied_map_all,
         detalleAnticipos: this.tabla_anticipos,
@@ -3761,6 +3746,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           console.log(this.array_de_descuentos_ya_agregados);
           this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
 
+          this.log_module.guardarLog(this.ventana, "proforma_validad_cod" + this.totabilizar_post.codProf, "POST", "", "");
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
           this.totabilizar();
           setTimeout(() => {

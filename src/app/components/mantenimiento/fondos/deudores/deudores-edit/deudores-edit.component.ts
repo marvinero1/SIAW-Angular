@@ -17,13 +17,13 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DeudoresEditComponent implements OnInit {
 
- FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
+  dataform: any = '';
   userConn: any;
-  
-  numChecCli:any=[];
+
+  numChecCli: any = [];
   userLogueado: any = [];
   persona_get: any = [];
   persona_get_catalogo: any = [];
@@ -31,40 +31,40 @@ export class DeudoresEditComponent implements OnInit {
   deudor_edit: any = [];
   persona_get_catalogo_id: any;
 
-  public ventana="deudores-create"
-  public detalle="deudores-detalle";
-  public tipo="transaccion-deudores-POST";
+  public ventana = "deudores-create"
+  public detalle = "deudores-detalle";
+  public tipo = "transaccion-deudores-POST";
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<DeudoresEditComponent>, public _snackBar: MatSnackBar,
+    private api: ApiService, public dialogRef: MatDialogRef<DeudoresEditComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService, public dialog: MatDialog,
     public servicioPersona: ServicePersonaService, @Inject(MAT_DIALOG_DATA) public dataDeudorEdit_copied: any) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.deudor_edit = dataDeudorEdit_copied.dataDeudorEdit_copied;
-      console.log(this.deudor_edit);
-      
+    console.log(this.deudor_edit);
+
     this.FormularioData = this.createForm();
-    
+
   }
 
   ngOnInit() {
     this.getPersona();
-    this.servicioPersona.disparadorDePersonas.subscribe(data =>{
-      console.log("Recibiendo Persona: " , data);
+    this.servicioPersona.disparadorDePersonas.subscribe(data => {
+      console.log("Recibiendo Persona: ", data);
       this.persona_get_catalogo = data.persona;
-        this.persona_get_catalogo_id = data.persona.codigo;
+      this.persona_get_catalogo_id = data.persona.codigo;
     });
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       id: [this.deudor_edit.id],
@@ -72,38 +72,38 @@ export class DeudoresEditComponent implements OnInit {
       codpersona: [this.dataform.codpersona, Validators.compose([Validators.required])],
 
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     let codpersona = data.codpersona;
     console.log(data);
 
     const encontrado = this.persona_get.some(objeto => objeto.codigo === codpersona);
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /fondos/mant/fndeudor/";
-    if (encontrado) { 
-      return this.api.update("/fondos/mant/fndeudor/"+this.userConn+"/"+this.deudor_edit.id, data)
-      .subscribe({
-        next: (datav) => {
-          this.numChecCli = datav;
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /fondos/mant/fndeudor/";
+    if (encontrado) {
+      return this.api.update("/fondos/mant/fndeudor/" + this.userConn + "/" + this.deudor_edit.id, data)
+        .subscribe({
+          next: (datav) => {
+            this.numChecCli = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-          this.onNoClick();
-          this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+            this.onNoClick();
+            this.spinner.show();
+            this.toastr.success('Guardado con Exito! 🎉');
 
-          location.reload();
-        },
-    
-        error: (err) => { 
-          console.log(err, errorMessage);
-          this.toastr.error('! NO SE GUARDO !');
-        },
-        complete: () => { }
-      })
+            location.reload();
+          },
+
+          error: (err) => {
+            console.log(err, errorMessage);
+            this.toastr.error('! NO SE GUARDO !');
+          },
+          complete: () => { }
+        })
     } else {
       console.log("NO HAY ESE CODPERSONA SEGUNDA VALIDACION");
       this.toastr.warning('No existe ese codigo de persona, elija un codigo existente! ⛔');
@@ -111,15 +111,15 @@ export class DeudoresEditComponent implements OnInit {
 
   }
 
-  getPersona(){
+  getPersona() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
-    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/'+this.userConn)
+    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.persona_get = datav;
           // console.log(this.persona_get);
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -127,16 +127,16 @@ export class DeudoresEditComponent implements OnInit {
   }
 
   onFocus() {
-  console.log('El input ha obtenido el foco');
+    console.log('El input ha obtenido el foco');
   }
-  
-  onLeave(event: any){
+
+  onLeave(event: any) {
     const inputValue = event.target.value;
     let numero = Number(inputValue);
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.persona_get.some(objeto => objeto.codigo === numero);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -150,17 +150,17 @@ export class DeudoresEditComponent implements OnInit {
     console.log('Input perdió el foco', numero);
   }
 
-  getPersonaID(id){
+  getPersonaID(id) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
-    return this.api.getAll('/pers_plan/mant/pepersona/'+this.userConn+"/"+id)
+    return this.api.getAll('/pers_plan/mant/pepersona/' + this.userConn + "/" + id)
       .subscribe({
         next: (datav) => {
           this.persona_get_id = datav;
           console.log(this.persona_get_id);
 
-          this.persona_get_catalogo.descrip = this.persona_get_id.nombre1+" "+ this.persona_get_id.nombre2+" "+this.persona_get_id.apellido1+" "+this.persona_get_id.apellido2;
+          this.persona_get_catalogo.descrip = this.persona_get_id.nombre1 + " " + this.persona_get_id.nombre2 + " " + this.persona_get_id.apellido1 + " " + this.persona_get_id.apellido2;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -173,7 +173,7 @@ export class DeudoresEditComponent implements OnInit {
       height: 'auto',
     });
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }

@@ -15,70 +15,70 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RubroEditComponent implements OnInit {
 
- FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  rubro:any=[];
-  moneda:any=[];
-  empresa:any=[];
-  userConn:any;
+  dataform: any = '';
+  rubro: any = [];
+  moneda: any = [];
+  empresa: any = [];
+  userConn: any;
   userLogueado: any = [];
   dataRubroEdit_get: any = [];
 
-  public ventana="rubro-create"
-  public detalle="rubro-detalle";
-  public tipo="transaccion-rubro-POST";
-  
+  public ventana = "rubro-create"
+  public detalle = "rubro-detalle";
+  public tipo = "transaccion-rubro-POST";
+
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<RubroEditComponent>, public _snackBar: MatSnackBar,
-    public log_module:LogService, private toastr: ToastrService,  @Inject(MAT_DIALOG_DATA) public dataRubroEdit: any){
+    private api: ApiService, public dialogRef: MatDialogRef<RubroEditComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public dataRubroEdit: any) {
 
     this.dataRubroEdit_get = this.dataRubroEdit.dataRubroEdit;
     this.FormularioData = this.createForm();
-  } 
+  }
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     console.log(this.userLogueado);
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataRubroEdit_get.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /venta/mant/verubro/";
-    
-    return this.api.update("/venta/mant/verubro/"+this.userConn+"/"+this.dataRubroEdit_get.codigo, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/mant/verubro/";
+
+    return this.api.update("/venta/mant/verubro/" + this.userConn + "/" + this.dataRubroEdit_get.codigo, data)
       .subscribe({
         next: (datav) => {
           this.rubro = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
-          location.reload();      
+          location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
 
@@ -87,22 +87,22 @@ export class RubroEditComponent implements OnInit {
       })
   }
 
-  getAllEmpresa(user_conn){
+  getAllEmpresa(user_conn) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/'+user_conn)
+    return this.api.getAll('/seg_adm/mant/adempresa/' + user_conn)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
           //console.log('data', datav);
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }

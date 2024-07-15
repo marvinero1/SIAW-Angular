@@ -141,7 +141,7 @@ export class LugaresComponent implements OnInit, AfterViewInit {
           this.lugar_save = datav;
 
           console.log('data', datav);
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
@@ -201,7 +201,7 @@ export class LugaresComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.lugar_save = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
@@ -232,7 +232,7 @@ export class LugaresComponent implements OnInit, AfterViewInit {
         return this.api.delete('/venta/mant/velugar/' + this.userConn + "/" + this.lugar_get.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               this.limpiar();

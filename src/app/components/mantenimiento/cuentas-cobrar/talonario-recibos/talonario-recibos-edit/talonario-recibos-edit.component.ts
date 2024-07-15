@@ -135,7 +135,7 @@ export class TalonarioRecibosEditComponent implements OnInit {
         next: (datav) => {
           this.talon = datav;
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },

@@ -15,25 +15,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class UnidadnegocioCreateComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  dpto:any=[];
+  dataform: any = '';
+  dpto: any = [];
   usuario_logueado;
 
-  public ventana="unidadnegocio-create"
-	public detalle="unidadnegocio-create";
-	public tipo="transaccion-unidadnegocio-POST";
+  public ventana = "unidadnegocio-create"
+  public detalle = "unidadnegocio-create";
+  public tipo = "transaccion-unidadnegocio-POST";
 
-  constructor(private _formBuilder: FormBuilder,  private datePipe: DatePipe,  private spinner: NgxSpinnerService, public log_module:LogService,
-    private api:ApiService, public dialogRef: MatDialogRef<UnidadnegocioCreateComponent>, public _snackBar: MatSnackBar,
-    private toastr: ToastrService,){
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService, public log_module: LogService,
+    private api: ApiService, public dialogRef: MatDialogRef<UnidadnegocioCreateComponent>, public _snackBar: MatSnackBar,
+    private toastr: ToastrService,) {
     this.FormularioData = this.createForm();
   }
 
-  
-  ngOnInit(){
+
+  ngOnInit() {
   }
 
   createForm(): FormGroup {
@@ -41,26 +41,26 @@ export class UnidadnegocioCreateComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataform.codigo,Validators.compose([Validators.required])],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:- /adunidad";
-    return this.api.create("/seg_adm/mant/adunidad/"+user_conn, data)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /adunidad";
+    return this.api.create("/seg_adm/mant/adunidad/" + user_conn, data)
       .subscribe({
         next: (datav) => {
-          this.log_module.guardarLog(this.ventana,this.detalle,this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.dpto = datav;
           console.log('data', datav);
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
@@ -69,19 +69,19 @@ export class UnidadnegocioCreateComponent implements OnInit {
             duration: 3000,
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
-    }
+  }
 
-    onNoClick(): void {
-      this.dialogRef.close();
-    }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

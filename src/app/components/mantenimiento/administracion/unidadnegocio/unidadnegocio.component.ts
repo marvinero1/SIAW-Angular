@@ -85,7 +85,7 @@ export class UnidadnegocioComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/adunidad/' + this.userConn + '/' + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.toastr.success('! SE ELIMINO EXITOSAMENTE !');
               this.spinner.show();
               setTimeout(() => {

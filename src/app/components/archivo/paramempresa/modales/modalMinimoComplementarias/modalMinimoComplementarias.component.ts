@@ -15,33 +15,33 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class ModalMinimoComplementariasComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  dataform:any="";
-  userConn:any;
-  BD_storage:any;
+  FormularioData: FormGroup;
+  dataform: any = "";
+  userConn: any;
+  BD_storage: any;
 
-  dataEmpresa:any=[];
-  dataparametros_complementario:any=[];
-  tarifa:any=[];
-  moneda:any=[];
-  minimo_complementario:any=[];
+  dataEmpresa: any = [];
+  dataparametros_complementario: any = [];
+  tarifa: any = [];
+  moneda: any = [];
+  minimo_complementario: any = [];
 
-  displayedColumns = ['tarifa','sin_desct','monto','moneda','codempresa','accion'];
+  displayedColumns = ['tarifa', 'sin_desct', 'monto', 'moneda', 'codempresa', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  public ventana="minimocomplemen-create"
-  public detalle="minimocomplemen-detalle";
-  public tipo="minimocomplemen-POST";
+  public ventana = "minimocomplemen-create"
+  public detalle = "minimocomplemen-detalle";
+  public tipo = "minimocomplemen-POST";
 
-  constructor(public dialogRef: MatDialogRef<ModalMinimoComplementariasComponent>, private api:ApiService, private spinner: NgxSpinnerService,
-    @Inject(MAT_DIALOG_DATA) public dataEmpresaParametros: any, public _snackBar: MatSnackBar,public dialog: MatDialog,
-    private _formBuilder: FormBuilder, public log_module:LogService){
-      this.FormularioData = this.createForm();
+  constructor(public dialogRef: MatDialogRef<ModalMinimoComplementariasComponent>, private api: ApiService, private spinner: NgxSpinnerService,
+    @Inject(MAT_DIALOG_DATA) public dataEmpresaParametros: any, public _snackBar: MatSnackBar, public dialog: MatDialog,
+    private _formBuilder: FormBuilder, public log_module: LogService) {
+    this.FormularioData = this.createForm();
 
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-      this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
   }
 
@@ -54,80 +54,80 @@ export class ModalMinimoComplementariasComponent implements OnInit {
     this.getAllmoneda(this.userConn);
 
     // console.log(this.dataEmpresa);
-  } 
+  }
 
-  createForm(): FormGroup{      
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codempresa: [this.dataEmpresaParametros.dataEmpresaParametros],
-      sindesc:[this.dataform.sindesc, Validators.compose([Validators.required])],
+      sindesc: [this.dataform.sindesc, Validators.compose([Validators.required])],
       codtarifa: [this.dataform.codtarifa, Validators.compose([Validators.required])],
       monto: [this.dataform.monto, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
     });
   }
 
-  getAllintarifa(userConn){
-    let errorMessage:string;
+  getAllintarifa(userConn) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -- /inventario/mant/intarifa";
-    return this.api.getAll('/inventario/mant/intarifa/'+userConn)
+    return this.api.getAll('/inventario/mant/intarifa/' + userConn)
       .subscribe({
         next: (datav) => {
           this.tarifa = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllmoneda(userConn){
-    let errorMessage:string;
+  getAllmoneda(userConn) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/admoneda/'+userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getbyCodigoParametros(userConn, bd){
-    let errorMessage:string;
+  getbyCodigoParametros(userConn, bd) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     // return this.api.getAll('/seg_adm/mant/getParametroMinimoComplementarias/'+this.dataEmpresaParametros.dataEmpresaParametros)
-    return this.api.getAll('/seg_adm/mant/adparametros_complementarias/'+userConn+"/"+bd.bd)  
+    return this.api.getAll('/seg_adm/mant/adparametros_complementarias/' + userConn + "/" + bd.bd)
       .subscribe({
         next: (datav) => {
           this.dataparametros_complementario = datav;
           // console.log('data', datav);
           this.dataSource = new MatTableDataSource(this.dataparametros_complementario);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /serol";
-     console.log(data);
-    
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /serol";
+    console.log(data);
+
     return this.api.create("/seg_adm/mant/adparametrosComplementarias", data)
       .subscribe({
         next: (datav) => {
           this.minimo_complementario = datav;
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
-           console.log('data', datav);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+          console.log('data', datav);
           this.spinner.show();
 
           setTimeout(() => {
@@ -138,41 +138,41 @@ export class ModalMinimoComplementariasComponent implements OnInit {
             duration: 3000,
           });
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data:{dataUsuarioEdit:element},
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result:Boolean)=>{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
       // console.log(result);
-      if(result) {
-        return this.api.delete('/seg_adm/mant/adparametrosComplementarias/'+ element.codigo)
-        .subscribe({
-          next: () => {
-            this.spinner.show();
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1000);
-            
-            this.getbyCodigoParametros(this.userConn, this.BD_storage);
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+      if (result) {
+        return this.api.delete('/seg_adm/mant/adparametrosComplementarias/' + element.codigo)
+          .subscribe({
+            next: () => {
+              this.spinner.show();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+
+              this.getbyCodigoParametros(this.userConn, this.BD_storage);
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });

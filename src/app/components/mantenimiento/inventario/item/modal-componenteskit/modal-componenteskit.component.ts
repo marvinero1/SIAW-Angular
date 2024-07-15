@@ -15,35 +15,35 @@ import { LogService } from '@services/log-service.service';
 })
 export class ModalComponenteskitComponent implements OnInit {
 
-  FormularioData:FormGroup;
-  dataform:any='';
-  dataSaldoCubrir:any=[];
-  item_modal:any=[];
-  item_inkit:any=[];
-  item:any=[];
-  userConn:any;
+  FormularioData: FormGroup;
+  dataform: any = '';
+  dataSaldoCubrir: any = [];
+  item_modal: any = [];
+  item_inkit: any = [];
+  item: any = [];
+  userConn: any;
 
-  displayedColumns = ['item','descripcion','medida','unidad','accion'];
+  displayedColumns = ['item', 'descripcion', 'medida', 'unidad', 'accion'];
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
 
-  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalComponenteskitComponent>, 
-    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api:ApiService, 
-    public _snackBar: MatSnackBar,public dialog: MatDialog, public log_module:LogService){
+  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalComponenteskitComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api: ApiService,
+    public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module: LogService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllinKit();
     this.getAllitem();
   }
 
-  createForm(): FormGroup{ 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       codigo: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
       item: [this.dataform.item, Validators.compose([Validators.required])],
@@ -52,56 +52,56 @@ export class ModalComponenteskitComponent implements OnInit {
     });
   }
 
-  submitData(){
-    let ventana="kitComponentes-create"
-    let detalle="kitComponentes-detalle";
-    let tipo="transaccion-kitComponentes-POST";
+  submitData() {
+    let ventana = "kitComponentes-create"
+    let detalle = "kitComponentes-detalle";
+    let tipo = "transaccion-kitComponentes-POST";
 
     let data = this.FormularioData.value;
     // console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /inventario/mant/inctrlstock  POST";
-    return this.api.create("/inventario/mant/inkit/"+this.userConn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/inctrlstock  POST";
+    return this.api.create("/inventario/mant/inkit/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.dataSaldoCubrir = datav;
-          
+
           this.onNoClick();
-          this.log_module.guardarLog(ventana,detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllitem(){
-    let errorMessage:string;
+  getAllitem() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/catalogo/'+this.userConn)
+    return this.api.getAll('/inventario/mant/initem/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.item = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinKit(){
-    let errorMessage:string;
+  getAllinKit() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getById('/inventario/mant/inkit/initem_inkit/'+this.userConn+"/"+this.dataItem.dataItem.codigo)
+    return this.api.getById('/inventario/mant/inkit/initem_inkit/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
       .subscribe({
         next: (datav) => {
           this.item_inkit = datav;
@@ -111,42 +111,42 @@ export class ModalComponenteskitComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let ventana="kitComponentes-delete"
-    let detalle="kitComponentes-detalle";
-    let tipo="transaccion-kitComponentes-DELETE";
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let ventana = "kitComponentes-delete"
+    let detalle = "kitComponentes-detalle";
+    let tipo = "transaccion-kitComponentes-DELETE";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      data:{dataUsuarioEdit:element},
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/inkit/'+this.userConn+"/"+this.dataItem.dataItem.codigo+'/'+element.item)
-        .subscribe({
-          next: ()=>{
-            this.log_module.guardarLog(ventana,detalle, tipo);
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-            });
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/inkit/' + this.userConn + "/" + this.dataItem.dataItem.codigo + '/' + element.item)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+              });
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });

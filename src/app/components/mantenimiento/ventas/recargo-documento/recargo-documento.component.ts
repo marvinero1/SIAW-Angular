@@ -136,7 +136,7 @@ export class RecargoDocumentoComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.recargo = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
           this.spinner.show();
 
@@ -166,7 +166,7 @@ export class RecargoDocumentoComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.recargo = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
           this.toastr.success('Guardado con Exito! 🎉');
           this.spinner.show();
@@ -207,7 +207,7 @@ export class RecargoDocumentoComponent implements OnInit {
         return this.api.delete('/venta/mant/verecargo/' + this.userConn + "/" + codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               setTimeout(() => {

@@ -99,7 +99,7 @@ export class ObservacionesHojaRutaComponent implements OnInit {
         return this.api.delete('/venta/mant/veobs_ruta/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

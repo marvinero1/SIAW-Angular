@@ -97,7 +97,7 @@ export class DescuentosEspecialesComponent implements OnInit {
         next: (datav) => {
           this.save_descuento = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
           location.reload();
@@ -122,7 +122,7 @@ export class DescuentosEspecialesComponent implements OnInit {
           this.save_descuento = datav;
           // console.log(this.save_descuento);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
           location.reload();
@@ -150,7 +150,7 @@ export class DescuentosEspecialesComponent implements OnInit {
         return this.api.delete('/venta/mant/vedescuento/' + this.userConn + "/" + this.descuento.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

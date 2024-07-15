@@ -259,7 +259,7 @@ export class PrecioItemComponent implements OnInit {
           if (data) {
             this.tarifa_save = datav;
             this.getPrecio();
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
             this.toastr.success('Guardado con Exito! 🎉');
           } else {
             this.toastr.error('! ERROR AL GUARDAR !');

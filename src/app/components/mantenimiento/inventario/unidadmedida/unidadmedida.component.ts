@@ -94,7 +94,7 @@ export class UnidadmedidaComponent implements OnInit {
         return this.api.delete('/inventario/mant/inudemed/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.toastr.error('! No Se Guardo Correctamente !');
 
               location.reload();

@@ -183,7 +183,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
         return this.api.delete('/inventario/oper/docininvconsol/deleteDocInvFisc/' + this.userConn + "/" + codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();
@@ -415,7 +415,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
             next: (datav) => {
               console.log(datav);
 
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
               this.toastr.success(datav.resp);
               this.estadoInventario(this.cabecera.codigo);
             },
@@ -461,7 +461,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
           .subscribe({
             next: (datav) => {
               console.log(datav);
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
               this.toastr.success(datav.resp);
               this.estadoInventario(this.cabecera.codigo);
             },

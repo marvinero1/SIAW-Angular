@@ -121,7 +121,7 @@ export class IdProformaUsuarioComponent implements OnInit {
           this.guardar_proforma = datav;
           console.log(this.guardar_proforma);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           this.toastr.success(this.guardar_proforma.usuario_idasignado);
           this.getAllIdProformaUsuario();
@@ -154,7 +154,7 @@ export class IdProformaUsuarioComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/adusuario_idproforma/' + this.userConn + "/" + element.id)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

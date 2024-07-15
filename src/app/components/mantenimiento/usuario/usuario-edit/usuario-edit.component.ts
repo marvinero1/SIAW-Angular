@@ -107,7 +107,7 @@ export class UsuarioEditComponent implements OnInit {
     return this.api.update('/seg_adm/mant/adusuario/' + data.login, data)
       .subscribe({
         next: (datav) => {
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.serol = datav;
           // console.log('data', datav);
           this.onNoClick();

@@ -14,26 +14,26 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class RolesEditComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  role_edit:any=[];
+  dataform: any = '';
+  role_edit: any = [];
   rol: any = [];
   role_edit_codigo: any;
-  userConn:any=[];
+  userConn: any = [];
 
-  public ventana="rol-edit"
-  public detalle="rol-detalle";
-  public tipo="transaccion-rol-PUT";
+  public ventana = "rol-edit"
+  public detalle = "rol-detalle";
+  public tipo = "transaccion-rol-PUT";
 
-  constructor(private _formBuilder: FormBuilder,  private datePipe: DatePipe,  private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<RolesEditComponent>, public _snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public dataRolEdit: any, public log_module:LogService){
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
+    private api: ApiService, public dialogRef: MatDialogRef<RolesEditComponent>, public _snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public dataRolEdit: any, public log_module: LogService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-     this.role_edit_codigo = this.dataRolEdit.dataRolEdit.codigo;
+    this.role_edit_codigo = this.dataRolEdit.dataRolEdit.codigo;
 
   }
 
@@ -46,7 +46,7 @@ export class RolesEditComponent implements OnInit {
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.role_edit_codigo],
@@ -58,23 +58,23 @@ export class RolesEditComponent implements OnInit {
       con_letras: [this.dataform.con_letras],
       con_numeros: [this.dataform.con_numeros],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.userConn],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /seg_adm/mant/serol/";
-    return this.api.update("/seg_adm/mant/serol/"+this.userConn+"/"+this.role_edit.codigo, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/serol/";
+    return this.api.update("/seg_adm/mant/serol/" + this.userConn + "/" + this.role_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.rol = datav;
           //  console.log('data', datav);
 
           this.onNoClick();
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
             panelClass: ['coorporativo-snackbar', 'login-snackbar'],
@@ -84,11 +84,11 @@ export class RolesEditComponent implements OnInit {
           setTimeout(() => {
             this.spinner.hide();
           }, 2000);
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

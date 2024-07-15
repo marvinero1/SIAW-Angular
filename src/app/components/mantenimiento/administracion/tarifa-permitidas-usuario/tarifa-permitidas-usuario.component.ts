@@ -109,7 +109,7 @@ export class TarifaPermitidasUsuarioComponent implements OnInit {
           this.guardar_tarifa = datav;
           console.log(this.guardar_tarifa);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success("Guardado Exitosamente");
           location.reload();
         },
@@ -209,7 +209,7 @@ export class TarifaPermitidasUsuarioComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/adusuario_tarifa/' + this.userConn + "/" + element.id)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

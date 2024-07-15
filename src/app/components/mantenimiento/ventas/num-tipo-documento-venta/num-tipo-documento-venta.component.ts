@@ -108,7 +108,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
           this.doc_save = datav;
           console.log('data', datav);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
@@ -148,7 +148,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
           this.doc_save = datav;
           console.log('data', datav);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
@@ -199,7 +199,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
         return this.api.delete('/venta/mant/venumeracion/' + this.userConn + "/" + this.documento_get_catalogo_id)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               this.limpiar();

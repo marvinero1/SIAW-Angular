@@ -15,25 +15,25 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class BancoEditComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
+  dataform: any = '';
   userConn: any;
-  codigo_banco:any;
+  codigo_banco: any;
   userLogueado: any = [];
   banco_post: any = [];
   banco_modat_data: any = [];
   inputValue: number | null = null;
 
-  public ventana="Banco-create"
-  public detalle="Banco-detalle";
-  public tipo="transaccion-Banco-PUT";
+  public ventana = "Banco-create"
+  public detalle = "Banco-detalle";
+  public tipo = "transaccion-Banco-PUT";
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<BancoEditComponent>, public _snackBar: MatSnackBar,
+    private api: ApiService, public dialogRef: MatDialogRef<BancoEditComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public datanumRetBancEdit: any) {
-    
+
     this.banco_modat_data = datanumRetBancEdit.datanumRetBancEdit;
     this.codigo_banco = this.banco_modat_data.codigo
 
@@ -41,17 +41,17 @@ export class BancoEditComponent implements OnInit {
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
-  } 
+  }
 
   ngOnInit() {
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.codigo_banco],
@@ -60,40 +60,40 @@ export class BancoEditComponent implements OnInit {
       nit: [this.dataform.nit, Validators.pattern(/^-?\d+$/)],
 
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /fondos/mant/fntiporetiro/";
-    
-    return this.api.update("/ctsxcob/mant/cobanco/"+this.userConn+"/"+this.codigo_banco, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /fondos/mant/fntiporetiro/";
+
+    return this.api.update("/ctsxcob/mant/cobanco/" + this.userConn + "/" + this.codigo_banco, data)
       .subscribe({
         next: (datav) => {
           this.banco_post = datav;
 
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Editado con Exito! 🎉');
 
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }
-  
+
   onInputChange(value: string) {
     // Validar y formatear el valor ingresado
     const parsedValue = parseFloat(value);

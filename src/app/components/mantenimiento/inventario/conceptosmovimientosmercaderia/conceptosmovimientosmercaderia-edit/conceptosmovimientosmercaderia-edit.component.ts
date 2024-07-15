@@ -80,7 +80,7 @@ export class ConceptosmovimientosmercaderiaEditComponent implements OnInit {
         next: (datav) => {
           this.numTransf = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');

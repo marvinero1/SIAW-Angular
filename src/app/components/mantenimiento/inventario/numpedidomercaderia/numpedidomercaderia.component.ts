@@ -109,7 +109,7 @@ export class NumpedidomercaderiaComponent implements OnInit {
           .subscribe({
             next: () => {
               this.toastr.success('! Eliminado Exitosamente !');
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
               location.reload();
             },

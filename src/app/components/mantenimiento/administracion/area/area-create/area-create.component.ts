@@ -71,7 +71,7 @@ export class AreaCreateComponent implements OnInit {
         next: (datav) => {
           this.area = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');

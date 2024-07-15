@@ -126,7 +126,7 @@ export class PuntoVentaComponent implements OnInit, AfterContentInit {
 
           console.log('data', datav);
           if (this.punto_venta_save.resp == 204) {
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
             this.spinner.show();
             setTimeout(() => {
               this.spinner.hide();
@@ -161,7 +161,7 @@ export class PuntoVentaComponent implements OnInit, AfterContentInit {
       .subscribe({
         next: (datav) => {
           this.punto_venta_save = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           location.reload();
         },
@@ -192,7 +192,7 @@ export class PuntoVentaComponent implements OnInit, AfterContentInit {
         return this.api.delete('/venta/mant/veptoventa/' + this.userConn + "/" + this.cod_pto_venta.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

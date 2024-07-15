@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -14,25 +14,25 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./almacen-create.component.scss']
 })
 export class AlmacenCreateComponent {
- 
-  FormularioData:FormGroup;
+
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
   isLinear = true;
-  dataform:any='';
-  userConn:any;
-  usuarioLogueado:any;
-  almacen=[];
-  planporcen=[];
-  adarea=[];
-  moneda=[];
-  fncuenta=[];
+  dataform: any = '';
+  userConn: any;
+  usuarioLogueado: any;
+  almacen = [];
+  planporcen = [];
+  adarea = [];
+  moneda = [];
+  fncuenta = [];
 
-  public ventana="almacen-create"
-	public detalle="almacen-detalle";
-	public tipo="transaccion-almacen-CREATE";
+  public ventana = "almacen-create"
+  public detalle = "almacen-detalle";
+  public tipo = "transaccion-almacen-CREATE";
 
-  constructor(private _formBuilder: FormBuilder, private api:ApiService, private datePipe: DatePipe, public _snackBar: MatSnackBar,
+  constructor(private _formBuilder: FormBuilder, private api: ApiService, private datePipe: DatePipe, public _snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AlmacenCreateComponent>, private spinner: NgxSpinnerService, private router: Router,
     public log_module: LogService, private toastr: ToastrService,) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
@@ -50,18 +50,18 @@ export class AlmacenCreateComponent {
     this.getAllmoneda();
     this.getAllfncuenta();
   }
-  
+
   @ViewChild('validEmail') validEmail;
 
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-  
-      codigo: [this.dataform.codigo,Validators.compose([Validators.required])],
-      descripcion: [this.dataform.descripcion,Validators.compose([Validators.required])],
+
+      codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
+      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       direccion: [this.dataform.direccion, Validators.compose([Validators.required])],
       telefono: [this.dataform.telefono, Validators.compose([Validators.required])],
       email: [this.dataform.email, Validators.compose([Validators.required])],
@@ -75,7 +75,7 @@ export class AlmacenCreateComponent {
       codmoneda_min_solurgente: [this.dataform.codmoneda_min_solurgente],
       latitud: [this.dataform.latitud],
       longitud: [this.dataform.longitud],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       actividad: [this.dataform.actividad],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuarioLogueado],
@@ -101,18 +101,18 @@ export class AlmacenCreateComponent {
 
 
 
-  submitData(){
+  submitData() {
     const data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:- /inventario/mant/inalmacen/";
-    return this.api.create("/inventario/mant/inalmacen/"+this.userConn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/inalmacen/";
+    return this.api.create("/inventario/mant/inalmacen/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.almacen = datav;
 
           console.log('data', datav);
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
@@ -123,72 +123,72 @@ export class AlmacenCreateComponent {
           });
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAlladArea(){
-    let errorMessage:string;
+  getAlladArea() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adarea/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adarea/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.adarea = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllplanporcen(){
-    let errorMessage:string;
+  getAllplanporcen() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/peplanporcen/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/peplanporcen/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.planporcen = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllmoneda(){
-    let errorMessage:string;
+  getAllmoneda() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/admoneda/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllfncuenta(){
-    let errorMessage:string;
+  getAllfncuenta() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/fondos/mant/fncuenta/'+this.userConn)
+    return this.api.getAll('/fondos/mant/fncuenta/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.fncuenta = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

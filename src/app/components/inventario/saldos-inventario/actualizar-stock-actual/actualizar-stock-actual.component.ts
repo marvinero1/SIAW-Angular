@@ -77,7 +77,7 @@ export class ActualizarStockActualComponent implements OnInit {
         next: (datav) => {
           this.inventario_save = datav;
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('Guardado con Exito! 🎉');
 
           location.reload();

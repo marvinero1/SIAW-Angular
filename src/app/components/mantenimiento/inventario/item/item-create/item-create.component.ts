@@ -14,33 +14,33 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./item-create.component.scss'],
 })
 export class ItemCreateComponent implements OnInit {
-  
-  FormularioData:FormGroup;
+
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  rosca:any=[];
-  inudemed:any=[];
-  interminacion:any=[];
-  inresistencia:any=[];
-  inlinea:any=[];
-  initem_create:any=[];
-  userConn:any;
-  usuarioLogueado:any;
+  dataform: any = '';
+  rosca: any = [];
+  inudemed: any = [];
+  interminacion: any = [];
+  inresistencia: any = [];
+  inlinea: any = [];
+  initem_create: any = [];
+  userConn: any;
+  usuarioLogueado: any;
 
-  public ventana="initem-create"
-  public detalle="initem-detalle";
-  public tipo="transaccion-initem-POST";
+  public ventana = "initem-create"
+  public detalle = "initem-detalle";
+  public tipo = "transaccion-initem-POST";
 
-  constructor(private _formBuilder: FormBuilder,  private datePipe: DatePipe,  private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<ItemCreateComponent>, public _snackBar: MatSnackBar,
-    public log_module:LogService,private toastr: ToastrService,){
-      
-  this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
+    private api: ApiService, public dialogRef: MatDialogRef<ItemCreateComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, private toastr: ToastrService,) {
 
-  this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
-  this.FormularioData = this.createForm();
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.FormularioData = this.createForm();
   }
 
   ngOnInit(): void {
@@ -54,7 +54,7 @@ export class ItemCreateComponent implements OnInit {
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
@@ -89,29 +89,29 @@ export class ItemCreateComponent implements OnInit {
       porcen_saldo_restringido: [0],
       codproducto_sin: [""],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuarioLogueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:--  /inventario/mant/initem  POST";
-    return this.api.create("/inventario/mant/initem/"+this.userConn, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/initem  POST";
+    return this.api.create("/inventario/mant/initem/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.initem_create = datav;
 
           console.log('data', datav);
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -119,16 +119,16 @@ export class ItemCreateComponent implements OnInit {
       })
   }
 
-  getAllinudemed(){
-    let errorMessage:string;
+  getAllinudemed() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inudemed";
-    return this.api.getAll('/inventario/mant/inudemed/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inudemed/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inudemed = datav;
-          console.log('UnidadMedida: ',  this.inudemed);
+          console.log('UnidadMedida: ', this.inudemed);
         },
-                
+
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -136,68 +136,68 @@ export class ItemCreateComponent implements OnInit {
       })
   }
 
-  getAllRosca(){
-    let errorMessage:string;
+  getAllRosca() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inrosca";
-    return this.api.getAll('/inventario/mant/inrosca/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inrosca/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.rosca = datav;
           // console.log('roscas', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinTerminacion(){
-    let errorMessage:string;
+  getAllinTerminacion() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/interminacion";
-    return this.api.getAll('/inventario/mant/interminacion/'+this.userConn)
+    return this.api.getAll('/inventario/mant/interminacion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.interminacion = datav;
           // console.log('roscas', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinReistencia(){
-    let errorMessage:string;
+  getAllinReistencia() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inresistencia";
-    return this.api.getAll('/inventario/mant/inresistencia/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inresistencia/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inresistencia = datav;
           // console.log('roscas', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinLinea(){
-    let errorMessage:string;
+  getAllinLinea() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inresistencia";
-    return this.api.getAll('/inventario/mant/inlinea/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inlinea/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inlinea = datav;
           // console.log('roscas', datav);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }

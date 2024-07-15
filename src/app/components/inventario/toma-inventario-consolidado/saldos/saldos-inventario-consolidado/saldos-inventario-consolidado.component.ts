@@ -19,11 +19,11 @@ import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/alma
 })
 export class SaldosInventarioConsolidadoComponent implements OnInit {
 
-  FormularioDataEdit:FormGroup;
+  FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
   dataform: any;
-  
+
   primera_ventana = true;
   segunda_ventana = false;
   cod_almacen_cliente: any = [];
@@ -37,15 +37,15 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
-  public ventana="saldo-inventa-update"
-  public detalle="saldo-inventa-update";
+
+  public ventana = "saldo-inventa-update"
+  public detalle = "saldo-inventa-update";
   public tipo = "saldo-inventa-PUT";
-  
+
   constructor(public dialogRef: MatDialogRef<SaldosInventarioConsolidadoComponent>, public almacenservice: ServicioalmacenService,
     public dialog: MatDialog, private _formBuilder: FormBuilder, public log_module: LogService, private api: ApiService,
     private toastr: ToastrService, private datePipe: DatePipe, @Inject(MAT_DIALOG_DATA) public dataCabecera: any,
-    private spinner: NgxSpinnerService,public tomaInventario:TomaInventarioConsolidadoComponent, private refreshItemSer: ServiceRefreshItemsService){    
+    private spinner: NgxSpinnerService, public tomaInventario: TomaInventarioConsolidadoComponent, private refreshItemSer: ServiceRefreshItemsService) {
 
     console.log(dataCabecera);
     this.FormularioDataEdit = this.createForm();
@@ -53,8 +53,8 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
 
   ngOnInit() {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-       
-    this.almacenservice.disparadorDeAlmacenes.subscribe(data =>{
+
+    this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
       this.cod_almacen_cliente = data.almacen;
     });
@@ -65,7 +65,7 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataCabecera.dataCabecera.codigo],
@@ -77,19 +77,19 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
       codpersona: [this.dataCabecera.dataCabecera.codpersona],
       codalmacen: [this.dataCabecera.dataCabecera.codalmacen],
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
-      abierto:true,
+      abierto: true,
     });
-  } 
-  
-  generarSaldoFisico(){
+  }
+
+  generarSaldoFisico() {
     let data = this.FormularioDataEdit.value;
- 
+
     console.log(data);
- 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/oper/prgsaldoinv Update";
-    return this.api.update('/inventario/oper/prgsaldoinv/'+this.userConn+"/"+this.dataCabecera.dataCabecera.codigo+"/"+this.cod_almacen_cliente.codigo, data)
+
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgsaldoinv Update";
+    return this.api.update('/inventario/oper/prgsaldoinv/' + this.userConn + "/" + this.dataCabecera.dataCabecera.codigo + "/" + this.cod_almacen_cliente.codigo, data)
       .subscribe({
         next: (datav) => {
           this.saldo_inventario = datav;
@@ -99,13 +99,13 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SALDO EXITOSO !');
-          
+
           this.close();
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           this.toastr.error('! NO SE SACO LOS SALDOS !');
           console.log(err, this.errorMessage);
         },
@@ -117,11 +117,11 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{almacen:"almacen"}
+      data: { almacen: "almacen" }
     });
   }
 
-  confirmacion(){ 
+  confirmacion() {
     this.segunda_ventana = true
 
     this.primera_ventana = false;

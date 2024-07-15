@@ -150,7 +150,7 @@ export class PeriodosSistemaComponent implements OnInit {
           this.save_periods = datav;
           console.log(this.save_periods);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
 
           setTimeout(() => {
@@ -283,7 +283,7 @@ export class PeriodosSistemaComponent implements OnInit {
             this.periodo_save = datav;
 
             console.log('data', datav);
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
             this.spinner.show();
             setTimeout(() => {
               this.spinner.hide();
@@ -322,7 +322,7 @@ export class PeriodosSistemaComponent implements OnInit {
             this.periodo_save = datav;
             console.log('data', datav);
 
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
             this.spinner.show();
 
             setTimeout(() => {

@@ -137,7 +137,7 @@ export class LocalidadesComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/abmadlocalidad/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
 
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');
               location.reload();

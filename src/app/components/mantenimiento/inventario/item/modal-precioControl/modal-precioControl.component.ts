@@ -15,15 +15,15 @@ import { LogService } from '@services/log-service.service';
 })
 export class ModalPrecioControlComponent implements OnInit {
 
-  almacen:any=[];
-  precio_lista:any=[];
-  control_tarifa:any=[];
-  max_venta_item:any=[];
-  dataMaximoVentas:any=[];
-  dataform:any='';
-  userConn:any;
+  almacen: any = [];
+  precio_lista: any = [];
+  control_tarifa: any = [];
+  max_venta_item: any = [];
+  dataMaximoVentas: any = [];
+  dataform: any = '';
+  userConn: any;
 
-  displayedColumns = ['codtarifa_a','codtarifa_b','accion'];
+  displayedColumns = ['codtarifa_a', 'codtarifa_b', 'accion'];
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
@@ -32,21 +32,21 @@ export class ModalPrecioControlComponent implements OnInit {
   dataSourceWithPageSize = new MatTableDataSource();
   FormularioData: any;
 
-  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalPrecioControlComponent>, 
-  @Inject(MAT_DIALOG_DATA) public dataItem: any, private api:ApiService, 
-  public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module:LogService){
+  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalPrecioControlComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataItem: any, private api: ApiService,
+    public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module: LogService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     this.FormularioData = this.createForm();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllControlTarifa();
     this.getAllListaPrecio();
-    
+
   }
 
-  createForm(): FormGroup{ 
+  createForm(): FormGroup {
     return this._formBuilder.group({
       coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
       codtarifa_a: [this.dataform.codtarifa_a, Validators.compose([Validators.required])],
@@ -54,39 +54,39 @@ export class ModalPrecioControlComponent implements OnInit {
     });
   }
 
-  submitData(){
-    let ventana="PrecioControl-create"
-    let detalle="PrecioControl-detalle";
-    let tipo="transaccion-PrecioControl-POST";
+  submitData() {
+    let ventana = "PrecioControl-create"
+    let detalle = "PrecioControl-detalle";
+    let tipo = "transaccion-PrecioControl-POST";
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  /inventario/mant/inctrlstock  POST";
-    return this.api.create("/inventario/mant/initem_controltarifa/"+this.userConn, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/inctrlstock  POST";
+    return this.api.create("/inventario/mant/initem_controltarifa/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.dataMaximoVentas = datav;
 
           this.onNoClick();
-          this.log_module.guardarLog(ventana,detalle, tipo);
+          this.log_module.guardarLog(ventana, detalle, tipo, "", "");
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
           });
-          
+
           location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllControlTarifa(){
-    let errorMessage:string;
+  getAllControlTarifa() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/initem_controltarifa";
-    return this.api.getAll('/inventario/mant/initem_controltarifa/'+this.userConn+"/"+this.dataItem.dataItem.codigo)
+    return this.api.getAll('/inventario/mant/initem_controltarifa/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
       .subscribe({
         next: (datav) => {
           this.control_tarifa = datav;
@@ -96,60 +96,60 @@ export class ModalPrecioControlComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllListaPrecio(){
-    let errorMessage:string;
+  getAllListaPrecio() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/intarifa";
-    return this.api.getAll('/inventario/mant/intarifa/'+this.userConn)
+    return this.api.getAll('/inventario/mant/intarifa/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.precio_lista = datav;
           // console.log(this.precio_lista);
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  eliminar(element): void{
-    let ventana="PrecioControl-delete"
-    let detalle="PrecioControl-detalle";
-    let tipo="transaccion-PrecioControl-DELETE";
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:--  seg_adm/mant/adarea/ Delete";
+  eliminar(element): void {
+    let ventana = "PrecioControl-delete"
+    let detalle = "PrecioControl-detalle";
+    let tipo = "transaccion-PrecioControl-DELETE";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/initem_controltarifa/'+this.userConn+"/"+element.id)
-        .subscribe({
-          next: ()=>{
-            this.log_module.guardarLog(ventana,detalle, tipo);
-            this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-              duration: 3000,
-            });
-            location.reload();
-          },
-          error: (err: any) => { 
-            console.log(errorMessage);
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/initem_controltarifa/' + this.userConn + "/" + element.id)
+          .subscribe({
+            next: () => {
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
+              this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
+                duration: 3000,
+              });
+              location.reload();
+            },
+            error: (err: any) => {
+              console.log(errorMessage);
+            },
+            complete: () => { }
+          })
+      } else {
         alert("¡No se elimino!");
       }
     });

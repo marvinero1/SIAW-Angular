@@ -133,7 +133,7 @@ export class AlmacenComponent implements OnInit {
           this.almacen = datav;
           console.log('data', datav);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('! SE GUARDO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
@@ -161,7 +161,7 @@ export class AlmacenComponent implements OnInit {
           this.almacen = datav;
           console.log('data', datav);
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           this._snackBar.open('! SE EDITO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
@@ -302,7 +302,7 @@ export class AlmacenComponent implements OnInit {
         return this.api.delete('/inventario/mant/inalmacen/' + this.userConn + "/" + element.codigo)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+              this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
               this.spinner.show();
               setTimeout(() => {
                 this.spinner.hide();

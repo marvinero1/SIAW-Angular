@@ -104,7 +104,7 @@ export class ModalPreciosFacturacionComponent implements OnInit {
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this.getbyIdparametrosTarifas();
 
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
         },
 
         error: (err) => {

@@ -20,12 +20,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./reserva-almacenes.component.scss']
 })
 export class ReservaAlmacenesComponent implements OnInit {
-  
-  FormularioData: FormGroup;  
+
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  userConn: string; 
-  usuario: string; 
+  userConn: string;
+  usuario: string;
   usuario_logueado: string;
   dataform: any = "";
 
@@ -46,23 +46,23 @@ export class ReservaAlmacenesComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  nombre_ventana:string="abminalmacen_reserva.vb";
-  public ventana="Almacen Reserva"
-  public detalle="almacen-reserva";
+  nombre_ventana: string = "abminalmacen_reserva.vb";
+  public ventana = "Almacen Reserva"
+  public detalle = "almacen-reserva";
   public tipo = "transaccion-reserva-POST";
 
   constructor(public dialog: MatDialog, private api: ApiService, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public nombre_ventana_service: NombreVentanaService, public log_module: LogService, private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public cod_almacen_reserva: any, private _formBuilder: FormBuilder, public almacenservice: ServicioalmacenService,
     public dialogRef: MatDialogRef<ReservaAlmacenesComponent>) {
-    
+
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    
+
     this.FormularioData = this.createForm();
     this.almacen = cod_almacen_reserva.cod_almacen_reserva;
     this.almacen_codigo = cod_almacen_reserva.cod_almacen_reserva.codigo;
-    
+
     this.getAllReservas();
     this.getAlmacen();
   }
@@ -83,14 +83,14 @@ export class ReservaAlmacenesComponent implements OnInit {
     let a = Number(this.almacen_codigo);
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codalmacen: [this.dataform.codalmacen],
       codalmacen_reserva: [this.dataform.codalmacen_reserva, Validators.compose([Validators.required])],
-      
+
       horareg: [hora_actual_complete],
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [this.usuario],
     });
   }
@@ -98,27 +98,27 @@ export class ReservaAlmacenesComponent implements OnInit {
   submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /inventario/mant/inalmacen_reserva/";
-    return this.api.create("/inventario/mant/inalmacen_reserva/"+this.userConn, data)
+
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/inalmacen_reserva/";
+    return this.api.create("/inventario/mant/inalmacen_reserva/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.almacen = datav;
           console.log('data', datav);
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.getAllReservas();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
-      })    
+      })
   }
-  
-  getAllReservas(){
+
+  getAllReservas() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen_reserva/"
-    return this.api.getAll('/inventario/mant/inalmacen_reserva/'+this.userConn+"/"+this.almacen_codigo)
+    return this.api.getAll('/inventario/mant/inalmacen_reserva/' + this.userConn + "/" + this.almacen_codigo)
       .subscribe({
         next: (datav) => {
           this.reservas = datav;
@@ -134,55 +134,55 @@ export class ReservaAlmacenesComponent implements OnInit {
             this.spinner.hide();
           }, 1500);
         },
-    
-        error: (err: any) => { 
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-  
-  getAlmacen(){
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo2/"
-    return this.api.getAll('/inventario/mant/inalmacen/catalogo2/'+this.userConn)
-      .subscribe({
-        next: (datav) => {
-          this.agencia_get = datav;
-          console.log(this.agencia_get);
-        },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAlmacenID(id){
+  getAlmacen() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo2/"
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo2/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.agencia_get = datav;
+          console.log(this.agencia_get);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getAlmacenID(id) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/"
-    return this.api.getAll('/inventario/mant/inalmacen/'+this.userConn+"/"+id)
+    return this.api.getAll('/inventario/mant/inalmacen/' + this.userConn + "/" + id)
       .subscribe({
         next: (datav) => {
           this.agencia_get_id = datav;
           console.log(this.agencia_get_id);
           this.almacen_descripcion_catalogo = this.agencia_get_id.decripcion;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  onLeave(event: any){
+  onLeave(event: any) {
     const inputValue = event.target.value;
     let numero = Number(inputValue);
-      
+
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.agencia_get.some(objeto => objeto.codigo === numero);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -198,40 +198,40 @@ export class ReservaAlmacenesComponent implements OnInit {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
       height: 'auto',
-      data:{almacen:"almacen"}
+      data: { almacen: "almacen" }
     });
   }
-  
+
   eliminar(element) {
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /venta/mant/insolurgente_parametros/ Delete";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/insolurgente_parametros/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/inventario/mant/inalmacen_reserva/'+this.userConn+"/"+this.almacen_codigo+"/"+element.codigo)
-        .subscribe({
-          next: () => {            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            this.getAllReservas();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/inventario/mant/inalmacen_reserva/' + this.userConn + "/" + this.almacen_codigo + "/" + element.codigo)
+          .subscribe({
+            next: () => {
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.getAllReservas();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

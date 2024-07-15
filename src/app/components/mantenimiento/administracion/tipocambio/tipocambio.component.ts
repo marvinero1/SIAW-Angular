@@ -151,7 +151,7 @@ export class TipocambioComponent implements OnInit {
         return this.api.delete('/seg_adm/mant/adtipocambio/' + moneda + "/" + fecha_element_transform + "/" + codalmacen)
           .subscribe({
             next: () => {
-              this.log_module.guardarLog(ventana, detalle, tipo);
+              this.log_module.guardarLog(ventana, detalle, tipo, "", "");
               this.spinner.show();
               setTimeout(() => {
                 this.spinner.hide();

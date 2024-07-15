@@ -14,13 +14,13 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./tipos-credito-edit.component.scss']
 })
 export class TiposCreditoEditComponent implements OnInit {
-  
+
   FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  rubro:any=[];
-  moneda:any=[];
+  dataform: any = '';
+  rubro: any = [];
+  moneda: any = [];
   empresa: any = [];
   credito_edit: any = [];
   userConn: any;
@@ -29,14 +29,14 @@ export class TiposCreditoEditComponent implements OnInit {
   userLogueado: any = [];
   array_copy: any = [];
   inputValue: number | null = null;
-  
-  public ventana="tipos-credito-edit"
-  public detalle="tipos-credito-detalle";
-  public tipo="transaccion-tipos-credito-UPDATE";
-  
+
+  public ventana = "tipos-credito-edit"
+  public detalle = "tipos-credito-detalle";
+  public tipo = "transaccion-tipos-credito-UPDATE";
+
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private api:ApiService, public dialogRef: MatDialogRef<TiposCreditoEditComponent>, public _snackBar: MatSnackBar,
-    public log_module:LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public dataCreditoEdit: any){
+    private api: ApiService, public dialogRef: MatDialogRef<TiposCreditoEditComponent>, public _snackBar: MatSnackBar,
+    public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public dataCreditoEdit: any) {
 
     this.FormularioData = this.createForm();
 
@@ -44,21 +44,21 @@ export class TiposCreditoEditComponent implements OnInit {
     this.credito_edit_codigo = this.dataCreditoEdit.dataCreditoEdit.codigo;
     this.credito_edit_duracion = this.dataCreditoEdit.dataCreditoEdit.duracion;
     console.log(this.credito_edit);
-  } 
+  }
 
   ngOnInit(): void {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
   }
 
-  createForm(): FormGroup{
+  createForm(): FormGroup {
     this.credito_edit_codigo = this.dataCreditoEdit.dataCreditoEdit.codigo;
 
     let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-   
+
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: this.credito_edit_codigo,
@@ -66,47 +66,47 @@ export class TiposCreditoEditComponent implements OnInit {
       es_fijo: [this.dataform.es_fijo],
       duracion: [this.dataform.duracion, Validators.compose([Validators.required])],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [usuario_logueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:- /venta/mant/verubro/";
-    
-    return this.api.update("/venta/mant/vetipocredito/"+this.userConn+"/"+this.credito_edit.codigo, data)
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/mant/verubro/";
+
+    return this.api.update("/venta/mant/vetipocredito/" + this.userConn + "/" + this.credito_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.rubro = datav;
-          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-          
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
+
           this.onNoClick();
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
-          location.reload();      
+          location.reload();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
   }
-  
-  onInputChange(value: string){
+
+  onInputChange(value: string) {
     const parsedValue = parseFloat(value);
 
     if (!isNaN(parsedValue) && Number.isInteger(parsedValue)) {
       this.inputValue = parsedValue;
-    }else{
+    } else {
       this.credito_edit.duracion = null;
     }
   }
-  
+
   onNoClick(): void {
     this.dialogRef.close();
   }

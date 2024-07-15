@@ -15,32 +15,32 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ItemEditComponent implements OnInit {
 
-  FormularioData:FormGroup;
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  dataform:any='';
-  rosca:any=[];
-  inudemed:any=[];
-  interminacion:any=[];
-  inresistencia:any=[];
-  item_edit:any=[];
-  inlinea:any=[];
-  initem_create:any=[];
-  userConn:any;
-  usuarioLogueado:any;
-  conjunto:any;
+  dataform: any = '';
+  rosca: any = [];
+  inudemed: any = [];
+  interminacion: any = [];
+  inresistencia: any = [];
+  item_edit: any = [];
+  inlinea: any = [];
+  initem_create: any = [];
+  userConn: any;
+  usuarioLogueado: any;
+  conjunto: any;
 
-  public ventana="initem-edit"
-  public detalle="initem-edit";
-  public tipo="transaccion-initem-EDIT";
+  public ventana = "initem-edit"
+  public detalle = "initem-edit";
+  public tipo = "transaccion-initem-EDIT";
 
-  constructor(private _formBuilder: FormBuilder,private datePipe: DatePipe,private toastr: ToastrService,
-    private api:ApiService, public dialogRef: MatDialogRef<ItemEditComponent>, @Inject(MAT_DIALOG_DATA) public dataItem: any,
-    public _snackBar: MatSnackBar, public log_module:LogService,){
-      
-      this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-      this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-      this.FormularioData = this.createForm();
+  constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private toastr: ToastrService,
+    private api: ApiService, public dialogRef: MatDialogRef<ItemEditComponent>, @Inject(MAT_DIALOG_DATA) public dataItem: any,
+    public _snackBar: MatSnackBar, public log_module: LogService,) {
+
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.FormularioData = this.createForm();
   }
 
   ngOnInit(): void {
@@ -57,7 +57,7 @@ export class ItemEditComponent implements OnInit {
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;  
+    let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
       codigo: [this.dataform.codigo, Validators.compose([Validators.required])],
@@ -92,28 +92,28 @@ export class ItemEditComponent implements OnInit {
       porcen_saldo_restringido: [0],
       codproducto_sin: [""],
 
-      fechareg: [this.datePipe.transform(this.fecha_actual,"yyyy-MM-dd")],
+      fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
       usuarioreg: [this.usuarioLogueado],
     });
   }
 
-  submitData(){
+  submitData() {
     let data = this.FormularioData.value;
     console.log(data);
-    
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion"+"Ruta:-  /inventario/mant/inlinea  POST";
-    return this.api.create("/inventario/mant/initem/"+this.userConn+"/"+this.item_edit.codigo, data)
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-  /inventario/mant/inlinea  POST";
+    return this.api.create("/inventario/mant/initem/" + this.userConn + "/" + this.item_edit.codigo, data)
       .subscribe({
         next: (datav) => {
           this.initem_create = datav;
-          this.log_module.guardarLog(this.ventana,this.detalle, this.tipo);
+          this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           location.reload();
         },
 
-        error: (err) => { 
+        error: (err) => {
           console.log(err, errorMessage);
           this.toastr.error('! NO SE GUARDO !');
         },
@@ -121,80 +121,80 @@ export class ItemEditComponent implements OnInit {
       })
   }
 
-  getAllinudemed(){
-    let errorMessage:string;
+  getAllinudemed() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inudemed";
-    return this.api.getAll('/inventario/mant/inudemed/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inudemed/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inudemed = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllRosca(){
-    let errorMessage:string;
+  getAllRosca() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inrosca";
-    return this.api.getAll('/inventario/mant/inrosca/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inrosca/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.rosca = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinTerminacion(){
-    let errorMessage:string;
+  getAllinTerminacion() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/interminacion";
-    return this.api.getAll('/inventario/mant/interminacion/'+this.userConn)
+    return this.api.getAll('/inventario/mant/interminacion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.interminacion = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinReistencia(){
-    let errorMessage:string;
+  getAllinReistencia() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inresistencia";
-    return this.api.getAll('/inventario/mant/inresistencia/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inresistencia/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inresistencia = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getAllinLinea(){
-    let errorMessage:string;
+  getAllinLinea() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/inresistencia";
-    return this.api.getAll('/inventario/mant/inlinea/'+this.userConn)
+    return this.api.getAll('/inventario/mant/inlinea/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inlinea = datav;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
