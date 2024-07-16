@@ -154,7 +154,7 @@ export class MenuSidebarComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.tipo_cambio_hoy_dia = datav;
-          console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
+          // console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
 
           this.tipo_cambio_dolar = this.tipo_cambio_hoy_dia.filter((element) => element.moneda === 'US');
           this.tipo_cambio_dolar_dolar = this.tipo_cambio_dolar[0].factor;

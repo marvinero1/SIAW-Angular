@@ -713,8 +713,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   addItemArray() {
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
+    let i = this.array_items_seleccionado.length + 1;
 
-    this.array_items_seleccionado;
     let array = {
       coditem: cleanText,
       tarifa: this.cod_precio_venta_modal_codigo1,
@@ -730,13 +730,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       descripcion: this.descripcion_item,
       medida: this.medida_item,
       cantidad_empaque: this.cant_empaque,
+      orden_pedido: i,
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
     console.log(array);
-
-    let existe = this.array_items_completo.some
-      (item => item.coditem === array.coditem);
+    let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
     console.log(this.valorCelda, cleanText);
 
     if (existe) {
@@ -746,9 +745,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
       this.focusEmpaqueElement.nativeElement.focus();
 
-      this.cant_empaque = undefined;
-      this.pedido = undefined;
-      this.cantidad = undefined;
+      this.cant_empaque = 0;
+      this.pedido = 0;
+      this.cantidad = 0;
       return;
     }
 
@@ -768,7 +767,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // if (this.array_items_seleccionados_length === undefined) {
 
     //UNA VEZ QUE EL ITEM PASA LAS VALIDACIONES SE AGREGA AL ARRAY array_items_seleccionado
-
     // }
     // else {
     //   this.array_items_proforma_matriz.push(array);
@@ -794,9 +792,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     console.log(focusedElement.id);
 
-    console.log("array_items_completo", this.array_items_completo, "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
+    console.log("array_items_completo", this.array_items_completo,
+      "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
       "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
-
 
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
@@ -828,7 +826,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
     console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
-
+    let nuevo_arrray;
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
@@ -843,7 +841,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
-        empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque
+        empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque,
+        orden_pedido: elemento.orden_pedido,
       }
     });
     console.log(a);
@@ -854,6 +853,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.items_post = datav;
           console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
+
+          nuevo_arrray = this.items_post.map((element) => element.coditem === a.coditem({
+            ...element,
+            orden_pedido: a.orden_pedido
+          }));
+
+          console.log(nuevo_arrray);
 
           setTimeout(() => {
             this.spinner.hide();
@@ -868,12 +874,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           }, 1500);
         },
         complete: () => {
+          console.log(nuevo_arrray);
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
           if (this.array_items_proforma_matriz.length > 0) {
-            console.log("entro aca AA ");
+            // console.log("entro aca AA ");
             this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
           } else {
-            console.log("entro aca BB ");
+            // console.log("entro aca BB ");
             this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
           }
           this.dialogRef.close();

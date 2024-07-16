@@ -1,0 +1,24 @@
+.example-card {
+  max-height: 350px; /* Define la altura máxima del mat-card */
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido excede la altura máxima */
+}
+
+.card-content {
+  padding: 16px; /* Ajusta el padding según sea necesario */
+}
+
+
+
+
+
+
+
+::ng-deep{
+    .p-accordion-header-link {
+        color: #093070 !important;
+    }
+    
+    .mdc-list-item.mdc-list-item--with-one-line{
+        height: 30px !important;
+    }
+}

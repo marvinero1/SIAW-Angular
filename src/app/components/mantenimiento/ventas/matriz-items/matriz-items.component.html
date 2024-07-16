@@ -39,6 +39,7 @@
           <ng-container>
             <table style="padding: 8px 8px !important;">
               <tr>
+                <th style="border: 1px solid #ffc107;">Ord. Ped</th>
                 <th style="border: 1px solid #ffc107;">Item</th>
                 <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
                 <th style="border: 1px solid #ffc107;" width="175">Medida</th>
@@ -56,6 +57,7 @@
 
               <tbody>
                 <tr *ngFor="let array_items_completos of array_items_completo">
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.orden_pedido }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
                   <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">

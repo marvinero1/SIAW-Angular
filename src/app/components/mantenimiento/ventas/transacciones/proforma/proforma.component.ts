@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -143,7 +143,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         case "input_cantidad":
           this.cantidadChangeMatrix('', 0);
           break;
-
       }
     }
   };
@@ -349,7 +348,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   valor_nit: any;
   almacn_parame_usuario_almacen: any;
 
-
   // arraySacarTotal
   veproforma: any = [];
   veproforma1: any = [];
@@ -444,7 +442,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   private debounceTimer: any;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
-    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService,
+    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
     private serviciovendedor: VendedorService, private servicioPrecioVenta: ServicioprecioventaService,
     private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private subtotal_service: SubTotalService,
     private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
@@ -463,7 +461,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    console.log(this.BD_storage);
 
     console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -479,7 +476,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getDesctLineaIDTipo();
     this.tipopago = 1;
-    this.transporte = "FLOTA";
+    this.transporte = "CAMION PERTEC";
     this.fletepor = "CLIENTE";
 
     //ID TIPO
@@ -616,14 +613,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       } else {
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
       }
-
       console.log("ARRAY COMPLETO DE MATRIZ Y F4: " + this.array_items_carrito_y_f4_catalogo);
-
       //siempre sera uno
       this.orden_creciente = 1;
-
       // Agregar el número de orden a los objetos de datos
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+        element.nroitem = index + 1;
         element.orden = index + 1;
       });
     });
@@ -667,7 +662,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
       this.array_items_carrito_y_f4_catalogo = data.detalle;
       // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+      //this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -939,7 +934,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: [this.des_extra],
       tipopago: [this.dataform.tipopago === 0 ? 0 : 1, Validators.required],
-      transporte: [this.dataform.transporte === "FLOTA", Validators.required],
+      transporte: [this.dataform.transporte, Validators.compose([Validators.required])],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
       tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
       preparacion: [this.dataform.preparacion, Validators.compose([Validators.required])],
@@ -970,7 +965,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
-      email: [this.dataform.email],
+      email: [this.dataform.email, Validators.compose([Validators.required])],
 
       venta_cliente_oficina: this.dataform.venta_cliente_oficina === undefined ? false : true,
       tipo_venta: ['0'],
@@ -2879,6 +2874,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     } else {
       this.complementopf = 1;
     }
+
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
       this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
     };
@@ -2886,6 +2882,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     if (this.habilitar_desct_sgn_solicitud === undefined) {
       this.habilitar_desct_sgn_solicitud = false;
     };
+
+    console.log(this.FormularioData.valid);
 
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
@@ -4670,6 +4668,16 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
   // fin eventos de seleccion en la tabla
 
+  ordenarDetalleSegunOrdenPedido() {
+    console.log("....ordenando");
+    this.array_items_carrito_y_f4_catalogo = [...this.array_items_carrito_y_f4_catalogo.sort((a, b) => b.nroitem - a.nroitem)];
+    console.log(this.array_items_carrito_y_f4_catalogo);
+
+    // Forzar la detección de cambios
+    this.cdr.detectChanges();
+
+    return this.array_items_carrito_y_f4_catalogo;
+  }
 
 
 

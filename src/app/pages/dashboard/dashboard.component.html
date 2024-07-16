@@ -81,17 +81,16 @@
               class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
-    </div><br>
+    </div>
+
+    <hr>
 
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <mat-card class="example-card">
-
           <mat-card-title class="text-center"><strong>Comunicado PERTEC</strong></mat-card-title><br>
 
-
-          <img mat-card-image src="https://pertec.com.bo/assets/images/icon.png" alt="PERTEC"
-            style="width: 32.5%;display: block;margin: auto;">
+          <img mat-card-image src="/assets/img/logo.png" alt="PERTEC" style="width: 32.5%;display: block;margin: auto;">
           <mat-card-content><br>
             <p style="text-align: center;"><strong>COMUNICADOS</strong></p><br>
 
@@ -106,8 +105,9 @@
           </mat-card-actions> -->
         </mat-card>
       </div>
-      <div class="col-md-4">
-        <div class="info-box">
+
+      <div class="col-md-6">
+        <!-- <div class="info-box">
           <span class="info-box-icon bg-yellow"><i class="fa fa-address-card" aria-hidden="true"
               style="font-size:1.0rem !important"></i></span>
           <div class="info-box-content">
@@ -130,11 +130,134 @@
             <span class="info-box-text">Vendedor: 31103</span>
             <span class="info-box-number">Total Ventas: 50 </span>
           </div>
-        </div>
-      </div>
-      <div class="col-md-4">
+        </div> -->
+        <mat-card class="example-card" style="max-height: 350px;">
+          <mat-card-title class="text-center"><strong>Proformas Transferidas</strong></mat-card-title><br>
+          <mat-card-content>
+            <div *ngFor="let resultado_proformas_filtrados of resultado_proformas_filtrado">
+              <p-accordion>
+                <p-accordionTab
+                  header="{{ resultado_proformas_filtrados.Codpf }} - {{ resultado_proformas_filtrados.Numeroid }}"
+                  style="color: #093070;">
+                  <div class="info-box">
+                    <div class="info-box-content">
+                      <span class="info-box-text"><strong>Cod. Cliente: &nbsp;</strong>
+                        {{ resultado_proformas_filtrados.Codcliente }}</span>
+                      <span class="info-box-text"><strong>Nombre Cliente: &nbsp;
+                        </strong>{{ resultado_proformas_filtrados.Nomcliente }}</span>
+                      <span class="info-box-text"><strong>Cod.
+                          Vendedor: &nbsp;</strong>{{ resultado_proformas_filtrados.Codvendedor }}</span>
+                      <span class="info-box-text"><strong>Fecha:
+                        </strong>{{ resultado_proformas_filtrados.Fecha| date:'yyyy-MM-dd' }}</span>
+                      <span class="info-box-text"><strong>Fecha
+                          Inicial: &nbsp;</strong>{{ resultado_proformas_filtrados.Fecha_inicial | date:'yyyy-MM-dd' }}
+                        -
+                        {{ resultado_proformas_filtrados.Hora_inicial}}</span>
+                    </div>
+                  </div>
 
+                  <div class="info-box">
+                    <div class="col-md-6">
+                      <div class="info-box-content">
+                        <span class="info-box-text"><strong>ID / NumID:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Id_nr }} -
+                          {{ resultado_proformas_filtrados.Nroid_nr}}
+                        </span>
+                        <span class="info-box-text"><strong>Fecha Aut:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Fechaaut | date:'yyyy-MM-dd'}}
+                          {{ resultado_proformas_filtrados.Horaaut}}
+                        </span>
+                        <span class="info-box-text"><strong>Fecha:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Fecha | date:'yyyy-MM-dd'}}</span>
+                        <span class="info-box-text"><strong>Aprobada: &nbsp;</strong>
+                          <ng-container *ngIf="resultado_proformas_filtrados.Aprobada=== true;else aprb">
+                            <span style="color: rgb(43, 208, 43);">SI</span>
+                          </ng-container>
+                          <ng-template #aprb>
+                            <span style="color: red;">NO</span>
+                          </ng-template>
+                        </span>
+                        <span
+                          class="info-box-text"><strong>Fecha:&nbsp;</strong>{{ resultado_proformas_filtrados.Fecha | date:'yyyy-MM-dd'}}</span>
+                        <span class="info-box-text"><strong>Estado Contra
+                            Entrega: &nbsp;</strong>{{ resultado_proformas_filtrados.Estado_contra_entrega }}</span>
+                        <span class="info-box-text"><strong>Hrs Total del
+                            Pedido: &nbsp;</strong>{{ resultado_proformas_filtrados.Hrs_tomo }}</span>
+                        <span
+                          class="info-box-text"><strong>Usuario:</strong>{{ resultado_proformas_filtrados.Usuarioreg }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="info-box-content">
+                        <span class="info-box-text"><strong>Fecha Registro NR: &nbsp;</strong>
+                          {{ resultado_proformas_filtrados.Fechareg_nr | date:'yyyy-MM-dd'}} -
+                          {{ resultado_proformas_filtrados.Horareg_nr }}
+                        </span>
+                        <span class="info-box-text"><strong>Nro
+                            Items: &nbsp;</strong>{{ resultado_proformas_filtrados.Nroitems }}</span>
+                        <span class="info-box-text"><strong>Peso:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Peso }}</span>
+                        <span class="info-box-text"><strong>Transferida: &nbsp;</strong>
+                          <ng-container *ngIf="resultado_proformas_filtrados.Transferida === true;else trns">
+                            <span style="color: rgb(43, 208, 43);">SI</span>
+                          </ng-container>
+                          <ng-template #trns>
+                            <span style="color: red;">NO</span>
+                          </ng-template>
+                        </span>
+                        <span class="info-box-text"><strong>Tipo Pago:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Tipopago }}
+                        </span>
+                        <span class="info-box-text"><strong>Contra Entrega:</strong>
+                          <ng-container *ngIf="resultado_proformas_filtrados.Contra_entrega=== true;else ctre">
+                            <span style="color: rgb(43, 208, 43);">SI</span>
+                          </ng-container>
+                          <ng-template #ctre>
+                            <span style="color: red;">NO</span>
+                          </ng-template>
+                        </span>
+
+                        <span class="info-box-text"><strong>Total:
+                            &nbsp;</strong>{{ resultado_proformas_filtrados.Total }}</span>
+                        <span class="info-box-text"><strong> Total de Hrs
+                            Pedido:</strong>{{ resultado_proformas_filtrados.Ttl_hrs }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </p-accordionTab>
+              </p-accordion>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-3">
+        <mat-card class="example-card">
+          <mat-card-title class="text-center"><strong>Actualizaciones SIAW</strong></mat-card-title><br>
+
+          <!-- <img mat-card-image
+            src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmdzandpaGw0YzdkODZ4NzEzYWZlYnk2YXdzMGduNjkzc2k4ajY3NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zbzJF5kZxHBw8f7aOD/giphy.webp"
+            alt="ACTUALIZACION" style="width: 32.5%;display: block;margin: auto;"> -->
+
+          <img mat-card-image src="/assets/img/giphy.webp" alt="ACTUALIZACION"
+            style="width: 32.5%;display: block;margin: auto;">
+          <mat-card-content><br>
+            <p style="text-align: center;"><strong>Actualizaciones</strong></p>
+            <mat-list role="list">
+              <mat-list-item role="listitem">• Nueva Ventana: <strong>Modificar Proforma</strong></mat-list-item>
+              <mat-list-item role="listitem">• Nueva Ventana: <strong>Notas de Remision</strong></mat-list-item>
+              <mat-list-item role="listitem">• Actualizacion de Restricciones Anticipos</mat-list-item>
+            </mat-list>
+          </mat-card-content>
+          <!-- <mat-card-actions>
+            <button mat-button>LIKE</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions> -->
+        </mat-card>
       </div>
     </div>
   </div>
+
+  <br><br><br>
 </section>

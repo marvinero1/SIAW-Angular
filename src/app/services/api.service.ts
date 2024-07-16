@@ -209,10 +209,9 @@ export class ApiService {
   //cod_rol, seprograma
   verificarAccesoVentanaGlobal(cod_rol, nombre_venta) {
     let data: any = { "codrol": cod_rol, "programa": nombre_venta };
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta presenta fallos al hacer peticion POST --/seg_adm/oper/verificaserolprogs/";
 
-    return this.create('/seg_adm/oper/prgaccesosrol/verificaserolprogs/' + userConn, data)
+    return this.create('/seg_adm/oper/prgaccesosrol/verificaserolprogs/' + this.userConn, data)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -227,7 +226,11 @@ export class ApiService {
           this.toastr.error('SIN Acceso a la Ventana! 😢',);
           this.router.navigate(['/']);
         },
-        complete: () => { }
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        }
       })
   }
 

@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './item-seleccion-cantidad.component.html',
   styleUrls: ['./item-seleccion-cantidad.component.scss']
 })
-export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
+export class ItemSeleccionCantidadComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler() {
     const focusedElement = document.activeElement as HTMLElement;
@@ -112,7 +112,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
     this.precio_venta_get = precio_venta.precio_venta;
     this.tamanio_carrito = this.items_get_carrito.length;
 
-    console.log("Items de carrito: " + JSON.stringify(this.items_get_carrito), "Tamanio: " + this.tamanio_carrito)
+    console.log("Items de carrito: ", this.items_get_carrito, "Tamanio: " + this.tamanio_carrito)
   }
 
   ngOnInit() {
@@ -136,10 +136,7 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
 
     this.getTarifa();
     this.getDescuentos();
-  }
 
-  ngAfterViewInit() {
-    this.myInputField.nativeElement.focus();
   }
 
   getTarifa() {
@@ -150,7 +147,6 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
           this.tarifa_get_unico = datav;
           //console.log(this.tarifa_get_unico);
         },
-
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -241,11 +237,11 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Descuento"
     }
 
-    const nuevosItems: [] = this.dataItemSeleccionados_get.map((elemento) => {
+    const nuevosItems = this.dataItemSeleccionados_get.map((elemento, index) => {
       return {
         coditem: elemento,
-        tarifa: this.precio_venta_get, //cod_precio_venta viene de precio venta de la matriz xD
-        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, //cod_descuento_modal_codigo
+        tarifa: this.precio_venta_get, // cod_precio_venta viene de precio venta de la matriz xD
+        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, // cod_descuento_modal_codigo
         cantidad_pedida: this.cantidad_input,
         cantidad: this.cantidad_input,
         codcliente: this.codcliente_get,
@@ -254,9 +250,11 @@ export class ItemSeleccionCantidadComponent implements OnInit, AfterViewInit {
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
-        empaque: this.empaques_input
+        empaque: this.empaques_input,
+        orden_pedido: index + 1, // Usamos index + 1 para asignar el número de orden
       };
     });
+
 
     console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
 
