@@ -1,3 +1,19 @@
-<p>
-  dialog-confirm-actualizar works!
-</p>
+<article class="card">
+  <h1 mat-dialog-title> <strong>Confirmación</strong> </h1>
+  <div mat-dialog-content> {{ mensaje.mensaje_dialog }} </div>
+
+  <div mat-dialog-actions style="justify-content: center !important;">
+    <button mat-button mat-dialog-close cdkFocusInitial color="primary" (click)="confirmado()" class="btn_SI"><i
+        class="fa fa-check"></i>&nbsp; Si
+    </button>
+
+    <button mat-button mat-dialog-close class="example-label" color="warn" (click)="onNoClick()" class="btn_NO">
+      <i class="fa fa-times"></i>&nbsp; No
+    </button>
+  </div>
+
+  <span class="top"></span>
+  <span class="right"></span>
+  <span class="bottom"></span>
+  <span class="left"></span>
+</article>

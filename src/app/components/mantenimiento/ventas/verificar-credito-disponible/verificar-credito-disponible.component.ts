@@ -6,6 +6,7 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDetalleObserValidacionComponent } from '../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 @Component({
   selector: 'app-verificar-credito-disponible',
   templateUrl: './verificar-credito-disponible.component.html',
@@ -137,10 +138,18 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
     console.log(this.credito_disponible.resultado_func);
 
     if (this.credito_disponible.resultado_func === false) {
-      const confirmacionValidacionesResultadoFunc: boolean = window.confirm(`¿Desea verificar y asignar SI ES POSIBLE un CREDITO TEMPORAL?`);
-      if (confirmacionValidacionesResultadoFunc) {
-        //this.aplicarCreditoTempAuto();
-      }
+      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: { mensaje_dialog: "¿Desea verificar y asignar SI ES POSIBLE un CREDITO TEMPORAL?" },
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result: Boolean) => {
+        if (result) {
+          //this.aplicarCreditoTempAuto();
+        }
+      });
     } else {
       this.close();
       this.toastr.success("CREDITO VALIDO");

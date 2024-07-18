@@ -133,6 +133,7 @@ export class AreaComponent implements OnInit {
       width: 'auto',
       height: 'auto',
       data: { dataUsuarioEdit: element },
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {

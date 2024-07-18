@@ -62,16 +62,17 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.items_de_proforma = items.items;
     this.cabecera_proforma = cabecera.cabecera;
     this.recargos_del_total_get = recargos_del_total.recargos_del_total;
-    this.array_cabe_cuerpo_get = array_cabe_cuerpo.array_cabe_cuerpo
-    this.contra_entrega_get = contra_entrega.contra_entrega === undefined ? false : true;
+    this.array_cabe_cuerpo_get = array_cabe_cuerpo.array_cabe_cuerpo;
+    this.contra_entrega_get = contra_entrega.contra_entrega;
     this.cod_moneda_get = cod_moneda.cod_moneda;
-    this.recargos_array_get = recargos_array.recargos_array
+    this.recargos_array_get = recargos_array.recargos_array;
     this.cmtipo_complementopf_get = cmtipo_complementopf.cmtipo_complementopf;
-    this.cliente_real_get = cliente_real.cliente_real
+    this.cliente_real_get = cliente_real.cliente_real;
     this.array_de_descuentos = array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal
 
     //aca llega los descuentos q ya pusiste, esto se pinta en la su tabla
     console.log(this.recargos_array_get, this.array_de_descuentos);
+    console.log(this.contra_entrega_get);
 
     // this.array_de_descuentos = this.array_de_descuentos.map(element => ({
     //   codigo: element.coddesextra,

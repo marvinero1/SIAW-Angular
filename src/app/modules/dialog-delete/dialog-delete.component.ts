@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Data } from '@angular/router';
 
 @Component({
@@ -10,12 +10,14 @@ import { Data } from '@angular/router';
 
 export class DialogDeleteComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogDeleteComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data: Data){}
+  constructor(public dialogRef: MatDialogRef<DialogDeleteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Data) {
+
+  }
 
   onNoClick(): void {
     this.dialogRef.close(false);
-  } 
+  }
 
   confirmado(): void {
     this.dialogRef.close(true);

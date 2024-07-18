@@ -15,6 +15,7 @@ import { ServicioprecioventaService } from '../servicioprecioventa/serviciopreci
 
 import Handsontable from 'handsontable';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 @Component({
   selector: 'app-matriz-items',
   templateUrl: './matriz-items.component.html',
@@ -606,7 +607,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           type: 'text',
           readOnly: true,
         },
-
       ],
       className: 'my-custom-row-class',
 
@@ -624,16 +624,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             let nombre_input = focusedElement.id;
             console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
 
-            // if (nombre_input === "focusPedido") {
-            // }
-
             self.focusEmpaque();
             const focusElement = this.focusEmpaqueElement.nativeElement;
             focusElement.focus();
-            // this.focusEmpaque();
-
-            // const focusElement = this.focusEmpaqueElement.nativeElement;
-            // focusElement.focus();
 
             break;
           case 'backspace':
@@ -698,8 +691,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // this.renderer.selectRootElement('#focusEmpaque').focus();
     const focusElement = this.focusEmpaqueElement.nativeElement;
     focusElement.focus();
-
-
   }
 
   focusCantidad() {
@@ -883,9 +874,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             // console.log("entro aca BB ");
             this.enviarItemsAlServicio(this.items_post, this.array_items_completo);
           }
+
           this.dialogRef.close();
           this.num_hoja = 0;
-
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -1038,8 +1029,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           // this.cantidad = this.empaquesItem.cantidad;
 
           // this.empaque_descripcion_concat = "(" + this.empaque_item_codigo + ")" + this.empaque_item_descripcion + "-" + this.cantidad + " | ";
-
-
         },
 
         error: (err: any) => {
@@ -1206,13 +1195,21 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(tamanio);
 
     if (tamanio > 0) {
-      const resultado: boolean = window.confirm("HAY ITEMS EN EL CARRITO!, SEGURO QUE DESEA SALIR?");
-      if (resultado) {
-        console.log("El usuario hizo clic en Aceptar.");
-        this.dialogRef.close();
-      } else {
-        console.log("El usuario hizo clic en Cancelar.");
-      }
+      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: { mensaje_dialog: "HAY ITEMS EN EL CARRITO !, ¿ SEGURO QUE DESEA SALIR ?" },
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe((result: Boolean) => {
+        if (result) {
+          console.log("El usuario hizo clic en Aceptar.");
+          this.dialogRef.close();
+        } else {
+          console.log("El usuario hizo clic en Cancelar.");
+        }
+      });
     } else {
       this.dialogRef.close();
     }

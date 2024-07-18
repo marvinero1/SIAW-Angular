@@ -17,7 +17,6 @@ export class LogService {
   userConn: any;
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private api: ApiService) {
-
   }
 
   // ngOnInit(){
@@ -26,7 +25,6 @@ export class LogService {
   // }
 
   createFormLog(ventana: string, detalle: string, tipo: string, id, numero_id): FormGroup {
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     const usuario = this.userLogueado;
     let hour = this.hora_actual.getHours();
@@ -40,7 +38,7 @@ export class LogService {
       entidad: new UntypedFormControl("SIAW"),
       codigo: new UntypedFormControl(""),
       id_doc: new UntypedFormControl(id),
-      numeroid_doc: new UntypedFormControl(numero_id),
+      numeroid_doc: new UntypedFormControl(numero_id.toString()),
       ventana: new UntypedFormControl(ventana),
       detalle: new UntypedFormControl(detalle),
       tipo: new UntypedFormControl(tipo),
@@ -48,8 +46,6 @@ export class LogService {
   }
 
   createFormLogVentana(ventana: string, detalle: string): FormGroup {
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     const usuario = this.userLogueado;
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -73,8 +69,6 @@ export class LogService {
     this.logData = this.createFormLog(ventana, detalle, tipo, id, numero_id);
     let data = this.logData.value;
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "LOG Salio Error en guardar" + "Ruta:-/seg_adm/logs/selog/";
     return this.api.create("/seg_adm/logs/selog/" + this.userConn, data)
       .subscribe({
@@ -95,8 +89,6 @@ export class LogService {
     //detalle es la ruta PATH que redireccionara
     this.logData = this.createFormLogVentana(ventana, detalle);
     let data = this.logData.value;
-
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "LOG Salio Error en guardar" + "Ruta:--  /LOG";
     return this.api.create("/seg_adm/logs/selog/" + this.userConn, data)

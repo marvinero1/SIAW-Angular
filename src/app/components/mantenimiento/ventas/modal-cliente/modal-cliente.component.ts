@@ -139,6 +139,8 @@ export class ModalClienteComponent implements OnInit {
         cliente: this.cliente_send,
       });
       this.close();
+
+      window.alert("Como el cliente: " + this.cliente_send.codigo + " es casual y/o referencia, debe identificar el VENDEDOR que realiza la operacion, por defecto se pondra el codigo del vendedor del ! CLIENTE REFERENCIA O CASUAL !");
     }
 
     if (this.cliente_referencia_proforma_get === false) {
@@ -147,6 +149,8 @@ export class ModalClienteComponent implements OnInit {
       });
       this.close();
     }
+
+
   }
 
   close() {

@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './modal-detalle-obser-validacion.component.html',
   styleUrls: ['./modal-detalle-obser-validacion.component.scss']
 })
+
 export class ModalDetalleObserValidacionComponent implements OnInit {
 
   data: any = [];
@@ -15,21 +16,33 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
   more_messagess: any = [];
   lines: any;
 
+  data_string: string;
+  obs_contenido_get_string: string;
+  more_messagess_string: string;
+
   constructor(public dialogRef: MatDialogRef<ModalDetalleObserValidacionComponent>,
     @Inject(MAT_DIALOG_DATA) public obs_titulo: any,
     @Inject(MAT_DIALOG_DATA) public obs_contenido: any,
-    @Inject(MAT_DIALOG_DATA) public more_messages: any,
-  ) {
+    @Inject(MAT_DIALOG_DATA) public more_messages: any) {
 
     // this.data = this.processMessage(obs_titulo.obs_titulo);
-    this.data = obs_titulo.obs_titulo;
-    this.obs_contenido_get = obs_contenido.obs_contenido;
-    this.more_messagess = more_messages.more_messages
+    // this.data = obs_titulo.obs_titulo;
+    // this.obs_contenido_get = obs_contenido.obs_contenido;
+    // this.more_messagess = more_messages.more_messages;
+
+    this.data_string = obs_titulo.obs_titulo;
+    this.obs_contenido_get_string = obs_contenido.obs_contenido.replace(/-/g, '');
+    this.more_messagess_string = more_messages.more_messages;
+
+    // console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
+    // console.log("mensaje procesado, data: ", this.data);
+    // console.log("contenido: ?", this.obs_contenido_get);
+    // console.log("mas mensajes?: ", this.more_messagess);
 
     console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
-    console.log("mensaje procesado: ", this.data);
-    console.log("contenido: ?", this.obs_contenido_get);
-    console.log("mas mensajes?: ", this.more_messagess)
+    console.log("mensaje procesado, data: ", this.data_string);
+    console.log("contenido: ?", this.obs_contenido_get_string.replace(/-/g, ''));
+    console.log("mas mensajes?: ", this.more_messagess_string)
   }
 
   ngOnInit() {

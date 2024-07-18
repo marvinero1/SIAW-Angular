@@ -392,7 +392,6 @@ import { VerificarCreditoDisponibleComponent } from '@components/mantenimiento/v
 import { ItemSeleccionCantidadComponent } from '@components/mantenimiento/ventas/matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component';
 import { AnticiposProformaComponent } from '@components/mantenimiento/ventas/anticipos-proforma/anticipos-proforma.component';
 import { ModalEtiquetaComponent } from '@components/mantenimiento/ventas/modal-etiqueta/modal-etiqueta.component';
-import { ModalTransfeProformaComponent } from '@components/mantenimiento/ventas/modal-transfe-proforma/modal-transfe-proforma.component';
 import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component';
 import { CatalogoCotizacionComponent } from '@components/mantenimiento/ventas/transacciones/cotizacion/catalogo-cotizacion/catalogo-cotizacion.component';
 import { ModalEstadoPagoClienteComponent } from '@components/mantenimiento/ventas/modal-estado-pago-cliente/modal-estado-pago-cliente.component';
@@ -432,6 +431,8 @@ import { BuscadorAvanzadoComponent } from '@components/uso-general/buscador-avan
 import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf-email/proforma-pdf-email.component';
 import { CatalogoNotasRemisionComponent } from '@components/mantenimiento/ventas/transacciones/nota-remision/catalogo-notas-remision/catalogo-notas-remision.component';
 import { ModalTransfeNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/nota-remision/modal-transfe-nota-remision/modal-transfe-nota-remision.component';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
+import { ModalTransfeProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/modal-transfe-proforma/modal-transfe-proforma.component';
 
 
 registerLocaleData(es);
@@ -441,7 +442,7 @@ registerCellType(NumericCellType);
 registerPlugin(UndoRedo);
 @NgModule({
     declarations: [
-        AppComponent, VentanasComponent, MainComponent, LoginComponent, HeaderComponent, FooterComponent, MenuSidebarComponent, BlankComponent,
+        AppComponent, VentanasComponent, MainComponent, LoginComponent, HeaderComponent, FooterComponent, MenuSidebarComponent, BlankComponent, DialogConfirmActualizarComponent,
         ProfileComponent, VentanaValidacionesComponent, RegisterComponent, DashboardComponent, MessagesComponent, NotificationsComponent, UserComponent,
         ForgotPasswordComponent, RecoverPasswordComponent, LanguageComponent, MainMenuComponent, SubMenuComponent, MenuItemComponent,
         ControlSidebarComponent, SidebarSearchComponent, MenuImportacionesComponent, UsuarioComponent, UsuarioCreateComponent, BancoEditComponent,
@@ -512,10 +513,10 @@ registerPlugin(UndoRedo);
         SucursalEditComponent, SucursalCreateComponent, PlanCuentaComponent, PlanCuentaCreateComponent, PlanCuentaEditComponent, ModalBotonesImpresionComponent,
         CuentaEfectivoCuentasContablesComponent, CuentasContablesComponent, CuentasCatalogoComponent, NumeracionComprobantesComponent,
         NumeracionComprobantesCreateComponent, NumeracionComprobantesEditComponent, MonedaCatalogoComponent, ModalRecargosComponent,
-        VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalTransfeProformaComponent, ModalSolicitarUrgenteComponent,
+        VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent,
+        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent,
 
 
 

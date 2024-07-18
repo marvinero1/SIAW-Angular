@@ -65,8 +65,9 @@
 
       <div style="text-align: center;">
         <ng-container *ngIf="isCheckedProformas">
-          <button mat-raised-button color="primary" (click)="transferirProforma();" [disabled]="!id_proformas">
-            <i class="fa fa-paper-plane" aria-hidden="true"></i> Transferir Proforma
+          <button mat-raised-button color="primary" (click)="validarNotaRemisionParaTransferir();"
+            [disabled]="!id_proformas">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> Transferir Proforma a Nota Remisión
           </button>
         </ng-container>
 

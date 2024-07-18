@@ -10,34 +10,71 @@
         <div class="input-group-append text-center" style="float: left;">
           <!-- BOTONES -->
           <div class="input-group-append">
+            <!-- BTN GRABAR -->
+            <div>
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else trsf">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="submitDataModificarProforma();" disabled>
+                  <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
+                </button>
+              </ng-container>
+              <ng-template #trsf>
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="submitDataModificarProforma();">
+                  <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
+                </button>
+              </ng-template>
+            </div>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-              (click)="submitDataModificarProforma();">
-              <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
-            </button>
+            <!-- BTN GRABAR Y APROBAR -->
+            <div>
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else grbapr">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="submitDataModificarProformaAprobar();" disabled>
+                  <span>
+                    <mat-icon
+                      style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                      done_outline</mat-icon>Grabar y Aprobar
+                  </span>
+                </button>
+              </ng-container>
+              <ng-template #grbapr>
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="submitDataModificarProformaAprobar();">
+                  <span>
+                    <mat-icon
+                      style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                      done_outline</mat-icon>Grabar y Aprobar
+                  </span>
+                </button>
+              </ng-template>
+            </div>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-              (click)="submitDataModificarProformaAprobar();">
-              <span>
-                <mat-icon
-                  style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  done_outline</mat-icon>Grabar y Aprobar
-              </span>
-            </button>
+            <!-- BTN ANULAR -->
+            <div>
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else anld">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="anularProformar();" disabled>
+                  <span>
+                    <mat-icon
+                      style="color: #ff0707;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                      highlight_off</mat-icon>Anular
+                  </span>
+                </button>
+              </ng-container>
+              <ng-template #anld>
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="anularProformar();">
+                  <span>
+                    <mat-icon
+                      style="color: #ff0707;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                      highlight_off</mat-icon>Anular
+                  </span>
+                </button>
+              </ng-template>
+            </div>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-              (click)="anularProformar();">
-              <span>
-                <mat-icon
-                  style="color: #ff0707;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  highlight_off</mat-icon>Anular
-              </span>
-            </button>
-
-            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="validarProformaAll();">
-              <span> <i class="fa fa-check" aria-hidden="true" style="color: #05970c;"></i> Validar</span>
-            </button> -->
+            <!-- BTN VALIDAR -->
             <div>
               <ng-container *ngIf="estado_proforma === 'ANULADA'">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
@@ -83,10 +120,6 @@
                   account_balance_wallet</mat-icon> Verificar Crédito Disponible
               </span>
             </button>
-
-            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
-              <i class="fa fa-bars" aria-hidden="true" style="color: #ffc107;"></i> Orden Pedido
-            </button> -->
           </div>
           &nbsp;&nbsp;&nbsp;
           <div class="pt-1" style="padding-left: 85px !important;">
@@ -132,15 +165,16 @@
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
+
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
           </button> -->
+
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-user black" aria-hidden="true"></i>
           </button> -->
 
           <!-- [disabled]="[array_items_carrito_y_f4_catalogo].length !== 1" {{ [array_items_carrito_y_f4_catalogo].length  }} -->
-
           <button mat-button [matMenuTriggerFor]="beforeMenu">
             <mat-icon>expand_more</mat-icon>
           </button>
@@ -168,11 +202,12 @@
                 </button>
               </mat-list-item>
 
-              <!-- <mat-list-item role="listitem" class="list-button">
-                <button class="btn btn-outline-secondary form-control-sm" type="button">
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                  matTooltip="Orden Pedido" (click)="ordenarDetalleSegunOrdenPedido();">
                   <i class="fa fa-bars" aria-hidden="true"></i> Orden Pedido
                 </button>
-              </mat-list-item> -->
+              </mat-list-item>
             </mat-list>
           </mat-menu>
         </div>
@@ -322,8 +357,9 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Tipo Cliente </u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente"
-              [readOnly]="true">
+            <!-- <span>{{tipo_cliente}}</span> -->
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;"
+              formControlName="tipo_cliente" [(ngModel)]="tipo_cliente" [readOnly]="true">
           </div>
         </div>
 
@@ -423,7 +459,6 @@
             </mat-select>
           </div>
 
-
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
@@ -432,7 +467,8 @@
             <div class="input-group-prepend">
               <div class="input-group-text" style="border: 0 !important;">
                 <ng-container *ngIf="tipopago === 0">
-                  <input type="checkbox" formControlName="contra_entrega" [(ngModel)]="contra_entrega">
+                  <input type="checkbox" formControlName="contra_entrega" [(ngModel)]="contra_entrega"
+                    (change)="onCheckboxChange($event)">
                 </ng-container>
                 <ng-container *ngIf="tipopago === 1">
                   <input type="checkbox" disabled>
@@ -449,10 +485,11 @@
             <ng-container *ngIf="tipopago === 0">
               <select class="custom-select1 form-control-sm" formControlName="estado_contra_entrega"
                 [(ngModel)]="estado_contra_entrega_input">
-                <option value="YA CANCELO">YA CANCELO</option>
+                <option value='YA CANCELO'>YA CANCELO</option>
                 <option value="POR CANCELAR">POR CANCELAR</option>
               </select>
             </ng-container>
+
             <ng-container *ngIf="tipopago === 1">
               <select class="custom-select1 form-control-sm">
                 <option value=""></option>
@@ -487,6 +524,7 @@
           </ng-container> -->
         </div>
 
+        <!-- terceraColumna -->
         <div class="col-md-2 col-lg-2 col-sm-0">
           <div class="col">
             <div class="input-group">
@@ -515,7 +553,7 @@
           </div>
         </div>
 
-        <!-- terceraColumna -->
+        <!-- cuartaColumna -->
         <div class="col-md-4 col-lg-4 col-sm-4" style="float: right;">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -778,13 +816,13 @@
                   <th pSortableColumn="%" class="right1" style="width:3%">
                     %
                   </th>
-                  <th pSortableColumn="PD" class="right1" style="width:4%">
+                  <th pSortableColumn="PD" class="right1" style="width:6%">
                     PD
                   </th>
-                  <th pSortableColumn="PU" class="right1" style="width:4%">
+                  <th pSortableColumn="PU" class="right1" style="width:6%">
                     PU
                   </th>
-                  <th pSortableColumn="%" class="right1" style="width:4%">
+                  <th pSortableColumn="%" class="right1" style="width:6%">
                     Total
                     <p-sortIcon field="Total" />
                   </th>
@@ -2423,7 +2461,7 @@
 
           <!-- Empaques Minimo-->
           <div class="row">
-            <div class="input-group" style="width: 65% !important;">
+            <div class="input-group" style="width: 65% !important;padding-left: 7px;">
               <span class="input-group-text form-control-sm">Empaque Minimo</span>
 
               <div type="text" class="form-control form-control-sm inputsSaldos"
@@ -2498,8 +2536,8 @@
                   style="margin-left: 5px;" id="input_search">
               </div>
               <div class="input-group-append">
-                <button type="button" class="btn btn-outline-primary form-control-sm"
-                  (click)="transferirProforma(idpf_complemento_view, num_id)" style="border-color: #ffc107;">
+                <button type="button" class="btn btn-outline-primary form-control-sm" (click)="transferirProforma()"
+                  style="border-color: #ffc107;">
                   <i class="fa fa-search"></i>
                 </button>
                 <button style="height: 20px !important; font-size: 0.8rem; background-color: #fbd800;"

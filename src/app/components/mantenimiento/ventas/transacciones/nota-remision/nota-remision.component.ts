@@ -10,22 +10,20 @@ import { ToastrService } from 'ngx-toastr';
 import { ServicioclienteService } from '../../serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { TipoidService } from '../../serviciotipoid/tipoid.service';
-import { DescuentoService } from '../../serviciodescuento/descuento.service';
-import { ModalIdtipoComponent } from '../../modal-idtipo/modal-idtipo.component';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
 import { ModalDescuentosComponent } from '../../descuentos-especiales/modal-descuentos/modal-descuentos.component';
 import { MatrizItemsComponent } from '../../matriz-items/matriz-items.component';
 import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-cliente-info.component';
 import { ModalSaldosComponent } from '../../matriz-items/modal-saldos/modal-saldos.component';
 import { DatePipe } from '@angular/common';
-import { ServicioprecioventaService } from '../../servicioprecioventa/servicioprecioventa.service';
-import { ServicioTransfeAProformaService } from '../../modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalSubTotalComponent } from '../../modal-sub-total/modal-sub-total.component';
 import { ModalIvaComponent } from '../../modal-iva/modal-iva.component';
 import { MatTabGroup } from '@angular/material/tabs';
 import { CatalogoNotasRemisionComponent } from './catalogo-notas-remision/catalogo-notas-remision.component';
 import { ModalTransfeNotaRemisionComponent } from './modal-transfe-nota-remision/modal-transfe-nota-remision.component';
 import { SaldoItemMatrizService } from '../../matriz-items/services-saldo-matriz/saldo-item-matriz.service';
+import { ServicioTransfeAProformaService } from '../proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 @Component({
   selector: 'app-nota-remision',
   templateUrl: './nota-remision.component.html',
@@ -282,19 +280,26 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     // transferencia
     this.servicioTransfeProformaCotizacion.disparadorDeProformaTransferir.subscribe(data => {
       console.log("Recibiendo Transferencia: ", data);
-      const a = window.confirm("¿ Esta Seguro de Transferir a la Nota de Remision actual?, Se reemplazara el contenido de la proforma actual!");
-      if (a) {
-        this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
-        //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
-        this.imprimir_proforma_tranferida(data.proforma_transferir);
-        this.spinner.show();
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500);
+      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: { mensaje_dialog: "¿ Esta Seguro de Transferir a la Nota de Remision actual?, Se reemplazara el contenido de la proforma actual !" },
+        disableClose: true,
+      });
 
-      } else {
-        this.toastr.error('! CANCELADO ! ❌');
-      }
+      dialogRef.afterClosed().subscribe((result: Boolean) => {
+        if (result) {
+          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+          //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
+          this.imprimir_proforma_tranferida(data.proforma_transferir);
+          this.spinner.show();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500);
+        } else {
+          this.toastr.error('! CANCELADO ! ❌');
+        }
+      });
     });
     // fin_transferencia 
 
@@ -773,82 +778,125 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.total = 0;
   }
 
+  desclinea_segun_solicitud: any;
+  total_cabecera: any;
+  moneda_cabecera: any;
+  txtid_solurgente: any;
+  txtnroid_solurgente: any;
+
+
+  fecha_confirmada: any;
+  fechaaut: any;
+  fecha_reg: any;
+  fecha: any;
+  fecha_inicial: any;
+
+  horareg: any;
+  hora: any;
+  usuarioreg: any;
+  horaaut: any;
+  hora_confirmada: any;
+  hora_inicial: any;
+
   imprimir_proforma_tranferida(proforma) {
-    console.log(proforma);
-    // this.cod_id_tipo_modal = proforma.cabecera.id;
-    // this.id_proforma_numero_id = proforma.cabecera.numeroid;
-    // this.fecha_actual = proforma.cabecera.fecha;
+    console.log(proforma.data);
+
+    this.total_cabecera = proforma.data.cabecera.total;
+    this.moneda_cabecera = proforma.data.cabecera.codmoneda;
+
+    // this.cod_id_tipo_modal = proforma.data.cabecera.id;
+    // this.id_proforma_numero_id = proforma.data.cabecera.numeroid;
+    this.fecha_actual = proforma.data.cabecera.fecha;
     this.fecha_actual = this.fecha_actual;
-    this.almacn_parame_usuario = proforma.cabecera.codalmacen;
-    this.cod_vendedor_cliente_modal = proforma.cabecera.codvendedor;
-    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
-    this.codigo_cliente = proforma.cabecera.codcliente;
-    this.nombre_cliente = proforma.cabecera.nomcliente;
-    this.nombre_comercial_cliente = proforma.cabecera.nombre_comercial;
-    this.nombre_factura = proforma.cabecera.nombre_fact;
-    this.complemento_ci = proforma.cabecera.complemento_ci;
-    this.tipo_doc_cliente = proforma.cabecera.tipo_docid;
-    this.nit_cliente = proforma.cabecera.nit;
-    this.email_cliente = proforma.cabecera.email;
-    this.cliente_casual = proforma.cabecera.casual;
-    this.preparacion = proforma.cabecera.preparacion;
-    this.estado = proforma.cabecera.estado_contra_entrega;
 
-    this.moneda_get_catalogo = proforma.cabecera.codmoneda;
-    this.tdc = proforma.cabecera.tdc;
-    this.codigo_cliente = proforma.cabecera.codcliente_real;
-    this.tipopago = proforma.cabecera.tipopago;
-    this.estado_contra_entrega_input = proforma.cabecera.contra_entrega;
-    this.cod_proforma = proforma.cabecera.codigo;
-    this.id_nro_id_proforma = proforma.cabecera.id + "-" + proforma.cabecera.numeroid;
+    this.almacn_parame_usuario = proforma.data.cabecera.codalmacen;
+    this.cod_vendedor_cliente_modal = proforma.data.cabecera.codvendedor;
+    this.venta_cliente_oficina = proforma.data.cabecera.venta_cliente_oficina;
+    this.codigo_cliente = proforma.data.cabecera.codcliente;
+    this.nombre_cliente = proforma.data.cabecera.nomcliente;
+    this.nombre_comercial_cliente = proforma.data.cabecera.nombre_comercial;
+    this.nombre_factura = proforma.data.cabecera.nombre_fact;
+    this.complemento_ci = proforma.data.cabecera.complemento_ci;
+    this.tipo_doc_cliente = proforma.data.cabecera.tipo_docid;
+    this.nit_cliente = proforma.data.cabecera.nit;
+    this.email_cliente = proforma.data.cabecera.email;
+    this.cliente_casual = proforma.data.cabecera.casual;
+    this.preparacion = proforma.data.cabecera.preparacion;
+    this.estado = proforma.data.cabecera.estado_contra_entrega;
 
-    this.transporte = proforma.cabecera.transporte;
-    this.medio_transporte = proforma.cabecera.nombre_transporte;
-    this.fletepor = proforma.cabecera.fletepor;
-    this.tipoentrega = proforma.cabecera.tipoentrega;
-    this.peso = proforma.cabecera.peso;
-    this.direccion_central_input = proforma.cabecera.direccion;
-    this.odc = proforma.cabecera.odc;
+    this.moneda_get_catalogo = proforma.data.cabecera.codmoneda;
+    this.tdc = proforma.data.cabecera.tdc;
+    this.codigo_cliente = proforma.data.cabecera.codcliente_real;
+    this.tipopago = proforma.data.cabecera.tipopago;
+    this.estado_contra_entrega_input = proforma.data.cabecera.contra_entrega;
+    this.cod_proforma = proforma.data.cabecera.codigo;
+    this.id_nro_id_proforma = proforma.data.cabecera.id + "-" + proforma.data.cabecera.numeroid;
 
-    this.codigo_cliente_catalogo_real = proforma.cabecera.codcliente_real;
+    this.transporte = proforma.data.cabecera.transporte;
+    this.medio_transporte = proforma.data.cabecera.nombre_transporte;
+    this.fletepor = proforma.data.cabecera.fletepor;
+    this.tipoentrega = proforma.data.cabecera.tipoentrega;
+    this.peso = proforma.data.cabecera.peso;
+    this.direccion_central_input = proforma.data.cabecera.direccion;
+    this.odc = proforma.data.cabecera.odc;
 
-    this.cod_vendedor_cliente = proforma.cabecera.codvendedor;
-    this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
-    this.tipo_cliente = proforma.cabecera.tipo === undefined ? " " : " ";
-    this.direccion = proforma.cabecera.direccion;
-    this.whatsapp_cliente = proforma.cabecera.celular;
-    this.latitud_cliente = proforma.cabecera.latitud_entrega;
-    this.longitud_cliente = proforma.cabecera.longitud_entrega;
-    this.central_ubicacion = proforma.cabecera.central;
-    this.obs = proforma.cabecera.obs;
-    this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
+    this.codigo_cliente_catalogo_real = proforma.data.cabecera.codcliente_real;
+
+    this.desclinea_segun_solicitud = proforma.data.cabecera.desclinea_segun_solicitud;
+
+    this.cod_vendedor_cliente = proforma.data.cabecera.codvendedor;
+    this.venta_cliente_oficina = proforma.data.cabecera.venta_cliente_oficina;
+    this.tipo_cliente = proforma.data.cabecera.tipo === undefined ? " " : " ";
+    this.direccion = proforma.data.cabecera.direccion;
+    this.whatsapp_cliente = proforma.data.cabecera.celular;
+    this.latitud_cliente = proforma.data.cabecera.latitud_entrega;
+    this.longitud_cliente = proforma.data.cabecera.longitud_entrega;
+    this.central_ubicacion = proforma.data.cabecera.ubicacion;
+    this.obs = proforma.data.cabecera.obs;
+    this.desct_nivel_actual = proforma.data.cabecera.niveles_descuento;
     this.whatsapp_cliente = "0";
 
-    this.ubicacion_central = proforma.cabecera.ubicacion;
-    this.preparacion = proforma.cabecera.preparacion;
+    this.ubicacion_central = proforma.data.cabecera.ubicacion;
+    this.preparacion = proforma.data.cabecera.preparacion;
 
     //Descuentos De Linea de CLiente
-    this.nivel_descuento = proforma.cabecera.niveles_descuento;
+    this.nivel_descuento = proforma.data.cabecera.niveles_descuento;
 
     //complementarProforma
-    this.idpf_complemento_view = proforma.cabecera.idpf_complemento;
-    this.nroidpf_complemento = proforma.cabecera.nroidpf_complemento;
-
-    this.pago_contado_anticipado = proforma.cabecera.pago_contado_anticipado;
+    this.idpf_complemento_view = proforma.data.cabecera.idpf_complemento;
+    this.nroidpf_complemento = proforma.data.cabecera.nroidpf_complemento;
+    this.pago_contado_anticipado = proforma.data.cabecera.pago_contado_anticipado;
 
     //eso nop porque se totaliza una vez transferida
-    // this.subtotal = proforma.cabecera.subtotal;
-    // this.recargos = proforma.cabecera.recargos;
-    // this.des_extra = proforma.cabecera.descuentos;
-    // this.iva = proforma.cabecera.iva;
-    // this.total = proforma.cabecera.total;
+    // this.subtotal = proforma.data.cabecera.subtotal;
+    // this.recargos = proforma.data.cabecera.recargos;
+    // this.des_extra = proforma.data.cabecera.descuentos;
+    // this.total = proforma.data.cabecera.total;
 
-    this.item_seleccionados_catalogo_matriz = proforma.detalle;
-    this.array_de_descuentos_ya_agregados = proforma.descuentos;
+    this.iva = proforma.data.cabecera.iva;
+    this.tablaIva = proforma.data.iva
+
+    this.item_seleccionados_catalogo_matriz = proforma.data.detalle;
+    this.array_de_descuentos_ya_agregados = proforma.data.descuentos;
     //this.cod_descuento_total = proforma.descuentos;
 
     //el cuerpo del detalle asignado al carrito
-    this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+    this.array_items_carrito_y_f4_catalogo = proforma.data.detalle;
+
+    //fechas
+    this.fecha = this.datePipe.transform(proforma.data.cabecera.fecha, "yyyy-MM-dd");
+    this.fecha_inicial = this.datePipe.transform(proforma.data.cabecera.fecha_inicial, "yyyy-MM-dd");
+    this.fecha_confirmada = this.datePipe.transform(proforma.data.cabecera.fecha_confirmada, "yyyy-MM-dd");
+    this.fechaaut = this.datePipe.transform(proforma.data.cabecera.fechaaut, "yyyy-MM-dd");
+    this.fecha_reg = this.datePipe.transform(proforma.data.cabecera.fechareg, "yyyy-MM-dd");
+
+    this.hora_inicial = proforma.data.cabecera.hora_inicial;
+    this.horareg = proforma.data.cabecera.horareg;
+    this.hora = proforma.data.cabecera.hora;
+    this.usuarioreg = proforma.data.cabecera.usuarioreg;
+    this.horaaut = proforma.data.cabecera.horaaut;
+    this.hora_confirmada = proforma.data.cabecera.hora_confirmada;
+    //fin-fecha
 
     // Agregar el número de orden a los objetos de datos
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -860,6 +908,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
+    //id_solurgente, txtnroid_solurgente
+    this.txtid_solurgente = proforma.txtid_solurgente;
+    this.txtnroid_solurgente = proforma.txtnroid_solurgente;
+
+    console.log("Data que va a la URL: ", this.txtid_solurgente, this.txtnroid_solurgente);
 
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
@@ -868,16 +921,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    console.log(this.tipo_complementopf_input,);
-
-    let hour = this.hora_actual.getHours();
-    // Asegurarse de que el valor de la hora esté en formato de 24 horas
-    let hora_inicial = hour < 10 ? '0' + hour : hour; // Agrega un 0 inicial si la hora es menor a 10
-
-    let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;
-    let fecha_actual = new Date();
     let valor_cero: number = 0;
 
     // if(this.tipo_complementopf_input === 0) {
@@ -893,6 +936,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     }
 
     return this._formBuilder.group({
+      total_cabecera: [this.dataform.total_cabecera],
+      moneda_cabecera: [this.dataform.moneda_cabecera],
+
       id: [this.dataform.id, Validators.compose([Validators.required])],
       numeroid: [this.dataform.numeroid, Validators.compose([Validators.required])],
       codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
@@ -901,7 +947,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       nit: [this.dataform.nit, Validators.compose([Validators.required])],
       codvendedor: [this.dataform.codvendedor, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda, Validators.compose([Validators.required])],
-      fecha: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       //precio venta columna segunda primera fila verificar conq nombre se guarda
 
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
@@ -914,16 +959,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       tipoentrega: [this.dataform.tipoentrega === undefined ? "ENTREGAR" : this.dataform.tipoentrega, Validators.compose([Validators.required])],
       fletepor: [this.dataform.fletepor === "CLIENTE", Validators.compose([Validators.required])],
       estado_proforma: [{ value: this.dataform.estado_proforma, disabled: true }],
-      fecha_inicial: [fecha_actual],
       tdc: [this.dataform.tdc],
       anulada: [false],
       aprobada: [false],
       paraaprobar: [false],
       transferida: [false],
-      fechaaut: ["1900-01-01"],
-      fecha_confirmada: ["1900-01-01"],
-      hora_confirmada: ["00:00"],
-      hora_inicial: ["00:00"],
       usuarioaut: [""],
       confirmada: [false],
       impresa: [false],
@@ -944,13 +984,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
       venta_cliente_oficina: [{ value: this.dataform.venta_cliente_oficina === undefined ? false : true, disabled: true }],
       contra_entrega: [{ value: this.estado_contra_entrega_input, disabled: true }],
-
       tipo_venta: ['0'],
-
       estado_contra_entrega: [this.dataform.estado_contra_entrega === undefined ? "" : this.dataform.estado_contra_entrega],
+      desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
 
       odc: "",
-      desclinea_segun_solicitud: null, //Descuentos de Linea de Solicitud
 
       idanticipo: [""], //anticipo VentasL
       numeroidanticipo: [0], //anticipo Ventas
@@ -981,43 +1019,63 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       total: [this.dataform.total === null ? 0.00 : this.dataform.total], //TOTALES
       porceniva: [0],
 
-      fechareg: [fecha_actual],
-      horareg: [hora_actual_complete],
-      hora: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
-      horaaut: [hora_actual_complete],
+      fecha: this.dataform.fecha,
+      fechareg: this.dataform.fechareg,
+      fecha_confirmada: this.dataform.fecha_confirmada,
+      fechaaut: this.dataform.fechaaut,
+      fecha_inicial: this.dataform.fecha_inicial,
+
+      horareg: this.dataform.horareg,
+      hora: this.dataform.hora,
+      usuarioreg: this.usuarioLogueado,
+      horaaut: this.dataform.horaaut,
+      hora_inicial: this.dataform.hora_inicial,
+      hora_confirmada: this.dataform.hora_confirmada,
     });
   }
 
-  submitData() {
-    let ventana = "proforma-create"
-    let detalle = "proforma-CreoNuevoClienteCasual";
-    let tipo_transaccion = "transacc-proforma-POST";
+  submitDataNotaRemision() {
+    let submit_nota_remision = {
+      veremision: this.FormularioData.value,
+      veremision1: this.array_items_carrito_y_f4_catalogo,
+      vedesextraremi: this.array_de_descuentos_ya_agregados,
+      verecargoremi: [],
+      veremision_iva: this.tablaIva,
+      veremision_chequerechazado: {
+        codremision: 0,
+        id: "",
+        numeroid: 0,
+        codigo: 0
+      },
+    };
 
-    let data = this.FormularioData.value;
-    console.log("A Guardar: ", data);
+    if (this.txtid_solurgente === "") {
+      this.txtid_solurgente = "0";
+    }
 
-    // return this.api.create("/venta/transac/veproforma/crearCliente/" + userConn, data)
-    //   .subscribe({
-    //     next: (datav) => {
-    //       this.cliente_create = datav;
-    //       console.log(this.cliente_create);
+    console.log(submit_nota_remision);
 
-    //       this.log_module.guardarLog(ventana, detalle, tipo_transaccion);
-    //       this.spinner.show();
-    //       this.toastr.success('Guardado con Exito! ✅');
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
+    return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
+      + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.BD_storage + "/" + this.txtid_solurgente + "/" + this.txtnroid_solurgente, submit_nota_remision)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.log_module.guardarLog(this.ventana, "Modificacion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
-    //       location.reload();
-    //     },
+          this.toastr.success(datav.resp);
+        },
 
-    //     error: (err) => {
-    //       console.log(err, errorMessage);
-    //       this.toastr.warning('El Cliente no se registro correctamente! ❌');
-    //     },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
 
-    //     complete: () => { }
-    //   })
+        complete: () => {
+          window.location.reload();
+        }
+      })
   }
+
 
   getIDScomplementarProforma() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
@@ -1065,7 +1123,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
     // console.log(total_proforma_concat);
     // console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-    //   this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
+    // this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
 
     console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
@@ -1081,7 +1139,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
             this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
 
             console.log(this.array_items_carrito_y_f4_catalogo);
-
             setTimeout(() => {
               this.spinner.hide();
             }, 1500);
@@ -1115,16 +1172,22 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
             clearTimeout(this.debounceTimer);
             this.debounceTimer = setTimeout(() => {
               if (this.total != 0) {
-                const resultado: boolean = window.confirm("¿ DESEA GRABAR LA NOTA DE REMISION SIN REALIZAR NINGUNA MODIFICACION ?");
-                if (resultado) {
-                  console.log("GRABANDO....");
+                const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: { mensaje_dialog: "¿ DESEA GRABAR LA NOTA DE REMISION SIN REALIZAR NINGUNA MODIFICACION ?" },
+                  disableClose: true,
+                });
 
-                  this.submitData();
-
-                } else {
-                  console.log("LE DIO AL CANCELAR, NO GRABAR");
-                  // despues de que se transfiera se totaliza, si le da a cancelar igual se totaliza
-                }
+                dialogRef.afterClosed().subscribe((result: Boolean) => {
+                  if (result) {
+                    console.log("GRABANDO....");
+                    this.submitDataNotaRemision();
+                  } else {
+                    console.log("LE DIO AL CANCELAR, NO GRABAR");
+                    // despues de que se transfiera se totaliza, si le da a cancelar igual se totaliza
+                  }
+                });
               }
             }, 1500);
           }
@@ -1558,10 +1621,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-
-
-
-
 
 
 

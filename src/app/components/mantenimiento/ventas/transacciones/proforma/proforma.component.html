@@ -186,7 +186,16 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
-              ngModel="{{fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true">
+              [(ngModel)]="fecha_actual" [readOnly]="true">
+
+            <input type="text" formControlName="fechareg" [(ngModel)]="fecha_actual" hidden>
+            <input type="text" formControlName="hora" [(ngModel)]="hora_fecha_server" hidden>
+            <input type="text" formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" hidden>
+            <input type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
+            <input type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
+            <input type="text" formControlName="usuarioreg" [(ngModel)]="usuarioLogueado" hidden>
+            <input type="text" formControlName="horaaut" [(ngModel)]="hora_fecha_server" hidden>
+
           </div>
 
           <div class="input-group">
@@ -194,10 +203,10 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
             </div>
+            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" [(ngModel)]="fecha_actual"
+              [readOnly]="true" formControlName="fecha_inicial">
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              ngModel="{{fecha_actual | date:'yyyy-MM-dd'}}" [readOnly]="true" formControlName="fecha_inicial">
-            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              formControlName="hora_inicial" ngModel="{{fecha_actual | date:'HH:mm'}}" [readOnly]="true">
+              formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" [readOnly]="true">
           </div>
 
           <div class="row">
@@ -694,7 +703,7 @@
                     <u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:17%;" class="center">
+                  <th pSortableColumn="descripcion" style="width:20%;" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
@@ -734,19 +743,19 @@
                   <th pSortableColumn="PUL" class="right1" style="width:4%">
                     PUL
                   </th>
-                  <th pSortableColumn="NIV" class="right1" style="width:4%">
+                  <th pSortableColumn="NIV" class="right1" style="width:3%">
                     NIV
                   </th>
                   <th pSortableColumn="%" class="right1" style="width:3%">
                     %
                   </th>
-                  <th pSortableColumn="PD" class="right1" style="width:4%">
+                  <th pSortableColumn="PD" class="right1" style="width:6%">
                     PD
                   </th>
-                  <th pSortableColumn="PU" class="right1" style="width:4%">
+                  <th pSortableColumn="PU" class="right1" style="width:6%">
                     PU
                   </th>
-                  <th pSortableColumn="%" class="right1" style="width:4%">
+                  <th pSortableColumn="%" class="right1" style="width:6%">
                     Total
                     <p-sortIcon field="Total" />
                   </th>
@@ -2344,7 +2353,6 @@
         </div>
         <!-- finTotales -->
       </div>
-
 
       <div mat-dialog-footer class="footersito">
         <div class="row">

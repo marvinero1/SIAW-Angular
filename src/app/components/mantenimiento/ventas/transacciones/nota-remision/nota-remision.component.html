@@ -10,7 +10,8 @@
         <div class="input-group-append text-center" style="float: left;">
           <!-- botones -->
           <div class="input-group-append">
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="submit">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="submitDataNotaRemision();">
               <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7cc;"></i> Grabar</span>
             </button>
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
@@ -272,9 +273,11 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">Total Proforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" readonly>&nbsp;
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [ngModel]="total_cabecera"
+              formControlName="total_cabecera" readonly>&nbsp;
 
-            <input type="text" class="form-control form-control-sm" disabled>
+            <input type="text" class="form-control form-control-sm" [ngModel]="moneda_cabecera"
+              formControlName="moneda_cabecera" readonly>
           </div>
 
           <div class="input-group">
@@ -298,7 +301,7 @@
 
         <!-- cuartaColumna -->
         <div class="col col-lg-3" style="float: right;">
-          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
+          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitDataNotaRemision()">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 18px;">
@@ -478,13 +481,13 @@
                   <th pSortableColumn="NIV" class="right1" style="width:4%">
                     NIV
                   </th>
-                  <th pSortableColumn="PD" class="right1" style="width:4%">
+                  <th pSortableColumn="PD" class="right1" style="width:6%">
                     PD
                   </th>
-                  <th pSortableColumn="PU" class="right1" style="width:4%">
+                  <th pSortableColumn="PU" class="right1" style="width:6%">
                     PU
                   </th>
-                  <th pSortableColumn="%" class="right1" style="width:4%">
+                  <th pSortableColumn="%" class="right1" style="width:6%">
                     Total
                     <p-sortIcon field="Total" />
                   </th>
@@ -809,7 +812,7 @@
                             style="padding: 10px 0px 0px 47px;border: 0 !important;"><u>Ubicación</u>
                           </span>
                           <input type="text" class="form-control form-control-sm" [(ngModel)]="central_ubicacion"
-                            style="margin-left: 5px;" readonly>
+                            formControlName="ubicacion" style="margin-left: 5px;" readonly>
                         </div>
                       </div>
                     </div>
@@ -879,148 +882,178 @@
             </mat-tab>
 
             <mat-tab label="Solicitud Descuentos de Linea"><br>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="row">
-                    <div class="input-group">
-                      <span class="input-group-text form-control-sm" style="padding: 7px 4px 0px 19px;">
-                        <u>ID Tipo</u>
-                      </span>
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row">
+                  <div class="col-md-4 p-2">
+                    <div class="row">
+                      <div class="input-group" style="margin-left: 28px;">
+                        <input type="checkbox" [(ngModel)]="desclinea_segun_solicitud" [disabled]="true"
+                          formControlName="desclinea_segun_solicitud" readonly>
+                        {{ desclinea_segun_solicitud }}
+                        <span class="input-group-text form-control-sm" style="padding: 2px 1px 0px 20px;">
+                          Habilitar Descuento de Linea Segun Solicitud
+                        </span>
+                      </div><br>
 
-                      <input type="text" class="form-control form-control-sm"> &nbsp;
-                      <input type="text" class="form-control form-control-sm">
+                      <div class="input-group">
+                        <span class="input-group-text form-control-sm" style="padding: 7px 4px 0px 19px;">
+                          <u>ID Tipo</u>
+                        </span>
+                        <input type="text" class="form-control form-control-sm"> &nbsp;
+                        <input type="text" class="form-control form-control-sm">
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </mat-tab>
 
             <mat-tab label="Complementar Proforma">
-              <div class="row">
-                <div class="col-md-12">
-                  <form class="example-form" [formGroup]="FormularioData">
-                    <div class="row"><br>
-                      <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 5px;border: 0 !important;">
-                              <u>Complementar Proforma</u></span>
-                          </div>
-                          <mat-checkbox class="example-margin" [(ngModel)]="complementopf">
-                          </mat-checkbox>
-                        </div>
-                        <mat-form-field>
-                          <mat-label>Eliga una Opción</mat-label>
-                          <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf"
-                            [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
-                            <mat-option [value]="0">1. Dimediado - Precio Mayorista Para Cumplir
-                              Monto Minimo
-                            </mat-option>
-                            <mat-option [value]="1">2. Para Cumplir Monto Minimo Para Aplicar
-                              Descuento Extra
-                            </mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-
-                      <div class="col-md-8"><br><br>
-                        <div class="col-md-6">
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row">
+                  <div class="col-md-12">
+                    <form class="example-form" [formGroup]="FormularioData">
+                      <div class="row"><br>
+                        <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
                           <div class="input-group">
-                            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
-                              formControlName="idpf_complemento">
-                              <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
-                                [value]="ids_complementar_proformas.id">
-                                {{ ids_complementar_proformas.id }} -
-                                {{ ids_complementar_proformas.descripcion }}
+                            <div class="input-group-prepend">
+                              <span class="input-group-text form-control-sm"
+                                style="padding: 10px 0px 0px 5px;border: 0 !important;">
+                                <u>Complementar Proforma</u></span>
+                            </div>
+                            <mat-checkbox class="example-margin" [(ngModel)]="complementopf">
+                            </mat-checkbox>
+                          </div>
+                          <mat-form-field>
+                            <mat-label>Eliga una Opción</mat-label>
+                            <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf"
+                              [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
+                              <mat-option [value]="0">1. Dimediado - Precio Mayorista Para Cumplir
+                                Monto Minimo
+                              </mat-option>
+                              <mat-option [value]="1">2. Para Cumplir Monto Minimo Para Aplicar
+                                Descuento Extra
                               </mat-option>
                             </mat-select>
+                          </mat-form-field>
+                        </div>
 
-                            <input type="text" class="form-control form-control-sm" [(ngModel)]="nroidpf_complemento"
-                              style="margin-left: 5px;" [(ngModel)]="input_complemento_view" [readOnly]="true">
+                        <div class="col-md-8"><br><br>
+                          <div class="col-md-6">
+                            <div class="input-group">
+                              <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
+                                formControlName="idpf_complemento">
+                                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                                  [value]="ids_complementar_proformas.id">
+                                  {{ ids_complementar_proformas.id }} -
+                                  {{ ids_complementar_proformas.descripcion }}
+                                </mat-option>
+                              </mat-select>
 
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-primary form-control-sm" type="button"
-                                style="border-color: #ffc107;" [disabled]="true">
-                                <i class="fa fa-search"></i>
-                              </button>
+                              <input type="text" class="form-control form-control-sm" [(ngModel)]="nroidpf_complemento"
+                                style="margin-left: 5px;" [(ngModel)]="input_complemento_view" [readOnly]="true">
+
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-primary form-control-sm" type="button"
+                                  style="border-color: #ffc107;" [disabled]="true">
+                                  <i class="fa fa-search"></i>
+                                </button>
+                              </div>
                             </div>
-                          </div>
 
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Fecha Aut
-                                  Proforma:
-                                </u></span>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                  <u>Fecha Aut
+                                    Proforma:
+                                  </u></span>
+                              </div>
+
+                            </div>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                  <u>SubTotal Proforma: </u></span>
+                              </div>
                             </div>
 
-                          </div>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>SubTotal Proforma: </u></span>
-                            </div>
-                          </div>
-
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                <u>Total Proforma: </u></span>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                                  <u>Total Proforma: </u></span>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </div>
-              </div>
+              </form>
             </mat-tab>
 
             <mat-tab label="Anticipo Venta Contado"><br>
-              <div class="col-md-3">
-                <div class="input-group">
-                  <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                    <u>El Pago Se Realiza De Forma Anticipada</u>
-                  </span>
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="col-md-3">
+                  <div class="input-group">
+                    <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                      <u>El Pago Se Realiza De Forma Anticipada</u>
+                    </span>
 
-                  <input type="checkbox" class="form-control form-control-sm" style="margin-left: 5px;"
-                    [(ngModel)]="pago_contado_anticipado">
+                    <input type="checkbox" class="form-control form-control-sm" style="margin-left: 5px;"
+                      [(ngModel)]="pago_contado_anticipado">
+                  </div>
                 </div>
-              </div>
+              </form>
             </mat-tab>
 
             <mat-tab label="Precios - Descuento Especial"><br>
-              <div class="row p-2">
-                <input type="text" style="margin-left: 5px;" disabled>
-              </div>
+              <form class="example-form" [formGroup]="FormularioData">
+                <div class="row p-2">
+                  <input type="text" style="margin-left: 5px;" disabled>
+                </div>
 
-              <div class="row p-2">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
-                  style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
-                  <i class="fa fa-check"></i> Obtener El Precio Que Tiene Monto Min Mayor.
-                </button>
+                <div class="row p-2">
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    <i class="fa fa-check"></i> Obtener El Precio Que Tiene Monto Min Mayor.
+                  </button>
 
-                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
-                  style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
-                  <i class="fa fa-plus"></i> Aplicar Descto. Especial Segun Tipo Precio.
-                </button>
+                  <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    <i class="fa fa-plus"></i> Aplicar Descto. Especial Segun Tipo Precio.
+                  </button>
 
-                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
-                  style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
-                  <i class="fa fa-eraser"></i> Borrar Descto. Especial.
-                </button>
+                  <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    <i class="fa fa-eraser"></i> Borrar Descto. Especial.
+                  </button>
 
-                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
-                  style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
-                  <i class="fa fa-random"></i> Validar Empaque de Descto. Especial
-                </button>
+                  <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="true"
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    <i class="fa fa-random"></i> Validar Empaque de Descto. Especial
+                  </button>
 
-                <button class="btn btn-outline-primary form-control-sm" type="button"
-                  style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
-                  <i class="fa fa-cogs"></i> Validar Descuentos Aplicados
-                </button>
-              </div>
+                  <button class="btn btn-outline-primary form-control-sm" type="button"
+                    style="background-color: #ffff00;font-size: 0.7rem !important;padding: 0rem 0.12rem !important;">
+                    <i class="fa fa-cogs"></i> Validar Descuentos Aplicados
+                  </button>
+                </div>
+
+
+
+                <input type="text" [(ngModel)]="fecha" formControlName="fecha">
+                <input type="text" [ngModel]="fecha_reg" formControlName="fechareg">
+                <input type="text" [(ngModel)]="fecha_confirmada" formControlName="fecha_confirmada">
+                <input type="text" [(ngModel)]="fechaaut" formControlName="fechaaut">
+                <input type="text" [(ngModel)]="fecha_inicial" formControlName="fecha_inicial">
+                <input type="text" [ngModel]="horareg" formControlName="horareg">
+                <input type="text" [(ngModel)]="hora" formControlName="hora">
+                <input type="text" [(ngModel)]="usuarioreg" formControlName="usuarioreg">
+                <input type="text" [ngModel]="horaaut" formControlName="horaaut">
+                <input type="text" [(ngModel)]="hora_inicial" formControlName="hora_inicial">
+                <input type="text" [(ngModel)]="hora_confirmada" formControlName="hora_confirmada">
+              </form>
             </mat-tab>
           </mat-tab-group>
         </div>

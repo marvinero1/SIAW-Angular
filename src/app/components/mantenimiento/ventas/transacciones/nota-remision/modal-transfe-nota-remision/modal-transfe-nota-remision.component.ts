@@ -5,9 +5,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ServicioTransfeNotaRemisionService } from './servicio-tranfe-a-nota-remision/servicio-transfe-nota-remision.service';
 import { ServicioCatalogoProformasService } from '../../proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
-import { ServicioTransfeAProformaService } from '@components/mantenimiento/ventas/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { CatalogoProformasComponent } from '../../proforma/catalogo-proformas/catalogo-proformas.component';
-import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
+import { ServicioTransfeAProformaService } from '../../proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 @Component({
   selector: 'app-modal-transfe-nota-remision',
   templateUrl: './modal-transfe-nota-remision.component.html',
@@ -23,11 +22,8 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
 
       switch (elementTagName) {
         case "inputCatalogoCliente":
-          this.transferirProforma();
+          this.validarNotaRemisionParaTransferir();
           break;
-        // case "inputCantidad":
-        //   this.pedidoChangeMatrix('', 0);
-        //   break;
       }
     }
   };
@@ -94,9 +90,33 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
       })
   }
 
-  transferirProforma() {
+  validarNotaRemisionParaTransferir() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veremision/validaTranferencia/";
+    return this.api.getAll('/venta/transac/veremision/validaTranferencia/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas)
+      .subscribe({
+        next: (datav) => {
+          // this.transferir_get = datav;
+          console.log(datav);
+          if (datav.resp === "Transfiriendo Proforma") {
+            this.transferirANotaRemision(datav.codProforma);
+            this.toastr.success(datav.resp);
+          } else {
+            this.toastr.success("Proforma No Transferida");
+          }
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+        },
+        complete: () => {
+          this.close();
+        }
+      })
+  }
+
+  transferirANotaRemision(cod_proforma) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + this.BD_storage)
+    return this.api.getAll('/venta/transac/veremision/transferirProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + cod_proforma)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
