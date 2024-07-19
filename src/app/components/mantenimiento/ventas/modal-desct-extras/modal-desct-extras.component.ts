@@ -239,9 +239,6 @@ export class ModalDesctExtrasComponent implements OnInit {
       porcentaje: this.info_descuento_porcentaje,
     }));
 
-
-    //codproforma: this.cabecera_proforma.numeroid,
-    //codanticipo: this.cabecera_proforma.idanticipo == "" ? 0 : this.cabecera_proforma.idanticipo,
     console.log(this.array_valida_detalle);
 
     let a = [{

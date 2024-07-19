@@ -2,16 +2,16 @@
   <div class="tittle"> Catálogo Descuentos Especiales</div>
   <div class="p-1 mat-elevation-z8">
     <div class="row" style="height: 62.5px !important;">
-      <div class="col-md-8" style="padding: 15px 20px 2px;">
+      <div class="col-md-8" style="padding: 0px 20px 2px;">
         <div>
-          <span><strong>Dsct. Especial: </strong> {{ descuento_view.codigo }} -
-            {{ descuento_view.descripcion }}</span>
+          <span><strong>Dsct. Especial: </strong>
+            {{ descuento_codigo }} - {{ descuento_descripcion }}
+          </span>
         </div>
         <div>
-          <span><strong>Precio Sugerido: </strong>{{ descuentos_get.codTarifa }}</span>
+          <span><strong>Precio Sugerido: </strong>{{ precio_codigo }}</span>
         </div>
-        <br>
-      </div>
+      </div><br>
       <div class="col-md-4 text-center">
         <a mat-stroked-button color="primary" (click)="mandarDescuento();">
           <i class="fa fa-check"></i>
@@ -19,7 +19,7 @@
         <a mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></a>
       </div>
     </div>
-  </div>
+  </div><br>
 
   <div class="row">
     <div class="col-lg">

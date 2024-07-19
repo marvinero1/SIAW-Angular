@@ -58,6 +58,7 @@ import { ModalClienteDireccionComponent } from '../../modal-cliente-direccion/mo
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 import { ServicioTransfeAProformaService } from './modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalTransfeProformaComponent } from './modal-transfe-proforma/modal-transfe-proforma.component';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -263,7 +264,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public tipo_cliente: string = "";
   public parsed: string;
   public longitud_cliente: string;
-  public es_contra_entrega: string;
   public latitud_cliente: string;
   public complemento_ci: string
   public cod_vendedor_cliente: string;
@@ -858,6 +858,17 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     // this.disableSelectComplemetarProforma = true;
   }
 
+  onCheckboxChange(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const isChecked = inputElement.checked;
+    console.log("Checkbox value: ", isChecked);
+    if (isChecked === true) {
+      this.estado_contra_entrega_input = 'YA CANCELO';
+    } else {
+      this.estado_contra_entrega_input = '';
+    }
+  }
+
   tablaInicializada() {
     this.orden_creciente = 0;
     this.array_items_carrito_y_f4_catalogo = Array(35).fill({}).map(() => ({
@@ -1241,14 +1252,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.total = 0;
     this.subtotal = 0;
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefTOTALIZAR = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "¿ DESEA TOTALIZAR LOS ITEM DE LA PROFORMA ?, ESTA ACCION PUEDE TOMAR UN TIEMPO" },
       disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefTOTALIZAR.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         console.log("LE DIO AL SI HAY Q TOTALIZAR, ");
         this.totabilizar();
@@ -1273,14 +1284,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.total = 0.00;
     this.subtotal = 0.00;
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefITEM = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "¿ DESEA TOTALIZAR LOS ITEM DE LA PROFORMA ?, ESTA ACCION PUEDE TOMAR UN TIEMPO" },
       disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefITEM.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         console.log("LE DIO AL SI HAY Q TOTALIZAR");
         this.totabilizar();
@@ -1616,7 +1627,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   }
 
   limpiar() {
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "Se Limpiara la Proforma. ¿ Esta Segur@ ?" },
@@ -1624,7 +1635,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
 
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         this.codigo_cliente = "";
         this.nombre_cliente = "";
@@ -2225,14 +2236,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   definirClienteReferencia(codcliente, casual) {
     console.log(codcliente, casual)
     if (!casual) {
-      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      const dialogRefcasual = this.dialog.open(DialogConfirmActualizarComponent, {
         width: 'auto',
         height: 'auto',
         data: { mensaje_dialog: "El código del Cliente: " + codcliente + " no es casual, por tanto no puede vincular con otro cliente, ¿Esta seguro de continuar?" },
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result: Boolean) => {
+      dialogRefcasual.afterClosed().subscribe((result: Boolean) => {
         if (result) {
           this.modalClientesparaReferencia();
           window.alert("Como el cliente: " + codcliente + " es casual y/o referencia, debe identificar el VENDEDOR que realiza la operacion, por defecto se pondra el codigo del vendedor del ! CLIENTE REFERENCIA O CASUAL !");
@@ -2254,7 +2265,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     let tipo = "trasnferirProforma-UPDATE";
 
     console.log(codigo, id_numero_id);
-    const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
+    const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: 'auto',
       height: 'auto',
       data: {
@@ -2266,7 +2277,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefParams.afterClosed().subscribe((result: Boolean) => {
       console.log(result);
       if (result) {
         this.tranferirProforma();
@@ -2738,10 +2749,22 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openConfirmationDialog(message: string): Promise<boolean> {
+    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+
   //accion de btn grabar
-  submitData() {
+  async submitData() {
     this.spinner.show();
     this.totabilizar();
+    let data1 = this.FormularioData.value;
 
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (this.validacion_post && this.validacion_post_negativos) {
@@ -2756,45 +2779,83 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       console.log(array_validacion_existe_aun_no_validos);
       console.log(array_negativos_aun_existe);
 
-      //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
-      if (array_validacion_existe_aun_no_validos_tamanio > 0) {
-        const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
-          height: 'auto',
-          data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?` },
-          disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe((result: Boolean) => {
+      try {
+        if (array_validacion_existe_aun_no_validos_tamanio > 0) {
+          const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?`);
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);
             return;
           }
-        });
+        }
+
+        if (array_negativos_aun_existe_tamanio > 0) {
+          const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?`);
+          if (!result) {
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+            return;
+          }
+        }
+
+        const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} no esta confirmada. ¿Desea Confirmarla?`);
+        if (result) {
+          data1 = {
+            ...data1,
+            confirmada: true,
+          };
+        }
+        if (this.api.statusInternet === false) {
+          const resultInterne = await this.openConfirmationDialog("¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?");
+          if (resultInterne) {
+            this.detalleProformaCarritoTOExcel();
+          }
+        }
+      } catch (error) {
+        console.error('Error al realizar las validaciones:', error);
       }
+
+      //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
+      // if (array_validacion_existe_aun_no_validos_tamanio > 0) {
+      //   const dialogRefActualizar = this.dialog.open(DialogConfirmActualizarComponent, {
+      //     width: 'auto',
+      //     height: 'auto',
+      //     data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?` },
+      //     disableClose: true,
+      //   });
+
+      //   dialogRefActualizar.afterClosed().subscribe((result: Boolean) => {
+      //     if (!result) {
+      //       setTimeout(() => {
+      //         this.spinner.hide();
+      //       }, 1000);
+      //       return;
+      //     }
+      //   });
+      // }
 
       //VALIDACION SI EN LA VALIDACIONES HAY ITEMS QUE GENERAN NEGATIVOS
-      if (array_negativos_aun_existe_tamanio > 0) {
-        const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
-          height: 'auto',
-          data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?` },
-          disableClose: true,
-        });
+      //   if (array_negativos_aun_existe_tamanio > 0) {
+      //     const dialogRefConfirm = this.dialog.open(DialogConfirmActualizarComponent, {
+      //       width: 'auto',
+      //       height: 'auto',
+      //       data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?` },
+      //       disableClose: true,
+      //     });
 
-        dialogRef.afterClosed().subscribe((result: Boolean) => {
-          if (!result) {
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1000);
-            return;
-          }
-        });
-      }
+      //     dialogRefConfirm.afterClosed().subscribe((result: Boolean) => {
+      //       if (!result) {
+      //         setTimeout(() => {
+      //           this.spinner.hide();
+      //         }, 1000);
+      //         return;
+      //       }
+      //     });
+      //   }
     } else {
-      console.error('validacion_post o validacion_post_negativos no están definidos');
+      console.error('validacion_post o validacion_post_negativos están vacios o todo correcto');
     }
 
     const transformedArray = this.validacion_post.map(item => ({
@@ -2857,21 +2918,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }, 1000);
     }
 
-    if (this.api.statusInternet === false) {
-      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
-        height: 'auto',
-        data: { mensaje_dialog: "¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?" },
-        disableClose: true,
-      });
-
-      dialogRef.afterClosed().subscribe((result: Boolean) => {
-        if (result) {
-          this.detalleProformaCarritoTOExcel();
-        }
-      });
-    }
-
     let data = this.FormularioData.value;
     data = {
       ...data,
@@ -2880,23 +2926,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
       nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
     };
-
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: { mensaje_dialog: "La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? " },
-      disableClose: true,
-    });
-
-
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (result) {
-        data = {
-          ...data,
-          confirmada: true,
-        };
-      }
-    });
 
     console.log("Data Form Mapeado: ", data);
     total_proforma_concat = {
@@ -2919,6 +2948,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
         this.toastr.info("GUARDADO CON EXITO ✅");
+        this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
         this.totabilizar_post = datav;
         console.log(this.totabilizar_post);
 
@@ -2926,6 +2956,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         }, 1000);
       },
+
       error: (err) => {
         console.log(err, errorMessage);
         this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
@@ -2935,15 +2966,31 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         }, 1000);
       },
+
       complete: () => {
         //aca exporta a ZIP
-        this.exportProformaZIP(this.totabilizar_post.codProf);
-        this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+        const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
+          width: 'auto',
+          height: 'auto',
+          data: {
+            mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
+          },
+          disableClose: true,
+        });
 
-        //aca manda a imprimir la proforma guardada
-        this.modalBtnImpresiones();
+        dialogRefZIP.afterClosed().subscribe((result: Boolean) => {
+          if (result) {
+            this.exportProformaZIP(this.totabilizar_post.codProf);
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          } else {
+            this.toastr.error("NO SE DESCARGO ZIP");
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          }
+        });
+
         this.guardarDataImpresion(this.totabilizar_post.codProf);
-
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
@@ -2970,7 +3017,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     };
 
     console.log(this.FormularioData.valid);
-
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
@@ -3040,7 +3086,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   formatNumber(number: number): any {
     // Formatear el número con el separador de miles como coma y el separador decimal como punto
     return new Intl.NumberFormat('en-US').format(number);
@@ -3077,22 +3122,20 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefvALIDAR = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "¿Desea aplicar DESCUENTO POR DEPOSITO, si el cliente tiene pendiente algun descuento por este concepto?" },
       disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefvALIDAR.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         this.aplicarDesctPorDepositoYValidar();
       } else {
-        this.toastr.error('! CANCELADO !');
-
+        // this.toastr.error('! CANCELADO !');
         this.totabilizar();
         this.spinner.show();
-
         // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
         // VACIO - TODOS LOS CONTROLES
         this.valor_formulario = [this.FormularioData.value];
@@ -4605,63 +4648,46 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   // Exportar a EXCEL
   exportProformaZIP(cod_proforma: any) {
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: {
-        mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id
-          + " con Exito. ¿Desea Exportar el Documento? "
-      },
-      disableClose: true,
-    });
+    console.log("El usuario hizo clic en Aceptar.");
 
+    this.api.descargarArchivo('/venta/transac/veproforma/exportProforma/' + this.userConn + "/" + cod_proforma + "/" + this.codigo_cliente, { responseType: 'arraybuffer' })
+      .subscribe({
+        next: (datav: ArrayBuffer) => {
+          console.log(datav);
+          this.toastr.success("DESCARGA EN PROCESO");
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (result) {
-        console.log("El usuario hizo clic en Aceptar.");
+          // Convertir ArrayBuffer a Blob
+          const blob = new Blob([datav], { type: 'application/zip' });
+          const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
 
-        this.api.descargarArchivo('/venta/transac/veproforma/exportProforma/' + this.userConn + "/" + cod_proforma + "/" + this.codigo_cliente, { responseType: 'arraybuffer' })
-          .subscribe({
-            next: (datav: ArrayBuffer) => {
-              console.log(datav);
-              this.toastr.success("DESCARGA EN PROCESO");
+          // Crear el objeto URL para el Blob recibido
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = timestamp + "-" + this.cod_id_tipo_modal_id + "-" + this.id_proforma_numero_id + '.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
 
-              // Convertir ArrayBuffer a Blob
-              const blob = new Blob([datav], { type: 'application/zip' });
-              const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
 
-              // Crear el objeto URL para el Blob recibido
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = timestamp + "-" + this.cod_id_tipo_modal_id + "-" + this.id_proforma_numero_id + '.zip';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
 
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1000);
-            },
-
-            error: (err: any) => {
-              console.log(err);
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1000);
-            },
-
-            complete: () => {
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1000);
-            }
-          });
-      } else {
-        this.toastr.error("NO SE DESCARGO");
-      }
-    });
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
   }
 
   cargarDataExcel() {
@@ -4678,7 +4704,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
     const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefExcel = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "¿ Desea Exportar El Detalle Del Documento a Excel ?" },
@@ -4686,7 +4712,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
 
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefExcel.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         // Convertir los datos a una hoja de cálculo
         const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
@@ -5067,6 +5093,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         items: this.array_items_carrito_y_f4_catalogo,
         descuento_nivel: this.desct_nivel_actual,
+        tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
       }
     });
   }
@@ -5379,7 +5406,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         data: {
           cabecera: this.FormularioData.value,
           desct: this.cod_descuento_total,
-          contra_entrega: this.es_contra_entrega,
+          contra_entrega: this.contra_entrega,
           items: this.array_items_carrito_y_f4_catalogo,
           recargos_del_total: this.recargos,
           cod_moneda: this.moneda_get_catalogo,
@@ -5602,7 +5629,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     console.log(element, this.validacion_no_validos);
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
-    const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
+    const dialogRefEspeciales = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: 'auto',
       height: 'auto',
       data: {
@@ -5613,7 +5640,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefEspeciales.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         //let a = this.validacion_no_validos.filter(i => i.Codigo !== element.Codigo);
 
@@ -5678,7 +5705,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   resolverValidacionEnValidarMensaje(element) {
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    const dialogRefaplicar = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
       data: { mensaje_dialog: "¿Desea aplicar DESCUENTO POR DEPOSITO, si el cliente tiene pendiente algun descuento por este concepto?" },
@@ -5686,7 +5713,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
 
 
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
+    dialogRefaplicar.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         // Verificar si el elemento ya está presente en el array
         const indice_NO_VALIDAS_RESUELTAS = this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.findIndex(item => item.Codigo === element.Codigo);
@@ -5729,7 +5756,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         console.log("Array de donde se ah tenido que eliminar: ", this.validacion_no_validos);
         console.log("Array de donde se imprime solo las RESUELTAS: ", this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS);
       } else {
-        this.toastr.error('¡CANCELADO!');
+        // this.toastr.error('¡CANCELADO!');
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.Codigo === element.Codigo);
         if (indice !== -1) {

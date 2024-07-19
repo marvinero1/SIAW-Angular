@@ -127,7 +127,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public idpf_complemento_view: any;
   public disableSelect = new FormControl(false);
 
-
   precio: any = true;
   desct: any = false;
 
@@ -222,6 +221,31 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public item_obtenido: any = [];
   porcen_item: string;
 
+  desclinea_segun_solicitud: any;
+  total_cabecera: any;
+  moneda_cabecera: any;
+  txtid_solurgente: any;
+  txtnroid_solurgente: any;
+
+
+  fecha_confirmada: any;
+  fechaaut: any;
+  fecha_reg: any;
+  fecha: any;
+  fecha_inicial: any;
+
+  horareg: any;
+  hora: any;
+  usuarioreg: any;
+  horaaut: any;
+  hora_confirmada: any;
+  hora_inicial: any;
+  contra_entrega: any;
+  complemento_proforma: any;
+  codcliente_real: any;
+  descuento_total: any;
+  codigo_proforma: any;
+
   // totales
   public subtotal: number;
   public recargos: number;
@@ -232,7 +256,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   totabilizar_post: any = [];
   tablaIva: any = [];
 
-  cod_descuento_modal_codigo: number;
+  cod_descuento_modal_codigo: any;
   cod_precio_venta_modal_codigo: number;
 
   item_seleccionados_catalogo_matriz_codigo: any;
@@ -246,9 +270,15 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   public codigo_cliente_catalogo: string;
   public codigo_item_catalogo: string;
   id_tipo: any = [];
+  es_venta: boolean = true;
+
+  fecha_actual_server: any;
+  hora_fecha_server: any;
 
   dataSource_negativos = new MatTableDataSource();
   dataSourceWithPageSize_negativos = new MatTableDataSource();
+
+  codcliente_real_descripcion: string;
 
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
@@ -272,6 +302,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.es_venta = true;
+
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
       this.cod_id_tipo_modal = data.id_tipo.id;
@@ -344,6 +376,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.getHoraFechaServidorBckEnd();
     this.getIDScomplementarProforma();
     this.getIdTipo();
     this.getAlmacenParamUsuario();
@@ -352,6 +385,27 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.getAllmoneda();
     this.getTipoDocumentoIdentidadProforma();
     this.getVendedor();
+  }
+
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.fecha_actual_server = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
+          this.hora_fecha_server = datav.horaServidor;
+
+          console.log(this.fecha_actual, this.hora_fecha_server);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      })
   }
 
   getIdTipo() {
@@ -778,34 +832,17 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.total = 0;
   }
 
-  desclinea_segun_solicitud: any;
-  total_cabecera: any;
-  moneda_cabecera: any;
-  txtid_solurgente: any;
-  txtnroid_solurgente: any;
-
-
-  fecha_confirmada: any;
-  fechaaut: any;
-  fecha_reg: any;
-  fecha: any;
-  fecha_inicial: any;
-
-  horareg: any;
-  hora: any;
-  usuarioreg: any;
-  horaaut: any;
-  hora_confirmada: any;
-  hora_inicial: any;
-
   imprimir_proforma_tranferida(proforma) {
-    console.log(proforma.data);
+    console.log("Imprimir Proforma: ", proforma.data);
 
+    this.codigo_proforma = proforma.data.cabecera.codigo;
     this.total_cabecera = proforma.data.cabecera.total;
     this.moneda_cabecera = proforma.data.cabecera.codmoneda;
+    this.complemento_proforma = proforma.data.cabecera.complemento_proforma;
 
     // this.cod_id_tipo_modal = proforma.data.cabecera.id;
     // this.id_proforma_numero_id = proforma.data.cabecera.numeroid;
+
     this.fecha_actual = proforma.data.cabecera.fecha;
     this.fecha_actual = this.fecha_actual;
 
@@ -822,13 +859,16 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     this.email_cliente = proforma.data.cabecera.email;
     this.cliente_casual = proforma.data.cabecera.casual;
     this.preparacion = proforma.data.cabecera.preparacion;
-    this.estado = proforma.data.cabecera.estado_contra_entrega;
 
     this.moneda_get_catalogo = proforma.data.cabecera.codmoneda;
     this.tdc = proforma.data.cabecera.tdc;
-    this.codigo_cliente = proforma.data.cabecera.codcliente_real;
+
+    this.codcliente_real = proforma.data.cabecera.codcliente_real;
+    this.codcliente_real_descripcion = proforma.data.cabecera.codclientedescripcion;
+
     this.tipopago = proforma.data.cabecera.tipopago;
-    this.estado_contra_entrega_input = proforma.data.cabecera.contra_entrega;
+    this.estado_contra_entrega_input = proforma.data.cabecera.estado_contra_entrega;
+    this.contra_entrega = proforma.data.cabecera.contra_entrega;
     this.cod_proforma = proforma.data.cabecera.codigo;
     this.id_nro_id_proforma = proforma.data.cabecera.id + "-" + proforma.data.cabecera.numeroid;
 
@@ -870,7 +910,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
     //eso nop porque se totaliza una vez transferida
     // this.subtotal = proforma.data.cabecera.subtotal;
     // this.recargos = proforma.data.cabecera.recargos;
-    // this.des_extra = proforma.data.cabecera.descuentos;
+    this.descuento_total = proforma.data.cabecera.descuentos;
     // this.total = proforma.data.cabecera.total;
 
     this.iva = proforma.data.cabecera.iva;
@@ -950,7 +990,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       //precio venta columna segunda primera fila verificar conq nombre se guarda
 
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
-      descuentos: [this.des_extra],
+      cod_descuento: [this.dataform.descuentos],
       tipopago: [this.dataform.tipopago === 0 ? 0 : 1, Validators.required],
       transporte: [this.dataform.transporte === "FLOTA", Validators.required],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
@@ -969,25 +1009,28 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       impresa: [false],
       etiqueta_impresa: [false],
       es_sol_urgente: [false],
-      cod_proforma_form: [this.dataform.cod_proforma_form],
+      codproforma: [this.dataform.cod_proforma_form],
       id_nro_id_proforma_form: [this.dataform.id_nro_id_proforma_form],
-
+      complemento_proforma: [this.dataform.complemento_proforma],
       obs: this.dataform.obs ? this.dataform.obs.trim() : '',
       obs2: [""],
       direccion: [this.dataform.direccion],
-      peso: Number(this.peso),
-      codcliente_real: this.codigo_cliente,
+      codcliente_real: [this.dataform.codcliente_real],
+      // peso: Number(this.peso),
+      peso: Number(this.dataform.peso),
+
       latitud_entrega: [this.dataform.latitud_entrega === undefined ? this.dataform.latitud : this.dataform.latitud],
       longitud_entrega: [this.dataform.longitud_entrega === undefined ? this.dataform.longitud : this.dataform.longitud],
       ubicacion: [this.dataform.ubicacion === null ? 'LOCAL' : this.dataform.ubicacion],
       email: [this.dataform.email],
 
       venta_cliente_oficina: [{ value: this.dataform.venta_cliente_oficina === undefined ? false : true, disabled: true }],
-      contra_entrega: [{ value: this.estado_contra_entrega_input, disabled: true }],
-      tipo_venta: ['0'],
-      estado_contra_entrega: [this.dataform.estado_contra_entrega === undefined ? "" : this.dataform.estado_contra_entrega],
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
 
+      contra_entrega: this.dataform.contra_entrega,
+      estado_contra_entrega: [this.dataform.estado_contra_entrega],
+
+      tipo_venta: ['0'],
       odc: "",
 
       idanticipo: [""], //anticipo VentasL
@@ -997,7 +1040,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
       nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
-      idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
+      idsoldesctos: "", // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
@@ -1027,7 +1070,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
 
       horareg: this.dataform.horareg,
       hora: this.dataform.hora,
-      usuarioreg: this.usuarioLogueado,
+      usuarioreg: this.dataform.usuarioLogueado,
       horaaut: this.dataform.horaaut,
       hora_inicial: this.dataform.hora_inicial,
       hora_confirmada: this.dataform.hora_confirmada,
@@ -1035,24 +1078,29 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   submitDataNotaRemision() {
+    let a = [this.FormularioData.value].map((element) => ({
+      ...element,
+      descuentos: this.des_extra,
+      contra_entrega: this.contra_entrega,
+      codproforma: this.codigo_proforma,
+      tipo_docid: this.tipo_doc_cliente,
+      venta: this.es_venta,
+      codalmacen_saldo: this.almacn_parame_usuario_almacen,
+      descarga: true
+    }));
+
     let submit_nota_remision = {
-      veremision: this.FormularioData.value,
+      veremision: a[0],
       veremision1: this.array_items_carrito_y_f4_catalogo,
       vedesextraremi: this.array_de_descuentos_ya_agregados,
       verecargoremi: [],
       veremision_iva: this.tablaIva,
-      veremision_chequerechazado: {
-        codremision: 0,
-        id: "",
-        numeroid: 0,
-        codigo: 0
-      },
+      veremision_chequerechazado: {}
     };
 
     if (this.txtid_solurgente === "") {
       this.txtid_solurgente = "0";
     }
-
     console.log(submit_nota_remision);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
@@ -1064,6 +1112,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
           this.log_module.guardarLog(this.ventana, "Modificacion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
           this.toastr.success(datav.resp);
+          this.mandarAImprimir(datav.codNotRemision);
         },
 
         error: (err: any) => {
@@ -1071,10 +1120,70 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
         },
 
         complete: () => {
-          window.location.reload();
         }
-      })
+      });
   }
+
+  mandarAImprimir(cod_nota_remision) {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
+    return this.api.getAll('/venta/transac/veremision/impresionNotaRemision/' + this.userConn + "/" + this.codcliente_real + "/" +
+      this.BD_storage + "/" + this.codcliente_real_descripcion + "/" + this.preparacion + "/" + cod_nota_remision)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.log_module.guardarLog(this.ventana, "Impresion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          this.toastr.success(datav.resp);
+          this.toastr.success("IMPRIMIENDO 🖨️");
+
+
+          this.guardarDataImpresion(cod_nota_remision);
+
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+
+        complete: () => {
+          // window.location.reload();
+        }
+      });
+  }
+
+  guardarDataImpresion(codigo_proforma_submitdata) {
+    let data = [{
+      codigo_proforma: codigo_proforma_submitdata,
+      cod_cliente: this.codigo_cliente,
+      cod_cliente_real: this.codigo_cliente_catalogo_real,
+      cmbestado_contra_entrega: this.contra_entrega,
+      estado_contra_entrega: this.estado_contra_entrega_input,
+      codigo_vendedor: this.cod_vendedor_cliente
+    }];
+
+    localStorage.setItem('data_impresion', JSON.stringify(data));
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   getIDScomplementarProforma() {
@@ -1111,8 +1220,19 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
+    let a = [this.FormularioData.value].map((element) => ({
+      ...element,
+      descuentos: this.des_extra,
+      contra_entrega: this.contra_entrega,
+      codproforma: this.codigo_proforma,
+      tipo_docid: this.tipo_doc_cliente,
+      venta: this.es_venta,
+      codalmacen_saldo: this.almacn_parame_usuario_almacen,
+      descarga: true
+    }));
+
     total_proforma_concat = {
-      veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
+      veproforma: a[0], //este es el valor de todo el formulario de proforma
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
       veproforma_anticipo: [],
@@ -1314,13 +1434,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   getSaldoItemSeleccionadoDetalle(item) {
-    console.log(item, this.agencia_logueado);
-
     if (this.agencia_logueado === "Loc") {
       this.agencia_logueado = "311";
     }
 
-    let agencia = this.agencia_logueado;
     this.item_seleccionados_catalogo_matriz_codigo = item;
 
     let agencia_concat = "AG" + this.agencia_logueado;

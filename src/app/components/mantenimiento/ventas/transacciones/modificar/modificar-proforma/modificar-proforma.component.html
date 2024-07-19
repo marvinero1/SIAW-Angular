@@ -760,6 +760,9 @@
               (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
                 <tr>
+                  <th pSortableColumn="nroitem" class="center1" style="width:3%;">
+                    Or Ped
+                  </th>
                   <th pSortableColumn="orden" class="center1" style="width:4%">
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
@@ -831,6 +834,7 @@
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
                   (click)="itemDataAll(products?.coditem)">
+                  <td class="center1"> {{ products.nroitem }} </td>
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
                       padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
@@ -838,8 +842,7 @@
                     {{ products.orden }}
                   </td>
                   <td class="center1">{{ products.coditem }}</td>
-                  <td class="left">{{ products.descripcion }}
-                  </td>
+                  <td class="left">{{ products.descripcion }}</td>
                   <td class="center1">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
                   <td class="center1">{{ products.porceniva }}</td>

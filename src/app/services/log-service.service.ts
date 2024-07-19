@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
 import { ApiService } from './api.service';
 
@@ -13,10 +13,12 @@ export class LogService {
   hora_actual = new Date();
   logs: any = [];
   logData: FormGroup;
-  userLogueado: any = [];
   userConn: any;
+  usuarioLogueado: any;
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private api: ApiService) {
+    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
   }
 
   // ngOnInit(){
@@ -26,7 +28,7 @@ export class LogService {
 
   createFormLog(ventana: string, detalle: string, tipo: string, id, numero_id): FormGroup {
 
-    const usuario = this.userLogueado;
+    const usuario = this.usuarioLogueado;
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -46,7 +48,7 @@ export class LogService {
   }
 
   createFormLogVentana(ventana: string, detalle: string): FormGroup {
-    const usuario = this.userLogueado;
+    const usuario = this.usuarioLogueado;
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -90,7 +92,7 @@ export class LogService {
     this.logData = this.createFormLogVentana(ventana, detalle);
     let data = this.logData.value;
 
-    let errorMessage = "LOG Salio Error en guardar" + "Ruta:--  /LOG";
+    let errorMessage = "LOG Salio Error en guardar" + "Ruta: -/seg_adm/logs/selog/";
     return this.api.create("/seg_adm/logs/selog/" + this.userConn, data)
       .subscribe({
         next: (datav) => {

@@ -454,7 +454,7 @@ export class AnticiposProformaComponent implements OnInit {
   mandarProforma() {
     this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
       anticipos: this.array_tabla_anticipos_get,
-      totalAnticipo: this.total_anticipos,
+      totalAnticipo: this.formatNumberTotalSubTOTALES(this.total_anticipos),
     });
 
     this.dialogRef.close();

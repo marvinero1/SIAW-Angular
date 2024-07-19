@@ -398,7 +398,8 @@
             <div class="input-group-prepend">
               <div class="input-group-text" style="border: 0 !important;">
                 <ng-container *ngIf="tipopago === 0">
-                  <input type="checkbox" formControlName="contra_entrega" [(ngModel)]="contra_entrega">
+                  <input type="checkbox" formControlName="contra_entrega" [(ngModel)]="contra_entrega"
+                    (change)="onCheckboxChange($event)">
                 </ng-container>
                 <ng-container *ngIf="tipopago === 1">
                   <input type="checkbox" disabled>
@@ -453,6 +454,7 @@
           </ng-container> -->
         </div>
 
+        <!-- terceraColumna -->
         <div class="col-md-2 col-lg-2  col-sm-0">
           <div class="col">
             <div class="input-group">
@@ -479,7 +481,7 @@
           </div>
         </div>
 
-        <!-- terceraColumna -->
+        <!-- cuartaColumna -->
         <div class="col-md-4 col-lg-4 col-sm-4" style="float: right;">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -1624,8 +1626,8 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                              <u>Total Anticipo Aplicado :</u>&nbsp;
-                              <strong>{{ formatNumberTotalSub(monto_anticipo)}} -
+                              <u>Total Anticipo Aplicado:</u>&nbsp;
+                              <strong>{{ formatNumberTotalSubTOTALES(monto_anticipo)}} -
                                 {{ moneda_get_catalogo }}</strong>
                             </span>
                           </div>

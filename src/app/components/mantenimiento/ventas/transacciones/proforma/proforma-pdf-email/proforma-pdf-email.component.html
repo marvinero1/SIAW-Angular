@@ -1,3 +1,6 @@
+<!-- <div class="no-printme">
+  <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">download</mat-icon>
+</div> -->
 <div id="content" style="background-color: white !important;">
   <div class="row">
     <div class="col-sm-3 left">
@@ -114,18 +117,15 @@
           <td class="center" style="font-family: 'Courier New' !important;">&nbsp;{{items.coditem}}&nbsp;</td>
           <td width="450">
             <div class="row">
-              <div class="col-md-8 left" style="font-size: 0.8rem !important;">
-                {{items.descripcion}}
-              </div>
-              <div class="col-md-4 right" style="font-size: 0.8rem !important;">
-                {{items.medida}}
+              <div class="col-md left" style="font-size: 0.8rem !important;">
+                {{items.descripcion}} - {{items.medida}}
               </div>
             </div>
           </td>
           <td class="center" style="font-size: 0.8rem !important;">{{ items.udm }}</td>
-          <td class="right" style="font-size: 0.8rem !important;">{{ items.cantidad }}</td>
+          <td class="center" style="font-size: 0.8rem !important;">{{ items.cantidad }}</td>
           <td class="center" style="font-size: 0.8rem !important;">{{ items.codtarifa }}</td>
-          <td class="right" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub(items.precioneto) }}</td>
+          <td class="center" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub(items.precioneto) }}</td>
           <td class="right" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub2Decimals(items.total)  }}</td>
         </tr>
 

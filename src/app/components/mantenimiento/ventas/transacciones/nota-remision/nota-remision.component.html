@@ -194,7 +194,7 @@
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" formControlName="descuentos"
+              <input type="text" class="form-control form-control-sm" formControlName="cod_descuento"
                 [(ngModel)]="cod_descuento_modal_codigo" style="margin-left: 6px;" readonly>
             </ng-container>
 
@@ -260,7 +260,7 @@
               <div class="input-group-prepend">
                 <div class="input-group-text" style="border: 0;">
                   <input type="checkbox" style="margin-left: 5px;" formControlName="contra_entrega"
-                    [(ngModel)]="estado_contra_entrega_input" [disabled]="true" readonly>
+                    [(ngModel)]="contra_entrega" [disabled]="true" readonly>
                 </div>
               </div>
               <div class="input-group-prepend">
@@ -349,7 +349,7 @@
               </div>
 
               <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
-                [(ngModel)]="tipo_doc_cliente" [disabled]="true" readonly>
+                [(ngModel)]="tipo_doc_cliente" readonly>
                 <mat-option *ngFor="let documento_identidads of documento_identidad"
                   [value]="documento_identidads.codigoclasificador">
                   {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}
@@ -1040,8 +1040,7 @@
                   </button>
                 </div>
 
-
-
+                <!-- 
                 <input type="text" [(ngModel)]="fecha" formControlName="fecha">
                 <input type="text" [ngModel]="fecha_reg" formControlName="fechareg">
                 <input type="text" [(ngModel)]="fecha_confirmada" formControlName="fecha_confirmada">
@@ -1053,6 +1052,33 @@
                 <input type="text" [ngModel]="horaaut" formControlName="horaaut">
                 <input type="text" [(ngModel)]="hora_inicial" formControlName="hora_inicial">
                 <input type="text" [(ngModel)]="hora_confirmada" formControlName="hora_confirmada">
+
+
+                <input type="text" [(ngModel)]="complemento_proforma" formControlName="complemento_proforma">
+                <input type="number" [(ngModel)]="peso" formControlName="peso">
+                <input type="text" [(ngModel)]="codcliente_real" formControlName="codcliente_real"> -->
+
+
+                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha" readonly>
+                <input type="text" [ngModel]="fecha_actual_server" formControlName="fechareg" readonly>
+                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha_confirmada" readonly>
+                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fechaaut" readonly>
+                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha_inicial" readonly>
+                <input type="text" [ngModel]="hora_fecha_server" formControlName="horareg" readonly>
+                <input type="text" [(ngModel)]="hora_fecha_server" formControlName="hora" readonly>
+                <input type="text" [(ngModel)]="usuarioLogueado" formControlName="usuarioreg" readonly>
+                <input type="text" [ngModel]="hora_fecha_server" formControlName="horaaut" readonly>
+                <input type="text" [(ngModel)]="hora_fecha_server" formControlName="hora_inicial" readonly>
+                <input type="text" [(ngModel)]="hora_fecha_server" formControlName="hora_confirmada" readonly>
+
+                <input type="text" [(ngModel)]="complemento_proforma" formControlName="complemento_proforma" readonly>
+                <input type="number" [(ngModel)]="peso" formControlName="peso" readonly>
+                <input type="text" [(ngModel)]="codcliente_real" formControlName="codcliente_real" readonly>
+
+                <input type="text" [(ngModel)]="estado_contra_entrega_input" formControlName="estado_contra_entrega"
+                  readonly>
+                <input type="text" [(ngModel)]="contra_entrega" formControlName="contra_entrega" readonly>
+                <input type="number" [(ngModel)]="descuento_total" formControlName="descuento_total" readonly>
               </form>
             </mat-tab>
           </mat-tab-group>
@@ -1107,7 +1133,7 @@
               </div>
               <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
                 <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
-                <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
+                <!-- <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true"> -->
               </div>
               <div class="col text-right">
                 <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1152,7 +1178,7 @@
             </div>
 
             <div style="text-align: center;">
-              <input type="checkbox"><span>&nbsp; Es Venta</span>
+              <input type="checkbox" [(ngModel)]="es_venta" [value]="true" readonly><span>&nbsp; Es Venta</span>
             </div>
           </form>
         </div>

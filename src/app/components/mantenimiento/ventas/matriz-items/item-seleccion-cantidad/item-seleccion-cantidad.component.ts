@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -91,7 +91,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService,
     @Inject(MAT_DIALOG_DATA) public desct_nivel: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public precio_venta: any) {
+    @Inject(MAT_DIALOG_DATA) public precio_venta: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any
+  ) {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
@@ -110,7 +111,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.desct_nivel_get = desct_nivel.desct_nivel;
     this.items_get_carrito = items.items;
     this.precio_venta_get = precio_venta.precio_venta;
-    this.tamanio_carrito = this.items_get_carrito.length;
+    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras;
 
     console.log("Items de carrito: ", this.items_get_carrito, "Tamanio: " + this.tamanio_carrito)
   }
@@ -120,7 +121,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
       console.log("Recibiendo Descuento: ", data);
       this.cod_descuento_modal = data.descuento;
-      this.cod_descuento_modal_codigo = this.cod_descuento_modal.codigo;
+      this.cod_descuento_modal_codigo = data.descuento;
       this.cod_precio_venta_modal_codigo = data.precio_sugerido;
     });
     // findescuentos
@@ -136,7 +137,6 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.getTarifa();
     this.getDescuentos();
-
   }
 
   getTarifa() {
@@ -227,6 +227,9 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   agregarItems() {
     let a: any;
     var d_tipo_precio_desct: string;
+    let i = this.tamanio_carrito + 1;
+    console.log("Tamanio CARRITO COMPRAS", this.tamanio_carrito)
+
 
     const errorMessage1 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
     const errorMessage2 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
@@ -242,8 +245,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         coditem: elemento,
         tarifa: this.precio_venta_get, // cod_precio_venta viene de precio venta de la matriz xD
         descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, // cod_descuento_modal_codigo
-        cantidad_pedida: this.cantidad_input,
-        cantidad: this.cantidad_input,
+        cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
+        cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
         codcliente: this.codcliente_get,
         opcion_nivel: this.desct_nivel_get,
         codalmacen: this.codalmacen_get,
@@ -251,7 +254,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
         empaque: this.empaques_input,
-        orden_pedido: index + 1, // Usamos index + 1 para asignar el número de orden
+        orden_pedido: i + index, // Usamos index + 1 para asignar el número de orden
       };
     });
 

@@ -35,12 +35,19 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
     console.log("data impresion: ", this.data_impresion);
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    //primero carga la info del PDF, y el PDF se tiene q pintar de data
+    this.getDataPDF();
+  }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.getDataPDF();
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      // una vez q la data se cargue al PDF, el PDF se genera y se envia el archivo PDF ya generado con la data en el xD xD
+      this.generatePDF()
+    }, 4000);
   }
 
   getDataPDF() {
@@ -52,7 +59,6 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
           console.log("DATA DEL PDF: ", datav);
           //datav.docveprofCab CABECERA Y FOOTER
           this.data_cabecera_footer_proforma = datav.docveprofCab;
-
           //datav.dtveproforma1 DETALLE
           this.data_detalle_proforma = datav.dtveproforma1;
         },
@@ -60,10 +66,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-          //this.printFunction();
-          this.generatePDF();
-        }
+        complete: () => { }
       })
   }
 
@@ -91,52 +94,43 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   }
 
   printFunction() {
-    window.print();
+    this.generatePDF();
   }
 
   generatePDF() {
     const content = document.getElementById('content');
     if (content) {
-      // Ajustar la escala para mejorar la calidad de la imagen
       html2canvas(content, { scale: 2 }).then((canvas) => {
         const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
-        // Crear un nuevo documento PDF
         const pdf = new jsPDF({
           orientation: 'portrait',
           unit: 'mm',
           format: 'letter' // Formato Carta (Letter)
         });
 
-        // Calcular el ancho y alto del PDF con márgenes
         const margin = 10;
         const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
         const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
 
-        // Obtener el ancho y alto de la imagen en el canvas
         const imgWidth = canvas.width;
         const imgHeight = canvas.height;
 
-        // Calcular la relación de aspecto de la imagen
         const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
         const newWidth = imgWidth * ratio;
         const newHeight = imgHeight * ratio;
 
-        // Agregar la imagen al PDF con márgenes
         pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
-        // Obtener el PDF como un Blob
         const pdfBlob = pdf.output('blob');
+        console.log("ARCHIVO pdf a enviar correo: ", pdfBlob);
 
-        clearTimeout(this.debounceTimer);
-        this.debounceTimer = setTimeout(() => {
-          // Enviar el correo cuando ya está generado el PDF
-          this.enviarCorreoProformaGuardada(pdfBlob);
+        // Guardar el PDF localmente para ver si se genera correctamente
+        //pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
 
-          this.toastr.success(" CORREO ELECTRONICO ENVIADO ");
-        }, 3000); // 750 ms de retardo o más
+        // Enviar el correo cuando ya está generado el PDF
+        this.enviarCorreoProformaGuardada(pdfBlob);
       });
     }
   }
@@ -145,10 +139,12 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   enviarCorreoProformaGuardada(pdfBlob: Blob) {
     const formData = new FormData();
     formData.append('pdfFile', pdfBlob, this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
-    console.log(formData.get('pdfFile'));
 
-    let errormesagge = "La Ruta presenta fallos al hacer peticion GET -/notif/envioCorreos/envioCorreoProforma/ ";
-    this.api.createAllWithOutToken('/notif/envioCorreos/envioCorreoProforma/' + this.userConn + '/dpd3/31101/' + this.data_impresion[0].codigo_proforma, formData).subscribe({
+    console.log(formData.get('pdfFile'));
+    console.log(formData);
+
+    const errormesagge = "La Ruta presenta fallos al hacer petición POST -/notif/envioCorreos/envioCorreoProforma/ ";
+    this.api.createAllWithOutToken(`/notif/envioCorreos/envioCorreoProforma/${this.userConn}/dpd3/31101/${this.data_impresion[0].codigo_proforma}`, formData).subscribe({
       next: (datav) => {
         console.log(datav);
         this.toastr.success(" CORREO ELECTRONICO ENVIADO ");
@@ -157,7 +153,6 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
         console.log(err, errormesagge);
         console.log(pdfBlob);
       },
-
       complete: () => {
         window.close();
       }

@@ -20,6 +20,7 @@ export class ModalDescuentosComponent implements OnInit {
   };
 
   descuentos_get: any = [];
+  precio_codigo: any;
   public descuento_view: any = [];
   private debounceTimer: any;
 
@@ -30,6 +31,9 @@ export class ModalDescuentosComponent implements OnInit {
   descuentss!: veDescuento[];
   selectedescuentss: veDescuento[];
   searchValue: string | undefined;
+
+  descuento_codigo: any;
+  descuento_descripcion: any;
 
   @ViewChild('dt1') dt1: Table;
   @ViewChildren('para') paras: QueryList<ElementRef>;
@@ -64,15 +68,16 @@ export class ModalDescuentosComponent implements OnInit {
   }
 
   getDescuentobyId(element) {
-    this.descuento_view = element.data;
-    console.log(element);
+    this.descuento_codigo = element.data.codigo;
+    this.descuento_descripcion = element.data.descripcion;
+    console.log(this.descuento_codigo, this.descuento_descripcion);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getSugerenciaTarfromDesc/";
-    return this.api.getAll('/venta/transac/veproforma/getSugerenciaTarfromDesc/' + this.userConn + "/" + element.codigo + "/" + this.usuario_logueado)
+    return this.api.getAll('/venta/transac/veproforma/getSugerenciaTarfromDesc/' + this.userConn + "/" + element.data.codigo + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
-          this.descuentos_get = datav;
-          console.log(this.descuentos_get);
+          this.precio_codigo = datav.codTarifa;
+          console.log(this.precio_codigo);
         },
 
         error: (err: any) => {
@@ -100,7 +105,6 @@ export class ModalDescuentosComponent implements OnInit {
           break;
         }
       }
-
       if (!focused) {
         console.warn('No se encontró ningún elemento para hacer focus');
       }
@@ -110,13 +114,13 @@ export class ModalDescuentosComponent implements OnInit {
   mandarDescuento() {
     if (this.detalle_get === true) {
       this.servicioDescuento.disparadorDeDescuentosDetalle.emit({
-        descuento: this.descuento_view,
-        precio_sugerido: this.descuentos_get.codTarifa,
+        descuento: this.descuento_codigo,
+        precio_sugerido: this.precio_codigo,
       });
     } else {
       this.servicioDescuento.disparadorDeDescuentos.emit({
-        descuento: this.descuento_view,
-        precio_sugerido: this.descuentos_get.codTarifa,
+        descuento: this.descuento_codigo,
+        precio_sugerido: this.precio_codigo,
       });
     }
     this.close();

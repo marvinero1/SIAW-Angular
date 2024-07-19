@@ -60,6 +60,7 @@ import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actual
 import { MatSelectChange } from '@angular/material/select';
 import { ServicioTransfeAProformaService } from '../../proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalTransfeProformaComponent } from '../../proforma/modal-transfe-proforma/modal-transfe-proforma.component';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -2768,9 +2769,22 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  // MODAL DE CONFIRMACION, PARA Q NO APAREZCAN TODOS DE GOLPE SI NO UNO POR UNO
+  openConfirmationDialog(message: string): Promise<boolean> {
+    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+
   //accion de btn grabar
-  submitDataModificarProforma() {
+  async submitDataModificarProforma() {
     this.spinner.show();
+    let data1 = this.FormularioData.value;
 
     const transformedArray = this.validacion_post.map(item => ({
       codproforma: this.codigo_proforma,
@@ -2889,11 +2903,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         disableClose: true,
       });
 
-      dialogRef.afterClosed().subscribe((result: Boolean) => {
-        if (result) {
-          this.detalleProformaCarritoTOExcel();
-        }
-      });
+
     }
 
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
@@ -2910,98 +2920,130 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       console.log(array_validacion_existe_aun_no_validos);
       console.log(array_negativos_aun_existe);
 
-      //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
-      if (array_validacion_existe_aun_no_validos_tamanio > 0) {
-        const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
-          height: 'auto',
-          data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿ Desea Continuar de todas formas ?` },
-          disableClose: true,
-        });
-
-        dialogRef.afterClosed().subscribe((result: Boolean) => {
+      try {
+        if (array_validacion_existe_aun_no_validos_tamanio > 0) {
+          const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?`);
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);
+            return;
           }
-        });
+        }
+
+        if (array_negativos_aun_existe_tamanio > 0) {
+          const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?`);
+          if (!result) {
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+            return;
+          }
+        }
+
+        const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} no esta confirmada. ¿Desea Confirmarla?`);
+        if (result) {
+          data1 = {
+            ...data1,
+            confirmada: true,
+          };
+        }
+
+      } catch (error) {
+        console.error('Error al realizar las validaciones:', error);
       }
+
+      //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
+      // if (array_validacion_existe_aun_no_validos_tamanio > 0) {
+      //   const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      //     width: 'auto',
+      //     height: 'auto',
+      //     data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿ Desea Continuar de todas formas ?` },
+      //     disableClose: true,
+      //   });
+
+      //   dialogRef.afterClosed().subscribe((result: Boolean) => {
+      //     if (!result) {
+      //       setTimeout(() => {
+      //         this.spinner.hide();
+      //       }, 1000);
+      //     }
+      //   });
+      // }
 
       //VALIDACION SI EN LA VALIDACIONES HAY ITEMS QUE GENERAN NEGATIVOS
-      if (array_negativos_aun_existe_tamanio > 0) {
-        const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
-          height: 'auto',
-          data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?` },
-          disableClose: true,
-        });
+      //   if (array_negativos_aun_existe_tamanio > 0) {
+      //     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      //       width: 'auto',
+      //       height: 'auto',
+      //       data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?` },
+      //       disableClose: true,
+      //     });
 
-        dialogRef.afterClosed().subscribe((result: Boolean) => {
-          if (!result) {
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1000);
-          } else {
+      //     dialogRef.afterClosed().subscribe((result: Boolean) => {
+      //       if (!result) {
+      //         setTimeout(() => {
+      //           this.spinner.hide();
+      //         }, 1000);
+      //       } else {
 
-          }
-        });
-      }
+      //       }
+      //     });
+      //   }
     }
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: { mensaje_dialog: "La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? " },
-      disableClose: true,
-    });
+    // const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+    //   width: 'auto',
+    //   height: 'auto',
+    //   data: { mensaje_dialog: "La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla? " },
+    //   disableClose: true,
+    // });
 
-
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (result) {
-        data = {
-          ...data,
-          confirmada: true,
-        };
-      }
-    });
+    // dialogRef.afterClosed().subscribe((result: Boolean) => {
+    //   if (result) {
+    //     data = {
+    //       ...data,
+    //       confirmada: true,
+    //     };
+    //   }
+    // });
 
     this.totabilizar();
     console.log("FORMULARIO VALIDADO");
     const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
-    this.api.create(url, total_proforma_concat).subscribe({
-      next: (datav) => {
-        this.toastr.info("GUARDADO CON EXITO ✅");
-        this.totabilizar_post = datav;
-        console.log(this.totabilizar_post);
+    // this.api.create(url, total_proforma_concat).subscribe({
+    //   next: (datav) => {
+    //     this.toastr.info("GUARDADO CON EXITO ✅");
+    //     this.totabilizar_post = datav;
+    //     console.log(this.totabilizar_post);
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+    //     setTimeout(() => {
+    //       this.spinner.hide();
+    //     }, 1000);
+    //   },
 
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-        //this.detalleProformaCarritoTOExcel();
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+    //   error: (err) => {
+    //     console.log(err, errorMessage);
+    //     this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+    //     //this.detalleProformaCarritoTOExcel();
+    //     setTimeout(() => {
+    //       this.spinner.hide();
+    //     }, 1000);
+    //   },
 
-      complete: () => {
-        //aca exporta a ZIP
-        this.exportProformaZIP(this.totabilizar_post.codProf);
-        this.log_module.guardarLog(this.ventana, "modif_proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
-        //aca manda a imprimir la proforma guardada
-        this.modalBtnImpresiones();
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      }
-    });
+    //   complete: () => {
+    //     //aca exporta a ZIP
+    //     this.exportProformaZIP(this.totabilizar_post.codProf);
+    //     this.log_module.guardarLog(this.ventana, "modif_proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+    //     //aca manda a imprimir la proforma guardada
+    //     this.modalBtnImpresiones();
+    //     setTimeout(() => {
+    //       this.spinner.hide();
+    //     }, 1000);
+    //   }
+    // });
   }
 
   // grabarYAprobar
@@ -3109,7 +3151,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       data: { mensaje_dialog: "La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla?" },
       disableClose: true,
     });
-
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
@@ -3408,7 +3449,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }, 1500);
           return;
         };
-
+        //Despues de las validaciones VALIDA ACA!!!!! xD
         this.validar();
       }
     });
@@ -3915,7 +3956,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
       ...element,
       descripcion: element.descripcion,
-    }))
+      descrip: element.descripcion,
+    }));
 
     let a = {
       getTarifaPrincipal: {
@@ -3925,6 +3967,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       tabladescuentos: this.array_de_descuentos_ya_agregados,
       tblcbza_deposito: [],
     };
+
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
@@ -3934,7 +3977,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           console.log(datav);
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
+            ...element,
+            descripcion: element.descrip,
+            descrip: element.descrip,
+          }));
 
           this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
           this.totabilizar();
@@ -3961,10 +4009,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     console.log(this.array_de_descuentos_ya_agregados);
 
-    // this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-    //   ...element,
-    //   descripcion: element.descripcion,
-    // }));
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
+      ...element,
+      descrip: element.descripcion,
+      descripcion: element.descripcion,
+    }));
 
     let a = {
       getTarifaPrincipal: {
@@ -3982,12 +4031,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
 
-          // this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
-          //   ...element,
-          //   descripcion: element.descrip,
-          // }));
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
+            ...element,
+            descripcion: element.descrip,
+            descrip: element.descrip,
+          }));
 
           console.log(this.array_de_descuentos_ya_agregados);
           this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
@@ -4105,7 +4154,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos,
       detalleDescuentos: this.array_de_descuentos_ya_agregados,
-      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleEtiqueta: [this.etiqueta_get_modal_etiqueta[0]],
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
       detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
@@ -4113,7 +4162,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     console.log(proforma_validar, "Largo del array etiqueta: ");
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
-
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
     console.log("Valor Formulario Controles: ", this.validacion_post);
 
@@ -4177,9 +4225,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     return this.array_items_carrito_y_f4_catalogo;
   }
-
-
-
 
 
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ApiService } from '@services/api.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-modal-botones-impresion',
   templateUrl: './modal-botones-impresion.component.html',
@@ -24,11 +24,10 @@ export class ModalBotonesImpresionComponent implements OnInit {
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
     this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
-
   }
 
   ngOnInit() {
-    this.btnCorreo();
+    //this.btnCorreo();
   }
 
   proformaImpresion() {
@@ -56,6 +55,6 @@ export class ModalBotonesImpresionComponent implements OnInit {
     this.toastr.info("GUARDADO CON EXITO ✅");
     localStorage.removeItem("data_impresion");
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 }

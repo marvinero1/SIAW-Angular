@@ -167,9 +167,9 @@
                   </div>
 
                   <div style="float: right;text-align: end;">
-                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos</u></mat-label>
-                    <input type="text" style="width: 35%;text-align: right;" [(ngModel)]="total_anticipos"
-                      placeholder="0.00" readonly>
+                    <mat-label style="padding-right: 5px;padding-top: 7px;"><u>Total Anticipos:</u></mat-label>
+                    <!-- <input type="text" style="width: 35%;text-align: right;" placeholder="0.00" readonly> -->
+                    <span><strong>{{ formatNumberTotalSubTOTALES(total_anticipos) }}</strong></span>
                   </div>
                 </div>
               </div>

@@ -12,7 +12,6 @@ import { ServicioF9Service } from './stock-actual-f9/servicio-f9.service';
 import { DatePipe } from '@angular/common';
 import { ModalPrecioVentaComponent } from '../modal-precio-venta/modal-precio-venta.component';
 import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
-
 import Handsontable from 'handsontable';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
@@ -125,6 +124,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   elementoActual = this.lista_hojas[0];
   item_seleccionados_catalogo_matriz: any = [];
   array_items_completo_multiple: any = [];
+  precioItem: any = [];
 
   descuento_get: any;
   codcliente_get: any;
@@ -142,6 +142,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   tarifa_get_unico_copied: any = [];
   cod_precio_venta_modal_codigo1: any;
   output: string;
+  tamanio_carrito: any;
 
   izquierda: string = "izquierda";
   derecha: string = "derecha";
@@ -162,7 +163,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any
+  ) {
 
     this.array_items_proforma_matriz = items.items;
 
@@ -192,7 +194,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
-    this.codcliente_real_get = codcliente_real.codcliente_real
+    this.codcliente_real_get = codcliente_real.codcliente_real;
+    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras
+
+    console.log("tamanio carrito:", this.tamanio_carrito)
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -472,7 +477,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   getHoja() {
     console.log(this.num_hoja);
-
     if (this.num_hoja != 0 || this.num_hoja != undefined) {
       let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/";
       return this.api.getAll('/inventario/mant/inmatriz/' + this.userConn + "/" + this.num_hoja)
@@ -817,7 +821,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
     console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
-    let nuevo_arrray;
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
@@ -845,13 +848,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           this.items_post = datav;
           console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
 
-          nuevo_arrray = this.items_post.map((element) => element.coditem === a.coditem({
-            ...element,
-            orden_pedido: a.orden_pedido
-          }));
-
-          console.log(nuevo_arrray);
-
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -865,7 +861,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           }, 1500);
         },
         complete: () => {
-          console.log(nuevo_arrray);
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
           if (this.array_items_proforma_matriz.length > 0) {
             // console.log("entro aca AA ");
@@ -1014,7 +1009,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
-  precioItem: any = [];
+
   getPrecioItemSeleccionado(item) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getPreciosItem/";
     return this.api.getAll('/venta/transac/veproforma/getPreciosItem/' + this.userConn + "/" + item + "/" + this.codalmacen_get + "/" + this.codmoneda_get)
@@ -1048,7 +1043,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Precio";
     } else {
       d_tipo_precio_desct = "Descuento"
-    }
+    };
 
     if (this.cant_empaque === 0) {
       const focusedElement = document.activeElement as HTMLElement;
@@ -1058,6 +1053,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.renderer.selectRootElement(focusElement).focus();
       focusElement.click();
     } else {
+      // if (this.cant_empaque === undefined) {
+      //   this.cant_empaque = 0
+      // };
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
@@ -1081,8 +1079,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             focusElement.click();
           }
         })
-    }
-
+    };
   }
 
   getAlmacenesSaldos() {
@@ -1174,7 +1171,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         desct_nivel: this.descuento_nivel_get,
         items: this.array_items_completo,
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
-        precio_venta: this.cod_precio_venta_modal_codigo1
+        precio_venta: this.cod_precio_venta_modal_codigo1,
+        tamanio_carrito_compras: this.tamanio_carrito,
       },
     });
 
