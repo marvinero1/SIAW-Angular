@@ -869,6 +869,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.getHoraFechaServidorBckEnd();
     this.getIdTipo();
     this.getAlmacen();
     this.getAlmacenParamUsuario();
@@ -884,6 +885,29 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getIDScomplementarProforma();
 
     this.getUltimaProformaGuardada();
+  }
+
+  fecha_actual_server: any;
+  hora_fecha_server: any;
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          this.fecha_actual_server = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
+          this.hora_fecha_server = datav.horaServidor;
+
+          console.log(this.fecha_actual, this.hora_fecha_server);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      })
   }
 
   onCheckboxChange(event: Event) {
@@ -1032,18 +1056,21 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       total: [this.dataform.total], //TOTALES
       porceniva: [0],
 
+      //estas fechas se quedan tal como llegan al traer la proforma
       fecha: this.dataform.fecha,
-      fechareg: this.dataform.fechareg,
       fecha_confirmada: this.dataform.fecha_confirmada,
       fechaaut: this.dataform.fechaaut,
       fecha_inicial: this.dataform.fecha_inicial,
-
       horareg: this.dataform.horareg,
       hora: this.dataform.hora,
-      usuarioreg: this.usuarioLogueado,
       horaaut: this.dataform.horaaut,
       hora_inicial: this.dataform.hora_inicial,
       hora_confirmada: this.dataform.hora_confirmada,
+
+
+      //estas fechas se cambian por la hora del server mas el usuario actual
+      usuarioreg: this.usuarioLogueado,
+      fechareg: this.dataform.fecha_actual_server,
     });
   }
 
@@ -2783,7 +2810,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   //accion de btn grabar
   async submitDataModificarProforma() {
-    this.spinner.show();
     let data1 = this.FormularioData.value;
 
     const transformedArray = this.validacion_post.map(item => ({
@@ -3009,41 +3035,65 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     // });
 
     this.totabilizar();
-    console.log("FORMULARIO VALIDADO");
+    console.log("FORMULARIO VALIDADO", total_proforma_concat);
     const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
-    // this.api.create(url, total_proforma_concat).subscribe({
-    //   next: (datav) => {
-    //     this.toastr.info("GUARDADO CON EXITO ✅");
-    //     this.totabilizar_post = datav;
-    //     console.log(this.totabilizar_post);
+    this.api.create(url, total_proforma_concat).subscribe({
+      next: (datav) => {
+        this.spinner.show();
+        this.toastr.info("GUARDADO CON EXITO ✅");
+        this.totabilizar_post = datav;
+        console.log(this.totabilizar_post);
 
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   },
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
 
-    //   error: (err) => {
-    //     console.log(err, errorMessage);
-    //     this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-    //     //this.detalleProformaCarritoTOExcel();
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        //this.detalleProformaCarritoTOExcel();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
 
-    //   complete: () => {
-    //     //aca exporta a ZIP
-    //     this.exportProformaZIP(this.totabilizar_post.codProf);
-    //     this.log_module.guardarLog(this.ventana, "modif_proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
-    //     //aca manda a imprimir la proforma guardada
-    //     this.modalBtnImpresiones();
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   }
-    // });
+      complete: () => {
+        const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
+          width: 'auto',
+          height: 'auto',
+          data: {
+            mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
+          },
+          disableClose: true,
+        });
+
+        dialogRefZIP.afterClosed().subscribe((result: Boolean) => {
+          if (result) {
+            this.exportProformaZIP(this.totabilizar_post.codProf);
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          } else {
+            this.toastr.error("NO SE DESCARGO ZIP");
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          }
+        });
+
+        //aca exporta a ZIP
+        this.exportProformaZIP(this.totabilizar_post.codProf);
+
+        // se gurda en el LOG
+        this.log_module.guardarLog(this.ventana, "Modificar" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+
+        // this.guardarDataImpresion(this.totabilizar_post.codProf);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      }
+    });
   }
 
   // grabarYAprobar
