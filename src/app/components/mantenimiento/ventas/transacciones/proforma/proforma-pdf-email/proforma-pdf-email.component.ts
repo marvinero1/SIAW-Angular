@@ -33,11 +33,13 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
     this.data_impresion = localStorage.getItem("data_impresion") !== undefined ? JSON.parse(localStorage.getItem("data_impresion")) : null;
 
     console.log("data impresion: ", this.data_impresion);
+
+    //primero carga la info del PDF, y el PDF se tiene q pintar de data
+    this.getDataPDF();
   }
 
   ngOnInit() {
-    //primero carga la info del PDF, y el PDF se tiene q pintar de data
-    this.getDataPDF();
+
   }
 
   ngAfterViewInit(): void {
@@ -53,7 +55,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   getDataPDF() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" +
-      this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + this.data_impresion[0].estado_contra_entrega_input)
+      this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + this.data_impresion[0].estado_contra_entrega_input + "/false")
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
@@ -130,7 +132,12 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
         //pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
 
         // Enviar el correo cuando ya está generado el PDF
-        this.enviarCorreoProformaGuardada(pdfBlob);
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(() => {
+          // una vez q la data se cargue al PDF, el PDF se genera y se envia el archivo PDF ya generado con la data en el xD xD
+          this.enviarCorreoProformaGuardada(pdfBlob);
+        }, 4000);
+
       });
     }
   }
@@ -154,7 +161,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
         console.log(pdfBlob);
       },
       complete: () => {
-        window.close();
+        // window.close();
       }
     });
   }

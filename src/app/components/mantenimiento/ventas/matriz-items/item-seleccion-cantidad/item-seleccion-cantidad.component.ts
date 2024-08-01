@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -78,10 +78,11 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   desct_nivel_get: any;
   precio_venta_get: any;
   items_get_carrito: [];
-  tamanio_carrito: any;
+  tamanio_carrito_viene_de_matriz: any;
 
   precio: any = false;
   desct: any = false;
+  code_desct: any;
 
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ItemSeleccionCantidadComponent>,
     public itemservice: ItemServiceService, private spinner: NgxSpinnerService,
@@ -91,16 +92,15 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, public servicioDesctEspecial: DescuentoService,
     @Inject(MAT_DIALOG_DATA) public desct_nivel: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public precio_venta: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any
-  ) {
+    @Inject(MAT_DIALOG_DATA) public precio_venta: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any) {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
-
+    tamanio_carrito_compras
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-
+    tamanio_carrito_compras
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
     this.codcliente_get = codcliente.codcliente;
@@ -108,21 +108,23 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
-    this.desct_nivel_get = desct_nivel.desct_nivel;
     this.items_get_carrito = items.items;
+    this.desct_nivel_get = desct_nivel.desct_nivel;
     this.precio_venta_get = precio_venta.precio_venta;
-    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras;
+    this.tamanio_carrito_viene_de_matriz = tamanio_carrito_compras.tamanio_carrito_compras
+    //this.tamanio_carrito = this.items_get_carrito.length
 
-    console.log("Items de carrito: ", this.items_get_carrito, "Tamanio: " + this.tamanio_carrito)
+    console.log("Items de carrito: ", this.items_get_carrito, this.items_get_carrito.length, "Tamanio Carrito: ", this.tamanio_carrito_viene_de_matriz)
   }
 
   ngOnInit() {
     // descuentos
-    this.servicioDesctEspecial.disparadorDeDescuentos.subscribe(data => {
-      console.log("Recibiendo Descuento: ", data);
-      this.cod_descuento_modal = data.descuento;
-      this.cod_descuento_modal_codigo = data.descuento;
-      this.cod_precio_venta_modal_codigo = data.precio_sugerido;
+    this.servicioDesctEspecial.disparadorDeDescuentosMatrizCantidad.subscribe(dataDescuento => {
+      console.log("Recibiendo Descuento: ", dataDescuento);
+      console.log("Descuento Codigo: ", dataDescuento.descuento);
+      this.code_desct = dataDescuento.descuento;
+
+      this.cod_precio_venta_modal_codigo = dataDescuento.precio_sugerido;
     });
     // findescuentos
 
@@ -137,6 +139,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.getTarifa();
     this.getDescuentos();
+
   }
 
   getTarifa() {
@@ -227,9 +230,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   agregarItems() {
     let a: any;
     var d_tipo_precio_desct: string;
-    let i = this.tamanio_carrito + 1;
-    console.log("Tamanio CARRITO COMPRAS", this.tamanio_carrito)
-
+    let i = this.items_get_carrito.length + 1;
+    console.log("Tamanio CARRITO COMPRAS", this.items_get_carrito.length);
 
     const errorMessage1 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
     const errorMessage2 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
@@ -255,6 +257,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         fecha: this.fecha_get,
         empaque: this.empaques_input,
         orden_pedido: i + index, // Usamos index + 1 para asignar el número de orden
+        nroitem: i + index,
       };
     });
 
@@ -329,7 +332,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
           .subscribe({
             next: (datav) => {
-              if (this.tamanio_carrito > 0) {
+              if (this.items_get_carrito.length > 0) {
                 console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
                 a = this.items_post.concat(datav, this.items_get_carrito);
               } else {
@@ -358,7 +361,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
           .subscribe({
             next: (datav) => {
-              if (this.tamanio_carrito > 0) {
+              if (this.items_get_carrito.length > 0) {
                 console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
                 a = this.items_post.concat(datav, this.items_get_carrito);
               } else {
@@ -388,7 +391,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
           .subscribe({
             next: (datav) => {
-              if (this.tamanio_carrito > 0) {
+              if (this.items_get_carrito.length > 0) {
                 console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
                 a = this.items_post.concat(datav, this.items_get_carrito);
               } else {

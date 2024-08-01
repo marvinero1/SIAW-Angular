@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-modal-botones-impresion',
   templateUrl: './modal-botones-impresion.component.html',
@@ -44,6 +43,11 @@ export class ModalBotonesImpresionComponent implements OnInit {
 
     const url_items = this.router.serializeUrl(this.router.createUrlTree(['/etiquetasItemsProforma']));
     window.open(url_items, '_blank');
+
+    if (this.data_impresion[0].grabar_aprobar === true) {
+      const url_tuercas = this.router.serializeUrl(this.router.createUrlTree(['/etiquetaTuercasProforma']));
+      window.open(url_tuercas, '_blank');
+    }
   }
 
   btnCorreo() {

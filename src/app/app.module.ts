@@ -433,6 +433,8 @@ import { CatalogoNotasRemisionComponent } from '@components/mantenimiento/ventas
 import { ModalTransfeNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/nota-remision/modal-transfe-nota-remision/modal-transfe-nota-remision.component';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 import { ModalTransfeProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/modal-transfe-proforma/modal-transfe-proforma.component';
+import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
+import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 
 
 registerLocaleData(es);
@@ -516,8 +518,8 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent,
-
+        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
+        EtiquetaTuercasProformaComponent
 
 
 

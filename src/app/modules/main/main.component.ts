@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
 	public titulo_agencia: any;
 	public ui: Observable<UiState>;
 
-	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma'];
+	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma', 'etiquetaTuercasProforma'];
 	nombre_ventana: string;
 	isProformaPdfPage = false;
 

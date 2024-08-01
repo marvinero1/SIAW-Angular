@@ -116,6 +116,7 @@ import { EtiquetasItemProformaComponent } from '@components/mantenimiento/ventas
 import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-impresion-proforma/etiqueta-impresion-proforma.component';
 import { ModificarProformaComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component';
 import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf-email/proforma-pdf-email.component';
+import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -746,9 +747,14 @@ const routes: Routes = [
                 component: EtiquetasItemProformaComponent
             },
             {
+                path: 'etiquetaTuercasProforma',
+                component: EtiquetaTuercasProformaComponent
+            },
+            {
                 path: 'etiquetaImpresionProforma',
                 component: EtiquetaImpresionProformaComponent
             },
+
 
 
         ]

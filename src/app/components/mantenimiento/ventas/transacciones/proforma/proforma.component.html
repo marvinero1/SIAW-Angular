@@ -13,13 +13,15 @@
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
               <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
             </button>
-            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="submitDataGrabarAprobar();">
               <span>
                 <mat-icon
                   style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  done_outline</mat-icon>Aprobar
+                  done_outline</mat-icon>Grabar y Aprobar
               </span>
-            </button> -->
+            </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="limpiar();">
@@ -53,7 +55,7 @@
               </span>
             </button>
           </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;
           <div class="pt-1" style="padding-left: 85px !important;">
             <h3><strong><u>PROFORMA</u></strong></h3>
           </div>
@@ -357,7 +359,7 @@
             </div>
 
             <ng-container>
-              <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal_codigo"
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_descuento_modal"
                 id="inputCatalogoDesctEspecial" (blur)="onLeaveDescuentoEspecial($event)" formControlName="descuentos">
             </ng-container>
 
@@ -367,7 +369,7 @@
                 <i class="fa fa-search"></i>
               </a>
               <a class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                (click)="aplicarDesctEspc(cod_descuento_modal_codigo);"><i class="fa fa-cog"></i> Aplicar
+                (click)="aplicarDesctEspc(cod_descuento_modal);"><i class="fa fa-cog"></i> Aplicar
               </a>
             </div>
           </div>
@@ -692,28 +694,28 @@
               (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
                 <tr>
-                  <th pSortableColumn="nroitem" class="center1" style="width:3%;">
-                    Or Ped
+                  <th pSortableColumn="nroitem" class="center1" style="width:2%;">
+                    OrdP
                   </th>
-                  <th pSortableColumn="orden" class="center1" style="width:5%;">
+                  <th pSortableColumn="orden" class="center1" style="width:4%;">
                     Orden
                     <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:8%;" class="center1" (click)="modalCatalogoProductos()"
+                  <th pSortableColumn="item" style="width:9%;" class="center1" (click)="modalCatalogoProductos()"
                     style="text-align: center !important; cursor: pointer;">
                     <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;
                     <u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:20%;" class="center">
+                  <th pSortableColumn="descripcion" style="width:18%;" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
-                  <th pSortableColumn="medida" class="center1" style="width:7%">
+                  <th pSortableColumn="medida" class="center1" style="width:8%">
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
-                  <th pSortableColumn="ud" class="center1" style="width:4%">
+                  <th pSortableColumn="ud" class="center1" style="width:3%">
                     Ud
                   </th>
                   <th pSortableColumn="iva" class="center1" style="width:2%">
@@ -721,7 +723,6 @@
                   </th>
                   <th pSortableColumn="empaque" class="center1">
                     Empaque
-                    <p-sortIcon field="empaque" />
                   </th>
                   <th pSortableColumn="pedido" class="center1">
                     Pedido
@@ -731,7 +732,7 @@
                     Cantidad
                     <p-sortIcon field="cantidad" />
                   </th>
-                  <th pSortableColumn="sld" class="center1">
+                  <th pSortableColumn="sld" class="right">
                     % SLD
                   </th>
                   <th pSortableColumn="TP" class="center1">
@@ -794,6 +795,7 @@
                     </p-cellEditor>
                   </td>
 
+
                   <!-- COLUMNA PEDIDO -->
                   <td class="center1" [pEditableColumn]="products.cantidad_pedida"
                     pEditableColumnField="cantidad_pedida">
@@ -801,23 +803,17 @@
                       <ng-template pTemplate="input">
 
                         <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                          id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                          (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                          (input)="onInputChange(products, $event.target.value)">
+                          id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)">
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                            (input)="onInputChange(products, $event.target.value)"
+                            id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            (blur)="pedidoChangeMatrix(products, $event.target.value)"
-                            (input)="onInputChange(products, $event.target.value)"
+                            id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)"
                             style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
@@ -834,24 +830,18 @@
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
                           <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="cantidadChangeMatrix(products, $event.target.value);"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
                             (input)="cantidadChangeMatrix(products, $event.target.value);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="cantidadChangeMatrix(products, $event.target.value)"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
                             (input)="cantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad" (change)="cantidadChangeMatrix(products, $event.target.value)"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);"
+                            id="input_cantidad" (input)="cantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
@@ -862,14 +852,14 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1">{{ products.porcen_mercaderia }}</td>
+                  <td class="right">{{ products.porcen_mercaderia }}</td>
 
                   <td class="center1" [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.codtarifa"
-                          id="inputCatalogoPrecioVentaDetalle" (blur)="onLeavePrecioVentaDetalle($event, products)"
-                          [value]="products?.codtarifa" (change)="TPChangeMatrix(products, $event.target.value)"
+                          id="inputCatalogoPrecioVentaDetalle" [value]="products?.codtarifa"
+                          (change)="TPChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedPrecioVenta(products)">
                       </ng-template>
 
@@ -883,8 +873,8 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
-                          [(ngModel)]="products.coddescuento" (blur)="onLeaveDescuentoEspecialDetalle($event, products)"
-                          [value]="products?.coddescuento" (change)="DEChangeMatrix(products, $event.target.value)"
+                          [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"
+                          (change)="DEChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedDescuento(products)">
                       </ng-template>
 
@@ -1669,7 +1659,7 @@
                         <div>
                           <button class="btn btn-outline-primary form-control-sm" type="button"
                             style="float: left;margin-left: 5px;" [disabled]="!codigo_cliente"
-                            (click)="definirClienteReferencia(codigo_cliente, cliente_casual);">
+                            (click)="definirClienteReferencia(codigo_cliente_catalogo_real, cliente_casual);">
                             <i class="fa fa-cog"></i> Definir Cliente Referencia
                           </button>
                         </div>

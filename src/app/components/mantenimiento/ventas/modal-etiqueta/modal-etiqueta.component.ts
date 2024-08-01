@@ -34,14 +34,14 @@ export class ModalEtiquetaComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModalEtiquetaComponent>, private spinner: NgxSpinnerService,
     private api: ApiService, public _snackBar: MatSnackBar, public servicioEtiqueta: EtiquetaService,
     private communicationService: ComunicacionproformaService, private toastr: ToastrService,
-    @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
+    @Inject(MAT_DIALOG_DATA) public cod_cliente_proforma1: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
     @Inject(MAT_DIALOG_DATA) public numero_id: any, @Inject(MAT_DIALOG_DATA) public nom_cliente: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea: any, @Inject(MAT_DIALOG_DATA) public id_sol_desct: any,
     @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
-    this.cod_cliente_proforma = cod_cliente.cod_cliente;
+    this.cod_cliente_proforma = cod_cliente_proforma1.cod_cliente_proforma1;
     this.id_proforma_get = id_proforma.id_proforma;
     this.numero_id_proforma = numero_id.numero_id;
     this.nombre_cliente_get = nom_cliente.nom_cliente;
@@ -63,6 +63,7 @@ export class ModalEtiquetaComponent implements OnInit {
     this.getDataEtiquetaClientesinDescuento();
   }
   data_array: any = {}
+
   getDataEtiquetaClientesinDescuento() {
     let a = {
       // codcliente_real: this.cliente_real_proforma,

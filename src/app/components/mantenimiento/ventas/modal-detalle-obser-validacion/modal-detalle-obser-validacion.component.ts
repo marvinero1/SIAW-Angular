@@ -31,7 +31,9 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
     // this.more_messagess = more_messages.more_messages;
 
     this.data_string = obs_titulo.obs_titulo;
-    this.obs_contenido_get_string = obs_contenido.obs_contenido.replace(/-/g, '');
+    // this.obs_contenido_get_string = obs_contenido.obs_contenido.replace(/-/g, '');
+    this.obs_contenido_get_string = obs_contenido.obs_contenido;
+
     this.more_messagess_string = more_messages.more_messages;
 
     // console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
@@ -41,7 +43,9 @@ export class ModalDetalleObserValidacionComponent implements OnInit {
 
     console.log("mensaje no procesado: ", obs_titulo.obs_titulo);
     console.log("mensaje procesado, data: ", this.data_string);
-    console.log("contenido: ?", this.obs_contenido_get_string.replace(/-/g, ''));
+    // console.log("contenido: ?", this.obs_contenido_get_string.replace(/-/g, ''));
+    console.log("contenido: ?", this.obs_contenido_get_string);
+
     console.log("mas mensajes?: ", this.more_messagess_string)
   }
 

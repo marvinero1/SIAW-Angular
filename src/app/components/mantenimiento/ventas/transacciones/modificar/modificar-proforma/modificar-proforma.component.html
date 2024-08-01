@@ -12,7 +12,7 @@
           <div class="input-group-append">
             <!-- BTN GRABAR -->
             <div>
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else trsf">
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA';else trsf">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                   (click)="submitDataModificarProforma();" disabled>
                   <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
@@ -28,7 +28,7 @@
 
             <!-- BTN GRABAR Y APROBAR -->
             <div>
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else grbapr">
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA';else grbapr">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                   (click)="submitDataModificarProformaAprobar();" disabled>
                   <span>
@@ -52,7 +52,7 @@
 
             <!-- BTN ANULAR -->
             <div>
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA';else anld">
+              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA';else anld">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                   (click)="anularProformar();" disabled>
                   <span>
@@ -1723,7 +1723,7 @@
                         <div>
                           <button class="btn btn-outline-primary form-control-sm" type="button"
                             style="float: left;margin-left: 5px;" [disabled]="!codigo_cliente"
-                            (click)="definirClienteReferencia(codigo_cliente, cliente_casual);">
+                            (click)="definirClienteReferencia(codigo_cliente);">
                             <i class="fa fa-cog"></i> Definir Cliente Referencia
                           </button>
                         </div>
@@ -2417,7 +2417,7 @@
             </div>
 
             <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-              (click)="modalClienteEtiqueta(codigo_cliente);">
+              (click)="modalClienteEtiqueta(codigo_cliente_catalogo_real);">
               <!-- [disabled]="!codigo_cliente" -->
               <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
             </button>

@@ -83,8 +83,9 @@
             <div class="input-group-prepend">
               <span class="form-control-sm" style="margin-right: 1px;"><u>Desct. Especiales</u></span>
             </div>
-            <input type="text" [(ngModel)]="cod_descuento_modal_codigo" [disabled]="!isCheckedEmpaque"
-              (blur)="onLeaveDesctEspecial($event)" min="0" id="descuento_input">
+
+            <input type="text" [(ngModel)]="code_desct" [disabled]="!isCheckedEmpaque">
+
             <div class="input-group-append">
               <a class="btn btn-outline-primary form-control-sm" type="button"
                 style="border-color: #093070;padding: 5px;" (click)="modalDescuentoEspecial();">

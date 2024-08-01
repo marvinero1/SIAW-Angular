@@ -107,8 +107,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Desactivar el autocompletar
-    this.usernameInput.nativeElement.setAttribute('autocomplete', 'off');
-    this.passwordInput.nativeElement.setAttribute('autocomplete', 'off');
+    // this.usernameInput.nativeElement.setAttribute('autocomplete', 'off');
+    // this.passwordInput.nativeElement.setAttribute('autocomplete', 'off');
   }
 
   createFormServer(): FormGroup {

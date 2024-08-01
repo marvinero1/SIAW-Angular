@@ -1,10 +1,11 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild, Inject, ViewChildren, QueryList } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { veCliente } from '@services/modelos/objetos';
 import { ServicioclienteService } from '../serviciocliente/serviciocliente.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Table } from 'primeng/table';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 @Component({
   selector: 'app-modal-cliente',
   templateUrl: './modal-cliente.component.html',
@@ -35,7 +36,7 @@ export class ModalClienteComponent implements OnInit {
   @ViewChild('dt1') dt1: Table;
   @ViewChildren('para') paras: QueryList<ElementRef>;
 
-  constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService,
+  constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private dialog: MatDialog, private api: ApiService,
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any,
     @Inject(MAT_DIALOG_DATA) public ventana: any) {
@@ -114,7 +115,7 @@ export class ModalClienteComponent implements OnInit {
       if (!focused) {
         console.warn('No se encontró ningún elemento para hacer focus');
       }
-    }, 950); // 750 ms de retardo
+    }, 750); // 750 ms de retardo
   }
 
   mandarCliente() {
@@ -135,12 +136,27 @@ export class ModalClienteComponent implements OnInit {
     }
 
     if (this.origen === "ventana_cliente_referencia") {
-      this.servicioCliente.disparadorDeClienteReal.emit({
-        cliente: this.cliente_send,
+      // window.alert("Como el cliente: " + this.cliente_send.codigo + " es casual y/o referencia, debe identificar el VENDEDOR que realiza la operacion, por defecto se pondra el codigo del vendedor del ! CLIENTE REFERENCIA O CASUAL !");
+      const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: { mensaje_dialog: "Como el cliente: " + this.cliente_send.codigo + " es casual y/o referencia, debe identificar el VENDEDOR que realiza la operacion, por defecto se pondra el codigo del vendedor del ! CLIENTE REFERENCIA O CASUAL !" },
+        disableClose: true,
       });
-      this.close();
 
-      window.alert("Como el cliente: " + this.cliente_send.codigo + " es casual y/o referencia, debe identificar el VENDEDOR que realiza la operacion, por defecto se pondra el codigo del vendedor del ! CLIENTE REFERENCIA O CASUAL !");
+      dialogRef.afterClosed().subscribe((result: Boolean) => {
+        if (result) {
+          this.servicioCliente.disparadorDeClienteReal.emit({
+            cliente: this.cliente_send,
+          });
+          this.close();
+        } else {
+          this.servicioCliente.disparadorDeClienteReal.emit({
+            cliente: this.cliente_send,
+          });
+          this.close();
+        }
+      });
     }
 
     if (this.cliente_referencia_proforma_get === false) {
@@ -149,8 +165,6 @@ export class ModalClienteComponent implements OnInit {
       });
       this.close();
     }
-
-
   }
 
   close() {

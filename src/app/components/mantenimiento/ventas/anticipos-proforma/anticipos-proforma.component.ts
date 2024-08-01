@@ -246,7 +246,7 @@ export class AnticiposProformaComponent implements OnInit {
 
   getUltimaProformaGuardada() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/getUltiProfId/";
-    return this.api.getAll('/venta/modif/docmodifveproforma/getUltiProfId/' + this.userConn)
+    return this.api.getAll('/venta/modif/docmodifveproforma/getUltiProfId/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           console.log(datav);

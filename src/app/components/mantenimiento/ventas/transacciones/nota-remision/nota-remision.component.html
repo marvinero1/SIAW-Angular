@@ -11,7 +11,7 @@
           <!-- botones -->
           <div class="input-group-append">
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-              (click)="submitDataNotaRemision();">
+              (click)="submitDataNotaRemision(0);">
               <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7cc;"></i> Grabar</span>
             </button>
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
@@ -95,7 +95,7 @@
               <span class="input-group-text form-control-sm" style="padding: 6px 37px 0px 0px;"><u>Fecha</u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              value="{{ fecha_actual | date:'dd/MM/yyyy' }}" formControlName="fecha" readonly>
+              [(ngModel)]="fecha_actual_format" formControlName="fecha" readonly>
           </div>
 
           <div class="input-group">
@@ -273,8 +273,8 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">Total Proforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [ngModel]="total_cabecera"
-              formControlName="total_cabecera" readonly>&nbsp;
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;width: 56px !important;"
+              [ngModel]="total_cabecera" formControlName="total_cabecera" readonly>&nbsp;
 
             <input type="text" class="form-control form-control-sm" [ngModel]="moneda_cabecera"
               formControlName="moneda_cabecera" readonly>
@@ -301,7 +301,7 @@
 
         <!-- cuartaColumna -->
         <div class="col col-lg-3" style="float: right;">
-          <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitDataNotaRemision()">
+          <form class="example-form" [formGroup]="FormularioData">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 18px;">
@@ -429,30 +429,27 @@
     <!-- inicio Tabla -->
     <div class="row">
       <div class="col">
-        <mat-tab-group style="height: 230px !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
+        <mat-tab-group style="height: 40vh !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
               [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
               (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
-                <tr>
-                  <th pSortableColumn="orden" class="center1" style="width:5%;">
+                <tr style="cursor: pointer;">
+                  <th pSortableColumn="orden" class="center1" style="width:3%;">
                     Orden
-                    <p-sortIcon class="iconGrid" field="orden" />
                   </th>
-                  <th pSortableColumn="item" style="width:8%;" class="center1"
-                    style="text-align: center !important; cursor: pointer;">
+                  <th pSortableColumn="item" style="width:5%;" class="left1">
                     <u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:17%;" class="center">
+                  <th pSortableColumn="descripcion" style="width:20%;" class="left1">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
                   <th pSortableColumn="medida" class="center1" style="width:7%">
                     Medida
-                    <!-- <p-sortIcon field="medida"/> -->
                   </th>
                   <th pSortableColumn="ud" class="center1" style="width:4%">
                     Ud
@@ -460,18 +457,18 @@
                   <th pSortableColumn="iva" class="center1" style="width:2%">
                     %IVA
                   </th>
-                  <th pSortableColumn="cantidad" class="center1">
+                  <th pSortableColumn="cantidad" class="right1" style="width:6%">
                     Cantidad
                     <p-sortIcon field="cantidad" />
                   </th>
-                  <th pSortableColumn="sld" class="center1">
+                  <th pSortableColumn="sld" class="center1" style="width:5%;">
                     % SLD
                   </th>
-                  <th pSortableColumn="TP" class="center1">
+                  <th pSortableColumn="TP" class="center1" style="width:4%">
                     TP
                     <p-sortIcon field="TP" />
                   </th>
-                  <th pSortableColumn="DE" class="center1">
+                  <th pSortableColumn="DE" class="center1" style="width:4%">
                     DE
                     <p-sortIcon field="DE" />
                   </th>
@@ -497,14 +494,14 @@
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
                   (click)="itemDataAll(products?.coditem)">
                   <td class="center1"> {{ products.orden }} </td>
-                  <td class="center1"> {{ products.coditem }} </td>
-                  <td class="left"> {{ products.descripcion }} </td>
+                  <td class="left1"> {{ products.coditem }} </td>
+                  <td class="left1"> {{ products.descripcion }} </td>
                   <td class="center1"> {{ products.medida }} </td>
                   <td class="center1"> {{ products.udm }} </td>
                   <td class="center1"> {{ products.porceniva }} </td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                  <td class="right1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
@@ -769,7 +766,8 @@
                       <div class="col-md-2">
                         <div class="input-group">
                           <span class="input-group-text form-control-sm"
-                            style="padding: 10px 0px 0px 0px;border: 0 !important;">Peso Total: {{ peso }} Kgr.
+                            style="padding: 10px 0px 0px 0px;border: 0 !important;">Peso Total:
+                            {{ peso | number:'2.2-2' }} Kgr.
                           </span>
                         </div>
                       </div>
@@ -1178,7 +1176,8 @@
             </div>
 
             <div style="text-align: center;">
-              <input type="checkbox" [(ngModel)]="es_venta" [value]="true" readonly><span>&nbsp; Es Venta</span>
+              <input type="checkbox" [(ngModel)]="es_venta" [value]="true" formControlName="es_venta"
+                readonly><span>&nbsp; Es Venta</span>
             </div>
           </form>
         </div>

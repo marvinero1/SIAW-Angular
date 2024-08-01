@@ -123,6 +123,11 @@ export class ModalDescuentosComponent implements OnInit {
         precio_sugerido: this.precio_codigo,
       });
     }
+
+    this.servicioDescuento.disparadorDeDescuentosMatrizCantidad.emit({
+      descuento: this.descuento_codigo,
+      precio_sugerido: this.precio_codigo,
+    });
     this.close();
   }
 

@@ -91,7 +91,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   precio_input: any;
   usuario_logueado: string = "";
   valorCelda: any;
-  tamanio_lista_item_pedido: any;
+  tamanio_lista_item_pedido: any = 0;
 
   item: any = 0;
   item_set: any;
@@ -116,7 +116,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   data_almacen_local: any = [];
   array_items_seleccionado: any = [];
   array_items_proforma_matriz: any = [];
-  array_items_seleccionados_length: number = 0;
   array_items_completo: any = [];
   dataItemsSeleccionadosMultiple: any = [];
   items_post: any = [];
@@ -163,13 +162,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any
-  ) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any) {
 
     this.array_items_proforma_matriz = items.items;
-
+    //array_items_completo
     // si ya existen items en el detalle de la proforma todo se concatena a este array this.array_items_proforma_matriz
-    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz);
+    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz.length);
 
     this.pedidoInicial = 0;
     this.cantidad = this.pedido;
@@ -195,9 +193,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.codmoneda_get = codmoneda.codmoneda;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
     this.codcliente_real_get = codcliente_real.codcliente_real;
-    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras
+    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras;
 
-    console.log("tamanio carrito:", this.tamanio_carrito)
+    console.log("array completo:", this.array_items_completo, "tamanio carrito:", this.tamanio_carrito)
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -219,6 +217,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       "FECHA: " + this.fecha_get,
       "CODMONEDA: " + this.codmoneda_get,
       "DESC NIVEL: " + this.descuento_nivel_get,
+      "tamanio carrito:", this.tamanio_carrito
     );
 
     this.dataItemsSeleccionadosMultiple = [];
@@ -254,30 +253,19 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.itemservice.disparadorDeItemsSeleccionadosAMatriz.subscribe(datav => {
       console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
       this.item_seleccionados_catalogo_matriz = datav;
+      this.tamanio_carrito = this.item_seleccionados_catalogo_matriz.length;
 
-      console.log(this.item_seleccionados_catalogo_matriz);
+      //this.array_items_completo = this.item_seleccionados_catalogo_matriz;
 
-      this.addItemArraySeleccion(this.item_seleccionados_catalogo_matriz);
+      console.log(this.item_seleccionados_catalogo_matriz, "tamanio del carrito:", this.tamanio_carrito);
+      this.addItemArraySeleccion();
     });
-    //
-
-    //Items seleccionados
-    // this.itemservice.disparadorDeItemsSeleccionadosAProforma.subscribe(datav => {
-    //   console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
-    //   this.item_seleccionados_catalogo_matriz = datav;
-    //   this.item_seleccionados_catalogo_matriz;
-    //   this.addItemArraySeleccion(this.item_seleccionados_catalogo_matriz);
-    // });
     //
 
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
       this.cod_precio_venta_modal_codigo1 = data.precio_venta.codigo;
     });
-
-    //this.tamanio_lista_item_pedido = this.array_items_proforma_matriz.length; //aca pone la longitud del carrito con los items concatenados del detalle de la proforma
-    this.array_items_seleccionados_length = this.array_items_seleccionado.length;
-    console.log(this.tamanio_lista_item_pedido, this.array_items_seleccionados_length);
   }
 
   ngAfterViewInit(): void {
@@ -288,7 +276,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.toastr.error('¡' + this.messages.join(', ') + '!');
     }
 
-    console.log(this.array_items_completo);
+    console.log("item de seleccion:", this.array_items_completo);
 
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
@@ -329,6 +317,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
   togglePrecio() {
     if (this.precio) {
       this.precio = false;
@@ -358,7 +347,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       case 'focusEmpaque':
         this.getEmpaqueItem();
         break;
-
     }
   }
 
@@ -706,9 +694,15 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   addItemArray() {
+    // this.array_items_proforma_matriz.length = this.array_items_completo.length;
+    let i = this.tamanio_carrito + 1;
+    // let i = this.array_items_completo.length + 1;
+    this.tamanio_carrito = this.array_items_proforma_matriz.length + 1;
+    console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length + 1)
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
-    let i = this.array_items_seleccionado.length + 1;
+    //LONGITUD DEL CARRITO DE COMPRAS
+    console.log(this.tamanio_carrito);
 
     let array = {
       coditem: cleanText,
@@ -725,7 +719,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       descripcion: this.descripcion_item,
       medida: this.medida_item,
       cantidad_empaque: this.cant_empaque,
-      orden_pedido: i,
+      orden_pedido: this.array_items_completo.length + 1,
+      nroitem: this.array_items_completo.length + 1,
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
@@ -787,33 +782,27 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     console.log(focusedElement.id);
 
+    //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
+    this.array_items_completo = this.array_items_seleccionado.concat(this.item_seleccionados_catalogo_matriz);
+
     console.log("array_items_completo", this.array_items_completo,
       "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
-      "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz);
-
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
+      "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
+      "TAMANIO CARRITO: ", this.array_items_completo.length + this.array_items_completo.length + this.array_items_seleccionado.length + this.array_items_proforma_matriz.length);
 
     this.cant_empaque = undefined;
     this.pedido = undefined;
     this.cantidad = undefined;
+    this.tamanio_lista_item_pedido = this.array_items_completo.length;
   }
 
-  addItemArraySeleccion(items_seleccionados_seleccion) {
-    //aca se agregan los items de seleccion multiple al carrito ya mapeado
-    this.array_items_completo_multiple = items_seleccionados_seleccion;
+  addItemArraySeleccion() {
+    // ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
+    this.array_items_completo = this.item_seleccionados_catalogo_matriz;
 
-    //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
-    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
-
-    //si el carrito ya tiene items concatenarlo a la nueva carga de items
-    //aca se pone el numerito que indica el total de los items que hay en el carrito
+    // si el carrito ya tiene items concatenarlo a la nueva carga de items
+    // aca se pone el numerito que indica el total de los items que hay en el carrito
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
-
-    // this.item_seleccionados_catalogo_matriz.forEach(element => {
-    //   console.log("ITEMS DEL CARRO BTN CONFRIMAR: " + JSON.stringify(element));
-    // });
   }
 
   mandarItemaProforma() {
@@ -836,7 +825,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
         empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque,
-        orden_pedido: elemento.orden_pedido,
+        orden_pedido: elemento.nroitem,
+        nroitem: elemento.nroitem,
       }
     });
     console.log(a);
@@ -894,6 +884,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     this.array_items_proforma_matriz = this.array_items_proforma_matriz.filter(i => i.coditem !== item);
     this.array_items_seleccionado = this.array_items_seleccionado.filter(i => i.coditem !== item);
+
+    console.log(this.array_items_completo);
   }
 
   limpiarMatriz() {
@@ -1157,6 +1149,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   seleccionMultipleItemHotTable() {
+    console.log(this.tamanio_carrito);
+
     this.dialog.open(ItemSeleccionCantidadComponent, {
       width: 'auto',
       height: 'auto',
@@ -1172,6 +1166,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         items: this.array_items_completo,
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
         precio_venta: this.cod_precio_venta_modal_codigo1,
+        // tamanio_carrito_compras: this.array_items_completo.length,
         tamanio_carrito_compras: this.tamanio_carrito,
       },
     });
