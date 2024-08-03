@@ -12,7 +12,8 @@
           <div class="input-group-append">
             <!-- BTN GRABAR -->
             <div>
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA';else trsf">
+              <ng-container
+                *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA' || estado_proforma=== 'ANULADA';else trsf">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                   (click)="submitDataModificarProforma();" disabled>
                   <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
@@ -28,7 +29,8 @@
 
             <!-- BTN GRABAR Y APROBAR -->
             <div>
-              <ng-container *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA';else grbapr">
+              <ng-container
+                *ngIf="estado_proforma === 'TRANSFERIDA' || estado_proforma === 'APROBADA' || estado_proforma=== 'ANULADA';else grbapr">
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                   (click)="submitDataModificarProformaAprobar();" disabled>
                   <span>
@@ -848,18 +850,33 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
-                    <p-cellEditor>
+                    <!-- <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <ng-template>
-                          <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.empaque"
+                        <ng-container *ngIf="products.empaque === 'null'">
+                          <input pInputText type="number" class="pedido" min="0" [value]=0
                             (change)="empaqueChangeMatrix(products, $event.target.value)"
                             style="text-align: center !important;">
-                        </ng-template>
+                        </ng-container>
                       </ng-template>
+
                       <ng-template pTemplate="output">
                         {{ products.empaque }}
                       </ng-template>
+                    </p-cellEditor> -->
+
+                    <p-cellEditor>
+                      <ng-template pTemplate="input">
+                        <input pInputText type="number" min="0"
+                          [value]="products.empaque === null ? 0 : products.empaque"
+                          style="text-align: center !important;"
+                          (input)="onInputChangeMatrix(products, $event.target.value)" />
+                      </ng-template>
+
+                      <ng-template pTemplate="output">
+                        {{ products.empaque === null ? 0 : products.empaque }}
+                      </ng-template>
                     </p-cellEditor>
+
                   </td>
 
                   <td class="center1" [pEditableColumn]="products.cantidad_pedida"

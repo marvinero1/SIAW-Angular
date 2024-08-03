@@ -1,5 +1,5 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -58,14 +58,14 @@ import { ModalClienteDireccionComponent } from '../../modal-cliente-direccion/mo
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 import { ServicioTransfeAProformaService } from './modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalTransfeProformaComponent } from './modal-transfe-proforma/modal-transfe-proforma.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
   styleUrls: ['./proforma.component.scss'],
 })
-export class ProformaComponent implements OnInit, AfterViewInit {
+export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public nombre_ventana: string = "docveproforma.vb";
   public ventana: string = "Proforma";
@@ -307,6 +307,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   public nroidpf_complemento_view: any;
   public input_complemento_view: any;
 
+  latitud_entrega: any;
+  longitud_entrega: any;
+
   public moneda_get_catalogo: any;
   public moneda_get_array: any = [];
   public tipo_cambio_moneda_catalogo: any;
@@ -438,7 +441,9 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   hora_fecha_server: any = [];
 
   decimalPipe: any;
+
   private debounceTimer: any;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
@@ -746,6 +751,14 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
+    //modalClientesDireccion
+    this.servicioCliente.disparadorDeDireccionesClientes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Direccion Cliente: ", data);
+      this.direccion = data.direccion;
+      console.log(this.direccion);
+    });
+    //
+
     //SALDOS ITEM PIE DE PAGINA
     this.saldoItemServices.disparadorDeSaldoAlm1.subscribe(data => {
       console.log("Recibiendo Saldo Total: ", data);
@@ -837,6 +850,11 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.getIDScomplementarProforma();
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   onNoClick(event: Event): void {
     event.preventDefault();
   }
@@ -857,48 +875,48 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  tablaInicializada() {
-    this.orden_creciente = 0;
-    this.array_items_carrito_y_f4_catalogo = Array(35).fill({}).map(() => ({
-      coditem: " ",
-      descripcion: " ",
-      medida: " ",
-      udm: " ",
-      porceniva: undefined,
-      cantidad_pedida: undefined,
-      cantidad: undefined,
-      porcen_mercaderia: undefined,
-      codtarifa: undefined,
-      coddescuento: undefined,
-      preciolista: undefined,
-      niveldesc: " ",
-      porcendesc: undefined,
-      preciodesc: undefined,
-      precioneto: undefined,
-      total: undefined,
-      cumple: false,
-      nroitem: undefined,
-      porcentaje: undefined,
-      monto_descto: undefined,
-      subtotal_descto_extra: undefined
-    }));
+  // tablaInicializada() {
+  //   this.orden_creciente = 0;
+  //   this.array_items_carrito_y_f4_catalogo = Array(35).fill({}).map(() => ({
+  //     coditem: " ",
+  //     descripcion: " ",
+  //     medida: " ",
+  //     udm: " ",
+  //     porceniva: undefined,
+  //     cantidad_pedida: undefined,
+  //     cantidad: undefined,
+  //     porcen_mercaderia: undefined,
+  //     codtarifa: undefined,
+  //     coddescuento: undefined,
+  //     preciolista: undefined,
+  //     niveldesc: " ",
+  //     porcendesc: undefined,
+  //     preciodesc: undefined,
+  //     precioneto: undefined,
+  //     total: undefined,
+  //     cumple: false,
+  //     nroitem: undefined,
+  //     porcentaje: undefined,
+  //     monto_descto: undefined,
+  //     subtotal_descto_extra: undefined
+  //   }));
 
-    let validacion = [{
-      codControl: '',
-      descripcion: '',
-      valido: '',
-      cod_servicio: '',
-      desct_servicio: '',
-      datoA: '',
-      datoB: '',
-      clave_servicio: '',
-      resolver: '',
-      detalle_observacion: '',
-      validar: '',
-    }]
+  //   let validacion = [{
+  //     codControl: '',
+  //     descripcion: '',
+  //     valido: '',
+  //     cod_servicio: '',
+  //     desct_servicio: '',
+  //     datoA: '',
+  //     datoB: '',
+  //     clave_servicio: '',
+  //     resolver: '',
+  //     detalle_observacion: '',
+  //     validar: '',
+  //   }]
 
-    this.dataSource_validacion = new MatTableDataSource(validacion);
-  }
+  //   this.dataSource_validacion = new MatTableDataSource(validacion);
+  // }
 
   itemDataAll(codigo) {
     this.getSaldoEmpaquePesoAlmacenLocal(codigo);
@@ -1679,7 +1697,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         this.array_de_descuentos_ya_agregados = [];
         this.tabla_anticipos = [];
 
-        this.tablaInicializada();
+        // this.tablaInicializada();
         this.limpiarEtiqueta();
       } else {
         this.toastr.info("SE CANCELO LA LIMPIEZA");
@@ -1795,7 +1813,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   empaqueChangeMatrix(element: any, newValue: number) {
     console.log(element);
-
     var d_tipo_precio_desct: string;
 
     if (this.precio === true) {
@@ -1818,12 +1835,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           element.empaque = Number(newValue);
           element.cantidad = Number(datav.total);
           element.cantidad_pedida = Number(datav.total);
-
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          // guardar en el carrito ya modificado, para enviar a totalizar
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -1836,10 +1847,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.empaqueChangeMatrix(products, value);
-    }, 2000); // 300 ms de retardo
+    }, 1500); // 300 ms de retardo
   }
-
-
 
   pedidoChangeMatrix(element: any, newValue: number) {
     this.total = 0;
@@ -1855,7 +1864,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
       + this.usuarioLogueado + "/" + element.coditem + "/" + element.codtarifa + "/" + element.coddescuento + "/" + element.cantidad_pedida +
-      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      "/" + element.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/false/" + this.moneda_get_catalogo + "/" + fecha)
       .subscribe({
         next: (datav) => {
           //this.almacenes_saldos = datav;
@@ -1865,11 +1874,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           element.preciolista = Number(datav.preciolista);
           element.preciodesc = Number(datav.preciodesc);
           element.precioneto = Number(datav.precioneto);
-
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
 
         error: (err: any) => {
@@ -1884,7 +1888,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.pedidoChangeMatrix(products, value);
-    }, 2000); // 300 ms de retardo
+    }, 1500); // 300 ms de retardo
   }
 
   cantidadChangeMatrix(elemento: any, newValue: number) {
@@ -1912,10 +1916,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
 
         error: (err: any) => {
@@ -1924,6 +1924,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         complete: () => {
         }
       });
+  }
+
+  onInputChangecantidadChangeMatrix(products: any, value: any) {
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.cantidadChangeMatrix(products, value);
+    }, 1500); // 300 ms de retardo
   }
 
   // PRECIO VENTA DETALLE
@@ -2256,7 +2263,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
     console.log(codigo, id_numero_id);
     const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: {
         dataA: codigo,
@@ -2540,7 +2547,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     }
 
     return this.api.create("/venta/transac/veproforma/recuperarPfComplemento/" + this.userConn + "/" + complemento_id + "/" +
-      complemento_numero_id + "/" + this.complementopf + "/" + this.BD_storage, proforma_validar)
+      complemento_numero_id + "/" + this.tipo_complementopf_input + "/" + this.BD_storage, proforma_validar)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -2548,7 +2555,12 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
           if (datav.value === false) {
             this.modalDetalleObservaciones(datav.resp, datav.detalle);
-            this.complementopf = false;
+            // this.complementopf = false;
+            this.disableSelectComplemetarProforma = false;
+            this.tipo_complementopf_input = 3;
+            this.idpf_complemento_view = "";
+            this.input_complemento_view = "";
+
           } else {
             this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
           }
@@ -2561,7 +2573,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         error: (err) => {
           console.log(err);
           this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
-          this.complementopf = false;
+          // this.complementopf = false;
+          this.disableSelectComplemetarProforma = false;
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
@@ -2715,7 +2728,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
       nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
-      idsoldesctos: this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
+      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
       idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
@@ -2754,7 +2767,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   openConfirmacionDialog(message: string): Promise<boolean> {
     //btn aceptar
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: message },
       disableClose: true,
@@ -2907,6 +2920,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       descuentos: this.des_extra,
       idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
       nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
+      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view,
     };
 
     console.log("Data Form Mapeado: ", data);
@@ -2979,9 +2993,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-
-
 
   // accion de brn grabarAprobar
   async submitDataGrabarAprobar() {
@@ -3096,15 +3107,13 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       descuentos: this.des_extra,
       idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
       nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
+      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view,
     };
 
     // array dtva
     let tipo_complemento
     console.log(this.tipo_complementopf_input);
     switch (this.tipo_complementopf_input) {
-      case 3:
-        tipo_complemento = "";
-        break;
       case 0:
         tipo_complemento = "complemento_mayorista_dimediado";
         break;
@@ -3112,6 +3121,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         tipo_complemento = "complemento_para_descto_monto_min_desextra";
         break;
     }
+
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
@@ -3151,8 +3161,8 @@ export class ProformaComponent implements OnInit, AfterViewInit {
         tipoentrega: element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
-        latitud: element.latitud_entrega,
-        longitud: element.longitud_entrega,
+        latitud: this.latitud_entrega,
+        longitud: this.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
@@ -3222,7 +3232,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     };
 
     this.submitted = true;
-    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
+    console.log("Formulario que se envia al BACKEND: ", total_proforma_concat, "Valor Formulario Original: ", this.FormularioData.value);
     console.log("FORMULARIO VALIDADO");
     console.log(this.array_items_carrito_y_f4_catalogo);
 
@@ -5447,14 +5457,6 @@ export class ProformaComponent implements OnInit, AfterViewInit {
       disableClose: true,
       data: { cod_cliente: cod_cliente },
     });
-
-    //modalClientesDireccion
-    this.servicioCliente.disparadorDeDireccionesClientes.subscribe(data => {
-      console.log("Recibiendo Direccion Cliente: ", data);
-      this.direccion = data.direccion;
-      console.log(this.direccion);
-    });
-    //
   }
 
   modalSaldos(cod_almacen, posicion_fija): void {
@@ -5770,7 +5772,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
   //seccion mat-tab Resultado de Validacion
   resolverValidacion() {
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: {
         dataA: '00068',
@@ -5928,7 +5930,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
     const dialogRefEspeciales = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: {
         dataA: datoA,
@@ -6074,7 +6076,7 @@ export class ProformaComponent implements OnInit, AfterViewInit {
 
   modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
-      width: 'auto',
+      width: '700px',
       height: 'auto',
       disableClose: true,
       data: {

@@ -25,6 +25,9 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   data_detalle_proforma: any = [];
   data_cabecera_footer_proforma: any = [];
 
+  cod_cliente_get: any;
+  cod_cliente_real_get: any;
+
   constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService) {
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
@@ -34,6 +37,9 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
 
     this.getDataPDF();
     this.mandarNombre();
+
+    this.cod_cliente_get = this.data_impresion[0].cod_cliente;
+    this.cod_cliente_real_get = this.data_impresion[0].cod_cliente_real;
   }
 
   ngOnInit(): void {
@@ -42,7 +48,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   getDataPDF() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" +
-      this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + this.data_impresion[0].cmbestado_contra_entrega + "/" + this.data_impresion[0].grabar_aprobar)
+      this.data_impresion[0].cod_cliente + "/" + this.cod_cliente_real_get + "/" + this.BD_storage + "/" + this.data_impresion[0].cmbestado_contra_entrega + "/" + this.data_impresion[0].grabar_aprobar)
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);

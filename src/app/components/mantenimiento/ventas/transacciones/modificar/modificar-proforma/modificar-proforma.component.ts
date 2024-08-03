@@ -381,6 +381,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   tipo_venta: any;
   numeroidanticipo: any;
 
+  latitud_entrega: any;
+  longitud_entrega: any;
+
   //fechas
   pago_contado_anticipado_view: any;
   odc: any;
@@ -1077,7 +1080,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
         id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
+        numeroid: element.numeroid?.toString(),
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
@@ -1308,7 +1311,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.cliente_habilitado_get = proforma.habilitado;
 
     this.cod_id_tipo_modal_id = proforma.cabecera.id;
-    this.id_proforma_numero_id = proforma.cabecera.numeroid;
+    this.id_proforma_numero_id = proforma.cabecera.numeroid.toString();
 
     //fechas
     this.fecha = this.datePipe.transform(proforma.cabecera.fecha, "yyyy-MM-dd");
@@ -1729,7 +1732,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('Usuario Inexiste! ⚠️');
+          // this.toastr.warning('Usuario Inexiste! ⚠️');
         },
         complete: () => {
           this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
@@ -2174,15 +2177,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
           element.cantidad_empaque = Number(newValue);
-
           element.cantidad = Number(datav.total);
           element.cantidad_pedida = Number(datav.total);
-
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          //guardar en el carrito ya modificado, para enviar a totalizar
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
 
         error: (err: any) => {
@@ -2217,10 +2213,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
 
         error: (err: any) => {
@@ -2231,6 +2223,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
 
   pedidoChangeMatrix(element: any, newValue: number) {
     this.total = 0;
@@ -2256,10 +2249,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           element.preciolista = Number(datav.preciolista);
           element.preciodesc = Number(datav.preciodesc);
           element.precioneto = Number(datav.precioneto);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(this.dataSource.filteredData);
-
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
         },
 
         error: (err: any) => {
@@ -2599,7 +2588,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   imprimir_cotizacion_transferida(cotizacion) {
     console.log(cotizacion);
     this.cod_id_tipo_modal_id = cotizacion.cabecera.id;
-    this.id_proforma_numero_id = cotizacion.cabecera.numeroid;
+    this.id_proforma_numero_id = cotizacion.cabecera.numeroid.toString();
     this.fecha_actual = cotizacion.cabecera.fecha;
     this.almacn_parame_usuario = cotizacion.cabecera.codalmacen;
     this.codigo_cliente = cotizacion.cabecera.codcliente;
@@ -2711,7 +2700,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
         id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
+        numeroid: element.numeroid?.toString(),
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
@@ -3297,34 +3286,95 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
     };
 
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: { mensaje_dialog: "La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " " + "no esta confirmada. ¿Desea Confirmarla?" },
-      disableClose: true,
-    });
-
-    dialogRef.afterClosed().subscribe((result: Boolean) => {
-      if (result) {
-        data = {
-          ...data,
-          confirmada: true,
-        };
-      }
-    });
-
     console.log("Data Form Mapeado: ", data);
+    console.log(this.valor_formulario_copied_map_all);
+
     //se aumenta el array tabladescuentos y el array tablarecargos al array de validaciones
-    let form_validacion = this.valor_formulario_copied_map_all;
-    form_validacion = {
-      ...form_validacion,
-      estado_doc_vta: "",
+    let form_validacion = [this.valor_formulario_copied_map_all].map((element) => ({
+      codalmacen: element.codalmacen.toString(),
+      numeroid: element.numeroid.toString(),
+      codvendedor: element.codvendedor.toString(),
+      contra_entrega: element.contra_entrega.toString(),
+      nroidpf_complemento: element.nroidpf_complemento.toString(),
+      coddocumento: 0,
+      id: element.id.toString() || '',
+      codcliente: element.codcliente?.toString() || '',
+      nombcliente: this.razon_social?.toString() || '',
+      nitfactura: element.nit?.toString() || '',
+      tipo_doc_id: element.tipo_docid?.toString() || '',
+      codcliente_real: element.codcliente_real?.toString() || '',
+      nomcliente_real: this.nombre_cliente_catalogo_real,
+      codmoneda: element.codmoneda?.toString() || '',
+      subtotaldoc: element.subtotal,
+      totaldoc: element.total,
+      tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+      preciovta: element.preciovta?.toString() || '',
+      preparacion: element.preparacion,
+      vta_cliente_en_oficina: element.venta_cliente_oficina,
+      estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+      desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+      pago_con_anticipo: element.pago_contado_anticipado,
+      niveles_descuento: element.niveles_descuento,
+      transporte: element.transporte,
+      nombre_transporte: element.nombre_transporte,
+      fletepor: element.fletepor === undefined ? "" : element.fletepor,
+      tipoentrega: element.tipoentrega,
+      direccion: element.direccion,
+      ubicacion: element.ubicacion,
+      latitud: element.latitud_entrega,
+      longitud: element.latitud_entrega,
+      nroitems: this.array_items_carrito_y_f4_catalogo.length,
+      tipo_complemento: element.tipo_complemento,
+      fechadoc: element.fecha,
+      idanticipo: element.idanticipo,
+      noridanticipo: element.numeroidanticipo?.toString() || '',
+      monto_anticipo: 0,
+      nrofactura: "0",
+      nroticket: "",
+      tipo_caja: "",
       tipo_cliente: this.tipo_cliente,
-    }
+      nroautorizacion: "",
+      nrocaja: "",
+      idsol_nivel: "",
+      nroidsol_nivel: "0",
+      version_codcontrol: "",
+      estado_doc_vta: "NUEVO",
+      codtarifadefecto: "1",
+      desctoespecial: "0",
+      cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+      totdesctos_extras: this.des_extra,
+      totrecargos: 0,
+      idpf_complemento: "",
+      idFC_complementaria: "",
+      nroidFC_complementaria: "",
+      fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+      idpf_solurgente: "0",
+      noridpf_solurgente: "0",
+    }));
 
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
       ...element,
       descrip: element.descripcion,
+    }));
+
+    let tabladescuentos_map = this.array_de_descuentos_ya_agregados.map((element) => ({
+      coddesextra: element.coddesextra,
+      descripcion: element.descripcion,
+      porcen: element.porcen,
+      montodoc: element.montodoc,
+      codcobranza: element.codcobranza,
+      codcobranza_contado: element.codcobranza_contado,
+      codanticipo: element.codanticipo
+    }));
+
+    let tablarecargos_map = this.recargo_de_recargos.map((element) => ({
+      codrecargo: element.codrecargo,
+      descripcion: element.descripcion,
+      porcen: element.porcen,
+      monto: element.monto,
+      moneda: element.moneda,
+      montodoc: element.montodoc,
+      codcobranza: element.codcobranza
     }));
 
     total_proforma_concat = {
@@ -3336,10 +3386,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       verecargoprof: this.recargo_de_recargos, //array de recargos,
       veetiqueta_proforma: this.etiqueta_get_modal_etiqueta[0], // array de etiqueta
       veproforma_iva: this.veproforma_iva, //array de iva
-      dvta: form_validacion, // aca el array de validacion mapeado con mas info xdxd  this.valor_formulario_copied_map_all;
+      dvta: form_validacion[0], // aca el array de validacion mapeado con mas info xdxd  this.valor_formulario_copied_map_all;
       detalleAnticipos: [],
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
-      tablarecargos: this.recargo_de_recargos,
+
+      tabladescuentos: tabladescuentos_map,
+      tablarecargos: tablarecargos_map
     };
 
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat, "FORMULARIO VALIDADO");
@@ -3347,36 +3398,54 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/true/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
-    // this.api.create(url, total_proforma_concat).subscribe({
-    //   next: (datav) => {
-    //     this.toastr.info("GUARDADO CON EXITO ✅");
-    //     this.totabilizar_post = datav;
-    //     console.log(this.totabilizar_post);
+    this.api.create(url, total_proforma_concat).subscribe({
+      next: (datav) => {
+        this.toastr.info("GUARDADO CON EXITO ✅");
+        this.totabilizar_post = datav;
+        console.log(this.totabilizar_post);
 
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   },
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
 
-    //   error: (err) => {
-    //     console.log(err, errorMessage);
-    //     this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-    //     //this.detalleProformaCarritoTOExcel();
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   },
-    //   complete: () => {
-    //     //aca exporta a ZIP
-    //     this.exportProformaZIP(this.totabilizar_post.codProf);
-    //     this.log_module.guardarLog(this.ventana, "proforma_guardada_cod" + this.totabilizar_post.codProf, "POST", "", "");
-    //     // aca manda a imprimir la proforma guardada
-    //     this.modalBtnImpresiones();
-    //     setTimeout(() => {
-    //       this.spinner.hide();
-    //     }, 1000);
-    //   }
-    // });
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        //this.detalleProformaCarritoTOExcel();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      complete: () => {
+        //aca exporta a ZIP
+        const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
+          width: 'auto',
+          height: 'auto',
+          data: {
+            mensaje_dialog: "Se Grabo y Aprobo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
+          },
+          disableClose: true,
+        });
+
+        dialogRefZIP.afterClosed().subscribe((result: Boolean) => {
+          if (result) {
+            this.exportProformaZIP(this.totabilizar_post.codProf);
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          } else {
+            this.toastr.error("NO SE DESCARGO ZIP");
+            //aca manda a imprimir la proforma guardada
+            this.modalBtnImpresiones();
+          }
+        });
+
+        this.guardarDataImpresion(this.totabilizar_post.codProf, true);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      }
+    });
   }
 
   totabilizar() {
@@ -3630,7 +3699,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       return this.valor_formulario_negativos = {
         coddocumento: 0,
         id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
+        numeroid: element.numeroid?.toString(),
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
@@ -3814,7 +3883,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       return this.validacion_post_max_ventas = {
         coddocumento: 0,
         id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
+        numeroid: element.numeroid?.toString(),
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
@@ -4197,7 +4266,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.valor_formulario_copied_map_all = {
         coddocumento: 0,
         id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
+        numeroid: element.numeroid?.toString(),
         codcliente: element.codcliente?.toString() || '',
         nombcliente: this.razon_social?.toString() || '',
         nitfactura: element.nit?.toString() || '',
@@ -4266,7 +4335,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       detalleEtiqueta: [this.etiqueta_get_modal_etiqueta[0]],
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
-      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
+      detalleControles: this.validacion_post.length > 1 ? [] : this.validacion_post,
     }
 
     console.log(proforma_validar, "Largo del array etiqueta: ");
@@ -4335,9 +4404,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.array_items_carrito_y_f4_catalogo;
   }
 
+  private debounceTimer: any;
 
-
-
+  onInputChangeMatrix(products: any, value: any) {
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => {
+      this.empaqueChangeMatrix(products, value);
+    }, 1500); // 300 ms de retardo
+  }
 
 
 
@@ -5790,7 +5864,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   //seccion mat-tab Resultado de Validacion
   resolverValidacion() {
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: 'auto',
+      width: '600px',
       height: 'auto',
       data: {
         dataA: '00068',
@@ -5843,16 +5917,16 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       height: 'auto',
       disableClose: true,
     });
-    this.guardarDataImpresion();
   }
 
-  guardarDataImpresion() {
+  guardarDataImpresion(codigo_proforma_submitdata, grabar_aprobar: boolean) {
     let data = [{
-      codigo_proforma: this.codigo_proforma,
+      codigo_proforma: codigo_proforma_submitdata,
       cod_cliente: this.codigo_cliente,
       cod_cliente_real: this.codigo_cliente_catalogo_real,
       cmbestado_contra_entrega: this.contra_entrega,
       estado_contra_entrega: this.estado_contra_entrega_input,
+      grabar_aprobar: grabar_aprobar
     }];
 
     localStorage.setItem('data_impresion', JSON.stringify(data));
@@ -5958,7 +6032,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: 'auto',
+      width: '600px',
       height: 'auto',
       data: {
         dataA: datoA,
@@ -6105,7 +6179,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   modalDetalleObservaciones(obs, obsDetalle) {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
-      width: 'auto',
+      width: '700px',
       height: 'auto',
       disableClose: true,
       data: {

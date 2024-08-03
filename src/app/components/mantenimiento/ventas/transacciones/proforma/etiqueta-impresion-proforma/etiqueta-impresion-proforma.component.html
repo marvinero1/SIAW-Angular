@@ -5,26 +5,32 @@
 
 <div id="content">
   <div class="row">
-    <div class="col-md-4 p-1 content-box">
-
-      <p class="pe"><strong>{{ data_etiqueta.linea1 }}</strong></p><br>
-      <span class="espan"><strong>{{ data_etiqueta.representante }}</strong></span>
-      <div style="text-align: left !important;">
-        <div class="row">
-          <div class="col">
-            <p class="pe"><strong>TEL: {{ data_etiqueta.telefono }}</strong></p>
-            <p class="pe"><strong>CEL: {{ data_etiqueta.celular }}</strong></p>
+    <ng-container *ngIf="cod_cliente_get !== cod_cliente_real_get;else cltRef">
+      <div class="col-md-4 p-1 content-box">
+        <p class="pe"><strong>{{ data_etiqueta.linea1 }}</strong></p><br>
+        <span class="espan"><strong>{{ data_etiqueta.representante }}</strong></span>
+        <div style="text-align: left !important;">
+          <div class="row">
+            <div class="col">
+              <p class="pe"><strong>TEL: {{ data_etiqueta.telefono }}</strong></p>
+              <p class="pe"><strong>CEL: {{ data_etiqueta.celular }}</strong></p>
+            </div>
+            <div class="col">
+              <div style="border: 4px solid black; height: 50px !important;"></div>
+            </div>
           </div>
-          <div class="col">
-            <div style="border: 4px solid black; height: 50px !important;"></div>
-          </div>
+          <p class="pe"><strong>{{ data_etiqueta.ciudad }}</strong></p>
         </div>
-        <p class="pe"><strong>{{ data_etiqueta.ciudad }}</strong></p>
-      </div>
 
-      <div class="row p-2">
-        <strong>{{ data_etiqueta.nom_factura }}</strong>
+        <div class="row p-2">
+          <strong>{{ data_etiqueta.nom_factura }}</strong>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-template #cltRef>
+      <p style="text-align: center;"><strong><u>LA VENTA NO ES CASUAL-REFERENCIAL, LA DATA NO SE MUESTRA</u></strong>
+      </p>
+    </ng-template>
   </div>
 </div>

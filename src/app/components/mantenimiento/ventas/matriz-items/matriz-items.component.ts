@@ -694,8 +694,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   addItemArray() {
+
     // this.array_items_proforma_matriz.length = this.array_items_completo.length;
     let i = this.tamanio_carrito + 1;
+    let j = this.tamanio_carrito + this.array_items_proforma_matriz.length;
     // let i = this.array_items_completo.length + 1;
     this.tamanio_carrito = this.array_items_proforma_matriz.length + 1;
     console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length + 1)
@@ -719,8 +721,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       descripcion: this.descripcion_item,
       medida: this.medida_item,
       cantidad_empaque: this.cant_empaque,
-      orden_pedido: this.array_items_completo.length + 1,
-      nroitem: this.array_items_completo.length + 1,
+
+      //aca funciona pero cuando se cierra la matriz toma valor 1 y empieza su orden de nuevo
+      // orden_pedido: this.array_items_completo.length + 1,
+      // nroitem: this.array_items_completo.length + 1,
+
+      // aca
+      orden_pedido: i,
+      nroitem: i,
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
@@ -755,8 +763,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // //CUANDO NO HAY NADA EN EL CARRITO Y ES EL PRIMER ITEM SE AGREGA ACA,
     // //Y SI YA TIENE ITEMS SE TIENEN QUE IR AGREGANDO AL ARRAY SIN BORRARSE
     // if (this.array_items_seleccionados_length === undefined) {
-
-    //UNA VEZ QUE EL ITEM PASA LAS VALIDACIONES SE AGREGA AL ARRAY array_items_seleccionado
+    // UNA VEZ QUE EL ITEM PASA LAS VALIDACIONES SE AGREGA AL ARRAY array_items_seleccionado
     // }
     // else {
     //   this.array_items_proforma_matriz.push(array);
@@ -764,17 +771,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     this.array_items_seleccionado.push(array);
 
-    //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM
-    //this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
-
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
     this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
 
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
-
-    // const focusElement = this.focusTabla.nativeElement;
-    // focusElement.focus();
 
     let nombre_input: string = ""
     const focusedElement = document.activeElement as HTMLElement;
@@ -788,7 +789,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log("array_items_completo", this.array_items_completo,
       "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
       "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
-      "TAMANIO CARRITO: ", this.array_items_completo.length + this.array_items_completo.length + this.array_items_seleccionado.length + this.array_items_proforma_matriz.length);
+      "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
+      this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
 
     this.cant_empaque = undefined;
     this.pedido = undefined;
@@ -807,6 +809,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   mandarItemaProforma() {
     this.spinner.show();
+
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
     console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
@@ -829,6 +832,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         nroitem: elemento.nroitem,
       }
     });
+
     console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";

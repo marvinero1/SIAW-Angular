@@ -787,14 +787,13 @@
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.empaque"
                           style="text-align: center !important;"
-                          (change)="empaqueChangeMatrix(products, $event.target.value)" />
+                          (input)="onInputChangeMatrix(products, $event.target.value)" />
                       </ng-template>
                       <ng-template pTemplate="output">
                         {{ products.empaque }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
-
 
                   <!-- COLUMNA PEDIDO -->
                   <td class="center1" [pEditableColumn]="products.cantidad_pedida"
@@ -830,18 +829,19 @@
                       <ng-template pTemplate="input">
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
                           <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);">
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(0, 0, 255, 0.824);">
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad" (input)="cantidadChangeMatrix(products, $event.target.value);"
+                            id="input_cantidad"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(255, 0, 0, 0.824);">
                         </ng-container>
                       </ng-template>
@@ -1739,11 +1739,11 @@
                     <mat-label>Eliga una Opción</mat-label>
                     <mat-select class="custom-select1 form-control-sm" [disabled]="!disableSelectComplemetarProforma"
                       [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
-                      <mat-option [value]=0>Elija una opcion...</mat-option>
-                      <mat-option [value]=1>1. Dimediado - Precio Mayorista Para Cumplir
+                      <mat-option [value]=3>Elija una opcion...</mat-option>
+                      <mat-option [value]=0>1. Dimediado - Precio Mayorista Para Cumplir
                         Monto Minimo
                       </mat-option>
-                      <mat-option [value]=2>2. Para Cumplir Monto Minimo Para Aplicar
+                      <mat-option [value]=1>2. Para Cumplir Monto Minimo Para Aplicar
                         Descuento Extra
                       </mat-option>
                     </mat-select>
