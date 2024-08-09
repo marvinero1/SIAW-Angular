@@ -20,7 +20,7 @@
   <a mat-menu-item>Cotización</a>
   <a mat-menu-item (click)="guardarRutaLOG('proforma','/venta/transacciones/proforma');">Proforma 🟡</a>
   <a mat-menu-item (click)="guardarRutaLOG('nota-remision','/venta/transacciones/nota-remision');">
-    Notas de Remisión 🟡</a>
+    Notas de Remisión ✅</a>
   <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura','/venta/transacciones/nota-remision-factura');">
     Facturar Nota de Remisión (FEL) 🟡</a>
   <a mat-menu-item>Emitir Notas de Debito de Notas de Remisión</a>
@@ -37,7 +37,9 @@
 <mat-menu #modificaciones_ventas="matMenu">
   <a mat-menu-item>Cotización</a>
   <a mat-menu-item (click)="guardarRutaLOG('modificar-proforma','/venta/modificaciones/proforma');">Proforma 🟡</a>
-  <a mat-menu-item> Notas de Remisión</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('modificar-nota-remision','/venta/modificaciones/modificacion-nota-remision');"> Notas de
+    Remisión 🟡</a>
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Cambiar Datos de Facturacion</a>
   <a mat-menu-item>Reimpresion / Anulacion de Facturas (FEL)</a>

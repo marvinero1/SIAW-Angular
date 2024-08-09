@@ -2755,7 +2755,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   openConfirmationDialog(message: string): Promise<boolean> {
     //btn si/no
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: message },
       disableClose: true,
@@ -2871,7 +2871,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.api.statusInternet === false) {
       const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
+        width: '450px',
         height: 'auto',
         data: { mensaje_dialog: "¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?" },
         disableClose: true,
@@ -2966,7 +2966,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       complete: () => {
         //aca exporta a ZIP
         const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
+          width: '450px',
           height: 'auto',
           data: {
             mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
@@ -3058,7 +3058,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.api.statusInternet === false) {
       const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
+        width: '450px',
         height: 'auto',
         data: { mensaje_dialog: "¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?" },
         disableClose: true,
@@ -3161,8 +3161,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipoentrega: element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
-        latitud: this.latitud_entrega,
-        longitud: this.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
@@ -3191,6 +3189,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
+        latitud: this.latitud_cliente,
+        longitud: this.longitud_cliente,
       }
     });
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
@@ -3264,7 +3264,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       complete: () => {
         //aca exporta a ZIP
         const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
+          width: '450px',
           height: 'auto',
           data: {
             mensaje_dialog: "Se Grabo y Aprobo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
@@ -3417,7 +3417,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   validarProformaAll() {
     const dialogRefvALIDAR = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: "¿Desea aplicar DESCUENTO POR DEPOSITO, si el cliente tiene pendiente algun descuento por este concepto?" },
       disableClose: true,
@@ -4999,7 +4999,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
 
     const dialogRefExcel = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: "¿ Desea Exportar El Detalle Del Documento a Excel ?" },
       disableClose: true,
@@ -5394,6 +5394,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         items: this.array_items_carrito_y_f4_catalogo,
         descuento_nivel: this.desct_nivel_actual,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
+        // tamanio_carrito_compras: ultimo_valor?.nroitem,
       }
     });
   }
@@ -5731,7 +5732,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  modalClienteEtiqueta(cod_cliente): void {
+  modalClienteEtiqueta(): void {
     this.dialog.open(ModalEtiquetaComponent, {
       width: '505px',
       height: 'auto',
@@ -6007,7 +6008,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
     const dialogRefaplicar = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: element.Observacion },
       disableClose: true,

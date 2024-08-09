@@ -56,7 +56,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   dataItemSeleccionados_get: any = [];
   cod_descuento_modal: any = [];
   cod_precio_venta_modal: any = [];
-  array_items_completo: [];
+  array_items_completo: any = [];
 
   isCheckedCantidad: boolean = true;
   isCheckedEmpaque: boolean = false;
@@ -228,25 +228,32 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   }
 
   agregarItems() {
+    console.warn("CARRITO ESTA CON ESTA LONGITUD:", this.tamanio_carrito_viene_de_matriz);
+    console.log("CARRITO ESTA CON ESTA LONGITUD:", this.tamanio_carrito_viene_de_matriz);
+    console.error("CARRITO ESTA CON ESTA LONGITUD:", this.tamanio_carrito_viene_de_matriz);
+
+
+    //let j = this.tamanio_carrito_viene_de_matriz + 1;
+    let j = this.tamanio_carrito_viene_de_matriz + 1;
     let a: any;
     var d_tipo_precio_desct: string;
-    let i = this.items_get_carrito.length + 1;
-    console.log("Tamanio CARRITO COMPRAS", this.items_get_carrito.length);
+    let i = this.tamanio_carrito_viene_de_matriz + 1;
+    console.log("Tamanio CARRITO COMPRAS", j, this.tamanio_carrito_viene_de_matriz, this.tamanio_carrito_viene_de_matriz);
 
     const errorMessage1 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
     const errorMessage2 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
 
-    if (this.precio === true) {
-      d_tipo_precio_desct = "Precio";
-    } else {
-      d_tipo_precio_desct = "Descuento"
-    }
+    // if (this.precio === true) {
+    //   d_tipo_precio_desct = "Precio";
+    // } else {
+    //   d_tipo_precio_desct = "Descuento"
+    // }
 
-    const nuevosItems = this.dataItemSeleccionados_get.map((elemento, index) => {
-      return {
+    const nuevosItems = this.dataItemSeleccionados_get.map((elemento) => {
+      const item = {
         coditem: elemento,
-        tarifa: this.precio_venta_get, // cod_precio_venta viene de precio venta de la matriz xD
-        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo, // cod_descuento_modal_codigo
+        tarifa: this.precio_venta_get,
+        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo,
         cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
         cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
         codcliente: this.codcliente_get,
@@ -256,13 +263,15 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
         empaque: this.empaques_input,
-        orden_pedido: i + index, // Usamos index + 1 para asignar el número de orden
-        nroitem: i + index,
+        orden_pedido: j,
+        nroitem: j,
       };
+      j++; // Incrementamos j para el próximo elemento
+      return item;
     });
 
 
-    console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
+    // console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
 
     // if (!this.isCheckedCantidad) {
     //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
@@ -335,6 +344,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
               if (this.items_get_carrito.length > 0) {
                 console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
                 a = this.items_post.concat(datav, this.items_get_carrito);
+
               } else {
                 console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
                 a = this.items_post = datav;

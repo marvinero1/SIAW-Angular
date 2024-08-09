@@ -1,11 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
 import { ApiService } from '@services/api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalIdtipoComponent } from '@components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
@@ -14,6 +14,9 @@ import { TipoidService } from '@components/mantenimiento/ventas/serviciotipoid/t
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { VendedorService } from '@components/mantenimiento/ventas/serviciovendedor/vendedor.service';
 import { ServicioclienteService } from '@components/mantenimiento/ventas/serviciocliente/serviciocliente.service';
+import { CatalogoNotasRemisionComponent } from '@components/mantenimiento/ventas/transacciones/nota-remision/catalogo-notas-remision/catalogo-notas-remision.component';
+import { ServicioTransfeAProformaService } from '@components/mantenimiento/ventas/transacciones/proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
+import { CatalogoNotasRemisionService } from '@components/mantenimiento/ventas/transacciones/nota-remision/servicio-catalogo-notas-remision/catalogo-notas-remision.service';
 interface buscadorGeneral {
   id: any,
   numeroid: any,
@@ -53,6 +56,8 @@ export class BuscadorAvanzadoComponent implements OnInit {
   public codigo_cliente1: string;
   public codigo_cliente2: string;
 
+  nombre_ventana: any;
+
   todas: boolean = true;
   todas_id: boolean = false;
   todas_fecha: boolean = false;
@@ -67,6 +72,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
   cliente_bool: boolean = false;
 
   id_tipo_view_get_array: any = [];
+  id_tipo_view_get_array_nota_remision: any = [];
   almacen_get: any = [];
   vendedor_get: any = [];
 
@@ -84,22 +90,25 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
   usuarioLogueado: any;
   agencia_logueado: any;
+  codigo_documento: any;
 
   constructor(private api: ApiService, public servicioBuscadorAvanzado: BuscadorAvanzadoService,
     public dialogRef: MatDialogRef<BuscadorAvanzadoComponent>, private toastr: ToastrService,
     private almacenservice: ServicioalmacenService, private serviciovendedor: VendedorService,
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService,
-    private dialog: MatDialog, private serviciotipoid: TipoidService, private servicioCliente: ServicioclienteService,) {
+    private dialog: MatDialog, private serviciotipoid: TipoidService, private servicioCliente: ServicioclienteService,
+    @Inject(MAT_DIALOG_DATA) public ventana: any, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService) {
 
     this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-
+    this.nombre_ventana = ventana.ventana;
   }
 
   ngOnInit() {
     this.getIdTipo();
+    this.getNotaRemision();
     this.getAlmacen();
     this.getVendedorCatalogo();
 
@@ -150,6 +159,17 @@ export class BuscadorAvanzadoComponent implements OnInit {
       }
     });
     //
+
+    // Nota de Remision Catalogo
+    this.servicioCatalogoNotasRemision.disparadorDeIDNotaRemision.subscribe(data => {
+      console.log("Recibiendo ID y numeroID Buscador Avanzado Nota Remision: ", data);
+      if (this.id_tipo_view_get_codigo1 === undefined) {
+        this.id_tipo_view_get_codigo1 = data.proforma.id;
+      } else {
+        this.id_tipo_view_get_codigo2 = data.proforma.id;
+      }
+    });
+    // Fin Nota de Remision Catalogo
   }
 
   habilitarTodo() {
@@ -161,8 +181,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.vendedor_bool = false;
     this.cliente_bool = false;
   }
-
-
 
   habilitarID() {
     if (this.todas) {
@@ -251,14 +269,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
   //id tipo
   getIdTipo() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
@@ -275,7 +285,41 @@ export class BuscadorAvanzadoComponent implements OnInit {
       })
   }
 
-  onLeaveIDTipo(event: any) {
+  getNotaRemision() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "4")
+      .subscribe({
+        next: (datav) => {
+          this.id_tipo_view_get_array_nota_remision = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveIDTipoProformaCatalogo(event: any) {
+    console.log(this.id_tipo_view_get_array);
+    const inputValue = event.target.value;
+
+    let cadena = inputValue.toString();
+    console.log(cadena);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.id_tipo_view_get_array.some(objeto => objeto.id === cadena.toUpperCase());
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = cadena;
+    }
+  }
+
+  onLeaveIDTipoNotaRemisionCatalogo(event: any) {
     console.log(this.id_tipo_view_get_array);
     const inputValue = event.target.value;
 
@@ -359,7 +403,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
     }
   }
 
-  buscador() {
+  buscadorProformas() {
     console.log("FECHAS: ", this.fecha_desde, this.fecha_hasta);
 
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
@@ -429,17 +473,88 @@ export class BuscadorAvanzadoComponent implements OnInit {
     });
   }
 
+  buscadorNotasRemision() {
+    console.log("FECHAS: ", this.fecha_desde, this.fecha_hasta);
+
+    let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
+    let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
+
+    if (this.almacn_parame_usuario_almacen1 === undefined) {
+      this.almacn_parame_usuario_almacen1 = 0
+    }
+
+    if (this.almacn_parame_usuario_almacen2 === undefined) {
+      this.almacn_parame_usuario_almacen2 = 0
+    }
+
+    if (this.fecha_desde === undefined && this.fecha_hasta === undefined) {
+      fecha_desde = "1900-01-01";
+      fecha_hasta = "1900-01-01";
+    }
+
+    let data = {
+      itodos1: this.id_bool,
+      id1: this.id_tipo_view_get_codigo1,
+      id2: this.id_tipo_view_get_codigo2,
+
+      ftodos1: this.fecha_bool,
+      fechade: fecha_desde,
+      fechaa: fecha_hasta,
+
+      atodos1: this.almacen_bool,
+      codalmacen1: Number(this.almacn_parame_usuario_almacen1) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen1),
+      codalmacen2: Number(this.almacn_parame_usuario_almacen2) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen2),
+
+      vtodos1: this.vendedor_bool,
+      codvendedor1: this.cod_vendedor_cliente1,
+      codvendedor2: this.cod_vendedor_cliente2,
+
+      ctodos1: this.cliente_bool,
+      codcliente1: this.codigo_cliente1,
+      codcliente2: this.codigo_cliente2,
+    };
+
+    const url = `/venta/busq/prgbusqprof/getNotRemisionByParam/${this.userConn}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    this.api.create(url, data).subscribe({
+      next: (datav) => {
+        console.log(datav);
+        this.buscadorObj = datav
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! OCURRIO UN PROBLEMA AL GRABAR !');
+        //this.detalleProformaCarritoTOExcel();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      complete: () => {
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      }
+    });
+  }
+
   getProformaById(element) {
     this.id_buscador = element.data.id;
     this.num_id_buscador = element.data.numeroid;
+    this.codigo_documento = element.data.codigo;
 
-    console.log(this.id_buscador, this.num_id_buscador);
+    console.log(element, this.id_buscador, this.num_id_buscador, this.codigo_documento);
   }
 
   mandarAModificarProforma() {
     this.spinner.show();
 
-    this.servicioBuscadorAvanzado.disparadorDeID_NumeroID.emit({
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDModificarProforma.emit({
       buscador_id: this.id_buscador,
       buscador_num_id: this.num_id_buscador
     })
@@ -451,8 +566,36 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.close();
   }
 
-  modalTipoID(): void {
+  mandarAModificarNotaRemision() {
+    this.spinner.show();
+
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotaRemision.emit({
+      buscador_id: this.id_buscador,
+      buscador_num_id: this.num_id_buscador,
+      codigo_documento: this.codigo_documento,
+    });
+
+    this.toastr.success("PROFORMA TRANSFERIDA CON EXITO !");
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+
+    this.close();
+  }
+
+  modalTipoIDProformas(): void {
     this.dialog.open(ModalIdtipoComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        ventana: "ventana_buscador"
+      }
+    });
+  }
+
+  modalTipoIDNotasRemision(): void {
+    this.dialog.open(CatalogoNotasRemisionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,

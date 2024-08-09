@@ -5,7 +5,9 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 })
 export class BuscadorAvanzadoService {
 
-  @Output() disparadorDeID_NumeroID: EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDeID_NumeroIDNotaRemision: EventEmitter<any> = new EventEmitter();
+  @Output() disparadorDeID_NumeroIDModificarProforma: EventEmitter<any> = new EventEmitter();
+
 
   constructor() { }
 

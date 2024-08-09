@@ -1,6 +1,32 @@
 <article class="card">
   <h1 mat-dialog-title> <strong>Confirmación</strong> </h1>
-  <div mat-dialog-content> {{ mensaje.mensaje_dialog }} </div>
+  <div mat-dialog-content>
+    {{ mensaje.mensaje_dialog }}
+
+
+    <!-- aca estan las cuotas de NOTAS DE REMISION si una PROFORMA ES A CREDITO Y SU TOTAL SE DIVIDE EN CUOTAS
+    NO BORRAR ESTE CODIGO PARA NADA  -->
+    <ng-container *ngIf="array_mensaje.length > 0 ">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Vencimiento</th>
+            <th>Monto</th>
+            <th>Moneda</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let array_mensajes of array_mensaje">
+            <td>{{ array_mensajes.nrocuota }}</td>
+            <td>{{ array_mensajes.vencimiento | date:'yyyy-MM-dd'}}</td>
+            <td>{{ array_mensajes.monto | number:'2.2-2' }}</td>
+            <td>{{ array_mensajes.moneda }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
 
   <div mat-dialog-actions style="justify-content: center !important;">
     <button mat-button mat-dialog-close cdkFocusInitial color="warning" (click)="confirmado()" class="btn_SI"><i

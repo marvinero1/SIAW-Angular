@@ -1572,8 +1572,7 @@
                             <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
                               padding: 10px 0px 0px 32px;border: 0 !important;"><u>Observación</u></span>
                           </div>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
-                            style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs"></textarea>
+                          <input class="form-control" formControlName="obs" [(ngModel)]="obs" style="margin-left: 5px;">
                         </div>
                       </div>
                     </div>
@@ -2330,7 +2329,7 @@
             </div>
 
             <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-              (click)="modalClienteEtiqueta(codigo_cliente);" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
+              (click)="modalClienteEtiqueta();" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
               <!-- [disabled]="!codigo_cliente" -->
               <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
             </button>

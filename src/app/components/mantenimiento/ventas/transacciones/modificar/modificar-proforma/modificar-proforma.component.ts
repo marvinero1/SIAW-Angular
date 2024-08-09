@@ -53,16 +53,12 @@ import { ModalDesctDepositoClienteComponent } from '@components/mantenimiento/ve
 import { ModalBotonesImpresionComponent } from '../../proforma/modal-botones-impresion/modal-botones-impresion.component';
 import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas/modal-solicitar-urgente/modal-solicitar-urgente.component';
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
-import { CargarExcelComponent } from '@components/mantenimiento/ventas/cargar-excel/cargar-excel.component';
 import { BuscadorAvanzadoComponent } from '@components/uso-general/buscador-avanzado/buscador-avanzado.component';
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
-import { MatSelectChange } from '@angular/material/select';
 import { ServicioTransfeAProformaService } from '../../proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { ModalTransfeProformaComponent } from '../../proforma/modal-transfe-proforma/modal-transfe-proforma.component';
 import { firstValueFrom } from 'rxjs';
-
-
 @Component({
   selector: 'app-modificar-proforma',
   templateUrl: './modificar-proforma.component.html',
@@ -706,8 +702,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
-
-
     //modalClientesParaSeleccionarClienteReal
     //aca le llega del catalogo cliente
     this.servicioCliente.disparadorDeClienteReal.subscribe(data => {
@@ -836,7 +830,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
 
     //ventana modal BuscadorGeneral
-    this.servicioBuscadorAvanzado.disparadorDeID_NumeroID.subscribe(data => {
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDModificarProforma.subscribe(data => {
       console.log("Recibiendo ID y numeroID Buscador: ", data);
       this.transferirProformaUltima(data.buscador_id, data.buscador_num_id)
     });
@@ -864,8 +858,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getIDScomplementarProforma();
 
     this.getUltimaProformaGuardada();
-
-
   }
 
   fecha_actual_server: any;
@@ -1641,7 +1633,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.subtotal = 0;
 
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: "¿ DESEA TOTALIZAR LOS ITEM DE LA PROFORMA?, ESTA ACCION PUEDE TOMAR UN TIEMPO" },
       disableClose: true,
@@ -1673,7 +1665,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.subtotal = 0.00;
 
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '150px',
       height: 'auto',
       data: { mensaje_dialog: "¿ DESEA TOTALIZAR LOS ITEM DE LA PROFORMA ?, ESTA ACCION PUEDE TOMAR UN TIEMPO" },
       disableClose: true,
@@ -2567,7 +2559,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     if (!this.cliente_casual) {
       const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
+        width: '450px',
         height: 'auto',
         data: { mensaje_dialog: "El código del Cliente: " + codcliente + " no es casual, por tanto no puede vincular con otro cliente, ¿ Esta seguro de continuar ?" },
         disableClose: true,
@@ -2855,7 +2847,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   // MODAL DE CONFIRMACION, PARA Q NO APAREZCAN TODOS DE GOLPE SI NO UNO POR UNO
   openConfirmationDialog(message: string): Promise<boolean> {
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: message },
       disableClose: true,
@@ -2979,7 +2971,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     if (this.api.statusInternet === false) {
       const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
+        width: '450px',
         height: 'auto',
         data: { mensaje_dialog: "¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?" },
         disableClose: true,
@@ -3036,7 +3028,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
       // if (array_validacion_existe_aun_no_validos_tamanio > 0) {
       //   const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      //     width: 'auto',
+      //     width: '450px',
       //     height: 'auto',
       //     data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿ Desea Continuar de todas formas ?` },
       //     disableClose: true,
@@ -3054,7 +3046,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       //VALIDACION SI EN LA VALIDACIONES HAY ITEMS QUE GENERAN NEGATIVOS
       //   if (array_negativos_aun_existe_tamanio > 0) {
       //     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      //       width: 'auto',
+      //       width: '450px',
       //       height: 'auto',
       //       data: { mensaje_dialog: `La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?` },
       //       disableClose: true,
@@ -3116,7 +3108,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
       complete: () => {
         const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
+          width: '450px',
           height: 'auto',
           data: {
             mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
@@ -3195,7 +3187,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     if (this.api.statusInternet === false) {
       const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-        width: 'auto',
+        width: '450px',
         height: 'auto',
         data: { mensaje_dialog: "¿No tienes conexion a internet ⚠️, esta proforma se exportara en un excel, para que posteriormente continues dando curso al pedido?" },
         disableClose: true,
@@ -3420,7 +3412,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       complete: () => {
         //aca exporta a ZIP
         const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
-          width: 'auto',
+          width: '450px',
           height: 'auto',
           data: {
             mensaje_dialog: "Se Grabo y Aprobo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
@@ -3601,7 +3593,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     // Preguntar si desea colocar el desct 23 APLICAR DESCT POR DEPOSITO
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: "¿Desea aplicar DESCUENTO POR DEPOSITO, si el cliente tiene pendiente algun descuento por este concepto?" },
       disableClose: true,
@@ -5046,7 +5038,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   // Exportar a EXCEL
   exportProformaZIP(cod_proforma: any) {
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: {
         mensaje_dialog: "Se Grabo La Proforma" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id
@@ -5109,7 +5101,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
     const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: "¿ Desea Exportar El Detalle Del Documento a Excel ?" },
       disableClose: true,
@@ -5442,8 +5434,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       });
       return;
     }
-
-    console.log(this.agencia_logueado);
+    let a = this.array_items_carrito_y_f4_catalogo.length
+    console.log(a + 1);
     // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsComponent, {
       width: '100vw',
@@ -5466,7 +5458,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         items: this.array_items_carrito_y_f4_catalogo,
         descuento_nivel: this.desct_nivel_actual,
-        tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
+        tamanio_carrito_compras: a + 1,
       }
     });
   }
@@ -5946,7 +5938,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       disableClose: true,
       width: '820px',
       height: 'auto',
-      data: {},
+      data: {
+        ventana: "modificar_proforma"
+      },
     });
   }
 
@@ -6108,7 +6102,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.array_original_de_validaciones_copied = this.validacion_no_validos;
 
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: 'auto',
+      width: '450px',
       height: 'auto',
       data: { mensaje_dialog: `${element.Observacion}` + "¿Desea Continuar?" },
       disableClose: true,

@@ -1098,7 +1098,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       hora_inicial: this.dataform.hora_inicial,
       hora_confirmada: this.dataform.hora_confirmada,
 
-      es_venta: this.dataform.es_venta
+      es_venta: { value: this.dataform.es_venta, disabled: true }
     });
   }
 
@@ -1150,7 +1150,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           // aca sale el mensaje de la primera validacion
           try {
             if (datav.resp === false) {
-              const result = await this.openConfirmacionDialog(datav.msgsAlert);
+              const result = await this.openConfirmacionDialog(datav.msgsAlert, []);
               if (!result) {
                 setTimeout(() => {
                   this.spinner.hide();
@@ -1158,7 +1158,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
               }
             } else {
-              const result = await this.openConfirmacionDialog(datav.resp);
+              const result = await this.openConfirmacionDialog(datav.resp, []);
               if (!result) {
                 setTimeout(() => {
                   this.spinner.hide();
@@ -1166,6 +1166,17 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
               }
             }
+
+            if (datav.mostrarVentanaModifPlanCuotas === true) {
+              const result = await this.openConfirmacionDialog("", datav.planCuotas);
+              if (!result) {
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1000);
+                return;
+              }
+            }
+
           } catch (error) {
             console.error(error);
           };
@@ -1513,12 +1524,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-  openConfirmacionDialog(message: string): Promise<boolean> {
+  openConfirmacionDialog(message: string, array): Promise<boolean> {
     //btn aceptar
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
       width: 'auto',
       height: 'auto',
-      data: { mensaje_dialog: message },
+      data: { mensaje_dialog: message, msj_array: array },
       disableClose: true,
     });
 
@@ -1701,59 +1712,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   // sin_validar_monto_min_desc: false
   // sin_validar_monto_total: false
   // sin_validar_doc_ant_inv: false
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   mandarAImprimir(cod_nota_remision) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/impresionNotaRemision/"
@@ -2322,6 +2280,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
   }
+
   modalIva() {
     console.log(this.tablaIva);
     this.dialog.open(ModalIvaComponent, {

@@ -148,6 +148,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   precio: any = true;
   desct: any = false;
+  tamanio_carro: any;
 
   @ViewChild("focusPedido") focusPedido1: ElementRef;
   @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
@@ -164,10 +165,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any) {
 
-    this.array_items_proforma_matriz = items.items;
+    this.array_items_proforma_matriz = items?.items;
     //array_items_completo
     // si ya existen items en el detalle de la proforma todo se concatena a este array this.array_items_proforma_matriz
-    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz.length);
 
     this.pedidoInicial = 0;
     this.cantidad = this.pedido;
@@ -185,17 +185,20 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.agencia = '311'
     }
 
-    this.descuento_get = descuento.descuento;
-    this.codcliente_get = codcliente.codcliente;
-    this.codalmacen_get = codalmacen.codalmacen;
-    this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
-    this.fecha_get = fecha.fecha;
-    this.codmoneda_get = codmoneda.codmoneda;
-    this.descuento_nivel_get = descuento_nivel.descuento_nivel;
-    this.codcliente_real_get = codcliente_real.codcliente_real;
-    this.tamanio_carrito = tamanio_carrito_compras.tamanio_carrito_compras;
+    this.descuento_get = descuento?.descuento;
+    this.codcliente_get = codcliente?.codcliente;
+    this.codalmacen_get = codalmacen?.codalmacen;
+    this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud?.desc_linea_seg_solicitud;
+    this.fecha_get = fecha?.fecha;
+    this.codmoneda_get = codmoneda?.codmoneda;
+    this.descuento_nivel_get = descuento_nivel?.descuento_nivel;
+    this.codcliente_real_get = codcliente_real?.codcliente_real;
+    this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
 
-    console.log("array completo:", this.array_items_completo, "tamanio carrito:", this.tamanio_carrito)
+
+    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
+
+    console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -254,8 +257,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
       this.item_seleccionados_catalogo_matriz = datav;
       this.tamanio_carrito = this.item_seleccionados_catalogo_matriz.length;
-
-      //this.array_items_completo = this.item_seleccionados_catalogo_matriz;
 
       console.log(this.item_seleccionados_catalogo_matriz, "tamanio del carrito:", this.tamanio_carrito);
       this.addItemArraySeleccion();
@@ -430,7 +431,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll
       ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia + "/" + item + "/" + this.BD_storage + "/" + this.usuario_logueado)
@@ -694,13 +694,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   addItemArray() {
-
     // this.array_items_proforma_matriz.length = this.array_items_completo.length;
-    let i = this.tamanio_carrito + 1;
-    let j = this.tamanio_carrito + this.array_items_proforma_matriz.length;
+    let i = this.array_items_completo.length + 1;
+    let j = this.array_items_completo.length + this.array_items_proforma_matriz.length;
     // let i = this.array_items_completo.length + 1;
     this.tamanio_carrito = this.array_items_proforma_matriz.length + 1;
-    console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length + 1)
+    console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length)
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
     //LONGITUD DEL CARRITO DE COMPRAS
@@ -727,8 +726,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       // nroitem: this.array_items_completo.length + 1,
 
       // aca
-      orden_pedido: i,
-      nroitem: i,
+      orden_pedido: j + 1,
+      nroitem: j + 1,
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
@@ -1171,7 +1170,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         fecha: this.datePipe.transform(this.fecha_get, "yyyy-MM-dd"),
         precio_venta: this.cod_precio_venta_modal_codigo1,
         // tamanio_carrito_compras: this.array_items_completo.length,
-        tamanio_carrito_compras: this.tamanio_carrito,
+        tamanio_carrito_compras: this.array_items_proforma_matriz.length,
       },
     });
 

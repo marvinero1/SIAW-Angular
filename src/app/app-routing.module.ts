@@ -117,6 +117,7 @@ import { EtiquetaImpresionProformaComponent } from '@components/mantenimiento/ve
 import { ModificarProformaComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-proforma/modificar-proforma.component';
 import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf-email/proforma-pdf-email.component';
 import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
+import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -658,13 +659,13 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
-                path: 'venta/transacciones/proforma',
-                component: ProformaComponent,
+                path: 'venta/transacciones/nota-remision',
+                component: NotaRemisionComponent,
                 canActivate: [AuthGuard]
             },
             {
-                path: 'venta/transacciones/nota-remision',
-                component: NotaRemisionComponent,
+                path: 'venta/modificaciones/modificacion-nota-remision',
+                component: ModificarNotaRemisionComponent,
                 canActivate: [AuthGuard]
             },
             {

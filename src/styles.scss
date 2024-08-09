@@ -492,15 +492,21 @@ select, textarea {
   color: black;
 }
 
-  .ag-root-wrapper-body.ag-layout-normal{
-    height: 100% !important;
-  }
+.ag-root-wrapper-body.ag-layout-normal{
+  height: 100% !important;
+}
+
+.mat-mdc-icon-button{
+  --mdc-icon-button-state-layer-size: 32px !important;
+}
+
+
 
 ::ng-deep{
   .ag-root-wrapper-body.ag-layout-normal{
     height: 100% !important;
   }
- 
+
   .bg-yellow .mat-dialog-container{
     --mdc-dialog-container-color: #ffffc0 !important;
   }
@@ -531,31 +537,21 @@ select, textarea {
     color: #fbd800 !important;
   }
 
+  .mat-tooltip {
+    font-size: 0.7rem !important;
+    background-color: #093070 !important;
+    color: #fbd800 !important;
+  }
 
+  .mat-tooltip.tooltip {
+    font-size: 0.7rem !important;
+    background-color: #093070 !important;
+    color:#fbd800 !important
+  }
 
-
-
-
-
-
-
-
-
-.mat-tooltip {
-  font-size: 0.7rem !important;
-  background-color: #093070 !important;
-  color: #fbd800 !important;
-}
-
-.mat-tooltip.tooltip {
-  font-size: 0.7rem !important;
-  background-color: #093070 !important;
-  color:#fbd800 !important
-}
-
-.my-custom-row-class{
-  font-family: 'Courier New', Courier, monospace !important;
-  font-size: 0.7rem !important;
-  padding: 3px 1px 1px 1px !important;  
-}
+  .my-custom-row-class{
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 0.7rem !important;
+    padding: 3px 1px 1px 1px !important;  
+  }
 

@@ -1,4 +1,4 @@
-<section style="background-color:#ffffc0 !important;">
+<section style="background-color:#ffffc0 !important;padding: 5px !important;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -1652,8 +1652,7 @@
                             <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
                               padding: 10px 0px 0px 32px;border: 0 !important;"><u>Observación</u></span>
                           </div>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
-                            style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs"></textarea>
+                          <input class="form-control" formControlName="obs" [(ngModel)]="obs" style="margin-left: 5px;">
                         </div>
                       </div>
                     </div>
@@ -2552,8 +2551,8 @@
                   <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
                     [value]="ids_complementar_proformas.id">
                     {{ ids_complementar_proformas.id }} - {{ ids_complementar_proformas.descripcion }}
+                    <hr>
                   </mat-option>
-                  <hr>
                 </mat-select>
               </mat-form-field>
 

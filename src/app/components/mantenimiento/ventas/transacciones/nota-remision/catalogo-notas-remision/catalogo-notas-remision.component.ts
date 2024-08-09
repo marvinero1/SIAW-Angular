@@ -42,10 +42,10 @@ export class CatalogoNotasRemisionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getProforma();
+    this.getNotaRemision();
   }
 
-  getProforma() {
+  getNotaRemision() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
 
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "4")
