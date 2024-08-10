@@ -10,7 +10,7 @@
         <div class="input-group-append text-center" style="float: left;">
           <!-- botones -->
           <div class="input-group-append">
-            <ng-container *ngIf="estadodoc === 'ANULADA';else stdc">
+            <!-- <ng-container *ngIf="estadodoc === 'ANULADA';else stdc">
               <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" disabled>
                 <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7cc;"></i> Grabar</span>
               </button>
@@ -19,10 +19,10 @@
               <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
                 <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7cc;"></i> Grabar</span>
               </button>
-            </ng-template>
+            </ng-template> -->
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="anularNotaRemision();">
+              (click)="anularNotaRemision(codigo_control);">
               <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Anular</span>
             </button>
           </div>
@@ -36,26 +36,22 @@
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="generarPlanPagosFaltante();">
             <i class="fa fa-save" aria-hidden="true"></i> Generar Plan de Pagos Faltante
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" matTooltip="Matriz Item" type="button"
-            (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip">
+
+          <button class="btn btn-outline-secondary form-control-sm" (click)="modalMatrizProductos()"
+            matTooltip="Matriz Item" matTooltipClass="custom-tooltip" type="button">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
-            matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-inbox blue" aria-hidden="true"></i>
-          </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <mat-icon class="blue">photo_size_select_small</mat-icon>
-          </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-inbox blue" aria-hidden="true"></i>
-          </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+            matTooltip="Ver Estado de Cuenta del Cliente" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <mat-icon class="green"> monetization_on</mat-icon>
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+            matTooltip="Verificar si se cumplen empaques" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-inbox blue" aria-hidden="true"></i>
           </button>
+          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
+            <mat-icon class="green"> monetization_on</mat-icon>
+          </button> -->
         </div>
       </div>
     </div>
@@ -222,12 +218,9 @@
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 59px;"><u>Estado </u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="estado_contra_entrega_input"
+                formControlName="estado_contra_entrega" readonly>
             </div>
-            <select class="custom-select1 form-control-sm" style="margin-left: 5px;" formControlName="estado_proforma"
-              [(ngModel)]="estado" readonly>
-              <option>YA CANCELO</option>
-              <option>POR CANCELAR</option>
-            </select>
           </div>
 
 
@@ -662,8 +655,8 @@
 
 
 
-                <input type="text" [(ngModel)]="usuarioLogueado" formControlName="usuarioLogueado">
-                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha_actual_server">
+                <input type="text" [(ngModel)]="usuarioLogueado" formControlName="usuarioLogueado" hidden>
+                <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha_actual_server" hidden>
               </form>
             </mat-tab>
           </mat-tab-group>
@@ -765,14 +758,16 @@
             <div style="text-align: center;">
               <input type="checkbox" [(ngModel)]="es_venta" [value]="true" formControlName="es_venta"
                 readonly><span>&nbsp; Es Venta</span>
-              <button mat-icon-button class="btn btn-secondary" (click)="deshabiliatHabilitarEsVenta();"><i
+              <button mat-icon-button class="btn btn-secondary" (click)="deshabiliatHabilitarEsVenta();"
+                matTooltip="Cambiar Estado Es Venta" matTooltipClass="custom-tooltip" matTooltipPosition="above"><i
                   class="fa fa-cog"></i></button>
             </div>
 
             <div style="text-align: center;">
               <input type="date" formControlName="fecha" [(ngModel)]="fecha_anulacion_input">
-              <button mat-icon-button class="btn btn-secondary" (click)="cambiarFechaAnulacion();"><i
-                  class="fa fa-cog"></i></button>
+              <button mat-icon-button class="btn btn-secondary" (click)="cambiarFechaAnulacion();"
+                matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+                <i class="fa fa-cog"></i></button>
               <span style="color:rgb(218, 28, 28);text-align: right;"><strong>{{ estadodoc }}</strong></span>
             </div>
           </form>

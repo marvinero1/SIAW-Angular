@@ -289,7 +289,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   id_proforma: any;
   nro_id_proforma: any;
-
+  cod_nota_remision: any;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
@@ -1694,7 +1694,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           // this.toastr.success(datav.resp);
           this.toastr.success("GUARDADO EXITOSAMENTE");
-
+          this.cod_nota_remision = datav.codNotRemision
           this.mandarAImprimir(datav.codNotRemision);
         },
 

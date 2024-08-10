@@ -59,6 +59,7 @@ export class ModalBotonesImpresionComponent implements OnInit {
     this.toastr.info("GUARDADO CON EXITO ✅");
     localStorage.removeItem("data_impresion");
     this.dialogRef.close();
-    //window.location.reload();
+
+    window.location.reload();
   }
 }

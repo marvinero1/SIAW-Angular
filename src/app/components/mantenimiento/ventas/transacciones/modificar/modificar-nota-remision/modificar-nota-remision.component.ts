@@ -317,7 +317,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          // this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
         },
         complete: () => {
         }
@@ -399,7 +399,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     this.fecha_confirmada = proforma.cabecera.fecha_confirmada;
     this.fechaaut = proforma.cabecera.fechaaut;
     this.fecha_reg = proforma.cabecera.fechareg;
-    this.fecha_anulacion = proforma.cabecera.fecha_anulacion
+    this.fecha_anulacion_input = proforma.cabecera.fecha_anulacion
 
     this.hora_inicial = proforma.cabecera.hora_inicial;
     this.horareg = proforma.cabecera.horareg;
@@ -526,7 +526,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
       desclinea_segun_solicitud: "false", //Descuentos de Linea de Solicitud
 
       contra_entrega: this.dataform.contra_entrega,
-      //estado_contra_entrega: [this.dataform.estado_contra_entrega],
+      estado_contra_entrega: [this.dataform.estado_contra_entrega],
 
       tipo_venta: ['0'],
       odc: "",
@@ -900,71 +900,172 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
   autUltInventario: boolean = false;
   autNResReversion: boolean = false;
-  anularNotaRemision() {
+  codigo_control: any;
+  anularNotaRemision(codigo_control) {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/anularNR/ `;
 
-    this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.autUltInventario + "/" + this.autNResReversion, []).subscribe({
-      next: (datav) => {
-        this.toastr.info("GUARDADO CON EXITO ✅");
-        this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
-        console.log(datav);
+    this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/"
+      + this.autUltInventario + "/" + this.autNResReversion, []).subscribe({
+        next: (datav) => {
+          this.toastr.info("GUARDADO CON EXITO ✅");
+          this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          this.codigo_control = datav.tipoPermiso;
+          console.log(datav);
 
-        this.openConfirmacionDialog(datav.resp);
+          this.openConfirmacionDialog(datav.resp);
 
+          if (datav.validacion === true) {
+            switch (datav.tipoPermiso) {
+              case 78:
+                const dialogRefValidacion78 = this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: {
+                    dataA: datav.datos_a,
+                    dataB: datav.datos_b,
+                    dataPermiso: "ANULAR REVERSION",
+                    dataCodigoPermiso: datav.tipoPermison,
+                  },
+                });
 
+                dialogRefValidacion78.afterClosed().subscribe((result: Boolean) => {
+                  return this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/"
+                    + this.autUltInventario + "/" + this.autNResReversion, [])
+                    .subscribe({
+                      next: async (datav) => {
+                        // this.tipoentrega = datav.mensaje;
+                        console.log("Info data guardada NOTA REMISION CODIGO 78: ", datav, "ruta:", errorMessage);
 
+                        //PRIMERO SE CAMBIAN LOS VALORES Y LUEGO SE LLAMA A LA RECURSIVA
+                        this.autNResReversion = true;
+                        this.autUltInventario = false;
 
+                        // aca se vuelve RECURSIVA, volviendo a llamar a la funcion pasandole el nuevo codigo_control recibido
+                        this.anularNotaRemision(codigo_control);
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+                        console.log("Valor Bool al finlizar funcion:", this.autNResReversion);
+                        setTimeout(() => {
+                          this.spinner.hide();
+                        }, 1000);
+                        return;
+                      },
 
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+                      error: (err: any) => {
+                        console.log(err, errorMessage);
+                        // this.toastr.error("Formulario T. Entrega Error");
+                      },
+                      complete: () => {
+                        this.toastr.success("GUARDADO EXITOSAMENTE");
+                      }
+                    })
+                });
+                break;
+              case 48:
+                const dialogRefValidacion48 = this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: {
+                    dataA: datav.datos_a,
+                    dataB: datav.datos_b,
+                    dataPermiso: "MODIFICACION ANTERIOR A INVENTARIO",
+                    dataCodigoPermiso: 48,
+                  },
+                });
 
-        //this.detalleProformaCarritoTOExcel();
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+                dialogRefValidacion48.afterClosed().subscribe((result: Boolean) => {
+                  return this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/"
+                    + this.autUltInventario + "/" + this.autNResReversion, [])
+                    .subscribe({
+                      next: async (datav) => {
+                        // this.tipoentrega = datav.mensaje;
+                        console.log("Info data guardada NOTA REMISION CODIGO 78: ", datav, "ruta:", errorMessage);
 
-      complete: () => {
+                        //PRIMERO SE CAMBIAN LOS VALORES Y LUEGO SE LLAMA A LA RECURSIVA
+                        this.autUltInventario = true;
+                        this.autNResReversion = false;
 
+                        // aca se vuelve RECURSIVA, volviendo a llamar a la funcion pasandole el nuevo codigo_control recibido
+                        this.anularNotaRemision(codigo_control);
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      }
-    });
+                        console.log("Valor Bool al finlizar funcion:", this.autUltInventario);
+                        setTimeout(() => {
+                          this.spinner.hide();
+                        }, 1000);
+                        return;
+                      },
+
+                      error: (err: any) => {
+                        console.log(err, errorMessage);
+                        // this.toastr.error("Formulario T. Entrega Error");
+                      },
+                      complete: () => {
+                        this.toastr.success("GUARDADO EXITOSAMENTE");
+                      }
+                    })
+                });
+                break;
+              default:
+                break;
+            }
+          }
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL ANULAR !');
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
   }
 
   cambiarFechaAnulacion() {
-    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/cambiarFechaAnulNR/`;
-    this.api.update('/venta/modif/docmodifveremision/cambiarFechaAnulNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.datePipe.transform(this.fecha_anulacion, 'yyyy-MM-dd') + "/false", []).subscribe({
-      next: (datav) => {
-        this.toastr.info("FECHA ANULACION ACTUALIZADA ✅");
-        this.log_module.guardarLog(this.ventana, "Modificar" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+    const dialogRefConfirFechaAnulacion = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: "¿Esta Seguro de Cambiar la Fecha de Anulacion?" },
+      disableClose: true,
+    });
 
-        console.log(datav);
-        this.openConfirmacionDialog(datav.resp);
+    dialogRefConfirFechaAnulacion.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/cambiarFechaAnulNR/`;
+        this.api.update('/venta/modif/docmodifveremision/cambiarFechaAnulNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.datePipe.transform(this.fecha_anulacion_input, 'yyyy-MM-dd') + "/false", []).subscribe({
+          next: (datav) => {
+            this.toastr.info("FECHA ANULACION ACTUALIZADA ✅");
+            this.log_module.guardarLog(this.ventana, "Modificar" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+            console.log(datav);
+            this.openConfirmacionDialog(datav.resp);
 
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('! FECHA ANULACION NO ACTUALIZADA !');
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+          },
 
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1000);
-      },
+          error: (err) => {
+            console.log(err, errorMessage);
+            this.toastr.error('! FECHA ANULACION NO ACTUALIZADA !');
 
-      complete: () => { }
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+          },
+
+          complete: () => { }
+        });
+      }
     });
   }
 
@@ -985,7 +1086,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        // this.toastr.error('! PLAN DE PAGOS NO GENERADO !');
 
         setTimeout(() => {
           this.spinner.hide();

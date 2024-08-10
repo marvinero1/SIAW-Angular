@@ -8,6 +8,7 @@ import {
 import {
 	Observable,
 	catchError,
+	firstValueFrom,
 	throwError
 } from "rxjs";
 import {
@@ -16,6 +17,8 @@ import {
 import {
 	ToastrService
 } from "ngx-toastr";
+import { MatDialog } from "@angular/material/dialog";
+import { DialogConfirmacionComponent } from "@modules/dialog-confirmacion/dialog-confirmacion.component";
 @Injectable({
 	providedIn: 'root'
 })
@@ -28,7 +31,7 @@ export class Interceptor implements HttpInterceptor {
 	public tokken: any = [];
 	public refresh: any = [];
 
-	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService) {
+	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService, private dialog: MatDialog) {
 		this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 		this.tokken = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
 	}
@@ -38,7 +41,7 @@ export class Interceptor implements HttpInterceptor {
 			this.err = err.error;
 			this.status = err.status;
 			this.error_code = this.err.resp;
-			console.log(this.error_code);
+			console.log(this.error_code, this.status);
 
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA transac / veproforma / getempaques
@@ -147,7 +150,7 @@ export class Interceptor implements HttpInterceptor {
 				case 401:
 					this.refreshToken();
 
-					this._snackBar.open('¡ Usuario SIN AUTORIZACION, Falta de Token !', '🚫', {
+					this._snackBar.open('¡ USUARIO SIN TOKEN, TOKEN EXPIRADO !', '🚫', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
@@ -179,7 +182,7 @@ export class Interceptor implements HttpInterceptor {
 		console.log(data);
 
 		let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/login/refreshToken/";
-		return this.api.create("/seg_adm/login/refreshToken/" + this.userConn, data)
+		return this.api.createAllWithOutToken("/seg_adm/login/refreshToken/" + this.userConn, data)
 			.subscribe({
 				next: (datav) => {
 					this.refresh = datav;
@@ -192,4 +195,17 @@ export class Interceptor implements HttpInterceptor {
 				complete: () => { }
 			})
 	}
+
+	openConfirmacionDialog(): Promise<boolean> {
+		//btn aceptar
+		const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+			width: '450px',
+			height: 'auto',
+			data: { mensaje_dialog: "TOKEN VENCIDO, ¿ DESEA REFRESCAR TOKEN PARA SEGUIR UTILIZANDO EL SISTEMA ?" },
+			disableClose: true,
+		});
+
+		return firstValueFrom(dialogRef.afterClosed());
+	}
+
 }
