@@ -33,7 +33,7 @@ export class ModalSaldoCubrirComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ModalSaldoCubrirComponent>,
     @Inject(MAT_DIALOG_DATA) public dataItem: any, private api: ApiService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, public log_module: LogService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.FormularioData = this.createForm();
   }

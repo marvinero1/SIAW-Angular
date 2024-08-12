@@ -34,12 +34,11 @@ export class VehiculoCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     console.log(this.userLogueado);
 
     let hour = this.hora_actual.getHours();
@@ -53,7 +52,7 @@ export class VehiculoCreateComponent implements OnInit {
 
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.userLogueado],
     });
   }
 
@@ -71,7 +70,7 @@ export class VehiculoCreateComponent implements OnInit {
           this.spinner.show();
           this.toastr.success('Guardado con Exito! 🎉');
 
-          location.reload();
+          window.location.reload();
         },
 
         error: (err) => {

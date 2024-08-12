@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,13 +13,15 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './moneda-create.component.html',
   styleUrls: ['./moneda-create.component.scss']
 })
-export class MonedaCreateComponent {
+export class MonedaCreateComponent implements OnInit {
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
   dataform: any = '';
   moneda: any = [];
+
+  userConn: any;
   usuario_logueado: any;
 
   public ventana = "moneda-create"
@@ -29,6 +31,10 @@ export class MonedaCreateComponent {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private api: ApiService, public dialogRef: MatDialogRef<MonedaCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService,) {
+
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.FormularioData = this.createForm();
   }
 
@@ -36,8 +42,6 @@ export class MonedaCreateComponent {
   }
 
   createForm(): FormGroup {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -54,11 +58,9 @@ export class MonedaCreateComponent {
   }
 
   submitData() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/admoneda";
-    return this.api.create("/seg_adm/mant/admoneda/" + user_conn, data)
+    return this.api.create("/seg_adm/mant/admoneda/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;

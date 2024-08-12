@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './banco-create.component.html',
   styleUrls: ['./banco-create.component.scss']
 })
-export class BancoCreateComponent {
+export class BancoCreateComponent implements OnInit {
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -31,8 +31,8 @@ export class BancoCreateComponent {
     private api: ApiService, public dialogRef: MatDialogRef<BancoCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
@@ -42,7 +42,7 @@ export class BancoCreateComponent {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -101,5 +101,4 @@ export class BancoCreateComponent {
       this.inputValue = 0;
     }
   }
-
 }

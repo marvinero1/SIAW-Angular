@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-numdevolucionesdeudor-edit',
   templateUrl: './numdevolucionesdeudor-edit.component.html',
@@ -18,9 +17,10 @@ export class NumdevolucionesdeudorEditComponent implements OnInit {
   fecha_actual = new Date();
   hora_actual = new Date();
   numDevDeu_edit: any = [];
-  dataform: any = '';
   unidadNegocio: [];
   numDevDeu: any = [];
+
+  dataform: any = '';
   usuario_logueado: any;
   user_conn: any;
   errorMessage;
@@ -33,13 +33,13 @@ export class NumdevolucionesdeudorEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumdevolucionesdeudorEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datanumDevDeuEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     this.numDevDeu_edit = this.datanumDevDeuEdit.datanumDevDeuEdit;
     this.getAllUnidadesNegocio();
   }
@@ -60,7 +60,7 @@ export class NumdevolucionesdeudorEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -112,6 +112,4 @@ export class NumdevolucionesdeudorEditComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-
 }

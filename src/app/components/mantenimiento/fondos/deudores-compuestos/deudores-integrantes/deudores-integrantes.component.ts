@@ -22,11 +22,11 @@ import { DeudorCatalogoService } from '../../deudores/deudor-servicio/deudor-cat
 })
 export class DeudoresIntegrantesComponent implements OnInit {
 
-  FormularioData: FormGroup;  
+  FormularioData: FormGroup;
   fecha_actual = new Date();
   hora_actual = new Date();
-  userConn: string; 
-  usuario: string; 
+  userConn: string;
+  usuario: string;
   usuario_logueado: string;
   cod_precio_venta_modal_codigo: string;
 
@@ -57,13 +57,13 @@ export class DeudoresIntegrantesComponent implements OnInit {
     this.deudor_edit = dataIntegrantes.dataIntegrantes;
     this.deudor_edit_codigo = dataIntegrantes.dataIntegrantes.id;
     console.log(this.deudor_edit);
-    
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.getDeudorCatalogo();
-    this.cargarTablaMiembrosDeudor();    
+    this.cargarTablaMiembrosDeudor();
   }
 
   ngOnInit() {
@@ -78,7 +78,7 @@ export class DeudoresIntegrantesComponent implements OnInit {
 
   cargarTablaMiembrosDeudor() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/fondos/mant/fndeudor_compuesto1/"
-    return this.api.getAll('/fondos/mant/fndeudor_compuesto1/'+this.userConn+"/"+this.deudor_edit_codigo)
+    return this.api.getAll('/fondos/mant/fndeudor_compuesto1/' + this.userConn + "/" + this.deudor_edit_codigo)
       .subscribe({
         next: (datav) => {
           this.deudores = datav;
@@ -88,22 +88,22 @@ export class DeudoresIntegrantesComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getDeudorCatalogo(){
+  getDeudorCatalogo() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
-    return this.api.getAll('/fondos/mant/fndeudor/catalogo/'+this.userConn)
+    return this.api.getAll('/fondos/mant/fndeudor/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.deudores_cat = datav;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -118,10 +118,10 @@ export class DeudoresIntegrantesComponent implements OnInit {
     });
   }
 
-  submitData(){
-    let data = this.FormularioData.value;    
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /fondos/mant/fndeudor_compuesto1/";
-    return this.api.create("/fondos/mant/fndeudor_compuesto1/"+this.userConn, data)
+  submitData() {
+    let data = this.FormularioData.value;
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /fondos/mant/fndeudor_compuesto1/";
+    return this.api.create("/fondos/mant/fndeudor_compuesto1/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.miembro_save = datav;
@@ -130,22 +130,22 @@ export class DeudoresIntegrantesComponent implements OnInit {
           this.toastr.success('Guardado con Exito! 🎉');
           this.cargarTablaMiembrosDeudor();
         },
-    
-        error: (err) => { 
+
+        error: (err) => {
           console.log(err, errorMessage);
           // this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
   }
-  
-  onLeaveDeudor(event: any){
+
+  onLeaveDeudor(event: any) {
     const inputValue = event.target.value;
-      
+
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.deudores_cat.some(objeto => objeto.id === inputValue);
 
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO INPUT");
@@ -157,10 +157,10 @@ export class DeudoresIntegrantesComponent implements OnInit {
     console.log('Input perdió el foco', inputValue);
   }
 
-  modalDeudores() { 
+  modalDeudores() {
     this.dialog.open(DeudoresCatalogoComponent, {
       width: 'auto',
-      height:'auto',
+      height: 'auto',
     });
   }
 
@@ -176,38 +176,38 @@ export class DeudoresIntegrantesComponent implements OnInit {
   }
 
   eliminar(element) {
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion"+"Ruta:-- /venta/mant/insolurgente_parametros/ Delete";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/insolurgente_parametros/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
-      height:'auto',
-      data:{dataUsuarioEdit:element},
+      height: 'auto',
+      data: { dataUsuarioEdit: element },
     });
 
-    dialogRef.afterClosed().subscribe((result: Boolean)=>{
-      if(result) {
-        return this.api.delete('/fondos/mant/fndeudor_compuesto1/'+this.userConn+"/"+this.deudor_edit_codigo+"/"+element.iddeudor)
-        .subscribe({
-          next: () => {
-            // this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-            
-            this.toastr.success('!ELIMINADO EXITOSAMENTE!');
-            this.cargarTablaMiembrosDeudor();
-            // location.reload();
-          },
-          error: (err: any) => { 
-            console.log(err, errorMessage);
-            this.toastr.error('! NO ELIMINADO !');
-          },
-          complete: () => { }
-        })
-      }else{
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        return this.api.delete('/fondos/mant/fndeudor_compuesto1/' + this.userConn + "/" + this.deudor_edit_codigo + "/" + element.iddeudor)
+          .subscribe({
+            next: () => {
+              // this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
+
+              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.cargarTablaMiembrosDeudor();
+              // location.reload();
+            },
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              this.toastr.error('! NO ELIMINADO !');
+            },
+            complete: () => { }
+          })
+      } else {
         this.toastr.error('! CANCELADO !');
       }
     });
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

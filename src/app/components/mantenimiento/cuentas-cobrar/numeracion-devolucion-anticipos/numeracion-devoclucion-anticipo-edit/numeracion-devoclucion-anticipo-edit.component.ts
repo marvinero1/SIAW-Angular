@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-numeracion-devoclucion-anticipo-edit',
   templateUrl: './numeracion-devoclucion-anticipo-edit.component.html',
@@ -37,8 +36,8 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numDevAnti_edit = this.datanumDevAntiEdit.datanumDevAntiEdit;
     this.getAllUnidadesNegocio();
@@ -60,7 +59,7 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -112,5 +111,4 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }

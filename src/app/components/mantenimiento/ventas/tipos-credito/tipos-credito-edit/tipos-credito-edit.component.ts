@@ -47,14 +47,12 @@ export class TiposCreditoEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   createForm(): FormGroup {
     this.credito_edit_codigo = this.dataCreditoEdit.dataCreditoEdit.codigo;
-
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -68,7 +66,7 @@ export class TiposCreditoEditComponent implements OnInit {
 
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.userLogueado],
     });
   }
 

@@ -15,21 +15,21 @@ import { NotasMovimientoService } from '../serviciocatalogonotasmovimiento/notas
 })
 export class CatalogoNotasMovimientoComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     console.log("Hola Lola ENTER");
-    
+
     this.mandarMovimiento();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarMovimiento();
   };
 
-  movimiento_get:any=[];
+  movimiento_get: any = [];
   public movimiento_view: any = [];
   movimiento_view_get: any;
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<inMovimiento>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -43,12 +43,12 @@ export class CatalogoNotasMovimientoComponent implements OnInit {
   myControlDescripcion = new FormControl<string | inMovimiento>('');
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoNotasMovimientoComponent>,
-  public movientoService:NotasMovimientoService) {
-  
+    public movientoService: NotasMovimientoService) {
+
   }
 
-  ngOnInit(){
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  ngOnInit() {
+    let userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getNotasMovimiento(userConn);
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
@@ -74,7 +74,7 @@ export class CatalogoNotasMovimientoComponent implements OnInit {
     return this.options.filter(option => option.id.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -84,9 +84,9 @@ export class CatalogoNotasMovimientoComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  getNotasMovimiento(useConn){
+  getNotasMovimiento(useConn) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/mant/intipomovimiento/catalogo/'+useConn)
+    return this.api.getAll('/inventario/mant/intipomovimiento/catalogo/' + useConn)
       .subscribe({
         next: (datav) => {
           this.movimiento_get = datav;
@@ -96,28 +96,28 @@ export class CatalogoNotasMovimientoComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarMovimiento(){
+  mandarMovimiento() {
     this.movientoService.disparadorDeNotasMovimiento.emit({
-      movimiento:this.movimiento_view,
+      movimiento: this.movimiento_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.movimiento_view = element;
     console.log(this.movimiento_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 

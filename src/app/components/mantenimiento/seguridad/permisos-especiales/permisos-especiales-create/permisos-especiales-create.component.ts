@@ -208,11 +208,13 @@ export class PermisosEspecialesCreateComponent implements OnInit {
   permiso_especial: any = [];
   persona: any = [];
   empresa: any = [];
+  cod_persona_service: any = [];
+
   userConn: any;
   bd: any;
   nombre_empresa: any;
   sevicio_select: any;
-  cod_persona_service: any = [];
+  usuario_logueado: any;
 
   public ventana = "autorizacion-especial-create"
   public detalle = "autorizacion-especial-detalle";
@@ -222,14 +224,14 @@ export class PermisosEspecialesCreateComponent implements OnInit {
     private api: ApiService, public dialogRef: MatDialogRef<PermisosEspecialesCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService, public dialog: MatDialog, private servicioPersona: ServicePersonaService) {
 
+    this.bd = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
     this.FormularioData = this.createForm();
   }
 
   ngOnInit(): void {
-    this.bd = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    // console.log(this.userLogueado);
-
     this.servicioPersona.disparadorDePersonas.subscribe(data => {
       console.log("Recibiendo Persona: ", data);
       this.cod_persona_service = data.persona;
@@ -239,8 +241,8 @@ export class PermisosEspecialesCreateComponent implements OnInit {
   }
 
   getEmpresa() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + this.bd.bd)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adempresa/getNomEmpresa/";
+    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + this.bd)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -256,10 +258,6 @@ export class PermisosEspecialesCreateComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let bd = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -268,18 +266,18 @@ export class PermisosEspecialesCreateComponent implements OnInit {
       nivel: [this.dataform.nivel, Validators.compose([Validators.required])],
       password: [this.dataform.password, Validators.compose([Validators.required])],
       obs: [this.dataform.obs],
-      codempresa: [bd.bd],
+      codempresa: [this.bd],
       codpersona: [this.dataform.codpersona, Validators.compose([Validators.required])],
       vencimiento: [this.datePipe.transform(this.dataform.vencimiento, "yyyy-MM-dd"), Validators.compose([Validators.required])],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.usuario_logueado],
     });
   }
 
   submitData() {
     let data = this.FormularioData.value;
-    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/mant/adarea/";
+    let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/abmadautorizacion/adautorizacion/";
     console.log(data);
 
     return this.api.create("/seg_adm/mant/abmadautorizacion/adautorizacion/" + this.userConn, data)

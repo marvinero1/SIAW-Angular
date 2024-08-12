@@ -45,14 +45,14 @@ export class CrearTomaInventarioComponent implements OnInit {
     public servicioPersona: ServicePersonaService, public servicioAlmacen: ServicioalmacenService, private _formBuilder: FormBuilder,
     private datePipe: DatePipe, private toastr: ToastrService, public log_module: LogService,
     public nombre_ventana_service: NombreVentanaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.getInventarios();
     this.getAlmacen();
     this.getPersonaAll();
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.api.getRolUserParaVentana(this.nombre_ventana);
 
     this.FormularioData = this.createForm();
@@ -80,7 +80,7 @@ export class CrearTomaInventarioComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

@@ -39,12 +39,12 @@ export class ClasificacionClientesComponent implements OnInit {
   public tipo = "clasiCliente-POST";
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ClasificacionClientesComponent>,
-    private _formBuilder: FormBuilder, public log_module: LogService, private spinner: NgxSpinnerService,
+    public log_module: LogService, private spinner: NgxSpinnerService,
     private toastr: ToastrService, public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public nivel_get: any,
     public dialog: MatDialog) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.nivel = this.nivel_get.nivel;
     console.log(this.nivel_get);

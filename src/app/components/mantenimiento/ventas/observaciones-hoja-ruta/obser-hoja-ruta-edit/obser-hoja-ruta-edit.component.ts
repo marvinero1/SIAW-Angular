@@ -37,8 +37,8 @@ export class ObserHojaRutaEditComponent implements OnInit {
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService,
     public _snackBar: MatSnackBar, private spinner: NgxSpinnerService, private toastr: ToastrService,
     @Inject(MAT_DIALOG_DATA) public hoja: any) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.hoja_data_edit = hoja.hoja;
     this.FormularioData = this.createForm();

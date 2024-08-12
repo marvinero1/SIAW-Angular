@@ -74,7 +74,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
     private spinner: NgxSpinnerService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
     public log_module: LogService, private datePipe: DatePipe, public periodoSistema: PeriodoSistemaService, public router: Router) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.getInventarios();
@@ -235,7 +235,7 @@ export class TomaInventarioConsolidadoComponent implements OnInit {
   actualizarLimpios(get_items) {
     console.log(this.cabecera.codigo, this.items);
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/inventario/oper/docininvconsol/limpiarDataininvconsol1/";
     return this.api.update('/inventario/oper/docininvconsol/limpiarDataininvconsol1/' + this.userConn + "/" + this.cabecera.codigo, get_items)
       .subscribe({
         next: (datav) => {

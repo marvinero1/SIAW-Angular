@@ -16,19 +16,19 @@ import { DeudorCatalogoService } from '../deudor-servicio/deudor-catalogo.servic
 })
 export class DeudoresCatalogoComponent implements OnInit {
 
- @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarDeudor();
   };
-    
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarDeudor();
-  }; 
-  
-  deudor_get:any=[];
-  public deudor_view:any=[];
+  };
+
+  deudor_get: any = [];
+  public deudor_view: any = [];
   userConn: string;
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<fndeudor>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -42,13 +42,13 @@ export class DeudoresCatalogoComponent implements OnInit {
   myControlDescripcion = new FormControl<string | fndeudor>('');
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<DeudoresCatalogoComponent>,
-    private servicioDeudor: DeudorCatalogoService){
-    
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    private servicioDeudor: DeudorCatalogoService) {
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getDeudorCatalogo();
   }
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   private _filter(name: string): fndeudor[] {
@@ -57,7 +57,7 @@ export class DeudoresCatalogoComponent implements OnInit {
     return this.options.filter(option => option.id.toString().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -67,38 +67,38 @@ export class DeudoresCatalogoComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  getDeudorCatalogo(){
+  getDeudorCatalogo() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/fondos/mant/fndeudor/catalogo/";
-    return this.api.getAll('/fondos/mant/fndeudor/catalogo/'+this.userConn)
+    return this.api.getAll('/fondos/mant/fndeudor/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.deudor_get = datav;
-          console.log( this.deudor_get);
+          console.log(this.deudor_get);
 
           this.dataSource = new MatTableDataSource(this.deudor_get);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
-  
-  getveVendedorbyId(deudor){
+
+  getveVendedorbyId(deudor) {
     this.deudor_view = deudor;
     console.log(deudor);
   }
 
-  mandarDeudor(){
+  mandarDeudor() {
     this.servicioDeudor.disparadorDeDeudor.emit({
-      deudor:this.deudor_view,
+      deudor: this.deudor_view,
     });
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

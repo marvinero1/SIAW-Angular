@@ -67,17 +67,16 @@ export class MenuSidebarComponent implements OnInit {
 
   userConn: any;
   usuarioLogueado: any;
-  fecha_actual_format: any;
   fecha_actual = new Date();
 
   constructor(public appService: AppService, private datePipe: DatePipe, private api: ApiService,
     private store: Store<AppState>, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, private zone: NgZone) {
 
-    this.agencia_storage = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.agencia_storage = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
@@ -98,9 +97,6 @@ export class MenuSidebarComponent implements OnInit {
     });
     this.user = this.appService.user;
 
-    // FECHA ACTUAL EN HEADER
-    this.fecha_actual_format = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")
-    // FIN FECHA ACTUAL  
     this.loadDataSession();
   }
 
@@ -149,7 +145,7 @@ export class MenuSidebarComponent implements OnInit {
 
   getTipoCambioHoyDia() {
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adtipocambio/getTipocambioFecha/";
     return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + this.userConn + "/" + dataTransform)
       .subscribe({
         next: (datav) => {

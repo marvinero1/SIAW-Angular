@@ -24,7 +24,7 @@ export class MainComponent implements OnInit {
 	constructor(private renderer: Renderer2, private store: Store<AppState>, private router: Router,
 		public nombre_ventana_service: NombreVentanaService) {
 
-		this.titulo_agencia = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+		this.titulo_agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 		if (this.titulo_agencia === 'Loc') {
 			this.titulo_agencia = 'Maq. Rodri'
 		}

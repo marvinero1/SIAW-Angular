@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-percepcionesretenciones-edit',
   templateUrl: './percepcionesretenciones-edit.component.html',
@@ -36,16 +35,13 @@ export class PercepcionesretencionesEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.percpRet_edit = this.datapercpRetEdit.datapercpRetEdit;
   }
 
-
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -56,7 +52,7 @@ export class PercepcionesretencionesEditComponent implements OnInit {
       porcentaje: [this.dataform.porcentaje, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.usuario_logueado],
     });
   }
 
@@ -82,9 +78,7 @@ export class PercepcionesretencionesEditComponent implements OnInit {
       })
   }
 
-
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }

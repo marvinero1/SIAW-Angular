@@ -13,7 +13,6 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-sucursal',
   templateUrl: './sucursal.component.html',
@@ -43,16 +42,15 @@ export class SucursalComponent implements OnInit {
   public detalle = "sucursales-delete";
   public tipo = "sucursales-DELETE";
 
-
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllsucur(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -158,5 +156,4 @@ export class SucursalComponent implements OnInit {
       }
     });
   }
-
 }

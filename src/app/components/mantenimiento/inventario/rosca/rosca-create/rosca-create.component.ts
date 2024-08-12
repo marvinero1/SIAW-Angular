@@ -30,8 +30,8 @@ export class RoscaCreateComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private api: ApiService, public dialogRef: MatDialogRef<RoscaCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService,) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }

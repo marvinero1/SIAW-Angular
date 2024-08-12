@@ -25,6 +25,7 @@ export class ActualizarStockActualComponent implements OnInit {
   inventario_save: any = [];
   dataform: any = '';
   userConn: any;
+  usuario_logueado: any;
 
   nombre_ventana: string = "prgactstoactual.vb";
 
@@ -37,6 +38,7 @@ export class ActualizarStockActualComponent implements OnInit {
     private datePipe: DatePipe, private toastr: ToastrService, public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
@@ -51,7 +53,6 @@ export class ActualizarStockActualComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -63,7 +64,7 @@ export class ActualizarStockActualComponent implements OnInit {
       codalmacen: [this.dataform.codalmacen],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.usuario_logueado],
     });
   }
 

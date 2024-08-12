@@ -12,16 +12,16 @@
     </ng-container>
 
     <ng-container *ngIf="!nombre_ventana">
-      <span class="pr-4">S/N</span>
+      <span class="pr-4">S/N</span>|
     </ng-container>
 
-    <span class="pr-4">| {{ BD_storage.bd }} </span>|
+    <span class="pr-4">{{ BD_storage }} </span>|
 
     <span class="pr-4"> {{ agencia_storage }} </span>|
 
     <span class="pr-4">{{ tipo_cambio_dolar_moneda_base }} {{ tipo_cambio_dolar_dolar }} </span>|
 
-    <span class="pr-4"> Hoy es: {{  fecha_actual_format | date:'EEEE, dd-MM-yyyy' }}</span>
+    <span class="pr-4"> Hoy es: {{  fecha_actual |date:"fullDate" }}</span>
   </div>
 
   <!-- <div class="col">

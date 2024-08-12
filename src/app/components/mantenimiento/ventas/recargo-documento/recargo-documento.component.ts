@@ -53,8 +53,8 @@ export class RecargoDocumentoComponent implements OnInit {
 
     this.FormularioData = this.createForm();
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   ngOnInit() {
@@ -83,7 +83,7 @@ export class RecargoDocumentoComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let user = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let user = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -106,7 +106,7 @@ export class RecargoDocumentoComponent implements OnInit {
   }
 
   createFormEdit(): FormGroup {
-    let user = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let user = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;

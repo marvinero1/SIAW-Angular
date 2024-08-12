@@ -39,7 +39,7 @@ export class TipoconocimientocargaEditComponent implements OnInit {
     console.log(this.dataEdit_codigo);
 
     this.FormularioData = this.createForm();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

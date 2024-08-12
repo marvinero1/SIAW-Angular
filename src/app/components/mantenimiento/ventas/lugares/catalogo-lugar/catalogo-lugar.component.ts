@@ -15,22 +15,22 @@ import { LugarService } from '../lugar-services/lugar.service';
 })
 export class CatalogoLugarComponent implements OnInit {
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarLugar();
   };
-    
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarLugar();
-  }; 
-  
-  lugar_get:any=[];
+  };
+
+  lugar_get: any = [];
   public lugar_view: string;
   userConn: any;
 
-  public codigo:string='';
-  public nombre:string='';
+  public codigo: string = '';
+  public nombre: string = '';
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<veLugar>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -43,11 +43,11 @@ export class CatalogoLugarComponent implements OnInit {
   myControlCodigo = new FormControl<string | veLugar>('');
   myControlDescripcion = new FormControl<string | veLugar>('');
 
-  constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoLugarComponent>,public lugar_service:LugarService) {
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoLugarComponent>, public lugar_service: LugarService) {
   }
 
-  ngOnInit(){
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  ngOnInit() {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.getLugaresCatalogo(this.userConn);
   }
@@ -58,7 +58,7 @@ export class CatalogoLugarComponent implements OnInit {
     return this.options.filter(option => option.codigo.toString().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -68,39 +68,39 @@ export class CatalogoLugarComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getLugaresCatalogo(userConn){
-    let errorMessage:string;
+  getLugaresCatalogo(userConn) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --catalogoVendedor";
-    return this.api.getAll('/venta/mant/velugar/catalogo/'+userConn)
+    return this.api.getAll('/venta/mant/velugar/catalogo/' + userConn)
       .subscribe({
         next: (datav) => {
           this.lugar_get = datav;
-          
+
           this.dataSource = new MatTableDataSource(this.lugar_get);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getveVendedorbyId(codigo){
+  getveVendedorbyId(codigo) {
     this.lugar_view = codigo;
     console.log(codigo);
   }
 
-  mandarLugar(){
+  mandarLugar() {
     this.lugar_service.disparadorDeLugares.emit({
-      lugar:this.lugar_view,
+      lugar: this.lugar_view,
     });
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

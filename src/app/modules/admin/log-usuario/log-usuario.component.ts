@@ -6,7 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-
 @Component({
   selector: 'app-log-usuario',
   templateUrl: './log-usuario.component.html',
@@ -32,8 +31,8 @@ export class LogUsuarioComponent implements OnInit, AfterViewInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     private datePipe: DatePipe, private _formBuilder: FormBuilder) {
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     //this.api.getRolUserParaVentana('/logs');
 
     this.FormularioData = this.createForm();
@@ -55,12 +54,9 @@ export class LogUsuarioComponent implements OnInit, AfterViewInit {
 
   getAllLogAtTheMomentForDate() {
     let dateTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
-    return this.api.getAll('/seg_adm/logs/selog/getseloguserfecha/' + this.userConn + "/" + usuarioLogueado + "/" + dateTransform)
+    return this.api.getAll('/seg_adm/logs/selog/getseloguserfecha/' + this.userConn + "/" + this.usuarioLogueado + "/" + dateTransform)
       .subscribe({
         next: (datav) => {
           this.log = datav;
@@ -84,10 +80,9 @@ export class LogUsuarioComponent implements OnInit, AfterViewInit {
   buscadorFechaLog() {
     this.data = this.FormularioData.value.fecha;
     let dateTransform = this.datePipe.transform(this.FormularioData.value.fecha, "yyyy-MM-dd")
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     this.errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/logs/selog/getselogfecha/";
-    return this.api.getAll('/seg_adm/logs/selog/getseloguserfecha/' + this.userConn + "/" + usuarioLogueado + "/" + dateTransform)
+    return this.api.getAll('/seg_adm/logs/selog/getseloguserfecha/' + this.userConn + "/" + this.usuarioLogueado + "/" + dateTransform)
       .subscribe({
         next: (datav) => {
           this.log = datav;

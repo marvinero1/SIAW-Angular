@@ -28,8 +28,7 @@
               <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
             </button>
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente &&
-              id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''">
+              (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente && id_proforma_numero_id !== 0">
               <span><i class="fa fa-clone" aria-hidden="true" style="color: #7d99c7;"></i> Transferir</span>
             </button>
 
@@ -97,7 +96,7 @@
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
-            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
+            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0"
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
@@ -115,8 +114,7 @@
             <mat-list role="list">
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
-                  (click)="ultimasProformas()">
+                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0" (click)="ultimasProformas()">
                   <i class="fa fa-clone green" aria-hidden="true"></i> Ultimas Proformas
                 </button>
               </mat-list-item>
@@ -162,9 +160,8 @@
 
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" formControlName="id"
-                    [(ngModel)]="cod_id_tipo_modal_id" [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo"
-                    (blur)="onLeaveIDTipo($event)" style="margin-left: 16px;"
-                    [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
+                    [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo" (blur)="onLeaveIDTipo($event)"
+                    style="margin-left: 16px;" [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
                 </ng-container>
                 <div class="input-group-append">
                   <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
@@ -571,7 +568,7 @@
               [(ngModel)]="tipo_doc_cliente"
               [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)">
               <mat-option *ngFor="let documento_identidads of documento_identidad"
-                [value]="documento_identidads.codigoclasificador">
+                [value]="documento_identidads.codigoclasificador" disabled>
                 {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
             </mat-select>
           </div>
@@ -587,8 +584,8 @@
 
               <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
                 <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
-                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readOnly]="true"
-                  [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
+                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
+                  [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)" readonly>
               </ng-container>
               <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
             </div>

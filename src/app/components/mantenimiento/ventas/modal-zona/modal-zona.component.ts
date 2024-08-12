@@ -42,7 +42,7 @@ export class ModalZonaComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ModalZonaComponent>, private api: ApiService,
     public servicioZona: ServiciozonaService) {
 
-    this.useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.useConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

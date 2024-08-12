@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,13 +8,12 @@ import { VendedorService } from '@components/mantenimiento/ventas/serviciovended
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-numeracion-cobranza-edit',
   templateUrl: './numeracion-cobranza-edit.component.html',
   styleUrls: ['./numeracion-cobranza-edit.component.scss']
 })
-export class NumeracionCobranzaEditComponent implements OnInit {
+export class NumeracionCobranzaEditComponent implements OnInit, AfterViewInit {
 
   FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
@@ -42,8 +41,8 @@ export class NumeracionCobranzaEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numCobran_edit = this.datanumCobranEdit.datanumCobranEdit;
     this.getAllUnidadesNegocio();
@@ -54,12 +53,9 @@ export class NumeracionCobranzaEditComponent implements OnInit {
     });
   }
 
-
-
   ngAfterViewInit() {
     this.getVendedorCatalogo();
   }
-
 
   getVendedorCatalogo() {
     let errorMessage: string;
@@ -103,7 +99,6 @@ export class NumeracionCobranzaEditComponent implements OnInit {
     }
   }
 
-
   getAllUnidadesNegocio() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/seg_adm/mant/adunidad/catalogo/' + this.user_conn)
@@ -120,7 +115,7 @@ export class NumeracionCobranzaEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -173,6 +168,4 @@ export class NumeracionCobranzaEditComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-
 }

@@ -38,8 +38,8 @@ export class ModalTransfeProformaComponent implements OnInit {
     public servicioCatalogoProformas: ServicioCatalogoProformasService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService) {
 
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

@@ -40,7 +40,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
   // dataSourceWithPageSize = new MatTableDataSource();
 
   constructor(public dialog: MatDialog) {
-    /*let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;*/
+    /*let usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;*/
   }
 
   ngOnInit() {

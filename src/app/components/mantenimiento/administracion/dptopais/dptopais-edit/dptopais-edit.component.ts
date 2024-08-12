@@ -30,6 +30,9 @@ export class DptopaisEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private api: ApiService, public dialogRef: MatDialogRef<DptopaisEditComponent>, public _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public dataDptoEdit: any, public log_module: LogService) {
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.FormularioDataEdit = this.createForm();
   }
 
@@ -53,11 +56,9 @@ export class DptopaisEditComponent implements OnInit {
   }
 
   submitData() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
+    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/addepto/";
     return this.api.update('/seg_adm/mant/addepto/' + this.userConn + "/" + this.dataDptoEdit.dataDptoEdit.codigo, data)
       .subscribe({
         next: (datav) => {

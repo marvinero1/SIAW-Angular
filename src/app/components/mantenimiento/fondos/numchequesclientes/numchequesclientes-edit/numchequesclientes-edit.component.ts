@@ -37,8 +37,8 @@ export class NumchequesclientesEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public datanumChecCliEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
 
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numChecCli_edit = this.datanumChecCliEdit.datanumChecCliEdit;
     this.FormularioDataEdit = this.createForm();
@@ -65,7 +65,7 @@ export class NumchequesclientesEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

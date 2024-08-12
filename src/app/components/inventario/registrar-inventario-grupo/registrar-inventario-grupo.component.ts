@@ -53,8 +53,8 @@ export class RegistrarInventarioGrupoComponent implements OnInit, AfterViewInit 
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
     private servicioInventario: ServicioInventarioService, private datePipe: DatePipe, public itemservice: ItemServiceService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);

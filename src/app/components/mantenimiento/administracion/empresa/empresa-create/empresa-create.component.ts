@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './empresa-create.component.html',
   styleUrls: ['./empresa-create.component.scss']
 })
-export class EmpresaCreateComponent {
+export class EmpresaCreateComponent implements OnInit {
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -22,6 +22,8 @@ export class EmpresaCreateComponent {
   cnplancuenta: any = [];
   moneda: any = [];
   almacen: any = [];
+
+  userConn
   usuario_logueado;
 
   public ventana = "empresa-create"
@@ -31,7 +33,10 @@ export class EmpresaCreateComponent {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe,
     private api: ApiService, public dialogRef: MatDialogRef<EmpresaCreateComponent>, public _snackBar: MatSnackBar,
     private toastr: ToastrService, public log_module: LogService) {
+
     this.FormularioData = this.createForm();
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit(): void {
@@ -41,7 +46,6 @@ export class EmpresaCreateComponent {
   }
 
   createForm(): FormGroup {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -70,12 +74,12 @@ export class EmpresaCreateComponent {
   }
 
   submitData() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
     let data = this.FormularioData.value;
     console.log(data);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /seg_adm/mant/adempresa/";
-    return this.api.create("/seg_adm/mant/adempresa/" + user_conn, data)
+    return this.api.create("/seg_adm/mant/adempresa/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -100,10 +104,8 @@ export class EmpresaCreateComponent {
   }
 
   getPlanCuenta() {
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/cnplancuenta/' + useConn)
+    return this.api.getAll('/seg_adm/mant/cnplancuenta/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cnplancuenta = datav;
@@ -117,10 +119,9 @@ export class EmpresaCreateComponent {
   }
 
   getMoneda() {
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
-    return this.api.getAll('/seg_adm/mant/admoneda/' + useConn)
+    return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.moneda = datav;
@@ -134,10 +135,8 @@ export class EmpresaCreateComponent {
   }
 
   getAlmacen() {
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inalmacen/";
-    return this.api.getAll('/inventario/mant/inalmacen/' + useConn)
+    return this.api.getAll('/inventario/mant/inalmacen/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.almacen = datav;

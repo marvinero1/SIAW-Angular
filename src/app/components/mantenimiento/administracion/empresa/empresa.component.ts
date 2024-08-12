@@ -24,6 +24,7 @@ export class EmpresaComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     public nombre_ventana_service: NombreVentanaService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
@@ -41,7 +42,6 @@ export class EmpresaComponent implements OnInit {
   }
 
   getAllEmpresa() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/adempresa/";
@@ -66,10 +66,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   eliminar(element): void {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /moneda Delete";
-
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       data: { dataUsuarioEdit: element },
@@ -77,7 +74,7 @@ export class EmpresaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete('/seg_adm/mant/adempresa/' + user_conn + '/' + element)
+        return this.api.delete('/seg_adm/mant/adempresa/' + this.userConn + '/' + element)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

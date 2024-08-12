@@ -54,7 +54,7 @@ export class ConsolidarInventarioComponent implements OnInit {
     console.log(this.data_cabezera, this.data_items);
 
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

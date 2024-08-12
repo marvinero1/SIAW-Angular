@@ -50,8 +50,8 @@ export class ParametrosFacturacionSIATComponent implements OnInit {
 
   constructor(public dialog: MatDialog, public log_module: LogService, public almacenservice: ServicioalmacenService,
     private api: ApiService, private toastr: ToastrService, private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.getSucursal();
     this.getActividad();

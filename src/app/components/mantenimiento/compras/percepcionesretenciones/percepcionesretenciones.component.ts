@@ -46,14 +46,14 @@ export class PercepcionesretencionesComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.getAllpercpRet(this.userConn);
-
+    this.getAllpercpRet();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -63,9 +63,9 @@ export class PercepcionesretencionesComponent implements OnInit {
     );
   }
 
-  getAllpercpRet(userConn) {
+  getAllpercpRet() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/compras/mant/cppercepcion/' + userConn)
+    return this.api.getAll('/compras/mant/cppercepcion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.percpRet = datav;
@@ -157,6 +157,4 @@ export class PercepcionesretencionesComponent implements OnInit {
       }
     });
   }
-
-
 }

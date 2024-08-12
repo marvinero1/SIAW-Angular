@@ -48,7 +48,7 @@ export class ItemComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -84,7 +84,7 @@ export class ItemComponent implements OnInit {
   }
 
   getAllitem() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    let user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/initem/' + user_conn)

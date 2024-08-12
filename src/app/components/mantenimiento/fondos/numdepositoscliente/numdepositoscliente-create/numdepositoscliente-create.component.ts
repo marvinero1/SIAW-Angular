@@ -7,15 +7,12 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
-
 @Component({
   selector: 'app-numdepositoscliente-create',
   templateUrl: './numdepositoscliente-create.component.html',
   styleUrls: ['./numdepositoscliente-create.component.scss']
 })
 export class NumdepositosclienteCreateComponent implements OnInit {
-
 
   FormularioData: FormGroup;
   fecha_actual = new Date();
@@ -31,27 +28,23 @@ export class NumdepositosclienteCreateComponent implements OnInit {
   public detalle = "tipoDepositosCliente-detalle";
   public tipo = "transaccion-tipoDepositosCliente-POST";
 
-
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private api: ApiService, public dialogRef: MatDialogRef<NumdepositosclienteCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
     this.getAllUnidadesNegocio();
   }
-
-
 
   ngOnInit() {
 
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -124,5 +117,4 @@ export class NumdepositosclienteCreateComponent implements OnInit {
       this.inputValue = null;
     }
   }
-
 }

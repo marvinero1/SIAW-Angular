@@ -40,7 +40,7 @@ export class ModalClienteComponent implements OnInit {
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any,
     @Inject(MAT_DIALOG_DATA) public ventana: any) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.origen = ventana.ventana;
     // Verificar si cliente_referencia_proforma es null

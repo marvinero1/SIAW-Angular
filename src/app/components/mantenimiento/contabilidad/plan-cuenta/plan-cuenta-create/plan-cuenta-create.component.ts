@@ -7,8 +7,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
-
 @Component({
   selector: 'app-plan-cuenta-create',
   templateUrl: './plan-cuenta-create.component.html',
@@ -20,36 +18,32 @@ export class PlanCuentaCreateComponent implements OnInit {
   fecha_actual = new Date();
   hora_actual = new Date();
   dataform: any = '';
+
   plancuent: any = [];
-  userConn: any;
   userLogueado: any = [];
+  userConn: any;
+
   inputValue: number | null = null;
 
   public ventana = "plandeCuenta-create"
   public detalle = "plandeCuenta-detalle";
   public tipo = "transaccion-plandeCuenta-POST";
 
-
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private api: ApiService, public dialogRef: MatDialogRef<PlanCuentaCreateComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
-
-
 
   ngOnInit() {
 
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -60,7 +54,7 @@ export class PlanCuentaCreateComponent implements OnInit {
 
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.userLogueado],
     });
   }
 
@@ -103,6 +97,4 @@ export class PlanCuentaCreateComponent implements OnInit {
       this.inputValue = null;
     }
   }
-
-
 }

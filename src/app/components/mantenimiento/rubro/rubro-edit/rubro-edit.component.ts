@@ -7,7 +7,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-rubro-edit',
   templateUrl: './rubro-edit.component.html',
@@ -39,12 +38,11 @@ export class RubroEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     console.log(this.userLogueado);
 
     let hour = this.hora_actual.getHours();
@@ -57,7 +55,7 @@ export class RubroEditComponent implements OnInit {
 
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.userLogueado],
     });
   }
 

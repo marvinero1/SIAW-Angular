@@ -40,8 +40,8 @@ export class ModalPrecioVentaComponent implements OnInit {
     public servicioPrecioVenta: ServicioprecioventaService, @Inject(MAT_DIALOG_DATA) public detalle: any) {
     console.log(detalle);
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   ngOnInit() {

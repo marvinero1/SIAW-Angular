@@ -50,9 +50,10 @@ export class ApiService {
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
     public periodoSistemaService: PeriodoSistemaService) {
 
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
 
     this.verificarInternet();
     console.log(this.ventana_estado);
@@ -97,12 +98,13 @@ export class ApiService {
   }
 
   create(url: string, obj): Observable<any> {
-    this.token = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
+    let token1 = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
+
     console.log(this.token.token);
 
     const httpOptions = {
       headers: new HttpHeaders({
-        "Authorization": "bearer" + " " + this.token.token,
+        "Authorization": "bearer" + " " + token1,
       })
     };
 
@@ -116,7 +118,7 @@ export class ApiService {
   }
 
   update(url: string, obj): Observable<any> {
-    this.token = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
+    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
     console.log(this.token.token);
 
     const httpOptions = {
@@ -135,7 +137,7 @@ export class ApiService {
   }
 
   delete(id: string) {
-    this.token = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
+    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
     console.log(this.token.token);
 
     const httpOptions = {
@@ -169,32 +171,32 @@ export class ApiService {
   }
 
   obtenerUsuarioStorage() {
-    this.usuario_storage = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.usuario_storage = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
     return this.usuario_storage;
   }
 
   obtenerAgenciaStorage() {
-    this.agencia_storage = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
+    this.agencia_storage = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
     return this.agencia_storage;
   }
 
   obtenerToken() {
     console.log(this.token, JSON.parse(this.token));
-    return this.token = localStorage.getItem('token');
+    return this.token = sessionStorage.getItem('token');
   }
 
   obtenerAgencia() {
     console.log(this.agencia, JSON.parse(this.agencia));
-    return this.agencia = localStorage.getItem('agencia_logueado');
+    return this.agencia = sessionStorage.getItem('agencia_logueado');
   }
 
   verificarToken() {
-    let token = localStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 
     return this.delete('/seg_adm/login/eliminaToken/' + token)
       .subscribe({
         next: (datav) => {
-          console.log('Token Eliminado');
+          console.log('Token Eliminado', datav);
         },
         error: (err: any) => {
           console.log(err, 'No se pudo eliminar el token, revise la ruta!');
@@ -202,8 +204,6 @@ export class ApiService {
         complete: () => { }
       })
   }
-
-
 
   //Funcion que verifica la accesibilidad de las ventanas
   //cod_rol, seprograma
@@ -284,8 +284,6 @@ export class ApiService {
     */
 
     date_pipe = this.datePipe.transform(fecha, "yyyy-MM-dd")
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/abmadapertura/verificaPeriodoAbierto/ --Vista LOG/Angular";
     this.getAll('/seg_adm/mant/abmadapertura/verifPeriodoAbierto/' + this.userConn + "/" + date_pipe + "/" + modulo)
       .subscribe({
@@ -324,7 +322,6 @@ export class ApiService {
       this.ventana_estado.push({ ventana: nombre_ventana, ruta: ruta, estado: estado });
     } else {
       console.log("La ventana ya esta agregada");
-
     }
   }
 
@@ -341,10 +338,10 @@ export class ApiService {
 
     if (navigator.onLine === true) {
       this.statusInternet = true;
-      console.log('Tienes conexión a Internet');
+      // console.log('Tienes conexión a Internet');
     } else {
       this.statusInternet = false;
-      console.log('No tienes conexión a Internet');
+      // console.log('No tienes conexión a Internet');
     }
 
     setTimeout(() => {
@@ -354,35 +351,36 @@ export class ApiService {
   }
 
   async logout() {
-    localStorage.removeItem("usuario_logueado");
+    // localStorage.removeItem("usuario_logueado");
     sessionStorage.removeItem("usuario_logueado");
 
-    localStorage.removeItem("agencia_logueado");
+    // localStorage.removeItem("agencia_logueado");
     sessionStorage.removeItem("agencia_logueado");
 
-    localStorage.removeItem("bd_logueado");
+    // localStorage.removeItem("bd_logueado");
     sessionStorage.removeItem("bd_logueado");
 
-    localStorage.removeItem("user_conn");
+    // localStorage.removeItem("user_conn");
     sessionStorage.removeItem("user_conn");
 
     this.eliminarToken();
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
     sessionStorage.removeItem("token");
 
-    localStorage.removeItem("data_impresion");
+    sessionStorage.removeItem("data_impresion");
 
     localStorage.removeItem("data_impresion");
     return this.router.navigate(['/login']);
   }
 
   eliminarToken() {
-    let token = localStorage.getItem('token');
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    let token = sessionStorage.getItem('token');
+    let useConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     return this.delete('/seg_adm/login/logout/' + useConn + "/" + token)
       .subscribe({
         next: (datav) => {
+          console.log("LOGOUT TOKEN ELIMINADO", datav);
         },
         error: (err: any) => {
           console.log(err, 'No se pudo eliminar el token, revise la ruta!');

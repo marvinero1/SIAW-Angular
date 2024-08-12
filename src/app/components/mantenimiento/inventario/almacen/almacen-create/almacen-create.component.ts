@@ -35,9 +35,9 @@ export class AlmacenCreateComponent {
   constructor(private _formBuilder: FormBuilder, private api: ApiService, private datePipe: DatePipe, public _snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AlmacenCreateComponent>, private spinner: NgxSpinnerService, private router: Router,
     public log_module: LogService, private toastr: ToastrService,) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
     // this.FormularioData1 = this.createForm1();

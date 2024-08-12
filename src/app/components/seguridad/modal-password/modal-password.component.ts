@@ -226,8 +226,8 @@ export class ModalPasswordComponent implements OnInit {
     this.data_autorizacionB = this.dataB.dataB;
     this.data_cod_almacen = this.cod_almacen.cod_almacen;
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     console.log(this.BD_storage);
 
 

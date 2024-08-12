@@ -30,6 +30,7 @@ export class ProvinciadptopaisComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService,
     public log_module: LogService, private toastr: ToastrService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -47,9 +48,7 @@ export class ProvinciadptopaisComponent implements OnInit {
   }
 
   getAllprovincias_dpto() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adprovincia/";
     return this.api.getAll('/seg_adm/mant/adprovincia/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -69,7 +68,6 @@ export class ProvinciadptopaisComponent implements OnInit {
   }
 
   eliminar(element) {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la eliminacion" + "Ruta:--  /seg_adm/mant/adprovincia Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
@@ -81,7 +79,7 @@ export class ProvinciadptopaisComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: Boolean) => {
 
       if (result) {
-        return this.api.delete('/seg_adm/mant/adprovincia/' + user_conn + '/' + element.codigo)
+        return this.api.delete('/seg_adm/mant/adprovincia/' + this.userConn + '/' + element.codigo)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

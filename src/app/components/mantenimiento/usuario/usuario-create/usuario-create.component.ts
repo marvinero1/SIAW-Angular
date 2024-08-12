@@ -40,8 +40,8 @@ export class UsuarioCreateComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public _snackBar: MatSnackBar, private api: ApiService,
     private toastr: ToastrService, public dialogRef: MatDialogRef<UsuarioCreateComponent>, private datePipe: DatePipe) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
@@ -99,8 +99,6 @@ export class UsuarioCreateComponent implements OnInit {
   }
 
   getAllRol() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     this.errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/seg_adm/mant/serol/' + this.userConn)
       .subscribe({

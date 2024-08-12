@@ -29,7 +29,7 @@ export class TipocambiovalidacionCreateComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, public dialogRef: MatDialogRef<TipocambiovalidacionCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public dataMoneda: any, private api: ApiService, public _snackBar: MatSnackBar, public log_module: LogService,
     public dialog: MatDialog, private Tipocambio: TipocambiovalidacionComponent) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
   }
 

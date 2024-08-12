@@ -264,7 +264,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   public latitud_cliente: string;
   public complemento_ci: string
   public cod_vendedor_cliente: string;
-  public cod_id_tipo_modal_id: string;
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
   public venta_cliente_oficina: boolean = false;
@@ -461,10 +460,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log("Estado Internet: ", this.api.statusInternet);
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -487,7 +487,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
       this.cod_id_tipo_modal = data.id_tipo;
-      this.cod_id_tipo_modal_id = this.cod_id_tipo_modal.id;
+      this.id_tipo_view_get_codigo = this.cod_id_tipo_modal.id;
 
       //si se cambia el tipoID, los totales tambien se cambian
       this.total = 0.00;
@@ -1329,7 +1329,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.nombre_comercial_razon_social = this.nombre_comercial_cliente;
           this.tipo_doc_cliente = this.cliente.cliente.tipo_docid;
           this.nit_cliente = this.cliente.cliente.nit_fact;
-          this.email_cliente = this.cliente.vivienda.email;
+          this.email_cliente = this.cliente.vivienda.email === "" ? "facturasventas@pertec.com.bo" : this.cliente.vivienda.email;
           this.cliente_casual = this.cliente.cliente.casual;
           this.cliente_habilitado_get = this.cliente.cliente.habilitado;
           this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial;
@@ -2255,7 +2255,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ventanaPermisoEspecialPassword() {
     let codigo = this.codigo_cliente;
-    let id_numero_id = this.cod_id_tipo_modal_id + this.id_proforma_numero_id;
+    let id_numero_id = this.id_tipo_view_get_codigo + this.id_proforma_numero_id;
 
     let ventana = "PermisosEspecialesParametros"
     let detalle = "trasnferirProforma-update";
@@ -2288,7 +2288,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
 
-    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
+    this.id_tipo_view_get_codigo = this.id_tipo_view_get_codigo;
     this.id_proforma_numero_id = this.id_proforma_numero_id;
     this.fecha_actual = this.fecha_actual;
     // this.fecha_actual = proforma.cabecera.fecha;
@@ -2303,7 +2303,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.nombre_comercial_razon_social = proforma.cabecera.nomcliente;
     this.tipo_doc_cliente = proforma.cabecera.tipo_docid;
     this.nit_cliente = proforma.cabecera.nit;
-    this.email_cliente = proforma.cabecera.email;
+    this.email_cliente = proforma.cabecera.email === "" ? "facturasventas@pertec.com.bo" : proforma.cabecera.email;
     this.cliente_casual = proforma.cabecera.casual;
     this.moneda_get_catalogo = proforma.cabecera.codmoneda;
     this.codigo_cliente = proforma.cabecera.codcliente_real;
@@ -2355,7 +2355,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   imprimir_cotizacion_transferida(cotizacion) {
     console.log(cotizacion);
-    this.cod_id_tipo_modal_id = cotizacion.cabecera.id;
+    this.id_tipo_view_get_codigo = cotizacion.cabecera.id;
     this.id_proforma_numero_id = cotizacion.cabecera.numeroid;
     this.fecha_actual = cotizacion.cabecera.fecha;
     this.almacn_parame_usuario = cotizacion.cabecera.codalmacen;
@@ -2390,8 +2390,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   imprimir_zip_importado(zip_json) {
     console.log(zip_json);
 
-    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
+    this.id_tipo_view_get_codigo = zip_json.cabeceraList[0].id;
     this.id_proforma_numero_id = this.id_proforma_numero_id;
+    this.getIdTipoNumeracion(zip_json.cabeceraList[0].id);
+
     this.fecha_actual = this.fecha_actual;
     this.almacn_parame_usuario = zip_json.cabeceraList[0].codalmacen;
     this.venta_cliente_oficina = zip_json.cabeceraList[0].venta_cliente_oficina;
@@ -2453,6 +2455,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // //this.dataSource = new MatTableDataSource(proforma.detalle);
     // // se dibuja los items al detalle de la proforma
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+
   }
 
   complemento_proforma: any = [];
@@ -2938,13 +2942,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
     console.log("FORMULARIO VALIDADO");
 
-    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
+    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.id_tipo_view_get_codigo}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
         this.toastr.info("GUARDADO CON EXITO ✅");
-        this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+        this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
         this.totabilizar_post = datav;
         console.log(this.totabilizar_post);
 
@@ -3236,13 +3240,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("FORMULARIO VALIDADO");
     console.log(this.array_items_carrito_y_f4_catalogo);
 
-    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.cod_id_tipo_modal_id}/${this.BD_storage}/true/${this.codigo_cliente_catalogo_real}`;
+    const url = `/venta/transac/veproforma/guardarProforma/${this.userConn}/${this.id_tipo_view_get_codigo}/${this.BD_storage}/true/${this.codigo_cliente_catalogo_real}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
         this.toastr.info("GUARDADO CON EXITO ✅");
-        this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+        this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
         this.totabilizar_post = datav;
         console.log(this.totabilizar_post);
 
@@ -4958,7 +4962,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = timestamp + "-" + this.cod_id_tipo_modal_id + "-" + this.id_proforma_numero_id + '.zip';
+          a.download = timestamp + "-" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + '.zip';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -4996,7 +5000,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.array_items_carrito_y_f4_catalogo);
     // console.log([this.array_items_carrito_y_f4_catalogo].length);
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
-    const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
+    const nombre_archivo = this.id_tipo_view_get_codigo + "_" + this.id_proforma_numero_id;
 
     const dialogRefExcel = this.dialog.open(DialogConfirmActualizarComponent, {
       width: '450px',
@@ -5534,7 +5538,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_real: this.codigo_cliente_catalogo_real,
         codmoneda: this.moneda_get_catalogo,
         moneda: this.moneda_get,
-        id_prof: this.cod_id_tipo_modal_id,
+        id_prof: this.id_tipo_view_get_codigo,
         numero_id_prof: this.id_proforma_numero_id,
       }
     });
@@ -5848,7 +5852,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       grabar_aprobar: grabar_aprobar
     }];
 
-    localStorage.setItem('data_impresion', JSON.stringify(data));
+    sessionStorage.setItem('data_impresion', JSON.stringify(data));
   }
 
   mandarNombre() {

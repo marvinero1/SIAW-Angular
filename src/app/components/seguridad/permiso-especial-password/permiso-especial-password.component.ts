@@ -5,7 +5,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Clipboard } from '@angular/cdk/clipboard';
-
 @Component({
   selector: 'app-permiso-especial-password',
   templateUrl: './permiso-especial-password.component.html',
@@ -13,7 +12,6 @@ import { Clipboard } from '@angular/cdk/clipboard';
 })
 export class PermisoEspecialPasswordComponent implements OnInit {
   //ESTA VENTANA NO SE USA PARA GENERAR CONTRASENIAS
-
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.getaAutorizacion();
   };
@@ -28,24 +26,21 @@ export class PermisoEspecialPasswordComponent implements OnInit {
   autorizacion_recibida: any = [];
   BD_storage: any = [];
 
-
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<PermisoEspecialPasswordComponent>,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar, private clipboard: Clipboard,
     @Inject(MAT_DIALOG_DATA) public dataA: any, @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public permiso_id: any,
     @Inject(MAT_DIALOG_DATA) public permiso_text: any) {
-
   }
 
   ngOnInit() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.data_autorizacionA = this.dataA.dataA;
     this.data_autorizacionB = this.dataB.dataB;
     this.servicio_id = this.permiso_id.permiso_id;
     this.text_servicio = this.permiso_text.permiso_text;
-
 
     console.log(this.data_autorizacionA, this.data_autorizacionB, this.servicio_id, this.text_servicio);
   }

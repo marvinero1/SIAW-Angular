@@ -12,24 +12,24 @@ import { ServicioUsuarioService } from '../service-usuario/servicio-usuario.serv
   templateUrl: './modal-usuario.component.html',
   styleUrls: ['./modal-usuario.component.scss']
 })
-  
+
 export class ModalUsuarioComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     console.log("Hola Lola ENTER");
-    
+
     this.mandarUsuario();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarUsuario();
   };
 
-  usuario_get:any=[];
+  usuario_get: any = [];
   public usuario_view: string;
   userConn: string;
 
-  displayedColumns = ['login','descripcion'];
+  displayedColumns = ['login', 'descripcion'];
 
   dataSource = new MatTableDataSource<adUsuario>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -42,13 +42,13 @@ export class ModalUsuarioComponent implements OnInit {
   myControlCodigo = new FormControl<string | adUsuario>('');
   myControlDescripcion = new FormControl<string | adUsuario>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ModalUsuarioComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalUsuarioComponent>,
     private servicioUsuario: ServicioUsuarioService) {
-    
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -74,7 +74,7 @@ export class ModalUsuarioComponent implements OnInit {
     return this.options.filter(option => option.login.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -84,9 +84,9 @@ export class ModalUsuarioComponent implements OnInit {
     return user && user.correo ? user.correo : '';
   }
 
-  getUsuario(){
+  getUsuario() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/adusuario/catalogo/"
-    return this.api.getAll('/seg_adm/mant/adusuario/catalogo/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adusuario/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.usuario_get = datav;
@@ -96,28 +96,28 @@ export class ModalUsuarioComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarUsuario(){
+  mandarUsuario() {
     this.servicioUsuario.disparadorDeUsuarios.emit({
-      usuario:this.usuario_view,
+      usuario: this.usuario_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.usuario_view = element;
     console.log(this.usuario_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

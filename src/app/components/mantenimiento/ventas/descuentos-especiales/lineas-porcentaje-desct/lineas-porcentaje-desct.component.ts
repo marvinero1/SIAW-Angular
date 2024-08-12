@@ -12,7 +12,6 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { LineaProductoCatalogoComponent } from '@components/mantenimiento/inventario/lineaproducto/linea-producto-catalogo/linea-producto-catalogo.component';
 import { ServicioLineaProductoService } from '@components/mantenimiento/inventario/lineaproducto/service-linea/servicio-linea-producto.service';
-
 @Component({
   selector: 'app-lineas-porcentaje-desct',
   templateUrl: './lineas-porcentaje-desct.component.html',
@@ -49,8 +48,8 @@ export class LineasPorcentajeDesctComponent implements OnInit {
     private spinner: NgxSpinnerService, private toastr: ToastrService, public servicioPrecioVenta: ServicioprecioventaService,
     private servicioLinea: ServicioLineaProductoService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.descuento_edit = this.descuento.descuento;
     this.desct_codigo = this.descuento.descuento.codigo;
@@ -129,9 +128,8 @@ export class LineasPorcentajeDesctComponent implements OnInit {
   }
 
   eliminar(element) {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
 
+    let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/vedescuento1/ Delete";
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
       height: 'auto',
@@ -140,7 +138,7 @@ export class LineasPorcentajeDesctComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete("/venta/mant/vedescuento/vedescuento1/" + user_conn + "/" + element.codigo + "/" + this.descuento_edit.codigo)
+        return this.api.delete("/venta/mant/vedescuento/vedescuento1/" + this.userConn + "/" + element.codigo + "/" + this.descuento_edit.codigo)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
@@ -164,9 +162,7 @@ export class LineasPorcentajeDesctComponent implements OnInit {
   }
 
   eliminarTodo() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/deleteTodo_vedescuento1/ Delete";
-
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',
       height: 'auto',
@@ -175,7 +171,7 @@ export class LineasPorcentajeDesctComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete("/venta/mant/vedescuento/deleteTodo_vedescuento1/" + user_conn + "/" + this.desct_codigo)
+        return this.api.delete("/venta/mant/vedescuento/deleteTodo_vedescuento1/" + this.userConn + "/" + this.desct_codigo)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

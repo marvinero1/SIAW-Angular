@@ -34,7 +34,7 @@ export class ModalClienteDireccionComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalClienteDireccionComponent>, private api: ApiService,
     public servicioCliente: ServicioclienteService, @Inject(MAT_DIALOG_DATA) public cod_cliente: any) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

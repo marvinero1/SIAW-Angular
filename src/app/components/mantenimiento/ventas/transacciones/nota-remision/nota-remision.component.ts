@@ -302,10 +302,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     private log_module: LogService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
     this.FormularioData = this.createForm();
@@ -1752,7 +1752,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       codigo_vendedor: this.cod_vendedor_cliente
     }];
 
-    localStorage.setItem('data_impresion', JSON.stringify(data));
+    sessionStorage.setItem('data_impresion', JSON.stringify(data));
   }
 
 

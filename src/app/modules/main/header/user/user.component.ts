@@ -1,13 +1,5 @@
-import {
-  Component,
-  OnInit
-} from '@angular/core';
-import {
-  ApiService
-} from '@services/api.service';
-import {
-  AppService
-} from '@services/app.service';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '@services/api.service';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -19,23 +11,23 @@ export class UserComponent implements OnInit {
   public session: any;
   public userConn: any;
   public token: any;
-  public usuario_logueado: any;
+  public usuarioLogueado: any;
+  public agencia_logueado: any;
+  public BD_storage: any;
+
   rol: any = [];
 
   constructor(private api: ApiService) {
-
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.token = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
-
-    this.usuario_logueado = this.api.dato_local_storage;
-    this.session = JSON.parse(this.usuario_logueado);
-
     this.getRolUser();
   }
-
 
   logout() {
     this.api.create("/seg_adm/login/logout/" + this.userConn + "/" + this.token, [])
@@ -45,6 +37,7 @@ export class UserComponent implements OnInit {
         },
 
         error: (err) => {
+          console.error(err);
         },
 
         complete: () => { }
@@ -54,8 +47,8 @@ export class UserComponent implements OnInit {
   }
 
   getRolUser() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
-    return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.session)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
+    return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.rol = datav.codrol;

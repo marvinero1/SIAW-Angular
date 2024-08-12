@@ -210,6 +210,7 @@ export class PermisosEspecialesComponent implements OnInit {
   data: [];
   empresa: any = [];
   fecha_actual = new Date();
+  BD_storage: any;
 
   displayedColumns = ['codigo', 'nivel', 'obs', 'vencimiento', 'nomPerson', 'accion'];
   displayedColumnsDeshabilitados = ['nivel', 'descripcion', 'fechareg', 'accion'];
@@ -228,6 +229,7 @@ export class PermisosEspecialesComponent implements OnInit {
   filteredOptions: Observable<AutorizacionEspecial[]>;
   userConn: any;
 
+
   nombre_ventana: string = "abmadautorizacion.vb";
   public ventana = "Autorizaciones Especiales"
   public detalle = "AutorizacionEspecial-delete";
@@ -236,7 +238,11 @@ export class PermisosEspecialesComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     private toastr: ToastrService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+
+
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
 
@@ -306,10 +312,9 @@ export class PermisosEspecialesComponent implements OnInit {
   }
 
   getEmpresa() {
-    let bd = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adempresa/getNomEmpresa/";
-    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + bd.bd)
+    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -318,23 +323,6 @@ export class PermisosEspecialesComponent implements OnInit {
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
-  getNombreEmpresa() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adempresa/getNomEmpresa/";
-    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/")
-      .subscribe({
-        next: (datav) => {
-          this.autorizaciones = datav;
-
-          console.log(this.autorizaciones);
         },
 
         error: (err: any) => {

@@ -44,13 +44,13 @@ export class LocalidadesComponent implements OnInit {
     private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
 
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllArea(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -63,7 +63,7 @@ export class LocalidadesComponent implements OnInit {
   }
 
   getAllArea(userConn) {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/abmadlocalidad/";
     return this.api.getAll('/seg_adm/mant/abmadlocalidad/' + userConn)
       .subscribe({
         next: (datav) => {

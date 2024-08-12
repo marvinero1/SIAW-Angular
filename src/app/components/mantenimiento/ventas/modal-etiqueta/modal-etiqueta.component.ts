@@ -39,7 +39,7 @@ export class ModalEtiquetaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public desc_linea: any, @Inject(MAT_DIALOG_DATA) public id_sol_desct: any,
     @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.cod_cliente_proforma = cod_cliente_proforma1.cod_cliente_proforma1;
     this.id_proforma_get = id_proforma.id_proforma;

@@ -78,7 +78,7 @@
               <td>&nbsp; Fecha Actual:</td>
             </tr>
             <tr>
-              <td>&nbsp; <strong>{{ fecha_actual_format | date:'EEEE, dd/MM/yyyy' }}</strong></td>
+              <td>&nbsp; <strong>{{ fecha_actual |date:"fullDate" }}</strong></td>
             </tr>
           </thead>
         </table>
@@ -150,7 +150,7 @@
               <td rowspan="2">
                 <mat-icon>assignment_ind</mat-icon>
               </td>
-              <td>&nbsp; Usuario: <strong *ngIf="session">{{ session }}</strong> </td>
+              <td>&nbsp; Usuario: <strong>{{ usuarioLogueado }}</strong> </td>
             </tr>
           </thead>
         </table>

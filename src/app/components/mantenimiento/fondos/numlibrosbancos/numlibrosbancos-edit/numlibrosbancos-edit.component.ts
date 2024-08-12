@@ -34,8 +34,8 @@ export class NumlibrosbancosEditComponent implements OnInit {
     private api: ApiService, public dialogRef: MatDialogRef<NumlibrosbancosEditComponent>, public _snackBar: MatSnackBar,
     public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public datanumChecCliEdit: any,) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.numChecCli_edit = this.datanumChecCliEdit.datanumChecCliEdit;
     this.FormularioData = this.createForm();
@@ -46,7 +46,7 @@ export class NumlibrosbancosEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

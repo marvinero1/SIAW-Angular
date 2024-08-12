@@ -19,44 +19,38 @@ export class FooterComponent implements OnInit {
     public nombre_ventana: string;
 
     fecha_actual = new Date();
-    fecha_actual_format: any;
 
     public session: any;
     public usuario_logueado: any;
     public agencia_storage: any;
     public BD_storage: any;
+    public userConn: any;
 
     tipo_cambio_dolar: any;
     tipo_cambio_dolar_dolar: any;
     tipo_cambio_dolar_moneda_base: any;
 
     constructor(private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService) {
+        this.agencia_storage = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+        this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+        this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
         this.nombre_ventana_service.disparadorDeNombreVentana.subscribe(data => {
             console.log("Recibiendo Ventana: ", data);
             this.nombre_ventana = data.nombre_vent;
         });
-
-        this.fecha_actual_format = this.datePipe.transform(this.fecha_actual);
-        console.log(this.fecha_actual_format);
     }
 
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
-        this.usuario_logueado = this.api.dato_local_storage;
-        this.session = JSON.parse(this.usuario_logueado);
-
-        this.agencia_storage = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-        this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-        let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
-        this.getTipoCambioHoyDia(userConn);
+        this.getTipoCambioHoyDia(this.userConn);
     }
 
     getTipoCambioHoyDia(userConn) {
         let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-        let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-        return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + userConn + "/" + dataTransform)
+        let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adtipocambio/getTipocambioFecha/";
+        return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + this.userConn + "/" + dataTransform)
             .subscribe({
                 next: (datav) => {
                     this.tipo_cambio_hoy_dia = datav;

@@ -32,8 +32,8 @@ export class Interceptor implements HttpInterceptor {
 	public refresh: any = [];
 
 	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService, private dialog: MatDialog) {
-		this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-		this.tokken = localStorage.getItem("token") !== undefined ? JSON.parse(localStorage.getItem("token")) : null;
+		this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+		this.tokken = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
 	}
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

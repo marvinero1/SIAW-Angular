@@ -49,8 +49,8 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
     public dialogRef: MatDialogRef<ModalTransfeNotaRemisionComponent>, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private spinner: NgxSpinnerService, private toastr: ToastrService, public servicioCatalogoProformas: ServicioCatalogoProformasService) {
 
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

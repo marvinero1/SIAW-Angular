@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-numeracion-desct-varios-directos-edit',
   templateUrl: './numeracion-desct-varios-directos-edit.component.html',
@@ -37,8 +36,8 @@ export class NumeracionDesctVariosDirectosEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numDescFalt_edit = this.datanumDescFaltEdit.datanumDescFaltEdit;
     this.getAllUnidadesNegocio();
@@ -60,8 +59,6 @@ export class NumeracionDesctVariosDirectosEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -72,7 +69,7 @@ export class NumeracionDesctVariosDirectosEditComponent implements OnInit {
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.usuario_logueado],
       codunidad: [this.dataform.codunidad, Validators.compose([Validators.required])],
     });
   }

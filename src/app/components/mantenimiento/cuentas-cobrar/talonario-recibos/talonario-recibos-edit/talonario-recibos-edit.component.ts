@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,13 +8,12 @@ import { VendedorService } from '@components/mantenimiento/ventas/serviciovended
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-talonario-recibos-edit',
   templateUrl: './talonario-recibos-edit.component.html',
   styleUrls: ['./talonario-recibos-edit.component.scss']
 })
-export class TalonarioRecibosEditComponent implements OnInit {
+export class TalonarioRecibosEditComponent implements OnInit, AfterViewInit {
 
   FormularioDataEdit: FormGroup;
   fecha_actual = new Date();
@@ -44,8 +43,8 @@ export class TalonarioRecibosEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.talon_edit = this.datatalonEdit.datatalonEdit;
 
@@ -58,7 +57,6 @@ export class TalonarioRecibosEditComponent implements OnInit {
   ngAfterViewInit() {
     this.getVendedorCatalogo();
   }
-
 
   getVendedorCatalogo() {
     let errorMessage: string;
@@ -103,7 +101,7 @@ export class TalonarioRecibosEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -148,8 +146,6 @@ export class TalonarioRecibosEditComponent implements OnInit {
       })
   }
 
-
-
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -164,6 +160,7 @@ export class TalonarioRecibosEditComponent implements OnInit {
       this.talon_edit.nroactual = null;
     }
   }
+
   onInputChange1(value: string) {
     // Validar y formatear el valor ingresado
     const parsedValue = parseFloat(value);
@@ -174,6 +171,7 @@ export class TalonarioRecibosEditComponent implements OnInit {
       this.talon_edit.talDel = null;
     }
   }
+
   onInputChange2(value: string) {
     // Validar y formatear el valor ingresado
     const parsedValue = parseFloat(value);
@@ -184,5 +182,4 @@ export class TalonarioRecibosEditComponent implements OnInit {
       this.talon_edit.talAl = null;
     }
   }
-
 }

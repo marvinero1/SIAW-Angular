@@ -46,9 +46,9 @@ export class TipocambioComponent implements OnInit {
     private datePipe: DatePipe, private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
     this.FormularioData = this.createForm();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
@@ -91,11 +91,10 @@ export class TipocambioComponent implements OnInit {
   }
 
   getAllTipoCambio() {
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
-    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + useConn + "/" + dataTransform)
+    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + this.userConn + "/" + dataTransform)
       .subscribe({
         next: (datav) => {
           this.tipo_cambio = datav;

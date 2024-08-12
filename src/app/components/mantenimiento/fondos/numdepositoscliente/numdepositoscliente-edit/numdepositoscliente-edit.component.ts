@@ -37,15 +37,15 @@ export class NumdepositosclienteEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numDepCli_edit = this.datanumDepCliEdit.datanumDepCliEdit;
     this.getAllUnidadesNegocio();
   }
 
   getAllUnidadesNegocio() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adunidad/catalogo/";
     return this.api.getAll('/seg_adm/mant/adunidad/catalogo/' + this.user_conn)
       .subscribe({
         next: (datav) => {
@@ -60,7 +60,7 @@ export class NumdepositosclienteEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

@@ -51,7 +51,7 @@ export class AlmacenComponent implements OnInit {
     private _formBuilder: FormBuilder, public almacenservice: ServicioalmacenService, private toastr: ToastrService) {
 
     this.FormularioData = this.createForm();
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -75,7 +75,7 @@ export class AlmacenComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

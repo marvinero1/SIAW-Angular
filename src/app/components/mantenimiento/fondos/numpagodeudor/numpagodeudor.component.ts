@@ -19,7 +19,6 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   styleUrls: ['./numpagodeudor.component.scss']
 })
 export class NumpagodeudorComponent implements OnInit {
-
   numPagoDeu: any = [];
   data: [];
   datanumPagoDeuEdit_copied: any = [];
@@ -44,13 +43,13 @@ export class NumpagodeudorComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getAllnumPagoDeuerencias(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -63,7 +62,7 @@ export class NumpagodeudorComponent implements OnInit {
   }
 
   getAllnumPagoDeuerencias(userConn) {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /fondos/mant/fntipopagoadeudor/";
     return this.api.getAll('/fondos/mant/fntipopagoadeudor/' + userConn)
       .subscribe({
         next: (datav) => {

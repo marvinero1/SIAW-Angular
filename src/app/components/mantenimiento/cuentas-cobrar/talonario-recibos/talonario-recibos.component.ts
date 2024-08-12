@@ -50,7 +50,7 @@ export class TalonarioRecibosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getAlltalonario(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(

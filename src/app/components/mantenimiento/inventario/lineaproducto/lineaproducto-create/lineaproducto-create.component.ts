@@ -34,8 +34,8 @@ export class LineaproductoCreateComponent implements OnInit {
   constructor(private api: ApiService, public dialogRef: MatDialogRef<LineaproductoCreateComponent>,
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService,
     public _snackBar: MatSnackBar, private spinner: NgxSpinnerService, private toastr: ToastrService,) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }

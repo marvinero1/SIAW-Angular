@@ -46,7 +46,7 @@ export class CatalogoPuntoVentaComponent implements OnInit {
   constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoPuntoVentaComponent>,
     @Inject(MAT_DIALOG_DATA) public origen: any, @Inject(MAT_DIALOG_DATA) public destino: any,
     public servicesPuntoVenta: PuntoventaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

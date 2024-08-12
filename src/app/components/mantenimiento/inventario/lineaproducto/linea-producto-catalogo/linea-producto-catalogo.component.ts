@@ -16,21 +16,21 @@ import { element } from 'protractor';
 })
 export class LineaProductoCatalogoComponent implements OnInit {
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarLinea();
   };
-    
+
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
     this.mandarLinea();
   };
-  
-  linea_get:any=[];
-  public linea_view:any=[];
 
-  public codigo:string='';
-  public nombre:string='';
+  linea_get: any = [];
+  public linea_view: any = [];
 
-  displayedColumns = ['codigo','descripcion'];
+  public codigo: string = '';
+  public nombre: string = '';
+
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<inLineaProducto>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -47,8 +47,8 @@ export class LineaProductoCatalogoComponent implements OnInit {
     private servicioLinea: ServicioLineaProductoService) {
   }
 
-  ngOnInit(){
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  ngOnInit() {
+    let useConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.getLineaCatalogo(useConn);
   }
@@ -59,7 +59,7 @@ export class LineaProductoCatalogoComponent implements OnInit {
     return this.options.filter(option => option.codigo.toString().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -69,39 +69,39 @@ export class LineaProductoCatalogoComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getLineaCatalogo(userConn){
-    let errorMessage:string;
+  getLineaCatalogo(userConn) {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --catalogoVendedor";
-    return this.api.getAll('/inventario/mant/inlinea/'+userConn)
+    return this.api.getAll('/inventario/mant/inlinea/' + userConn)
       .subscribe({
         next: (datav) => {
           this.linea_get = datav;
-          
+
           this.dataSource = new MatTableDataSource(this.linea_get);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getveVendedorbyId(element){
+  getveVendedorbyId(element) {
     this.linea_view = element;
     console.log(element);
   }
 
-  mandarLinea(){
+  mandarLinea() {
     this.servicioLinea.disparadorDeLineaItem.emit({
-      linea:this.linea_view,
+      linea: this.linea_view,
     });
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 

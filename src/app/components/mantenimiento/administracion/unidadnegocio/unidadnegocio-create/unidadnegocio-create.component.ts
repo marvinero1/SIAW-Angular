@@ -20,7 +20,9 @@ export class UnidadnegocioCreateComponent implements OnInit {
   hora_actual = new Date();
   dataform: any = '';
   dpto: any = [];
-  usuario_logueado;
+
+  userConn: any;
+  usuario_logueado: any;
 
   public ventana = "unidadnegocio-create"
   public detalle = "unidadnegocio-create";
@@ -29,6 +31,9 @@ export class UnidadnegocioCreateComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private spinner: NgxSpinnerService, public log_module: LogService,
     private api: ApiService, public dialogRef: MatDialogRef<UnidadnegocioCreateComponent>, public _snackBar: MatSnackBar,
     private toastr: ToastrService,) {
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.FormularioData = this.createForm();
   }
 
@@ -37,8 +42,6 @@ export class UnidadnegocioCreateComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -53,11 +56,9 @@ export class UnidadnegocioCreateComponent implements OnInit {
   }
 
   submitData() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /adunidad";
-    return this.api.create("/seg_adm/mant/adunidad/" + user_conn, data)
+    return this.api.create("/seg_adm/mant/adunidad/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

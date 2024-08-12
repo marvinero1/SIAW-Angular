@@ -31,11 +31,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   constructor(private api: ApiService, private datePipe: DatePipe, public dialog: MatDialog,
     private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = "31isaias";
-    // this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;   
-    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.mandarNombre();
   }
@@ -51,32 +50,40 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getRolUserParaVentana() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
     return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           this.rol = datav.codrol;
           console.log(this.rol);
+          //aca toda la logica segun el rol
+          switch (this.rol) {
+            case 'ADM_GERENC_CORP':
+              this.getVentasUsuarioGerencia();
+              break;
+            case 'ADM_GERENC_CORP':
+              this.getVentasUsuarioGerencia();
+              break;
+            case 'DPD':
+              this.getVentasUsuarioGerencia();
+              break;
 
+            // aca solo salen las proformas tranferidas del vendedor que hizo login
+            case 'VTA_EJEC_VENTAS':
+              this.getVentasUsuarioPorVendedor();
+              break;
+
+            default:
+              break;
+          }
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-          //aca toda la logica segun el rol
-
-          if (this.rol === "ADM_GERENC_CORP" && "ADM_ASI_OPE_COM") {
-            this.getVentasUsuarioGerencia();
-          }
-
-          if (this.rol === "VTA_EJEC_VENTAS") {
-            this.getVentasUsuarioPorVendedor();
-          }
-        }
+        complete: () => { }
       });
   }
-
 
   getVentasUsuarioPorVendedor() {
     //trae todas las proformas aprobadas del vendedor que inicio sesion
@@ -90,7 +97,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
           //SOLO DEL VENDEDOR
           // const result = this.vents_vendedor.filter((element) => element.Usuarioreg === this.usuarioLogueado);
-          this.resultado_proformas_filtrado = this.vents_vendedor.filter((element) => element.Usuarioreg === '31isaias');
+          this.resultado_proformas_filtrado = this.vents_vendedor.filter((element) => element.Usuarioreg === this.usuarioLogueado);
           console.log("Array Filtrado: ", this.resultado_proformas_filtrado);
         },
 
@@ -120,11 +127,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       })
   }
 
-
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
       nombre_vent: this.ventana,
     });
   }
-
 }

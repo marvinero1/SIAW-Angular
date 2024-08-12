@@ -15,19 +15,19 @@ import { ServicePersonaService } from './service-persona/service-persona.service
 })
 export class PersonaCatalogoComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
-    this.mandarAlmacen();
-  }; 
-
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarAlmacen();
   };
 
-  persona_get:any=[];
-  public persona_view:any=[];
-  userConn:any;
+  @HostListener('dblclick') onDoubleClicked2() {
+    this.mandarAlmacen();
+  };
 
-  displayedColumns = ['codigo','descripcion'];
+  persona_get: any = [];
+  public persona_view: any = [];
+  userConn: any;
+
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<pePersona>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -38,16 +38,16 @@ export class PersonaCatalogoComponent implements OnInit {
   options: pePersona[] = [];
   filteredOptions: Observable<pePersona[]>;
   myControlCodigo = new FormControl<string | pePersona>('');
-  myControlDescrip= new FormControl<string | pePersona>('');
+  myControlDescrip = new FormControl<string | pePersona>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent>,
     private servicioPersona: ServicePersonaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.getPersona();
   }
 
-  ngOnInit(){
+  ngOnInit() {
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
@@ -72,7 +72,7 @@ export class PersonaCatalogoComponent implements OnInit {
     return this.options.filter(option => option.nombre1.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -82,9 +82,9 @@ export class PersonaCatalogoComponent implements OnInit {
     return user && user.nombre1 ? user.nombre1 : '';
   }
 
-  getPersona(){
+  getPersona() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
-    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/'+this.userConn)
+    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.persona_get = datav;
@@ -94,27 +94,27 @@ export class PersonaCatalogoComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-        error: (err: any) => { 
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarAlmacen(){
+  mandarAlmacen() {
     this.servicioPersona.disparadorDePersonas.emit({
-      persona:this.persona_view,
+      persona: this.persona_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.persona_view = element;
     console.log(this.persona_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

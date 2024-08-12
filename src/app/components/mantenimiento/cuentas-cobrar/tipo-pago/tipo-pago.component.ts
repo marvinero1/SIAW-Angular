@@ -13,7 +13,6 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ToastrService } from 'ngx-toastr';
 import { LogService } from '@services/log-service.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
-
 @Component({
   selector: 'app-tipo-pago',
   templateUrl: './tipo-pago.component.html',
@@ -52,19 +51,20 @@ export class TipoPagoComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.getAlltiposPago(this.userConn);
+    this.getAlltiposPago();
   }
 
-  getAlltiposPago(userConn) {
+  getAlltiposPago() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/ctsxcob/mant/cotippago/' + userConn)
+    return this.api.getAll('/ctsxcob/mant/cotippago/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.tiposPago = datav;

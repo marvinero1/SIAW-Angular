@@ -254,7 +254,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           if (agencias) {
             console.log("Se Verifico la AG seleccionada: ", agencia);
 
-            localStorage.setItem('agencia_logueado', JSON.stringify(agencia));
             sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
             this.ip_servidores = false;
             this.bd_datos = false;
@@ -372,30 +371,32 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   guardarToken(token) {
-    localStorage.setItem('token', JSON.stringify(token));
+    // localStorage.setItem('token', JSON.stringify(token));
+    sessionStorage.setItem('token', JSON.stringify(token));
+
   }
 
   guardarStorageUsuario(usuario) {
-    localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    // localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
     sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
   }
 
   guardarStorageBD(data) {
-    localStorage.setItem('bd_logueado', JSON.stringify(data));
+    // localStorage.setItem('bd_logueado', JSON.stringify(data));
     sessionStorage.setItem('bd_logueado', JSON.stringify(data));
   }
 
   guardarStorageuserConn(data) {
-    localStorage.setItem('user_conn', JSON.stringify(data));
+    // localStorage.setItem('user_conn', JSON.stringify(data));
     sessionStorage.setItem('user_conn', JSON.stringify(data));
   }
 
-  obtenerStorage() {
-    this.dato_local_storage = localStorage.getItem('usuario_logueado');
-    this.dato_local_session = sessionStorage.getItem('usuario_logueado');
+  // obtenerStorage() {
+  //   this.dato_local_storage = localStorage.getItem('usuario_logueado');
+  //   this.dato_local_session = sessionStorage.getItem('usuario_logueado');
 
-    console.log(this.dato_local_storage, JSON.parse(this.dato_local_storage));
-  }
+  //   console.log(this.dato_local_storage, JSON.parse(this.dato_local_storage));
+  // }
 
   transformacionTecnologica() {
     this.dialog.open(TransformacionDigitalComponent, {

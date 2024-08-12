@@ -39,8 +39,8 @@ export class ModalPreciosFacturacionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataEmpresaParametros: any, public _snackBar: MatSnackBar, public dialog: MatDialog,
     private _formBuilder: FormBuilder, public log_module: LogService, private toastr: ToastrService,) {
 
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.FormularioData = this.createForm();
     this.getAllinTarifaSelect(this.userConn);

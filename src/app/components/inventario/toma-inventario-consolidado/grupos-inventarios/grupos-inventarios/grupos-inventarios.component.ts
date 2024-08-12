@@ -54,7 +54,7 @@ export class GruposInventariosComponent implements OnInit {
     private api: ApiService, @Inject(MAT_DIALOG_DATA) public dataInventario: any, public log_module: LogService, private _formBuilder: FormBuilder,
     private toastr: ToastrService, private datePipe: DatePipe, private spinner: NgxSpinnerService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.data_inventario = this.dataInventario.dataInventario;
     console.log(this.data_inventario);
@@ -77,7 +77,7 @@ export class GruposInventariosComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     console.log(usuario_logueado);
 
     let hour = this.hora_actual.getHours();

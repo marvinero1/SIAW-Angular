@@ -15,22 +15,22 @@ import { ProvinciasService } from '../services-provincias/provincias.service';
 })
 export class ProvinciasCatalogoComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarProvincia();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarProvincia();
   };
 
   provincia_get: any = [];
-  origen_get:string;
+  origen_get: string;
   destino_get: string;
   almacen_get: string;
   userConn: any;
-  public provincia_view:any=[];
+  public provincia_view: any = [];
 
-  displayedColumns = ['codigo','nombre','departamento'];
+  displayedColumns = ['codigo', 'nombre', 'departamento'];
 
   dataSource = new MatTableDataSource<adProvincia>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -43,16 +43,17 @@ export class ProvinciasCatalogoComponent implements OnInit {
   myControlCodigo = new FormControl<string | adProvincia>('');
   myControlDescripcion = new FormControl<string | adProvincia>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ProvinciasCatalogoComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ProvinciasCatalogoComponent>,
     private servicioProvincia: ProvinciasService) {
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
   }
 
-  ngOnInit(){
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  ngOnInit() {
     this.getProvincia();
 
     console.log(this.origen_get, this.destino_get);
-    
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -76,7 +77,7 @@ export class ProvinciasCatalogoComponent implements OnInit {
     return this.options.filter(option => option.nombre.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -86,9 +87,9 @@ export class ProvinciasCatalogoComponent implements OnInit {
     return user && user.nombre ? user.nombre : '';
   }
 
-  getProvincia(){
+  getProvincia() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/mant/adprovincia/catalogo_depto/"
-    return this.api.getAll('/seg_adm/mant/adprovincia/catalogo_depto/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adprovincia/catalogo_depto/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.provincia_get = datav;
@@ -98,28 +99,28 @@ export class ProvinciasCatalogoComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarProvincia(){
+  mandarProvincia() {
     this.servicioProvincia.disparadorDeProvincias.emit({
-      provincia:this.provincia_view,
+      provincia: this.provincia_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.provincia_view = element;
     console.log(this.provincia_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

@@ -206,7 +206,7 @@ export class ModalGenerarAutorizacionComponent implements OnInit {
 
   constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ModalGenerarAutorizacionComponent>,
     public log_module: LogService, public almacenservice: ServicioalmacenService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

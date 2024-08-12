@@ -15,18 +15,18 @@ import { ServiciorubroService } from '../servicio/serviciorubro.service';
 })
 export class ModalRubroComponent implements OnInit {
 
-  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarAlmacen();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarAlmacen();
   };
 
-  rubro_get:any=[];
-  public rubro_view:any=[];
+  rubro_get: any = [];
+  public rubro_view: any = [];
 
-  displayedColumns = ['codigo','descripcion'];
+  displayedColumns = ['codigo', 'descripcion'];
 
   dataSource = new MatTableDataSource<Rubro>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -39,12 +39,12 @@ export class ModalRubroComponent implements OnInit {
   myControlCodigo = new FormControl<string | Rubro>('');
   myControlDescripcion = new FormControl<string | Rubro>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ModalRubroComponent>,
-    private servicioRubro:ServiciorubroService){
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalRubroComponent>,
+    private servicioRubro: ServiciorubroService) {
   }
 
-  ngOnInit(){
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+  ngOnInit() {
+    let userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getAlmacen(userConn);
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
@@ -70,7 +70,7 @@ export class ModalRubroComponent implements OnInit {
     return this.options.filter(option => option.codigo.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -80,9 +80,9 @@ export class ModalRubroComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getAlmacen(useConn){
+  getAlmacen(useConn) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/venta/mant/verubro/'+ useConn)
+    return this.api.getAll('/venta/mant/verubro/' + useConn)
       .subscribe({
         next: (datav) => {
           this.rubro_get = datav;
@@ -92,28 +92,28 @@ export class ModalRubroComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarAlmacen(){
+  mandarAlmacen() {
     this.servicioRubro.disparadorDeRubro.emit({
-      rubro:this.rubro_view,
+      rubro: this.rubro_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.rubro_view = element;
     console.log(this.rubro_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

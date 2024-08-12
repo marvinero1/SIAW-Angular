@@ -96,11 +96,12 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.dataItemSeleccionados_get = dataItemSeleccionados.dataItemSeleccionados;
     console.log(this.dataItemSeleccionados_get);
-    tamanio_carrito_compras
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
-    tamanio_carrito_compras
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
     this.codcliente_get = codcliente.codcliente;

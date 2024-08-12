@@ -37,8 +37,8 @@ export class NumcomprasmenoresEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numCmpMen_edit = this.datanumCmpMenEdit.datanumCmpMenEdit;
     this.getAllUnidadesNegocio();
@@ -60,8 +60,6 @@ export class NumcomprasmenoresEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    const usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
@@ -72,7 +70,7 @@ export class NumcomprasmenoresEditComponent implements OnInit {
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
-      usuarioreg: [usuario_logueado],
+      usuarioreg: [this.usuario_logueado],
       codunidad: [this.dataform.codunidad, Validators.compose([Validators.required])],
     });
   }

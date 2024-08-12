@@ -51,7 +51,7 @@ export class CatalogoMovimientoMercaderiaComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, public _snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<CatalogoMovimientoMercaderiaComponent>, public movimientoMercaderia: MovimientomercaderiaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 

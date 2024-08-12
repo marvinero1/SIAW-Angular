@@ -485,10 +485,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     console.log("Estado Internet: ", this.api.statusInternet);
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.agencia_logueado = localStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(localStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     console.log(this.BD_storage);
 
     console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
@@ -2078,7 +2078,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   guardarNombreCliente() {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     let tipo_doc_cliente_parse_string = this.tipo_doc_cliente.toString();
     let nit_string;
     let cliente_nuevo: any = [];
@@ -2614,8 +2614,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   imprimir_zip_importado(zip_json) {
     console.log(zip_json);
 
-    this.cod_id_tipo_modal_id = this.id_tipo_view_get_codigo;
-    this.id_proforma_numero_id = this.id_proforma_numero_id;
+    this.cod_id_tipo_modal_id = zip_json.cabeceraList[0].id;
+    this.id_proforma_numero_id = zip_json.cabeceraList[0].numeroid;
     this.fecha_actual = this.fecha_actual;
     this.almacn_parame_usuario = zip_json.cabeceraList[0].codalmacen;
     this.venta_cliente_oficina = zip_json.cabeceraList[0].venta_cliente_oficina;
@@ -4202,20 +4202,21 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           console.log(datav);
 
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
-            ...element,
-            descripcion: element.descrip,
-            descrip: element.descrip,
-          }));
+          // this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
+          //   ...element,
+          //   descripcion: element.descrip,
+          //   descrip: element.descrip,
+          // }));
 
           console.log(this.array_de_descuentos_ya_agregados);
           this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+          this.toastr.warning(datav.resp);
 
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
           this.totabilizar();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
+          // setTimeout(() => {
+          //   this.spinner.hide();
+          // }, 1000);
         },
 
         error: (err: any) => {
@@ -4233,6 +4234,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   validar() {
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
     // VACIO - TODOS LOS CONTROLES
+    this.spinner.show();
+
     this.valor_formulario = [this.FormularioData.value];
     console.log("Valor Formulario Original: ", this.valor_formulario);
 
@@ -4379,10 +4382,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }, 1500);
       }
     });
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
   }
 
   ordenarDetalleSegunOrdenPedido() {
@@ -5921,7 +5920,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       grabar_aprobar: grabar_aprobar
     }];
 
-    localStorage.setItem('data_impresion', JSON.stringify(data));
+    sessionStorage.setItem('data_impresion', JSON.stringify(data));
   }
 
   modalSolicitudUrgente() {

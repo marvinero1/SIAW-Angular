@@ -74,8 +74,8 @@ export class ModalRecargosComponent implements OnInit {
     this.array_cabe_cuerpo_get = array_cabe_cuerpo.array_cabe_cuerpo
     console.log(this.array_cabe_cuerpo_get);
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.recargos_ya_en_array_tamanio = tamanio_recargos.tamanio_recargos;
     console.log("Array de Recargos q vienen de proforma: ", this.recargos_ya_en_array, "Tamanio Array: " + this.recargos_ya_en_array_tamanio);

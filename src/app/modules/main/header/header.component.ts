@@ -1,44 +1,14 @@
-import {
-  AppState
-} from '@/store/state';
-import {
-  ToggleControlSidebar,
-  ToggleSidebarMenu
-} from '@/store/ui/actions';
-import {
-  UiState
-} from '@/store/ui/state';
-import {
-  Component,
-  HostBinding,
-  Input,
-  OnInit
-} from '@angular/core';
-import {
-  UntypedFormGroup,
-  UntypedFormControl
-} from '@angular/forms';
-import {
-  Router
-} from '@angular/router';
-import {
-  Store
-} from '@ngrx/store';
-import {
-  ApiService
-} from '@services/api.service';
-import {
-  Observable,
-  filter
-} from 'rxjs';
-import {
-  DatePipe,
-  Location
-} from '@angular/common';
-import {
-  LogService
-} from '@services/log-service.service';
-
+import { AppState } from '@/store/state';
+import { ToggleControlSidebar, ToggleSidebarMenu } from '@/store/ui/actions';
+import { UiState } from '@/store/ui/state';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { ApiService } from '@services/api.service';
+import { Observable, filter } from 'rxjs';
+import { DatePipe, Location } from '@angular/common';
+import { LogService } from '@services/log-service.service';
 const BASE_CLASSES = 'main-header navbar navbar-expand navbar-warning';
 @Component({
   selector: 'app-header',
@@ -58,8 +28,9 @@ export class HeaderComponent implements OnInit {
   public log_ruta = [];
   isNavbarVisible = true;
 
-  userConn: any = '';
+  userConn: any;
   data: any = "";
+  usuarioLogueado: any;
 
   public ventana = "login"
   public detalle = "login-user";
@@ -72,6 +43,9 @@ export class HeaderComponent implements OnInit {
 
   constructor(private store: Store<AppState>, private api: ApiService, public router: Router, public log_module: LogService,
     private _location: Location, private datePipe: DatePipe) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
     this.onToggleMenuSidebar();
   }
 
@@ -114,8 +88,6 @@ export class HeaderComponent implements OnInit {
   getAllLogHistorialRutas() {
     let errorMessage: string;
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
 
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
     return this.api.getAll('/seg_adm/logs/selog/getselogfecha/' + this.userConn + "/" + dataTransform)

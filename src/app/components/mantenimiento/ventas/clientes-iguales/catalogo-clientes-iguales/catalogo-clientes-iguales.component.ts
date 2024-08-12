@@ -17,30 +17,30 @@ import { ModalClienteComponent } from '../../modal-cliente/modal-cliente.compone
 })
 export class CatalogoClientesIgualesComponent implements OnInit {
 
-@HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent){
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarCliente();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarCliente();
   };
-  
+
   cliente: any = [];
   cliente_send: any = [];
-  public codigo:string='';
+  public codigo: string = '';
   public nombre: string = '';
   condicional: any;
 
   @Output() codigoEvento = new EventEmitter<string>();
 
-  displayedColumns = ['codigo','nombre','nit','direccion_titular'];
+  displayedColumns = ['codigo', 'nombre', 'nit', 'direccion_titular'];
 
   dataSource = new MatTableDataSource<veCliente>();
   dataSourceWithPageSize = new MatTableDataSource();
-  
+
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
-  
+
   myControlCodigo = new FormControl<string | veCliente>('');
   myControlNombre = new FormControl<string | veCliente>('');
   myControlNIT = new FormControl<string | veCliente>('');
@@ -49,18 +49,19 @@ export class CatalogoClientesIgualesComponent implements OnInit {
   options: veCliente[] = [];
   filteredOptions: Observable<veCliente[]>;
 
-  constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api:ApiService, private spinner: NgxSpinnerService,
-    public servicioCliente:ClientesIgulesService, @Inject(MAT_DIALOG_DATA) public dataCatalogo: any){
-    
+  userConn: any;
+
+  constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private api: ApiService, private spinner: NgxSpinnerService,
+    public servicioCliente: ClientesIgulesService, @Inject(MAT_DIALOG_DATA) public dataCatalogo: any) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.condicional = this.dataCatalogo.dataCatalogo;
 
     console.log(this.condicional);
   }
 
-  ngOnInit(){
-    let useConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
-    this.getClienteCatalogo(useConn);
+  ngOnInit() {
+    this.getClienteCatalogo();
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
@@ -101,7 +102,7 @@ export class CatalogoClientesIgualesComponent implements OnInit {
     return this.options.filter(option => option.codigo.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -111,46 +112,46 @@ export class CatalogoClientesIgualesComponent implements OnInit {
     return user && user.codigo ? user.codigo : '';
   }
 
-  getClienteCatalogo(userConn){
-    let errorMessage:string;
+  getClienteCatalogo() {
+    let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vecliente/catalogo/'+userConn)
+    return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.cliente = datav;
           console.log('data', datav);
-          
+
           this.dataSource = new MatTableDataSource(this.cliente);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-                
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  getveClienteByID(cliente){
+  getveClienteByID(cliente) {
     this.cliente_send = cliente;
   }
 
   mandarCliente() {
-    if (this.condicional == 'A') { 
+    if (this.condicional == 'A') {
       this.servicioCliente.disparadorDeClienteA.emit({
-        cliente:this.cliente_send,
+        cliente: this.cliente_send,
       });
 
-    } if (this.condicional == 'B'){
+    } if (this.condicional == 'B') {
       this.servicioCliente.disparadorDeClienteB.emit({
-        cliente:this.cliente_send,
+        cliente: this.cliente_send,
       });
     }
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

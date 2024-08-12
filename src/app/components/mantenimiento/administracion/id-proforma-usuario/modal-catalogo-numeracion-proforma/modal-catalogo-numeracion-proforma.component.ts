@@ -13,20 +13,20 @@ import { ServicioidproformaService } from '../servicioidproforma.service';
   styleUrls: ['./modal-catalogo-numeracion-proforma.component.scss']
 })
 export class ModalCatalogoNumeracionProformaComponent implements OnInit {
-  
+
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarAlmacen();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarAlmacen();
   };
 
-  idproforma_get:any=[];
+  idproforma_get: any = [];
   public agencia_view: string;
   userConn: string;
 
-  displayedColumns = ['id','descripcion'];
+  displayedColumns = ['id', 'descripcion'];
 
   dataSource = new MatTableDataSource<IDProforma>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -39,13 +39,13 @@ export class ModalCatalogoNumeracionProformaComponent implements OnInit {
   myControlCodigo = new FormControl<string | IDProforma>('');
   myControlDescripcion = new FormControl<string | IDProforma>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<ModalCatalogoNumeracionProformaComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalCatalogoNumeracionProformaComponent>,
     private servicioIDProforma: ServicioidproformaService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.getAllNumeracionProforma();
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
@@ -71,7 +71,7 @@ export class ModalCatalogoNumeracionProformaComponent implements OnInit {
     return this.options.filter(option => option.id.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -81,9 +81,9 @@ export class ModalCatalogoNumeracionProformaComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  getAllNumeracionProforma(){
+  getAllNumeracionProforma() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/seg_adm/mant/adusuario_idproforma/catalogoVenumeracionProf/"
-    return this.api.getAll('/seg_adm/mant/adusuario_idproforma/catalogoVenumeracionProf/'+this.userConn)
+    return this.api.getAll('/seg_adm/mant/adusuario_idproforma/catalogoVenumeracionProf/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.idproforma_get = datav;
@@ -93,28 +93,28 @@ export class ModalCatalogoNumeracionProformaComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarAlmacen(){
+  mandarAlmacen() {
     this.servicioIDProforma.disparadorDeIDProformas.emit({
-      id_proforma:this.agencia_view,
+      id_proforma: this.agencia_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.agencia_view = element;
     console.log(this.agencia_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

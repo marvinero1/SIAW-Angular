@@ -41,7 +41,7 @@ export class ModalAlmacenComponent implements OnInit {
     private servicioAlmacen: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public origen: any,
     @Inject(MAT_DIALOG_DATA) public destino: any, @Inject(MAT_DIALOG_DATA) public almacen: any) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
   ngOnInit() {

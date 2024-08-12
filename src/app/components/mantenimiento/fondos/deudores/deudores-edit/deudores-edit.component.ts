@@ -40,8 +40,8 @@ export class DeudoresEditComponent implements OnInit {
     public log_module: LogService, private toastr: ToastrService, public dialog: MatDialog,
     public servicioPersona: ServicePersonaService, @Inject(MAT_DIALOG_DATA) public dataDeudorEdit_copied: any) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.deudor_edit = dataDeudorEdit_copied.dataDeudorEdit_copied;
     console.log(this.deudor_edit);
@@ -60,7 +60,7 @@ export class DeudoresEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    let usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

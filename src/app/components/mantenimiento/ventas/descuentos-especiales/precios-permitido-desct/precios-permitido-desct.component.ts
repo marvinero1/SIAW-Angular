@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,6 +26,7 @@ export class PreciosPermitidoDesctComponent implements OnInit {
   precios_codigo: any = [];
   cod_precio_venta_modal: any = [];
   save_precio: any = [];
+  BD_storage: any;
 
   displayedColumns = ['coddescuento', 'descripcion', 'accion'];
 
@@ -51,8 +51,9 @@ export class PreciosPermitidoDesctComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.userLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.getPreciosCodigo();
 
@@ -122,7 +123,6 @@ export class PreciosPermitidoDesctComponent implements OnInit {
   }
 
   eliminar(element) {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta presenta fallos al hacer peticion" + "Ruta:--/venta/mant/vedescuento/vedescuento_tarifa/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
@@ -133,7 +133,7 @@ export class PreciosPermitidoDesctComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete("/venta/mant/vedescuento/vedescuento_tarifa/" + user_conn + "/" + this.desct_codigo + "/" + element.codtarifa)
+        return this.api.delete("/venta/mant/vedescuento/vedescuento_tarifa/" + this.userConn + "/" + this.desct_codigo + "/" + element.codtarifa)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

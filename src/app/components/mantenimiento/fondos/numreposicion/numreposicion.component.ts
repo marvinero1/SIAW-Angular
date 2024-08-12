@@ -51,7 +51,7 @@ export class NumreposicionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getAllNumReposiciones(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -64,7 +64,7 @@ export class NumreposicionComponent implements OnInit {
   }
 
   getAllNumReposiciones(userConn) {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /fondos/mant/fntiporeposicion/";
     return this.api.getAll('/fondos/mant/fntiporeposicion/' + userConn)
       .subscribe({
         next: (datav) => {

@@ -37,7 +37,7 @@ export class NumsolicitudurgenteComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
     this.mandarNombre()

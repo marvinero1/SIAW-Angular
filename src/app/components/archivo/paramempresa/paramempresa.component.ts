@@ -43,8 +43,8 @@ export class ParamempresaComponent implements OnInit {
 
     this.mandarNombre();
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
@@ -187,7 +187,7 @@ export class ParamempresaComponent implements OnInit {
   }
 
   openDialogMinimoComplementarias(dataEmpresaParametros) {
-    const dialogRef = this.dialog.open(ModalMinimoComplementariasComponent, {
+    this.dialog.open(ModalMinimoComplementariasComponent, {
       width: '1120px',
       height: 'auto',
       data: { dataEmpresaParametros: dataEmpresaParametros },
@@ -195,7 +195,7 @@ export class ParamempresaComponent implements OnInit {
   }
 
   openDialogCreditoConAutorizacion(dataEmpresaParametros) {
-    const dialogRef = this.dialog.open(ModalCreditoAutorizacionComponent, {
+    this.dialog.open(ModalCreditoAutorizacionComponent, {
       width: '850px',
       height: 'auto',
       data: { dataEmpresaParametros: dataEmpresaParametros },
@@ -203,7 +203,7 @@ export class ParamempresaComponent implements OnInit {
   }
 
   openDialogPreciosFacturacion(dataEmpresaParametros) {
-    const dialogRef = this.dialog.open(ModalPreciosFacturacionComponent, {
+    this.dialog.open(ModalPreciosFacturacionComponent, {
       width: '750px',
       height: 'auto',
       data: { dataEmpresaParametros: dataEmpresaParametros },
@@ -350,7 +350,7 @@ export class ParamempresaComponent implements OnInit {
     let data = this.FormularioDataParamEmpresa.value;
     console.log(data);
 
-    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
+    this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/adparametros/";
     return this.api.update('/seg_adm/mant/adparametros/' + this.BD_storage, data)
       .subscribe({
         next: (datav) => {

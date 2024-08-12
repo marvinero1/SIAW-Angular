@@ -47,10 +47,11 @@ export class CatalogoPersonaComponent implements OnInit {
     private toastr: ToastrService,) {
 
     this.cod_grupo = this.codigo_grupo.codigo_grupo;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
   }
 
   ngOnInit() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     this.getPersona();
 
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(

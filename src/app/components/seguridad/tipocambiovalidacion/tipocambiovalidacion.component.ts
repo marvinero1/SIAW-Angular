@@ -46,8 +46,8 @@ export class TipocambiovalidacionComponent implements OnInit {
     public dialogRef: MatDialogRef<TipocambiovalidacionComponent>, private router: Router,
     private datePipe: DatePipe, public log_module: LogService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.BD_storage = localStorage.getItem("bd_logueado") !== undefined ? JSON.parse(localStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.bd_logueado = this.BD_storage;
     console.log(this.bd_logueado);
   }
@@ -85,11 +85,10 @@ export class TipocambiovalidacionComponent implements OnInit {
   }
 
   getAllTipoCambio() {
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET al tipo de cambio ruta /seg_adm/mant/getTipocambioFecha/";
 
-    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + userConn + "/" + dataTransform)
+    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioFecha/' + this.userConn + "/" + dataTransform)
       .subscribe({
         next: (datav) => {
           this.tipo_cambio = datav;
@@ -117,14 +116,12 @@ export class TipocambiovalidacionComponent implements OnInit {
   }
 
   getAllTipoCambioUltimoRegistro() {
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage: string;
     let fecha_actual = new Date();
     let dataTransform = this.datePipe.transform(fecha_actual, "yyyy-MM-dd");
 
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET al tipo de cambio ruta /seg_adm/mant/getTipocambioFecha/";
-    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioAnt/' + userConn)
+    return this.api.getAll('/seg_adm/mant/adtipocambio/getTipocambioAnt/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.tipo_cambio_ultimo = datav;
@@ -151,11 +148,9 @@ export class TipocambiovalidacionComponent implements OnInit {
   }
 
   GuardartipoCambioUltimoRegistro(elementoArray) {
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer POST al guardar un array de datos de tipo de cambio ruta --/seg_adm/mant/addlisttipocambio/";
 
-    return this.api.create('/seg_adm/mant/adtipocambio/addlisttipocambio/' + userConn, elementoArray)
+    return this.api.create('/seg_adm/mant/adtipocambio/addlisttipocambio/' + this.userConn, elementoArray)
       .subscribe({
         next: (datav) => {
           this.ultimo_registro_create = datav;

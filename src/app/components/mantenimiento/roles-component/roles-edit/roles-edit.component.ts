@@ -31,7 +31,7 @@ export class RolesEditComponent implements OnInit {
     private api: ApiService, public dialogRef: MatDialogRef<RolesEditComponent>, public _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public dataRolEdit: any, public log_module: LogService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.role_edit_codigo = this.dataRolEdit.dataRolEdit.codigo;
 

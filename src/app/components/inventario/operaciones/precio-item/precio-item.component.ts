@@ -56,8 +56,8 @@ export class PrecioItemComponent implements OnInit {
     public log_module: LogService, private _formBuilder: FormBuilder, public itemservice: ItemServiceService,
     public servicioPrecioVenta: ServicioprecioventaService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
     this.mandarNombre();
@@ -80,9 +80,8 @@ export class PrecioItemComponent implements OnInit {
   }
 
   getAllitem() {
-    let user_conn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/catalogo/' + user_conn)
+    return this.api.getAll('/inventario/mant/initem/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.item = datav;

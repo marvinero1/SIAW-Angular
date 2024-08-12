@@ -19,15 +19,15 @@ export class CatalogoInventarioComponent implements OnInit {
     this.mandarInventario();
   };
 
-  @HostListener('dblclick') onDoubleClicked2(){
+  @HostListener('dblclick') onDoubleClicked2() {
     this.mandarInventario();
   };
 
-  inventario_get:any=[];
+  inventario_get: any = [];
   public inventario_view: any = [];
   userConn: string;
 
-  displayedColumns = ['id','descripcion'];
+  displayedColumns = ['id', 'descripcion'];
 
   dataSource = new MatTableDataSource<CatalogoInventario>();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -42,15 +42,15 @@ export class CatalogoInventarioComponent implements OnInit {
 
   myControlDescripcion = new FormControl<string | CatalogoInventario>('');
 
-  constructor(private api:ApiService, public dialogRef: MatDialogRef<CatalogoInventarioComponent>,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<CatalogoInventarioComponent>,
     private servicioInventario: ServicioInventarioService) {
-    
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.getInventarios();
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {
@@ -66,7 +66,7 @@ export class CatalogoInventarioComponent implements OnInit {
         return name ? this._filter(name as string) : this.options.slice();
       }),
     );
-    
+
     this.myInputField.nativeElement.focus();
   }
 
@@ -77,7 +77,7 @@ export class CatalogoInventarioComponent implements OnInit {
     return this.options.filter(option => option.id.toLowerCase().includes(filterValue));
   }
 
-  applyFilter(event: Event){
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     console.log(this.dataSource.filter);
@@ -87,9 +87,9 @@ export class CatalogoInventarioComponent implements OnInit {
     return user && user.id ? user.id : '';
   }
 
-  getInventarios(){
+  getInventarios() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/oper/prgcrearinv/catalogointipoinv/'+this.userConn)
+    return this.api.getAll('/inventario/oper/prgcrearinv/catalogointipoinv/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.inventario_get = datav;
@@ -99,28 +99,28 @@ export class CatalogoInventarioComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
         },
-    
-        error: (err: any) => { 
+
+        error: (err: any) => {
           console.log(err, errorMessage);
         },
         complete: () => { }
       })
   }
 
-  mandarInventario(){
+  mandarInventario() {
     this.servicioInventario.disparadorDeInventarios.emit({
-      inventario:this.inventario_view,
+      inventario: this.inventario_view,
     });
 
-   this.close();
+    this.close();
   }
 
-  getDescripcionView(element){
+  getDescripcionView(element) {
     this.inventario_view = element;
     console.log(this.inventario_view);
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

@@ -45,7 +45,7 @@ export class VehiculoComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.getAllVehiculos();
@@ -111,7 +111,7 @@ export class VehiculoComponent implements OnInit {
 
   editar(dataVehiculoEdit) {
     this.data = dataVehiculoEdit;
-    const dialogRef = this.dialog.open(VehiculoEditComponent, {
+    this.dialog.open(VehiculoEditComponent, {
       data: { dataVehiculoEdit: dataVehiculoEdit },
       width: 'auto',
       height: 'auto'

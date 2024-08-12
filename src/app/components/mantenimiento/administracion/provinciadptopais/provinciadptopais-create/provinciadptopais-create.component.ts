@@ -30,7 +30,9 @@ export class ProvinciadptopaisCreateComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe,
     private api: ApiService, public dialogRef: MatDialogRef<ProvinciadptopaisCreateComponent>, public log_module: LogService,
     public _snackBar: MatSnackBar, private toastr: ToastrService) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
@@ -39,7 +41,6 @@ export class ProvinciadptopaisCreateComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

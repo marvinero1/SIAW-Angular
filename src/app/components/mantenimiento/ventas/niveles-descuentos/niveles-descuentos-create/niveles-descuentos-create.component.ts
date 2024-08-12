@@ -7,7 +7,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-niveles-descuentos-create',
   templateUrl: './niveles-descuentos-create.component.html',
@@ -34,18 +33,15 @@ export class NivelesDescuentosCreateComponent implements OnInit {
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<NivelesDescuentosCreateComponent>,
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService, private spinner: NgxSpinnerService,
-    private toastr: ToastrService, public _snackBar: MatSnackBar,) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    private toastr: ToastrService, public _snackBar: MatSnackBar) {
 
-
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioData = this.createForm();
   }
 
-
   ngOnInit() {
-
   }
 
   createForm(): FormGroup {

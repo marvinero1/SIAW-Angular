@@ -33,8 +33,8 @@ export class NumnotasdemovimientoEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<AreaEditComponent>, public log_module: LogService,
     @Inject(MAT_DIALOG_DATA) public dataAreaEdit: any, private api: ApiService, private datePipe: DatePipe,
     public _snackBar: MatSnackBar) {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.numnotasmovimientoedit = this.dataAreaEdit.dataAreaEdit;
     console.log(this.numnotasmovimientoedit);

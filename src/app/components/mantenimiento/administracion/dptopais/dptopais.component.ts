@@ -30,6 +30,7 @@ export class DptopaisComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, public log_module: LogService,
     private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.mandarNombre();
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
@@ -40,7 +41,6 @@ export class DptopaisComponent implements OnInit {
   }
 
   getAlldpto() {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/seg_adm/mant/addepto/' + this.userConn)
       .subscribe({

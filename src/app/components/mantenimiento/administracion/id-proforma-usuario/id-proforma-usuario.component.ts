@@ -46,8 +46,8 @@ export class IdProformaUsuarioComponent implements OnInit {
     private toastr: ToastrService, private servicioIDProforma: ServicioidproformaService, public nombre_ventana_service: NombreVentanaService,
     public usuarioservice: ServicioUsuarioService) {
 
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.getAllIdProformaUsuario();
     this.getUsuario();
@@ -68,7 +68,7 @@ export class IdProformaUsuarioComponent implements OnInit {
   }
 
   getAllIdProformaUsuario() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adusuario_idproforma/";
     return this.api.getAll('/seg_adm/mant/adusuario_idproforma/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -141,7 +141,7 @@ export class IdProformaUsuarioComponent implements OnInit {
     let detalle = "idproforma-delete";
     let tipo = "idproforma-DELETE";
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/adusuario_idproforma/";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',

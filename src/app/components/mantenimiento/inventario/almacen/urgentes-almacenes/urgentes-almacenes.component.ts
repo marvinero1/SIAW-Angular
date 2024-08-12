@@ -59,8 +59,8 @@ export class UrgentesAlmacenesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public cod_almacen_solurgente: any, private _formBuilder: FormBuilder,
     public servicioPrecioVenta: ServicioprecioventaService, public dialogRef: MatDialogRef<UrgentesAlmacenesComponent>) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.getMoneda();
     this.getTarifa();

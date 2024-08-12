@@ -32,8 +32,8 @@ export class ResistenciaEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataRoscaEdit: any, private api: ApiService, private datePipe: DatePipe,
     public _snackBar: MatSnackBar, private toastr: ToastrService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.FormularioDataEdit = this.createForm();
   }

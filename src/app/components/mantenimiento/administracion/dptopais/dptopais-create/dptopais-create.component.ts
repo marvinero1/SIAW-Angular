@@ -19,6 +19,8 @@ export class DptopaisCreateComponent implements OnInit {
   public hora_actual = new Date();
   public dataform: any = '';
   public dpto: any = [];
+
+  public userConn
   public usuario_logueado: any;
 
   public ventana = "dptopais-create"
@@ -27,7 +29,10 @@ export class DptopaisCreateComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService,
     private api: ApiService, public dialogRef: MatDialogRef<DptopaisCreateComponent>, public _snackBar: MatSnackBar,
-    private toastr: ToastrService,) {
+    private toastr: ToastrService) {
+
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.FormularioData = this.createForm();
   }
@@ -37,7 +42,6 @@ export class DptopaisCreateComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    this.usuario_logueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -53,10 +57,10 @@ export class DptopaisCreateComponent implements OnInit {
   }
 
   submitData() {
-    let userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /admoneda";
-    return this.api.create("/seg_adm/mant/addepto/" + userConn, data)
+    return this.api.create("/seg_adm/mant/addepto/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
           this.dpto = datav;

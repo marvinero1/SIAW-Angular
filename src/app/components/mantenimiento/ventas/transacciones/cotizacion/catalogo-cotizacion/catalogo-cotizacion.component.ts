@@ -46,8 +46,8 @@ export class CatalogoCotizacionComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<CatalogoCotizacionComponent>, private api: ApiService, private spinner: NgxSpinnerService,
     public servicioCatalogoProformas: ServicioCatalogoProformasService) {
 
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.usuario = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   ngOnInit() {

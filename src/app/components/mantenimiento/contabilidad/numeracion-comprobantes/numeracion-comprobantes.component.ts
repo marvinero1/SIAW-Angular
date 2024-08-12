@@ -44,14 +44,14 @@ export class NumeracionComprobantesComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
-    this.getAllnumcomprob(this.userConn);
+    this.getAllnumcomprob();
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -62,9 +62,9 @@ export class NumeracionComprobantesComponent implements OnInit {
     );
   }
 
-  getAllnumcomprob(userConn) {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/contab/mant/cnnumeracion/' + userConn)
+  getAllnumcomprob() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /contab/mant/cnnumeracion/";
+    return this.api.getAll('/contab/mant/cnnumeracion/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.numcomprob = datav;
@@ -127,7 +127,7 @@ export class NumeracionComprobantesComponent implements OnInit {
   }
 
   eliminar(element): void {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  contab/mant/cnnumeracion/ Delete";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- contab/mant/cnnumeracion/ Delete";
 
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: 'auto',

@@ -24,7 +24,7 @@ export class NumdepositosclienteComponent implements OnInit {
   numDepCli: any = [];
   data: [];
   datanumDepCliEdit_copied: any = [];
-
+  usuarioLogueado: any;
   displayedColumns = ['id', 'descripcion', 'nroactual', 'horareg', 'fechareg', 'usuarioreg', 'codunidad', 'descUnidad', 'accion'];
 
   dataSource = new MatTableDataSource();
@@ -46,13 +46,13 @@ export class NumdepositosclienteComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
     this.mandarNombre();
-    let usuarioLogueado = localStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(localStorage.getItem("usuario_logueado")) : null;
 
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit(): void {
-    this.userConn = localStorage.getItem("user_conn") !== undefined ? JSON.parse(localStorage.getItem("user_conn")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.getAllnumDepClierencias(this.userConn);
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
