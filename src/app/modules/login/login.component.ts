@@ -216,7 +216,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
               console.log("DATOS CORRECTOS");
 
             this.router.navigate(['/']);
-            event.preventDefault();
+            // event.preventDefault();
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);
@@ -272,7 +272,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   conectarBD(bd) {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /login/authenticate/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /Connection/connDBS/";
     return this.api.getAll("/Connection/connDBS/" + bd)
       .subscribe({
         next: (connDBs) => {

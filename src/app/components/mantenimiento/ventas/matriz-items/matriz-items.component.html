@@ -131,15 +131,17 @@
             </a>
           </div>
 
-          <span class="form-control-sm" style="border: 0 !important;">
-            <u>Calcular Empa. por Precio</u>
-            <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
-          </span>
+          <ng-container *ngIf="permiso_para_vista === true">
+            <span class="form-control-sm" style="border: 0 !important;">
+              <u>Calcular Empa. por Precio</u>
+              <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
+            </span>
 
-          <span class="form-control-sm" style="border: 0 !important;">
-            <u>Calcular Empa. por Descuento</u>
-            <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
-          </span>
+            <span class="form-control-sm" style="border: 0 !important;">
+              <u>Calcular Empa. por Descuento</u>
+              <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
+            </span>
+          </ng-container>
         </div>
       </div>
 
@@ -158,22 +160,24 @@
         <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 33%;">&nbsp;
 
         <ng-container *ngIf="item_valido === false">
-          <span style="color: rgb(227, 0, 0);">NO VENTA</span>
+          <span style="color: rgb(227, 0, 0);"><strong>NO VENTA</strong></span>
         </ng-container>
 
         <ng-container *ngIf="item_valido === true">
-          <span style="color: rgb(rgb(0, 171, 0));">SI VENTA</span>
+          <span style="color: rgb(rgb(0, 171, 0));"><strong>SI VENTA</strong></span>
         </ng-container>
         <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
       </div>
 
       <div class="col-md-6">
         <div class="row">
-          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
-            <mat-label>Empaque</mat-label>
-            <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
-              #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
-          </mat-form-field>&nbsp;
+          <ng-container *ngIf="permiso_para_vista === true">
+            <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+              <mat-label>Empaque</mat-label>
+              <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
+                #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
+            </mat-form-field>&nbsp;
+          </ng-container>
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
@@ -183,7 +187,7 @@
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
-            <input type="number" matInput #focusCantidad [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
+            <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
               (keydown)="handleKeyDown($event)" placeholder="{{pedido}}">
           </mat-form-field>
           <mat-icon (click)="loseFocus()">bug_report</mat-icon>
@@ -191,7 +195,6 @@
       </div>
     </div>
   </div>
-
 
   <mat-dialog-content class="dialog-matriz">
     <div class="row">
@@ -252,7 +255,7 @@
 
   <div mat-dialog-footer>
     <!-- Saldos -->
-    <div class="row pl-2 pt-1">
+    <div class="row pl-3 pt-1">
       <ng-container *ngIf="saldoItem > 0; else saldo">
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
           style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
@@ -290,7 +293,8 @@
             (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
         </ng-container>
       </ng-container>
-      <ng-container *ngIf="!almacenes_saldos"></ng-container>
+      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;"><strong><u>F9 = Información
+            Item</u></strong></span>
     </div>
     <!-- finSaldos -->
 

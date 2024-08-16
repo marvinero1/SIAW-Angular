@@ -62,8 +62,8 @@
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" matTooltip="Matriz Item" type="button"
-            (click)="modalMatrizProductos()" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
+            matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
@@ -186,7 +186,6 @@
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
               [(ngModel)]="fecha_actual" [readOnly]="true">
-
             <input type="text" formControlName="fechareg" [(ngModel)]="fecha_actual" hidden>
             <input type="text" formControlName="hora" [(ngModel)]="hora_fecha_server" hidden>
             <input type="text" formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" hidden>
@@ -194,7 +193,6 @@
             <input type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
             <input type="text" formControlName="usuarioreg" [(ngModel)]="usuarioLogueado" hidden>
             <input type="text" formControlName="horaaut" [(ngModel)]="hora_fecha_server" hidden>
-
           </div>
 
           <div class="input-group">

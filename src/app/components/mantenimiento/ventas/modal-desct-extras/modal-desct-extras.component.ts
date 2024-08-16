@@ -113,6 +113,11 @@ export class ModalDesctExtrasComponent implements OnInit {
   }
 
   getPrecioInicial() {
+    this.items_de_proforma = this.items_de_proforma.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
+    }));
+
     let array_post = {
       tabladetalle: this.items_de_proforma,
       dvta: this.cabecera_proforma,

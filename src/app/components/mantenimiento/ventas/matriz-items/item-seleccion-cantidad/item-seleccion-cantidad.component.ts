@@ -61,6 +61,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   isCheckedCantidad: boolean = true;
   isCheckedEmpaque: boolean = false;
   isCheckedEmpaques: boolean = false;
+  permiso_para_vista: boolean;
 
   userConn: any;
   usuarioLogueado: any;
@@ -119,6 +120,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getPermisosBtnPorRol();
     // descuentos
     this.servicioDesctEspecial.disparadorDeDescuentosMatrizCantidad.subscribe(dataDescuento => {
       console.log("Recibiendo Descuento: ", dataDescuento);
@@ -434,6 +436,24 @@ export class ItemSeleccionCantidadComponent implements OnInit {
         console.log("Ninguna opción seleccionada");
         break;
     }
+  }
+
+  getPermisosBtnPorRol() {
+    // esta funcion devuelve un booleano para verificar que tiene permiso para ver el input y la funcional de empaques
+    // esta funcion mas que todo es para Don Percy ya que la matriz se personaliza para su uso exclusivo de el.
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/verColEmpbyUser/";
+    return this.api.getAll('/venta/transac/veproforma/verColEmpbyUser/' + this.userConn + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.permiso_para_vista = datav.veEmpaques;
+          console.log(this.permiso_para_vista);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   enviarItemsAlServicio(items: any[]) {

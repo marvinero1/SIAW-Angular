@@ -31,7 +31,6 @@ export class LogComponent implements OnInit, AfterViewInit {
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     private datePipe: DatePipe, private _formBuilder: FormBuilder) {
 
-    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     // this.api.getRolUserParaVentana('/logs');
 
@@ -39,6 +38,8 @@ export class LogComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.getAllLogAtTheMoment();
   }
 

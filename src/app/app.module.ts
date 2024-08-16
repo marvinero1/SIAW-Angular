@@ -436,6 +436,7 @@ import { ModalTransfeProformaComponent } from '@components/mantenimiento/ventas/
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
+import { ChartModule } from 'primeng/chart';
 
 
 registerLocaleData(es);
@@ -592,6 +593,7 @@ registerPlugin(UndoRedo);
         NgPipesModule,
         HotTableModule,
         ImportsModule,
+        ChartModule,
 
         ToastrModule.forRoot({
             timeOut: 3000,

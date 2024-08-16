@@ -5,15 +5,15 @@
 
 <div class="row">
   <div class="col">
-    <span class="pr-4">{{ session }} </span>|
+    <span class="pr-4">{{ usuarioLogueado }} </span>|
 
     <ng-container *ngIf="nombre_ventana">
       <span class="pr-4">{{ nombre_ventana }} </span>
     </ng-container>
 
     <ng-container *ngIf="!nombre_ventana">
-      <span class="pr-4">S/N</span>|
-    </ng-container>
+      <span class="pr-4">S/N</span>
+    </ng-container>|
 
     <span class="pr-4">{{ BD_storage }} </span>|
 

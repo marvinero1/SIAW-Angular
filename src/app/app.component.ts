@@ -1,10 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { NavigationEnd } from '@angular/router';
 import { SesionExpiradaComponent } from '@pages/errors/sesion-expirada/sesion-expirada.component';
-import { BnNgIdleService } from 'bn-ng-idle';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,17 +14,18 @@ export class AppComponent implements OnInit, AfterViewInit {
   hora_actual = new Date();
   IP_api: any = [];
 
+  userConn: any;
+
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  constructor(private bnIdle: BnNgIdleService, public dialog: MatDialog) {
+  constructor() {
+
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());
   }
 
   ngOnInit(): void {
-
-
     // 900 = 15 minute
     // 600 = 10 minute
     // 60 = 1 minute
@@ -54,11 +51,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  abrirModalSesionExpirada() {
-    this.dialog.open(SesionExpiradaComponent, {
-      width: '450px',
-      height: 'auto',
-      disableClose: true
-    });
-  }
+  // abrirModalSesionExpirada() {
+  //   this.dialog.open(SesionExpiradaComponent, {
+  //     width: '450px',
+  //     height: 'auto',
+  //     disableClose: true
+  //   });
+  // }
 }

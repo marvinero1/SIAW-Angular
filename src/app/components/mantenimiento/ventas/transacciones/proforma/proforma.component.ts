@@ -476,7 +476,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.modalSolicitudUrgente();
   }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    history.pushState(null, '', location.href); // Si se detecta navegación hacia atrás, vuelve al mismo lugar
+  }
+
   ngOnInit() {
+    history.pushState(null, '', location.href); // Coloca un estado en la historia
+
     this.mandarNombre();
     this.getDesctLineaIDTipo();
     this.tipopago = 1;
@@ -1007,6 +1014,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.preparacion;
     }
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
+    }));
 
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
@@ -2388,13 +2400,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   imprimir_zip_importado(zip_json) {
+    this.spinner.show();
     console.log(zip_json);
 
     this.id_tipo_view_get_codigo = zip_json.cabeceraList[0].id;
     this.id_proforma_numero_id = this.id_proforma_numero_id;
     this.getIdTipoNumeracion(zip_json.cabeceraList[0].id);
 
-    this.fecha_actual = this.fecha_actual;
+    this.contra_entrega = zip_json.cabeceraList[0].contra_entrega;
+    this.estado_contra_entrega_input = zip_json.cabeceraList[0].estado_contra_entrega;
+
+    this.fecha_actual = this.datePipe.transform(zip_json.cabeceraList[0].fecha, 'yyyy-MM-dd');
+    this.hora_fecha_server = zip_json.cabeceraList[0].hora;
     this.almacn_parame_usuario = zip_json.cabeceraList[0].codalmacen;
     this.venta_cliente_oficina = zip_json.cabeceraList[0].venta_cliente_oficina;
     this.codigo_cliente = zip_json.cabeceraList[0].codcliente;
@@ -2447,8 +2464,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = zip_json.cabeceraList[0]
-    // //el cuerpo del detalle asignado al carrito
-    this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
@@ -2457,6 +2472,46 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
 
+    this.nombre_cliente_catalogo_real = zip_json.clienteList[0].razonsocial;
+    this.cliente_habilitado_get = zip_json.clienteList[0].habilitado
+    this.des_extra = zip_json.cabeceraList[0].descuentos
+
+
+
+
+    // //el cuerpo del detalle asignado al carrito
+    this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
+    this.etiqueta_get_modal_etiqueta = zip_json.etiquetaList;
+    // this.array_de_descuentos_ya_agregados = zip_json.descuentoList;
+    this.veproforma_iva = zip_json.ivaList;
+    this.recargo_de_recargos = zip_json.recargoList;
+
+    this.getNombreDeDescuentos(zip_json.descuentoList);
+
+
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+  }
+
+  getNombreDeDescuentos(array_descuentos) {
+    console.log(array_descuentos)
+
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/veproforma/getDescripDescExtra/";
+    return this.api.create('/venta/transac/veproforma/getDescripDescExtra/' + this.userConn, array_descuentos)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav)
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
+            ...element,
+            descripcion: element.descrip,
+          }));
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   complemento_proforma: any = [];
@@ -3523,6 +3578,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+          ...element,
+          cumple: element.cumple === 1 ? true : false,
+        }));
 
         let proforma_validar = {
           datosDocVta: this.valor_formulario_copied_map_all,
@@ -4106,6 +4165,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       descripcion: element.descripcion,
     }));
 
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
+    }));
+
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
@@ -4153,6 +4217,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
       ...element,
       descripcion: element.descripcion,
+    }));
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
     }));
 
     let a = {
@@ -5718,7 +5787,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           recargos_array: this.recargo_de_recargos,
           array_de_descuentos_ya_agregados_a_modal: this.array_de_descuentos_ya_agregados,
           cmtipo_complementopf: this.disableSelectComplemetarProforma === false ? 0 : 1,
-          cliente_real: this.codigo_cliente_catalogo_real
+          cliente_real: this.codigo_cliente_catalogo_real,
+
         }
       });
     } else {

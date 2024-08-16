@@ -74,6 +74,10 @@ export class StockActualF9Component implements OnInit {
           // console.log("CUARTA POSICION "+this.data_stock_item[3].itemInfo);
           this.info_cuarto_lugar = this.data_stock_item[3].itemInfo;
           this.stock_cuarto_lugar = this.data_stock_item[3].itemStocks;
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {

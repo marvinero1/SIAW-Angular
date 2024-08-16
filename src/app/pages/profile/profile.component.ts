@@ -31,7 +31,7 @@ export class ProfileComponent {
   }
 
   getRolUser() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/logs/selog/getselogfecha/  --Vista LOG/Angular";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
     return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {

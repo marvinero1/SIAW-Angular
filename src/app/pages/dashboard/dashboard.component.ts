@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   public rol: string;
 
   public ventana = "Dashboard";
+  data_graficar: any;
+  options_grafica: any;
 
   constructor(private api: ApiService, private datePipe: DatePipe, public dialog: MatDialog,
     private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService) {
@@ -47,6 +49,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.getRolUserParaVentana();
+    this.graficarVentasSIAWvsSIA();
   }
 
   getRolUserParaVentana() {
@@ -125,6 +128,69 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         },
         complete: () => { }
       })
+  }
+
+
+
+  graficarVentasSIAWvsSIA() {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+    this.data_graficar = {
+      labels: ['V31101', 'V31102', 'V31103', 'V31104', 'V31201', 'V31202', 'V31203'],
+      datasets: [
+        {
+          label: 'SIA',
+          backgroundColor: documentStyle.getPropertyValue('--blue-500'),
+          borderColor: documentStyle.getPropertyValue('--blue-500'),
+          data: [65, 59, 80, 81, 56, 55, 40]
+        },
+        {
+          label: 'SIAW',
+          backgroundColor: documentStyle.getPropertyValue('--yellow-500'),
+          borderColor: documentStyle.getPropertyValue('--yellow-500'),
+          data: [28, 48, 40, 19, 86, 27, 90]
+        }
+      ]
+    };
+
+    this.options_grafica = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+              weight: 500
+            }
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: true
+          }
+        },
+        y: {
+          ticks: {
+            color: textColorSecondary
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: true
+          }
+        }
+
+      }
+    };
   }
 
   mandarNombre() {

@@ -2790,6 +2790,15 @@
         "hash": "sha512-4B8B+3vFsY4eo33DMKyJPlQ3sBMpPFUZK2dr3O3rXrOGKKbYG44J0XSFkDo1VOQiri5HFEhIeVvItjR2xcazmg=="
       }
     },
+    "npm:@kurkle/color": {
+      "type": "npm",
+      "name": "npm:@kurkle/color",
+      "data": {
+        "version": "0.3.2",
+        "packageName": "@kurkle/color",
+        "hash": "sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw=="
+      }
+    },
     "npm:@leichtgewicht/ip-codec": {
       "type": "npm",
       "name": "npm:@leichtgewicht/ip-codec",
@@ -4905,6 +4914,24 @@
         "hash": "sha512-IDUfoU8jo9DVlB59lDEASAJXTesAEXDZ68DOHI3qg93r5ehVTkMl2x0ixgIyff8NiHeNYXpcOZh3tr6oGbvu9g=="
       }
     },
+    "npm:chart.js@2.9.4": {
+      "type": "npm",
+      "name": "npm:chart.js@2.9.4",
+      "data": {
+        "version": "2.9.4",
+        "packageName": "chart.js",
+        "hash": "sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A=="
+      }
+    },
+    "npm:chart.js": {
+      "type": "npm",
+      "name": "npm:chart.js",
+      "data": {
+        "version": "4.4.3",
+        "packageName": "chart.js",
+        "hash": "sha512-qK1gkGSRYcJzqrrzdR6a+I0vQ4/R+SoODXyAjscQ/4mzuNzySaMCd+hyVxitSY1+L2fjPD1Gbn+ibNqRmwQeLw=="
+      }
+    },
     "npm:ag-grid-community": {
       "type": "npm",
       "name": "npm:ag-grid-community",
@@ -5731,15 +5758,6 @@
         "version": "0.7.0",
         "packageName": "chardet",
         "hash": "sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA=="
-      }
-    },
-    "npm:chart.js": {
-      "type": "npm",
-      "name": "npm:chart.js",
-      "data": {
-        "version": "2.9.4",
-        "packageName": "chart.js",
-        "hash": "sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A=="
       }
     },
     "npm:chartjs-color": {
@@ -20965,7 +20983,7 @@
     },
     {
       "source": "npm:admin-lte",
-      "target": "npm:chart.js",
+      "target": "npm:chart.js@2.9.4",
       "type": "static"
     },
     {
@@ -21206,6 +21224,16 @@
     {
       "source": "npm:admin-lte",
       "target": "npm:uplot",
+      "type": "static"
+    },
+    {
+      "source": "npm:chart.js@2.9.4",
+      "target": "npm:chartjs-color",
+      "type": "static"
+    },
+    {
+      "source": "npm:chart.js@2.9.4",
+      "target": "npm:moment",
       "type": "static"
     },
     {
@@ -21860,12 +21888,7 @@
     },
     {
       "source": "npm:chart.js",
-      "target": "npm:chartjs-color",
-      "type": "static"
-    },
-    {
-      "source": "npm:chart.js",
-      "target": "npm:moment",
+      "target": "npm:@kurkle/color",
       "type": "static"
     },
     {

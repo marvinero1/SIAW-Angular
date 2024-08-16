@@ -1,7 +1,7 @@
 import { AppState } from '@/store/state';
 import { ToggleControlSidebar, ToggleSidebarMenu } from '@/store/ui/actions';
 import { UiState } from '@/store/ui/state';
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,7 @@ const BASE_CLASSES = 'main-header navbar navbar-expand navbar-warning';
   styleUrls: ['./header.component.scss']
 })
 
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   private log: any = [];
 
@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit {
   userConn: any;
   data: any = "";
   usuarioLogueado: any;
+  private intervalId: any; // Variable para almacenar el ID del intervalo
 
   public ventana = "login"
   public detalle = "login-user";
@@ -47,6 +48,16 @@ export class HeaderComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.onToggleMenuSidebar();
+    this.getHoraFechaServidorBckEnd(this.userConn)
+
+    if (this.userConn === null) {
+      console.log("NO USUARIO")
+    } else {
+      // Ejecutar inmediatamente al cargar el componente
+      this.getHoraFechaServidorBckEnd(this.userConn);
+      console.log(this.userConn);
+    }
+
   }
 
   ngOnInit() {
@@ -62,6 +73,23 @@ export class HeaderComponent implements OnInit {
     });
 
     this.getAllLogHistorialRutas();
+
+    // Configura el intervalo para que se ejecute cada 5 minutos (300000 ms)
+    this.intervalId = setInterval(() => {
+      if (this.userConn != null) {
+        this.getHoraFechaServidorBckEnd(this.userConn);
+      } else {
+        console.log("NO USUARIO INTERVAL")
+      }
+    }, 240000); // 300000 ms = 5 minutos 240000ms = 4 minutos
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar el intervalo cuando el componente se destruya para evitar fugas de memoria
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      console.log('Intervalo limpiado al destruir el componente.');
+    }
   }
 
   goBack(): void {
@@ -83,6 +111,26 @@ export class HeaderComponent implements OnInit {
 
   toggleNavbar() {
     this.isNavbarVisible = !this.isNavbarVisible;
+  }
+
+  getHoraFechaServidorBckEnd(user_conn) {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + user_conn)
+      .subscribe({
+        next: (datav) => {
+          console.log("Hora Fecha Servidor cada 2 min: ", datav);
+          // this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
+          // this.hora_fecha_server = datav.horaServidor;
+
+          // console.log(this.fecha_actual, this.hora_fecha_server);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+        }
+      })
   }
 
   getAllLogHistorialRutas() {

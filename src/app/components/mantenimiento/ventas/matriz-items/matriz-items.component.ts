@@ -31,30 +31,63 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
+    if (this.permiso_para_vista === true) {
+      switch (nombre_input) {
+        case '':
+          this.getEmpaqueItem();
+          break;
+        case 'focusEmpaque':
+          this.getEmpaqueItem();
+          break;
+        case 'focusPedido':
+          this.addItemArray();
+          // this.cant_empaque = undefined;
+          // this.cantidad = undefined;
+          break;
+        case 'focusCantidad':
+          // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
+          // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
+          this.addItemArray();
+          // this.cant_empaque = undefined;
+          // this.pedido = undefined;
+          // this.cantidad = undefined;
+          break;
+        case 'idBuscadorHoja':
+          this.getHoja();
+          break;
+      }
+    } else {
+      switch (nombre_input) {
+        case '':
+          this.getEmpaqueItem();
+          break;
+        case 'focusEmpaque':
+          this.getEmpaqueItem();
+          break;
+        case 'focusPedido':
+          // this.addItemArray();
+          // this.cant_empaque = undefined;
+          console.log(this.pedido);
+          if (this.pedido != 0) {
+            const focusedElement = document.activeElement as HTMLElement;
+            let nombre_input = focusedElement.id;
+            console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
 
-    switch (nombre_input) {
-      case '':
-        this.getEmpaqueItem();
-        break;
-      case 'focusEmpaque':
-        this.getEmpaqueItem();
-        break;
-      case 'focusPedido':
-        this.addItemArray();
-        // this.cant_empaque = undefined;
-        // this.cantidad = undefined;
-        break;
-      case 'focusCantidad':
-        // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
-        // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
-        this.addItemArray();
-        // this.cant_empaque = undefined;
-        // this.pedido = undefined;
-        // this.cantidad = undefined;
-        break;
-      case 'idBuscadorHoja':
-        this.getHoja();
-        break;
+            this.focusCantidad();
+          }
+          break;
+        case 'focusCantidad':
+          // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
+          // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
+          this.addItemArray();
+          // this.cant_empaque = undefined;
+          // this.pedido = undefined;
+          // this.cantidad = undefined;
+          break;
+        case 'idBuscadorHoja':
+          this.getHoja();
+          break;
+      }
     }
   }
 
@@ -65,7 +98,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     switch (nombre_input) {
       case 'focusPedido':
-        this.focusMyInput();
+        this.focusCantidad();
         break;
     }
   }
@@ -149,9 +182,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   precio: any = true;
   desct: any = false;
   tamanio_carro: any;
+  permiso_para_vista: boolean;
 
-  @ViewChild("focusPedido") focusPedido1: ElementRef;
+  @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
+  @ViewChild("focusPedido", { static: false }) focusPedido1: ElementRef;
   @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
+
   @ViewChild('example') focusTabla: ElementRef;
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
@@ -210,7 +246,16 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.getTarifa();
   }
 
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    history.pushState(null, '', location.href); // Si se detecta navegación hacia atrás, vuelve al mismo lugar
+    console.warn("HOLA LOLA")
+  }
+
   ngOnInit() {
+    history.pushState(null, '', location.href); // Coloca un estado en la historia
+
+    this.getPermisosBtnPorRol();
     console.log(
       "CODCLIENTE" + this.codcliente_get,
       "TARIFA: " + this.cod_precio_venta_modal_codigo1,
@@ -314,7 +359,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       }
 
       if (nombre_input === 'focusCantidad') {
-        this.pedido = undefined;
+        this.cantidad = undefined;
       }
     }
   }
@@ -603,30 +648,29 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       className: 'my-custom-row-class',
 
       beforeKeyDown: function (e) {
-        switch (e.key) {
-          case 'Enter':
-            console.log("ENTER PARA ENVIAR ITEM A CARRITO");
-            // this.focusPedido();
-            // this.focusPedido.nativeElement.focus();
-            // this.render.selectRootElement('#focusPedido').focus();
-            // this.input1.nativeElement.focus();
-            // this.setFocus();
+        if (self.permiso_para_vista === true) {
+          switch (e.key) {
+            case 'Enter':
+              console.log("ENTER PARA ENVIAR ITEM A CARRITO");
+              // this.focusPedido();
+              // this.focusPedido.nativeElement.focus();
+              // this.render.selectRootElement('#focusPedido').focus();
+              // this.input1.nativeElement.focus();
+              // this.setFocus();
 
-            const focusedElement = document.activeElement as HTMLElement;
-            let nombre_input = focusedElement.id;
-            console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
+              const focusedElement = document.activeElement as HTMLElement;
+              let nombre_input = focusedElement.id;
+              console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
 
-            self.focusEmpaque();
-            const focusElement = this.focusEmpaqueElement.nativeElement;
-            focusElement.focus();
+              self.focusEmpaque();
+              const focusElement = this.focusEmpaqueElement.nativeElement;
+              focusElement.focus();
 
-            break;
-          case 'backspace':
-            console.log("Hola lola BACKSPACE");
-            break;
-          case 'F9':
-            self.modalStockActualF9();
-            console.log("Hola lola modalStockActualF9");
+              break;
+            case 'F9':
+              self.modalStockActualF9();
+              console.log("Hola lola modalStockActualF9");
+          }
         }
       }
     });
@@ -677,6 +721,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   focusPedido() {
     this.renderer.selectRootElement('#focusPedido').focus();
+    // this.pedido = 0;
   }
 
   focusEmpaque() {
@@ -686,7 +731,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   focusCantidad() {
-    this.renderer.selectRootElement('#focusCantidad').focus();
+    const focusElement = this.focusPedido1.nativeElement;
+    focusElement.focus();
+    // this.renderer.selectRootElement('#focusCantidad').focus();
+    // this.addItemArray();
   }
 
   focusMyInput() {
@@ -768,7 +816,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     //   this.array_items_proforma_matriz.push(array);
     // }
 
-    this.array_items_seleccionado.push(array);
+    if (this.pedido != 0 && this.pedido != undefined) {
+      this.array_items_seleccionado.push(array);
+    } else {
+      this.toastr.warning("El Pedido Cantidad No Puede ser 0");
+    }
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
     this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
@@ -1040,6 +1092,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Descuento"
     };
 
+    // if (this.cant_empaque === undefined) {
+    //   this.cant_empaque = 0;
+    // }
+
     if (this.cant_empaque === 0) {
       const focusedElement = document.activeElement as HTMLElement;
       focusedElement.id = nombre_input;
@@ -1054,7 +1110,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
-            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque === undefined ? 0 : this.cant_empaque);
             this.pedido = datav.total;
             this.cantidad = datav.total;
 
@@ -1062,6 +1118,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           },
 
           error: (err: any) => {
+            this.pedido = 0;
+
             console.log(err, errorMessage);
           },
           complete: () => {
@@ -1115,6 +1173,24 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         console.log(this.elementoActual);
         this.getAllHojaControls(this.elementoActual);
     }
+  }
+
+  getPermisosBtnPorRol() {
+    // esta funcion devuelve un booleano para verificar que tiene permiso para ver el input y la funcional de empaques
+    // esta funcion mas que todo es para Don Percy ya que la matriz se personaliza para su uso exclusivo de el.
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/verColEmpbyUser/";
+    return this.api.getAll('/venta/transac/veproforma/verColEmpbyUser/' + this.userConn + "/" + this.usuario_logueado)
+      .subscribe({
+        next: (datav) => {
+          this.permiso_para_vista = datav.veEmpaques;
+          console.log(this.permiso_para_vista);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   getAllHojaControls(hoja) {

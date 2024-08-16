@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 export interface PeriodicElement {
   numero: number;
+  descuento: number;
   subtotal: number;
   recargos: number;
   montoiva: number;
@@ -10,17 +11,17 @@ export interface PeriodicElement {
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
-  { numero: 1, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 1, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 2, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 3, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 4, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 5, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 6, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 7, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 8, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 9, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 10, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
+  { numero: 11, descuento: 0.00, subtotal: 528.65, recargos: 0.00, montoiva: 1.0079, total: 582.20 },
 ];
 
 @Component({
@@ -32,9 +33,17 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
   nombre_ventana: string = "prgfacturarNR_cufd.vb";
   almacn_parame_usuario: any = [];
+  selectedItems!: any[];
+
+  fecha_actual: Date;
 
   displayedColumns: string[] = ['numero', 'subtotal', 'recargos', 'montoiva', 'total'];
   dataSource = ELEMENT_DATA;
+
+  items = Array.from({ length: 100000 }, (_, i) => ({
+    label: `20240812 #${i}`, value: i + `VALOR CRECIENTE`
+  }))
+
 
   // dataSource = new MatTableDataSource();
   // dataSourceWithPageSize = new MatTableDataSource();

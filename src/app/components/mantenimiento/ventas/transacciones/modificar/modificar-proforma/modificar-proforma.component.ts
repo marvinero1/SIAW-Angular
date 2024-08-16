@@ -504,8 +504,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     // this.modalSolicitudUrgente();
   }
-
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    history.pushState(null, '', location.href); // Si se detecta navegación hacia atrás, vuelve al mismo lugar
+  }
   ngOnInit() {
+    history.pushState(null, '', location.href); // Coloca un estado en la historia
     this.getDesctLineaIDTipo();
     this.tipopago = 1;
     this.transporte = "FLOTA";
@@ -3529,33 +3533,50 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     };
     console.log(data_anular);
 
-    // let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/anularProforma/";
-    // return this.api.update('/venta/modif/docmodifveproforma/anularProforma/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage, data_anular)
-    //   .subscribe({
-    //     next: (datav) => {
-    //       console.log(datav);
-    //       // se guarda LOG al anular
-    //       this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
-    //       this.toastr.success(datav.resp);
-    //       setTimeout(() => {
-    //         this.spinner.hide();
-    //       }, 1000);
-    //     },
+    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ SEGURO QUE DESEA ANULAR LA PROFORMA: " + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + "?" },
+      disableClose: true,
+    });
 
-    //     error: (err: any) => {
-    //       console.log(err, errorMessage);
-    //       setTimeout(() => {
-    //         this.spinner.hide();
-    //       }, 1000);
-    //     },
+    dialogRef.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/anularProforma/";
+        return this.api.update('/venta/modif/docmodifveproforma/anularProforma/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage, data_anular)
+          .subscribe({
+            next: (datav) => {
+              console.log(datav);
+              // se guarda LOG al anular
+              this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+              this.toastr.success(datav.resp);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+            },
 
-    //     complete: () => {
-    //       // window.location.reload();
-    //       setTimeout(() => {
-    //         this.spinner.hide();
-    //       }, 1000);
-    //     }
-    //   })
+            error: (err: any) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+            },
+
+            complete: () => {
+              // window.location.reload();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+            }
+          })
+      }
+
+    });
+
+
+
+
+
   }
 
   formatNumber(number: number): any {
