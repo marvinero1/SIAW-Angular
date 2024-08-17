@@ -41,8 +41,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           break;
         case 'focusPedido':
           this.addItemArray();
-          // this.cant_empaque = undefined;
-          // this.cantidad = undefined;
+          //this.cant_empaque = undefined;
+          this.cantidad = this.pedido;
           break;
         case 'focusCantidad':
           // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
@@ -187,6 +187,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
   @ViewChild("focusPedido", { static: false }) focusPedido1: ElementRef;
   @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
+  @ViewChild('exampleRef') exampleElement: ElementRef;
 
   @ViewChild('example') focusTabla: ElementRef;
 
@@ -455,6 +456,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.cantidad = undefined;
   }
 
+  applyFocusMatriz() {
+
+  }
+
   getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo1 + "/" + this.descuento_get + "/" + item + "/" + this.agencia + "/" + this.BD_storage)
@@ -518,6 +523,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             this.hojas = datav;
             console.log(this.hojas);
             this.initHandsontable(this.hojas);
+
+            this.applyFocusMatriz();
           },
 
           error: (err: any) => {
@@ -578,6 +585,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       rowHeaders: false,
       colHeaders: true,
       selectionMode: 'multiple',
+      navigableHeaders: true, // New accessibility feature
+      tabNavigation: true, // New accessibility feature
       columns: [
         {
           data: 'a',
@@ -679,7 +688,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       const selectedCoords = hot.getSelected();
       if (selectedCoords) {
         const [startRow, startCol] = selectedCoords[0];
-        // console.log('Coordenada de la celda seleccionada:', startRow, startCol);
+        console.log('Coordenada de la celda seleccionada:', startRow, startCol);
         // Obtener la data de la celda seleccionada
         const cellData = hot.getDataAtCell(startRow, startCol);
         this.valorCelda = cellData;
@@ -787,12 +796,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       console.log("El item ya existe en el array.");
       this.toastr.warning('¡EL ITEM YA ESTA EN CARRITO!');
 
-      this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
-      this.focusEmpaqueElement.nativeElement.focus();
 
-      this.cant_empaque = 0;
-      this.pedido = 0;
-      this.cantidad = 0;
+      // Luego, para quitar el foco
+      this.focusEmpaqueElement.nativeElement.blur();
+
+      this.cant_empaque = undefined;
+      this.pedido = undefined;
+      this.cantidad = undefined;
       return;
     }
 
@@ -1118,8 +1128,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           },
 
           error: (err: any) => {
-            this.pedido = 0;
-
+            this.pedido = undefined;
+            this.cantidad = this.pedido;
             console.log(err, errorMessage);
           },
           complete: () => {

@@ -32,8 +32,8 @@
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 19px;"><u>Almacen</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                [value]="almacn_parame_usuario" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario_almacen"
+                [value]="almacn_parame_usuario_almacen" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
@@ -49,8 +49,7 @@
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 5px;">
                   <u># Caja Factura</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                [value]="almacn_parame_usuario" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" value="0" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
@@ -63,9 +62,10 @@
           <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 19px;"><u>Fecha</u></span>
+                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 19px;"><u>Fecha: </u></span>
               </div>
-              <input type="date" class="form-control form-control-sm" style="margin-left: 5px;" disabled>
+              <input type="date" class="form-control form-control-sm" style="margin-left: 5px;"
+                [(ngModel)]="fecha_actual" disabled>
             </div>
           </div>
         </div>
@@ -76,7 +76,8 @@
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 33px;"><u>CUFD</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" [(ngModel)]="CUFD"
+                disabled>
             </div>
           </div>
         </div>
@@ -87,7 +88,8 @@
               <div class="input-group-prepend">
                 <span class="input-group-text form-control-sm" style="padding: 7px 1px ;"><u>Cod. Control</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                [(ngModel)]="cod_control" disabled>
             </div>
           </div>
           <div class="col-md-2"></div>
@@ -98,7 +100,7 @@
                   <u>Factura en: &nbsp;</u></span>
               </div>
               <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                style="background-color: black;color: yellow;" disabled>
+                style="background-color: black;color: yellow;" [(ngModel)]="moneda_get_catalogo" disabled>
             </div>
           </div>
         </div>
@@ -116,8 +118,8 @@
                   <u>Nota
                     Remisión</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                [value]="almacn_parame_usuario" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" [ngModel]="id_proforma_numero_id"
+                [value]="id_proforma_numero_id" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
@@ -217,9 +219,8 @@
                   <u>Fecha</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                [value]="almacn_parame_usuario" style="margin-left: 5px;background-color: black;color: yellow;"
-                disabled>
+              <input type="text" class="form-control form-control-sm" [ngModel]="fecha_actual" [value]="fecha_actual"
+                style="margin-left: 5px;background-color: black;color: yellow;" disabled>
             </div>
           </div>
         </div>

@@ -4,7 +4,8 @@
       <div class="col-md-9" style="padding-left: 20px;">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
           <mat-label># Hoja</mat-label>
-          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja">
+          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja"
+            name="enable-tab-navigation">
         </mat-form-field>
         <button mat-raised-button color="secondary" (click)="getHoja();">
           <i class="fa fa-search"></i>
@@ -142,6 +143,7 @@
               <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
             </span>
           </ng-container>
+          <!-- <button (click)="applyFocusMatriz()"> FOCUS</button> -->
         </div>
       </div>
 
@@ -188,8 +190,9 @@
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
             <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              (keydown)="handleKeyDown($event)" placeholder="{{pedido}}">
+              (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : 'Placeholder predeterminado'">
           </mat-form-field>
+
           <mat-icon (click)="loseFocus()">bug_report</mat-icon>
         </div>
       </div>
@@ -198,8 +201,8 @@
 
   <mat-dialog-content class="dialog-matriz">
     <div class="row">
-      <div class="col-lg-9" style="max-width: 80% !important;">
-        <hot-table id="example"></hot-table>
+      <div class="col-lg-9" style="max-width: 70% !important;">
+        <hot-table id="example" #exampleRef tabindex="0"></hot-table>
       </div>
 
       <div class="col-sm-3" style="padding: 0px !important;max-width: 24%;">
