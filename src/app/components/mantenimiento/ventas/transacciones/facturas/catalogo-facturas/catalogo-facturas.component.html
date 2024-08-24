@@ -1,0 +1,61 @@
+<div class="p-1">
+  <div class="tittle">Catálogo Facturas</div>
+  <div class="p-1 mat-elevation-z8">
+    <div class="row ">
+      <div class="col-md-8" style="padding: 15px 20px 2px;text-align: left;">
+        <p><strong>Factura:</strong> &nbsp; {{ nota_remision_view.id }} - {{ nota_remision_view.descripcion }}</p>
+      </div>
+      <div class="col-md-4 text-center p-2">
+        <a mat-stroked-button color="primary" (click)="mandarFactura();">
+          <i class="fa fa-check"></i></a>
+        <a mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team bg-white scrollmenu">
+        <p-table #dt1 [value]="nota_remisions" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
+          selectionMode="single" styleClass="p-datatable-striped" [paginator]="true"
+          [(selectedRow)]="selectenota_remisions" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]"
+          [(selection)]="selectenota_remisions" (onRowSelect)="getProformabyId($event)"
+          styleClass="p-datatable-striped tablita" [globalFilterFields]="['id', 'descripcion']">
+
+          <ng-template pTemplate="caption" styleClass="p-datatable-striped">
+            <div class="flex">
+              <span class="p-input-icon-left ml-auto">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
+                  pAutoFocus [autofocus]="true" />
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr style="background-color: #093070 !important;">
+              <th pSortableColumn="codigo" class="text-center">
+                Código
+                <p-sortIcon field="codigo"></p-sortIcon>
+              </th>
+              <th pSortableColumn="descripcion" class="text-center">
+                Descripción
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-nota_remisions let-rowIndex="rowIndex">
+            <tr #para [pSelectableRow]="nota_remisions" [pSelectableRowIndex]="rowIndex" tabindex="-1">
+              <td class="text-center">
+                {{ nota_remisions.id }}
+              </td>
+              <td class="text-center">
+                {{ nota_remisions.descripcion }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+</div>

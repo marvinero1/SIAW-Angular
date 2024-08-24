@@ -83,7 +83,7 @@
       <span class="pe">{{ data_cabecera_footer_proforma.rdireccion }}</span>
     </div>
     <div class="col-sm-5 left">
-      <p class="pe"><strong>Teléfono: </strong> {{ data_cabecera_footer_proforma.rtelefono }}</p>
+      <p class="pe"><strong>Teléfono: </strong> {{ data_detalle_etiqueta.telefono }}</p>
     </div>
   </div>
 
@@ -104,6 +104,7 @@
           <th class="center" style="font-weight: 100 !important;">#</th>
           <th class="center" style="font-weight: 100 !important;">CODIGO</th>
           <th width="450" class="center" style="font-weight: 100 !important;">DESCRIPCION</th>
+
           <th class="center" style="font-weight: 100 !important;">UD.</th>
           <th class="center" style="font-weight: 100 !important;">CANT. PEDIDA</th>
           <th class="center" style="font-weight: 100 !important;">TP</th>
@@ -119,9 +120,9 @@
           <td width="450">
             <div class="row">
               <div class="col-md left" style="font-size: 0.8rem !important;">
-                {{items.descripcion}} - {{items.medida}}
+                {{items.descripcion}}
               </div>
-              <!-- <div class="col-md-4 right" style="font-size: 0.8rem !important;"> </div> -->
+              <div class="col-md-4 right" style="font-size: 0.8rem !important;">{{items.medida}} </div>
             </div>
           </td>
           <td class="center" style="font-size: 0.8rem !important;">{{ items.udm }}</td>

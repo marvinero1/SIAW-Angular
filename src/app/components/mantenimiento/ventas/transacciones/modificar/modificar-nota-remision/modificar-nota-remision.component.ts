@@ -307,7 +307,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
             this.openConfirmacionDialog(datav.resp);
           }
 
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+          this.toastr.success('! TRANSFERENCIA CON EXITO ! ✅');
           this.spinner.show();
 
           setTimeout(() => {
@@ -906,13 +906,14 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
+      this.spinner.show();
       if (result) {
         const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/anularNR/ `;
 
         this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/"
           + this.autUltInventario + "/" + this.autNResReversion, []).subscribe({
             next: (datav) => {
-              this.toastr.info("GUARDADO CON EXITO ✅");
+              this.toastr.info("ANULADO CON EXITO ✅");
               this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
               this.codigo_control = datav.tipoPermiso;
               console.log(datav);
@@ -1020,7 +1021,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
             error: (err) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL ANULAR !');
+              this.toastr.error('! NO SE ANULO, OCURRIO UN PROBLEMA !');
 
               setTimeout(() => {
                 this.spinner.hide();
@@ -1035,8 +1036,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
           });
       }
     });
-
-
   }
 
   cambiarFechaAnulacion() {
@@ -1052,6 +1051,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/cambiarFechaAnulNR/`;
         this.api.update('/venta/modif/docmodifveremision/cambiarFechaAnulNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.datePipe.transform(this.fecha_anulacion_input, 'yyyy-MM-dd') + "/false", []).subscribe({
           next: (datav) => {
+            this.spinner.show();
             this.toastr.info("FECHA ANULACION ACTUALIZADA ✅");
             this.log_module.guardarLog(this.ventana, "Modificar" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
@@ -1082,6 +1082,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:-/venta/modif/docmodifveremision/getPlanPagosFalt/`;
     this.api.create('/venta/modif/docmodifveremision/genPlanPagosFalt/' + this.userConn + "/" + this.codigo_proforma + "/" + this.BD_storage, []).subscribe({
       next: (datav) => {
+        this.spinner.show();
         this.toastr.info("PLAN DE PAGOS CREADO ✅");
         this.log_module.guardarLog(this.ventana, "Crear" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 

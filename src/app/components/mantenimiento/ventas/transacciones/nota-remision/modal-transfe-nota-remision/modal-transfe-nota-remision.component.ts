@@ -99,7 +99,7 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
           console.log(datav);
           if (datav.resp === "Transfiriendo Proforma") {
             this.transferirANotaRemision(datav.codProforma);
-            this.toastr.success(datav.resp);
+            this.toastr.success(datav.resp.toUpperCase());
           } else {
             this.toastr.success("Proforma No Transferida");
           }

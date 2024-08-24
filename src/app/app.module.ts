@@ -437,6 +437,7 @@ import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog
 import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
 import { ChartModule } from 'primeng/chart';
+import { CatalogoFacturasComponent } from '@components/mantenimiento/ventas/transacciones/facturas/catalogo-facturas/catalogo-facturas.component';
 
 
 registerLocaleData(es);
@@ -521,7 +522,7 @@ registerPlugin(UndoRedo);
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
         ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
-        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent
+        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent,
 
 
 
@@ -596,9 +597,11 @@ registerPlugin(UndoRedo);
         ChartModule,
 
         ToastrModule.forRoot({
-            timeOut: 3000,
+            timeOut: 5000, // Duración infinita
             positionClass: 'toast-top-right',
-            preventDuplicates: true
+            preventDuplicates: true,
+            extendedTimeOut: 0, // No desaparecer cuando se detiene el hover
+            tapToDismiss: true, // No se oculta al hacer clic
         })],
 
     providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,

@@ -43,8 +43,8 @@ export class ApiService {
   public periodo_abierto;
   public statusInternet: boolean = true;
 
-  private readonly API_URL = 'http://192.168.30.6/API_SIAW/api';
-  // private readonly API_URL = 'http://192.168.31.240/API_SIAW/api';
+  // private readonly API_URL = 'http://192.168.30.6/API_SIAW/api';
+  private readonly API_URL = 'http://192.168.31.240/API_SIAW/api';
 
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,

@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
+import { CatalogoNotasRemisionComponent } from '../nota-remision/catalogo-notas-remision/catalogo-notas-remision.component';
+import { CatalogoFacturasComponent } from '../facturas/catalogo-facturas/catalogo-facturas.component';
+import { CatalogoFacturasService } from '../facturas/catalogo-facturas/servicio-catalogo-facturas/catalogo-facturas.service';
 export interface PeriodicElement {
   numero: number;
   descuento: number;
@@ -70,14 +73,15 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
   items = Array.from({ length: 100000 }, (_, i) => ({
     label: `20240812 #${i}`, value: i + `VALOR CRECIENTE`
-  }))
-
+  }));
 
 
   // dataSource = new MatTableDataSource();
   // dataSourceWithPageSize = new MatTableDataSource();
 
-  constructor(public dialog: MatDialog, private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService) {
+  constructor(public dialog: MatDialog, private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService,
+    private servicioFacturas: CatalogoFacturasService) {
+
     this.cod_control = '9F6F73D67AE8E74'
     /*let usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;*/
 
@@ -88,15 +92,23 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-
+  id_factura_catalogo: any;
   ngOnInit() {
+    this.servicioFacturas.disparadorDeIDFacturas.subscribe(data => {
+      console.log("Recibiendo ID Tipo: ", data);
+      this.id_factura_catalogo = data.factura.id;
+    });
+
+
     this.fecha_actual_format = this.datePipe.transform(this.fecha_actual, 'dd-MM-yyyy');
 
     this.mandarNombre();
     this.getHoraFechaServidorBckEnd();
     this.getAlmacenParamUsuario();
     this.getAllmoneda();
+    this.getIdTipo();
   }
+
 
   getHoraFechaServidorBckEnd() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
@@ -118,6 +130,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
         }
       })
   }
+
 
   getAllmoneda() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
@@ -143,6 +156,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
       })
   }
 
+
   getAlmacenParamUsuario() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -162,14 +176,15 @@ export class FacturaNotaRemisionComponent implements OnInit {
       })
   }
 
+
   getIdTipo() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/catalogoNumProf/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veremision/getParametrosIniciales/";
     return this.api.getAll('/venta/transac/veremision/getParametrosIniciales/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           console.log('data', datav);
-          this.almacn_parame_usuario_almacen = datav.id;
-          this.id_proforma_numero_id = datav.numeroid;
+          //this.almacn_parame_usuario_almacen = datav.id;
+          this.id_proforma_numero_id = datav.id;
           this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.moneda_get_catalogo = datav.codmoneda;
           //this.tdc = datav.codtarifadefect;
@@ -203,6 +218,11 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
 
 
+
+
+
+
+
   modalAlmacen(): void {
     this.dialog.open(ModalAlmacenComponent, {
       width: 'auto',
@@ -211,10 +231,23 @@ export class FacturaNotaRemisionComponent implements OnInit {
     });
   }
 
+  modalTipoID(): void {
+    this.dialog.open(CatalogoNotasRemisionComponent, {
+      width: 'auto',
+      height: 'auto',
+    });
+  }
+
+  modalCatalogoFacturas(): void {
+    this.dialog.open(CatalogoFacturasComponent, {
+      width: 'auto',
+      height: 'auto',
+    });
+  }
+
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
       nombre_vent: this.ventana,
     });
   }
-
 }

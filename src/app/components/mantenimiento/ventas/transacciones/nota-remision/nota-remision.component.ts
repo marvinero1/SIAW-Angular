@@ -28,6 +28,7 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-nota-remision',
   templateUrl: './nota-remision.component.html',
@@ -327,7 +328,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       const dialogRefTransfeProformaCotizacion = this.dialog.open(DialogConfirmActualizarComponent, {
         width: 'auto',
         height: 'auto',
-        data: { mensaje_dialog: "¿ Esta Seguro de Transferir a la Nota de Remision actual?, Se reemplazara el contenido de la proforma actual !" },
+        data: { mensaje_dialog: "¿ ESTA SEGURO QUE DESEA TRANFERIR LA PROFORMA?, SE REMPLAZARA EL CONTENIDO DE LA PROFORMA ACTUALl !" },
         disableClose: true,
       });
 
@@ -554,7 +555,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('Usuario Inexiste! ⚠️');
+          // this.toastr.warning('Usuario Inexiste! ⚠️');
           this.limpiar();
         },
         complete: () => {
@@ -1109,8 +1110,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   sin_validar_monto_total: boolean = false;
   sin_validar_doc_ant_inv: boolean = false;
 
+
+
   // BTN GRABAR NT RMS
   async submitDataNotaRemision(codigo_control) {
+    this.spinner.show();
+
     let a = [this.FormularioData.value].map((element) => ({
       ...element,
       descuentos: this.des_extra,
@@ -1158,8 +1163,26 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
               }
             } else {
-              const result = await this.openConfirmacionDialog(datav.resp, []);
-              if (!result) {
+              // Abrir el diálogo y esperar a que el usuario responda
+              const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+                width: 'auto',
+                height: 'auto',
+                data: { mensaje_dialog: datav.resp + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?" },
+                disableClose: true,
+              });
+
+              // Esperar a que el diálogo se cierre y capturar el resultado
+              const dialogReConfirmImpresion = await dialogRef.afterClosed().toPromise();
+
+              // Procesar la respuesta del diálogo
+              if (!dialogReConfirmImpresion) {
+                console.log("SIN IMPRIMIR");
+                window.location.reload();
+                return;
+              } else {
+                this.mandarAImprimir(datav.codNotRemision);
+                console.log("ENVIO A IMPRIMIR");
+
                 setTimeout(() => {
                   this.spinner.hide();
                 }, 1000);
@@ -1179,7 +1202,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           } catch (error) {
             console.error(error);
-          };
+          }
+
 
           // si el codigo_control es igual a :
           // 3 - sin_validar_negativos,
@@ -1232,8 +1256,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log(err, errorMessage);
                       // this.toastr.error("Formulario T. Entrega Error");
                     },
-                    complete: () => {
-                      this.toastr.success("GUARDADO EXITOSAMENTE");
+                    complete: async () => {
+                      // this.toastr.success("GUARDADO EXITOSAMENTE");
+                      // const resultComplete3 = await this.openConfirmacionDialog("NOTA DE REMISION" + datav.codNotRemision + "-" + datav.nroIdRemision + "GRABADA EXITOSAMENTE", []);
+                      // if (resultComplete3) {
+                      //   this.mandarAImprimir(datav.codNotRemision);
+                      // }
                     }
                   });
               });
@@ -1279,8 +1307,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                     error: (err: any) => {
                       console.log(err, errorMessage);
                     },
-                    complete: () => {
-                      this.toastr.success("GUARDADO EXITOSAMENTE");
+                    complete: async () => {
+                      // this.toastr.success("GUARDADO EXITOSAMENTE");
+                      // const resultComplete25 = await this.openConfirmacionDialog("NOTA DE REMISION" + datav.codNotRemision + "-" + datav.nroIdRemision + "GRABADA EXITOSAMENTE", []);
+                      // if (resultComplete25) {
+                      //   this.mandarAImprimir(datav.codNotRemision);
+                      // }
                     }
                   });
               });
@@ -1329,8 +1361,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log(err, errorMessage);
                       // this.toastr.error("Formulario T. Entrega Error");
                     },
-                    complete: () => {
-                      this.toastr.success("GUARDADO EXITOSAMENTE");
+                    complete: async () => {
+                      // this.toastr.success("GUARDADO EXITOSAMENTE");
+                      // const resultComplete65 = await this.openConfirmacionDialog("NOTA DE REMISION" + datav.codNotRemision + "-" + datav.nroIdRemision + "GRABADA EXITOSAMENTE", []);
+                      // if (resultComplete65) {
+                      //   this.mandarAImprimir(datav.codNotRemision);
+                      // }
                     }
                   });
               });
@@ -1380,8 +1416,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log(err, errorMessage);
                       // this.toastr.error("Formulario T. Entrega Error");
                     },
-                    complete: () => {
-                      this.toastr.success("GUARDADO EXITOSAMENTE");
+                    complete: async () => {
+                      // this.toastr.success("GUARDADO EXITOSAMENTE");
+                      // const resultComplete147 = await this.openConfirmacionDialog("NOTA DE REMISION" + datav.codNotRemision + "-" + datav.nroIdRemision + "GRABADA EXITOSAMENTE", []);
+                      // if (resultComplete147) {
+                      //   this.mandarAImprimir(datav.codNotRemision);
+                      // }
                     }
                   });
               });
@@ -1430,11 +1470,14 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       console.log(err, errorMessage);
                       // this.toastr.error("Formulario T. Entrega Error");
                     },
-                    complete: () => {
-                      this.toastr.success("GUARDADO EXITOSAMENTE");
+                    complete: async () => {
+                      // this.toastr.success("GUARDADO EXITOSAMENTE");
+                      // const resultComplete48 = await this.openConfirmacionDialog("NOTA DE REMISION" + datav.codNotRemision + "-" + datav.nroIdRemision + "GRABADA EXITOSAMENTE", []);
+                      // if (resultComplete48) {
+                      //   this.mandarAImprimir(datav.codNotRemision);
+                      // }
                     }
                   });
-
               });
               break;
 
@@ -1443,65 +1486,27 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
           this.log_module.guardarLog(this.ventana, "Crear" + datav.codproforma, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
-          this.mandarAImprimir(datav.codNotRemision);
+          // this.toastr.success(datav.resp);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         complete: () => {
-          // this.toastr.success(datav.resp);
-          this.toastr.success("GUARDADO EXITOSAMENTE");
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         }
       });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1682,20 +1687,65 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.txtid_solurgente = "0";
     }
     console.log(submit_nota_remision, "SIN MODIFICACION, CLICK GUARDAR MODAL");
-
+    this.spinner.show();
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
       + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
       + this.txtid_solurgente + "/" + this.txtnroid_solurgente + "/true/false/false/false/false/false", submit_nota_remision)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log(datav);
-          this.log_module.guardarLog(this.ventana, "Modificacion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+
+          if (datav.mostrarVentanaModifPlanCuotas === true) {
+            const result = await this.openConfirmacionDialog("", datav.planCuotas);
+            if (!result) {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+              return;
+            }
+          }
 
           // this.toastr.success(datav.resp);
-          this.toastr.success("GUARDADO EXITOSAMENTE");
-          this.cod_nota_remision = datav.codNotRemision
-          this.mandarAImprimir(datav.codNotRemision);
+          // this.toastr.success("NOTA DE REMISION" + datav.codNotRemision + "GRABADA EXITOSAMENTE");
+          // const result = await this.openConfirmacionDialog("NOTA DE REMISION  " + datav.nroIdRemision + "  GRABADA EXITOSAMENTE" + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?", []);
+          // if (!result) {
+          //   this.mandarAImprimir(datav.codNotRemision);
+          //   setTimeout(() => {
+          //     this.spinner.hide();
+          //   }, 1000);
+          //   return;
+          // } else {
+          //   console.warn("SIN IMPRIMIR");
+          // }
+          const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+            width: 'auto',
+            height: 'auto',
+            data: { mensaje_dialog: datav.resp + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?" },
+            disableClose: true,
+          });
+
+          // Esperar a que el diálogo se cierre y capturar el resultado
+          const dialogReConfirmImpresion = await dialogRef.afterClosed().toPromise();
+
+          // Procesar la respuesta del diálogo
+          if (!dialogReConfirmImpresion) {
+            console.log("SIN IMPRIMIR");
+            window.location.reload();
+
+          } else {
+            this.mandarAImprimir(datav.codNotRemision);
+            console.log("ENVIO A IMPRIMIR");
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 1000);
+          }
+
+          this.log_module.guardarLog(this.ventana, "Modificacion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
@@ -1703,6 +1753,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         }
       });
   }
@@ -1725,7 +1778,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.log_module.guardarLog(this.ventana, "Impresion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
           console.log(datav);
-          this.toastr.success("IMPRIMIENDO... 🖨️");
+          this.toastr.success("IMPRIMIENDO 🖨️");
 
           // la data se guarda en la session storage para poder mandarlo a imprimir
           // pero creo q no sera necesario
@@ -1737,7 +1790,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         complete: () => {
-          // window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000)
         }
       });
   }
@@ -1847,7 +1902,15 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
               element.orden = index + 1;
             });
 
-            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
+            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf.sort((a, b) => {
+              if (a.coditem < b.coditem) {
+                return -1;
+              } else if (a.coditem > b.coditem) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });;
           }
         })
     } else {
@@ -1936,7 +1999,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     // Aquí puedes añadir cualquier lógica adicional, como totabilizar después de cambiar la cantidad a 0
     this.totabilizar();
   }
-
 
   onRowUnselect(event: any) {
     console.log('Row Unselected:', event.data);
@@ -2175,12 +2237,14 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
+
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { }
+        complete: () => {
+        }
       });
   }
 

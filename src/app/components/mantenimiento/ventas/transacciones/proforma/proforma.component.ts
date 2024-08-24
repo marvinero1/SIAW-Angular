@@ -687,7 +687,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log("Recibiendo Cliente: ", data);
       this.codigo_cliente_catalogo = data.cliente.codigo;
 
-      this.getClientByID(this.codigo_cliente_catalogo);
+      this.getClientByID(data.cliente.codigo);
       this.getDireccionCentral(data.cliente.codigo);
 
       //si se cambia de cliente, los totales tambien se cambian
@@ -998,8 +998,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: " ",
+        idpf_complemento: element.idpf_complemento === undefined ? "" : element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: "2030-04-10",
@@ -1323,7 +1323,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getClientByID(codigo) {
-    console.log(codigo, this.userConn);
+    console.log(codigo);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vecliente/";
     return this.api.getAll('/venta/mant/vecliente/' + this.userConn + "/" + codigo)
       .subscribe({
@@ -1823,6 +1823,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   empaqueChangeMatrix(element: any, newValue: number) {
+    this.total = 0;
+    this.subtotal = 0;
+    this.iva = 0
+    this.des_extra = 0;
+    this.recargos = 0;
+
     console.log(element);
     var d_tipo_precio_desct: string;
 
@@ -1864,7 +1870,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   pedidoChangeMatrix(element: any, newValue: number) {
     this.total = 0;
     this.subtotal = 0;
-    this.iva = 0
+    this.iva = 0;
     this.des_extra = 0;
     this.recargos = 0;
 
@@ -2274,7 +2280,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log(codigo, id_numero_id);
     const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: '450px',
+      width: '350px',
       height: 'auto',
       data: {
         dataA: codigo,
@@ -2447,6 +2453,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.obs = zip_json.cabeceraList[0].obs;
     this.desct_nivel_actual = zip_json.cabeceraList[0].niveles_descuento;
     this.whatsapp_cliente = "0";
+    this.tipo_cliente = zip_json.clienteList[0].tipo
 
     this.ubicacion_central = zip_json.cabeceraList[0].ubicacion;
     this.preparacion = zip_json.cabeceraList[0].preparacion;
@@ -2461,21 +2468,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.item_seleccionados_catalogo_matriz = zip_json.detalleList[0];
     this.veproforma1 = zip_json.detalleList[0];
 
+
     // //la cabecera asignada a this.veproforma para totalizar y grabar
     this.veproforma = zip_json.cabeceraList[0]
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
 
-    // //this.dataSource = new MatTableDataSource(proforma.detalle);
     // // se dibuja los items al detalle de la proforma
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
 
     this.nombre_cliente_catalogo_real = zip_json.clienteList[0].razonsocial;
-    this.cliente_habilitado_get = zip_json.clienteList[0].habilitado
-    this.des_extra = zip_json.cabeceraList[0].descuentos
-
-
+    this.cliente_habilitado_get = zip_json.clienteList[0].habilitado;
+    this.des_extra = zip_json.cabeceraList[0].descuentos;
 
 
     // //el cuerpo del detalle asignado al carrito
@@ -2484,6 +2489,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.array_de_descuentos_ya_agregados = zip_json.descuentoList;
     this.veproforma_iva = zip_json.ivaList;
     this.recargo_de_recargos = zip_json.recargoList;
+    //this.tabla_anticipos = zip_json.detalleAnticipos = null ? [] : zip_json.detalleAnticipos[0];
+    this.tabla_anticipos = [];
 
     this.getNombreDeDescuentos(zip_json.descuentoList);
 
@@ -2583,7 +2590,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         noridpf_solurgente: "0",
 
         nroidpf_complemento: this.input_complemento_view.toString() === undefined ? "" : this.input_complemento_view.toString(),
-        tipo_complemento: "complemento_para_descto_monto_min_desextra",
+        tipo_complemento: this.tipo_complementopf_input.toString(),
         idpf_complemento: this.idpf_complemento_view,
       }
     });
@@ -2785,13 +2792,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
+      //complementar input
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, //aca es para complemento de proforma
       nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
-      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view, // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
-      nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
+
+      idsoldesctos: "0", // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
+      nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
       monto_anticipo: 0, //anticipo Ventas
-      tipo_complementopf: [{ value: this.dataform.tipo_complementopf, disabled: this.disableSelectComplemetarProforma = false }], //aca es para complemento de proforma
+      tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
@@ -2976,9 +2985,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       codcliente_real: this.codigo_cliente,
       // codcliente_real: this.codigo_cliente_catalogo_real,
       descuentos: this.des_extra,
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
-      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
-      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view,
+      idpf_complemento: this.idpf_complemento_view === undefined ? " " : this.idpf_complemento_view, // complemento de complementar proforma
+      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de complementar proforma
+      tipo_complementopf: this.tipo_complementopf_input === undefined ? 3 : this.tipo_complementopf_input,
+      idsoldesctos: "0",
     };
 
     console.log("Data Form Mapeado: ", data);
@@ -3068,7 +3078,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.spinner.show();
     this.totabilizar();
-    let data1 = this.FormularioData.value;
 
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (array_validacion_existe_aun_no_validos.length > 0 || array_negativos_aun_existe.length > 0) {
@@ -3162,10 +3171,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     data = {
       ...data,
       codcliente_real: this.codigo_cliente,
+      // codcliente_real: this.codigo_cliente_catalogo_real,
       descuentos: this.des_extra,
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, // complemento de proforma
-      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de proforma
-      idsoldesctos: this.idpf_complemento_view === null ? "" : this.idpf_complemento_view,
+      idpf_complemento: this.idpf_complemento_view === undefined ? " " : this.idpf_complemento_view, // complemento de complementar proforma
+      nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de complementar proforma
+      tipo_complementopf: this.tipo_complementopf_input === undefined ? 3 : this.tipo_complementopf_input,
+      idsoldesctos: "0",
     };
 
     // array dtva
@@ -3240,8 +3251,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: "",
+        idpf_complemento: element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -3474,6 +3485,44 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleNoValidos: boolean = false;
 
   validarProformaAll() {
+    //SI EL USUARIO VALIDA PERO NO GRABO PRIMERAMENTE LA ETIQUETA QUE LE SALGA LA VENTANA DE LA ETIQUETA Y Q GRABRE XD XD
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
+    // if (tamanio_array_etiqueta === 0) {
+    //   this.modalClienteEtiqueta();
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     const dialogRefvALIDAR = this.dialog.open(DialogConfirmActualizarComponent, {
       width: '450px',
       height: 'auto',
@@ -3550,6 +3599,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             fechadoc: element.fecha,
             idanticipo: element.idanticipo,
             noridanticipo: element.numeroidanticipo?.toString() || '',
+
             monto_anticipo: 0,
             nrofactura: "0",
             nroticket: "",
@@ -3566,8 +3616,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
             totdesctos_extras: this.des_extra,
             totrecargos: 0,
-            idpf_complemento: "",
-            nroidpf_complemento: "",
+            idpf_complemento: this.idpf_complemento_view,
+            nroidpf_complemento: this.input_complemento_view?.toString(),
+
             idFC_complementaria: "",
             nroidFC_complementaria: "",
             fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -3592,9 +3643,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
         }
 
-        let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
-        console.log(proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
-        console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
+
+        console.log("ARRAY VALIDACIONAL BACKEND:", proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
 
         this.submitted = true;
 
@@ -3757,7 +3807,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
@@ -3777,8 +3826,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: "",
+        idpf_complemento: this.idpf_complemento_view,
+        nroidpf_complemento: this.input_complemento_view?.toString(),
+        tipo_complementopf: this.tipo_complementopf_input,
+
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
@@ -3941,7 +3992,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         latitud: element.latitud_entrega,
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_complemento: tipo_complemento,
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
@@ -3961,8 +4011,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: "",
+
+        idpf_complemento: this.idpf_complemento_view,
+        nroidpf_complemento: this.input_complemento_view?.toString(),
+        tipo_complementopf: this.tipo_complementopf_input,
+
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
@@ -4212,6 +4265,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   aplicarDesctPorDepositoYValidar() {
     this.spinner.show();
     console.log(this.array_de_descuentos_ya_agregados);
+    let tipo_complemento
+    console.log(this.tipo_complementopf_input);
+    switch (this.tipo_complementopf_input) {
+      case 3:
+        tipo_complemento = "";
+        break;
+      case 0:
+        tipo_complemento = "complemento_mayorista_dimediado";
+        break;
+      case 1:
+        tipo_complemento = "complemento_para_descto_monto_min_desextra";
+        break;
+    }
 
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
       ...element,
@@ -4223,10 +4289,82 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       cumple: element.cumple === 1 ? true : false,
     }));
 
+    this.valor_formulario = [this.FormularioData.value];
+    console.log("Valor Formulario Original: ", this.valor_formulario);
+
+    this.valor_formulario.map((element: any) => {
+      if (this.tipopago === 1) {
+        element.contra_entrega = false;
+        element.estado_contra_entrega = "";
+      }
+
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: this.razon_social?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: this.nombre_cliente_catalogo_real,
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: element.preparacion,
+        contra_entrega: element.contra_entrega,
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: element.tipoentrega,
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        tipo_complemento: tipo_complemento,
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: 0,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+        idpf_complemento: element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento,
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+      }
+    });
+
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
-        dvta: this.FormularioData.value,
+        dvta: this.valor_formulario_copied_map_all,
       },
       tabladescuentos: this.array_de_descuentos_ya_agregados,
       tblcbza_deposito: [],
@@ -4252,6 +4390,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.log_module.guardarLog(this.ventana, "proforma_validad_cod" + this.totabilizar_post.codProf, "POST", "", "");
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
           this.totabilizar();
+          this.validarSinDect23();
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -4348,8 +4487,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        idpf_complemento: "",
-        nroidpf_complemento: "",
+        idpf_complemento: element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -4960,7 +5099,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     const file = event.target.files[0];
     console.log(file);
 
-    if (file && file.type === 'application/x-zip-compressed') {
+    if (file.type === 'application/x-zip-compressed' || file.type === 'application/zip') {
       // Crear un FormData y agregar el archivo
       const formData = new FormData();
       formData.append('file', file, file.name);
@@ -5315,6 +5454,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
       element.orden = index + 1;
     });
+
+    this.total = 0;
+    this.subtotal = 0;
 
     // Actualizar el origen de datos del MatTableDataSource
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
@@ -5846,7 +5988,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   //seccion mat-tab Resultado de Validacion
   resolverValidacion() {
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: '450px',
+      width: '350px',
       height: 'auto',
       data: {
         dataA: '00068',

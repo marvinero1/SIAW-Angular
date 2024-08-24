@@ -1,4 +1,5 @@
-<section style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;">
+<section
+  style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;flex: 1;width: 100%;height: 100vh;box-sizing: border-box;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -433,8 +434,8 @@
 
     <!-- inicio Tabla -->
     <div class="row">
-      <div class="col">
-        <mat-tab-group style="height: 40vh !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
+      <div class="col" style="padding-right: 2.5px !important;padding-left: 0px !important;">
+        <mat-tab-group style="height: 25vh !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
           <mat-tab label="Detalle del Pedido">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
@@ -827,11 +828,11 @@
                     <div class="row">
                       <div class="input-group">
                         <span class="input-group-text form-control-sm"
-                          style="height: calc(2.3rem + 5px) !important;padding: 10px 0px 0px 48px;border: 0 !important;">
+                          style="height: calc(1.3rem + 5px) !important;padding: 0px 0px 0px 48px;border: 0 !important;">
                           <u>Dirección</u></span>
 
-                        <textarea class="form-control" formControlName="direccion" [(ngModel)]="direccion_central_input"
-                          rows="1" style="font-size: 0.79rem !important;margin-left: 6px;" readonly></textarea>
+                        <input class="form-control form-control-sm" formControlName="direccion"
+                          [(ngModel)]="direccion_central_input" style="margin-left: 6px;" readonly>
                       </div>
                     </div>
                   </div>
@@ -842,12 +843,12 @@
                     <div class="row">
                       <div class="input-group">
                         <span class="input-group-text form-control-sm"
-                          style="height: calc(2.3rem + 2px) !important;padding: 10px 0px 0px 32px;border: 0 !important;">
+                          style="height: calc(1.3rem + 1px) !important;padding: 10px 0px 0px 32px;border: 0 !important;">
                           <u>Observación</u>
                         </span>
 
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
-                          style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs" readonly></textarea>
+                        <input class="form-control form-control-sm" id="exampleFormControlTextarea1"
+                          style="margin-left: 5px;" formControlName="obs" [(ngModel)]="obs" readonly>
                       </div>
                     </div>
                   </div>

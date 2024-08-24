@@ -5,7 +5,8 @@
   font-family: 'Courier New' !important;
   /* width: 100%; */
   size: auto;
-  margin: 10mm; /* Márgenes de 4mm */
+  margin-left: 10mm;
+  margin-right: 10mm;
 }
 
 .pe{
@@ -36,8 +37,6 @@ table{
 .left{
   text-align: left !important;
 }
-
-
 
 row{
   margin-right: 0px;

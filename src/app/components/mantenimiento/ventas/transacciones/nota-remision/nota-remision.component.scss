@@ -154,10 +154,7 @@ span{
   .mat-mdc-tab-labels{
     height: calc(1.3rem + 0px) !important;
   }
-  .miTabGroupProformaFooter .mat-mdc-tab-body{
-    //height: 14rem !important;
-    height: 195px !important;
-  }
+
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 10px 0px 10px !important;
   }
@@ -266,7 +263,7 @@ span{
 }
 .miTabGroupProformaFooter .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
-  height: 184px !important;
+  height: 138px !important;
 }
 .selected-row {
   background-color: #093070; /* Color de fondo cuando se selecciona la fila */
@@ -343,7 +340,7 @@ span{
   }
   .miTabGroupProformaFooter .mat-mdc-tab-body{
     //height: 14rem !important;
-    height: 165px !important;
+    height: 138px !important;
   }
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 10px 0px 10px !important;
@@ -447,3 +444,5 @@ span{
     background-color: #e9ecef;
   }
 }
+
+

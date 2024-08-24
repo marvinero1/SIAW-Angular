@@ -1,4 +1,4 @@
-<section class="content" style="background-color: #ffe0c0;">
+<section class="content" style="background-color: #ffe0c0;flex: 1;width: 100%;height: 100vh;box-sizing: border-box;">
   <div class="row">
     <div class="col">
       <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="submit">
@@ -104,7 +104,7 @@
             </div>
           </div>
         </div>
-      </div><br>
+      </div>
 
       <div class="mat-elevation-z2 p-2">
         <strong>
@@ -122,7 +122,7 @@
                 [value]="id_proforma_numero_id" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
-                <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
+                <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalTipoID();"
                   style="border-color: green;" matTooltip="Catalogo Notas Remision" matTooltipClass="custom-tooltip"
                   matTooltipPosition="above"><i class="fa fa-search"></i>
                 </button>
@@ -144,10 +144,10 @@
                   <u>Factura</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                [value]="almacn_parame_usuario" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" [ngModel]="id_factura_catalogo"
+                [value]="id_factura_catalogo" style="margin-left: 5px;" disabled>
               <div class="input-group-append">
-                <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
+                <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalCatalogoFacturas();"
                   style="border-color: green;" matTooltip="Catalogo Factura" matTooltipClass="custom-tooltip"
                   matTooltipPosition="above"><i class="fa fa-search"></i>
                 </button>
@@ -159,12 +159,12 @@
               [value]="almacn_parame_usuario" style="margin-left: 5px;"> -->
           </div>
           <div class="col-md-2">
-            <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
-              style="border-color: green;" matTooltip="Buscar Almacen"><i class="fa fa-cog"></i> Generar Factura
+            <button class="btn btn-outline-success form-control-sm right1" type="button" (click)="modalAlmacen();"
+              style="border-color: green;" matTooltip="Generar Factura"><i class="fa fa-cog"></i> Generar Factura
             </button>
           </div>
         </div>
-      </div><br>
+      </div>
 
       <div class="mat-elevation-z2 p-2">
         <strong>
@@ -224,13 +224,13 @@
             </div>
           </div>
         </div>
-      </div><br>
+      </div>
 
       <div class="mat-elevation-z2 p-2">
         <div class="row">
           <div class="col-lg">
             <div class="team scrollmenu">
-              <div class="col-lg-12 pr-lg-4"
+              <div class="col-lg-6 pr-lg-4"
                 style="width: 100%;overflow-x: auto;height: 230px !important; overflow-y: scroll;overflow-x: scroll;">
 
                 <p-table [value]="dataSource" [tableStyle]="{'min-width': '60rem'}"
@@ -241,19 +241,19 @@
                       <th pSortableColumn="nroitem" class="center1" style="width:2%;">
                         #
                       </th>
-                      <th pSortableColumn="orden" class="center1" style="width:8%;">
+                      <th pSortableColumn="orden" class="right1" style="width:8%;">
                         Sub-Total
                         <p-sortIcon class="iconGrid" field="orden" />
                       </th>
-                      <th pSortableColumn="item" style="width:8%;" class="center1">
+                      <th pSortableColumn="item" style="width:8%;" class="right1">
                         <u>Descuentos</u>
                         <p-sortIcon field="item" />
                       </th>
-                      <th pSortableColumn="descripcion" style="width:8%;" class="center">
+                      <th pSortableColumn="descripcion" style="width:8%;" class="right1">
                         Recargos
                         <p-sortIcon field="descripcion" />
                       </th>
-                      <th pSortableColumn="medida" class="center1" style="width:8%">
+                      <th pSortableColumn="medida" class="right1" style="width:8%">
                         Monto I.V.A
                         <!-- <p-sortIcon field="medida"/> -->
                       </th>
@@ -266,11 +266,11 @@
                   <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                     <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}">
                       <td class="center1">{{ products.numero }}</td>
-                      <td class="center1">{{ products.subtotal }}</td>
-                      <td class="center1">{{ products.descuento }}</td>
-                      <td class="center1">{{ products.recargos }}</td>
-                      <td class="center1">{{ products.montoiva }}</td>
-                      <td class="center1">{{ products.total }}</td>
+                      <td class="right1">{{ products.subtotal }}</td>
+                      <td class="right1">{{ products.descuento }}</td>
+                      <td class="right1">{{ products.recargos }}</td>
+                      <td class="right1">{{ products.montoiva }}</td>
+                      <td class="right1">{{ products.total }}</td>
                     </tr>
                   </ng-template>
                 </p-table>
@@ -279,7 +279,7 @@
             </div>
           </div>
         </div>
-      </div><br>
+      </div>
 
       <div class="mat-elevation-z2 p-2">
         <div class="row">
@@ -320,14 +320,14 @@
                 style="text-align:right;margin-left: 5px;" disabled>
             </div>
           </div>
-          <div class="col-md-2"></div>
-          <div class="col-md-3">
+          <!-- <div class="col-md-2"></div> -->
+          <div class="col-md-2">
             <div class="input-group">
-              <img src="assets/img/descargar.png" alt="codigoQR">
+              <img width="75%" src="assets/img/descargar.png" alt="codigoQR">
             </div>
           </div>
-          <div class="col-md-2"></div>
-          <div class="col-md-3">
+          <!-- <div class="col-md-2"></div> -->
+          <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 55px;">
@@ -358,6 +358,21 @@
     </mat-tab>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <mat-tab label="LOG de Transacciones">
       <div style="background-color: black;color: yellow;">
         <span>RESULTADO DE ENVIO DE FACTURA</span>
@@ -366,7 +381,6 @@
         [virtualScrollItemSize]="38" [metaKeySelection]="false" scrollHeight="250px" />
       <br><br>
     </mat-tab>
-
 
 
     <mat-tab label="Resultados de Facturación">
@@ -437,7 +451,6 @@
       </div>
       <br><br>
     </mat-tab>
-
 
     <mat-tab label="Generación Automatica">
 

@@ -36,7 +36,7 @@
                 Código
                 <p-sortIcon field="codigo"></p-sortIcon>
               </th>
-              <th pSortableColumn="nombre" class="text-center" style="width:55%">
+              <th pSortableColumn="nombre" class="text-center" style="width:55%;">
                 Nombre
               </th>
               <th pSortableColumn="nombre" class="text-center" style="width:10%">
@@ -50,10 +50,10 @@
 
           <ng-template pTemplate="body" let-clientes let-rowIndex="rowIndex">
             <tr #para [pSelectableRow]="clientes" [pSelectableRowIndex]="rowIndex" tabindex="-1">
-              <td class="text-center">
+              <td style="text-align: left !important;">
                 {{ clientes.codigo }}
               </td>
-              <td class="text-center">
+              <td style="text-align: left !important;">
                 {{ clientes.nombre }}
               </td>
               <td class="text-center">
