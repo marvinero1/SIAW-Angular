@@ -5014,6 +5014,15 @@
         "hash": "sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ=="
       }
     },
+    "npm:angularx-qrcode": {
+      "type": "npm",
+      "name": "npm:angularx-qrcode",
+      "data": {
+        "version": "18.0.1",
+        "packageName": "angularx-qrcode",
+        "hash": "sha512-LbF6h+IQowZ+kK4kKIBOZgFkKOqvyggPtcfYIgr6Zk6/zWHczh5OZgiQKNqhodwdmuroKGWBVcJWg7l4/dYDWw=="
+      }
+    },
     "npm:ansi-colors": {
       "type": "npm",
       "name": "npm:ansi-colors",
@@ -7003,6 +7012,15 @@
         "hash": "sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q=="
       }
     },
+    "npm:dijkstrajs": {
+      "type": "npm",
+      "name": "npm:dijkstrajs",
+      "data": {
+        "version": "1.0.3",
+        "packageName": "dijkstrajs",
+        "hash": "sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA=="
+      }
+    },
     "npm:dir-glob": {
       "type": "npm",
       "name": "npm:dir-glob",
@@ -7199,6 +7217,15 @@
         "version": "3.0.0",
         "packageName": "emojis-list",
         "hash": "sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q=="
+      }
+    },
+    "npm:encode-utf8": {
+      "type": "npm",
+      "name": "npm:encode-utf8",
+      "data": {
+        "version": "1.0.3",
+        "packageName": "encode-utf8",
+        "hash": "sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw=="
       }
     },
     "npm:encodeurl": {
@@ -11071,6 +11098,15 @@
         "hash": "sha512-k+YsbhpA9e+EFfKjTCH3VW6aoKlyNYI6NYdTfDL4CIvFnvsuO84ttonmZE7rc+v23SLTH8XX+5w/Ak9v0xGY4g=="
       }
     },
+    "npm:pngjs": {
+      "type": "npm",
+      "name": "npm:pngjs",
+      "data": {
+        "version": "5.0.0",
+        "packageName": "pngjs",
+        "hash": "sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw=="
+      }
+    },
     "npm:popper.js": {
       "type": "npm",
       "name": "npm:popper.js",
@@ -11366,6 +11402,15 @@
         "version": "1.2.0",
         "packageName": "qjobs",
         "hash": "sha512-8YOJEHtxpySA3fFDyCRxA+UUV+fA+rTWnuWvylOK/NCjhY+b4ocCtmu8TtsWb+mYeU+GCHf/S66KZF/AsteKHg=="
+      }
+    },
+    "npm:qrcode": {
+      "type": "npm",
+      "name": "npm:qrcode",
+      "data": {
+        "version": "1.5.3",
+        "packageName": "qrcode",
+        "hash": "sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg=="
       }
     },
     "npm:qs": {
@@ -21358,6 +21403,18 @@
         "type": "static"
       }
     ],
+    "npm:angularx-qrcode": [
+      {
+        "source": "npm:angularx-qrcode",
+        "target": "npm:qrcode",
+        "type": "static"
+      },
+      {
+        "source": "npm:angularx-qrcode",
+        "target": "npm:tslib",
+        "type": "static"
+      }
+    ],
     "npm:ansi-escapes": [
       {
         "source": "npm:ansi-escapes",
@@ -27817,6 +27874,28 @@
       {
         "source": "npm:pump",
         "target": "npm:once",
+        "type": "static"
+      }
+    ],
+    "npm:qrcode": [
+      {
+        "source": "npm:qrcode",
+        "target": "npm:dijkstrajs",
+        "type": "static"
+      },
+      {
+        "source": "npm:qrcode",
+        "target": "npm:encode-utf8",
+        "type": "static"
+      },
+      {
+        "source": "npm:qrcode",
+        "target": "npm:pngjs",
+        "type": "static"
+      },
+      {
+        "source": "npm:qrcode",
+        "target": "npm:yargs@15.4.1",
         "type": "static"
       }
     ],

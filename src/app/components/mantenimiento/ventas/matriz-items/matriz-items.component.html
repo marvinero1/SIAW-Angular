@@ -343,18 +343,8 @@
         </div>
 
         <div class="col-md">
-          <table>
-            <tbody>
-              <tr>
-                <td style="float: left;">Empaque Minimo</td>
-                <td style="float: right;"><strong>{{ data_almacen_local.empaque }}</strong></td>
-              </tr>
-              <tr>
-                <td style="float: left;">Peso Minimo</td>
-                <td style="float: right;"><strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</strong></td>
-              </tr>
-            </tbody>
-          </table>
+          <span><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
+          <span><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
         </div>
       </div>
     </mat-dialog-content>

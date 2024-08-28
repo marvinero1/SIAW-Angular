@@ -37,7 +37,7 @@ import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public nombre_ventana: string = "docveremision.vb";
-  public ventana: string = "Notas De Remision";
+  public ventana: string = "Notas De Remision SIAW";
   public detalle = "Notas De Remision";
   public tipo = "transaccion-nota-remision-POST";
 
@@ -152,7 +152,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   // TRANSFERENCIA
   moneda_get_catalogo: string;
   cod_id_tipo_modal_id: string;
-  tipopago: string;
+  tipopago: any;
   transporte: string;
   medio_transporte: string;
   fletepor: string;
@@ -193,7 +193,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // formulario
   tdc: any;
-  cod_proforma: any;
   id_nro_id_proforma: any;
   odc: any;
   nroidpf_complemento: number;
@@ -291,6 +290,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   id_proforma: any;
   nro_id_proforma: any;
   cod_nota_remision: any;
+  tipoventa: any;
+
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
@@ -334,16 +335,17 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
       dialogRefTransfeProformaCotizacion.afterClosed().subscribe((result: Boolean) => {
         if (result) {
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+          this.spinner.show();
+          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ⚙️');
           //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
           this.imprimir_proforma_tranferida(data.proforma_transferir);
+          this.codigo_proforma = data.proforma_transferir.data.cabecera.codigo
 
-          this.spinner.show();
+        } else {
+          this.toastr.error('! CANCELADO ! ❌');
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);
-        } else {
-          this.toastr.error('! CANCELADO ! ❌');
         }
       });
     });
@@ -796,7 +798,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.codigo_cliente = "";
     this.tipopago = "";
     this.estado_contra_entrega_input = "";
-    this.cod_proforma = "";
     this.id_nro_id_proforma = "";
 
     this.transporte = "";
@@ -857,6 +858,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   imprimir_proforma_tranferida(proforma) {
+    this.spinner.show();
     console.log("Imprimir Proforma: ", proforma.data);
 
     this.codigo_proforma = proforma.data.cabecera.codigo;
@@ -891,9 +893,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.codcliente_real_descripcion = proforma.data.codclientedescripcion;
 
     this.tipopago = proforma.data.cabecera.tipopago;
+    this.tipoventa = 0;
     this.estado_contra_entrega_input = proforma.data.cabecera.estado_contra_entrega;
     this.contra_entrega = proforma.data.cabecera.contra_entrega;
-    this.cod_proforma = proforma.data.cabecera.codigo;
+    this.codigo_proforma = proforma.data.cabecera.codigo;
     this.id_nro_id_proforma = proforma.data.cabecera.id + "-" + proforma.data.cabecera.numeroid;
 
     this.transporte = proforma.data.cabecera.transporte;
@@ -980,8 +983,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
+      this.spinner.show();
+
+      // this.spinner.hide();
       this.totabilizarYGrabar();
-    }, 1500); // 300 ms de retardo
+    }, 500); // 300 ms de retardo
   }
 
   createForm(): FormGroup {
@@ -1015,7 +1021,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       cod_descuento: [this.dataform.descuentos],
-      tipopago: [this.dataform.tipopago === 0 ? 0 : 1, Validators.required],
       transporte: [this.dataform.transporte === "FLOTA", Validators.required],
       nombre_transporte: [this.dataform.nombre_transporte, Validators.compose([Validators.required])],
       tipo_docid: [{ value: this.dataform.tipo_docid, disabled: true }, Validators.compose([Validators.required])],
@@ -1033,7 +1038,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       impresa: [false],
       etiqueta_impresa: [false],
       es_sol_urgente: [false],
-      codproforma: [this.dataform.cod_proforma_form],
+      codproforma: this.dataform.codproforma,
       id_nro_id_proforma_form: [this.dataform.id_nro_id_proforma_form],
       complemento_proforma: [this.dataform.complemento_proforma],
       obs: this.dataform.obs ? this.dataform.obs.trim() : '',
@@ -1054,7 +1059,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       contra_entrega: this.dataform.contra_entrega,
       estado_contra_entrega: [this.dataform.estado_contra_entrega],
 
-      tipo_venta: ['0'],
+      tipo_venta: 0,
+      tipopago: [{ value: this.dataform.tipopago === 0 ? 0 : 1, disabled: true }],
+
+      // tipopago: [this.dataform.tipopago],
       odc: "",
 
       idanticipo: [""], //anticipo VentasL
@@ -1124,7 +1132,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       tipo_docid: this.tipo_doc_cliente,
       venta: this.es_venta,
       codalmacen_saldo: this.almacn_parame_usuario_almacen,
-      descarga: true
+      descarga: true,
+      tipo_venta: 0,
+      tipopago: this.tipopago,
     }));
 
     let submit_nota_remision = {
@@ -1139,17 +1149,25 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.txtid_solurgente === "") {
       this.txtid_solurgente = "0";
     }
+
+    //si hay negativos no tiene q dejar grabar
+    // if (this.validacion_post_negativos.length > 0) {
+    //   this.toastr.warning("HAY ITEM'S NEGATIVOS VERIFIQUE, NO SE GRABO");
+    // };
+
     console.log(submit_nota_remision);
     console.log("Valor Bool antes de la funcion:", this.sin_validar_empaques, this.sin_validar_negativos);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/ " + "/ false /" + this.sin_validar_empaques + " / " + this.sin_validar_negativos + " / " + this.sin_validar_monto_min_desc + " / " + this.sin_validar_monto_total + " /" + this.sin_validar_doc_ant_inv
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-      + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+      + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
       + this.txtid_solurgente + "/" + this.txtnroid_solurgente
       + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
       .subscribe({
         next: async (datav) => {
-          codigo_control = datav.codigo_control
+          codigo_control = datav.codigo_control,
+            this.dataSource_negativos = new MatTableDataSource(datav.dtnegativos_result);
+          this.validacion_post_negativos = datav.dtnegativos_result
           console.log("Info data guardada NOTA REMISION: ", datav, "ruta:", errorMessage);
 
           // aca sale el mensaje de la primera validacion
@@ -1165,7 +1183,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
               // Abrir el diálogo y esperar a que el usuario responda
               const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-                width: 'auto',
+                width: '400px',
                 height: 'auto',
                 data: { mensaje_dialog: datav.resp + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?" },
                 disableClose: true,
@@ -1199,11 +1217,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 return;
               }
             }
-
           } catch (error) {
             console.error(error);
           }
-
 
           // si el codigo_control es igual a :
           // 3 - sin_validar_negativos,
@@ -1230,7 +1246,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 let errorMessage = "CODIGO 3 " + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv
 
                 return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-                  + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+                  + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
                   + this.txtid_solurgente + "/" + this.txtnroid_solurgente +
                   "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
                   .subscribe({
@@ -1283,7 +1299,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 let errorMessage = "CODIGO 25  /false/true/false/false/false/false" + "----" + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv;
 
                 return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado + "/" + this.desclinea_segun_solicitud + "/" +
-                  this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/" + this.txtid_solurgente + "/" + this.txtnroid_solurgente +
+                  this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/" + this.txtid_solurgente + "/" + this.txtnroid_solurgente +
                   "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
                   .subscribe({
                     next: async (datav) => {
@@ -1334,7 +1350,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 let errorMessage = "CODIGO 65  /false/true/true/true/false/false" + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv;
 
                 return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-                  + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+                  + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
                   + this.txtid_solurgente + "/" + this.txtnroid_solurgente +
                   "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
                   .subscribe({
@@ -1388,7 +1404,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 let errorMessage = "CODIGO 147  false/true/true/true/true/false" + + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv;
 
                 return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-                  + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+                  + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
                   + this.txtid_solurgente + "/" + this.txtnroid_solurgente
                   + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
                   .subscribe({
@@ -1427,6 +1443,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
               });
               break;
             case 48:
+
               const dialogRefEspeciales_sin_validar_doc_ant_inv = this.dialog.open(PermisosEspecialesParametrosComponent, {
                 width: 'auto',
                 height: 'auto',
@@ -1442,7 +1459,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                 // aca la logica despues de grabar y q salte la validaciones poner aca de nuevo la ruta correcta para q se grabe
                 let errorMessage = "CODIGO 48  /false/true/true/true/true/true" + + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv;
                 return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-                  + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+                  + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
                   + this.txtid_solurgente + "/" + this.txtnroid_solurgente +
                   "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
                   .subscribe({
@@ -1485,7 +1502,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
               break;
           }
 
-          this.log_module.guardarLog(this.ventana, "Crear" + datav.codproforma, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
+          this.log_module.guardarLog(this.ventana, "CREAR" + datav.codproforma, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
           // this.toastr.success(datav.resp);
 
           setTimeout(() => {
@@ -1541,7 +1558,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     return firstValueFrom(dialogRef.afterClosed());
   }
 
-  // MODAL
+  // COMPONENTE
   totabilizarYGrabar() {
     // ACA RUTA 
     // BTN GRABAR DE MODAL
@@ -1555,8 +1572,13 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.toastr.warning("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
     };
+
+    // si hay negativos no tiene q dejar grabar
+    // if (this.validacion_post_negativos.length > 0) {
+    //   this.toastr.warning("HAY ITEM'S NEGATIVOS VERIFIQUE, NO SE GRABO");
+    // };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
       this.habilitar_desct_sgn_solicitud = false;
@@ -1570,7 +1592,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       tipo_docid: this.tipo_doc_cliente,
       venta: this.es_venta,
       codalmacen_saldo: this.almacn_parame_usuario_almacen,
-      descarga: true
+      descarga: true,
+      tipo_venta: 0,
+      tipopago: this.tipopago,
     }));
 
     total_proforma_concat = {
@@ -1594,12 +1618,14 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
       return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-        "false" + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat)
+        "false" + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat).pipe(takeUntil(this.unsubscribe$))
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log(this.totabilizar_post);
             this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+
+            this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
             console.log(this.array_items_carrito_y_f4_catalogo);
             setTimeout(() => {
@@ -1622,10 +1648,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
             this.des_extra = this.totabilizar_post.totales?.descuento;
             this.iva = this.totabilizar_post.totales?.iva;
             this.peso = Number(this.totabilizar_post.totales?.peso);
-            // this.tablaIva = this.totabilizar_post.totales?.tablaIva;
-            const item_procesados_en_total = this.totabilizar_post?.detalleProf;
 
-            // Agregar el número de orden a los objetos de datos
             this.totabilizar_post?.detalleProf.forEach((element, index) => {
               element.orden = index + 1;
             });
@@ -1642,14 +1665,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   disableClose: true,
                 });
 
-                dialogRef.afterClosed().subscribe((result: Boolean) => {
+                dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe((result: Boolean) => {
                   if (result) {
                     console.log("GRABANDO....");
-                    //BTN GRABAR MODAL TRANSFRENCIA
                     this.submitDataNotaRemisiontotabilizarYGrabar();
                   } else {
                     console.log("LE DIO AL CANCELAR, NO GRABAR");
-                    // despues de que se transfiera se totaliza, si le da a cancelar igual se totaliza
                   }
                 });
               }
@@ -1662,7 +1683,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  //MODAL ACA
   submitDataNotaRemisiontotabilizarYGrabar() {
+    console.time('Tiempo de la petición HTTP');
+
     let a = [this.FormularioData.value].map((element) => ({
       ...element,
       descuentos: this.des_extra,
@@ -1671,7 +1695,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       tipo_docid: this.tipo_doc_cliente,
       venta: this.es_venta,
       codalmacen_saldo: this.almacn_parame_usuario_almacen,
-      descarga: true
+      descarga: true,
+      tipo_venta: 0,
+      tipopago: this.tipopago,
     }));
 
     let submit_nota_remision = {
@@ -1690,11 +1716,52 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.show();
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
-      + "/" + this.desclinea_segun_solicitud + "/" + this.cod_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
+      + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
       + this.txtid_solurgente + "/" + this.txtnroid_solurgente + "/true/false/false/false/false/false", submit_nota_remision)
       .subscribe({
         next: async (datav) => {
+          //this.codigo_control = datav.codigo_control,
+          this.dataSource_negativos = new MatTableDataSource(datav.dtnegativos_result);
+          this.validacion_post_negativos = datav.dtnegativos_result
           console.log(datav);
+
+          if (datav.resp === false) {
+            const result = await this.openConfirmacionDialog(datav.msgsAlert, []);
+            if (!result) {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+              return;
+            }
+          } else {
+            const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+              width: '400px',
+              height: 'auto',
+              data: { mensaje_dialog: datav.resp + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?" },
+              disableClose: true,
+            });
+
+            // Esperar a que el diálogo se cierre y capturar el resultado usando takeUntil
+            dialogRef.afterClosed().pipe(takeUntil(this.unsubscribe$)).subscribe(async (dialogReConfirmImpresion) => {
+              // Procesar la respuesta del diálogo
+              if (!dialogReConfirmImpresion) {
+                console.log("SIN IMPRIMIR");
+                window.location.reload();
+                return;
+              } else {
+                this.mandarAImprimir(datav.codNotRemision);
+                console.log("ENVIO A IMPRIMIR");
+
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1000);
+              }
+
+              // Completar el observable para que no vuelva a abrir el diálogo
+              this.unsubscribe$.next();
+              this.unsubscribe$.complete();
+            });
+          }
 
           if (datav.mostrarVentanaModifPlanCuotas === true) {
             const result = await this.openConfirmacionDialog("", datav.planCuotas);
@@ -1704,45 +1771,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
               }, 1000);
               return;
             }
-          }
+          };
+          console.timeEnd('Tiempo de la petición HTTP');
+          console.log('Datos recibidos:');
 
-          // this.toastr.success(datav.resp);
-          // this.toastr.success("NOTA DE REMISION" + datav.codNotRemision + "GRABADA EXITOSAMENTE");
-          // const result = await this.openConfirmacionDialog("NOTA DE REMISION  " + datav.nroIdRemision + "  GRABADA EXITOSAMENTE" + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?", []);
-          // if (!result) {
-          //   this.mandarAImprimir(datav.codNotRemision);
-          //   setTimeout(() => {
-          //     this.spinner.hide();
-          //   }, 1000);
-          //   return;
-          // } else {
-          //   console.warn("SIN IMPRIMIR");
-          // }
-          const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-            width: 'auto',
-            height: 'auto',
-            data: { mensaje_dialog: datav.resp + "¿ DESEA IMPRIMIR LA NOTA DE REMISION ?" },
-            disableClose: true,
-          });
-
-          // Esperar a que el diálogo se cierre y capturar el resultado
-          const dialogReConfirmImpresion = await dialogRef.afterClosed().toPromise();
-
-          // Procesar la respuesta del diálogo
-          if (!dialogReConfirmImpresion) {
-            console.log("SIN IMPRIMIR");
-            window.location.reload();
-
-          } else {
-            this.mandarAImprimir(datav.codNotRemision);
-            console.log("ENVIO A IMPRIMIR");
-
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 1000);
-          }
-
-          this.log_module.guardarLog(this.ventana, "Modificacion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -1750,6 +1783,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          console.timeEnd('Tiempo de la petición HTTP');
+          console.log('Datos recibidos:');
         },
 
         complete: () => {
@@ -2104,9 +2139,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         nroidpf_complemento: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
+        fechalimite_dosificacion: "2030-04-10T00:00:00.532Z",
+
+
+        idpf_solurgente: this.id_proforma.toString(),
+        noridpf_solurgente: this.nro_id_proforma.toString(),
       }
     });
 
@@ -2117,8 +2154,21 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log("DATOS VALIDADOS");
       console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
 
+      if (this.tipopago === 0) {
+        this.tipopago = "CONTADO"
+      } if (this.tipopago === 1) {
+        this.tipopago = "CREDITO"
+      }
+
+      this.valor_formulario_negativos = [this.valor_formulario_negativos].map((element) => ({
+        ...element,
+        id: this.id_proforma,
+        numeroid: this.nro_id_proforma.toString(),
+        tipo_vta: this.tipopago,
+      }));
+
       let proforma_validar = {
-        datosDocVta: this.valor_formulario_negativos,
+        datosDocVta: this.valor_formulario_negativos[0],
         detalleAnticipos: [],
         detalleDescuentos: [],
         //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],

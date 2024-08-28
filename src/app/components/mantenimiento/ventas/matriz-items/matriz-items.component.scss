@@ -126,7 +126,7 @@ th.mat-column-position, td.mat-column-position {
 
   .wtHolder{
     //no mover, medida exacta
-    width: 900px !important;
+    width: 925px !important;
   }
 
   .wtHolder::-webkit-scrollbar {
@@ -239,6 +239,9 @@ td{
   // max-height: 74vh;  /* Ajusta la altura máxima según tus necesidades */
   overflow-y: none;  /* Habilita el scroll vertical */
   scrollbar-width: none;  /* Para navegadores que soportan esta propiedad */
+}
+.card{
+  margin-bottom: 0% !important;
 }
 
 // /* Estilo para navegadores basados en WebKit (Chrome, Safari) */

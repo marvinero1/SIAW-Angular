@@ -146,16 +146,16 @@ export class Interceptor implements HttpInterceptor {
 					break;
 			}
 
-			switch (this.status) {
-				case 401:
-					this.refreshToken();
+			// switch (this.status) {
+			// 	case 401:
+			// 		this.refreshToken();
 
-					this._snackBar.open('¡ USUARIO SIN TOKEN, TOKEN EXPIRADO !', '🚫', {
-						duration: 3000,
-						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
-					});
-					break;
-			}
+			// 		this._snackBar.open('¡ USUARIO SIN TOKEN O TOKEN EXPIRADO !', '🚫', {
+			// 			duration: 3000,
+			// 			panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+			// 		});
+			// 		break;
+			// }
 
 			// switch(this.status){
 			//     case 404:

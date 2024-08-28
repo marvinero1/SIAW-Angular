@@ -41,6 +41,7 @@
     "@profabric/angular-components": "0.1.2",
     "@syncfusion/ej2-popups": "^21.2.3",
     "ag-grid-community": "^31.3.2",
+    "angularx-qrcode": "^18.0.1",
     "bn-ng-idle": "^2.0.5",
     "bootstrap": "4.6.1",
     "chart.js": "^4.4.3",

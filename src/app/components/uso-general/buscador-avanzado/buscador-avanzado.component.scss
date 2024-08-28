@@ -33,9 +33,9 @@
     }
 }
 
-.input-group{
-    width: 45% !important;
-}
+// .input-group{
+//     width: 45% !important;
+// }
 
 .mat-mdc-form-field-input-control.mat-mdc-form-field-input-control{
     padding-top: 8px !important;
@@ -43,4 +43,8 @@
 
 .input-group-text{
     background: none;
+}
+
+span{
+    border: none;
 }

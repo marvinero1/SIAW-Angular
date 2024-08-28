@@ -1098,7 +1098,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: element.estado_contra_entrega === "undefined" ? "NO" : "SI",
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
@@ -1257,7 +1257,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
 
 
-
+  idanticipo: any;
 
 
 
@@ -1308,6 +1308,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.anticipo_button = true;
     }
 
+    this.idanticipo = proforma.cabecera.idanticipo
     //COMPLEMENTAR PROFORMA
     // SI HAY DATA EN nroidpf_complemento ES DECIR QUE ESTA COMPLEMENTADA ENTONCES TIENE Q LLAMAR A LA FUNCION Q COMPLEMENTA
 
@@ -1413,7 +1414,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //complementar proforma
     this.idpf_complemento_view = proforma.cabecera.idpf_complemento;
     this.nroidpf_complemento_view = proforma.cabecera.nroidpf_complemento;
-    this.tipo_complementopf_input = proforma.cabecera.tipo_complementopf - 1;
+    this.tipo_complementopf_input = proforma.cabecera.tipo_complementopf;
 
     // if (this.disableSelectComplemetarProforma === true) {
     //   this.buscadorIDComplementarProforma(proforma.cabecera.idpf_complemento, proforma.cabecera.nroidpf_complemento);
@@ -2744,7 +2745,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: this.estado_contra_entrega_input === undefined ? " " : this.estado_contra_entrega_input,
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
@@ -3648,7 +3649,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   validacionesTodosFilterToggle() {
     this.toggleValidacionesAll = true;
     this.toggleValidos = false;
@@ -3733,7 +3733,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: element.estado_contra_entrega === undefined ? "SI" : "NO",
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
@@ -3746,7 +3746,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         fechadoc: element.fecha,
 
-        idanticipo: element.idanticipo,
+        idanticipo: this.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
 
         monto_anticipo: 0,
@@ -3768,11 +3768,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         idpf_complemento: this.idpf_complemento_view,
         nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
-        tipo_complemento: this.tipo_complementopf_input,
+        tipo_complemento: this.tipo_complementopf_input?.toString(),
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -3790,7 +3791,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         detalleAnticipos: this.tabla_anticipos,
         detalleDescuentos: this.array_de_descuentos_ya_agregados,
         //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
-        detalleEtiqueta: this.etiqueta_get_modal_etiqueta[0],
+        detalleEtiqueta: [this.etiqueta_get_modal_etiqueta[0]],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
         detalleRecargos: [],
       }
@@ -3921,7 +3922,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: element.estado_contra_entrega === undefined ? "SI" : "NO",
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
@@ -3933,7 +3934,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         longitud: element.longitud_entrega,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
         fechadoc: element.fecha,
-        idanticipo: element.idanticipo,
+        idanticipo: this.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
         monto_anticipo: 0,
         nrofactura: "0",
@@ -3954,7 +3955,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         idpf_complemento: this.idpf_complemento_view,
         nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
-        tipo_complemento: this.tipo_complementopf_input,
+        tipo_complemento: this.tipo_complementopf_input?.toString(),
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
@@ -4309,7 +4310,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         vta_cliente_en_oficina: element.venta_cliente_oficina,
         estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
         desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,

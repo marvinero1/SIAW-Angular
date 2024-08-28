@@ -60,6 +60,8 @@ import { ServicioTransfeAProformaService } from './modal-transfe-proforma/servic
 import { ModalTransfeProformaComponent } from './modal-transfe-proforma/modal-transfe-proforma.component';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
+import { MatrizItemsClasicaComponent } from '../../matriz-items-clasica/matriz-items-clasica.component';
+import { MatrizItemsListaComponent } from '../../matriz-items-lista/matriz-items-lista.component';
 @Component({
   selector: 'app-proforma',
   templateUrl: './proforma.component.html',
@@ -387,6 +389,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   public tabla_anticipos: any;
 
   public tipo_complementopf_input: any;
+  public pinta_empaque_minimo: boolean = false;
 
   // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
@@ -1350,13 +1353,16 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.venta_cliente_oficina = this.cliente.cliente.venta_cliente_oficina;
           this.tipo_cliente = this.cliente.cliente.tipo;
 
-          // this.direccion = this.cliente.vivienda.direccion;
+          this.direccion = this.cliente.vivienda.direccion;
           this.whatsapp_cliente = this.cliente.vivienda.celular;
           this.latitud_cliente = this.cliente.vivienda.latitud;
           this.longitud_cliente = this.cliente.vivienda.longitud;
           this.central_ubicacion = this.cliente.vivienda.central;
 
           this.obs = this.cliente.vivienda.obs;
+
+          this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
+          this.getUbicacionCliente(datav.cliente.codigo, datav.vivienda.direccion);
         },
 
         error: (err: any) => {
@@ -1364,8 +1370,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toastr.warning('Usuario Inexiste! ⚠️');
         },
         complete: () => {
-          this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
-          this.getUbicacionCliente(this.codigo_cliente_catalogo, this.cliente.vivienda.direccion);
+
         }
       })
   }
@@ -1397,9 +1402,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subtotal = 0.00;
     this.monto_anticipo = 0.00
     this.tabla_anticipos = [];
-    this.servicioCliente.disparadorDeClientes.emit({
-      cliente: { codigo: cod_cliente }
-    });
+
+    this.getClientByID(cod_cliente);
   }
 
   getAllmoneda() {
@@ -3521,7 +3525,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
+    let tipo_complemento
 
     const dialogRefvALIDAR = this.dialog.open(DialogConfirmActualizarComponent, {
       width: '450px',
@@ -3536,14 +3540,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         // this.toastr.error('! CANCELADO !');
         this.totabilizar();
-        this.spinner.show();
         // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
         // VACIO - TODOS LOS CONTROLES
         this.valor_formulario = [this.FormularioData.value];
-        console.log("Valor Formulario Original: ", this.valor_formulario);
+        // console.log("Valor Formulario Original: ", this.valor_formulario);
 
-        let tipo_complemento
-        console.log(this.tipo_complementopf_input);
         switch (this.tipo_complementopf_input) {
           case 3:
             tipo_complemento = "";
@@ -3627,7 +3628,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
 
-        console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+        // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
           ...element,
           cumple: element.cumple === 1 ? true : false,
@@ -3643,14 +3644,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
         }
 
-
         console.log("ARRAY VALIDACIONAL BACKEND:", proforma_validar, "Largo del array etiqueta: ", tamanio_array_etiqueta);
 
         this.submitted = true;
-
-        const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
-        const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
         if (this.total === 0) {
           this.toastr.error("EL TOTAL NO PUEDE SER 0");
           setTimeout(() => {
@@ -3660,7 +3656,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
-          this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+          this.toastr.warning("¡ FALTA GRABAR ETIQUETA !");
           this.toastr.info("VALIDACION ACTIVA 🚨");
           setTimeout(() => {
             this.spinner.hide();
@@ -3668,9 +3664,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           return;
         }
 
+        this.spinner.show();
+        this.toastr.info("VALIDACION EN CURSO ⚙️");
+        const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+        const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+
         this.api.create(url, proforma_validar).subscribe({
           next: (datav) => {
-            this.toastr.info("VALIDACION EN CURSO ⚙️");
             this.validacion_post = datav;
             console.log("INFO VALIDACIONES:", datav);
 
@@ -3689,13 +3690,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
             this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
 
+            this.toastr.success("VALIDACION EXITOSA ✅");
+            this.abrirTabPorLabel("Resultado de Validacion");
             setTimeout(() => {
               this.spinner.hide();
             }, 1500);
           },
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+            this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA! ❌');
 
             setTimeout(() => {
               this.spinner.hide();
@@ -4169,7 +4172,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
-  pinta_empaque_minimo: boolean = false;
   empaquesMinimosPrecioValidacion() {
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
     return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
@@ -4263,10 +4265,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   aplicarDesctPorDepositoYValidar() {
+    let tipo_complemento;
+
     this.spinner.show();
     console.log(this.array_de_descuentos_ya_agregados);
-    let tipo_complemento
-    console.log(this.tipo_complementopf_input);
     switch (this.tipo_complementopf_input) {
       case 3:
         tipo_complemento = "";
@@ -4371,6 +4373,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     console.log(a);
 
+    this.toastr.success('DESCT. POR DEPOSITO APLICANDO ⚙️');
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
@@ -4385,15 +4389,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }));
 
           console.log(this.array_de_descuentos_ya_agregados);
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+
+          this.toastr.success('DESCT. POR DEPOSITO APLICADO ✅');
 
           this.log_module.guardarLog(this.ventana, "proforma_validad_cod" + this.totabilizar_post.codProf, "POST", "", "");
           this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
           this.totabilizar();
           this.validarSinDect23();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
+
+          // setTimeout(() => {
+          //   this.spinner.hide();
+          // }, 1000);
         },
 
         error: (err: any) => {
@@ -4518,31 +4524,26 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(proforma_validar, "Largo del array etiqueta: ");
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
 
-    this.submitted = true;
-
-    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
     if (this.total === 0) {
       this.toastr.error("EL TOTAL NO PUEDE SER 0");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
       return;
     }
 
     if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       this.toastr.info("VALIDACION ACTIVA 🚨");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 1500);
       return;
     }
 
+    this.submitted = true;
+    this.spinner.show();
+    this.toastr.info("VALIDACION EN CURSO ⚙️");
+
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
     this.api.create(url, proforma_validar).subscribe({
       next: (datav) => {
-        this.toastr.info("VALIDACION EN CURSO ⚙️");
         this.validacion_post = datav;
         console.log("INFO VALIDACIONES:", datav);
 
@@ -4560,6 +4561,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         // maximo de ventas
         this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
         this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+
+        this.toastr.info("VALIDACION EXITOSA ✅");
 
         setTimeout(() => {
           this.spinner.hide();
@@ -5534,6 +5537,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // CATALOGOS ITEMS
   modalMatrizProductos(): void {
     // Realizamos todas las validaciones
     if (this.moneda_get_catalogo === '') {
@@ -5613,6 +5617,164 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  modalMatrizClasica(): void {
+    // Realizamos todas las validaciones
+    if (this.moneda_get_catalogo === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE MONEDA",
+        }
+      });
+      return; // Detenemos la ejecución de la función si la validación falla
+    }
+
+    if (this.codigo_cliente === undefined || this.codigo_cliente === '' || this.razon_social === undefined || this.razon_social === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE CLIENTE EN PROFORMA",
+        }
+      });
+      return;
+    }
+
+    if (this.almacn_parame_usuario === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE ALMACEN",
+        }
+      });
+      return;
+    }
+
+    if (this.desct_nivel_actual === undefined) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE NIVEL DE DESCT.",
+        }
+      });
+      return;
+    }
+
+    console.log(this.agencia_logueado);
+    // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
+    this.dialog.open(MatrizItemsClasicaComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-modal',
+      disableClose: true,
+      data: {
+        //esta info tarifa ya esta en la matriz xd
+        // tarifa: this.cod_precio_venta_modal_codigo,
+        descuento: this.cod_descuento_modal,
+        codcliente: this.codigo_cliente,
+        codcliente_real: this.codigo_cliente_catalogo_real,
+        codalmacen: this.agencia_logueado,
+        // ACA ES IMPORTANTE PASARLO A STRING, PORQ LA BD ESPERA STRING NO BOOLEAN habilitar_desct_sgn_solicitud
+        // ESTA VARIABLE ESTA EN EL TAB DESCUENTOS DE LINEA DE SOLICITUD
+        desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
+        codmoneda: this.moneda_get_catalogo,
+        fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        items: this.array_items_carrito_y_f4_catalogo,
+        descuento_nivel: this.desct_nivel_actual,
+        tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
+        // tamanio_carrito_compras: ultimo_valor?.nroitem,
+      }
+    });
+  }
+
+  modalMatrizLista(): void {
+    // Realizamos todas las validaciones
+    if (this.moneda_get_catalogo === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE MONEDA",
+        }
+      });
+      return; // Detenemos la ejecución de la función si la validación falla
+    }
+
+    if (this.codigo_cliente === undefined || this.codigo_cliente === '' || this.razon_social === undefined || this.razon_social === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE CLIENTE EN PROFORMA",
+        }
+      });
+      return;
+    }
+
+    if (this.almacn_parame_usuario === '') {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE ALMACEN",
+        }
+      });
+      return;
+    }
+
+    if (this.desct_nivel_actual === undefined) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "SELECCIONE NIVEL DE DESCT.",
+        }
+      });
+      return;
+    }
+
+    console.log(this.agencia_logueado);
+    // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
+    this.dialog.open(MatrizItemsListaComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'full-screen-modal',
+      disableClose: true,
+      data: {
+        //esta info tarifa ya esta en la matriz xd
+        // tarifa: this.cod_precio_venta_modal_codigo,
+        descuento: this.cod_descuento_modal,
+        codcliente: this.codigo_cliente,
+        codcliente_real: this.codigo_cliente_catalogo_real,
+        codalmacen: this.agencia_logueado,
+        // ACA ES IMPORTANTE PASARLO A STRING, PORQ LA BD ESPERA STRING NO BOOLEAN habilitar_desct_sgn_solicitud
+        // ESTA VARIABLE ESTA EN EL TAB DESCUENTOS DE LINEA DE SOLICITUD
+        desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
+        codmoneda: this.moneda_get_catalogo,
+        fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        items: this.array_items_carrito_y_f4_catalogo,
+        descuento_nivel: this.desct_nivel_actual,
+        tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
+        // tamanio_carrito_compras: ultimo_valor?.nroitem,
+      }
+    });
+  }
+
   modalCatalogoProductos(): void {
     this.dialog.open(ModalItemsComponent, {
       width: 'auto',
@@ -5631,6 +5793,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
   }
+  // FIN CATALOGOS ITEMS
+
+
+
 
   modalClientes(): void {
     this.dialog.open(ModalClienteComponent, {

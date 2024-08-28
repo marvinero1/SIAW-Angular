@@ -37,9 +37,9 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.mandarAModificarProforma();
   };
 
-  @HostListener('dblclick') onDoubleClicked2() {
-    this.mandarAModificarProforma();
-  };
+  // @HostListener('dblclick') onDoubleClicked2() {
+  //   this.mandarAModificarProforma();
+  // };
 
   public id_tipo_view_get_codigo1: string;
   public id_tipo_view_get_codigo2: string;

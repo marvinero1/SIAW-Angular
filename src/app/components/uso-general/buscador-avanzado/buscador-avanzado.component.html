@@ -35,264 +35,104 @@
         </ng-container>
       </div><br>
 
-      <div>
+
+      <table style="width: 100%;">
         <tr>
           <td width="18%">
-            <span style="padding-right: 35px;">ID: </span>
+            <span>ID:</span>
             <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();">
               Todas
             </mat-slide-toggle>
           </td>
-
           <td width="12%">
             <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();">
-              Desde: &nbsp;&nbsp;&nbsp;
+              Desde:
             </mat-slide-toggle>
           </td>
-
-          <td width="70%" class="text-center">
-            <div class="row">
-              <div class="input-group-">
-                <span class="input-group-text" style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID: </u>
-                </span>
-              </div>
-
-              <ng-container *ngIf="nombre_ventana === 'modificar_proforma'">
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" (blur)="onLeaveIDTipoProformaCatalogo($event)"
-                    [(ngModel)]="id_tipo_view_get_codigo1" [disabled]="!id_bool" style="width: 37%;">
-                </ng-container>
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
-                    (click)="modalTipoIDProformas();" style="border-color: #093070;" [disabled]="!id_bool"
-                    matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-                &nbsp; | &nbsp;
-                <div class="input-group">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta: </u></span>
-
-                  <ng-container>
-                    <input type="text" class="form-control form-control-sm"
-                      (blur)="onLeaveIDTipoProformaCatalogo($event)" [(ngModel)]="id_tipo_view_get_codigo2"
-                      [disabled]="!id_bool">
-                  </ng-container>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-primary form-control-sm" type="button"
-                      (click)="modalTipoIDProformas();" style="border-color: #093070;" [disabled]="!id_bool"
-                      matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </ng-container>
-
-              <ng-container *ngIf="nombre_ventana === 'modificar_notas_remision'">
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm"
-                    (blur)="onLeaveIDTipoNotaRemisionCatalogo($event)" [(ngModel)]="id_tipo_view_get_codigo1"
-                    [disabled]="!id_bool" style="width: 37%;">
-                </ng-container>
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
-                    (click)="modalTipoIDNotasRemision();" style="border-color: #093070;" [disabled]="!id_bool"
-                    matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-                &nbsp; | &nbsp;
-                <div class="input-group">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta: </u></span>
-
-                  <ng-container>
-                    <input type="text" class="form-control form-control-sm"
-                      (blur)="onLeaveIDTipoNotaRemisionCatalogo($event)" [(ngModel)]="id_tipo_view_get_codigo2"
-                      [disabled]="!id_bool">
-                  </ng-container>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-primary form-control-sm" type="button"
-                      (click)="modalTipoIDNotasRemision();" style="border-color: #093070;" [disabled]="!id_bool"
-                      matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              </ng-container>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
+                [disabled]="!id_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
+                [disabled]="!id_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo2"
+                [disabled]="!id_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
+                [disabled]="!id_bool">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </td>
         </tr>
-      </div>
 
-      <hr style="margin-top: 0rem !important;margin-bottom: 0rem !important;border: 0 !important;border-top: 0px solid
-        rgba(0, 0, 0, .1) !important;">
-
-      <div>
         <tr>
           <td width="18%">
-            <span style="padding-right: 12px;">Fecha: </span>
-
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();">
-              Todas
-            </mat-slide-toggle>
-          </td>&nbsp;
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();">
-              Desde:&nbsp;&nbsp;
-            </mat-slide-toggle>
-          </td>
-          <td width="70%" class="text-center">
-            <div class="row">
-              <div class="input-group">
-                <!-- <span class="input-group-text" style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha: </u>
-                </span> -->
-
-                <mat-form-field>
-                  <mat-label>Fecha Desde: </mat-label>
-                  <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_desde" [matDatepicker]="picker1">
-                  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                </mat-form-field>
-              </div>
-              &nbsp;|&nbsp;
-              <div class="input-group">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta:</u></span>&nbsp;&nbsp;
-                <ng-container>
-                  <mat-form-field>
-                    <mat-label>Fecha Hasta: </mat-label>
-                    <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_hasta" [matDatepicker]="picker2">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker #picker2></mat-datepicker>
-                  </mat-form-field>
-                </ng-container>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </div>
-
-      <hr style="margin-top: 0rem !important;margin-bottom: 0rem !important;border: 0 !important;border-top: 0px solid
-        rgba(0, 0, 0, .1) !important;">
-
-      <div>
-        <tr>
-          <td width="18%">
-            <span style="padding-right: 10px;">Cliente: </span>
+            <span>Cliente:</span>
             <mat-slide-toggle class="example-margin" [(ngModel)]="todas_cliente" (click)="habilitarTodo();">
               Todas
             </mat-slide-toggle>
           </td>
           <td width="12%">
             <mat-slide-toggle class="example-margin" [(ngModel)]="cliente_bool" (click)="habilitarCliente();">
-              Desde:&nbsp;&nbsp;&nbsp;
+              Desde:
             </mat-slide-toggle>
           </td>
-          <td width="70%" class="text-center">
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 15px 0px 0px;border: 0 !important;"><u>Cliente</u></span>
-                </div>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                    [disabled]="!cliente_bool" [(ngModel)]="codigo_cliente1">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalClientes();"
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Cliente"
-                    [disabled]="!cliente_bool">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
-              &nbsp; | &nbsp;
-              <div class="input-group">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta:</u></span>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                    [disabled]="!cliente_bool" [(ngModel)]="codigo_cliente2">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalClientes();"
-                    [disabled]="!cliente_bool" style="border-color: #093070;" matTooltipClass="custom-tooltip"
-                    matTooltip="Buscar Cliente"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text"><u>Cliente:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_cliente1"
+                [disabled]="!cliente_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalClientes();"
+                [disabled]="!cliente_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_cliente2"
+                [disabled]="!cliente_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalClientes();"
+                [disabled]="!cliente_bool">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </td>
         </tr>
-      </div>
 
-      <hr style="margin-top: 0rem !important;margin-bottom: 0rem !important;border: 0 !important;border-top: 0px solid
-        rgba(0, 0, 0, .1) !important;">
-
-      <div>
         <tr>
           <td width="18%">
-            <span>Almacen: </span>
+            <span>Almacén:</span>
             <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();">
               Todas
             </mat-slide-toggle>
           </td>
           <td width="12%">
             <mat-slide-toggle class="example-margin" [(ngModel)]="almacen_bool" (click)="habilitarAlmacen();">
-              Desde:&nbsp;&nbsp;&nbsp;
+              Desde:
             </mat-slide-toggle>
           </td>
-          <td width="70%" class="text-center">
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 6px 0px 0px;border: 0 !important;"><u>Almacen</u></span>
-                </div>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
-                    id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)" [disabled]="!almacen_bool">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen();"
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
-                    [disabled]="!almacen_bool"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
-
-              &nbsp; | &nbsp;
-
-              <div class="input-group">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta:</u></span>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen2"
-                    id="inputCatalogoAlmacen" (blur)="onLeaveAlmacen($event)" [disabled]="!almacen_bool">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen();"
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
-                    [disabled]="!almacen_bool"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text"><u>Almacén:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
+                [disabled]="!almacen_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
+                [disabled]="!almacen_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen2"
+                [disabled]="!almacen_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
+                [disabled]="!almacen_bool">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </td>
         </tr>
-      </div>
 
-      <hr style="margin-top: 0rem !important;margin-bottom: 0rem !important;border: 0 !important;border-top: 0px solid
-        rgba(0, 0, 0, .1) !important;">
-
-      <div>
         <tr>
           <td width="18%">
             <span>Vendedor:</span>
@@ -302,51 +142,65 @@
           </td>
           <td width="12%">
             <mat-slide-toggle class="example-margin" [(ngModel)]="vendedor_bool" (click)="habilitarVendedor();">
-              Desde:&nbsp;&nbsp;&nbsp;
+              Desde:
             </mat-slide-toggle>
           </td>
-          <td width="70%" class="text-center">
-            <div class="row">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Vendedor</u></span>
-                </div>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" [disabled]="!vendedor_bool"
-                    [(ngModel)]="cod_vendedor_cliente1" (blur)="onLeaveVendedor($event)">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"
-                    [disabled]="!vendedor_bool">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
-              &nbsp; | &nbsp;
-              <div class="input-group">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Hasta:</u></span>
-
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" [disabled]="!vendedor_bool"
-                    [(ngModel)]="cod_vendedor_cliente2" (blur)="onLeaveVendedor($event)">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
-                    [disabled]="!vendedor_bool" style="border-color: #093070;" matTooltipClass="custom-tooltip"
-                    matTooltip="Buscar Vendedor"><i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text"><u>Vendedor:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente1"
+                [disabled]="!vendedor_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
+                [disabled]="!vendedor_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente2"
+                [disabled]="!vendedor_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
+                [disabled]="!vendedor_bool">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </td>
         </tr>
-      </div>
+
+        <tr>
+          <td width="18%">
+            <span>Fecha:</span>
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();">
+              Todas
+            </mat-slide-toggle>
+          </td>
+          <td width="12%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();">
+              Desde:
+            </mat-slide-toggle>
+          </td>
+          <td width="70%">
+            <div class="input-group">
+              <mat-form-field>
+                <mat-label>Fecha Desde:</mat-label>
+                <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_desde" [matDatepicker]="picker1">
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <mat-form-field>
+                <mat-label>Fecha Hasta:</mat-label>
+                <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_hasta" [matDatepicker]="picker2">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+
+
+
       <!-- fin buscadores -->
 
       <hr>
@@ -364,34 +218,31 @@
 
                 <ng-template pTemplate="header">
                   <tr style="background-color: #093070 !important;">
-                    <th pSortableColumn="id" class="text-center">
+                    <th pSortableColumn="id" class="text-center" style="width:6%;">
                       ID
-                      <p-sortIcon field="id"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="numeroid" class="text-center">
+                    <th pSortableColumn="numeroid" class="text-center" style="width:6%;">
                       NumeroID
-                      <p-sortIcon field="numeroid"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="codigo" class="text-center">
+                    <th pSortableColumn="codigo" class="text-center" style="width:6%;">
                       Codigo
-                      <p-sortIcon field="codigo"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="fecha" class="text-center">
+                    <th pSortableColumn="fecha" class="text-center" style="width:12.5%;">
                       Fecha
                     </th>
-                    <th pSortableColumn="cliente" class="text-center">
+                    <th pSortableColumn="cliente" style="text-align: left;" style="width:40%;">
                       Cliente
                     </th>
-                    <th pSortableColumn="vendedoor" class="text-center">
+                    <th pSortableColumn="vendedoor" class="text-center" style="width:6%;">
                       Vendedor
                     </th>
-                    <th pSortableColumn="almacen" class="text-center">
+                    <th pSortableColumn="almacen" class="text-center" style="width:6%;">
                       Almacen
                     </th>
-                    <th pSortableColumn="monto" class="text-right">
+                    <th pSortableColumn="monto" class="text-center" style="width:10%;">
                       Monto
                     </th>
-                    <th pSortableColumn="moneda" class="text-right">
+                    <th pSortableColumn="moneda" class="text-right" style="width:5%;">
                       Moneda
                     </th>
                   </tr>
@@ -410,7 +261,7 @@
                     <td class="text-center">
                       {{ buscador.fecha | date:'yyyy-MM-dd'}}
                     </td>
-                    <td class="text-center">
+                    <td style="text-align: left;">
                       {{ buscador.nomcliente }}
                     </td>
                     <td class="text-center">
@@ -419,10 +270,10 @@
                     <td class="text-center">
                       {{ buscador.codalmacen }}
                     </td>
-                    <td class="text-right">
+                    <td style="text-align: right;">
                       {{ buscador.total }}
                     </td>
-                    <td class="text-right">
+                    <td style="text-align: right;">
                       {{ buscador.codmoneda }}
                     </td>
                     <td></td>

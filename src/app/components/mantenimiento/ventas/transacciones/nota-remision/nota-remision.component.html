@@ -290,8 +290,8 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm">Cod. Proforma</span>
             </div>
-            <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_proforma"
-              formControlName="cod_proforma_form" style="margin-left: 6px;" readonly>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_proforma"
+              formControlName="codproforma" style="margin-left: 6px;" readonly>
           </div>
 
           <div class="input-group">
@@ -437,10 +437,9 @@
       <div class="col" style="padding-right: 2.5px !important;padding-left: 0px !important;">
         <mat-tab-group style="height: 25vh !important; overflow-y: scroll;overflow-x: scroll;" #tabGroup>
           <mat-tab label="Detalle del Pedido">
-            <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
-              styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
-              [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
-              (onRowUnselect)="onRowUnselect($event)">
+            <p-table [value]="array_items_carrito_y_f4_catalogo" styleClass="p-datatable-striped tablitaDetalle"
+              [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedProducts" dataKey="coditem"
+              sortMode="multiple" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
                 <tr style="cursor: pointer;">
                   <th pSortableColumn="orden" class="center1" style="width:3%;">

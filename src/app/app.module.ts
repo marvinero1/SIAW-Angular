@@ -419,7 +419,7 @@ import { ModalSolicitarUrgenteComponent } from '@components/mantenimiento/ventas
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 
@@ -438,6 +438,8 @@ import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/vent
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
 import { ChartModule } from 'primeng/chart';
 import { CatalogoFacturasComponent } from '@components/mantenimiento/ventas/transacciones/facturas/catalogo-facturas/catalogo-facturas.component';
+import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
+import { MatrizItemsListaComponent } from '@components/mantenimiento/ventas/matriz-items-lista/matriz-items-lista.component';
 
 
 registerLocaleData(es);
@@ -522,7 +524,8 @@ registerPlugin(UndoRedo);
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
         ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
-        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent,
+        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
+
 
 
 
@@ -595,6 +598,7 @@ registerPlugin(UndoRedo);
         HotTableModule,
         ImportsModule,
         ChartModule,
+        QRCodeModule,
 
         ToastrModule.forRoot({
             timeOut: 5000, // Duración infinita

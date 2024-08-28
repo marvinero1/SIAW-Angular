@@ -233,6 +233,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
     public almacenservice: ServicioalmacenService,
+
     @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
@@ -334,7 +335,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   }
 
   copyToClipboard(): void {
-    let copia = "Codigo Servicio: " + this.data_servicio + "Dato A: " + this.data_autorizacionA + "Dato B: " + this.data_autorizacionB
+    let copia = "Codigo Servicio: " + this.data_servicio + "Dato A: " + this.dataA_get + "  " + "Dato B: " + this.dataB_get
     // Se copia el texto del input al portapapeles
     this.clipboard.copy(copia);
 

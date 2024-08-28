@@ -246,6 +246,14 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
       this.transferirNotaRemisionUltima(data.codigo_documento);
     });
     //fin ventana modal BuscadorGeneral
+
+    //ventana modal BuscadorGeneral
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotaRemision.subscribe(data => {
+      console.log("Recibiendo ID y numeroID Buscador: ", data);
+      this.transferirNotaRemisionUltima(data.codigo_documento);
+
+    });
+    //fin ventana modal BuscadorGeneral
   }
 
   ngAfterViewInit() {
@@ -1034,6 +1042,10 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
               }, 1000);
             }
           });
+      } else {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
       }
     });
   }

@@ -86,16 +86,16 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "adminlte:build",
+                        "buildTarget": "adminlte:build",
                         "ssl": false
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "adminlte:build:production",
+                            "buildTarget": "adminlte:build:production",
                             "proxyConfig": "src/proxy.conf.json"
                         },
                         "development": {
-                            "browserTarget": "angularApp:build:development",
+                            "buildTarget": "angularApp:build:development",
                             "proxyConfig": "src/proxy.conf.json"
 
                         }
@@ -104,7 +104,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "adminlte:build"
+                        "buildTarget": "adminlte:build"
                     }
                 },
                 "test": {

@@ -1,0 +1,337 @@
+<section class="all mat-elevation-z8 p-2">
+  <div style="position: sticky;padding-top: 6px;">
+    <div class="row">
+      <div class="col-md-9" style="padding-left: 20px;">
+        <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
+          <mat-label># Hoja</mat-label>
+          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja"
+            name="enable-tab-navigation">
+        </mat-form-field>
+        <button mat-raised-button color="secondary" (click)="getHoja();">
+          <i class="fa fa-search"></i>
+        </button>
+
+        <ng-container>
+          <a (click)="pasarHoja(izquierda, num_hoja);">
+            <mat-icon style="padding-block-start: 5px !important;">
+              keyboard_arrow_left
+            </mat-icon>
+          </a>
+          <a (click)="pasarHoja(derecha, num_hoja);">
+            <mat-icon style="padding-block-start: 5px !important;">
+              keyboard_arrow_right
+            </mat-icon>
+          </a>
+        </ng-container>
+
+        <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" [disabled]="!item_valido"
+          id="seleccion">
+          <i class="fa fa-plus"></i> Selección
+        </button>&nbsp;
+
+        <button mat-raised-button color="warn" (click)="limpiarMatriz();"><i class="fa fa-eraser"></i> Limpiar
+        </button>&nbsp;
+
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
+          <i class="fa fa-cart-plus"></i> OK
+        </button>&nbsp;
+        <!-- MENU CARRITO DE COMPRAS-->
+        <mat-menu #menu="matMenu" xPosition="after">
+          <ng-container>
+            <table style="padding: 8px 8px !important;">
+              <tr>
+                <th style="border: 1px solid #ffc107;">Ord. Ped</th>
+                <th style="border: 1px solid #ffc107;">Item</th>
+                <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
+                <th style="border: 1px solid #ffc107;" width="175">Medida</th>
+                <th style="border: 1px solid #ffc107;">Empaque</th>
+                <th style="border: 1px solid #ffc107;">Precio</th>
+                <th style="border: 1px solid #ffc107;">Pedido</th>
+                <th style="border: 1px solid #ffc107;">Cant.</th>
+                <th style="border: 1px solid #ffc107;">
+                  <i class="fa fa-trash" aria-hidden="true" color="danger" style="font-size: 0.5rem; color: red;"></i>
+                </th>
+                <th style="padding-left: 10px;">
+                  <mat-icon color="primary" style="color: #ffc107;">close</mat-icon>
+                </th>
+              </tr>
+
+              <tbody>
+                <tr *ngFor="let array_items_completos of array_items_completo">
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.nroitem }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.coditem }}</td>
+                  <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
+                  <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
+                    {{ array_items_completos.medida }} </td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" color="danger"
+                      (click)="eliminarItemArrayPedido(array_items_completos.coditem);"
+                      style="font-size: 0.5rem; color: red;"></i>
+                  </td>
+                </tr>
+                <hr>
+                <!-- <span>Items ya en carrito</span>
+                <tr *ngFor="let array_items_proforma_matrizs of array_items_proforma_matriz">
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.coditem }}</td>
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.cantidad_pedida }}</td>
+                  <td style="border: 1px solid #ffc107;">
+                    {{ array_items_proforma_matrizs.cantidad }}</td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" color="danger"
+                      (click)="eliminarItemArrayPedido(array_items_proforma_matrizs.coditem);"
+                      style="font-size: 0.5rem; color: red;"></i>
+                  </td>
+                </tr> -->
+              </tbody>
+            </table>
+          </ng-container>
+          <div style="text-align: center;display: block;margin: auto;">
+            <!-- BOTON CONFIRMAR -->
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm" (click)="mandarItemaProforma();"
+              style="width: 100%;height: calc(1.8rem + 0px) !important;">
+              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
+                <strong> Confirmar</strong></span>
+            </button>
+          </div>
+        </mat-menu>
+
+        <!-- <div style="float: right !important;">
+          <mat-icon>mobile_friendly</mat-icon>
+          <button mat-raised-button color="primary" (click)="simulateEnterKey()" style="margin-block-end: 9px;"
+            #myButton>
+            <mat-icon>subdirectory_arrow_right</mat-icon> Enter
+          </button>
+
+          <button mat-raised-button color="primary" (click)="agregarCarritoMobile()" style="margin-block-end: 9px;"
+            #myButton>
+            <mat-icon>add</mat-icon>
+          </button>
+        </div> -->
+
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Venta</u> </span>
+          </div>
+
+          <ng-container>
+            <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo1"
+              (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta"
+              style="width: 14% !important;flex: none !important;">
+          </ng-container>
+
+          <div class="input-group-append">
+            <a class="btn btn-outline-primary form-control-sm" style="border-color: #093070;"
+              (click)="modalPrecioVenta();"> <i class="fa fa-search"></i>
+            </a>
+          </div>
+
+          <ng-container *ngIf="permiso_para_vista === true">
+            <span class="form-control-sm" style="border: 0 !important;">
+              <u>Calcular Empa. por Precio</u>
+              <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
+            </span>
+
+            <span class="form-control-sm" style="border: 0 !important;">
+              <u>Calcular Empa. por Descuento</u>
+              <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
+            </span>
+          </ng-container>
+          <!-- <button (click)="applyFocusMatriz()"> FOCUS</button> -->
+        </div>
+      </div>
+
+      <div class="col-md-3 text-right">
+        <mat-icon color="primary" (click)="close();">close</mat-icon>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6" style="padding-left: 21px;">
+        <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
+          style="width: 16%;">
+
+        <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
+        <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
+        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 33%;">&nbsp;
+
+        <ng-container *ngIf="item_valido === false">
+          <span style="color: rgb(227, 0, 0);"><strong>NO VENTA</strong></span>
+        </ng-container>
+
+        <ng-container *ngIf="item_valido === true">
+          <span style="color: rgb(rgb(0, 171, 0));"><strong>SI VENTA</strong></span>
+        </ng-container>
+        <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
+      </div>
+
+      <div class="col-md-6">
+        <div class="row">
+          <ng-container *ngIf="permiso_para_vista === true">
+            <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+              <mat-label>Empaque</mat-label>
+              <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
+                #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
+            </mat-form-field>&nbsp;
+          </ng-container>
+
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Pedido</mat-label>
+            <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
+              (keydown)="handleKeyDown($event)" #focusPedido>
+          </mat-form-field>&nbsp;
+
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Cantidad</mat-label>
+            <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
+              (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : 'Placeholder predeterminado'">
+          </mat-form-field>
+
+          <mat-icon (click)="loseFocus()">bug_report</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-matriz">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card flex justify-content-center">
+          <p-listbox #listboxElement [options]="items_catalogo" [(ngModel)]="selected_Item" [virtualScroll]="true"
+            [virtualScrollItemSize]="10" optionLabel="codigo" [filter]="true" scrollHeight="358px"
+            [style]=" {'width':'100%', 'height' : 'calc(1.3rem + 0px) !important' }" (click)="getSelectedItemInfo()"
+            (keydown.space)="getSelectedItemInfo()" (keydown.enter)="getSelectedItemInfo()" id="listbox">
+            <ng-template let-item pTemplate="item">
+              <tbody>
+                <tr>
+                  <td>{{item.codigo}}</td>
+                  <td>{{item.descripcion}}</td>
+                  <td>{{item.medida}}</td>&nbsp;&nbsp;&nbsp;
+                  <td>
+                    <i class="fa fa-plus" (click)="getSelectedItem()" style="color:#093070;cursor: pointer;"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </ng-template>
+          </p-listbox>
+
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <div mat-dialog-footer>
+    <!-- Saldos -->
+    <div class="row pl-3 pt-1">
+      <ng-container *ngIf="saldoItem > 0; else saldo">
+        <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
+          style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
+      </ng-container>
+      <ng-template #saldo>
+        <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
+          style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
+      </ng-template>
+
+      <ng-container *ngIf="almacenes_saldos">
+        <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
+
+          <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
+          <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'2.2-2'"
+            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
+        </ng-container>
+      </ng-container>
+      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;"><strong><u>F9 = Información
+            Item</u></strong></span>
+    </div>
+    <!-- finSaldos -->
+
+    <!-- Empaques -->
+    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
+      <div class="row">
+        <div class="col-sm">
+          <div class="input-group">
+            <span class="input-group-text form-control-sm">Empaques</span>
+            <ng-container *ngIf="!empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+            </ng-container>
+
+            <ng-container *ngIf="empaque_view">
+              <div *ngFor="let empaquesItems of empaquesItem">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                  ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <!-- finempaque -->
+
+    <!-- Precio Item  -->
+    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text form-control-sm">Precios</span>
+            <ng-container *ngIf="!empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
+            </ng-container>
+
+            <ng-container *ngIf="empaque_view">
+              <div type="text" class="form-control form-control-sm inputsSaldos">
+                {{precioItem.precios}}
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- <div class="col-md">
+          <table>
+            <tbody>
+              <tr>
+                <td style="float: left;"> </td>
+                <td style="float: right;"><strong></strong></td>
+              </tr>
+              <tr>
+                <td style="float: left;"> </td>
+                <td style="float: right;"><strong></strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+        <div class="col-md">
+          <span><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
+          <span><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <!-- finempaque -->
+  </div>
+</section>

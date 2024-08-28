@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col text-center" style="padding: 24px;">
         <h3>LOG Sistema SIA & SIAW</h3>
-        <h3><strong>Usuario: </strong>{{ usuarioLogueado }}</h3>
+        <h3><strong>Mi Usuario: </strong>{{ usuarioLogueado }}</h3>
       </div>
 
       <div class="col-lg">
@@ -13,7 +13,7 @@
           <mat-form-field class="example-full-width">
             <mat-label>Buscar por Fecha</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="fecha" style="margin-left: 5px;" required>
-            <mat-hint style="font-size: 0.8rem;">MM/DD/YYYY</mat-hint>
+
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>

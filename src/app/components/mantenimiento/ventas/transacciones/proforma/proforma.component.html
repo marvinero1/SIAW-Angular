@@ -1,5 +1,5 @@
 <section
-  style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;flex: 1;width: 100%;height: 100vh;box-sizing: border-box;">
+  style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;flex: 1;height: 100vh;box-sizing: border-box;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -55,18 +55,29 @@
               </span>
             </button>
           </div>
-          &nbsp;
-          <div class="pt-1" style="padding-left: 85px !important;">
+
+          <div class="pt-1" style="padding-left: 80px !important;">
             <h3><strong><u>PROFORMA</u></strong></h3>
           </div>
           <!-- BOTONES FIN -->
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
+            matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-th gray" aria-hidden="true"></i>
+          </button>
+
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
-            matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizLista()"
+            matTooltip="Matriz Item Lista" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-th black" aria-hidden="true"></i>
+          </button>
+
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
             matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-inbox gray" aria-hidden="true"></i>
@@ -92,15 +103,8 @@
             matTooltipPosition="above">
             <i class="fa fa-inbox red" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-window-restore blue" aria-hidden="true"></i>
-          </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
-            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0"
-            (click)="verificarDepositoPendientesDescuentoCliente()">
-            <i class="fa fa-calculator blue" aria-hidden="true"></i>
-          </button>
+
+
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
           </button> -->
@@ -113,6 +117,20 @@
           </button>
           <mat-menu #beforeMenu="matMenu" xPosition="before">
             <mat-list role="list">
+              <!-- <mat-list-item role="listitem" class="list-button"> -->
+              <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
+                  <i class="fa fa-window-restore blue" aria-hidden="true"></i> 
+                </button> -->
+              <!-- </mat-list-item> -->
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
+                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0"
+                  (click)="verificarDepositoPendientesDescuentoCliente()">
+                  <i class="fa fa-calculator blue" aria-hidden="true"></i> Verificar Depositos Pendientes de Descuentos
+                  del Cliente
+                </button>
+              </mat-list-item>
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
                   [disabled]="!codigo_cliente && id_proforma_numero_id !== 0" (click)="ultimasProformas()">
