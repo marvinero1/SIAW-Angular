@@ -15,13 +15,13 @@
       <span class="pr-4">S/N</span>
     </ng-container>|
 
-    <span class="pr-4">{{ BD_storage }} </span>|
+    <span class="pr-4">{{ bd }} </span>|
 
-    <span class="pr-4"> {{ agencia_storage }} </span>|
+    <span class="pr-4">{{ servidor }} - {{ agencia_storage }} </span>|
 
     <span class="pr-4">{{ tipo_cambio_dolar_moneda_base }} {{ tipo_cambio_dolar_dolar }} </span>|
 
-    <span class="pr-4"> Hoy es: {{  fecha_actual |date:"fullDate" }}</span>
+    <span class="pr-4"> Hoy es: {{  fecha_actual | date:"fullDate" }}</span>
   </div>
 
   <!-- <div class="col">

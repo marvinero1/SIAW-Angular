@@ -1,15 +1,16 @@
 <section class="all mat-elevation-z8 p-2">
   <div style="position: sticky;padding-top: 6px;">
     <div class="row">
-      <div class="col-md-9" style="padding-left: 20px;">
-        <!-- <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;"> -->
+      <div class="col-sm-1" style="padding-left: 20px;">
         <button mat-raised-button class="btn btn-outline-secondary form-control-sm" (click)="mandarItemaProforma();"
-          style="width: 100%;height: calc(1.8rem + 0px) !important;">
+          style="width: 10%;height: calc(1.8rem + 0px) !important;">
           <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
             <strong> OK </strong></span>
         </button>
-        <!-- </mat-form-field> -->
+      </div>
 
+
+      <div class="col-md-9">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
           <mat-label># Hoja</mat-label>
           <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja"
@@ -156,7 +157,7 @@
         </div>
       </div>
 
-      <div class="col-md-3 text-right">
+      <div class="col-md-2 text-right">
         <mat-icon color="primary" (click)="close();">close</mat-icon>
       </div>
     </div>

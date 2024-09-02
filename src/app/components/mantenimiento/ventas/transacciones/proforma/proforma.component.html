@@ -592,11 +592,11 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;">
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 41px;border: 0 !important;">
                 <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback">
                   <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar NIT">info</mat-icon>
                 </div>
-                <u> N.I.T</u>
+                <u><i class="fa fa-eye" (click)="verificarNit()" style="cursor:pointer"></i> N.I.T</u>
               </span>
 
               <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
@@ -1640,9 +1640,14 @@
                             disabled> -->
                         </div><br>
                         <div style="text-align: center;">
-                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                          <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
                             (click)="modalAnticiposProforma();" [disabled]="!anticipo_button"
                             style="border-color: #ffc107;"><i class="fa fa-archive"></i> Asignar Anticipo
+                          </button> -->
+
+                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                            (click)="modalAnticiposProforma();" style="border-color: #ffc107;">
+                            <i class="fa fa-archive"></i> Asignar Anticipo
                           </button>
                         </div>
                       </div>
@@ -2343,7 +2348,7 @@
             </div>
 
             <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-              (click)="modalClienteEtiqueta();" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
+              (click)="modalClienteEtiqueta(direccion);" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
               <!-- [disabled]="!codigo_cliente" -->
               <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
             </button>

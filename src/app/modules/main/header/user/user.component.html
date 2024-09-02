@@ -41,9 +41,18 @@
 
     <!-- Menu Footer-->
     <li class="user-footer">
-      <a [routerLink]="['/profile']" class="btn btn-default btn-flat" style="font-size: 0.75rem;">
+      <a [routerLink]="['/profile']" class="btn btn-default btn-flat float-left" style="font-size: 0.75rem;">
         Mi Perfil
       </a>
+
+      <a (click)="refreshToken();" class="btn btn-default btn-flat float-left" style="font-size: 0.75rem;">
+        Token
+      </a>
+
+      <a (click)="refreshLogin();" class="btn btn-default btn-flat float-left" style="font-size: 0.75rem;">
+        Re-Auth
+      </a>
+
       <a (click)="logout();" class="btn btn-default btn-flat float-right" style="font-size: 0.75rem;">
         Salir
       </a>

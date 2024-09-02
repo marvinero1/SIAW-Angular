@@ -46,6 +46,7 @@ import {
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostBinding('class') class = 'login-box';
 
+
   public isAuthLoading = false;
   public isGoogleLoading = false;
   public isFacebookLoading = false;
@@ -55,6 +56,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   public login_box = true;
   public existe_usuario = false;
   public usuario_login: any;
+  public contrasenia: any;
 
   public dato_local_storage;
   public dato_local_session;
@@ -373,7 +375,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   guardarToken(token) {
     // localStorage.setItem('token', JSON.stringify(token));
     sessionStorage.setItem('token', JSON.stringify(token));
-
+    sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
   }
 
   guardarStorageUsuario(usuario) {

@@ -103,11 +103,12 @@
         <tr>
           <th class="center" style="font-weight: 100 !important;">#</th>
           <th class="center" style="font-weight: 100 !important;">CODIGO</th>
-          <th width="450" class="center" style="font-weight: 100 !important;">DESCRIPCION</th>
+          <th width="42%" class="center" style="font-weight: 100 !important;">DESCRIPCION</th>
 
-          <th class="center" style="font-weight: 100 !important;">UD.</th>
-          <th class="center" style="font-weight: 100 !important;">CANT. PEDIDA</th>
-          <th class="center" style="font-weight: 100 !important;">TP</th>
+          <th width="7%" class="center" style="font-weight: 100 !important;">UD.</th>
+          <th width="14%" class="right" style="font-weight: 100 !important;">CANT.PEDIDA</th>
+          <th class="center" style="font-weight: 100 !important;"></th>
+          <th width="50" class="center" style="font-weight: 100 !important;">TP</th>
           <th class="center" style="font-weight: 100 !important;">PRECIO UNIT.</th>
           <th class="right" style="font-weight: 100 !important;">TOTAL</th>
         </tr>
@@ -115,9 +116,9 @@
 
       <tbody>
         <tr *ngFor="let items of data_detalle_proforma">
-          <td class="center" style="font-size: 0.8rem !important;">1</td>
+          <td class="center" style="font-size: 0.8rem !important;">{{ items.nroitem }}</td>
           <td class="center" style="font-family: 'Courier New' !important;">&nbsp;{{items.coditem}}&nbsp;</td>
-          <td width="450">
+          <td>
             <div class="row">
               <div class="col-md left" style="font-size: 0.8rem !important;">
                 {{items.descripcion}}
@@ -126,7 +127,8 @@
             </div>
           </td>
           <td class="center" style="font-size: 0.8rem !important;">{{ items.udm }}</td>
-          <td class="right" style="font-size: 0.8rem !important;">{{ items.cantidad }}</td>
+          <td class="right" style="font-size: 0.8rem !important;">{{ items.cantidad | number:'1.2-2' }}</td>
+          <td class="right" style="font-size: 0.8rem !important;">_________________</td>
           <td class="center" style="font-size: 0.8rem !important;">{{ items.codtarifa }}</td>
           <td class="center" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub(items.precioneto) }}</td>
           <td class="right" style="font-size: 0.8rem !important;">{{ formatNumberTotalSub2Decimals(items.total)  }}</td>
@@ -137,6 +139,8 @@
         <tr>
           <td style="border: 0px;"></td>
           <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
+          <td style="border: 0px;"></td>
           <td width="450" class="right" style="border: 0px;font-family: 'Courier New' !important;">
             <strong>Peso Total:</strong>
           </td>
@@ -144,7 +148,6 @@
             {{ data_cabecera_footer_proforma.rpesototal | number:'2.2-2' }}
             <strong style="font-family: 'Courier New' !important;">Kgr</strong>
           </td>
-          <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;font-family: 'Courier New' !important;"><strong>Sub Total</strong> </td>
           <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
@@ -157,6 +160,7 @@
           <td class="left" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;font-family: 'Courier New' !important;"><strong>Recargos:</strong> </td>
           <td class="right" style="border: 0px;font-family: 'Courier New' !important;">
             {{ data_cabecera_footer_proforma.rrecargos }}</td>
@@ -166,6 +170,7 @@
           <td style="border: 0px;"></td>
           <td width="450" class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;font-family: 'Courier New' !important;"> <strong>Descuentos:</strong>
@@ -181,6 +186,7 @@
           <td style="border: 0px;"></td>
           <td width="450" class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;"></td>
+          <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;">

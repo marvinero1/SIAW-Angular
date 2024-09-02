@@ -28,14 +28,9 @@ import {
 import {
   ApiService
 } from '@services/api.service';
-import {
-  AppService
-} from '@services/app.service';
+import { AppService } from '@services/app.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import {
-  BehaviorSubject,
-  Observable
-} from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 const BASE_CLASSES = 'bck-azul elevation-4 main-sidebar sidebar-dark-warning';
 @Component({
@@ -49,12 +44,14 @@ export class MenuSidebarComponent implements OnInit {
   @HostBinding('class') classes: string = BASE_CLASSES;
   public ui: Observable<UiState>;
   public user;
+  public ip_vpn: any;
 
   public tipo_cambio: boolean;
   public dato_local_storage: any = [];
   public dato_local_session: any = [];
   public tipo_cambio_hoy_dia: any = [];
   public almacn_parame_usuario: any = [];
+  public info_conexion_usuario: any = [];
   public agencia_storage: any;
   public BD_storage: any;
   public session: any;
@@ -64,6 +61,9 @@ export class MenuSidebarComponent implements OnInit {
   tipo_cambio_dolar: any;
   tipo_cambio_dolar_dolar: any;
   tipo_cambio_dolar_moneda_base: any;
+
+  servidor: any;
+  bd: any;
 
   userConn: any;
   usuarioLogueado: any;
@@ -88,6 +88,7 @@ export class MenuSidebarComponent implements OnInit {
     this.getTipoCambioHeader(dataTransform);
     this.getTipoCambioHoyDia();
     this.getAlmacenParamUsuario();
+    this.getVerificaraDondeEstaConectadoUsuario();
   }
 
   ngOnInit() {
@@ -183,6 +184,23 @@ export class MenuSidebarComponent implements OnInit {
       })
   }
 
+  getVerificaraDondeEstaConectadoUsuario() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/oper/infoConexion/getConnectionInfo/";
+    return this.api.getAll('/seg_adm/oper/infoConexion/getConnectionInfo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.info_conexion_usuario = datav;
+          console.log('Conexion Usuario: ', this.info_conexion_usuario);
+          this.bd = this.info_conexion_usuario.database
+          this.servidor = this.info_conexion_usuario.server
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
   verificarInternet() {
     this.spinner.show();
 
@@ -199,7 +217,7 @@ export class MenuSidebarComponent implements OnInit {
     }, 1000);
   }
 
-  ip_vpn: any;
+
   verificarIP_VPN() {
     return this.api.getSimple("https://api.ipify.org?format=json").subscribe({
       next: (datav) => {

@@ -1,0 +1,122 @@
+ .bacgroundAnulada:after {
+        content: "ANULADO";
+        font-size: 6.2rem;
+        color: #ff4040;
+        /* z-index: -19; */
+        /* display: inline-block; */
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 594px;
+        right: 0;
+        bottom: 0;
+        /* left: 0; */
+        text-align: center;
+        /* transform: skewY(-19deg); */
+    }
+    .m-0px{
+        text-shadow: 0 0.2px 0 rgb(9 45 116) !important;
+    }
+    .header-3.style-2 .navbar-fixed-top.affix{
+        background-color: #093070;
+    }
+    .section {
+        padding: 100px 0;
+        position: relative;
+    }
+
+    .gray-bg, br {
+        background-color: #f5f5f5;
+    }
+    a{
+        color: #000000;
+    }
+    body {
+        font-family: Tahoma, Verdana, Segoe, sans-serif !important;
+    }
+    .font-frank-demi {
+        font-family: Tahoma, Verdana, Segoe, sans-serif !important;
+    }
+    .alineacion p {
+        line-height: 7px !important;
+        text-align: center;
+    }
+    .alineacion h6 {
+        margin-bottom: 8px;
+        line-height: 17px;
+    }
+    .infoFactura {
+        font-size: 13px !important;
+        color: #000000 !important;
+        line-height: 16px !important;
+        margin-bottom: 7px;
+    }
+    table.greyGridTable {
+        border: 2px solid #FFFFFF;
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    table.greyGridTable td,
+    table.greyGridTable th {
+        border: 1px solid #FFFFFF;
+        padding: 3px 4px;
+    }
+    table.greyGridTable tbody td {
+        font-size: 14px;
+        color: #000000;
+    }
+    table.greyGridTable thead {
+        font-family: 'Franklin Gothic Demi', sans-serif;
+        font-weight: 100;
+        background: #FFFFFF;
+        border-bottom: 2px solid #000000 !important;
+        border-top: 2px solid #000000;
+    }
+    table.greyGridTable thead th {
+        font-size: 14px;
+        font-weight: bold;
+        color: #000000;
+        text-align: center;
+        border-bottom: 2px solid #000000 !important;
+    }
+    table.greyGridTable tfoot {
+        font-family: 'Franklin Gothic Demi', sans-serif;
+        font-weight: 100;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: right;
+        color: #000000;
+        border-top: 2px solid #000000;
+    }
+    table.greyGridTable tfoot td {
+        font-size: 13px;
+    }
+    .alingLeft {
+        text-align: left;
+    }
+    .alingRight {
+        text-align: right;
+    }
+
+    @media (max-width: 991px) {
+        .inf-per-fac-1 {
+            text-align: right;
+        }
+        .inf-per-fac-2 {
+            text-align: left;
+            margin-left: 0px !important;
+        }
+    }
+    .alingCenter {
+        text-align: center;
+    }
+
+    @media (max-width: 767px) {
+        .col-sm-12 {
+            width: 100%;
+        }
+    }
+    .btn-primary{
+        width: 170px !important;
+    }

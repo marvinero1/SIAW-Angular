@@ -35,17 +35,16 @@ export class CatalogoFacturasComponent implements OnInit {
   private debounceTimer: any;
 
   constructor(public dialogRef: MatDialogRef<CatalogoFacturasComponent>, private api: ApiService,
-    private spinner: NgxSpinnerService, private servicioFacturas: CatalogoFacturasService) {
-
+    private servicioFacturas: CatalogoFacturasService) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
   }
 
   ngOnInit() {
-    this.getNotaRemision();
+    this.getCatalogoFacturas();
   }
 
-  getNotaRemision() {
+  getCatalogoFacturas() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
 
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "1")

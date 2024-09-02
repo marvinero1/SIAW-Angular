@@ -43,7 +43,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   array_de_descuentos_con_descuentos: any = [];
 
   contra_entrega_get: any;
-  displayedColumns = ['codigo', 'descripcion', 'porcen', 'accion'];
+  displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto_doc', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();

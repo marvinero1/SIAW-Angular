@@ -27,17 +27,25 @@ export class ModalEtiquetaComponent implements OnInit {
   cliente_real_proforma: string;
 
   data: any = [];
+  data_map: any = [];
+
   userConn: string;
+  direccion_get: string;
+  latitud_get: any;
+  longitud_get: any;
 
   array_enviar: any = [];
 
   constructor(public dialogRef: MatDialogRef<ModalEtiquetaComponent>, private spinner: NgxSpinnerService,
     private api: ApiService, public _snackBar: MatSnackBar, public servicioEtiqueta: EtiquetaService,
-    private communicationService: ComunicacionproformaService, private toastr: ToastrService,
-    @Inject(MAT_DIALOG_DATA) public cod_cliente_proforma1: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
+    private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
+    @Inject(MAT_DIALOG_DATA) public cod_cliente_proforma1: any,
+    @Inject(MAT_DIALOG_DATA) public id_proforma: any,
     @Inject(MAT_DIALOG_DATA) public numero_id: any, @Inject(MAT_DIALOG_DATA) public nom_cliente: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea: any, @Inject(MAT_DIALOG_DATA) public id_sol_desct: any,
-    @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
+    @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any,
+    @Inject(MAT_DIALOG_DATA) public direccion: any, @Inject(MAT_DIALOG_DATA) public latitud: any,
+    @Inject(MAT_DIALOG_DATA) public longitud: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
@@ -49,6 +57,9 @@ export class ModalEtiquetaComponent implements OnInit {
     this.id_sol_desct_proforma = id_sol_desct.id_sol_desct;
     this.nro_id_sol_desct_proforma = nro_id_sol_desct.nro_id_sol_desct;
     this.cliente_real_proforma = cliente_real.cliente_real;
+    this.direccion_get = direccion.direccion;
+    this.longitud_get = longitud.longitud;
+    this.latitud_get = latitud.latitud;
 
     console.log(this.cod_cliente_proforma, this.id_proforma_get, this.numero_id_proforma, this.nombre_cliente_get,
       this.desc_linea_proforma, this.id_sol_desct_proforma, this.nro_id_sol_desct_proforma, this.cliente_real_proforma);
@@ -68,7 +79,7 @@ export class ModalEtiquetaComponent implements OnInit {
     let a = {
       // codcliente_real: this.cliente_real_proforma,
       codcliente_real: this.cliente_real_proforma,
-      id: this.id_proforma_get,
+      id: this.id_proforma_get === undefined ? "0" : this.id_proforma_get,
       numeroid: this.numero_id_proforma,
       codcliente: this.cod_cliente_proforma,
       nomcliente: this.nombre_cliente_get,
@@ -84,6 +95,18 @@ export class ModalEtiquetaComponent implements OnInit {
         next: (datav) => {
           this.data = datav;
           console.log('data', this.data);
+
+          this.data_map = [this.data].map((element) => ({
+            ...element,
+            codcliente: this.cod_cliente_proforma,
+            representante: this.direccion_get,
+            longitud_entrega: this.longitud_get,
+            latitud_entrega: this.latitud_get,
+          }));
+
+          console.log("Data Etiqueta Mapeada: ", this.data_map);
+
+          this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.data_map[0].latitud_entrega + "%2C" + this.data_map[0].longitud_entrega;
         },
 
         error: (err: any) => {
@@ -91,21 +114,13 @@ export class ModalEtiquetaComponent implements OnInit {
         },
         complete: () => {
 
-          this.data_array = [this.data].map(element => ({
-            ...element,
-            codcliente: this.cod_cliente_proforma
-          }));
-
-          console.log("Data Etiqueta Mapeada: ", this.data_array);
-
-          this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.data.latitud_entrega + "%2C" + this.data.longitud_entrega;
         }
       })
   }
 
   enviarArrayToProforma() {
     this.servicioEtiqueta.disparadorDeEtiqueta.emit({
-      etiqueta: this.data_array,
+      etiqueta: this.data_map,
     });
     this.close();
 

@@ -34,6 +34,7 @@ export class ApiService {
   public session: any;
 
   public userConn: any;
+  public token_alone: any;
   public BD_storage: any;
   public usuarioLogueado: any;
 
@@ -44,7 +45,10 @@ export class ApiService {
   public statusInternet: boolean = true;
 
   // private readonly API_URL = 'http://192.168.30.6/API_SIAW/api';
-  private readonly API_URL = 'http://192.168.31.240/API_SIAW/api';
+  private readonly API_URL = 'http://192.168.31.240/API_SIAW/api'; //MAQUINA RODRI
+  // private readonly API_URL = 'http://192.168.40.5/API_SIAW/api'; // LA PAZ 
+  // private readonly API_URL = 'http://192.168.30.5/API_SIAW/api'; // CBBA
+  // private readonly API_URL = 'http://192.168.80.5/API_SIAW/api'; // STCZ
 
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
@@ -54,6 +58,8 @@ export class ApiService {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
+    this.token_alone = this.token;
+    console.log("🚀 ~ ApiService ~ token_alone:", this.token_alone)
 
     this.verificarInternet();
     console.log(this.ventana_estado);
@@ -62,8 +68,7 @@ export class ApiService {
   login(url: string, data): Observable<any> {
     return this.http.post(this.API_URL + url, data).pipe(
       catchError((err) => {
-        console.log('Error en Login api.services')
-        console.error(err);
+        console.log(err, 'Error en Login api.services')
         return throwError(() => new Error());
       })
     )
@@ -72,7 +77,7 @@ export class ApiService {
   getAll(url: string): Observable<any> {
     return this.http.get<object[]>(this.API_URL + url).pipe(
       catchError((err) => {
-        console.log('getAll Servicio')
+        console.log(err, 'getAll Servicio')
         return throwError(() => new Error());
       })
     )
@@ -81,7 +86,7 @@ export class ApiService {
   getSimple(url: string): Observable<any> {
     return this.http.get<object[]>(url).pipe(
       catchError((err) => {
-        console.log('getAll Servicio')
+        console.log(err, 'getAll Servicio')
         return throwError(() => new Error());
       })
     )
@@ -90,16 +95,14 @@ export class ApiService {
   createAllWithOutToken(url: string, obj): Observable<any> {
     return this.http.post(this.API_URL + url, obj).pipe(
       catchError((err) => {
-        console.log('createAllWithOutToken ERROR')
-        console.error(err);
+        console.log(err, 'createAllWithOutToken ERROR')
         return throwError(() => new Error());
       })
     )
   }
 
   create(url: string, obj): Observable<any> {
-    // let token1 = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
-    // console.log(this.token.token);
+    console.log(this.token_alone);
     const httpOptions = {
       headers: new HttpHeaders({
         "Authorization": "bearer" + " " + this.token,
@@ -108,46 +111,40 @@ export class ApiService {
 
     return this.http.post(this.API_URL + url, obj, httpOptions).pipe(
       catchError((err) => {
-        console.log('error caught in service')
-        console.log(err);
+        console.log(err, 'error caught in service')
         return throwError(() => new Error());
       })
     )
   }
 
   update(url: string, obj): Observable<any> {
-    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
-    console.log(this.token.token);
+    console.log(this.token_alone);
 
     const httpOptions = {
       headers: new HttpHeaders({
-        "Authorization": "bearer" + " " + this.token.token,
+        "Authorization": "bearer" + " " + this.token,
       })
     };
 
     return this.http.put(this.API_URL + url, obj, httpOptions).pipe(
       catchError((err) => {
-        console.log('Error en el servicio de UPDATE')
-        console.error(err);
+        console.log(err, 'Error en el servicio de UPDATE')
         return throwError(() => new Error());
       })
     )
   }
 
   delete(id: string) {
-    this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
-    console.log(this.token.token);
-
+    console.log(this.token_alone);
     const httpOptions = {
       headers: new HttpHeaders({
-        "Authorization": "bearer" + " " + this.token.token,
+        "Authorization": "bearer" + " " + this.token,
       })
     };
 
     return this.http.delete(this.API_URL + id, httpOptions).pipe(
       catchError((err) => {
-        console.log('error caught in service in delete service')
-        console.error(err);
+        console.log(err, 'error caught in service in delete service')
         return throwError(() => new Error());
       })
     )
@@ -156,8 +153,7 @@ export class ApiService {
   getById(id: string): Observable<any> {
     return this.http.get(this.API_URL + id).pipe(//Aumentar el ID al momento de traer
       catchError((err) => {
-        console.log('error caught in service')
-        console.error(err);
+        console.log(err, 'error caught in service')
         return throwError(() => new Error());
       })
     )
@@ -245,6 +241,9 @@ export class ApiService {
   }
 
   getRolUserParaVentana(ventana) {
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
     return this.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
@@ -372,10 +371,7 @@ export class ApiService {
   }
 
   eliminarToken() {
-    let token = sessionStorage.getItem('token');
-    let useConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    return this.delete('/seg_adm/login/logout/' + useConn + "/" + token)
+    return this.delete('/seg_adm/login/logout/' + this.userConn + "/" + this.token)
       .subscribe({
         next: (datav) => {
           console.log("LOGOUT TOKEN ELIMINADO", datav);

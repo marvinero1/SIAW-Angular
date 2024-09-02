@@ -7,6 +7,10 @@ import { ApiService } from '@services/api.service';
 import { CatalogoNotasRemisionComponent } from '../nota-remision/catalogo-notas-remision/catalogo-notas-remision.component';
 import { CatalogoFacturasComponent } from '../facturas/catalogo-facturas/catalogo-facturas.component';
 import { CatalogoFacturasService } from '../facturas/catalogo-facturas/servicio-catalogo-facturas/catalogo-facturas.service';
+import { TipoidService } from '../../serviciotipoid/tipoid.service';
+import { CatalogoNotasRemisionService } from '../nota-remision/servicio-catalogo-notas-remision/catalogo-notas-remision.service';
+import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
+import { Router } from '@angular/router';
 export interface PeriodicElement {
   numero: number;
   descuento: number;
@@ -57,7 +61,9 @@ export class FacturaNotaRemisionComponent implements OnInit {
   cod_descuento_modal: any;
   cod_control: string;
   id_proforma_numero_id: any;
-
+  id_factura_catalogo: any;
+  descrip_factura_catalogo: any;
+  descrip_proforma_numero_id: any;
 
   public moneda_get_catalogo: any;
   public moneda_get_fuction: any = [];
@@ -75,15 +81,11 @@ export class FacturaNotaRemisionComponent implements OnInit {
     label: `20240812 #${i}`, value: i + `VALOR CRECIENTE`
   }));
 
-
-  // dataSource = new MatTableDataSource();
-  // dataSourceWithPageSize = new MatTableDataSource();
-
   constructor(public dialog: MatDialog, private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService,
-    private servicioFacturas: CatalogoFacturasService) {
+    private servicioFacturas: CatalogoFacturasService, private almacenservice: ServicioalmacenService, public router: Router,
+    public servicioCatalogoNotasRemision: CatalogoNotasRemisionService) {
 
     this.cod_control = '9F6F73D67AE8E74'
-    /*let usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;*/
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -92,23 +94,36 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
-  id_factura_catalogo: any;
+
   ngOnInit() {
+    this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
+      console.log("Recibiendo Almacen: ", data);
+      this.almacn_parame_usuario_almacen = data.almacen.codigo;
+
+    });
+
     this.servicioFacturas.disparadorDeIDFacturas.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
       this.id_factura_catalogo = data.factura.id;
+      this.descrip_factura_catalogo = data.factura.descripcion;
     });
 
+    this.servicioCatalogoNotasRemision.disparadorDeIDNotaRemision.subscribe(data => {
+      console.log("Recibiendo ID Tipo: ", data);
+      this.id_proforma_numero_id = data.proforma.id;
+      this.descrip_proforma_numero_id = data.proforma.descripcion;
+    });
 
     this.fecha_actual_format = this.datePipe.transform(this.fecha_actual, 'dd-MM-yyyy');
 
+    this.getParamUsuario();
     this.mandarNombre();
     this.getHoraFechaServidorBckEnd();
     this.getAlmacenParamUsuario();
     this.getAllmoneda();
-    this.getIdTipo();
+    this.getNotaRemision();
+    this.getCatalogoFacturas();
   }
-
 
   getHoraFechaServidorBckEnd() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
@@ -130,7 +145,6 @@ export class FacturaNotaRemisionComponent implements OnInit {
         }
       })
   }
-
 
   getAllmoneda() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
@@ -156,7 +170,6 @@ export class FacturaNotaRemisionComponent implements OnInit {
       })
   }
 
-
   getAlmacenParamUsuario() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -176,21 +189,22 @@ export class FacturaNotaRemisionComponent implements OnInit {
       })
   }
 
-
-  getIdTipo() {
+  getParamUsuario() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veremision/getParametrosIniciales/";
     return this.api.getAll('/venta/transac/veremision/getParametrosIniciales/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           console.log('data', datav);
-          //this.almacn_parame_usuario_almacen = datav.id;
-          this.id_proforma_numero_id = datav.id;
+          // this.almacn_parame_usuario_almacen = datav.id;
+          // this.id_proforma_numero_id = datav[0].id;
+          // this.descrip_proforma_numero_id = datav[0].descripcion;
+          // this.tdc = datav.codtarifadefect;
+          // this.cod_descuento_modal_codigo = datav.coddescuentodefect;
+          // this.cod_vendedor_cliente_modal = datav.codvendedor;
+
           this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.moneda_get_catalogo = datav.codmoneda;
-          //this.tdc = datav.codtarifadefect;
-          //this.cod_descuento_modal_codigo = datav.coddescuentodefect;
           this.cod_precio_venta_modal_codigo = datav.codtarifadefect;
-          //this.cod_vendedor_cliente_modal = datav.codvendedor;
         },
 
         error: (err: any) => {
@@ -200,9 +214,48 @@ export class FacturaNotaRemisionComponent implements OnInit {
       })
   }
 
+  getNotaRemision() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "4")
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ FacturaNotaRemisionComponent ~ getNotaRemision ~ datav:", datav)
+
+          this.id_proforma_numero_id = datav[0].id;
+          this.descrip_proforma_numero_id = datav[0].descripcion;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getCatalogoFacturas() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
+
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "1")
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ FacturaNotaRemisionComponent ~ getCatalogoFacturas ~ datav:", datav)
 
 
+          this.id_factura_catalogo = datav[0].id;
+          this.descrip_factura_catalogo = datav[0].descripcion;
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  rutaTemplateFactura() {
+    this.router.navigate(['/venta/transacciones/facturaTemplate']);
+  }
 
 
 
@@ -231,7 +284,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
     });
   }
 
-  modalTipoID(): void {
+  modalCatalogoNotasDeRemision(): void {
     this.dialog.open(CatalogoNotasRemisionComponent, {
       width: 'auto',
       height: 'auto',

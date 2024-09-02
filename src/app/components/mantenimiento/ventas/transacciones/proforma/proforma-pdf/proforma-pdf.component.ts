@@ -48,6 +48,12 @@ export class ProformaPdfComponent implements OnInit {
           //datav.docveprofCab CABECERA Y FOOTER
           this.data_cabecera_footer_proforma = datav.docveprofCab;
 
+          // Agregar el número de orden a los objetos de datos
+          datav.dtveproforma1.forEach((element, index) => {
+            element.nroitem = index + 1;
+            element.orden = index + 1;
+          });
+
           //datav.dtveproforma1 DETALLE
           this.data_detalle_proforma = datav.dtveproforma1;
           this.data_detalle_etiqueta = datav.dt_etiqueta;
@@ -69,6 +75,12 @@ export class ProformaPdfComponent implements OnInit {
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
           //datav.docveprofCab CABECERA Y FOOTER
+          // Agregar el número de orden a los objetos de datos
+          datav.dtveproforma1.forEach((element, index) => {
+            element.nroitem = index + 1;
+            element.orden = index + 1;
+          });
+
           this.data_cabecera_footer_proforma = datav.docveprofCab
 
           //datav.dtveproforma1 DETALLE

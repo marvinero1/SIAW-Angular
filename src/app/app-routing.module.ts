@@ -118,6 +118,7 @@ import { ModificarProformaComponent } from '@components/mantenimiento/ventas/tra
 import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/transacciones/proforma/proforma-pdf-email/proforma-pdf-email.component';
 import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
+import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/transacciones/facturas/factura-template/factura-template.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -725,6 +726,11 @@ const routes: Routes = [
 
 
 
+            // FACTURA TEMPLATE
+            {
+                path: 'venta/transacciones/facturaTemplate',
+                component: FacturaTemplateComponent
+            },
 
 
 

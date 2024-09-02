@@ -578,7 +578,7 @@
                 style="cursor: pointer; border: 1;">
                 <i class="fa fa-search" aria-hidden="true" style="color: #093070;"></i>
               </span>
-              <span class="input-group-text form-control-sm" (click)="mandarCodCliente(codigo_cliente);"
+              <span class="input-group-text form-control-sm" (click)="getClientByID(codigo_cliente);"
                 style="cursor: pointer; border: 1;">
                 <i class="fa fa-eye" aria-hidden="true" style="color: #093070;"></i>
               </span>
@@ -651,11 +651,12 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;">
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 40px;border: 0 !important;">
                 <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback">
                   <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar NIT">info</mat-icon>
                 </div>
-                <u> N.I.T</u>
+                <u> <i class="fa fa-eye" (click)="verificarNit()" style="cursor:pointer"></i>
+                  N.I.T</u>
               </span>
 
               <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
@@ -1384,6 +1385,13 @@
                       <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i></span>
                     </button>
                   </ng-container>
+
+                  <!-- <ng-container *ngIf="element.DatoA != '' && element.DatoB !='' ">
+                    <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                      style="margin-block-start: 9px;" (click)="resolverValidacionEnValidarMensaje(element);">
+                      <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i></span>
+                    </button>
+                  </ng-container> -->
                 </td>
               </ng-container>
 
@@ -1706,9 +1714,14 @@
 
                         </div><br>
                         <div style="text-align: center;">
-                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                          <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
                             (click)="modalAnticiposProforma();" [disabled]="!anticipo_button"
                             style="border-color: #ffc107;"><i class="fa fa-archive"></i> Asignar Anticipo
+                          </button> -->
+
+                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                            (click)="modalAnticiposProforma();" style="border-color: #ffc107;"><i
+                              class="fa fa-archive"></i> Asignar Anticipo
                           </button>
                         </div>
                       </div>
@@ -2425,7 +2438,7 @@
             </div>
 
             <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-              (click)="modalClienteEtiqueta(codigo_cliente_catalogo_real);">
+              (click)="modalClienteEtiqueta(codigo_cliente_catalogo_real, direccion);">
               <!-- [disabled]="!codigo_cliente" -->
               <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
             </button>

@@ -24,8 +24,8 @@
             <div class="flex">
               <span class="p-input-icon-left ml-auto">
                 <i class="pi pi-search"></i>
-                <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
-                  pAutoFocus [autofocus]="true" />
+                <input pInputText type="text" [(ngModel)]="searchValue" (input)="onSearchChange(searchValue)" pAutoFocus
+                  [autofocus]="true" />
               </span>
             </div>
           </ng-template>

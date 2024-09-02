@@ -19,6 +19,7 @@ import {
 } from "ngx-toastr";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogConfirmacionComponent } from "@modules/dialog-confirmacion/dialog-confirmacion.component";
+import { NgxSpinnerService } from "ngx-spinner";
 @Injectable({
 	providedIn: 'root'
 })
@@ -26,12 +27,14 @@ export class Interceptor implements HttpInterceptor {
 
 	public err;
 	public status;
-	public error_code: number;
+	public error_code: any;
 	public userConn: string;
 	public tokken: any = [];
 	public refresh: any = [];
 
-	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService, private dialog: MatDialog) {
+	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService, private spinner: NgxSpinnerService,
+		private dialog: MatDialog) {
+
 		this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 		this.tokken = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
 	}
@@ -40,7 +43,12 @@ export class Interceptor implements HttpInterceptor {
 		return next.handle(request).pipe(catchError(err => {
 			this.err = err.error;
 			this.status = err.status;
-			this.error_code = this.err.resp;
+			if (this.err && this.err.resp !== undefined && this.err.resp !== null) {
+				this.error_code = this.err.resp;
+			} else {
+				this.error_code = "error devolvio nulo";
+			}
+
 			console.log(this.error_code, this.status);
 
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
@@ -150,21 +158,23 @@ export class Interceptor implements HttpInterceptor {
 			// 	case 401:
 			// 		this.refreshToken();
 
-			// 		this._snackBar.open('¡ USUARIO SIN TOKEN O TOKEN EXPIRADO !', '🚫', {
+			// 		this._snackBar.open('¡ USUARIO SIN TOKEN O TOKEN EXPIRADO !', '☠️', {
 			// 			duration: 3000,
 			// 			panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 			// 		});
 			// 		break;
 			// }
 
-			// switch(this.status){
-			//     case 404:
-			//         this._snackBar.open('¡ Usuario SIN AUTORIZACION, Falta de Token !', '🚫', {
-			//             duration: 3000,
-			//             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
-			//         });
-			//         break;
-			// }
+			switch (this.status) {
+				case 500:
+					// this._snackBar.open('¡ ERROR 500 EN EL SERVIDOR, FALLA SERVIDOR', '☠️', {
+					// 	duration: 3000,
+					// 	panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+					// });
+
+					this.spinner.hide();
+					break;
+			}
 
 			const error = err.error.message || err.statusText;
 			console.log(error);

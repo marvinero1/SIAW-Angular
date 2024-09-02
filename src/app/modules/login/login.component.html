@@ -144,8 +144,9 @@
                     <mat-label style="font-weight: 100 !important;"> Contraseña </mat-label>
                     <mat-icon matPrefix style="padding: 0px 8px 0px 8px !important;margin-bottom: 20px !important">lock
                     </mat-icon>
-                    <input matInput formControlName="password" type="password" style="padding-top: 8px;"
-                      placeholder="Contraseña" autocomplete="off" id="passwordInput" #passwordInput required />
+                    <input matInput formControlName="password" type="password" [(ngModel)]="contrasenia"
+                      style="padding-top: 8px;" placeholder="Contraseña" autocomplete="off" id="passwordInput"
+                      #passwordInput required />
                   </mat-form-field>
                 </div>
 

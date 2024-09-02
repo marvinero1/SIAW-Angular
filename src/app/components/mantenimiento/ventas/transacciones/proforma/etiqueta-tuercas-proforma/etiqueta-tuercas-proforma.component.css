@@ -21,6 +21,10 @@ span{
     font-size: 1.40rem !important;
 }
 
+.table td, .table th{
+    padding: 0.25rem !important;
+}
+
 .cabecera p{
  font-family: 'Courier New' !important;
   font-size: 0.91rem !important;

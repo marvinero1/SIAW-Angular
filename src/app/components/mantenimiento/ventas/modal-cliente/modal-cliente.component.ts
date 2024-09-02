@@ -52,15 +52,16 @@ export class ModalClienteComponent implements OnInit {
       this.cliente_referencia_proforma_get = false;
     }
     console.log(this.cliente_referencia_proforma_get);
-  }
 
-  ngOnInit() {
     this.getClienteCatalogo();
   }
 
-  getClienteCatalogo() {
-    this.spinner.show();
+  ngOnInit() {
 
+  }
+
+  getClienteCatalogo() {
+    // this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
     return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
       .subscribe({
@@ -97,25 +98,25 @@ export class ModalClienteComponent implements OnInit {
     console.log(searchValue);
 
     // Debounce logic
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.dt1.filterGlobal(searchValue, 'contains');
+    // clearTimeout(this.debounceTimer);
+    // this.debounceTimer = setTimeout(() => {
+    this.dt1.filterGlobal(searchValue, 'contains');
 
-      // Focus logic
-      const elements = this.paras.toArray();
-      let focused = false;
-      for (const element of elements) {
-        if (element.nativeElement.textContent.trim().includes(searchValue)) {
-          element.nativeElement.focus();
-          focused = true;
-          break;
-        }
-      }
+    // Focus logic
+    // const elements = this.paras.toArray();
+    // let focused = false;
+    // for (const element of elements) {
+    //   if (element.nativeElement.textContent.trim().includes(searchValue)) {
+    //     element.nativeElement.focus();
+    //     focused = true;
+    //     break;
+    //   }
+    // }
 
-      if (!focused) {
-        console.warn('No se encontró ningún elemento para hacer focus');
-      }
-    }, 750); // 750 ms de retardo
+    // if (!focused) {
+    //   console.warn('No se encontró ningún elemento para hacer focus');
+    // }
+    // }, 750); // 750 ms de retardo
   }
 
   mandarCliente() {

@@ -28,6 +28,7 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { CatalogoNotasRemisionService } from './servicio-catalogo-notas-remision/catalogo-notas-remision.service';
 
 @Component({
   selector: 'app-nota-remision',
@@ -302,7 +303,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     private servicioCliente: ServicioclienteService, private _formBuilder: FormBuilder,
     private serviciotipoid: TipoidService, private toastr: ToastrService, private spinner: NgxSpinnerService,
     private log_module: LogService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
-    public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public nombre_ventana_service: NombreVentanaService) {
+    public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService,
+    public nombre_ventana_service: NombreVentanaService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -321,6 +323,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
       this.cod_id_tipo_modal = data.id_tipo.id;
+    });
+
+    this.servicioCatalogoNotasRemision.disparadorDeIDNotaRemision.subscribe(data => {
+      console.log("Recibiendo ID Tipo: ", data);
+      this.cod_id_tipo_modal = data.proforma.id;
+      this.getIdTipoNumeracion(data.proforma.id)
     });
 
     // transferencia
@@ -477,8 +485,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.api.getAll('/venta/transac/veproforma/getNumActProd/' + this.userConn + "/" + id_proforma)
       .subscribe({
         next: (datav) => {
-          this.id_proforma_numero_id = datav.shift();
-          // console.log('data', this.id_proforma_numero_id);
+          // console.log("🚀 ~ NotaRemisionComponent ~ getIdTipoNumeracion ~ datav:", datav)
+          this.id_proforma_numero_id = datav
         },
 
         error: (err: any) => {
@@ -1118,8 +1126,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   sin_validar_monto_total: boolean = false;
   sin_validar_doc_ant_inv: boolean = false;
 
-
-
   // BTN GRABAR NT RMS
   async submitDataNotaRemision(codigo_control) {
     this.spinner.show();
@@ -1227,7 +1233,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           // 65 - sin_validar_monto_min_desc,
           // 147 - sin_validar_monto_total,
           // 48 - sin_validar_doc_ant_inv
-
           switch (codigo_control) {
             case 3:
               const dialogRefEspeciales_sin_validar_negativos = this.dialog.open(PermisosEspecialesParametrosComponent, {
@@ -1528,36 +1533,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  openConfirmacionDialog(message: string, array): Promise<boolean> {
-    //btn aceptar
-    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
-      width: 'auto',
-      height: 'auto',
-      data: { mensaje_dialog: message, msj_array: array },
-      disableClose: true,
-    });
-
-    return firstValueFrom(dialogRef.afterClosed());
-  }
-
   // COMPONENTE
   totabilizarYGrabar() {
     // ACA RUTA 
@@ -1625,7 +1600,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(this.totabilizar_post);
             this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
 
-            this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+            this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
 
             console.log(this.array_items_carrito_y_f4_catalogo);
             setTimeout(() => {
@@ -1775,7 +1750,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           console.timeEnd('Tiempo de la petición HTTP');
           console.log('Datos recibidos:');
 
-          this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -1811,7 +1786,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           console.log(datav);
 
-          this.log_module.guardarLog(this.ventana, "Impresion" + datav.codproforma, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+          this.log_module.guardarLog(this.ventana, "Impresion" + datav.codproforma, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
           console.log(datav);
           this.toastr.success("IMPRIMIENDO 🖨️");
 
@@ -2152,7 +2127,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.FormularioData.valid) {
       this.spinner.show();
       console.log("DATOS VALIDADOS");
-      console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
+      // console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
 
       if (this.tipopago === 0) {
         this.tipopago = "CONTADO"
@@ -2314,6 +2289,18 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         complete: () => { }
       })
+  }
+
+  openConfirmacionDialog(message: string, array): Promise<boolean> {
+    //btn aceptar
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message, msj_array: array },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
   }
 
   tranferirNotasRemision() {

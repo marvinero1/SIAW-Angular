@@ -27,6 +27,9 @@ export class ModalClienteDireccionComponent implements OnInit {
 
   public cliente_real_array: any = [];
   public direccion_view: any = [];
+
+  latitud: any
+  longitud: any
   userConn: any;
 
   @ViewChild('dt1') dt1: Table;
@@ -58,8 +61,12 @@ export class ModalClienteDireccionComponent implements OnInit {
       })
   }
 
+
+
   getDireccionView(element) {
     this.cliente_real_array = element.data;
+    this.latitud = element.data.latitud;
+    this.longitud = element.data.longitud;
     console.log(this.cliente_real_array);
   }
 
@@ -95,6 +102,8 @@ export class ModalClienteDireccionComponent implements OnInit {
 
     this.servicioCliente.disparadorDeDireccionesClientes.emit({
       direccion: this.cliente_real_array.direccion,
+      latitud_direccion: this.latitud,
+      longitud_direccion: this.longitud,
     });
 
     this.close();

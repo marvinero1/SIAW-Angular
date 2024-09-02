@@ -1,57 +1,56 @@
 #content {
-    margin: 18px;
-    padding: 18px;
-    /* padding-right: 75px !important; */
-    font-family: 'Arial' !important;
+  margin: 18px;
+  padding: 18px;
+  font-family: 'Arial' !important;
 }
 
-p{
-    font-size: 1.05rem !important;
-    margin-bottom: 0rem !important;
-    font-family: 'Arial' !important;
+p {
+  font-size: 1.10rem !important;
+  margin-bottom: 0.5rem !important; /* Ajuste de margen inferior */
+  font-family: 'Arial' !important;
+  margin-bottom: 0px !important;
 }
 
-th{
-    font-size: 0.75rem;
-}
-td{
-    padding: .25rem !important;
-}
-span{
-    font-size: 1.40rem !important;
+span {
+  font-size: 1.40rem !important;
 }
 
-.cabecera p{
- font-family: 'Courier New' !important;
+.cabecera p {
+  font-family: 'Courier New' !important;
   font-size: 0.91rem !important;
 }
 
-.center{
-    text-align: center !important;
+.center {
+  text-align: center !important;
 }
 
-.right{
-    text-align: right !important;
+.right {
+  text-align: right !important;
 }
 
-.left{
-    text-align: left !important;
+.left {
+  text-align: left !important;
 }
 
-.col-3{
-    flex: 0 0 25% !important;
-    max-width: 23% !important;
+.col-3 {
+  flex: 0 0 23% !important; /* Ajuste en flex para asegurar el tamaño adecuado */
+  max-width: 23% !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Asegura que el contenido esté centrado verticalmente */
 }
 
-/* para imprimir */
+/* Para impresión */
 .content {
-	display: none;
+  display: none;
 }
+
 @media print {
-	.no-printme  {
-		display: none;
-	}
-	.content  {
-		display: block;
-	}
+  .no-printme {
+    display: none;
+  }
+
+  .content {
+    display: block;
+  }
 }

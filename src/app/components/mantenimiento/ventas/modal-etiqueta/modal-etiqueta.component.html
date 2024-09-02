@@ -36,23 +36,23 @@
           <mat-card style="background-color: #f9f9f9; border: 1px #093070 solid;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <div class="nombre">
-                <strong>{{ data.linea1  }}</strong>
+                <strong>{{ data_map.linea1  }}</strong>
               </div>
               <input type="text" [(ngModel)]="input" style="width: 100% !important;">
               <div class="text-center">
-                <label>{{ data.representante }}</label>
+                <label>{{ data_map[0]?.representante }}</label>
               </div>
               <div>
                 <label>TEL.</label>
-                <input type="text" value="{{ data.telefono }}" readonly>
+                <input type="text" value="{{ data_map[0]?.telefono }}" readonly>
               </div>
               <div>
                 <label>CEL.</label>
-                <input type="text" value="{{ data.celular }}" readonly>
+                <input type="text" value="{{ data_map[0]?.celular }}" readonly>
               </div>
 
               <div class="text-center">
-                <label>{{ data.ciudad }}</label>
+                <label>{{ data_map[0]?.ciudad }}</label>
               </div>
             </mat-card-content>
           </mat-card>
@@ -80,11 +80,11 @@
         <mat-tab label="Georeferencia"><br>
           <div class="text-center">
             <label>LATITUD: </label>
-            <label>{{ data.latitud_entrega }}</label>
+            <label>{{ data_map[0]?.latitud_entrega }}</label>
           </div>
           <div class="text-center">
             <label>LONGITUD: </label>
-            <label>{{ data.longitud_entrega }}</label>
+            <label>{{ data_map[0]?.longitud_entrega }}</label>
           </div>
 
           <div class="text-center">
