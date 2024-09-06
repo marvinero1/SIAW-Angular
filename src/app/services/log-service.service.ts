@@ -27,14 +27,14 @@ export class LogService {
   createFormLog(ventana: string, detalle: string, tipo: string, id, numero_id): FormGroup {
 
     const usuario = this.usuarioLogueado;
-    let hour = this.hora_actual.getHours();
-    let minuts = this.hora_actual.getMinutes();
-    let hora_actual_complete = hour + ":" + minuts;
+    let hour = this.hora_actual.getHours().toString().padStart(2, '0');
+    let minutes = this.hora_actual.getMinutes().toString().padStart(2, '0');
+    let hora_actual_complete = `${hour}:${minutes}`; // Usar backticks para concatenar
 
     return this._formBuilder.group({
       usuario: new UntypedFormControl(usuario),
       fecha: new UntypedFormControl(this.datePipe.transform(this.fecha_hoy_dia, "yyyy-MM-dd")),
-      hora: new UntypedFormControl(hora_actual_complete),
+      hora: new UntypedFormControl(hora_actual_complete), // Se usa hora_actual_complete correctamente formateado
       entidad: new UntypedFormControl("SIAW"),
       codigo: new UntypedFormControl(""),
       id_doc: new UntypedFormControl(id),
@@ -48,7 +48,7 @@ export class LogService {
   createFormLogVentana(ventana: string, detalle: string): FormGroup {
     const usuario = this.usuarioLogueado;
     const hora_actual_complete = new Date();
-    const horas = hora_actual_complete.getHours();
+    const horas = hora_actual_complete.getHours().toString().padStart(2, '0');
     const minutos = hora_actual_complete.getMinutes().toString().padStart(2, '0');
     const hora_formateada = `${horas}:${minutos}`;
 

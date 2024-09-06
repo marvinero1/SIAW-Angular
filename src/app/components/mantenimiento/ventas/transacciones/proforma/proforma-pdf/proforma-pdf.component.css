@@ -4,10 +4,113 @@
   /* padding-right: 65px !important;  */
   font-family: 'Courier New' !important;
   /* width: 100%; */
+  font-size: 0.95rem !important;
   size: auto;
-  margin-left: 10mm;
-  margin-right: 10mm;
+  margin-left: 4mm;
+  margin-right: 4mm;
+  margin-bottom: 10mm;
+  margin-top: 4mm;
 }
+
+
+@page { size: auto;  margin: 4mm; }
+
+@media print {
+  .no-printme  {
+		display: none;
+	}
+  
+  body {
+    background-image: none;
+  }
+
+  /* #content {
+    margin-left: 2mm;
+    margin-right: 2mm;
+    margin-bottom: 5mm;
+    margin-top: 5mm;
+  } */
+
+
+  /* Ajustes para manejar márgenes en la impresión */
+  @page {
+    size: auto;
+    margin: 4mm;
+    font-size: 0.95rem !important;
+  }
+
+  .thdescrip{
+    width: 80% !important;
+  }
+
+  .td td{
+    /* tamanio de letra del detalle */
+    font-size: 1.00rem !important;
+    border-spacing: 2px !important;
+    line-height: 0.4 !important;
+  }
+
+
+
+  .header {
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+  }
+
+  .footer-table {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .table_component_detalle{
+    /* margin-bottom: 60px; Para dejar espacio al pie de página */
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1.2 !important;
+    font-family: 'Courier New' !important;
+    letter-spacing: -0.50px !important;
+  }
+}
+
+
+
+
+
+
+.header {
+    /* position: fixed; */
+    top: 0;
+    width: 100%; 
+  }
+
+  .table_component_detalle {
+    margin-bottom: 60px; /* Para dejar espacio al pie de página */
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.50px !important;
+  }
+
+  .footer-table {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+    /* margin-top: 20px; */
+  }
+
+
+
+
+
+
+
+
+
+
 
 .pe{
   font-size: 0.9rem !important;
@@ -46,49 +149,17 @@ row{
 
 
 
-
-
-
-
-
-.table-detalle {
-  width: 100% !important;
-}
-
 .table-detalle td{
   /* tamanio de letra del detalle */
   font-size: 1.00rem !important;
   border-spacing: 0px !important;
   line-height: 1.2 !important;
+  font-family: 'Courier New' !important
 }
 
-.table_component_detalle {
-  /* overflow: auto; */
-  width: 100%;
-  font-family: Arial;
-}
 
-.table_component_detalle table {
-  /* border: 1px solid #c5c2c2; */
-  height: 100%;
-  width: 100%;
-  table-layout: auto;
-}
 
-.table_component_detalle th {
-  border-bottom: 1px solid #000000;
-  border-top: 1px solid #000000;
-  background-color: #ffffff;
-  color: #000000;
-  /* padding: 5px; */
-}
 
-.table_component_detalle td {
-  /* border: 1px solid #c5c2c2; */
-  background-color: #ffffff;
-  color: #000000;
-  /* padding: 5px; */
-}
 
 .tr_linea{
   border: 1px solid black !important;
@@ -110,17 +181,7 @@ p{
 }
 
 
-
-
 /* para imprimir */
 .content {
 	display: none;
-}
-@media print {
-	.no-printme  {
-		display: none;
-	}
-	.content  {
-		display: block;
-	}
 }

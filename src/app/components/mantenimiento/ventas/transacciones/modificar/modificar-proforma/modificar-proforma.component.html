@@ -777,7 +777,7 @@
                       style="text-align: center !important; cursor: pointer;"></i>&nbsp;<u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:17%" class="center">
+                  <th pSortableColumn="descripcion" style="width:18%;" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
@@ -1692,7 +1692,8 @@
                       <div class="col">
                         <div class="input-group">
                           <mat-checkbox class="example-margin" formControlName="pago_contado_anticipado"
-                            (click)="enabledPagoFormaAnticipada(true);"></mat-checkbox>
+                            (click)="enabledPagoFormaAnticipada(true, pago_contado_anticipado);"
+                            [(ngModel)]="pago_contado_anticipado"></mat-checkbox>
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 5px;border: 0 !important;"><u>El Pago se
@@ -1720,8 +1721,9 @@
                           </button> -->
 
                           <button class="btn btn-outline-primary form-control-sm" type="button"
-                            (click)="modalAnticiposProforma();" style="border-color: #ffc107;"><i
-                              class="fa fa-archive"></i> Asignar Anticipo
+                            [disabled]="!pago_contado_anticipado" (click)="modalAnticiposProforma();"
+                            style="border-color: #ffc107;">
+                            <i class="fa fa-archive"></i> Asignar Anticipo
                           </button>
                         </div>
                       </div>
@@ -2366,7 +2368,7 @@
               </div>
               <div class="col text-right">
                 <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                  (click)="modalRecargos();">
+                  (click)="modalRecargos();" disabled="true">
                   <!-- [disabled]="total === 0" -->
                   <mat-icon>monetization_on</mat-icon>
                 </button>

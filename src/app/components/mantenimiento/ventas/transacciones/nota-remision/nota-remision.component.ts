@@ -445,7 +445,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log('data', datav);
           this.cod_id_tipo_modal = datav.id;
           this.id_proforma_numero_id = datav.numeroid;
-          this.almacn_parame_usuario_almacen = datav.codalmacen;
+          // this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.moneda_get_catalogo = datav.codmoneda;
           this.tdc = datav.codtarifadefect;
           this.cod_descuento_modal_codigo = datav.coddescuentodefect;
@@ -468,7 +468,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.almacn_parame_usuario = datav;
           console.log('data', this.almacn_parame_usuario);
 
-          this.almacn_parame_usuario_almacen = datav.codalmacen;
+          // this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa;
           this.cod_descuento_modal_codigo = this.almacn_parame_usuario.coddescuento;
         },
@@ -868,7 +868,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   imprimir_proforma_tranferida(proforma) {
     this.spinner.show();
     console.log("Imprimir Proforma: ", proforma.data);
-
+    this.tipoventa = 0;
+    this.tipopago = proforma.data.cabecera.tipopago
     this.codigo_proforma = proforma.data.cabecera.codigo;
     this.total_cabecera = proforma.data.cabecera.total;
     this.moneda_cabecera = proforma.data.cabecera.codmoneda;
@@ -893,6 +894,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.email_cliente = proforma.data.cabecera.email;
     this.cliente_casual = proforma.data.cabecera.casual;
     this.preparacion = proforma.data.cabecera.preparacion;
+    this.almacn_parame_usuario_almacen = proforma.data.cabecera.codalmacen;
 
     this.moneda_get_catalogo = proforma.data.cabecera.codmoneda;
     this.tdc = proforma.data.cabecera.tdc;
@@ -900,8 +902,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.codcliente_real = proforma.data.codcliente_real;
     this.codcliente_real_descripcion = proforma.data.codclientedescripcion;
 
-    this.tipopago = proforma.data.cabecera.tipopago;
-    this.tipoventa = 0;
     this.estado_contra_entrega_input = proforma.data.cabecera.estado_contra_entrega;
     this.contra_entrega = proforma.data.cabecera.contra_entrega;
     this.codigo_proforma = proforma.data.cabecera.codigo;
@@ -1068,7 +1068,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       estado_contra_entrega: [this.dataform.estado_contra_entrega],
 
       tipo_venta: 0,
-      tipopago: [{ value: this.dataform.tipopago === 0 ? 0 : 1, disabled: true }],
+      tipopago: [{ value: this.dataform.tipopago === "CONTADO" ? 0 : 1, disabled: true }],
 
       // tipopago: [this.dataform.tipopago],
       odc: "",
@@ -1163,7 +1163,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log(submit_nota_remision);
     console.log("Valor Bool antes de la funcion:", this.sin_validar_empaques, this.sin_validar_negativos);
-
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/ " + "/ false /" + this.sin_validar_empaques + " / " + this.sin_validar_negativos + " / " + this.sin_validar_monto_min_desc + " / " + this.sin_validar_monto_total + " /" + this.sin_validar_doc_ant_inv
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
       + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
@@ -1233,6 +1232,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           // 65 - sin_validar_monto_min_desc,
           // 147 - sin_validar_monto_total,
           // 48 - sin_validar_doc_ant_inv
+          this.totabilizar_post = datav;
           switch (codigo_control) {
             case 3:
               const dialogRefEspeciales_sin_validar_negativos = this.dialog.open(PermisosEspecialesParametrosComponent, {
@@ -1569,7 +1569,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       codalmacen_saldo: this.almacn_parame_usuario_almacen,
       descarga: true,
       tipo_venta: 0,
-      tipopago: this.tipopago,
+
     }));
 
     total_proforma_concat = {
@@ -2064,7 +2064,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
-        tipo_doc_id: element.tipo_docid?.toString() || '',
         codcliente_real: element.codcliente_real?.toString() || '',
         nomcliente_real: element.nomcliente_real?.toString() || '',
         codmoneda: element.codmoneda?.toString() || '',
@@ -2116,7 +2115,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         nroidFC_complementaria: "",
         fechalimite_dosificacion: "2030-04-10T00:00:00.532Z",
 
-
         idpf_solurgente: this.id_proforma.toString(),
         noridpf_solurgente: this.nro_id_proforma.toString(),
       }
@@ -2129,17 +2127,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log("DATOS VALIDADOS");
       // console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
 
-      if (this.tipopago === 0) {
-        this.tipopago = "CONTADO"
-      } if (this.tipopago === 1) {
-        this.tipopago = "CREDITO"
-      }
 
       this.valor_formulario_negativos = [this.valor_formulario_negativos].map((element) => ({
         ...element,
         id: this.id_proforma,
         numeroid: this.nro_id_proforma.toString(),
-        tipo_vta: this.tipopago,
       }));
 
       let proforma_validar = {

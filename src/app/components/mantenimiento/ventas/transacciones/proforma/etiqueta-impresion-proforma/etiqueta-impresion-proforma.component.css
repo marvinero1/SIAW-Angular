@@ -1,39 +1,78 @@
 #content {
-    margin: 20px;
-    padding: 20px;
-    font-family: 'Arial' !important;
-    line-height: 22px !important;
+  margin: 20px;
+  padding: 20px;
+  font-family: 'Arial' !important;
+  line-height: 22px !important;
 }
 
-.pe{
-    font-size: 0.9rem !important;
-    margin-bottom: 0rem !important;
-    font-family: 'Arial' !important;
+.pe {
+  font-size: 1.10rem !important;
+  margin-bottom: 0rem !important;
+  font-family: 'Arial' !important;
 }
 
-.espan{
-    font-size: 0.9rem !important;
+.espan {
+  font-size: 0.9rem !important;
 }
 
 .content-box {
-  border: 6px solid black;
-  width: auto;
-  height: auto !important;
-  margin-right: 5px;
+  /* line-height: 23.8px; */
+  /* margin-right: 6px; */
+  /* margin-bottom: 6px; */
+
+  border: 5px solid black;
+  width: 100%;
+  height: auto;
   text-align: center;
-  margin-bottom: 4px;
-  overflow: hidden;
+  word-wrap: break-word;
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: center;
+  page-break-inside: avoid !important;
 }
 
-/* para imprimir */
-.content {
-	display: none;
-}
-@media print {
-	.no-printme  {
-		display: none;
-	}
-	.content  {
-		display: block;
-	}
+
+
+
+
+
+@page { size: auto;  margin: 4mm; }
+    /* para imprimir */
+    @media print {
+    .no-printme {
+        display: none;
+    }
+
+    #content {
+        margin: 20px;
+        padding: 20px;
+        font-family: 'Arial' !important;
+        line-height: 22px !important;
+    }
+
+    .pe {
+        font-size: 1.10rem !important;
+        margin-bottom: 0rem !important;
+        font-family: 'Arial' !important;
+    }
+
+    .espan {
+        font-size: 0.9rem !important;
+    }
+
+    .content-box {
+        /* line-height: 23.8px; */
+        /* margin-right: 6px; */
+        /* margin-bottom: 6px; */
+        /* display: flex; */
+
+        border: 5px solid black;
+        width: 100%;
+        height: auto;
+        text-align: center;
+        word-wrap: break-word;
+        flex-direction: column;
+        justify-content: center;
+        page-break-inside: avoid !important;
+    }
 }

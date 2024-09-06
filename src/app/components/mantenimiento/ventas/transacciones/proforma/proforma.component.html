@@ -137,12 +137,12 @@
                   <i class="fa fa-clone green" aria-hidden="true"></i> Ultimas Proformas
                 </button>
               </mat-list-item>
-              <mat-list-item role="listitem" class="list-button">
+              <!-- <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
                   (click)="modalBtnImpresiones();">
                   <i class="fa fa-print" aria-hidden="true"></i> Mandar Imprimir
                 </button>
-              </mat-list-item>
+              </mat-list-item> -->
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
                   (click)="detalleProformaCarritoTOExcel();">
@@ -539,7 +539,7 @@
             </div>
             <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
               <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
-                formControlName="razon_social" [(ngModel)]="razon_social" readonly>
+                formControlName="razon_social" [(ngModel)]="razon_social">
             </ng-container>
 
             <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
@@ -560,15 +560,15 @@
                 style="padding: 7px 5px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
             </div>
 
-            <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
+            <ng-container *ngIf="razon_social === 'SIN NOMBRE';else nft">
               <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
                 formControlName="nomcliente">
             </ng-container>
 
-            <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
+            <ng-template #nft>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
                 formControlName="nomcliente" readonly>
-            </ng-container>
+            </ng-template>
           </div>
 
           <div class="input-group">
@@ -581,13 +581,24 @@
               </span>
             </div>
 
-            <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
-              [(ngModel)]="tipo_doc_cliente"
-              [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
-              <mat-option *ngFor="let documento_identidads of documento_identidad"
-                [value]="documento_identidads.codigoclasificador" disabled>
-                {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
-            </mat-select>
+            <ng-container *ngIf="razon_social === 'SIN NOMBRE'; else tipodocidnit">
+              <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+                [(ngModel)]="tipo_doc_cliente"
+                [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
+                <mat-option *ngFor="let documento_identidads of documento_identidad"
+                  [value]="documento_identidads.codigoclasificador">
+                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+              </mat-select>
+            </ng-container>
+            <ng-template #tipodocidnit>
+              <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+                [(ngModel)]="tipo_doc_cliente"
+                [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
+                <mat-option *ngFor="let documento_identidads of documento_identidad"
+                  [value]="documento_identidads.codigoclasificador" disabled>
+                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+              </mat-select>
+            </ng-template>
           </div>
 
           <div class="input-group">
@@ -1617,7 +1628,10 @@
                       <div class="col">
                         <div class="input-group">
                           <mat-checkbox class="example-margin" formControlName="pago_contado_anticipado"
-                            (click)="enabledPagoFormaAnticipada(true);"></mat-checkbox>
+                            (click)="enabledPagoFormaAnticipada(true, pago_contado_anticipado);"
+                            [(ngModel)]="pago_contado_anticipado">
+                          </mat-checkbox>
+
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 5px;border: 0 !important;"><u>El Pago se
@@ -1646,7 +1660,8 @@
                           </button> -->
 
                           <button class="btn btn-outline-primary form-control-sm" type="button"
-                            (click)="modalAnticiposProforma();" style="border-color: #ffc107;">
+                            (click)="modalAnticiposProforma();" style="border-color: #ffc107;"
+                            [disabled]="!pago_contado_anticipado">
                             <i class="fa fa-archive"></i> Asignar Anticipo
                           </button>
                         </div>
@@ -2276,7 +2291,7 @@
               </div>
               <div class="col text-right">
                 <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                  (click)="modalRecargos();">
+                  (click)="modalRecargos();" disabled="true">
                   <!-- [disabled]="total === 0" -->
                   <mat-icon>monetization_on</mat-icon>
                 </button>

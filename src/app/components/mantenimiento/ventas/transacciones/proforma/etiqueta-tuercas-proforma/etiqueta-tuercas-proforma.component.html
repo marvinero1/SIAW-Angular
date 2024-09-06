@@ -4,7 +4,7 @@
 </div>
 
 <div id="content">
-  <div class="cabecera">
+  <div class="cabecera header">
     <div class="row">
       <div class="col-sm-3 left">
         <p style="font-size: 1.22rem !important;"><strong><u>PERTEC S.R.L</u></strong></p>
@@ -33,23 +33,41 @@
       </div>
       <div class="col-md-3"></div>
     </div>
+    <div class="row">
+      <div class="col-sm left">
+        <p class="pe"><strong>Tipo de Pago:</strong>{{ data_cabecera_footer_proforma.tipopago }} </p>
+      </div>
+      <div class="col-sm center">
+        <p class="pe"><strong>Almacen:</strong> {{ data_cabecera_footer_proforma.codalmacen }}</p>
+      </div>
+      <div class="col-sm right">
+        <p>Pagina 1 de 1</p>
+      </div>
+    </div>
   </div>
 
-  <div class="row">
+  <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
+  <br>
+
+  <div class="row table_component_detalle">
     <div class="col-3 p-1" *ngFor="let items of tuercas_detalle" style="border: 2px solid black; width: 100%; height: 150px; line-height: 16.8px; 
      margin-right: 6px; text-align: center; margin-bottom: 6px; word-wrap: break-word; 
-     display: flex; flex-direction: column; justify-content: center;">
+     display: flex; flex-direction: column; justify-content: center;page-break-inside: avoid !important;">
 
       <p><strong>{{ items.descripcion }}</strong></p>
       <span><strong>{{ items.medida }}</strong></span>
       <p><strong>{{ items.cantidad | number:'1.2-2' }}</strong></p>
       <p><strong>{{ items.udm }}</strong></p>
-      <p><strong>( &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</strong></p>
+      <p><strong>(
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+        </strong>
+      </p>
     </div>
   </div>
   <hr>
 
-  <div class="row">
+  <div class="row footer-table">
     <div class="col">
       <p style="text-align: center;"><strong><u>DETALLE TOTAL DE TUERCAS</u></strong></p>
       <table class="table table-hover">

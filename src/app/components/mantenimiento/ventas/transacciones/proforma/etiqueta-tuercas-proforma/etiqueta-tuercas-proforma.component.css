@@ -1,9 +1,54 @@
 #content {
-    margin: 18px;
-    padding: 18px;
+    /* margin: 18px;
+    padding: 18px; */
     /* padding-right: 75px !important; */
     font-family: 'Arial' !important;
+      size: auto;
+  margin-left: 4mm;
+  margin-right: 4mm;
+  margin-bottom: 10mm;
+  margin-top: 4mm;
 }
+
+
+
+/*para imprimir*/
+@page { size: auto;  margin: 4mm; }
+
+@media print {
+  	.no-printme  {
+		display: none;
+	}
+	.content  {
+		display: block;
+	}
+  
+  body {
+    background-image: none;
+  }
+
+    .header {
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+  }
+
+  .footer-table {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    /* margin-top: 420px; */
+  }
+
+  .table_component_detalle{
+    margin-bottom: 60px; /* Para dejar espacio al pie de página */
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.50px !important;
+  }
+}
+/*Fin imprimir*/
 
 p{
     font-size: 1.05rem !important;

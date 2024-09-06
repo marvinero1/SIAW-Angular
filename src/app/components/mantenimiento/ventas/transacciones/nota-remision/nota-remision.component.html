@@ -140,8 +140,7 @@
               <span class="input-group-text form-control-sm" style="padding: 10px 6px 0px 0px;"><u>Tipo de Pago</u>
               </span>
             </div>
-            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
-              formControlName="tipopago">
+            <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" formControlName="tipopago">
               <mat-option [value]=0>CONTADO</mat-option>
               <mat-option [value]=1>CREDITO</mat-option>
             </mat-select>
@@ -1002,9 +1001,9 @@
                     <span class="input-group-text form-control-sm" style="border: 0 !important;">
                       <u>El Pago Se Realiza De Forma Anticipada</u>
                     </span>
-
                     <input type="checkbox" class="form-control form-control-sm" style="margin-left: 5px;"
                       [(ngModel)]="pago_contado_anticipado">
+
                   </div>
                 </div>
               </form>

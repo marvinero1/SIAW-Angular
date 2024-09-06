@@ -28,6 +28,9 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   cod_cliente_get: any;
   cod_cliente_real_get: any;
 
+  representante_string_acortado: string;
+  nom_factura_string_acortado: string;
+
   constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -43,6 +46,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   getDataPDF() {
@@ -52,10 +56,18 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);
-          //datav.docveprofCab CABECERA Y FOOTER
+
           this.data_etiqueta = datav.dt_etiqueta
+          let string_representante = datav.dt_etiqueta.representante;
+          let string_nom_factura = datav.dt_etiqueta.nom_factura;
+
+          console.warn(string_representante);
 
           this.nombre_guardar = datav.docveprofCab.titulo + "-" + datav.docveprofCab.rcodcliente;
+          this.representante_string_acortado = this.truncateString(string_representante, 55);
+          this.nom_factura_string_acortado = this.truncateString(string_nom_factura, 22);
+
+          console.warn("acortado:", string_representante);
         },
 
         error: (err: any) => {
@@ -127,6 +139,19 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
         pdf.save(this.nombre_guardar + '.pdf');
       });
     }
+  }
+
+  truncateString(text: string, maxLength: number): string {
+    if (text.length <= maxLength) {
+      return text;
+    }
+
+    // Corta hasta el máximo permitido y luego encuentra el último espacio
+    const truncatedText = text.slice(0, maxLength);
+    const lastSpaceIndex = truncatedText.lastIndexOf(' ');
+
+    // Si no hay espacios, retorna el texto truncado tal como está, de lo contrario, corta en el último espacio
+    return lastSpaceIndex > 0 ? truncatedText.slice(0, lastSpaceIndex) : truncatedText;
   }
 
   mandarNombre() {

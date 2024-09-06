@@ -1,5 +1,5 @@
-<section style="background-color: #ffe0c0;">
-  <div class="container-fluid">
+<section style="background-color: #ffe0c0;padding: 5px !important;flex: 1;width: 100%;box-sizing: border-box;">
+  <div>
 
     <mat-card-header class="mb-1">
       <div class="col-md-9">
@@ -82,8 +82,9 @@
                     <mat-label style="padding-right: 8px;"><u>Monto a Asignar</u></mat-label>
                     <input type="number" style="width: 22%;text-align: right;" [(ngModel)]="monto_a_asignar"
                       min="0">&nbsp;
-                    <button mat-raised-button (click)="BTNengranaje(monto_a_asignar);"><i class="fa fa-cogs"
-                        style="color: #093070 !important;"></i></button>
+                    <button mat-raised-button (click)="BTNengranaje();"><i class="fa fa-cogs"
+                        style="color: #093070 !important;"></i>
+                    </button>
                   </th>
                 </tr>
 
@@ -106,7 +107,7 @@
                   <div class="team scrollmenu">
                     <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto;">
                       <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8"
-                        style="height: 44px !important;">
+                        style="height: 199px !important;">
 
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>
@@ -141,6 +142,12 @@
                         <ng-container matColumnDef="vendedor">
                           <th mat-header-cell *matHeaderCellDef class="white"> Vendedor </th>
                           <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.codvendedor }}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cod_moneda">
+                          <th mat-header-cell *matHeaderCellDef class="white"> Cod Moneda </th>
+                          <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.codmoneda }}
                           </td>
                         </ng-container>
 
@@ -180,7 +187,7 @@
         <mat-tab label="Anticipos Contado Pendientes">
           <mat-card style="background-color: #ffe0c0;">
             <mat-card-content style="padding: 5px 0px 0px 0px !important;margin-bottom: 1.5px;">
-              <table class="tg" style="width: 100% !important;margin-bottom: 6px;">
+              <table class="tg" style="width: 100% !important;margin-bottom: 6px;height: 199px !important;">
                 <tr>
                   <th class="tg-0lax" style="padding-left: 128px;">
                     <div class="input-group">
@@ -264,7 +271,7 @@
                   <div class="team scrollmenu">
                     <div class="col-lg-12 bg-white" style="width: 100%;overflow-x: auto;">
                       <table mat-table [dataSource]="dataSourceAnticipado" multiTemplateDataRows
-                        class="mat-elevation-z8" style="height: 44px !important;margin-bottom: 6px;">
+                        class="mat-elevation-z8" style="height: 199px !important;margin-bottom: 6px;">
 
                         <ng-container matColumnDef="doc">
                           <th mat-header-cell *matHeaderCellDef class="white"> Doc Anticipado </th>

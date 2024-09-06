@@ -21,7 +21,7 @@ import { ItemSeleccionCantidadComponent } from '../matriz-items/item-seleccion-c
   templateUrl: './matriz-items-clasica.component.html',
   styleUrls: ['./matriz-items-clasica.component.scss']
 })
-export class MatrizItemsClasicaComponent implements OnInit {
+export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit {
   // @HostListener("document:keydown.F9", []) unloadHandler(event: Event) {
   //   // Verificar si la tecla F9 ya ha sido presionada
   //   this.modalStockActualF9();
@@ -109,7 +109,7 @@ export class MatrizItemsClasicaComponent implements OnInit {
   cantidad: number;
   pedido: number;
   pedidoInicial: number;
-  cant_empaque: number;
+  cant_empaque: any;
   saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
@@ -1117,12 +1117,19 @@ export class MatrizItemsClasicaComponent implements OnInit {
       // if (this.cant_empaque === undefined) {
       //   this.cant_empaque = 0
       // };
+
+      if (this.cant_empaque === undefined) {
+        this.cant_empaque = '';
+      }
+
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
-            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque === undefined ? 0 : this.cant_empaque);
+
+            console.warn(this.cant_empaque);
+            // console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque === undefined ? 0 : this.cant_empaque);
             this.pedido = datav.total;
-            this.cantidad = datav.total;
+            //this.cantidad = datav.total;
 
             console.log(this.pedido);
           },
@@ -1130,9 +1137,11 @@ export class MatrizItemsClasicaComponent implements OnInit {
           error: (err: any) => {
             this.pedido = undefined;
             this.cantidad = this.pedido;
+            console.warn(this.cant_empaque);
             console.log(err, errorMessage);
           },
           complete: () => {
+            console.warn(this.cant_empaque);
             const focusedElement = document.activeElement as HTMLElement;
             focusedElement.id = nombre_input;
 

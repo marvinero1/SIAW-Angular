@@ -179,6 +179,7 @@ export class ModalDesctExtrasComponent implements OnInit {
             codigo: element.codigo,
             descripcion: element.descripcion,
             porcentaje: this.info_descuento_porcentaje,
+
           }));
 
           this.info_descuento_peso_minimo = this.info_descuento.peso_minimo;
@@ -332,26 +333,18 @@ export class ModalDesctExtrasComponent implements OnInit {
   }
 
   sendArrayDescuentos() {
-    console.log(this.array_de_descuentos);
+    console.warn(this.array_de_descuentos);
 
     //mapeo para tabladescuentos
     this.array_de_descuentos = this.array_de_descuentos.map((element) => ({
-      codproforma: 0,
+      ...element,
       coddesextra: element.codigo,
       aplicacion: element.aplicacion,
-      codanticipo: 0,
-      codcobranza: 0,
-      codcobranza_contado: 0,
-      codmoneda: "BS",
-      id: 0,
-      montodoc: 0,
-      montorest: 0,
+      montodoc: element.montodoc,
       codigo: element.codigo,
       descrip: element.descripcion,
       descripcion: element.descripcion,
       porcen: element.porcentaje,
-      total_dist: 0,
-      total_desc: 0,
     }))
 
     let total_proforma_concat = {

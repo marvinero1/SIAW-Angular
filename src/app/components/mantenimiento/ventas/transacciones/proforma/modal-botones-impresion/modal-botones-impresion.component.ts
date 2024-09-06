@@ -13,6 +13,7 @@ export class ModalBotonesImpresionComponent implements OnInit {
   usuarioLogueado: any;
   agencia_logueado: any;
   BD_storage: any;
+  grabar_aprobar: boolean;
   public data_impresion: any = [];
 
   constructor(public dialogRef: MatDialogRef<ModalBotonesImpresionComponent>, private router: Router,
@@ -23,6 +24,9 @@ export class ModalBotonesImpresionComponent implements OnInit {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.data_impresion = sessionStorage.getItem("data_impresion") !== undefined ? JSON.parse(sessionStorage.getItem("data_impresion")) : null;
+
+
+    this.grabar_aprobar = this.data_impresion[0].grabar_aprobar;
   }
 
   ngOnInit() {
@@ -44,7 +48,7 @@ export class ModalBotonesImpresionComponent implements OnInit {
     const url_items = this.router.serializeUrl(this.router.createUrlTree(['/etiquetasItemsProforma']));
     window.open(url_items, '_blank');
 
-    if (this.data_impresion[0].grabar_aprobar === true) {
+    if (this.grabar_aprobar === true) {
       const url_tuercas = this.router.serializeUrl(this.router.createUrlTree(['/etiquetaTuercasProforma']));
       window.open(url_tuercas, '_blank');
     }

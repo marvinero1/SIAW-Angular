@@ -251,191 +251,352 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     // } else {
     //   d_tipo_precio_desct = "Descuento"
     // }
+    console.warn("VALOR:", this.isCheckedEmpaque)
+    if (this.isCheckedEmpaque === true) {
+      //si el toggle de empaque minimo esta en true se envia la info de los inputs a los valores tarifa y descuento
+      let nuevosItems = this.dataItemSeleccionados_get.map((elemento) => {
+        const item = {
+          coditem: elemento,
+          tarifa: this.cod_precio_venta_modal_codigo,
+          descuento: this.code_desct,
+          cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
+          cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
+          codcliente: this.codcliente_get,
+          opcion_nivel: this.desct_nivel_get,
+          codalmacen: this.codalmacen_get,
+          desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
+          codmoneda: this.codmoneda_get,
+          fecha: this.fecha_get,
+          empaque: this.empaques_input,
+          // cod_precio_venta_modal_codigo
+          orden_pedido: j,
+          nroitem: j,
+        };
+        j++; // Incrementamos j para el próximo elemento
+        return item;
+      });
+      console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
+      switch (true) {
+        case this.isCheckedCantidad:
+          console.log("SOLO CANTIDAD");
+          this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
+            .subscribe({
+              next: (datav) => {
+                if (this.items_get_carrito.length > 0) {
+                  console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                  a = this.items_post.concat(datav, this.items_get_carrito);
 
-    const nuevosItems = this.dataItemSeleccionados_get.map((elemento) => {
-      const item = {
-        coditem: elemento,
-        tarifa: this.precio_venta_get,
-        descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo,
-        cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
-        cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
-        codcliente: this.codcliente_get,
-        opcion_nivel: this.desct_nivel_get,
-        codalmacen: this.codalmacen_get,
-        desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
-        codmoneda: this.codmoneda_get,
-        fecha: this.fecha_get,
-        empaque: this.empaques_input,
-        orden_pedido: j,
-        nroitem: j,
-      };
-      j++; // Incrementamos j para el próximo elemento
-      return item;
-    });
+                } else {
+                  console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                  a = this.items_post = datav;
+                }
+                console.log('data', datav);
 
-
-    // console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
-
-    // if (!this.isCheckedCantidad) {
-    //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
-    //   console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
-    //   this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
-    //     .subscribe({
-    //       next: (datav) => {
-    //         if (this.tamanio_carrito > 0) {
-    //           console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-    //           a = this.items_post.concat(datav, this.items_get_carrito);
-    //         } else {
-    //           console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-    //           a = this.items_post = datav;
-    //         }
-    //         console.log('data', datav);
-
-    //         this.spinner.show();
-    //         setTimeout(() => {
-    //           this.spinner.hide();
-    //         }, 1500);
-    //       },
-    //       error: (err) => {
-    //         console.log(err, errorMessage);
-    //       },
-    //       complete: () => {
-    //         // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
-    //         this.enviarItemsAlServicio(a);
-    //         this.dialogRef.close();
-    //         // this.num_hoja = 0;
-    //       }
-    //     });
-    // } else {
-    //   console.log("SOLO CANTIDAD");
-    //   const errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
-
-    //   this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
-    //     .subscribe({
-    //       next: (datav) => {
-    //         if (this.tamanio_carrito > 0) {
-    //           console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-    //           a = this.items_post.concat(datav, this.items_get_carrito);
-    //         } else {
-    //           console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-    //           a = this.items_post = datav;
-    //         }
-    //         console.log('data', datav);
-
-    //         this.spinner.show();
-    //         setTimeout(() => {
-    //           this.spinner.hide();
-    //         }, 1500);
-    //       },
-    //       error: (err) => {
-    //         console.log(err, errorMessage);
-    //       },
-    //       complete: () => {
-    //         // Enviar los items al servicio (asumo que esta función está definida en otro lugar)
-    //         this.enviarItemsAlServicio(a);
-    //         this.dialogRef.close();
-    //         // this.num_hoja = 0;
-    //       }
-    //     });
-    // }
-    switch (true) {
-      case this.isCheckedCantidad:
-        console.log("SOLO CANTIDAD");
-        this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
-          .subscribe({
-            next: (datav) => {
-              if (this.items_get_carrito.length > 0) {
-                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-                a = this.items_post.concat(datav, this.items_get_carrito);
-
-              } else {
-                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-                a = this.items_post = datav;
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+              },
+              error: (err) => {
+                console.log(err, errorMessage2);
+              },
+              complete: () => {
+                this.enviarItemsAlServicio(a);
+                this.dialogRef.close();
               }
-              console.log('data', datav);
+            });
+          break;
 
-              this.spinner.show();
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1500);
-            },
-            error: (err) => {
-              console.log(err, errorMessage2);
-            },
-            complete: () => {
-              this.enviarItemsAlServicio(a);
-              this.dialogRef.close();
-            }
-          });
-        break;
+        case this.isCheckedEmpaque:
+          console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
+          this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+            .subscribe({
+              next: (datav) => {
+                if (this.items_get_carrito.length > 0) {
+                  console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                  a = this.items_post.concat(datav, this.items_get_carrito);
+                } else {
+                  console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                  a = this.items_post = datav;
+                }
+                console.log('data', datav);
 
-      case this.isCheckedEmpaque:
-        console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
-        this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
-          .subscribe({
-            next: (datav) => {
-              if (this.items_get_carrito.length > 0) {
-                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-                a = this.items_post.concat(datav, this.items_get_carrito);
-              } else {
-                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-                a = this.items_post = datav;
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+              },
+              error: (err) => {
+                console.log(err, errorMessage1);
+              },
+              complete: () => {
+                this.enviarItemsAlServicio(a);
+                this.dialogRef.close();
               }
-              console.log('data', datav);
+            });
+          break;
 
-              this.spinner.show();
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1500);
-            },
-            error: (err) => {
-              console.log(err, errorMessage1);
-            },
-            complete: () => {
-              this.enviarItemsAlServicio(a);
-              this.dialogRef.close();
-            }
-          });
-        break;
+        case this.isCheckedEmpaques:
+          console.log("SOLO EMPAQUES");
+          // Assuming similar API call and logic for empaques
+          this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
+            .subscribe({
+              next: (datav) => {
+                if (this.items_get_carrito.length > 0) {
+                  console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                  a = this.items_post.concat(datav, this.items_get_carrito);
+                } else {
+                  console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                  a = this.items_post = datav;
+                }
+                console.log('data', datav);
 
-      case this.isCheckedEmpaques:
-        console.log("SOLO EMPAQUES");
-        // Assuming similar API call and logic for empaques
-        this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
-          .subscribe({
-            next: (datav) => {
-              if (this.items_get_carrito.length > 0) {
-                console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
-                a = this.items_post.concat(datav, this.items_get_carrito);
-              } else {
-                console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
-                a = this.items_post = datav;
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+              },
+              error: (err) => {
+                console.log(err, errorMessage1);
+              },
+              complete: () => {
+                const updatedItems = a.map(item => {
+                  const { empaque, ...rest } = item;
+                  return { ...rest, cantidad_empaque: empaque };
+                });
+                this.enviarItemsAlServicio(updatedItems);
+                this.dialogRef.close();
               }
-              console.log('data', datav);
+            });
+          break;
 
-              this.spinner.show();
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 1500);
-            },
-            error: (err) => {
-              console.log(err, errorMessage1);
-            },
-            complete: () => {
-              const updatedItems = a.map(item => {
-                const { empaque, ...rest } = item;
-                return { ...rest, cantidad_empaque: empaque };
-              });
-              this.enviarItemsAlServicio(updatedItems);
-              this.dialogRef.close();
-            }
-          });
-        break;
+        default:
+          console.log("Ninguna opción seleccionada");
+          break;
+      }
+    } else {
+      console.warn("VALOR INPUT PRECIO MATRIZ:", this.precio_venta_get)
 
-      default:
-        console.log("Ninguna opción seleccionada");
-        break;
+      let nuevosItems = this.dataItemSeleccionados_get.map((elemento) => {
+        const item = {
+          coditem: elemento,
+          tarifa: this.precio_venta_get,
+          descuento: this.cod_descuento_modal_codigo === undefined ? 0 : this.cod_descuento_modal_codigo,
+          cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
+          cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
+          codcliente: this.codcliente_get,
+          opcion_nivel: this.desct_nivel_get,
+          codalmacen: this.codalmacen_get,
+          desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
+          codmoneda: this.codmoneda_get,
+          fecha: this.fecha_get,
+          empaque: this.empaques_input,
+          // cod_precio_venta_modal_codigo
+          orden_pedido: j,
+          nroitem: j,
+        };
+        j++; // Incrementamos j para el próximo elemento
+        return item;
+      });
+      console.log("Items para enviar al bacnekd segun su ruta", nuevosItems);
+
+      switch (true) {
+        case this.isCheckedCantidad:
+          console.log("SOLO CANTIDAD");
+          this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
+            .subscribe({
+              next: (datav) => {
+                if (this.items_get_carrito.length > 0) {
+                  console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                  a = this.items_post.concat(datav, this.items_get_carrito);
+
+                } else {
+                  console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                  a = this.items_post = datav;
+                }
+                console.log('data', datav);
+
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+              },
+              error: (err) => {
+                console.log(err, errorMessage2);
+              },
+              complete: () => {
+                this.enviarItemsAlServicio(a);
+                this.dialogRef.close();
+              }
+            });
+          break;
+
+        // case this.isCheckedEmpaque:
+        //   console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
+        //   this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+        //     .subscribe({
+        //       next: (datav) => {
+        //         if (this.items_get_carrito.length > 0) {
+        //           console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+        //           a = this.items_post.concat(datav, this.items_get_carrito);
+        //         } else {
+        //           console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+        //           a = this.items_post = datav;
+        //         }
+        //         console.log('data', datav);
+
+        //         this.spinner.show();
+        //         setTimeout(() => {
+        //           this.spinner.hide();
+        //         }, 1500);
+        //       },
+        //       error: (err) => {
+        //         console.log(err, errorMessage1);
+        //       },
+        //       complete: () => {
+        //         this.enviarItemsAlServicio(a);
+        //         this.dialogRef.close();
+        //       }
+        //     });
+        //   break;
+
+        case this.isCheckedEmpaques:
+          console.log("SOLO EMPAQUES");
+          // Assuming similar API call and logic for empaques
+          this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
+            .subscribe({
+              next: (datav) => {
+                if (this.items_get_carrito.length > 0) {
+                  console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+                  a = this.items_post.concat(datav, this.items_get_carrito);
+                } else {
+                  console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+                  a = this.items_post = datav;
+                }
+                console.log('data', datav);
+
+                this.spinner.show();
+                setTimeout(() => {
+                  this.spinner.hide();
+                }, 1500);
+              },
+              error: (err) => {
+                console.log(err, errorMessage1);
+              },
+              complete: () => {
+                const updatedItems = a.map(item => {
+                  const { empaque, ...rest } = item;
+                  return { ...rest, cantidad_empaque: empaque };
+                });
+                this.enviarItemsAlServicio(updatedItems);
+                this.dialogRef.close();
+              }
+            });
+          break;
+
+        default:
+          console.log("Ninguna opción seleccionada");
+          break;
+      }
     }
+    // switch (true) {
+    //   case this.isCheckedCantidad:
+    //     console.log("SOLO CANTIDAD");
+    //     this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, nuevosItems)
+    //       .subscribe({
+    //         next: (datav) => {
+    //           if (this.items_get_carrito.length > 0) {
+    //             console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+    //             a = this.items_post.concat(datav, this.items_get_carrito);
+
+    //           } else {
+    //             console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+    //             a = this.items_post = datav;
+    //           }
+    //           console.log('data', datav);
+
+    //           this.spinner.show();
+    //           setTimeout(() => {
+    //             this.spinner.hide();
+    //           }, 1500);
+    //         },
+    //         error: (err) => {
+    //           console.log(err, errorMessage2);
+    //         },
+    //         complete: () => {
+    //           this.enviarItemsAlServicio(a);
+    //           this.dialogRef.close();
+    //         }
+    //       });
+    //     break;
+
+    //   case this.isCheckedEmpaque:
+    //     console.log("DESCT PRECIO", "CHECK DE PRECIO Y DESCT ACTIVADO");
+    //     this.api.create("/venta/transac/veproforma/getCantfromEmpaque/" + this.userConn, nuevosItems)
+    //       .subscribe({
+    //         next: (datav) => {
+    //           if (this.items_get_carrito.length > 0) {
+    //             console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+    //             a = this.items_post.concat(datav, this.items_get_carrito);
+    //           } else {
+    //             console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+    //             a = this.items_post = datav;
+    //           }
+    //           console.log('data', datav);
+
+    //           this.spinner.show();
+    //           setTimeout(() => {
+    //             this.spinner.hide();
+    //           }, 1500);
+    //         },
+    //         error: (err) => {
+    //           console.log(err, errorMessage1);
+    //         },
+    //         complete: () => {
+    //           this.enviarItemsAlServicio(a);
+    //           this.dialogRef.close();
+    //         }
+    //       });
+    //     break;
+
+    //   case this.isCheckedEmpaques:
+    //     console.log("SOLO EMPAQUES");
+    //     // Assuming similar API call and logic for empaques
+    //     this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
+    //       .subscribe({
+    //         next: (datav) => {
+    //           if (this.items_get_carrito.length > 0) {
+    //             console.log("HAY ITEMS EN EL CARRITO LA CARGA SE CONCATENA");
+    //             a = this.items_post.concat(datav, this.items_get_carrito);
+    //           } else {
+    //             console.log("NO HAY ITEMS EN EL CARRITO LA CARGA NO SE CONCATENA");
+    //             a = this.items_post = datav;
+    //           }
+    //           console.log('data', datav);
+
+    //           this.spinner.show();
+    //           setTimeout(() => {
+    //             this.spinner.hide();
+    //           }, 1500);
+    //         },
+    //         error: (err) => {
+    //           console.log(err, errorMessage1);
+    //         },
+    //         complete: () => {
+    //           const updatedItems = a.map(item => {
+    //             const { empaque, ...rest } = item;
+    //             return { ...rest, cantidad_empaque: empaque };
+    //           });
+    //           this.enviarItemsAlServicio(updatedItems);
+    //           this.dialogRef.close();
+    //         }
+    //       });
+    //     break;
+
+    //   default:
+    //     console.log("Ninguna opción seleccionada");
+    //     break;
+    // }
   }
 
   getPermisosBtnPorRol() {

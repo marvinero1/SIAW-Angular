@@ -73,7 +73,7 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
   cantidad: number;
   pedido: number;
   pedidoInicial: number;
-  cant_empaque: number;
+  cant_empaque: any;
   saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
@@ -986,15 +986,15 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
       this.renderer.selectRootElement(focusElement).focus();
       focusElement.click();
     } else {
-      // if (this.cant_empaque === undefined) {
-      //   this.cant_empaque = 0
-      // };
+      if (this.cant_empaque === undefined) {
+        this.cant_empaque = '';
+      }
+
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText1 + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
-            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText1 + "/" + this.cant_empaque === undefined ? 0 : this.cant_empaque);
             this.pedido = datav.total;
-            this.cantidad = datav.total;
+            //this.cantidad = datav.total;
 
             console.log(this.pedido);
           },

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ModificarParametroAComponent } from './modificar-parametro-A/modificar-parametro-A.component';
 import { CambiarPasswordComponent } from '@modules/cambiar-password/cambiar-password.component';
+import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 
 @Component({
   selector: 'app-profile',
@@ -37,6 +38,21 @@ export class ProfileComponent {
         next: (datav) => {
           this.rol = datav.codrol;
           console.log(this.rol);
+
+          if (this.rol === undefined || this.rol === null) {
+            const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+              width: '450px',
+              height: 'auto',
+              data: { mensaje_dialog: "SU SESION EXPIRO, FAVOR DE INICIAR SESION" },
+              disableClose: true,
+            });
+
+            dialogRef.afterClosed().subscribe((result: Boolean) => {
+              if (result) {
+                this.api.logout();
+              }
+            });
+          }
         },
 
         error: (err: any) => {

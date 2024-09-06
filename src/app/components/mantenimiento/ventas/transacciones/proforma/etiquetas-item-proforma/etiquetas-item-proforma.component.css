@@ -1,18 +1,100 @@
 #content {
-  margin: 18px;
-  padding: 18px;
   font-family: 'Arial' !important;
+        size: auto;
+  margin-left: 4mm;
+  margin-right: 4mm;
+  margin-bottom: 10mm;
+  margin-top: 4mm;
 }
 
+/*para imprimir*/
+@page { size: auto;  margin: 4mm; }
+
+@media print {
+  	.no-printme  {
+		display: none;
+	}
+	.content  {
+		display: block;
+	}
+  
+  body {
+    background-image: none;
+  }
+
+    .header {
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+  }
+
+  .footer-table {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    /* margin-top: 420px; */
+    position: absolute;
+    bottom: 0;
+    height: 4rem;
+    /* margin-top: 4rem;
+    background-color: #a52626 */
+    page-break-inside: avoid !important;
+  }
+
+  .table_component_detalle{
+    margin-bottom: 60px; /* Para dejar espacio al pie de página */
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.50px !important;
+    min-height: calc(100% - 4rem);
+  }
+}
+/*Fin imprimir*/
+	.content  {
+		display: block;
+	}
+  
+  body {
+    background-image: none;
+  }
+
+    .header {
+    /* position: fixed; */
+    top: 0;
+    width: 100%;
+  }
+
+  .footer-table {
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+    /* margin-top: 420px; */
+    position: absolute;
+    bottom: 0;
+    height: 4rem;
+    /* margin-top: 4rem;
+    background-color: #a52626 */
+    page-break-inside: avoid !important;
+  }
+
+  .table_component_detalle{
+    margin-bottom: 60px; /* Para dejar espacio al pie de página */
+    font-size: 1.00rem !important;
+    border-spacing: 0px !important;
+    line-height: 1.2 !important;
+    letter-spacing: -0.50px !important;
+    min-height: calc(100% - 4rem);
+  }
+
 p {
-  font-size: 1.10rem !important;
-  margin-bottom: 0.5rem !important; /* Ajuste de margen inferior */
+  font-size: 1.20rem !important;
   font-family: 'Arial' !important;
   margin-bottom: 0px !important;
 }
 
 span {
-  font-size: 1.40rem !important;
+  font-size: 1.30rem !important;
 }
 
 .cabecera p {

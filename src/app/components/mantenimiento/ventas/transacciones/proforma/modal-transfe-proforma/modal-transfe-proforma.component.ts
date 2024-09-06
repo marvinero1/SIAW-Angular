@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,6 +14,21 @@ import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actual
   styleUrls: ['./modal-transfe-proforma.component.scss']
 })
 export class ModalTransfeProformaComponent implements OnInit {
+
+  @HostListener("document:keydown.enter", []) unloadHandler5(event: KeyboardEvent) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "input_num_id_proformas":
+          // this.getClientByID(this.codigo_cliente);
+          this.transferirProforma();
+          break;
+      }
+    }
+  };
 
   transferir_get: any = [];
   id_numero_id_proforma: any = [];
@@ -31,6 +46,9 @@ export class ModalTransfeProformaComponent implements OnInit {
 
   isCheckedProformas: boolean = true;
   isCheckedCotizaciones: boolean = false;
+
+
+  input_num_id_proformas
 
   constructor(public dialog: MatDialog, private api: ApiService,
     public dialogRef: MatDialogRef<ModalTransfeProformaComponent>,
