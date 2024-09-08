@@ -680,7 +680,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
 
       // Agregar el número de orden a los objetos de datos
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -707,7 +707,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
 
       // Agregar el número de orden a los objetos de datos
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -746,20 +746,26 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
     //
 
-    //Detalle de item q se importaron de un Excel
-    this.itemservice.disparadorDeDetalleImportarExcel.subscribe(data => {
-      console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
-      this.array_items_carrito_y_f4_catalogo = data.detalle;
-      // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+    // Detalle de item q se importaron de un Excel
+    // En modificar Proforma no se importa desde excel xd xd xd
+    // this.itemservice.disparadorDeDetalleImportarExcel.subscribe(data => {
+    //   console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
+    //   this.array_items_carrito_y_f4_catalogo = data.detalle;
+    //   // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
+    //   this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+    //     ...element,
+    //     empaque: element.empaque === null ? 0 : element.empaque,
+    //   }));
 
-      this.total = 0.00;
-      this.subtotal = 0.00;
-      this.recargos = 0.00;
-      this.des_extra = 0.00;
-      this.iva = 0.00;
-      this.tipoentrega = "";
-    });
+    //   this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+    //   this.total = 0.00;
+    //   this.subtotal = 0.00;
+    //   this.recargos = 0.00;
+    //   this.des_extra = 0.00;
+    //   this.iva = 0.00;
+    //   this.tipoentrega = "";
+    // });
     //
 
     //modalClientesParaSeleccionarClienteReal
@@ -897,7 +903,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     //fin ventana modal BuscadorGeneral
 
     this.communicationService.triggerFunction$.subscribe(() => {
-      this.aplicarDesctPorDeposito();
+      this.aplicarDesctPorDepositoHTML();
     });
   }
 
@@ -946,7 +952,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     const isChecked = inputElement.checked;
     console.log("Checkbox value: ", isChecked);
     if (isChecked === true) {
-      this.estado_contra_entrega_input = 'YA CANCELO';
+      this.estado_contra_entrega_input = 'POR CANCELAR';
     } else {
       this.estado_contra_entrega_input = '';
     }
@@ -1255,7 +1261,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -1280,19 +1286,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         error: (err: any) => {
           console.log(err, errorMessage);
           this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       })
   }
@@ -2176,7 +2182,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
@@ -2184,12 +2190,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       })
   }
@@ -2612,6 +2618,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     if (this.anticipo_button === val) {
       this.anticipo_button = false;
+      this.monto_anticipo = 0;
+      this.tabla_anticipos = [];
     } else {
       this.anticipo_button = true;
     }
@@ -3058,7 +3066,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       console.log("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     console.log("tamanio etiqueta:", tamanio_array_etiqueta, "tamanio validaciones:", tamanio_array_validaciones);
@@ -3067,7 +3075,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 50);
       return;
     } else {
       this.toastr.success("¡ ETIQUETA GRABADA!");
@@ -3077,7 +3085,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.toastr.error("¡ FALTA VALIDAR, VALIDE PORFAVOR !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 50);
       return;
     } else {
       this.toastr.success("¡ VALIDADO !");
@@ -3087,7 +3095,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (this.api.statusInternet === false) {
@@ -3119,7 +3127,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
             return;
           }
         }
@@ -3129,7 +3137,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
             return;
           }
         }
@@ -3163,7 +3171,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
 
       error: (err) => {
@@ -3172,7 +3180,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
 
       complete: () => {
@@ -3201,7 +3209,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.guardarDataImpresion(this.totabilizar_post.codProf, false);
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       }
     });
   }
@@ -3221,14 +3229,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       console.log("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (tamanio_array_etiqueta === 0) {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 50);
       return;
     }
 
@@ -3236,7 +3244,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.toastr.error("¡ FALTA VALIDAR, VALIDE PORFAVOR !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 50);
       return;
     } else {
       this.toastr.success("¡ VALIDADO !");
@@ -3246,7 +3254,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (this.api.statusInternet === false) {
@@ -3284,7 +3292,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           if (result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
             return;
           } else {
             return;
@@ -3297,7 +3305,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
             return;
           }
         }
@@ -3435,7 +3443,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
 
       error: (err) => {
@@ -3444,7 +3452,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
       complete: () => {
         //aca exporta a ZIP
@@ -3472,7 +3480,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.guardarDataImpresion(this.totabilizar_post.codProf, true);
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       }
     });
   }
@@ -3522,11 +3530,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       veproforma_iva: this.veproforma_iva, //array de iva
     };
 
-    console.log(total_proforma_concat);
-    console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-      this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
+    console.log("🚀 ~ ModificarProformaComponent ~ totabilizar ~ total_proforma_concat:", total_proforma_concat)
+    // console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
+    //   this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
 
-    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -3541,7 +3548,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           },
 
           error: (err) => {
@@ -3601,6 +3608,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       if (this.habilitar_desct_sgn_solicitud === undefined) {
         this.habilitar_desct_sgn_solicitud = false;
       }
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+        empaque: element.empaque === null ? 0 : element.empaque,
+      }));
+
+      this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados
+        ? this.array_de_descuentos_ya_agregados.map((element) => ({
+          ...element,
+        })) : [];
 
       total_proforma_concat = {
         veproforma: this.FormularioData.value,
@@ -3694,21 +3709,21 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
               this.toastr.success(datav.resp);
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             },
 
             error: (err: any) => {
               console.log(err, errorMessage);
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             },
 
             complete: () => {
               // window.location.reload();
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             }
           })
       }
@@ -3784,7 +3799,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
           return;
         }
 
@@ -4265,19 +4280,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       })
   }
@@ -4305,19 +4320,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       });
   }
@@ -4325,18 +4340,30 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   aplicarDesctPorDepositoBTNModal() {
     this.spinner.show();
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion,
-      descrip: element.descripcion,
-    }));
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
 
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
         dvta: this.FormularioData.value,
       },
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tabladescuentos: array_descuentos_dest_deposito,
       tblcbza_deposito: [],
     };
 
@@ -4346,37 +4373,46 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + this.codigo_proforma, a)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log(datav);
-          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+          let msa: any = datav.respOculto;
+          if (datav.respOculto) {
+            const result = await this.openConfirmationOKDialog(msa);
+            if (result) {
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
 
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
-            ...element,
-            descripcion: element.descrip,
-            descrip: element.descrip,
-          }));
-          console.warn("PRIMERO DESCT")
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+                ...element,
+                descripcion: element.descrip,
+                descrip: element.descrip,
+              }));
+            }
+          } else {
+            //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+              ...element,
+              descripcion: element.descrip,
+              descrip: element.descrip,
+            }));
+          }
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: async () => {
           console.warn("SEGUNDO TOTABILIZAR")
 
-          await this.aplicarDesctPorDepositoYTotalizarYValidar();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
+          this.aplicarDesctPorDepositoYTotalizarYValidar();
         }
       })
   }
@@ -4408,11 +4444,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       veproforma_iva: this.veproforma_iva, //array de iva
     };
 
-    console.log(total_proforma_concat);
-    console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-      this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-
-    console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+    console.log("🚀 ~ ModificarProformaComponent ~ aplicarDesctPorDepositoYTotalizarYValidar ~ total_proforma_concat:", total_proforma_concat)
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -4427,16 +4459,16 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           },
 
           error: (err) => {
             console.log(err, errorMessage);
             this.toastr.error('! NO SE TOTALIZO !');
 
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 10);
+            // setTimeout(() => {
+            //   this.spinner.hide();
+            // }, 10);
           },
           complete: async () => {
             this.mandarEntregar();
@@ -4569,11 +4601,10 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       detalleControles: this.validacion_post.length > 1 ? [] : this.validacion_post,
     }
 
-    console.log(proforma_validar, "Largo del array etiqueta: ");
-    console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
-    console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-    console.log("Valor Formulario Controles: ", this.validacion_post);
-
+    // console.log(proforma_validar, "Largo del array etiqueta: ");
+    // console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
+    // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    // console.log("Valor Formulario Controles: ", this.validacion_post);
     this.submitted = true;
 
     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
@@ -4640,115 +4671,88 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }, 1500); // 300 ms de retardo
   }
 
-
-
-
   //btn
-  aplicarDesctPorDeposito() {
+  aplicarDesctPorDepositoHTML() {
     this.spinner.show();
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion,
-      descrip: element.descripcion,
-    }));
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
 
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
         dvta: this.FormularioData.value,
       },
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tabladescuentos: array_descuentos_dest_deposito,
       tblcbza_deposito: [],
     };
 
     console.log(a);
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
-      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + this.codigo_proforma, a)
+      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log(datav);
-          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
-            ...element,
-            descripcion: element.descrip,
-            descrip: element.descrip,
-          }));
-          console.warn("PRIMERO DESCT")
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+          let msa: any = datav.respOculto;
+          if (datav.respOculto) {
+            const result = await this.openConfirmationOKDialog(msa);
+            if (result) {
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+                ...element,
+                descripcion: element.descrip,
+                descrip: element.descrip,
+              }));
+            }
+          } else {
+            //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+              ...element,
+              descripcion: element.descrip,
+              descrip: element.descrip,
+            }));
+          }
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: async () => {
-          console.warn("SEGUNDO TOTABILIZAR")
-
-          await this.aplicarDesctPorDepositoYTotalizarYValidar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       })
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4870,19 +4874,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       });
   }
@@ -4896,7 +4900,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
     setTimeout(() => {
       this.spinner.hide();
-    }, 1000);
+    }, 50);
   }
 
   validarEmpaqueDescEspc() {
@@ -4949,20 +4953,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       });
   }
@@ -5008,20 +5012,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       });
   }
@@ -5061,19 +5065,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         }
       });
   }
@@ -5285,19 +5289,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
           },
           error: (err: any) => {
             console.log(err);
             this.toastr.error("ERROR AL CARGAR EL ARCHIVO ❌");
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
           },
           complete: () => {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 50);
           }
         });
     } else {
@@ -5366,20 +5370,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             },
 
             error: (err: any) => {
               console.log(err);
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             },
 
             complete: () => {
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 50);
             }
           });
       } else {
@@ -5933,7 +5937,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     this.dialog.open(AnticiposProformaComponent, {
       width: 'auto',
-      height: '510px',
+      height: 'auto',
       disableClose: true,
       data: {
         cod_cliente: this.codigo_cliente,

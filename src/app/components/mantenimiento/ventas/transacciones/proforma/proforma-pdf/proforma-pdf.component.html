@@ -106,7 +106,9 @@
         <tr>
           <th class="center" style="font-weight: 100 !important;">#</th>
           <th class="center" style="font-weight: 100 !important;">CODIGO</th>
-          <th width="80%" class="center thdescrip" style="font-weight: 100 !important;">DESCRIPCION</th>
+          <th width="80%" class="center thdescrip" style="font-weight: 100 !important;">
+            <----------- DESCRIPCION ---------->
+          </th>
 
           <th width="7%" class="center" style="font-weight: 100 !important;">UD.</th>
           <th width="9%" class="right" style="font-weight: 100 !important;">CANT.PEDIDA</th>
@@ -126,7 +128,7 @@
               <div class="col-md left">
                 {{items.descripcion}}
               </div>
-              <div class="col-md-4 right">{{items.medida}}</div>
+              <div class="col-md-4 left">{{items.medida}}</div>
             </div>
           </td>
           <td class="center">{{ items.udm }}</td>

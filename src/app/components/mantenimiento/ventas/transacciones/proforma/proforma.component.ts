@@ -607,7 +607,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.spinner.show();
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 500);
 
       // Agregar el número de orden a los objetos de datos
       this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -680,6 +680,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.itemservice.disparadorDeDetalleImportarExcel.subscribe(data => {
       console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
       this.array_items_carrito_y_f4_catalogo = data.detalle;
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+        ...element,
+        empaque: element.empaque === undefined ? 0 : element.empaque,
+      }));
       // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
       //this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
@@ -847,7 +851,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
 
     this.communicationService.triggerFunction$.subscribe(() => {
-      this.aplicarDesctPorDeposito();
+      this.aplicarDesctPorDepositoHTML();
     });
   }
 
@@ -887,7 +891,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     const isChecked = inputElement.checked;
     console.log("Checkbox value: ", isChecked);
     if (isChecked === true) {
-      this.estado_contra_entrega_input = 'YA CANCELO';
+      this.estado_contra_entrega_input = 'POR CANCELAR';
     } else {
       this.estado_contra_entrega_input = '';
     }
@@ -1807,7 +1811,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
@@ -1815,12 +1819,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       })
   }
@@ -2262,8 +2266,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.anticipo_button === val) {
       this.anticipo_button = false;
+      this.monto_anticipo = 0;
+      this.tabla_anticipos = [];
     } else {
       this.anticipo_button = true;
+      console.log("La data se conserva")
     }
   }
 
@@ -2300,8 +2307,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       width: '450px',
       height: 'auto',
       data: {
-        dataA: codigo,
-        dataB: id_numero_id,
+        dataA: 0,
+        dataB: 0,
         dataPermiso: "TRANSFERIR PROFORMA",
         dataCodigoPermiso: "122",
         //abrir: true,
@@ -2514,7 +2521,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.spinner.hide();
-    }, 1000);
+    }, 500);
   }
 
   getNombreDeDescuentos(array_descuentos) {
@@ -2525,10 +2532,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           console.log(datav)
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos.map((element) => ({
-            ...element,
-            descripcion: element?.descrip,
-          }));
+
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -2893,7 +2897,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
             return;
           }
         }
@@ -2903,7 +2907,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
             return;
           }
         }
@@ -2927,21 +2931,21 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (this.validacion_post.length === 0) {
       this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (tamanio_array_etiqueta === 0) {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 50);
       return;
     }
 
@@ -2949,7 +2953,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 50);
     }
 
     if (this.api.statusInternet === false) {
@@ -3041,7 +3045,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
 
       error: (err) => {
@@ -3051,7 +3055,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       },
 
       complete: () => {
@@ -3080,7 +3084,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.guardarDataImpresion(this.totabilizar_post.codProf, false);
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       }
     });
   }
@@ -3109,7 +3113,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       if (result) {
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
         return;
       }
     } else {
@@ -3121,21 +3125,21 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       console.warn("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 500);
     }
 
     if (this.validacion_post.length === 0) {
       this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 500);
     }
 
     if (tamanio_array_etiqueta === 0) {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 500);
       return;
     }
 
@@ -3143,7 +3147,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1000);
+      }, 500);
     }
 
     if (this.api.statusInternet === false) {
@@ -3346,7 +3350,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 500);
       },
 
       error: (err) => {
@@ -3354,7 +3358,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 500);
       },
 
       complete: () => {
@@ -3385,16 +3389,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.guardarDataImpresion(this.totabilizar_post.codProf, true);
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 50);
       }
     });
   }
 
   totabilizar() {
     let total_proforma_concat: any = [];
-
-    // console.log("Carrito con Items y nroitems", this.array_items_carrito_y_f4_catalogo);
-
     //valor del check en el mat-tab complementar proforma
     if (this.disableSelectComplemetarProforma === false) { //valor del check en el mat-tab complementar proforma this.disableSelectComplemetarProforma.value 
       this.complementopf = 0;
@@ -3410,6 +3411,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      empaque: element.empaque === undefined ? 0 : element.empaque,
+    }));
+
     // console.log(this.FormularioData.valid);
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
@@ -3422,11 +3428,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     console.log("🚀 ~ ProformaComponent ~ totabilizar ~ total_proforma_concat:", total_proforma_concat)
-
-    // console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-    //   this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
-
-    // console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
@@ -3441,7 +3442,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           },
 
           error: (err) => {
@@ -3450,7 +3451,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 10);
+            }, 50);
           },
           complete: () => {
             this.mandarEntregar();
@@ -3479,6 +3480,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 50);
     }
   }
 
@@ -3558,7 +3562,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 500);
           return;
         }
 
@@ -3593,6 +3597,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.habilitar_desct_sgn_solicitud === undefined) {
       this.habilitar_desct_sgn_solicitud = false;
     };
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      empaque: element.empaque === undefined ? 0 : element.empaque,
+    }));
+
 
     // console.log(this.FormularioData.valid);
     total_proforma_concat = {
@@ -3665,18 +3675,30 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   aplicarDesctPorDepositoBTNModal() {
     this.spinner.show();
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion,
-      descrip: element.descripcion,
-    }));
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
 
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
         dvta: this.FormularioData.value,
       },
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tabladescuentos: array_descuentos_dest_deposito,
       tblcbza_deposito: [],
     };
 
@@ -3686,37 +3708,57 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log(datav);
-          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+          let msa: any = datav.respOculto;
 
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
-            ...element,
-            descripcion: element.descrip,
-            descrip: element.descrip,
-          }));
-          console.warn("PRIMERO DESCT")
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+          if (datav.respOculto) {
+            const result = await this.openConfirmacionDialog(msa);
+            if (result) {
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+              this.totabilizar();
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 500);
+              return;
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+                ...element,
+                descripcion: element.descrip,
+                descrip: element.descrip,
+              }));
+            }
+          } else {
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+              ...element,
+              descripcion: element.descrip,
+            }));
 
-          // setTimeout(() => {
-          //   this.spinner.hide();
-          // }, 1000);
+            console.log(this.array_de_descuentos_ya_agregados);
+
+            this.log_module.guardarLog(this.ventana, "proforma_validad_cod" + this.totabilizar_post.codProf, "POST", "", "");
+            this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+            this.totabilizar();
+            this.validar();
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 500);
+          }
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: async () => {
           console.warn("SEGUNDO TOTABILIZAR")
-
           await this.aplicarDesctPorDepositoYTotalizarYValidar();
-          // setTimeout(() => {
-          //   this.spinner.hide();
-          // }, 1000);
         }
       })
   }
@@ -3727,6 +3769,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
       this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
     };
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      empaque: element.empaque === undefined ? 0 : element.empaque,
+    }));
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
       this.habilitar_desct_sgn_solicitud = false;
@@ -3951,7 +3998,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       let proforma_validar = {
         datosDocVta: this.valor_formulario_negativos,
         detalleAnticipos: [],
-        detalleDescuentos: [],
+        detalleDescuentos: this.array_de_descuentos_ya_agregados,
         //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
         detalleEtiqueta: [],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
@@ -4137,7 +4184,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       let proforma_validar = {
         datosDocVta: this.validacion_post_max_ventas,
         detalleAnticipos: [],
-        detalleDescuentos: [],
+        detalleDescuentos: this.array_de_descuentos_ya_agregados,
         // detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
         detalleEtiqueta: [],
         detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
@@ -4277,19 +4324,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       })
   }
@@ -4316,72 +4363,188 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
 
-  aplicarDesctPorDeposito() {
+  //btn
+  aplicarDesctPorDepositoHTML() {
     this.spinner.show();
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion,
-    }));
-
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
-      ...element,
-      cumple: element.cumple === 1 ? true : false,
-    }));
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
 
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
         dvta: this.FormularioData.value,
       },
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tabladescuentos: array_descuentos_dest_deposito,
       tblcbza_deposito: [],
     };
-    console.log(a);
 
+    console.log(a);
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log(datav);
-          this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+          let msa: any = datav.respOculto;
 
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
-          this.totabilizar();
+          if (datav.respOculto) {
+            const result = await this.openConfirmacionDialog(msa);
+            if (result) {
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+                ...element,
+                descripcion: element.descrip,
+                descrip: element.descrip,
+              }));
+            }
+          } else {
+            //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+              ...element,
+              descripcion: element.descrip,
+              descrip: element.descrip,
+            }));
+          }
+
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
         },
-        complete: () => {
+        complete: async () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 50);
+        }
+      })
+  }
+
+
+  aplicarDesctPorDeposito() {
+    this.spinner.show();
+    console.warn(this.array_de_descuentos_ya_agregados)
+
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
+
+    let a = {
+      getTarifaPrincipal: {
+        tabladetalle: this.array_items_carrito_y_f4_catalogo,
+        dvta: this.FormularioData.value,
+      },
+      tabladescuentos: array_descuentos_dest_deposito,
+      tblcbza_deposito: [],
+    };
+
+    console.log(a);
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
+    return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
+      this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
+      .subscribe({
+        next: async (datav) => {
+          console.log(datav);
+          let msa: any = datav.respOculto;
+          if (datav.respOculto) {
+            const result = await this.openConfirmacionDialog(msa);
+            if (result) {
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+              this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+                ...element,
+                descripcion: element.descrip,
+                descrip: element.descrip,
+              }));
+            }
+          } else {
+            //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+            this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
+              ...element,
+              descripcion: element.descrip,
+              descrip: element.descrip,
+            }));
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: async () => {
+          console.warn("SEGUNDO TOTABILIZAR")
+
+          await this.aplicarDesctPorDepositoYTotalizarYValidar();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
         }
       })
   }
@@ -4403,10 +4566,23 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion,
-    }));
+    let array_descuentos_dest_deposito = this.array_de_descuentos_ya_agregados.map((element) => ({
+      codproforma: 0,
+      coddesextra: element.coddesextra,
+      porcen: element.porcen,
+      montodoc: 0,
+      codcobranza: 0,
+      codcobranza_contado: 0,
+      codanticipo: 0,
+      id: 0,
+      aplicacion: element.aplicacion,
+      codmoneda: "string",
+      descrip: element.descrip,
+      total_dist: 0,
+      total_desc: 0,
+      montorest: 0
+    })
+    );
 
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
       ...element,
@@ -4491,7 +4667,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         dvta: this.valor_formulario_copied_map_all,
       },
 
-      tabladescuentos: this.array_de_descuentos_ya_agregados,
+      tabladescuentos: array_descuentos_dest_deposito,
       tblcbza_deposito: [],
     };
 
@@ -4510,23 +4686,23 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           if (datav.respOculto) {
             const result = await this.openConfirmacionDialog(msa);
             if (result) {
-              console.warn(datav);
-
-              // no borrar este mapeo
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
+              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+            } else {
+              //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
               this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
               this.array_de_descuentos_ya_agregados = datav.tabladescuentos?.map((element) => ({
                 ...element,
                 descripcion: element.descrip,
+                descrip: element.descrip,
               }));
 
-              this.log_module.guardarLog(this.ventana, "proforma_validad_cod" + this.totabilizar_post.codProf, "POST", "", "");
-              this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
               this.totabilizar();
-
               //this.validar;
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1000);
+              }, 500);
               return;
             }
           } else {
@@ -4544,7 +4720,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             this.validar();
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
           }
         },
 
@@ -4552,18 +4728,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           this.validar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       })
   }
 
-  validar() {
+  async validar() {
     // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
     // VACIO - TODOS LOS CONTROLES
     this.valor_formulario = [this.FormularioData.value];
@@ -4654,11 +4830,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.map((element) => ({
-      ...element,
-      descripcion: element.descripcion === null ? element.descrip : element.descripcion,
-    }));
-
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos,
@@ -4670,7 +4841,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
-    console.log(proforma_validar, "Largo del array etiqueta: ");
+    console.log(proforma_validar);
     console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
 
     if (this.total === 0) {
@@ -4681,6 +4852,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
       this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
       this.toastr.info("VALIDACION ACTIVA 🚨");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
       return;
     }
 
@@ -4865,19 +5039,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -4891,7 +5065,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     setTimeout(() => {
       this.spinner.hide();
-    }, 1000);
+    }, 500);
   }
 
   validarEmpaqueDescEspc() {
@@ -4944,20 +5118,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -5003,20 +5177,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -5056,19 +5230,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -5263,19 +5437,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
           },
           error: (err: any) => {
             console.log(err);
             this.toastr.error("ERROR AL CARGAR EL ARCHIVO ❌");
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
           },
           complete: () => {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 500);
           }
         });
     } else {
@@ -5327,20 +5501,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -6297,7 +6471,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   limpiarEtiqueta() {
     this.toastr.success("Etiqueta Limpiada");
-
+    this.etiqueta_get_modal_etiqueta = [];
     // this.dialog.open(ModalEtiquetaComponent, {
     //   width: 'auto',
     //   height: 'auto',
@@ -6318,7 +6492,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   //seccion mat-tab Resultado de Validacion
   resolverValidacion() {
     const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
-      width: '350px',
+      width: '450px',
       height: 'auto',
       data: {
         dataA: '00068',

@@ -88,6 +88,7 @@ export class AnticiposProformaComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
+
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
     private anticipo_servicio: AnticipoProformaService,
@@ -209,22 +210,25 @@ export class AnticiposProformaComponent implements OnInit {
           console.log('data', this.data_tabla_anticipos);
           this.dataSourceAnticipado = new MatTableDataSource(this.data_tabla_anticipos);
 
+          this.dataSourceAnticipado.paginator = this.paginator;
+          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       })
   }
@@ -346,7 +350,7 @@ export class AnticiposProformaComponent implements OnInit {
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         error: (err) => {
@@ -356,13 +360,13 @@ export class AnticiposProformaComponent implements OnInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         },
 
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 500);
         }
       });
   }
@@ -452,9 +456,10 @@ export class AnticiposProformaComponent implements OnInit {
           this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem?.monto, 0);
 
           this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+          this.dataSource.paginator = this.paginator;
+          this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+
           console.warn("array_final preparaParaAgregar:", this.array_tabla_anticipos_get);
-
-
           this.getTotabilizarAsignacion(this.array_tabla_anticipos_get)
         },
 
@@ -515,7 +520,6 @@ export class AnticiposProformaComponent implements OnInit {
   }
 
   BTNengranaje() {
-
     this.spinner.show();
     let resultado: number = 0;
 
@@ -524,23 +528,29 @@ export class AnticiposProformaComponent implements OnInit {
     resultado = this.totalProf - this.total_anticipos;
     console.warn(resultado)
     if (resultado > this.monto_restante) {
-      resultado = this.monto_restante;
-    }
+      console.warn("resultado mayot", resultado)
 
-    this.monto_a_asignar = this.formatNumber2DecimalesBCK(resultado);
-    console.warn(this.monto_a_asignar)
+      resultado = this.formatNumberTotalSub(this.monto_a_asignar);
+    }
+    this.monto_a_asignar = this.formatNumberTotalSub(resultado);
+    console.warn(this.monto_a_asignar);
 
     setTimeout(() => {
       this.spinner.hide()
     }, 500);
   }
 
-  formatNumber2DecimalesBCK(numero) {
+  formatNumberTotalSub(number: number) {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    return Number(number?.toFixed(2));
+  }
+
+  formatNumber2DecimalesBCK(numero: number) {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getRedondeo2decimales/";
     return this.api.getAll('/venta/transac/veproforma/getRedondeo2decimales/' + this.userConn + "/" + numero)
       .subscribe({
         next: (datav) => {
-          this.monto_a_asignar = datav
+          return this.monto_a_asignar = datav;
         },
 
         error: (err: any) => {

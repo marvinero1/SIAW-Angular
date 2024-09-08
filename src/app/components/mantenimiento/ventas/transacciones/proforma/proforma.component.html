@@ -28,8 +28,12 @@
               (click)="limpiar();">
               <span><i class="fa fa-eraser" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
             </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente && id_proforma_numero_id !== 0">
+              <span><i class="fa fa-clone" aria-hidden="true" style="color: #7d99c7;"></i> Transferir</span>
+            </button> -->
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="ventanaPermisoEspecialPassword();">
               <span><i class="fa fa-clone" aria-hidden="true" style="color: #7d99c7;"></i> Transferir</span>
             </button>
 
@@ -1644,8 +1648,7 @@
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
                               <u>Total Anticipo Aplicado:</u>&nbsp;
-                              <strong>{{ formatNumberTotalSubTOTALES(monto_anticipo)}} -
-                                {{ moneda_get_catalogo }}</strong>
+                              <strong>{{ monto_anticipo }} - {{ moneda_get_catalogo }}</strong>
                             </span>
                           </div>
                           <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
@@ -2353,7 +2356,7 @@
           <!-- BTN ABAJO TOTAL -->
           <div class="text-center" style="text-align: center;">
             <div>
-              <button mat-raised-button (click)="aplicarDesctPorDeposito();"
+              <button mat-raised-button (click)="aplicarDesctPorDepositoHTML();"
                 style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Aplicar Desc.
                 Deposito</button>
 

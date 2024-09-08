@@ -124,7 +124,7 @@ export class ModalEtiquetaComponent implements OnInit {
     });
     this.close();
 
-    this.toastr.success("ETIQUETA RGABADA CON EXITO");
+    this.toastr.success("ETIQUETA GRABADA CON EXITO !");
   }
 
   close() {

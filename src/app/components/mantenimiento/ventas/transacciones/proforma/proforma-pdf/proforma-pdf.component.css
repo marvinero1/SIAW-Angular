@@ -13,7 +13,10 @@
 }
 
 
-@page { size: auto;  margin: 4mm; }
+@page { size: 8.5in 9in; 
+   margin-top: 4mm;
+  page-break-after: always;
+ }
 
 @media print {
   .no-printme  {
@@ -37,6 +40,7 @@
     size: auto;
     margin: 4mm;
     font-size: 0.95rem !important;
+      page-break-after: always;
   }
 
   .thdescrip{
@@ -56,6 +60,7 @@
     /* position: fixed; */
     top: 0;
     width: 100%;
+    
   }
 
   .footer-table {

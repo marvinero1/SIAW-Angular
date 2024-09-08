@@ -80,7 +80,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     //   porcentaje: element.porcen,
     // }))
 
-    this.array_de_descuentos = this.array_de_descuentos.map((element) => ({
+    this.array_de_descuentos = this.array_de_descuentos?.map((element) => ({
       aplicacion: element.aplicacion,
       codanticipo: element.codanticipo,
       codcobranza: element.codcobranza,
@@ -202,7 +202,7 @@ export class ModalDesctExtrasComponent implements OnInit {
 
   anadirArray() {
     let tamanio = this.array_de_descuentos_con_descuentos.length;
-    const existe_en_array = this.array_de_descuentos.some(item => item.codigo === this.info_descuento.codigo);
+    const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
     console.log(existe_en_array);
 
     if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
