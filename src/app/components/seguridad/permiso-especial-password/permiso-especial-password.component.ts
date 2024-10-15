@@ -56,7 +56,7 @@ export class PermisoEspecialPasswordComponent implements OnInit {
           if (datav = 712) {
             this._snackBar.open('¡ Permiso Autorizado !' + this.autorizacion_recibida.resp, '☑️', {
               duration: 2000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
             this.toastr.success('!AUTORIZADO!');
 
@@ -79,7 +79,7 @@ export class PermisoEspecialPasswordComponent implements OnInit {
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Texto Copiado !', '📑', {
       duration: 2000,
-      panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
     });
   }
 

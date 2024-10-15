@@ -53,9 +53,17 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   }
 
   getDataPDF() {
+    let array_send={
+      codProforma: this.data_impresion[0].codigo_proforma,
+      codcliente: this.data_impresion[0].cod_cliente ,
+      codcliente_real: this.data_impresion[0].cod_cliente_real,
+      codempresa: this.BD_storage,
+      cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
+      paraAprobar: this.data_impresion[0].grabar_aprobar
+    };
+
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" +
-      this.data_impresion[0].cod_cliente + "/" + this.data_impresion[0].cod_cliente_real + "/" + this.BD_storage + "/" + this.data_impresion[0].estado_contra_entrega_input + "/" + this.data_impresion[0].grabar_aprobar)
+    return this.api.create('/venta/transac/veproforma/getDataPDF/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);

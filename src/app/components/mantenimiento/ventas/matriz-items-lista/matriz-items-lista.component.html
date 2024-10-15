@@ -231,43 +231,43 @@
     <div class="row pl-3 pt-1">
       <ng-container *ngIf="saldoItem > 0; else saldo">
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
-          style="font-size: 0.8rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
+          style="font-size: 0.82rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
       </ng-container>
       <ng-template #saldo>
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
-          style="font-size: 0.8rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
+          style="font-size: 0.82rem;width:10%;background-color: red;color: rgb(230, 230, 0);" [readOnly]="true">
       </ng-template>
 
       <ng-container *ngIf="almacenes_saldos">
         <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
           <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald1 }}:</strong> </span>
           <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_1 | number:'2.2-2'"
-            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            style="font-size: 0.82rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
             (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true">
 
           <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong> </span>
           <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_2 | number:'2.2-2'"
-            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            style="font-size: 0.82rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
             (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true">
 
           <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong> </span>
           <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_3 | number:'2.2-2'"
-            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            style="font-size: 0.82rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
             (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true">
 
           <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong> </span>
           <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_4 | number:'2.2-2'"
-            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            style="font-size: 0.82rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
             (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true">
 
           <span style="padding: 2px"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong> </span>
           <input type="text" class="inputsSaldos" [ngModel]="saldo_modal_total_5 | number:'2.2-2'"
-            style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+            style="font-size: 0.82rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
             (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
         </ng-container>
       </ng-container>
-      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;"><strong><u>F9 = Información
-            Item</u></strong></span>
+      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;font-size: 0.82rem !important;"><strong>
+        <u>F9 = Información Item</u></strong></span>
     </div>
     <!-- finSaldos -->
 
@@ -276,14 +276,14 @@
       <div class="row">
         <div class="col-sm">
           <div class="input-group">
-            <span class="input-group-text form-control-sm">Empaques</span>
+            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;">Empaques</span>
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
             </ng-container>
 
             <ng-container *ngIf="empaque_view">
               <div *ngFor="let empaquesItems of empaquesItem">
-                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;font-size: 0.82rem !important;">
                   ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
                 </div>
               </div>
@@ -293,19 +293,20 @@
       </div>
     </mat-dialog-content>
     <!-- finempaque -->
+     
 
     <!-- Precio Item  -->
     <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
         <div class="col-md-8">
           <div class="input-group">
-            <span class="input-group-text form-control-sm">Precios</span>
+            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;">Precios</span>
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
             </ng-container>
 
             <ng-container *ngIf="empaque_view">
-              <div type="text" class="form-control form-control-sm inputsSaldos">
+              <div type="text" class="form-control form-control-sm inputsSaldos" style="font-size: 0.82rem !important;">
                 {{precioItem.precios}}
               </div>
             </ng-container>
@@ -327,8 +328,8 @@
           </table>
         </div> -->
         <div class="col-md">
-          <span><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
-          <span><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
+          <span style="font-size: 0.82rem !important;"><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
+          <span style="font-size: 0.82rem !important;"><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
         </div>
       </div>
     </mat-dialog-content>

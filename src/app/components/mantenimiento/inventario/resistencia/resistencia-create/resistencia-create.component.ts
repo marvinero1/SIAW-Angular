@@ -67,7 +67,7 @@ export class ResistenciaCreateComponent implements OnInit {
           this.toastr.success('Guardado con Exito! 🎉');
           this._snackBar.open('Se guardo correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           location.reload();
         },

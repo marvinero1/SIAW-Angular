@@ -77,7 +77,7 @@ export class StockActualF9Component implements OnInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 25);
         },
 
         error: (err: any) => {
@@ -86,7 +86,7 @@ export class StockActualF9Component implements OnInit {
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 25);
         }
       })
   }

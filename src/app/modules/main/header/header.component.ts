@@ -6,7 +6,7 @@ import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ApiService } from '@services/api.service';
-import { Observable, filter } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DatePipe, Location } from '@angular/common';
 import { LogService } from '@services/log-service.service';
 const BASE_CLASSES = 'main-header navbar navbar-expand navbar-warning';
@@ -48,19 +48,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.onToggleMenuSidebar();
-    this.getHoraFechaServidorBckEnd(this.userConn)
 
-    if (this.userConn === null) {
-      console.log("NO USUARIO")
-    } else {
-      // Ejecutar inmediatamente al cargar el componente
-      this.getHoraFechaServidorBckEnd(this.userConn);
-      console.log(this.userConn);
-    }
+    // if (this.userConn === null) {
+    //   console.log("NO USUARIO")
+    // } else {
+    //   // Ejecutar inmediatamente al cargar el componente
+    //   this.getHoraFechaServidorBckEnd(this.userConn);
+    //   // console.log(this.userConn);
+    // }
 
   }
 
   ngOnInit() {
+    this.getHoraFechaServidorBckEnd(this.userConn)
+
     // IMPRIMIR DATOS DE CABECERA
     this.api.obtenerUsuarioLogueado();
 
@@ -118,7 +119,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + user_conn)
       .subscribe({
         next: (datav) => {
-          console.log("Hora Fecha Servidor cada 2 min: ", datav);
+          // console.log("Hora Fecha Servidor cada 2 min: ", datav);
           // this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
           // this.hora_fecha_server = datav.horaServidor;
 
@@ -154,8 +155,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   rutaPATH(ruta) {
-    // console.log('http://localhost:4200'+ruta);
-
     this.router.navigate([ruta]);
   }
 }

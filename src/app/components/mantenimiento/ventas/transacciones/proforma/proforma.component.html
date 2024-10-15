@@ -1,5 +1,5 @@
 <section
-  style="background-color:#CEFFFF !important;margin-left: 7.5px;margin-right: 7.5px;flex: 1;height: 100vh;box-sizing: border-box;">
+  style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;flex: 1;height: 100vh;box-sizing: border-box;padding: 5px;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -99,14 +99,19 @@
             matTooltipClass="custom-tooltip" matTooltipPosition="above" (click)="validarProformaSoloNegativos();">
             <i class="fa fa-inbox blue" aria-hidden="true"></i>
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button">
+          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <i class="fa fa-question-circle black" aria-hidden="true"></i>
-          </button>
+          </button> -->
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()"
             matTooltipPosition="above">
             <i class="fa fa-inbox red" aria-hidden="true"></i>
           </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+          (click)="detalleProformaCarritoTOExcel();">
+          <i class="fa fa-paper-plane" aria-hidden="true"></i>
+        </button>
 
 
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
@@ -403,7 +408,7 @@
               </span>
             </div>
             <mat-select class="custom-select1 form-control-sm" [(ngModel)]="tipopago" placeholder="SELECCIONAR..."
-              formControlName="tipopago"
+              formControlName="tipopago" (selectionChange)="onInputChangeTIPOPAGO($event)"
               [class.is-invalid]="f.tipopago.invalid && (f.tipopago.dirty || f.tipopago.touched)">
               <mat-option [value]=0>CONTADO</mat-option>
               <mat-option [value]=1>CREDITO</mat-option>
@@ -541,19 +546,20 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 9px 8px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
             </div>
-            <ng-container *ngIf="razon_social === 'SIN NOMBRE'">
+            <!-- <ng-container *ngIf="codigo_cliente === 'SIN NOMBRE'"> -->
               <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
-                formControlName="razon_social" [(ngModel)]="razon_social">
-            </ng-container>
+                formControlName="razon_social" [(ngModel)]="razon_social" value="{{ razon_social }}"
+                [readonly]="!codigo_cliente?.startsWith('SN')">
+            <!-- </ng-container> -->
 
-            <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
+            <!-- <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
               <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
                 value="{{ razon_social }}" [(ngModel)]="razon_social" formControlName="razon_social" readonly>
-            </ng-container>
+            </ng-container> -->
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                [disabled]="razon_social !== 'SIN NOMBRE'" (click)="guardarNombreCliente();"><i class="fa fa-save"></i>
+                [disabled]="!codigo_cliente?.startsWith('SN')" (click)="guardarNombreCliente();"><i class="fa fa-save"></i>
               </button>
             </div>
           </div>
@@ -564,15 +570,15 @@
                 style="padding: 7px 5px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
             </div>
 
-            <ng-container *ngIf="razon_social === 'SIN NOMBRE';else nft">
+            <!-- <ng-container *ngIf="razon_social === 'SIN NOMBRE';else nft"> -->
               <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
-                formControlName="nomcliente">
-            </ng-container>
+              value="{{ razon_social }}" formControlName="nomcliente"  [readonly]="!codigo_cliente?.startsWith('SN')">
+            <!-- </ng-container> -->
 
-            <ng-template #nft>
+            <!-- <ng-template #nft>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
                 formControlName="nomcliente" readonly>
-            </ng-template>
+            </ng-template> -->
           </div>
 
           <div class="input-group">
@@ -585,24 +591,24 @@
               </span>
             </div>
 
-            <ng-container *ngIf="razon_social === 'SIN NOMBRE'; else tipodocidnit">
+            <!-- <ng-container *ngIf="razon_social === 'SIN NOMBRE'; else tipodocidnit"> -->
               <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
-                [(ngModel)]="tipo_doc_cliente"
-                [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
+                [(ngModel)]="tipo_doc_cliente" [disabled]="!codigo_cliente?.startsWith('SN')"
+                [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)">
                 <mat-option *ngFor="let documento_identidads of documento_identidad"
-                  [value]="documento_identidads.codigoclasificador">
+                  [value]="documento_identidads.codigoclasificador" >
                   {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
               </mat-select>
-            </ng-container>
-            <ng-template #tipodocidnit>
-              <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+            <!-- </ng-container> -->
+            <!-- <ng-template #tipodocidnit>  -->
+              <!-- <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
                 [(ngModel)]="tipo_doc_cliente"
                 [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
                 <mat-option *ngFor="let documento_identidads of documento_identidad"
                   [value]="documento_identidads.codigoclasificador" disabled>
                   {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
-              </mat-select>
-            </ng-template>
+              </mat-select> -->
+            <!-- </ng-template> -->
           </div>
 
           <div class="input-group">
@@ -614,11 +620,11 @@
                 <u><i class="fa fa-eye" (click)="verificarNit()" style="cursor:pointer"></i> N.I.T</u>
               </span>
 
-              <ng-container *ngIf="razon_social !== 'SIN NOMBRE';">
+              <!-- <ng-container *ngIf="razon_social !== 'SIN NOMBRE';"> -->
                 <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
-                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
+                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readonly]="!codigo_cliente?.startsWith('SN')"
                   [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)" readonly>
-              </ng-container>
+              <!-- </ng-container> -->
               <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
             </div>
 
@@ -661,12 +667,14 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 55px;border: 0 !important;"><u
-                  (click)="setEmailDefault();" style="cursor: pointer;">Email </u></span>
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 40px;border: 0 !important;">
+                <u (click)="setEmailDefault();" style="cursor: pointer;">
+                  <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;" aria-hidden="true"></i> Email
+                </u></span>
             </div>
-            <ng-container *ngIf="!email_cliente ">
+            <ng-container *ngIf="!email_cliente">
               <input type="email" class="form-control form-control-sm" formControlName="email" style="margin-left: 4px;"
-                style="margin-left: 2px;" [value]="" [(ngModel)]="email" [class.is-invalid]="f.email.invalid &&
+                style="margin-left: 2px;" [(ngModel)]="email" [class.is-invalid]="f.email.invalid &&
                 (f.email.dirty || f.email.touched)">
               <div *ngIf="submitted && f.email.invalid" class="invalid-feedback"></div>
             </ng-container>
@@ -796,6 +804,7 @@
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
                   (click)="itemDataAll(products?.coditem)">
+
                   <td class="center1"> {{ products.nroitem }} </td>
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
@@ -819,35 +828,46 @@
                           (input)="onInputChangeMatrix(products, $event.target.value)" />
                       </ng-template>
                       <ng-template pTemplate="output">
-                        {{ products.empaque }}
+                        {{ products.empaque === null ? 0 : products.empaque }}
                       </ng-template>
                     </p-cellEditor>
                   </td>
 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida"
-                    pEditableColumnField="cantidad_pedida">
+                  <td class="center1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-
-                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                          id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)">
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="inputCatalogoCliente" (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container>
+                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0" 
+                          (input)="onInputChange(products, $event.target.value)">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        {{ products.cantidad_pedida }}
+                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
+                          <span>{{ products.cantidad_pedida }}</span> 
+                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
+                          <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="onInputChange(products, $event.target.value)"
+                            style="color: rgba(0, 0, 255, 0.824);"> -->
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleMin === false">
+                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="onInputChange(products, $event.target.value)"
+                            style="color: rgba(255, 0, 0, 0.824);"> -->
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumple === false">
+                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                            (input)="onInputChange(products, $event.target.value)"
+                            style="color: rgba(255, 0, 0, 0.824);"> -->
+                        </ng-container>
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -856,27 +876,38 @@
                   <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container>
+                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                        (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        {{ products.cantidad }}
+                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
+                          <span>{{ products.cantidad }}</span> 
+                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
+                          <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
+                         <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                            style="color: rgba(0, 0, 255, 0.824) !important;"> -->
+                        </ng-container>
+
+                        <ng-container *ngIf="products?.cumpleMin === false" >
+                         <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
+                         <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                            id="input_cantidad"
+                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                            style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                        </ng-container>
+                        <ng-container *ngIf="products?.cumple === false" >
+                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
+                          <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                             id="input_cantidad"
+                             (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                         </ng-container>
                       </ng-template>
                     </p-cellEditor>
                   </td>
@@ -902,7 +933,9 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
-                          [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"
+                          [(ngModel)]="products.coddescuento"
+                          [value]="products?.coddescuento"
+                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)" 
                           (change)="DEChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedDescuento(products)">
                       </ng-template>
@@ -1151,7 +1184,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">% Max. Ventas</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  {{ element.porcen_maximo | number: '1.2-2' }}
+                  {{ formatNumberTotalSubTOTALES(element.porcen_maximo) }}
                 </td>
               </ng-container>
 
@@ -1169,6 +1202,23 @@
                   !important">{{ element.empaque_precio }}
                 </td>
               </ng-container>
+
+              <!-- <ng-container matColumnDef="pasa_limite">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">¿Pasa el % Venta?</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">
+
+                  <ng-container
+                    *ngIf="formatNumberTotalSubTOTALES(element.cantidad) > formatNumberTotalSubTOTALES(element.cantidad_permitida_seg_porcen) ;else prctvt">
+                    <strong style="color: red;">SI</strong>
+                  </ng-container>
+                  <ng-template #prctvt>
+                    <strong style="color: green;">NO</strong>
+                  </ng-template>
+                  Lo que estas pidiendo: {{element.cantidad }} - Lo que puedes vender:
+                  {{element.cantidad_permitida_seg_porcen}}
+                </td>
+              </ng-container> -->
 
               <!-- Observaciones Column -->
               <ng-container matColumnDef="obs">
@@ -1498,11 +1548,13 @@
                           </div>
                         </div>
                       </div>
+
                       <div class="col-md-2">
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 0px;border: 0 !important;">Kgr.
+                              style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                              <strong>Kgr.</strong>
                               {{ peso | number:'2.2-2' }}</span>
                           </div>
 
@@ -1515,7 +1567,7 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-12">
                     <div class="row">
                       <div class="col-md-3">
                         <div class="input-group">
@@ -1527,6 +1579,7 @@
                           <input type="text" [(ngModel)]="latitud_cliente" formControlName="latitud_entrega" hidden>
                         </div>
                       </div>
+
                       <div class="col-md-3">
                         <div class="input-group">
                           <div class="input-group-prepend">
@@ -1537,27 +1590,34 @@
                           <input type="text" [(ngModel)]="longitud_cliente" formControlName="longitud_entrega" hidden>
                         </div>
                       </div>
-
-                      <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
-                        <mat-icon> my_location</mat-icon>
-                      </a>
-
-                      <div class="col-md-4">
+    
+                      <div class="col-md-6">
                         <div class="input-group">
+                          <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
+                            <mat-icon> my_location</mat-icon>
+                          </a>
+
                           <span class="input-group-text form-control-sm"
                             style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Ubicación</u></span>
-
+  
                           <ng-container>
                             <!-- <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [readonly]="true"> -->
                             <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [(ngModel)]="ubicacion_central" [readonly]="true">
                           </ng-container>
-
+  
                           <!-- <ng-template #central_ubicacion1>
                             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [readonly]="true">
                           </ng-template> -->
+                          <div class="input-group-prepend">
+                            <span class="input-group-text form-control-sm"
+                              style="padding: 10px 0px 0px 4px;border: 0 !important;"><u>Orden de Compra</u></span>
+                          </div>
+
+                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
+                            [readOnly]="true" formControlName="odc">
                         </div>
                       </div>
                     </div>
@@ -1567,7 +1627,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="row">
-                      <div class="col">
+                      <div class="col-md-6">
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span class="input-group-text form-control-sm"
@@ -1588,34 +1648,17 @@
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="row">
-                      <div class="col">
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
-                              padding: 10px 0px 0px 32px;border: 0 !important;"><u>Observación</u></span>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
+                                  padding: 10px 0px 0px 6px;border: 0 !important;"><u>Observación</u></span>
+                              </div>
+                              <input class="form-control" formControlName="obs" [(ngModel)]="obs" style="margin-left: 5px;">
+                            </div>
                           </div>
-                          <input class="form-control" formControlName="obs" [(ngModel)]="obs" style="margin-left: 5px;">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="row">
-                      <div class="col">
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text form-control-sm"
-                              style="padding: 10px 0px 0px 4px;border: 0 !important;"><u>Orden de Compra</u></span>
-                          </div>
-                          <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                            [readOnly]="true" formControlName="odc">
                         </div>
                       </div>
                     </div>
@@ -2211,7 +2254,7 @@
                           style="margin-left: 15px;border: 0 !important;"><u>Aplicar Desct. de Nivel
                             Actuales del Cliente</u></span>
                       </div>
-                      <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" style="width: 18%;"
+                      <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual" style="width: 18%;"
                         formControlName="niveles_descuento">
                         <option value="ACTUAL" selected>ACTUAL</option>
                         <option value="ANTERIOR">ANTERIOR</option>
@@ -2225,7 +2268,7 @@
                           <u>Precio Principal del Pedido</u>
                         </span>
                       </div>
-                      <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal.codTarifa" readonly>
+                      <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal_value" readonly>
                       <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
                           (click)="getPrecioMayorEnDetalle();" style="border-color: #ffc107;">
@@ -2233,7 +2276,7 @@
                         </button>
                       </div>
                     </div>
-
+                  </form>
                     <div class="input-group">
                       <div class="input-group-prepend">
                         <span class="input-group-text form-control-sm"
@@ -2241,18 +2284,20 @@
                           <u>Tipo Descuento de Nivel</u></span>
                       </div>
 
-                      <select style="margin-left: 5px;">
-                        <option value="C">C : DESC PROM MARZO 2024</option>
+                      <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel" >
+                        <option *ngFor="let valor_desct_nivels of valor_desct_nivel"
+                         [value]="valor_desct_nivels.desc_nivel">{{ valor_desct_nivels.desc_nivel }}</option>
                       </select>&nbsp;
 
-                      <!-- <div class="input-group-append">
+                      <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #ffc107;">
+                          style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()" 
+                           readonly="!tarifaPrincipal_value">
                           <i class="fa fa-cog"> Aplicar Descuento</i>
                         </button>
-                      </div> -->
+                      </div>
                     </div>
-                  </form>
+                  
                 </div>
               </div>
             </mat-tab>
@@ -2260,13 +2305,13 @@
         </div>
 
         <!-- inicioTotales -->
-        <div class="col-md-2" style="padding-block-start: 2px;">
+        <div class="col-md-2">
           <form class="example-form" [formGroup]="FormularioData">
             <div class="row" style="height: calc(1.4rem + 2px) !important;">
               <div class="col">
                 <span class="input-group-text form-control-sm"
-                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>Sub
-                    Total</u>
+                  style="border: 0 !important;padding: 5px 0px 0px 0px;"><u>
+                    Sub Total</u>
                 </span>
               </div>
 
@@ -2364,18 +2409,6 @@
                 style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Quitar Desc.
                 Deposito</button>
             </div>
-
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
-              (click)="modalClienteEtiqueta(direccion);" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
-              <!-- [disabled]="!codigo_cliente" -->
-              <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
-            </button>
-
-            <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-              min-width: 45px !important;" (click)="limpiarEtiqueta();" matTooltipClass="custom-tooltip"
-              matTooltip="Limpiar Etiqueta">
-              <i class="fa fa-eraser"></i></button>
-
           </div>
           <!-- FIN BTN ABAJO TOTAL -->
         </div>
@@ -2452,7 +2485,7 @@
                 </ng-template>
 
                 <div type="text" class="form-control form-control-sm inputsSaldos"
-                  style="width: 8.5% !important;text-align: center;">
+                  style="width: 18.5% !important;text-align: center;">
                   {{ porcen_item }}
                 </div>
               </div>
@@ -2482,19 +2515,29 @@
 
           <div class="col-md-2">
             <div style="text-align: center !important;margin-right: 22px !important;">
-              <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
-                padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
-                  class="fa fa-file-archive " aria-hidden="true"></i>
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;"
+                (click)="modalClienteEtiqueta(direccion);" matTooltipClass="custom-tooltip" matTooltip="Etiqueta">
+                <!-- [disabled]="!codigo_cliente" -->
+                <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon> Etiqueta
               </button>
+
+              <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+                min-width: 45px !important;" (click)="limpiarEtiqueta();" matTooltipClass="custom-tooltip"
+                matTooltip="Limpiar Etiqueta">
+                <i class="fa fa-eraser"></i>
+              </button>
+
+              <button mat-raised-button (click)="fileInput.click()" style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;
+                  padding: 0 11px 0 11px;" matTooltipClass="custom-tooltip" matTooltip="Importar ZIP Proforma"><i
+                  class="fa fa-file-archive " aria-hidden="true"></i> .zip
+              </button>
+
               <input type="file" #fileInput (change)="onFileChange($event)" accept=".zip" style="display: none;" />
-
-
               <!-- <button mat-raised-button (click)="modalSolicitudUrgente();"
                 style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
                 <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
                 Solicitar Urgente
               </button> -->
-
               <button mat-raised-button style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">
                 <mat-icon style="margin-left: 10px;margin-right: 10px;">flip_to_front</mat-icon>
                 Solicitar Urgente

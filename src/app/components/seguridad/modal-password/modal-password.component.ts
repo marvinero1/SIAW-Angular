@@ -171,11 +171,12 @@ export class ModalPasswordComponent implements OnInit {
     { codigo: "149", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET", codigo_descripcion: "149 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET" },
     { codigo: "150", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN", codigo_descripcion: "150 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN" },
     { codigo: "151", descripcion: "PERMITIR CAMBIAR CODIGO FACTURA WEB DE FACTURA", codigo_descripcion: "151 - PERMITIR CAMBIAR codigo_descripcion FACTURA WEB DE FACTURA" },
-    // { codigo: "152", descripcion: "1" },
-    // { codigo: "153", descripcion: "1" },
-    // { codigo: "154", descripcion: "1" },
-    // { codigo: "155", descripcion: "1" },
-    // { codigo: "156", descripcion: "1" },
+    { codigo: "152", descripcion: "PERMITIR MODIFICAR VACACION REGISTRADA", codigo_descripcion: "152 - PERMITIR MODIFICAR VACACION REGISTRADA"},
+    { codigo: "153", descripcion: "CAMBIAR NOMBRE COMERCIAL" , codigo_descripcion:"153 - CAMBIAR NOMBRE COMERCIAL"},
+    { codigo: "154", descripcion: "PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO", codigo_descripcion:"154 - PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO"  },
+    { codigo: "155", descripcion: "DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO", codigo_descripcion:"155 - DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO"},
+    { codigo: "156", descripcion: "PERMITIR PROMOCION PARA PROFORMAS ANTERIORES", codigo_descripcion:"156 - PERMITIR PROMOCION PARA PROFORMAS ANTERIORES"},
+    
     // { codigo: "157", descripcion: "1" },
     // { codigo: "158", descripcion: "1" },
     // { codigo: "159", descripcion: "1" },
@@ -250,7 +251,7 @@ export class ModalPasswordComponent implements OnInit {
           if (datav = 712) {
             this._snackBar.open('¡ Permiso Autorizado !' + this.autorizacion_recibida.resp, '☑️', {
               duration: 12000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
             this.getPassword();
           }
@@ -287,7 +288,7 @@ export class ModalPasswordComponent implements OnInit {
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Texto Copiado !', '📑', {
       duration: 2000,
-      panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
     });
   }
 
@@ -298,7 +299,7 @@ export class ModalPasswordComponent implements OnInit {
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Contraseña Copiada !', '📑', {
       duration: 2000,
-      panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
     });
   }
 

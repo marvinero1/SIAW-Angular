@@ -69,7 +69,7 @@ export class NumpedidomercaderiaEditComponent implements OnInit {
 
           this._snackBar.open('Se ha editado correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           location.reload();
         },

@@ -59,8 +59,13 @@ export class ModalBotonesImpresionComponent implements OnInit {
     window.open(url_proforma, '_blank');
   }
 
+  // btnFactura() {
+  //   const url_proforma = this.router.serializeUrl(this.router.createUrlTree(['/venta/transacciones/facturaTemplate']));
+  //   window.open(url_proforma, '_blank');
+  // }
+
   close() {
-    this.toastr.info("GUARDADO CON EXITO ✅");
+    this.toastr.info("PROCESO COMPLETADO ✅");
     sessionStorage.removeItem("data_impresion");
     this.dialogRef.close();
 

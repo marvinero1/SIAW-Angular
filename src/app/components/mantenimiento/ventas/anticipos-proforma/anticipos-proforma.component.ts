@@ -155,6 +155,7 @@ export class AnticiposProformaComponent implements OnInit {
 
     // Resta 4 meses a la fecha actual
     this.fecha_desde = subMonths(this.fecha_desde, 4);
+    // suma todos los totales de la tabla
     this.total_anticipos = this.array_tabla_anticipos_get?.reduce((total, currentItem) => total + currentItem?.monto, 0);
 
     this.getAnticipo();
@@ -258,8 +259,6 @@ export class AnticiposProformaComponent implements OnInit {
     console.warn("Inicio:", this.array_tabla_anticipos_get, this.anticipos_asignados_table, "Nombre Ventana:", this.ventana_nom,
       "tamanio array anticipos:", longitud_array_anticipos);
 
-
-
     this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -281,20 +280,23 @@ export class AnticiposProformaComponent implements OnInit {
 
     if (this.ventana_nom === "docmodifveproforma.vb") {
       if (longitud_array_anticipos > 0) {
-        this.anticipos_asignados_table = [{
-          codproforma: this.cod_proforma,
-          codanticipo: this.cod_anticipo,
-          nroid_anticipo: this.anticipo,
-          id_anticipo: this.id_anticipo,
-          docanticipo: this.id_anticipo + "-" + this.anticipo,
-          fechareg: this.fecha_formateada1,
-          monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
-          usuarioreg: this.usuarioLogueado,
-          horareg: hora_actual_complete,
-          tdc: this.tdc_get,
-          codmoneda: this.cod_moneda_proforma,
-          codvendedor: this.vendedor_get.toString(),
-        }];
+
+        this.anticipos_asignados_table;
+
+        // this.anticipos_asignados_table = [{
+        //   codproforma: this.cod_proforma,
+        //   codanticipo: this.cod_anticipo,
+        //   nroid_anticipo: this.anticipo,
+        //   id_anticipo: this.id_anticipo,
+        //   docanticipo: this.id_anticipo + "-" + this.anticipo,
+        //   fechareg: this.fecha_formateada1,
+        //   monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
+        //   usuarioreg: this.usuarioLogueado,
+        //   horareg: hora_actual_complete,
+        //   tdc: this.tdc_get,
+        //   codmoneda: this.cod_moneda_proforma,
+        //   codvendedor: this.vendedor_get.toString(),
+        // }];
       } else {
         this.anticipos_asignados_table = [];
       }
@@ -386,7 +388,7 @@ export class AnticiposProformaComponent implements OnInit {
     if (this.ventana_nom === "docveproforma.vb") {
 
       b = {
-        codproforma: 0,
+        codproforma: this.cod_proforma,
         codanticipo: this.anticipo,
         nroid_anticipo: this.anticipo,
         docanticipo: this.id_anticipo + "-" + this.anticipo,
@@ -471,12 +473,11 @@ export class AnticiposProformaComponent implements OnInit {
   }
 
   getTotabilizarAsignacion(array_anticipos_asignados) {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/prgveproforma_anticipo/preparaParaAdd_monto/";
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/prgveproforma_anticipo/getTotabilizarAsignacion/";
     return this.api.create('/venta/transac/prgveproforma_anticipo/getTotabilizarAsignacion/' + this.userConn + "/" + this.cod_moneda_proforma, array_anticipos_asignados)
       .subscribe({
         next: (datav) => {
           console.warn("getTotabilizarAsignacion: ", datav);
-
 
           this.total_anticipos = datav;
         },
@@ -484,7 +485,9 @@ export class AnticiposProformaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { }
+        complete: () => {
+
+        }
       })
   }
 
@@ -503,7 +506,7 @@ export class AnticiposProformaComponent implements OnInit {
     } else {
       this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo);
 
-      this.cod_anticipo = element.codanticipo;
+      this.cod_anticipo = element.numeroid;
       this.monto = element.monto;
       this.moneda = element.codmoneda;
       this.cod_vendedor = element.codvendedor;

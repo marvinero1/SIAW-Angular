@@ -43,7 +43,6 @@ export class ApiService {
   public agencia_storage;
   public periodo_abierto;
   public statusInternet: boolean = true;
-  // 
 
   private readonly API_URL = 'http://192.168.31.240/API_SIAW/api'; // MAQUINA RODRI
   // private readonly API_URL = 'http://192.168.40.5/API_SIAW/api'; // LA PAZ
@@ -59,10 +58,9 @@ export class ApiService {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
     this.token_alone = this.token;
-    console.log("🚀 ~ ApiService ~ token_alone:", this.token_alone)
 
     this.verificarInternet();
-    console.log(this.ventana_estado);
+    // console.log(this.ventana_estado);
   }
 
   login(url: string, data): Observable<any> {
@@ -102,7 +100,7 @@ export class ApiService {
   }
 
   create(url: string, obj): Observable<any> {
-    console.log(this.token_alone);
+    // console.log(this.token_alone);
     const httpOptions = {
       headers: new HttpHeaders({
         "Authorization": "bearer" + " " + this.token,
@@ -118,7 +116,7 @@ export class ApiService {
   }
 
   update(url: string, obj): Observable<any> {
-    console.log(this.token_alone);
+    // console.log(this.token_alone);
 
     const httpOptions = {
       headers: new HttpHeaders({
@@ -135,7 +133,7 @@ export class ApiService {
   }
 
   delete(id: string) {
-    console.log(this.token_alone);
+    // console.log(this.token_alone);
     const httpOptions = {
       headers: new HttpHeaders({
         "Authorization": "bearer" + " " + this.token,
@@ -199,6 +197,23 @@ export class ApiService {
       })
   }
 
+  getRolUserParaVentana(ventana) {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta -/seg_adm/mant/adusuario/";
+    return this.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.rol = datav.codrol;
+          // console.log(this.rol);
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          this.verificarAccesoVentanaGlobal(this.rol, ventana);
+        }
+      })
+  }
+
   //Funcion que verifica la accesibilidad de las ventanas
   //cod_rol, seprograma
   verificarAccesoVentanaGlobal(cod_rol, nombre_venta) {
@@ -240,26 +255,6 @@ export class ApiService {
     });
   }
 
-  getRolUserParaVentana(ventana) {
-    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
-    return this.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
-      .subscribe({
-        next: (datav) => {
-          this.rol = datav.codrol;
-          console.log(this.rol);
-          this.verificarAccesoVentanaGlobal(this.rol, ventana);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
   getVerificarPeriodoAbierto(fecha, modulo) {
     console.log(fecha, modulo);
 
@@ -299,7 +294,6 @@ export class ApiService {
               periodo: false,
             });
           }
-
           return this.periodo_abierto;
         },
 
@@ -331,8 +325,6 @@ export class ApiService {
   }
 
   verificarInternet() {
-    this.spinner.show();
-
     if (navigator.onLine === true) {
       this.statusInternet = true;
       // console.log('Tienes conexión a Internet');

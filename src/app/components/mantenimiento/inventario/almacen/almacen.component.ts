@@ -137,7 +137,7 @@ export class AlmacenComponent implements OnInit {
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('! SE GUARDO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
 
           location.reload();
@@ -165,7 +165,7 @@ export class AlmacenComponent implements OnInit {
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
           this._snackBar.open('! SE EDITO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
 
           location.reload();

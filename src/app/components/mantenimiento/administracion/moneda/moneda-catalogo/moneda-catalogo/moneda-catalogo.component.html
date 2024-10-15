@@ -6,7 +6,8 @@
         <p><strong>Moneda:</strong> &nbsp; {{ moneda_view.codigo }} - {{ moneda_view.descripcion }}</p>
       </div>
       <div class="col-md-4 text-center p-2">
-        <a mat-stroked-button color="primary" (click)="mandarMoneda();">
+        <a mat-stroked-button color="primary" (click)="mandarMoneda();"
+          [disabled]="!moneda_view.codigo">
           <i class="fa fa-check"></i></a>
         <a mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></a>
       </div>

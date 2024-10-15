@@ -303,7 +303,7 @@ export class SidebarSearchComponent implements OnInit {
 
 
     displayFn(user?: Menu): string | undefined {
-        console.log(user ? user.name : "");
+        // console.log(user ? user.name : "");
         return user ? user.name : undefined;
     }
     returnFn(user?: Menu): string | undefined {

@@ -9513,6 +9513,15 @@
         "hash": "sha512-hXObxz7ZqoyhxET78+XR34Xu2qFGrJJ2I2bE5w4SM8eFaFEkW2xcGRVUss360fYelwRSid/jT078kbNvmoW0QA=="
       }
     },
+    "npm:jspdf-autotable": {
+      "type": "npm",
+      "name": "npm:jspdf-autotable",
+      "data": {
+        "version": "3.8.3",
+        "packageName": "jspdf-autotable",
+        "hash": "sha512-PQFdljBt+ijm6ZWXYxhZ54A/awV63UKcipYoA2+YGsz0BXXiXTIL/FIg+V30j7wPdSdzClfbB3qKX9UeuFylPQ=="
+      }
+    },
     "npm:jsprim": {
       "type": "npm",
       "name": "npm:jsprim",
@@ -10993,9 +11002,9 @@
       "type": "npm",
       "name": "npm:pdfmake",
       "data": {
-        "version": "0.2.10",
+        "version": "0.2.12",
         "packageName": "pdfmake",
-        "hash": "sha512-doipFnmE1UHSk+Z3wfQuVweVQqx2pE/Ns2G5gCqZmWwqjDj+mZHnZYH/ryXWoIfD+iVdZUAutgI/VHkTCN+Xrw=="
+        "hash": "sha512-TFsqaG6KVtk+TWermmJNNwom3wmB/xiz07prM74KBhdM+7pz3Uwq2b0uoqhhQRn6cYUTpL8lXZY6xF011o1YcQ=="
       }
     },
     "npm:performance-now": {
@@ -25064,6 +25073,11 @@
     {
       "source": "npm:jspdf",
       "target": "npm:html2canvas",
+      "type": "static"
+    },
+    {
+      "source": "npm:jspdf-autotable",
+      "target": "npm:jspdf",
       "type": "static"
     },
     {

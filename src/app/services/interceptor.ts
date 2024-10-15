@@ -41,6 +41,8 @@ export class Interceptor implements HttpInterceptor {
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(request).pipe(catchError(err => {
+			console.log(this.error_code, this.status);			
+
 			this.err = err.error;
 			this.status = err.status;
 			if (this.err && this.err.resp !== undefined && this.err.resp !== null) {
@@ -48,8 +50,16 @@ export class Interceptor implements HttpInterceptor {
 			} else {
 				this.error_code = "error devolvio nulo";
 			}
-
-			console.log(this.error_code, this.status);
+			
+			switch (this.error_code) {
+				case "La impresora no está dispobible.":
+					this.toastr.info("SE GUARDO CON EXITO, PERO NO SALIO LA IMPRESION, REVISE IMPRESORA");
+					this.spinner.hide();
+					break;
+			
+				default:
+					break;
+			}
 
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA transac / veproforma / getempaques
@@ -58,6 +68,7 @@ export class Interceptor implements HttpInterceptor {
 				console.log("NO TOAST xD");
 			} else {
 				this.toastr.error(this.err.resp);
+				this.spinner.hide();
 			}
 
 			// this.error_code === 801 ? console.log("NO TOAST xD") : this.toastr.error(this.err.resp);

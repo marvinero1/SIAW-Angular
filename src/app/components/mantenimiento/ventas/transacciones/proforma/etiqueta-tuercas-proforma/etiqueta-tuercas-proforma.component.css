@@ -1,34 +1,21 @@
 #content {
-    /* margin: 18px;
-    padding: 18px; */
-    /* padding-right: 75px !important; */
-    font-family: 'Arial' !important;
-      size: auto;
-  margin-left: 4mm;
-  margin-right: 4mm;
-  margin-bottom: 10mm;
-  margin-top: 4mm;
+  font-family: 'Arial' !important;
+  /* margin-left: 2mm;
+  margin-right: 2mm; */
+  /* margin-bottom: 10mm; */
+  /* margin-top: 2mm; */
 }
 
-
-
-/*para imprimir*/
-@page { size: auto;  margin: 4mm; }
-
 @media print {
-  	.no-printme  {
+  .no-printme  {
 		display: none;
 	}
-	.content  {
-		display: block;
-	}
-  
+
   body {
     background-image: none;
   }
 
-    .header {
-    /* position: fixed; */
+  .header {
     top: 0;
     width: 100%;
   }
@@ -41,7 +28,7 @@
   }
 
   .table_component_detalle{
-    margin-bottom: 60px; /* Para dejar espacio al pie de página */
+    /* margin-bottom: 60px; Para dejar espacio al pie de página */
     font-size: 1.00rem !important;
     border-spacing: 0px !important;
     line-height: 1.2 !important;
@@ -50,57 +37,58 @@
 }
 /*Fin imprimir*/
 
+
 p{
-    font-size: 1.05rem !important;
-    margin-bottom: 0rem !important;
-    font-family: 'Arial' !important;
+  font-size: 1.00rem !important;
+  margin-bottom: 0rem !important;
+  font-family: 'Arial' !important;
 }
 
 th{
-    font-size: 0.75rem;
+  font-size: 0.85rem;
 }
+
 td{
-    padding: .25rem !important;
+  padding: .25rem !important;
+  font-size: 0.85rem !important;
 }
+
 span{
     font-size: 1.40rem !important;
 }
 
 .table td, .table th{
-    padding: 0.25rem !important;
+  padding: 0.25rem !important;
 }
 
 .cabecera p{
- font-family: 'Courier New' !important;
-  font-size: 0.91rem !important;
+  font-family: 'Courier New' !important;
+  font-size: 1.10rem !important;
 }
 
 .center{
-    text-align: center !important;
+  text-align: center !important;
 }
 
 .right{
-    text-align: right !important;
+  text-align: right !important;
 }
 
 .left{
-    text-align: left !important;
+  text-align: left !important;
 }
 
 .col-3{
-    flex: 0 0 25% !important;
-    max-width: 23% !important;
+  flex: 0 0 25% !important;
+  max-width: 23% !important;
 }
 
-/* para imprimir */
-.content {
-	display: none;
-}
+
 @media print {
 	.no-printme  {
 		display: none;
 	}
-	.content  {
-		display: block;
-	}
+	/* .content  { */
+		/* /display: block; */
+	/* } */
 }

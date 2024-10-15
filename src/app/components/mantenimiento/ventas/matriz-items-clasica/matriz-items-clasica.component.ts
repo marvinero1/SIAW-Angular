@@ -883,12 +883,14 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit {
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
         codcliente: this.codcliente_get,
-        opcion_nivel: this.descuento_nivel_get,
+        opcion_nivel: this.descuento_nivel_get?.toString(),
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
-        empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque,
+        empaque: this.cant_empaque === undefined || this.cant_empaque === 0 ?
+        parseInt(elemento.cantidad_empaque || 0) :
+        parseInt(this.cant_empaque || 0),
         orden_pedido: elemento.nroitem,
         nroitem: elemento.nroitem,
       }
@@ -905,7 +907,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         },
 
         error: (err) => {
@@ -913,7 +915,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         },
         complete: () => {
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
@@ -929,7 +931,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit {
           this.num_hoja = 0;
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         }
       })
   }

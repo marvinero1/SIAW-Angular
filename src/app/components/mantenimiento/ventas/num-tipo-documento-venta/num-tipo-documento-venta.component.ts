@@ -112,7 +112,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           location.reload();
         },
@@ -152,7 +152,7 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
           this.toastr.success('! SE GUARDO EXITOSAMENTE !');
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
           location.reload();
         },

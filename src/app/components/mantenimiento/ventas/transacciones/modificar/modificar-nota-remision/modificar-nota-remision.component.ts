@@ -239,12 +239,12 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     // });
     // //fin ventana modal BuscadorGeneral
 
-    this.servicioTransfeProformaCotizacion.disparadorDeProformaTransferir.subscribe(data => {
-      console.log("Recibiendo ID y numeroID Buscador Avanzado: ", data);
-      // this.num_idd = data.buscador_id;
-      // this.num_id = data.buscador_num_id;
-      this.transferirNotaRemisionUltima(data.codigo_documento);
-    });
+    // this.servicioTransfeProformaCotizacion.disparadorDeProformaTransferir.subscribe(data => {
+    //   console.log("Recibiendo ID y numeroID Buscador Avanzado: ", data);
+    //   // this.num_idd = data.buscador_id;
+    //   // this.num_id = data.buscador_num_id;
+    //   this.transferirNotaRemisionUltima(data.codigo_documento);
+    // });
     //fin ventana modal BuscadorGeneral
 
     //ventana modal BuscadorGeneral

@@ -71,7 +71,7 @@ export class RolesCreateComponent implements OnInit {
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
 
           this.spinner.show();

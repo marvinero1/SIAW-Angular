@@ -32,6 +32,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   cabecera_proforma: any = [];
   info_descuento: any = [];
   array_de_descuentos: any = [];
+  tablaanticiposProforma: any = [];
   array_cabe_cuerpo_get: any = [];
   resultado_validacion: any = [];
   array_valida_detalle: any = [];
@@ -43,7 +44,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   array_de_descuentos_con_descuentos: any = [];
 
   contra_entrega_get: any;
-  displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto_doc', 'accion'];
+  displayedColumns = ['codigo', 'descripcion', 'porcen', 'monto_doc', 'moneda', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -57,8 +58,9 @@ export class ModalDesctExtrasComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public desct: any, @Inject(MAT_DIALOG_DATA) public recargos_del_total: any,
     @Inject(MAT_DIALOG_DATA) public contra_entrega: any, @Inject(MAT_DIALOG_DATA) public cod_moneda: any,
     @Inject(MAT_DIALOG_DATA) public recargos_array: any, @Inject(MAT_DIALOG_DATA) public array_de_descuentos_ya_agregados_a_modal: any,
-    @Inject(MAT_DIALOG_DATA) public cmtipo_complementopf: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
-
+    @Inject(MAT_DIALOG_DATA) public cmtipo_complementopf: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
+    @Inject(MAT_DIALOG_DATA) public detalleAnticipos: any) {
+      
     this.items_de_proforma = items.items;
     this.cabecera_proforma = cabecera.cabecera;
     this.recargos_del_total_get = recargos_del_total.recargos_del_total;
@@ -69,6 +71,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.cmtipo_complementopf_get = cmtipo_complementopf.cmtipo_complementopf;
     this.cliente_real_get = cliente_real.cliente_real;
     this.array_de_descuentos = array_de_descuentos_ya_agregados_a_modal.array_de_descuentos_ya_agregados_a_modal
+    this.tablaanticiposProforma = detalleAnticipos.detalleAnticipos
 
     //aca llega los descuentos q ya pusiste, esto se pinta en la su tabla
     console.log(this.recargos_array_get, this.array_de_descuentos);
@@ -92,15 +95,18 @@ export class ModalDesctExtrasComponent implements OnInit {
       montodoc: element.montodoc,
       montorest: element.montorest,
       codigo: element.coddesextra,
-      descripcion: element.descripcion,
+     // descripcion: element.descripcion,
+      descripcion: element.descrip,
+
       porcentaje: element.porcen,
     }))
 
+   
     this.dataSource = new MatTableDataSource(this.array_de_descuentos);
 
-    console.log(this.contra_entrega_get);
-    console.log(this.cabecera_proforma);
-    console.log("Array de descuentos que ya estaban: ", this.array_de_descuentos);
+    // console.log(this.contra_entrega_get);
+    // console.log(this.cabecera_proforma);
+    // console.log("Array de descuentos que ya estaban: ", this.array_de_descuentos);
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
@@ -128,7 +134,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.tarifaPrincipal = datav;
-          console.log(this.tarifaPrincipal);
+          // console.log(this.tarifaPrincipal);
 
           this.descuentoExtraSegunTarifa(this.tarifaPrincipal.codTarifa);
         },
@@ -175,7 +181,8 @@ export class ModalDesctExtrasComponent implements OnInit {
           console.log(this.info_descuento);
           // this.validarDescuento();
 
-          let array_mapeado = [this.info_descuento].map(element => ({
+          let array_mapeado = [this.info_descuento].map((element) => ({
+            ...element,
             codigo: element.codigo,
             descripcion: element.descripcion,
             porcentaje: this.info_descuento_porcentaje,
@@ -187,14 +194,14 @@ export class ModalDesctExtrasComponent implements OnInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 250);
         },
         error: (err: any) => {
           console.log(err, errorMessage);
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 250);
         },
         complete: () => { }
       });
@@ -205,11 +212,27 @@ export class ModalDesctExtrasComponent implements OnInit {
     const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
     console.log(existe_en_array);
 
+    // this.array_de_descuentos = this.array_de_descuentos_con_descuentos?.map((element) => ({
+    //   aplicacion: element.aplicacion,
+    //   codanticipo: element.codanticipo,
+    //   codcobranza: element.codcobranza,
+    //   codcobranza_contado: element.codcobranza_contado,
+    //   coddesextra: element.coddesextra,
+    //   codmoneda: element.codmoneda,
+    //   codproforma: element.codproforma,
+    //   id: element.id,
+    //   montodoc: element.montodoc,
+    //   montorest: element.montorest,
+    //   codigo: element.coddesextra,
+    //   descripcion: element.descripcion,
+    //   porcentaje: element.porcen,
+    // }))
+
     if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
       this.toastr.error("La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento");
       setTimeout(() => {
         this.spinner.hide();
-      }, 1500);
+      }, 500);
       return;
     }
 
@@ -224,13 +247,21 @@ export class ModalDesctExtrasComponent implements OnInit {
           if (this.validacion_bool_descuento.status === true) {
             // Concatenar el nuevo descuento con los descuentos existentes
             this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
+           
           } else {
             this.toastr.error("NO VALIDO PARA SER AGREGADO");
           }
         } else {
           console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
+          
+          // Inicializa el array si es undefined
+          this.array_de_descuentos = this.array_de_descuentos || [];
+          this.info_descuento = [this.info_descuento].map((element)=>({
+            ...element,
+          }));
+
           // Usar push para agregar el elemento directamente al array
-          this.array_de_descuentos.push(this.info_descuento);
+          this.array_de_descuentos.push(this.info_descuento[0]);
         }
       }
     }
@@ -239,7 +270,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   }
 
   validarDescuento() {
-    let array_mapeado = this.array_de_descuentos.map(element => ({
+    this.array_de_descuentos?.map(element => ({
       codigo: element.codigo,
       descripcion: element.descripcion,
       porcentaje: this.info_descuento_porcentaje,
@@ -257,7 +288,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       codanticipo: 0,
       id: 0,
     }];
-    console.log(a);
+    // console.log(a);
 
     let ucr;
 
@@ -271,7 +302,9 @@ export class ModalDesctExtrasComponent implements OnInit {
     //si es true anadir a tabla temporal
     //ESTO EN EL BOTON DE ANADIR
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddDescExtraProf/"
-    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real + "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_valida_detalle)
+    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + 
+      "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real +
+       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_valida_detalle)
       .subscribe({
         next: (datav) => {
           this.validacion_bool_descuento = datav;
@@ -287,7 +320,7 @@ export class ModalDesctExtrasComponent implements OnInit {
               this.array_valida_detalle.push(...a);
             } else {
               // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
-              this.array_valida_detalle = this.array_valida_detalle.concat(a);
+              this.array_valida_detalle = this.array_valida_detalle.push(...a);
             }
 
             this.array_valida_detalle.pop();
@@ -318,6 +351,7 @@ export class ModalDesctExtrasComponent implements OnInit {
           this.toastr.error("NO SE PUEDE AGREGAR EL DESCUENTO");
         },
         complete: () => {
+
         }
       })
   }
@@ -336,7 +370,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     console.warn(this.array_de_descuentos);
 
     //mapeo para tabladescuentos
-    this.array_de_descuentos = this.array_de_descuentos.map((element) => ({
+    this.array_de_descuentos = this.array_de_descuentos?.map((element) => ({
       ...element,
       coddesextra: element.codigo,
       aplicacion: element.aplicacion,
@@ -345,7 +379,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       descrip: element.descripcion,
       descripcion: element.descripcion,
       porcen: element.porcentaje,
-    }))
+    }));
 
     let total_proforma_concat = {
       veproforma: this.cabecera_proforma, //este es el valor de todo el formulario de proforma
@@ -361,9 +395,10 @@ export class ModalDesctExtrasComponent implements OnInit {
         "descrip": ""
       }],
       tabladescuentos: this.array_de_descuentos, //array de descuentos
+      tablaanticiposProforma: this.tablaanticiposProforma,
     }
+    console.log("🚀 ~ ModalDesctExtrasComponent ~ sendArrayDescuentos ~ total_proforma_concat:", total_proforma_concat)
 
-    console.log(total_proforma_concat);
 
     // if (this.disableSelect.value === false) {
     //   this.complementopf = 0;
@@ -384,12 +419,14 @@ export class ModalDesctExtrasComponent implements OnInit {
           this.resultado_validacion = datav
           console.log("array original como llega: ", datav);
 
-          // this.resultado_validacion = this.resultado_validacion.map((element) => ({
+          // this.resultado_validacion = datav.map((element) => ({
           //   ...element,
-          //   descripcion: element.descrip
+          //   tablaanticiposProforma: this.tablaanticiposProforma,
           // }));
 
-          console.log("arraya de descuentos mapeados despies de volver del backend:", this.resultado_validacion)
+
+
+          console.warn("arraya de descuentos mapeados despies de volver del backend:", this.resultado_validacion)
           this.servicioEnviarAProforma(this.resultado_validacion);
         },
 
@@ -403,6 +440,28 @@ export class ModalDesctExtrasComponent implements OnInit {
 
     this.close();
   }
+
+  // getNombreDeDescuentos(array_descuentos) {
+  //   // console.log(array_descuentos)
+
+  //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/veproforma/getDescripDescExtra/";
+  //   return this.api.create('/venta/transac/veproforma/getDescripDescExtra/' + this.userConn, array_descuentos)
+  //     .subscribe({
+  //       next: (datav) => {
+  //         // console.log(datav)
+  //         this.array_de_descuentos = datav.tabladescuentos;
+  //         this.array_de_descuentos?.map((element) => ({
+  //           ...element,
+  //           descripcion: element?.descrip,
+  //           descrip: element?.descrip
+  //         }));
+  //       },
+  //       error: (err: any) => {
+  //         console.log(err, errorMessage);
+  //       },
+  //       complete: () => { }
+  //     })
+  // }
 
   servicioEnviarAProforma(resultado_validacion) {
     this.descuento_services.disparadorDeDescuentosDelModalTotalDescuentos.emit({

@@ -77,21 +77,21 @@ export class MenuSidebarComponent implements OnInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    
 
     if (this.agencia_storage === 'Loc') {
       this.agencia_storage = 'Maq. Rodri'
     }
-
-    this.verificarInternet();
-    this.getTipoCambioHeader(dataTransform);
-    this.getTipoCambioHoyDia();
-    this.getAlmacenParamUsuario();
-    this.getVerificaraDondeEstaConectadoUsuario();
   }
 
   ngOnInit() {
+    let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+
+    this.getVerificaraDondeEstaConectadoUsuario();
+    this.getTipoCambioHeader(dataTransform);
+    this.getTipoCambioHoyDia();
+    this.getAlmacenParamUsuario();
+
     this.ui = this.store.select('ui');
     this.ui.subscribe((state: UiState) => {
       this.classes = `${BASE_CLASSES} ${state.sidebarSkin}`;
@@ -128,12 +128,12 @@ export class MenuSidebarComponent implements OnInit {
             const dialogRef = this.dialog.open(TipocambiovalidacionComponent, {
               disableClose: true,
               width: 'auto',
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             })
           } else {
             // this._snackBar.open('¡ Hay Tipo de Cambio !', '💲', {
             //     duration: 3000,
-            //     panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            //  panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             // });
           }
         },
@@ -202,8 +202,6 @@ export class MenuSidebarComponent implements OnInit {
   }
 
   verificarInternet() {
-    this.spinner.show();
-
     if (navigator.onLine) {
       this.statusInternet = true;
       console.log('Tienes conexión a Internet');

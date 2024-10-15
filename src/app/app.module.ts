@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { LocationStrategy, DecimalPipe } from '@angular/common';
@@ -441,10 +441,16 @@ import { CatalogoFacturasComponent } from '@components/mantenimiento/ventas/tran
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
 import { MatrizItemsListaComponent } from '@components/mantenimiento/ventas/matriz-items-lista/matriz-items-lista.component';
 import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/transacciones/facturas/factura-template/factura-template.component';
+import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/facturacion-mostrador-tiendas.component';
+import { ModalFormaPagoComponent } from '@components/mantenimiento/ventas/transacciones/factura-nota-remision/modal-forma-pago/modal-forma-pago.component';
 
+
+// Función para inicializar los Web Components
+export function initializeCustomElements() {
+    return () => defineCustomElements(window);
+}
 
 registerLocaleData(es);
-defineCustomElements();
 registerAllModules();
 registerCellType(NumericCellType);
 registerPlugin(UndoRedo);
@@ -525,8 +531,8 @@ registerPlugin(UndoRedo);
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
         ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
-        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
-        FacturaTemplateComponent,
+        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent, ModalFormaPagoComponent,
+        FacturaTemplateComponent,FacturacionMostradorTiendasComponent,
 
 
 
@@ -616,6 +622,7 @@ registerPlugin(UndoRedo);
         { provide: ServiceRefreshItemsService },
         { provide: LOCALE_ID, useValue: 'es-BO' },
         { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: APP_INITIALIZER, useFactory: initializeCustomElements, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
         { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
 })

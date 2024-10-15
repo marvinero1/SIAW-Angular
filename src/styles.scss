@@ -36,9 +36,9 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
   warn: $adminlte-warn,
 )));
 
-[_nghost-wmk-c219] {
-  display: list-item !important;
-}
+// [_nghost-wmk-c219] {
+//   display: list-item !important;
+// }
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -96,10 +96,9 @@ input::placeholder {
   /* Firefox */
 }
 
-
 ::-webkit-scrollbar {
-  width: 4.8px;
-  height: 5px;
+  width: 6.8px;
+  height: 6px;
 }
 
 //para colocarle background al scroll
@@ -570,4 +569,3 @@ app-nota-remision {
   height: 100%;  // Hace que tome todo el alto del contenedor
   box-sizing: border-box;  // Incluye padding y border en el tamaño total
 }
-

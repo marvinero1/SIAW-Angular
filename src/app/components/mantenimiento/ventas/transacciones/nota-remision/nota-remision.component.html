@@ -910,88 +910,91 @@
               </form>
             </mat-tab>
 
-            <mat-tab label="Complementar Proforma">
-              <form class="example-form" [formGroup]="FormularioData">
-                <div class="row">
-                  <div class="col-md-12">
-                    <form class="example-form" [formGroup]="FormularioData">
-                      <div class="row"><br>
-                        <div class="col-md-4" style="display: grid;justify-content: normal;"><br>
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text form-control-sm"
-                                style="padding: 10px 0px 0px 5px;border: 0 !important;">
-                                <u>Complementar Proforma</u></span>
-                            </div>
-                            <mat-checkbox class="example-margin" [(ngModel)]="complementopf">
-                            </mat-checkbox>
-                          </div>
-                          <mat-form-field>
-                            <mat-label>Eliga una Opción</mat-label>
-                            <mat-select [disabled]="!disableSelect.value" formControlName="tipo_complementopf"
-                              [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
-                              <mat-option [value]="0">1. Dimediado - Precio Mayorista Para Cumplir
-                                Monto Minimo
-                              </mat-option>
-                              <mat-option [value]="1">2. Para Cumplir Monto Minimo Para Aplicar
-                                Descuento Extra
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
+            <mat-tab label="Complementar Proforma"><br>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 0px 8px 6px 5px;;border: 0 !important;">
+                        <u>Complementar Proforma</u></span>
+                    </div>
 
-                        <div class="col-md-8"><br><br>
-                          <div class="col-md-6">
-                            <div class="input-group">
-                              <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
-                                formControlName="idpf_complemento">
-                                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
-                                  [value]="ids_complementar_proformas.id">
-                                  {{ ids_complementar_proformas.id }} -
-                                  {{ ids_complementar_proformas.descripcion }}
-                                </mat-option>
-                              </mat-select>
-
-                              <input type="text" class="form-control form-control-sm" [(ngModel)]="nroidpf_complemento"
-                                style="margin-left: 5px;" [(ngModel)]="input_complemento_view" [readOnly]="true">
-
-                              <div class="input-group-append">
-                                <button class="btn btn-outline-primary form-control-sm" type="button"
-                                  style="border-color: #ffc107;" [disabled]="true">
-                                  <i class="fa fa-search"></i>
-                                </button>
-                              </div>
-                            </div>
-
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                  <u>Fecha Aut
-                                    Proforma:
-                                  </u></span>
-                              </div>
-
-                            </div>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                  <u>SubTotal Proforma: </u></span>
-                              </div>
-                            </div>
-
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text form-control-sm" style="border: 0 !important;">
-                                  <u>Total Proforma: </u></span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </form>
+                    <mat-slide-toggle class="example-margin" [(ngModel)]="disableSelectComplemetarProforma"
+                      (change)="habilitarComplementarProforma()">
+                    </mat-slide-toggle>
+                    <!-- Valor: {{ disableSelectComplemetarProforma }} -->
                   </div>
                 </div>
-              </form>
+
+                <div class="col-md-8">
+                  <form class="example-form" [formGroup]="FormularioData">
+                    <mat-label>Eliga una Opción</mat-label>
+                    <mat-select class="custom-select1 form-control-sm" [disabled]="!disableSelectComplemetarProforma"
+                      [(ngModel)]="tipo_complementopf_input" formControlName="tipo_complementopf">
+
+                      <mat-option [value]=3>Elija una opcion...</mat-option>
+                      <mat-option [value]=0>1. Dimediado - Precio Mayorista Para Cumplir
+                        Monto Minimo
+                      </mat-option>
+                      <mat-option [value]=1>2. Para Cumplir Monto Minimo Para Aplicar
+                        Descuento Extra
+                      </mat-option>
+                    </mat-select>
+
+                    <!-- VALOR:{{ tipo_complementopf_input }} -->
+
+                    <div class="input-group">
+                      <mat-select class="custom-select1 form-control-sm" [(ngModel)]="idpf_complemento_view"
+                        formControlName="idpf_complemento" [disabled]="!disableSelectComplemetarProforma">
+                        <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                          [value]="ids_complementar_proformas.id">
+                          {{ ids_complementar_proformas.id }} -
+                          {{ ids_complementar_proformas.descripcion }}
+                        </mat-option>
+                      </mat-select>
+
+                      <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
+                        formControlName="nroidpf_complemento" placeholder="0"
+                        [disabled]="!disableSelectComplemetarProforma" [(ngModel)]="nroidpf_complemento_view">
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;" [disabled]="!disableSelectComplemetarProforma"
+                          (click)="buscadorIDComplementarProforma(idpf_complemento_view, nroidpf_complemento_view);">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>Fecha Aut
+                            Proforma:
+                          </u></span>{{ complemento_proforma?.fechaaut_pfcomplemento | date:'yyyy-mm-dd'}}
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>SubTotal Proforma: </u></span>
+                        {{ complemento_proforma?.subtotal_pfcomplemento | number:'1.2-2' }}
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="border: 0 !important;">
+                          <u>Total Proforma: </u></span>
+                        {{  complemento_proforma?.total_pfcomplemento | number:'1.2-2'}}
+                        {{ complemento_proforma?.moneda_total_pfcomplemento }}
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
             </mat-tab>
 
             <mat-tab label="Anticipo Venta Contado"><br>
@@ -1076,7 +1079,7 @@
                 <input type="text" [(ngModel)]="complemento_proforma" formControlName="complemento_proforma" readonly
                   hidden>
                 <input type="number" [(ngModel)]="peso" formControlName="peso" readonly hidden>
-                <input type="text" [(ngModel)]="codcliente_real" formControlName="codcliente_real" readonly hidden>
+                <input type="text" [(ngModel)]="codigo_cliente_catalogo_real" formControlName="codcliente_real" readonly>
 
                 <input type="text" [(ngModel)]="estado_contra_entrega_input" formControlName="estado_contra_entrega"
                   readonly hidden>

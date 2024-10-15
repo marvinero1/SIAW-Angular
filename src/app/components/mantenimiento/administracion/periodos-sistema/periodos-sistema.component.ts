@@ -292,7 +292,7 @@ export class PeriodosSistemaComponent implements OnInit {
 
             this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
               duration: 3000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
 
             this.getFechaApertura();
@@ -333,7 +333,7 @@ export class PeriodosSistemaComponent implements OnInit {
 
             this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
               duration: 3000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
 
             this.getFechaApertura();

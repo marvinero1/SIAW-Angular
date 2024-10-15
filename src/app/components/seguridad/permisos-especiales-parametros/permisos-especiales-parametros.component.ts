@@ -83,7 +83,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     { codigo: "59", descripcion: "MODIFICACION COBRANZA", codigo_descripcion: "59 - MODIFICACION COBRANZA" },
     { codigo: "60", descripcion: "MODIFICACION ANTICIPO", codigo_descripcion: "60 - MODIFICACION ANTICIPO" },
     { codigo: "61", descripcion: "MODIFICACION COMPRA", codigo_descripcion: "61 - MODIFICACION COMPRA" },
-    { codigo: "62", descripcion: "VENTA_CON_TIPO_DE_PAGO_NO_HABILITADO_PARA_EL_CLIENTE", codigo_descripcion: "62 - VENTA_CON_TIPO_DE_PAGO_NO_HABILITADO_PARA_EL_CLIENTE" },
+    { codigo: "62", descripcion: "VENTA_CON_TIPO_DE_PAGO_NO_HABILITADO_PARA_EL_CLIENTE", codigo_descripcion: "62 - VENTA CON TIPO DE PAGO NO HABILITADO PARA EL CLIENTE" },
     { codigo: "63", descripcion: "VENTA_SIN_TIPO_DE_PRECIO_HABILITADO", codigo_descripcion: "63 - VENTA_SIN_TIPO_DE_PRECIO_HABILITADO" },
     { codigo: "64", descripcion: "VENTA_SIN_CUMPLIR_MONTO_MINIMO_DE_LISTA_DE_PRECIOS", codigo_descripcion: "64 - VENTA_SIN_CUMPLIR_MONTO_MINIMO_DE_LISTA_DE_PRECIOS" },
     { codigo: "65", descripcion: "VENTA_SIN_CUMPLIR_EL_MONTO_MINIMO_DE_LOS_DESCUENTOS_ESPECIALES", codigo_descripcion: "65 - VENTA_SIN_CUMPLIR_EL_MONTO_MINIMO_DE_LOS_DESCUENTOS_ESPECIALES" },
@@ -173,11 +173,11 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     { codigo: "149", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET", codigo_descripcion: "149 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET" },
     { codigo: "150", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN", codigo_descripcion: "150 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN" },
     { codigo: "151", descripcion: "PERMITIR CAMBIAR CODIGO FACTURA WEB DE FACTURA", codigo_descripcion: "151 - PERMITIR CAMBIAR codigo_descripcion FACTURA WEB DE FACTURA" },
-    // { codigo: "152", descripcion: "1" },
-    // { codigo: "153", descripcion: "1" },
-    // { codigo: "154", descripcion: "1" },
-    // { codigo: "155", descripcion: "1" },
-    // { codigo: "156", descripcion: "1" },
+    { codigo: "152", descripcion: "PERMITIR MODIFICAR VACACION REGISTRADA", codigo_descripcion: "152 - PERMITIR MODIFICAR VACACION REGISTRADA"},
+    { codigo: "153", descripcion: "CAMBIAR NOMBRE COMERCIAL" , codigo_descripcion:"153 - CAMBIAR NOMBRE COMERCIAL"},
+    { codigo: "154", descripcion: "PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO", codigo_descripcion:"154 - PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO"  },
+    { codigo: "155", descripcion: "DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO", codigo_descripcion:"155 - DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO"},
+    { codigo: "156", descripcion: "PERMITIR PROMOCION PARA PROFORMAS ANTERIORES", codigo_descripcion:"156 - PERMITIR PROMOCION PARA PROFORMAS ANTERIORES"},
     // { codigo: "157", descripcion: "1" },
     // { codigo: "158", descripcion: "1" },
     // { codigo: "159", descripcion: "1" },
@@ -228,6 +228,12 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   persona_code: any = [];
   motivo: string;
 
+  cod_y_descripcion: any;
+  codigo_mas_descricpion:string;
+  descripcion_servicio:string;
+
+  codigo_servicio:any;
+
   constructor(private api: ApiService, public dialog: MatDialog,
     public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
@@ -239,21 +245,36 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
     @Inject(MAT_DIALOG_DATA) public dataCodigoPermiso: any,
     @Inject(MAT_DIALOG_DATA) public abrir: any) {
+    this.data_inventario_code = dataCodigoPermiso.dataCodigoPermiso;
+
+    let inventario_codigo:string;
+    inventario_codigo = this.data_inventario_code.toString();
+    console.log("🚀 ~ PermisosEspecialesParametrosComponent ~ @Inject ~ inventario_codigo en entero:", inventario_codigo)
+
+    let a = this.autorizacion.find((element) => element.codigo === inventario_codigo);
+
+    if (a) {
+      // console.log("🚀 ~ Código descripción encontrado:", this.codigo_mas_descricpion = a.codigo_descripcion);
+      this.descripcion_servicio = a.descripcion;
+      this.codigo_servicio = a.codigo;
+    } else {
+      // console.log("No se encontró ninguna coincidencia para el código:", this.data_inventario_code);
+    }
 
     this.dataA_get = this.dataA.dataA;
-    this.data_inventario = this.dataPermiso.dataPermiso;
+    this.data_inventario = a;
     this.dataB_get = this.dataB.dataB;
-    this.data_inventario_code = dataCodigoPermiso.dataCodigoPermiso;
+    this.cod_y_descripcion = this.data_inventario_code + "-" + this.data_inventario
 
     this.abrir_get = abrir.abrir;
 
-    console.log(this.dataA_get, this.dataB_get, this.data_inventario, this.data_inventario_code, this.abrir_get);
+    // console.log(this.dataA_get, this.dataB_get, this.data_inventario, this.descripcion_servicio, this.abrir_get);
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.user_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
-    console.log(this.BD_storage);
+    // console.log(this.BD_storage);
 
     this.data_text_area = this.autorizacion.find(x => x.codigo == this.data_servicio);
   }
@@ -286,7 +307,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
     let a = {
       servicio: this.data_inventario_code,
-      descServicio: this.data_inventario,
+      descServicio: this.data_inventario?.descripcion,
       codpersona: this.persona_code,
       password: this.contrasenia,
       codempresa: this.BD_storage,
@@ -298,7 +319,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       obs: this.motivo,
       datos_documento: " "
     };
-    console.log(a);
+    // console.log(a);
 
     return new Promise<boolean>((resolve, reject) => {
       // Verifica si la contrasenia ingresada es la correcta
@@ -312,17 +333,17 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
             this._snackBar.open(this.permiso_recibido.resp, '✅', {
               duration: 2000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
 
-            console.log(true);
+            // console.log(true);
             resolve(true);
           },
           error: (err: any) => {
             console.log(err, errorMessage);
             this._snackBar.open('Contraseña Incorrecta', '❌', {
               duration: 2000,
-              panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
             console.log(false);
             resolve(false);
@@ -335,14 +356,16 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   }
 
   copyToClipboard(): void {
-    let copia = "Codigo Servicio: " + this.data_servicio + "Dato A: " + this.dataA_get + "  " + "Dato B: " + this.dataB_get
+    let copiaCodigoServicio = "Codigo Servicio: " + this.codigo_servicio +"  - "+ this.descripcion_servicio + "\n" +
+      "Dato A: " + this.dataA_get + "\n" +
+      "Dato B: " + this.dataB_get;
     // Se copia el texto del input al portapapeles
-    this.clipboard.copy(copia);
-
+    this.clipboard.copy(copiaCodigoServicio);
+    
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Texto Copiado !', '📑', {
-      duration: 2000,
-      panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      duration: 2500,
+      panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
     });
   }
 
@@ -352,8 +375,8 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Contraseña Copiada !', '📑', {
-      duration: 2000,
-      panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+      duration: 2500,
+      panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
     });
   }
 

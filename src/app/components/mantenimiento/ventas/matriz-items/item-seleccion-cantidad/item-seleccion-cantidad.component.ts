@@ -262,7 +262,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
           cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
           cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
           codcliente: this.codcliente_get,
-          opcion_nivel: this.desct_nivel_get,
+          opcion_nivel: this.desct_nivel_get?.toString(),
           codalmacen: this.codalmacen_get,
           desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
           codmoneda: this.codmoneda_get,
@@ -337,7 +337,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
           break;
 
         case this.isCheckedEmpaques:
-          console.log("SOLO EMPAQUES");
+          console.log("SOLO EMPAQUES", nuevosItems);
           // Assuming similar API call and logic for empaques
           this.api.create("/venta/transac/veproforma/getCantItemsbyEmpinGroup/" + this.userConn + "/" + d_tipo_precio_desct + "/" + this.empaques_input, nuevosItems)
             .subscribe({
@@ -385,12 +385,13 @@ export class ItemSeleccionCantidadComponent implements OnInit {
           cantidad_pedida: this.cantidad_input === null ? 0 : this.cantidad_input,
           cantidad: this.cantidad_input === null ? 0 : this.cantidad_input,
           codcliente: this.codcliente_get,
-          opcion_nivel: this.desct_nivel_get,
+          opcion_nivel: this.desct_nivel_get?.toString(),
           codalmacen: this.codalmacen_get,
           desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get === "" ? "0" : this.desc_linea_seg_solicitud_get,
           codmoneda: this.codmoneda_get,
           fecha: this.fecha_get,
           empaque: this.empaques_input,
+          // empaque: this.empaques_input === undefined ? 0 : this.empaques_input,
           // cod_precio_venta_modal_codigo
           orden_pedido: j,
           nroitem: j,

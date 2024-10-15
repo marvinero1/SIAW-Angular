@@ -1,3 +1,17 @@
+
+<div class="no-printme p-3 center" style="text-align: center;">
+  
+  <mat-icon (click)="imprimirPDF(data_detalle_proforma)" 
+  style="cursor: pointer;color: #093070;width: 50px !important;font-size: 34px !important; height: 35px !important;"> print </mat-icon>
+
+  
+  <!-- <mat-icon (click)="descargaPDF()" 
+  style="cursor: pointer;color: red;width: 50px !important;font-size: 34px !important; height: 35px !important;">picture_as_pdf</mat-icon>
+  -->
+  <!-- <mat-icon (click)="vistaPreviaPDF()" 
+  style="cursor: pointer;color: #fbd800;width: 50px !important;font-size: 34px !important; height: 35px !important;">remove_red_eye</mat-icon> -->
+
+</div>
 <section id="sectionAboutUs" class="shotcode-1 about-home-2 text-center-xs text-center-sm">
   <div class="content section-content">
 
@@ -7,9 +21,11 @@
         <div class="x_panel">
           <div style="padding: 25px; padding-right: 15px;">
             <div class="row" style="text-align: center; height: 170px;">
+              
               <div class="col-md-2 col-sm-12" style="margin-top: 8px;">
                 <img src="assets/img/logo.png" alt="Pertec S.R.L &copy;" width="125px">
               </div>
+
               <div class="col-md-3 col-sm-12 alineacion"><br>
                 <h6 class="font-frank-demi color-black" style="font-size: 1.4rem;">PERTEC S.R.L.</h6>
                 <h6 class="font-frank-medium color-black">CASA MATRIZ</h6>
@@ -25,6 +41,7 @@
                 <p class="infoFactura"></p>
 
               </div>
+
               <div class="col-md-3 col-sm-12" style="height: 170px; display: table;">
                 <div style="display: table-cell; vertical-align: middle;"><br>
                   <h6 class="font-frank-demi color-black" style="font-size: 1.5rem; line-height: 0px; margin: 0;">
@@ -39,6 +56,7 @@
 
                 </div>
               </div>
+
               <div class="col-md-4 col-sm-12">
                 <div class="row">
                   <div class="col-md-6 col-sm-6 col-xs-6">
@@ -60,6 +78,7 @@
                   </div>
                 </div>
               </div>
+
             </div><br>
 
             <div class="row">
@@ -118,25 +137,23 @@
                     </thead>
 
                     <tbody>
-                      <!-- @foreach ($decoded->vefacturaProducto as $vefacturaDetalles)
-                      <tr>
-                        <td>{{ $decoded->contador_elementos++ }}</td>
-                        <td>{{ $vefacturaDetalles->coditem }}</td>
-                        <td class="alingLeft">{{ $vefacturaDetalles->descripcion }}</td>
-                        <td class="alingLeft">{{ $vefacturaDetalles->medida }}</td>
-                        <td class="alingCenter">{{ $vefacturaDetalles->udm }}</td>
-                        <td class="alingRight">{{ $vefacturaDetalles->cantidad }}</td>
-                        <td class="alingRight">
-                          {{  number_format(round($vefacturaDetalles->preciolista, 5) ,5,'.',',') }}</td>
-                        <td class="alingRight">
-                          {{ number_format(($vefacturaDetalles->preciolista * $vefacturaDetalles->cantidad) - ($vefacturaDetalles->precioneto * $vefacturaDetalles->cantidad),5) }}
-                        </td>
+                      
+                     
+                      <tr *ngFor="let data_detalle_proformas of data_detalle_proforma">
+                        <td>{{ data_detalle_proformas.nroitem }}</td>
+                        <td>{{ data_detalle_proformas.coditem }}</td>
+                        <td class="alingLeft">{{ data_detalle_proformas.descripcion }}</td>
 
+                        <td class="alingLeft">{{ data_detalle_proformas.medida }}</td>
+                        <td class="alingLeft">{{ data_detalle_proformas.udm }}</td>
+                        <td class="alingCenter">{{ data_detalle_proformas.cantidad }}</td>
+                        <td class="alingRight">{{ data_detalle_proformas.precioneto }}</td>
+                        <td class="alingRight">{{ data_detalle_proformas.preciodesc }}</td>
                         <td class="alingRight">
-                          {{ number_format(abs(($vefacturaDetalles->cantidad * $vefacturaDetalles->preciolista) - ($vefacturaDetalles->preciolista * $vefacturaDetalles->cantidad) - ($vefacturaDetalles->precioneto * $vefacturaDetalles->cantidad)),5) }}
+                          TOTAL
                         </td>
                       </tr>
-                      @endforeach -->
+                     
                     </tbody>
 
                     <tfoot>

@@ -1,4 +1,4 @@
-<section style="background-color:#ffe0c0 !important;margin-left: 7.5px;margin-right: 7.5px;flex: 1;
+<section style="background-color:#ffe0c0 !important;margin-left: 0px;margin-right: 7.5px;flex: 1;
         width: 100%;box-sizing: border-box;">
   <div class="row">
     <div class="col">
@@ -10,19 +10,19 @@
         <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Limpiar</span>
       </button>
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="rutaTemplateFactura()">
+      <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="modalPDFFactura()">
         <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Ver Factura Template</span>
-      </button>
-    </div>
+      </button> -->
 
-    <div class="col">
       <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="submit"
         style="float: right !important;">
         <span><i class="fa fa-cogs" aria-hidden="true" style="color: #ffc107;"></i>
-          Verificar Estado Conexion SIN
+           Verificar Estado Conexion SIN
         </span>
-      </button>
+      </button>     
     </div>
+
+    <div class="col">  </div>
   </div>
 
   <mat-tab-group>
@@ -42,7 +42,7 @@
 
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
-                  style="border-color: green;" matTooltip="Buscar Almacen" matTooltipClass="custom-tooltip"
+                  style="border-color: #04b7048b;" matTooltip="Buscar Almacen" matTooltipClass="custom-tooltip"
                   matTooltipPosition="above"><i class="fa fa-search"></i>
                 </button>
               </div>
@@ -52,14 +52,16 @@
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 5px;">
-                  <u># Caja Factura</u></span>
+                  <u># Caja Factura</u>
+                </span>
               </div>
-              <input type="text" class="form-control form-control-sm" value="0" style="margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" 
+              [ngModel]="num_caja" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
-                <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen();"
-                  style="border-color: green;" matTooltip="Caja Factura" matTooltipClass="custom-tooltip"
-                  matTooltipPosition="above"><i class="fa fa-search"></i>
+                <button class="btn btn-outline-success form-control-sm" type="button" (click)="generarFactura();"
+                  style="border-color: #04b7048b;" matTooltip="Caja Factura" matTooltipClass="custom-tooltip"
+                  matTooltipPosition="above"><i class="fa fa-plug"></i>
                 </button>
               </div>
             </div>
@@ -91,7 +93,9 @@
           <div class="col-md-2">
             <div class="input-group">
               <div class="input-group-prepend">
-                <span class="input-group-text form-control-sm" style="padding: 7px 1px ;"><u>Cod. Control</u></span>
+                <span class="input-group-text form-control-sm" style="padding: 0px 0px ;">
+                  <u>Cod. Control</u>
+                </span>
               </div>
               <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
                 [(ngModel)]="cod_control" disabled>
@@ -120,14 +124,15 @@
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;">
-                  <u>Nota Remisión: </u></span>
+                  <u>Nota Remisión: </u>
+                </span>
               </div>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_numero_id"
                 [value]="id_proforma_numero_id" style="margin-left: 5px;" disabled>
 
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button"
-                  (click)="modalCatalogoNotasDeRemision();" style="border-color: green;"
+                  (click)="modalCatalogoNotasDeRemision();" style="border-color: #04b7048b;"
                   matTooltip="Catalogo Notas Remision" matTooltipClass="custom-tooltip" matTooltipPosition="above"><i
                     class="fa fa-search"></i>
                 </button>
@@ -138,7 +143,10 @@
             <input type="text" class="form-control form-control-sm" [ngModel]="descrip_proforma_numero_id"
               [value]="descrip_proforma_numero_id" style="margin-left: 5px;" disabled>
           </div>
-          <div class="col-md-2"></div>
+          <div class="col-md-2" style="padding-left: 0px !important;">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="numero_id_nota_remision" 
+            id="input_numero_id_nota_remision" style="width: 35% !important;">
+          </div>
         </div>
 
         <div class="row">
@@ -153,7 +161,7 @@
                 [value]="id_factura_catalogo" style="margin-left: 5px;" disabled>
               <div class="input-group-append">
                 <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalCatalogoFacturas();"
-                  style="border-color: green;" matTooltip="Catalogo Factura" matTooltipClass="custom-tooltip"
+                  style="border-color: #04b7048b;" matTooltip="Catalogo Factura" matTooltipClass="custom-tooltip"
                   matTooltipPosition="above"><i class="fa fa-search"></i>
                 </button>
               </div>
@@ -164,8 +172,10 @@
               [value]="descrip_factura_catalogo" style="margin-left: 5px;" disabled>
           </div>
           <div class="col-md-2" style="text-align: right;">
-            <button class="btn btn-outline-success form-control-sm right1" type="button" (click)="modalAlmacen();"
-              style="border-color: green;" matTooltip="Generar Factura"><i class="fa fa-cog"></i> Generar Factura
+            <button class="btn btn-outline-success form-control-sm right1" type="button" 
+            (click)="generarFacturaNRPOST(valProfDespachoForm, valFechaRemiHoyForm, valFactContadoForm, valTipoCamForm);"
+              style="border-color: #04b7048b;" matTooltip="Generar Factura" matTooltipClass="custom-tooltip"
+              matTooltipPosition="above"><i class="fa fa-cog"></i> Generar Factura
             </button>
           </div>
         </div>
@@ -176,15 +186,14 @@
           <span>Facturas Generadas</span>
         </strong>
         <div class="row">
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 1px 0px 23px;">
                   <u>Facturar a: </u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                style="margin-left: 5px;" [value]="almacn_parame_usuario" style="background-color: black;color:
-                yellow;" disabled>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_cliente"
+                style="margin-left: 5px;"  style="background-color: black;color: yellow;" disabled>
             </div>
           </div>
           <div class="col-md-2">
@@ -194,26 +203,27 @@
                   <u>N.I.T</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                style="margin-left: 5px;" [value]="almacn_parame_usuario" style="background-color: black;color:
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="nit_cliente"
+                style="margin-left: 5px;" style="background-color: black;color:
                 yellow;" disabled>
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <input type="text" class="form-control form-control-sm" placeholder="Complemento"
+            [(ngModel)]="complemento_tipodocid_cliente"
               style="padding: 0px 0px 0px 0px;background-color: black;color: yellow;" disabled>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm" style="padding: 10px 2px 0px 0px;">
                   <u>Condición I.V.A</u></span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="almacn_parame_usuario"
-                style="margin-left: 5px;" [value]="almacn_parame_usuario" style="background-color: black;color:
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="condicionIVA_cliente"
+                style="margin-left: 5px;"  style="background-color: black;color:
                 yellow;" disabled>
             </div>
           </div>
@@ -224,10 +234,12 @@
                   <u>Fecha</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" [ngModel]="fecha_actual" [value]="fecha_actual"
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="fecha_actual" 
                 style="margin-left: 5px;background-color: black;color: yellow;" disabled>
             </div>
           </div>
+          <div class="col-md-1">
+            </div>
         </div>
       </div>
 
@@ -235,47 +247,47 @@
         <div class="row">
           <div class="col-lg">
             <div class="team scrollmenu">
-              <div class="col-lg-6 pr-lg-4"
+              <div class="col-md-6 "
                 style="width: 100%;overflow-x: auto;height: 230px !important; overflow-y: scroll;overflow-x: scroll;">
 
-                <p-table [value]="dataSource" [tableStyle]="{'min-width': '60rem'}"
-                  styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" dataKey="coditem"
+                <p-table [value]="lista_respuesta" [tableStyle]="{'min-width': '40rem'}"
+                  styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" 
                   sortMode="multiple">
                   <ng-template pTemplate="header">
                     <tr>
                       <th pSortableColumn="nroitem" class="center1" style="width:2%;">
                         #
                       </th>
-                      <th pSortableColumn="orden" class="right1" style="width:8%;">
+                      <th pSortableColumn="subtotal" class="right1" style="width:3%;">
                         Sub-Total
-                        <p-sortIcon class="iconGrid" field="orden" />
                       </th>
-                      <th pSortableColumn="item" style="width:8%;" class="right1">
+                      <th pSortableColumn="descuentos" class="right1" style="width:3%;">
                         <u>Descuentos</u>
-                        <p-sortIcon field="item" />
                       </th>
-                      <th pSortableColumn="descripcion" style="width:8%;" class="right1">
+                      <th pSortableColumn="recargos" style="width:3%;" class="right1">
                         Recargos
-                        <p-sortIcon field="descripcion" />
                       </th>
-                      <th pSortableColumn="medida" class="right1" style="width:8%">
+                      <th pSortableColumn="monto_iva" class="right1" style="width:3%">
                         Monto I.V.A
-                        <!-- <p-sortIcon field="medida"/> -->
                       </th>
-                      <th pSortableColumn="%" class="right1" style="width:8%">
+                      <th pSortableColumn="monto" class="right1" style="width:3%">
+                        Monto
+                      </th>
+                      <th pSortableColumn="total" class="right1" style="width:3%">
                         Total
-                        <p-sortIcon field="Total" />
                       </th>
                     </tr>
                   </ng-template>
-                  <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
-                    <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}">
-                      <td class="center1">{{ products.numero }}</td>
-                      <td class="right1">{{ products.subtotal }}</td>
-                      <td class="right1">{{ products.descuento }}</td>
-                      <td class="right1">{{ products.recargos }}</td>
-                      <td class="right1">{{ products.montoiva }}</td>
-                      <td class="right1">{{ products.total }}</td>
+                  <ng-template pTemplate="body" let-lista_respuestas let-rowIndex="rowIndex">
+                    <tr [pSelectableRow]="lista_respuesta" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}">
+                      <td class="center1" style="width:2%;">{{ lista_respuestas.nro }}</td>
+                      <td class="right1" style="width:3%;">{{ lista_respuestas.subtotal }}</td>
+                      <td class="right1" style="width:3%;">{{ lista_respuestas.descuentos }}</td>
+                      <td class="right1" style="width:3%;">{{ lista_respuestas.recargos }}</td>
+                      <td class="right1" style="width:3%;">{{ lista_respuestas.iva }}</td>
+                      <td class="right1" style="width:3%;">{{ lista_respuestas.monto }}</td>
+                      
+                      <td class="right1">{{ lista_respuestas.total }}</td>
                     </tr>
                   </ng-template>
                 </p-table>
@@ -295,8 +307,9 @@
                   <u>Sub Total N. Remisión</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="0.00"
-                style="text-align:right;margin-left: 2px;" disabled>
+              <input type="text" class="form-control form-control-sm" 
+              placeholder="0.00" [(ngModel)]="subtotal_cabecera"
+              style="text-align:right;margin-left: 2px;" disabled>
             </div>
             <div class="input-group">
               <div class="input-group-">
@@ -304,16 +317,19 @@
                   <u>Total
                     Descuentos</u> </span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="0.00"
-                style="text-align:right;margin-left: 2px;" disabled>
+              <input type="text" class="form-control form-control-sm" 
+              placeholder="0.00" [(ngModel)]="descuentos_cabecera"
+              style="text-align:right;margin-left: 2px;" disabled>
             </div>
             <div class="input-group">
               <div class="input-group-">
-                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 35px;"><u>Total Recargos</u>
+                <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 35px;"><u>Total Recargos</u>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="0.00"
-                style="text-align:right;margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" 
+              placeholder="0.00" [(ngModel)]="recargos_cabecera"
+              style="text-align:right;margin-left: 5px;" disabled>
             </div>
             <div class="input-group">
               <div class="input-group-">
@@ -321,15 +337,16 @@
                   <u>Total N.
                     Remisión</u> </span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="0.00"
-                style="text-align:right;margin-left: 5px;" disabled>
+              <input type="text" class="form-control form-control-sm" 
+              placeholder="0.00" [(ngModel)]="total_cabecera"
+              style="text-align:right;margin-left: 5px;" disabled>
             </div>
           </div>
           <!-- <div class="col-md-2"></div> -->
           <div class="col-md-2">
             <div class="input-group">
               <!-- <img width="75%" src="assets/img/descargar.png" alt="codigoQR"> -->
-              <qrcode [qrdata]="'Hola primor'" [width]="200" [colorLight]="'#ffe0c0'" [scale]="'4'"
+              <qrcode [qrdata]="valor_string_QR" [width]="200" [colorLight]="'#ffe0c0'" [scale]="'4'"
                 [errorCorrectionLevel]="'L'">
               </qrcode>
             </div>
@@ -342,7 +359,7 @@
                   <u>Total Factura</u></span>
               </div>
               <input type="text" class="form-control form-control-sm" placeholder="0.00"
-                style="text-align:right;margin-left: 5px;" disabled>
+                [(ngModel)]="totalFacturaFooter" style="text-align:right;margin-left: 5px;" disabled>
             </div>
             <div class="row">
               <div class="col">
@@ -356,7 +373,8 @@
             </div><br><br>
 
             <div style="float: right;">
-              <button class="btn btn-outline-success form-control-sm" type="button" style="border-color: green;">
+              <button class="btn btn-outline-success form-control-sm" type="button"
+              (click)="openFormasDePago();" style="border-color: #04b7048b;" [disabled]="!CUFD && !nit_cliente">
                 <i class="fa fa-print" aria-hidden="true"></i> Grabar e Imprimir
               </button>
             </div>
@@ -367,33 +385,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <mat-tab label="LOG de Transacciones">
       <div style="background-color: black;color: yellow;">
         <span>RESULTADO DE ENVIO DE FACTURA</span>
       </div>
-      <p-listbox [options]="items" [(ngModel)]="selectedItems" optionLabel="label" [virtualScroll]="true"
-        [virtualScrollItemSize]="38" [metaKeySelection]="false" scrollHeight="250px" />
+      <p-listbox [options]="eventosLogs" [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
+      </p-listbox>\
       <br><br>
     </mat-tab>
 
 
+
     <mat-tab label="Resultados de Facturación">
-      <p-table [value]="dataSource" [tableStyle]="{'min-width': '60rem'}"
-        styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" dataKey="coditem" sortMode="multiple">
+      <p-table [value]="" [tableStyle]="{'min-width': '60rem'}"
+        styleClass="p-datatable-striped-sm tablitaDetalle" 
+        [metaKeySelection]="true" dataKey="coditem" sortMode="multiple">
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="nroitem" class="center1" style="width:2%;">
@@ -460,7 +466,10 @@
       <br><br>
     </mat-tab>
 
+
+
     <!-- <mat-tab label="Generación Automatica"> </mat-tab>
     <mat-tab label="Archivos Para Correo"> </mat-tab> -->
   </mat-tab-group>
+  
 </section>

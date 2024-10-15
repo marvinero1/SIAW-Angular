@@ -25,7 +25,11 @@
     Facturar Nota de Remisión (FEL) 🟡</a>
   <a mat-menu-item>Emitir Notas de Debito de Notas de Remisión</a>
   <mat-divider class="p-2"></mat-divider>
-  <a mat-menu-item>Facturación Mostrador Tiendas (FEL)</a>
+
+
+  <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura', 'venta/transacciones/facturacion-fel-mostrador')"> 
+    Facturación Mostrador Tiendas (FEL) 🟡
+  </a>
   <a mat-menu-item>Notas de Credito (FEL)</a>
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Proforma (Liviana)</a>

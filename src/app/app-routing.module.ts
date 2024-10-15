@@ -119,6 +119,7 @@ import { ProformaPdfEmailComponent } from '@components/mantenimiento/ventas/tran
 import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/ventas/transacciones/proforma/etiqueta-tuercas-proforma/etiqueta-tuercas-proforma.component';
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
 import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/transacciones/facturas/factura-template/factura-template.component';
+import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/facturacion-mostrador-tiendas.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -675,6 +676,11 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'venta/transacciones/facturacion-fel-mostrador',
+                component: FacturacionMostradorTiendasComponent,
+                canActivate: [AuthGuard]
+            },
+            {
                 path: 'admin/system/log',
                 component: LogComponent,
                 canActivate: [AuthGuard]
@@ -768,8 +774,7 @@ const routes: Routes = [
     },
     {
         path: 'login',
-        component: LoginComponent,
-
+        loadComponent: () => import('./modules/login/login.component').then(m => m.LoginComponent)
     },
     {
         path: 'register',

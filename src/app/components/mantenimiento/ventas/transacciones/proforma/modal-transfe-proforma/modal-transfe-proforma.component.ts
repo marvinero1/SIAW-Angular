@@ -103,7 +103,7 @@ export class ModalTransfeProformaComponent implements OnInit {
               this.spinner.show();
               setTimeout(() => {
                 this.spinner.hide();
-              }, 1500);
+              }, 500);
               this.close();
             } else {
               this.toastr.error('! TCANCELADO ! ❌');
@@ -123,7 +123,7 @@ export class ModalTransfeProformaComponent implements OnInit {
   transferirCotizaciones() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosCotizacion/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage)
+    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
@@ -134,7 +134,7 @@ export class ModalTransfeProformaComponent implements OnInit {
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 500);
           this.close();
         },
         error: (err: any) => {

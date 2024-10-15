@@ -1,0 +1,113 @@
+<div style="background-color: #ffffc0;" class="p-2">
+  <mat-card style="background-color: #ffffc0;" class="p-2">
+    <mat-card-header class="mb-1">
+      <mat-card-title style="font-size: 0.8rem;">Formas de Pago</mat-card-title>
+      <!-- <mat-card-subtitle>End</mat-card-subtitle> -->
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- <form [formGroup]="FormularioData" (ngSubmit)="submitData()"> -->
+        <div class="row">
+          <tr>
+            <td>
+              <div class="card flex justify-content-center">
+                <label for="">Ingreso de Efectivo</label>
+                <p-dropdown 
+                  [options]="catalogo_fn_cuentas" 
+                  [(ngModel)]="selectedfn_cuenta" 
+                  optionLabel="label">
+                  <ng-template let-catalogo_fn_cuentas pTemplate="item">
+                    <div class="flex align-items-center catalogo_fn_cuentas-item">
+                      <div>{{ catalogo_fn_cuentas.id }} - {{ catalogo_fn_cuentas.descripcion }}</div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </td>
+          </tr>
+        </div>
+
+        <div class="row">
+          <tr>
+            <td>
+              <div class="card flex justify-content-center">
+                <label for="">Tipo de Pago</label>
+                <p-dropdown 
+                  [options]="catalogo_cotippago" 
+                  [(ngModel)]="selected_cotippago" 
+                  optionLabel="label">
+                  <ng-template let-catalogo_cotippago pTemplate="item">
+                    <div class="flex align-items-center catalogo_cotippago-item">
+                      <div>{{ catalogo_cotippago.codigo }} - {{ catalogo_cotippago.descripcion }}</div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </td>
+          </tr>          
+        </div>
+
+
+        <!-- Esta data ya no se visualiza desde 27-9-2024 -->
+        <!-- <div class="row">
+          <tr>
+            <td>
+              <div class="card flex justify-content-center">
+                <label for="">Nro de Cuenta</label>
+                <p-dropdown 
+                  [options]="catalogo_cuentas_bancos" 
+                  [(ngModel)]="selected_cuentas_bancos" 
+                  optionLabel="label">
+                  <ng-template let-catalogo_cuentas_bancos pTemplate="item">
+                    <div class="flex align-items-center catalogo_cuentas_bancos-item">
+                      <div>{{ catalogo_cuentas_bancos.codigo }} - {{ catalogo_cuentas_bancos.descripcion }}</div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </td>
+          </tr>          
+        </div> -->
+
+        <!-- <div class="row">
+          <tr>
+            <td>
+              <div class="card flex justify-content-center">
+                <label for="">Banco del Cheque</label>
+                <p-dropdown 
+                  [options]="catalogo_cuentas_bancos_cheques" 
+                  [(ngModel)]="selected_cuentas_bancos_cheques" 
+                  optionLabel="label">
+                  <ng-template let-catalogo_cuentas_bancos_cheques pTemplate="item">
+                    <div class="flex align-items-center catalogo_cuentas_bancos_cheques-item">
+                      <div>{{ catalogo_cuentas_bancos_cheques.codigo }} - {{ catalogo_cuentas_bancos_cheques.descripcion }}</div>
+                    </div>
+                  </ng-template>
+                </p-dropdown>
+              </div>
+            </td>
+          </tr>          
+        </div> -->
+        <br>
+
+        <!-- <div class="row">
+          <tr>
+            <td>
+              <label># de Cheque</label> &nbsp;
+              <input type="text" [(ngModel)]="numero_cheque" pInputText>
+            </td>
+          </tr>
+        </div> -->
+
+        <mat-card-actions align="end">
+          <button mat-raised-button color="primary" (click)="enviarData();">
+            <i class="fa fa-check"></i> &nbsp;Aceptar
+          </button>
+          <button mat-raised-button color="secondary" (click)="close();">
+            <i class="fa fa-window-close" aria-hidden="true"></i> &nbsp;Cancelar
+          </button>
+        </mat-card-actions>
+      <!-- </form> -->
+    </mat-card-content>
+  </mat-card>
+</div>

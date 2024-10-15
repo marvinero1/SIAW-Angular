@@ -30,11 +30,11 @@ export class MainComponent implements OnInit {
 		}
 
 		this.nombre_ventana_service.disparadorDeNombreVentana.subscribe(data => {
-			console.log("Recibiendo Ventana: ", data.nombre_vent);
+			// console.log("Recibiendo Ventana: ", data.nombre_vent);
 			this.nombre_ventana = data.nombre_vent;
 			this.isProformaPdfPage = this.proformaPdfRoutes.includes(this.nombre_ventana);
 
-			console.log("VALOR BOOL:", this.isProformaPdfPage)
+			// console.log("VALOR BOOL:", this.isProformaPdfPage)
 		});
 	}
 

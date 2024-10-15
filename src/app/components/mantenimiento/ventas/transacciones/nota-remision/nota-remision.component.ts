@@ -29,6 +29,7 @@ import { PermisosEspecialesParametrosComponent } from '@components/seguridad/per
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { CatalogoNotasRemisionService } from './servicio-catalogo-notas-remision/catalogo-notas-remision.service';
+import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 
 @Component({
   selector: 'app-nota-remision',
@@ -134,7 +135,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   public tipo_complementopf_input: any;
   public idpf_complemento_view: any;
   public disableSelect = new FormControl(false);
-
+  public disableSelectComplemetarProforma: boolean = false;
   precio: any = true;
   desct: any = false;
 
@@ -293,6 +294,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   cod_nota_remision: any;
   tipoventa: any;
 
+  public valor_formulario_copied_map_all_complementar: any = {};
+  public nroidpf_complemento_view: any;
+
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
@@ -337,7 +341,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       const dialogRefTransfeProformaCotizacion = this.dialog.open(DialogConfirmActualizarComponent, {
         width: 'auto',
         height: 'auto',
-        data: { mensaje_dialog: "¿ ESTA SEGURO QUE DESEA TRANFERIR LA PROFORMA?, SE REMPLAZARA EL CONTENIDO DE LA PROFORMA ACTUALl !" },
+        data: { mensaje_dialog: "¿ ESTA SEGURO QUE DESEA TRANFERIR LA PROFORMA?, SE REMPLAZARA EL CONTENIDO DE LA PROFORMA ACTUAL !" },
         disableClose: true,
       });
 
@@ -347,13 +351,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toastr.success('! TRANSFERENCIA EN PROGESO ! ⚙️');
           //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
           this.imprimir_proforma_tranferida(data.proforma_transferir);
-          this.codigo_proforma = data.proforma_transferir.data.cabecera.codigo
-
+          this.codigo_proforma = data.proforma_transferir.data.cabecera.codigo;
         } else {
           this.toastr.error('! CANCELADO ! ❌');
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 500);
         }
       });
     });
@@ -692,13 +695,14 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.submitted = true;
     this.valor_formulario.map((element: any) => {
       this.valor_formulario_copied_map_all = {
+        ...element,
         coddocumento: 0,
         id: element.id.toString() || '',
         numeroid: element.numeroid?.toString() || '',
         codcliente: element.codcliente?.toString() || '',
         nombcliente: element.nombcliente?.toString() || '',
         nitfactura: element.nit?.toString() || '',
-        tipo_doc_id: element.tipo_docid?.toString() || '',
+        tipo_doc_id: element.tipo_doc_id?.toString() || '',
         codcliente_real: element.codcliente_real?.toString() || '',
         nomcliente_real: element.nomcliente_real?.toString() || '',
         codmoneda: element.codmoneda?.toString() || '',
@@ -838,7 +842,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     //complementarProforma
     this.idpf_complemento_view = "";
-    this.nroidpf_complemento = 0;
+    // this.nroidpf_complemento = 0;
 
     this.pago_contado_anticipado = "";
 
@@ -865,9 +869,16 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.moneda_cabecera = "";
   }
 
+  codcliente_real_para_parametro: any;
+  
   imprimir_proforma_tranferida(proforma) {
     this.spinner.show();
     console.log("Imprimir Proforma: ", proforma.data);
+
+    if (proforma.data.cabecera.nroidpf_complemento > 0) {
+      this.disableSelectComplemetarProforma = true;
+    }
+
     this.tipoventa = 0;
     this.tipopago = proforma.data.cabecera.tipopago
     this.codigo_proforma = proforma.data.cabecera.codigo;
@@ -899,8 +910,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.moneda_get_catalogo = proforma.data.cabecera.codmoneda;
     this.tdc = proforma.data.cabecera.tdc;
 
-    this.codcliente_real = proforma.data.codcliente_real;
+    this.codcliente_real_para_parametro = proforma.data.codcliente_real;
     this.codcliente_real_descripcion = proforma.data.codclientedescripcion;
+
+    // codcliente de cabecera se utiliza este
+    this.codigo_cliente_catalogo_real = proforma.data.cabecera.codcliente_real;
 
     this.estado_contra_entrega_input = proforma.data.cabecera.estado_contra_entrega;
     this.contra_entrega = proforma.data.cabecera.contra_entrega;
@@ -914,8 +928,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.peso = proforma.data.cabecera.peso;
     this.direccion_central_input = proforma.data.cabecera.direccion;
     this.odc = proforma.data.cabecera.odc;
-
-    this.codigo_cliente_catalogo_real = proforma.data.cabecera.codcliente_real;
 
     this.desclinea_segun_solicitud = proforma.data.cabecera.desclinea_segun_solicitud;
 
@@ -941,6 +953,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.idpf_complemento_view = proforma.data.cabecera.idpf_complemento;
     this.nroidpf_complemento = proforma.data.cabecera.nroidpf_complemento;
     this.pago_contado_anticipado = proforma.data.cabecera.pago_contado_anticipado;
+    this.tipo_complementopf_input = proforma.data.cabecera.tipo_complementopf === 0 ? 3 : proforma.data.cabecera.tipo_complementopf;
+    this.nroidpf_complemento_view = proforma.data.cabecera.nroidpf_complemento;
+    //complementar proforma
 
     //eso nop porque se totaliza una vez transferida
     // this.subtotal = proforma.data.cabecera.subtotal;
@@ -973,6 +988,8 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.hora_confirmada = proforma.data.cabecera.hora_confirmada;
     //fin-fecha
 
+    this.tabla_anticipos = proforma.data?.detalleAnticipos;
+
     // Agregar el número de orden a los objetos de datos
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
       element.orden = index + 1;
@@ -1001,13 +1018,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   createForm(): FormGroup {
     let valor_cero: number = 0;
 
-    // if(this.tipo_complementopf_input === 0) {
-    //   this.dataform.tipo_complementopf === tipo_complementopf_val0;
-    // }
-
-    // if(this.tipo_complementopf_input === 0) {
-    //   this.dataform.tipo_complementopf === tipo_complementopf_val0;
-    // }
 
     if (this.input_complemento_view === null) {
       this.input_complemento_view = valor_cero;
@@ -1016,7 +1026,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     return this._formBuilder.group({
       total_cabecera: [this.dataform.total_cabecera],
       moneda_cabecera: [this.dataform.moneda_cabecera],
-
       id: [this.dataform.id, Validators.compose([Validators.required])],
       numeroid: [this.dataform.numeroid, Validators.compose([Validators.required])],
       codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
@@ -1079,20 +1088,24 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       complemento_ci: [this.dataform.complemento_ci === undefined ? "" : this.dataform.complemento_ci],
       codcomplementaria: [this.dataform.codcomplementaria === null ? 0 : 0], //aca es para complemento de proforma //ACA REVIS
 
-      nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
       idsoldesctos: "", // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [valor_cero], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
 
-      idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
-      monto_anticipo: 0, //anticipo Ventas
+      // idpf_complemento: this.dataform.idpf_complemento === undefined ? "" : this.dataform.idpf_complemento, //aca es para complemento de proforma
+      // nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
+      // tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
+
+      //complementar input
+      idpf_complemento: this.dataform.idpf_complemento === undefined ? " " : this.dataform.idpf_complemento, //aca es para complemento de proforma
+      nroidpf_complemento: this.dataform.nroidpf_complemento === undefined ? 0 : this.dataform.nroidpf_complemento,
       tipo_complementopf: this.dataform.tipo_complementopf, //aca es para complemento de proforma
+      monto_anticipo: [0], //anticipo Ventas
+      niveles_descuento: [this.dataform.niveles_descuento === undefined ? 'ACTUAL' : this.dataform.niveles_descuento], //niveles de descuento
 
       // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
       // moneda_total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
-
-      niveles_descuento: [this.dataform.niveles_descuento === undefined ? 'ACTUAL' : this.dataform.niveles_descuento], //niveles de descuento
 
       // no hay mas en esta seccion xD
       subtotal: [this.dataform.subtotal === null ? 0.00 : this.dataform.subtotal], //TOTALES
@@ -1146,7 +1159,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     let submit_nota_remision = {
       veremision: a[0],
       veremision1: this.array_items_carrito_y_f4_catalogo,
-      vedesextraremi: this.array_de_descuentos_ya_agregados,
+      vedesextraremi: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       verecargoremi: [],
       veremision_iva: this.tablaIva,
       veremision_chequerechazado: {}
@@ -1272,7 +1285,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       }, 1000);
                       return;
                     },
-
                     error: (err: any) => {
                       console.log(err, errorMessage);
                       // this.toastr.error("Formulario T. Entrega Error");
@@ -1530,9 +1542,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-
-
-
   // COMPONENTE
   totabilizarYGrabar() {
     // ACA RUTA 
@@ -1569,7 +1578,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       codalmacen_saldo: this.almacn_parame_usuario_almacen,
       descarga: true,
       tipo_venta: 0,
-
     }));
 
     total_proforma_concat = {
@@ -1577,9 +1585,10 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
       veproforma_anticipo: [],
-      vedesextraprof: this.array_de_descuentos_ya_agregados, //array de descuentos
+      vedesextraprof: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados, //array de descuentos
       verecargoprof: [], //array de recargos
       veproforma_iva: [], //array de iva
+      detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
     };
 
     // console.log(total_proforma_concat);
@@ -1587,25 +1596,25 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
 
     console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-      this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
+    this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
       return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-        "false" + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat).pipe(takeUntil(this.unsubscribe$))
+        "false" + "/" + this.tipo_complementopf_input + "/" + this.desct_nivel_actual + "/" + this.codcliente_real_para_parametro, total_proforma_concat).pipe(takeUntil(this.unsubscribe$))
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log(this.totabilizar_post);
             this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
             this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
 
+            this.getNombreDeDescuentos(datav.totales.tablaDescuentos);
             console.log(this.array_items_carrito_y_f4_catalogo);
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           },
 
           error: (err) => {
@@ -1614,7 +1623,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           },
           complete: () => {
             this.total = this.totabilizar_post.totales?.total;
@@ -1649,7 +1658,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   }
                 });
               }
-            }, 1500);
+            }, 50);
           }
         })
     } else {
@@ -1678,7 +1687,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     let submit_nota_remision = {
       veremision: a[0],
       veremision1: this.array_items_carrito_y_f4_catalogo,
-      vedesextraremi: this.array_de_descuentos_ya_agregados,
+      vedesextraremi: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       verecargoremi: [],
       veremision_iva: this.tablaIva,
       veremision_chequerechazado: {}
@@ -1690,6 +1699,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(submit_nota_remision, "SIN MODIFICACION, CLICK GUARDAR MODAL");
     this.spinner.show();
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
+
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
       + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
       + this.txtid_solurgente + "/" + this.txtnroid_solurgente + "/true/false/false/false/false/false", submit_nota_remision)
@@ -1780,7 +1790,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/impresionNotaRemision/"
     console.log(cod_nota_remision, this.codcliente_real_descripcion, this.preparacion);
 
-    return this.api.getAll('/venta/transac/veremision/impresionNotaRemision/' + this.userConn + "/" + this.codcliente_real + "/" +
+    return this.api.getAll('/venta/transac/veremision/impresionNotaRemision/' + this.userConn + "/" + this.codcliente_real_para_parametro + "/" +
       this.BD_storage + "/" + this.codcliente_real_descripcion + "/" + this.preparacion + "/" + cod_nota_remision)
       .subscribe({
         next: (datav) => {
@@ -1820,7 +1830,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     sessionStorage.setItem('data_impresion', JSON.stringify(data));
   }
 
-
   getIDScomplementarProforma() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + 2)
@@ -1840,13 +1849,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   totabilizar() {
     let total_proforma_concat: any = [];
 
-    //valor del check en el mat-tab complementar proforma
-    if (this.complementopf === false || this.complementopf === undefined) { //valor del check en el mat-tab complementar proforma this.disableSelectComplemetarProforma.value 
-      this.complementopf = 0;
-    } else {
-      this.complementopf = 1;
-    }
-
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
       this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
     };
@@ -1855,14 +1857,16 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
+
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
       veproforma_valida: [],
       veproforma_anticipo: [],
-      vedesextraprof: this.array_de_descuentos_ya_agregados, //array de descuentos
+      vedesextraprof: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados, //array de descuentos
       verecargoprof: [], //array de recargos
       veproforma_iva: [], //array de iva
+      detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
     };
 
     // console.log(total_proforma_concat);
@@ -1875,7 +1879,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
       return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-        "false" + "/" + this.complementopf + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat)
+        "false" + "/" + this.tipo_complementopf_input + "/" + this.desct_nivel_actual + "/" + this.codcliente_real_para_parametro, total_proforma_concat)
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
@@ -1884,9 +1888,11 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
             console.log(this.array_items_carrito_y_f4_catalogo);
 
+            this.getNombreDeDescuentos(datav.totales.tablaDescuentos);
+           // this.array_de_descuentos_ya_agregados = ;
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 500);
           },
 
           error: (err) => {
@@ -1895,7 +1901,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 500);
           },
           complete: () => {
             this.total = this.totabilizar_post.totales?.total;
@@ -1927,6 +1933,143 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
     }
+  }
+
+  habilitarComplementarProforma() {
+    console.log('Toggle clicked, current state:', this.disableSelectComplemetarProforma);
+    // this.disableSelectComplemetarProforma = true;
+  }
+
+  buscadorIDComplementarProforma(complemento_id, complemento_numero_id) {
+    console.log(complemento_id, complemento_numero_id);
+    let b = this.id_proforma_numero_id.toString();
+    console.log(b);
+
+    if (this.disableSelectComplemetarProforma === false) {
+      this.complementopf = 0;
+    } else {
+      this.complementopf = 1;
+    }
+
+    this.valor_formulario = [this.FormularioData.value];
+
+    this.valor_formulario.map((element: any) => {
+      this.valor_formulario_copied_map_all_complementar = {
+        ...element,
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: element.nombcliente?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_doc_id?.toString() || '',
+        codcliente_real: element.codcliente_real?.toString() || '',
+        nomcliente_real: element.nomcliente_real?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        preparacion: this.preparacion?.toString() || '',
+        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
+        vta_cliente_en_oficina: element.venta_cliente_oficina,
+        estado_contra_entrega: this.estado_contra_entrega_input === undefined ? " " : this.estado_contra_entrega_input,
+        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
+        niveles_descuento: element.niveles_descuento,
+        transporte: element.transporte,
+        nombre_transporte: element.nombre_transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: "",
+        direccion: element.direccion,
+        ubicacion: element.ubicacion,
+        latitud: element.latitud_entrega,
+        longitud: element.longitud_entrega,
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo === null ? "" : element.idanticip,
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        monto_anticipo: 0,
+        nrofactura: "0",
+        nroticket: "",
+        tipo_caja: "",
+        tipo_cliente: this.tipo_cliente,
+        nroautorizacion: "",
+        nrocaja: "",
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        version_codcontrol: "",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "1",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        fechalimite_dosificacion: "2030-04-10",
+        idpf_solurgente: "0",
+        noridpf_solurgente: "0",
+
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
+        tipo_complemento: element.tipo_complementopf?.toString(),
+        idpf_complemento: this.idpf_complemento_view,
+      }
+    });
+
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all_complementar,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      preparacion: this.preparacion,
+    }
+
+    console.log(proforma_validar);
+
+    if (this.total === 0) {
+      this.toastr.error("TOTALICE ANTES DE COMPLEMENTAR");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 150);
+      return;
+    }
+
+    return this.api.create("/venta/transac/veproforma/recuperarPfComplemento/" + this.userConn + "/" + complemento_id + "/" +
+      complemento_numero_id + "/" + this.tipo_complementopf_input + "/" + this.BD_storage, proforma_validar)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.complemento_proforma = datav;
+
+          if (datav.value === false) {
+            this.modalDetalleObservaciones(datav.resp, datav.detalle);
+            // this.complementopf = false;
+            this.disableSelectComplemetarProforma = false;
+            this.tipo_complementopf_input = 3;
+            this.idpf_complemento_view = "";
+            this.nroidpf_complemento_view = "";
+
+          } else {
+            this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
+          }
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        error: (err) => {
+          console.log(err);
+          this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
+          // this.complementopf = false;
+          this.disableSelectComplemetarProforma = false;
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => { }
+      })
   }
 
   formatNumberTotalSubTOTALES(numberString: number): string {
@@ -2058,6 +2201,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.valor_formulario.map((element: any) => {
       return this.valor_formulario_negativos = {
+        ...element,
         coddocumento: 0,
         id: element.id.toString() || '',
         numeroid: element.numeroid?.toString() || '',
@@ -2070,6 +2214,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         subtotaldoc: element.subtotal,
         totaldoc: element.total,
         tipo_vta: element.tipopago?.toString() || '',
+        tipo_doc_id: element.tipo_doc_id?.toString() || '',
         codalmacen: element.codalmacen?.toString() || '',
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
@@ -2165,7 +2310,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.abrirTabPorLabel("Negativos");
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 500);
 
         },
         error: (err) => {
@@ -2173,18 +2318,40 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 150);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 500);
         }
       });
     } else {
       this.toastr.info("VALIDACION ACTIVA 🚨");
       console.log("HAY QUE VALIDAR DATOS");
     }
+  }
+
+  getNombreDeDescuentos(array_descuentos) {
+    console.log(array_descuentos)
+
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/veproforma/getDescripDescExtra/";
+    return this.api.create('/venta/transac/veproforma/getDescripDescExtra/' + this.userConn, array_descuentos)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav)
+          this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
+          this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
+            ...element,
+            descripcion: element?.descrip,
+            descrip: element?.descrip
+          }));
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   negativosTodosFilterToggle() {
@@ -2268,7 +2435,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   getPorcentajeVentaItem(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inmatriz/infoItemRes/";
     return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia_logueado + "/" + item + "/" +
-      this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + this.codigo_cliente_catalogo_real)
+      this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + this.codcliente_real_para_parametro)
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
@@ -2381,6 +2548,18 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       height: 'auto',
       disableClose: true,
       data: { tablaIva: this.tablaIva },
+    });
+  }
+
+  modalDetalleObservaciones(obs, obsDetalle) {
+    this.dialog.open(ModalDetalleObserValidacionComponent, {
+      width: '700px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        obs_titulo: obs,
+        obs_contenido: obsDetalle,
+      },
     });
   }
 

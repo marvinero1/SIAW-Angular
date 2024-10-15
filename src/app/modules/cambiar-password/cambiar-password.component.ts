@@ -67,7 +67,7 @@ export class CambiarPasswordComponent implements OnInit {
           this.toastr.success('! Se Actualizo Correctamente !');
           this._snackBar.open('Se Actualizo Correctamente la Contraseña!', '🙂', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
         },
 

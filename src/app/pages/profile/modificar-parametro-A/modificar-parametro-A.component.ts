@@ -99,7 +99,7 @@ export class ModificarParametroAComponent implements OnInit {
 
           this._snackBar.open('Se Guardo Correctamente!', 'Ok', {
             duration: 3000,
-            panelClass: ['coorporativo-snackbar', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
 
           location.reload();

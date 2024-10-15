@@ -1,9 +1,11 @@
 #content {
-  margin: 20px;
-  padding: 20px;
+  margin-left: 2mm;
+  margin-right: 2mm;
   font-family: 'Arial' !important;
   line-height: 22px !important;
 }
+
+
 
 .pe {
   font-size: 1.10rem !important;
@@ -22,7 +24,6 @@
 
   border: 5px solid black;
   width: 100%;
-  height: auto;
   text-align: center;
   word-wrap: break-word;
   /* display: flex; */
@@ -36,43 +37,46 @@
 
 
 
+
+
 @page { size: auto;  margin: 4mm; }
     /* para imprimir */
     @media print {
     .no-printme {
-        display: none;
+      display: none;
     }
 
     #content {
-        margin: 20px;
-        padding: 20px;
-        font-family: 'Arial' !important;
-        line-height: 22px !important;
+      margin-left: 2mm;
+      margin-right: 2mm;
+      padding: 20px;
+      font-family: 'Arial' !important;
+      line-height: 22px !important;
     }
 
     .pe {
-        font-size: 1.10rem !important;
-        margin-bottom: 0rem !important;
-        font-family: 'Arial' !important;
+      font-size: 1.10rem !important;
+      margin-bottom: 0rem !important;
+      font-family: 'Arial' !important;
     }
 
     .espan {
-        font-size: 0.9rem !important;
+      font-size: 0.9rem !important;
     }
 
     .content-box {
-        /* line-height: 23.8px; */
-        /* margin-right: 6px; */
-        /* margin-bottom: 6px; */
-        /* display: flex; */
+      /* line-height: 23.8px; */
+      /* margin-right: 6px; */
+      /* margin-bottom: 6px; */
+      /* display: flex; */
 
-        border: 5px solid black;
-        width: 100%;
-        height: auto;
-        text-align: center;
-        word-wrap: break-word;
-        flex-direction: column;
-        justify-content: center;
-        page-break-inside: avoid !important;
+      border: 5px solid black;
+      width: 100%;
+      height: auto;
+      text-align: center;
+      word-wrap: break-word;
+      flex-direction: column;
+      justify-content: center;
+      page-break-inside: avoid !important;
     }
 }

@@ -3,7 +3,6 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { ApiService } from '@services/api.service';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-
 @Component({
   selector: 'app-etiqueta-impresion-proforma',
   templateUrl: './etiqueta-impresion-proforma.component.html',
@@ -41,18 +40,26 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     this.getDataPDF();
     this.mandarNombre();
 
+    console.log(this.data_impresion);
     this.cod_cliente_get = this.data_impresion[0].cod_cliente;
     this.cod_cliente_real_get = this.data_impresion[0].cod_cliente_real;
   }
 
   ngOnInit(): void {
-
   }
 
   getDataPDF() {
+    let array_send={
+      codProforma: this.data_impresion[0].codigo_proforma,
+      codcliente: this.data_impresion[0].cod_cliente ,
+      codcliente_real: this.data_impresion[0].cod_cliente_real,
+      codempresa: this.BD_storage,
+      cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
+      paraAprobar: this.data_impresion[0].grabar_aprobar
+    };
+
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-    return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/" + this.data_impresion[0].codigo_proforma + "/" +
-      this.data_impresion[0].cod_cliente + "/" + this.cod_cliente_real_get + "/" + this.BD_storage + "/" + this.data_impresion[0].cmbestado_contra_entrega + "/" + this.data_impresion[0].grabar_aprobar)
+    return this.api.create('/venta/transac/veproforma/getDataPDF/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
           console.log("DATA DEL PDF: ", datav);

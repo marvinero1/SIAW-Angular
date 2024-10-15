@@ -16,7 +16,7 @@ export class DialogConfirmacionComponent implements OnInit {
 
     this.mensaje = mensaje_dialog;
     this.array_mensaje = msj_array.msj_array;
-    console.log(this.mensaje, this.array_mensaje);
+    // console.log(this.mensaje, this.array_mensaje);
   }
 
   ngOnInit() { }

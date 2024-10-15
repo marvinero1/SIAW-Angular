@@ -225,13 +225,23 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
+   :host ::ng-deep .p-datatable .p-datatable-wrapper > tr > th {
+    overflow: visible;
+  }
 
 
+   :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0px;
+        overflow: visible;
+    }
 
-
-
-
-
+    @media screen and (max-width: 64em) {
+        :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+            top: 0px;
+        }
+    }
 
 
 
@@ -270,7 +280,7 @@ mat-row, mat-header-row, mat-footer-row{
   }
 
   .p-cell-editing {
-    color: #fff !important;
+    color: black !important;
   }
 
 
@@ -288,7 +298,7 @@ mat-row, mat-header-row, mat-footer-row{
   }
   .miTabGroupProformaFooter .mat-mdc-tab-body{
     //height: 14rem !important;
-    height: 164px !important;
+    height: 146px !important;
   }
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 10px 0px 10px !important;

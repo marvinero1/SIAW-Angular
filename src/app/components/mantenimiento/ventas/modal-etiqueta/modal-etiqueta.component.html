@@ -33,12 +33,54 @@
 
       <mat-tab-group style="background-color: #f9f9f9;">
         <mat-tab label="Etiqueta">
-          <mat-card style="background-color: #f9f9f9; border: 1px #093070 solid;">
+          <mat-tab-group>
+            <mat-tab *ngFor="let data_maps of data_map" label="Dirección"> 
+             
+              <mat-card style="background-color: #f9f9f9; border: 1px #093070 solid;">
+                <mat-card-content style="padding: 0px 0px 0px 0px !important;">
+                  <div class="nombre">
+                    <strong>{{ data_maps.linea1  }}</strong>
+                  </div>
+                  <input type="text" [(ngModel)]="linea2_input" style="width: 100% !important;">
+                  <div class="text-center">
+                    <label>{{ data_maps.representante }}</label>
+                  </div>
+                  <div>
+                    <label>TEL.</label>
+                    <input type="text" value="{{ data_maps.telefono }}" readonly>
+                  </div>
+                  <div>
+                    <label>CEL.</label>
+                    <input type="text" value="{{ data_maps.celular }}" readonly>
+                  </div>
+    
+                  <div class="text-center">
+                    <label>{{ data_maps.ciudad }}</label><br>
+
+                    <ng-container *ngIf="data_maps?.elegida" style="text-align: center;">
+                      <span style="color: green;">ETIQUETA ELEGIDA ✅</span>
+                    </ng-container>  
+                  </div>
+
+                  <div style="text-align: right;">
+                    <button style="height: 20px !important; font-size: 0.8rem; background-color: #fbd800;"
+                      (click)="seleccionarEtiqueta(data_maps, linea2_input);" class="mdc-button mdc-button--raised">
+                      <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
+                      <span class="mdc-button__label">
+                        <i class="fa fa-check"></i> Seleccionar Dirección
+                      </span>
+                    </button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </mat-tab>
+          </mat-tab-group>
+          <!-- <mat-card style="background-color: #f9f9f9; border: 1px #093070 solid;">
             <mat-card-content style="padding: 0px 0px 0px 0px !important;">
               <div class="nombre">
                 <strong>{{ data_map[0]?.linea1  }}</strong>
               </div>
-              <input type="text" [(ngModel)]="input" style="width: 100% !important;">
+              <input type="text" [(ngModel)]="linea2_input" style="width: 100% !important;">
               <div class="text-center">
                 <label>{{ data_map[0]?.representante }}</label>
               </div>
@@ -55,7 +97,7 @@
                 <label>{{ data_map[0]?.ciudad }}</label>
               </div>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
         </mat-tab>
 
         <mat-tab label="Teléfonos de Contacto"> <br>
@@ -78,18 +120,25 @@
         </mat-tab>
 
         <mat-tab label="Georeferencia"><br>
-          <div class="text-center">
+          <div *ngFor="let data_maps of data_map" class="text-center">
+            <div>
+              <strong>{{ data_maps.representante  }}</strong>
+            </div>
             <label>LATITUD: </label>
-            <label>{{ data_map[0]?.latitud_entrega }}</label>
-          </div>
-          <div class="text-center">
+            <label>{{ data_maps.latitud_entrega }}</label> <br>
             <label>LONGITUD: </label>
-            <label>{{ data_map[0]?.longitud_entrega }}</label>
+            <label>{{ data_maps.longitud_entrega }}</label>
+            <div class="text-center">
+              <label>{{ data_maps.ciudad }}</label>
+            </div>
+            <div class="text-center">
+              <a href="https://www.google.com/maps/search/?api=1&query={{ data_maps.latitud_entrega }}%2C{{ data_maps.longitud_entrega }}" target="_blank">
+                <i class="fa fa-map" aria-hidden="true"></i> VER EN MAPS
+              </a>              
+            </div>
+            <mat-divider></mat-divider>
           </div>
 
-          <div class="text-center">
-            <a href="{{URL_maps}}" target="_blank"><i class="fa fa-map" aria-hidden="true"></i> VER EN MAPS</a>
-          </div>
         </mat-tab>
       </mat-tab-group>
 
@@ -99,7 +148,7 @@
         </button>
 
         <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-          (click)="enviarArrayToProforma();">
+          (click)="enviarArrayToProforma();" [disabled]="longitud_etiqueta === 0">
           <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
         </button><br>
       </div>

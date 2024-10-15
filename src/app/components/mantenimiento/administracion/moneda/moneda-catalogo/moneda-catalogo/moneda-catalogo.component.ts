@@ -5,6 +5,7 @@ import { moneda } from '@services/modelos/objetos';
 import { MonedaServicioService } from '../../servicio-moneda/moneda-servicio.service';
 import { DatePipe } from '@angular/common';
 import { Table } from 'primeng/table';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-moneda-catalogo',
   templateUrl: './moneda-catalogo.component.html',
@@ -13,11 +14,19 @@ import { Table } from 'primeng/table';
 export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
 
   @HostListener('dblclick') onDoubleClicked2() {
-    this.mandarMoneda();
+    if(!this.moneda_view.codigo){
+      this.toastr.warning("SELECCIONE UNA MONEDA BOBO!!!")
+    }else{
+      this.mandarMoneda();
+    }
   };
 
   @HostListener("document:keydown.enter", []) unloadHandler0(event: KeyboardEvent) {
-    this.mandarMoneda();
+    if(!this.moneda_view.codigo){
+      this.toastr.warning("SELECCIONE UNA MONEDA BOBO!!!")
+    }else{
+      this.mandarMoneda();
+    }
   };
 
   public moneda_view: any = [];
@@ -41,7 +50,8 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
   searchValue: string;
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<MonedaCatalogoComponent>,
-    private serviciMoneda: MonedaServicioService, private datePipe: DatePipe) {
+    private serviciMoneda: MonedaServicioService, private datePipe: DatePipe,
+    private toastr: ToastrService) {
 
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -103,39 +113,41 @@ export class MonedaCatalogoComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { }
+        complete: () => { 
+          
+        }
       })
   }
 
   getMonedabyId(moneda) {
     this.moneda_view = moneda.data;
     console.log(this.moneda_view);
-    this.getMonedaTipoCambio(this.moneda_view);
+    this.getMonedaTipoCambio(this.moneda_view.codigo);
   }
 
   onSearchChange(searchValue: string) {
     console.log(searchValue);
 
-    // Debounce logic
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.dt1.filterGlobal(searchValue, 'contains');
+    // // Debounce logic
+    // clearTimeout(this.debounceTimer);
+    // this.debounceTimer = setTimeout(() => {
+    //   this.dt1.filterGlobal(searchValue, 'contains');
 
-      // Focus logic
-      const elements = this.paras.toArray();
-      let focused = false;
-      for (const element of elements) {
-        if (element.nativeElement.textContent.includes(searchValue)) {
-          element.nativeElement.focus();
-          focused = true;
-          break;
-        }
-      }
+    //   // Focus logic
+    //   const elements = this.paras.toArray();
+    //   let focused = false;
+    //   for (const element of elements) {
+    //     if (element.nativeElement.textContent.includes(searchValue)) {
+    //       element.nativeElement.focus();
+    //       focused = true;
+    //       break;
+    //     }
+    //   }
 
-      if (!focused) {
-        console.warn('No se encontró ningún elemento para hacer focus');
-      }
-    }, 550); // 750 ms de retardo
+    //   if (!focused) {
+    //     console.warn('No se encontró ningún elemento para hacer focus');
+    //   }
+    // }, 550); // 750 ms de retardo
   }
 
   mandarMoneda() {

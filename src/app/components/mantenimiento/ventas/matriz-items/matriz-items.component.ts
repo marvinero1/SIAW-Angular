@@ -233,9 +233,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
 
 
-    console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
+    // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
 
-    console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
+    // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
 
     //console.log(this.num_hoja);
     this.num_hoja = this.num_hoja;
@@ -250,67 +250,66 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   @HostListener('window:popstate', ['$event'])
   onPopState(event: any) {
     history.pushState(null, '', location.href); // Si se detecta navegación hacia atrás, vuelve al mismo lugar
-    console.warn("HOLA LOLA")
   }
 
   ngOnInit() {
     history.pushState(null, '', location.href); // Coloca un estado en la historia
 
     this.getPermisosBtnPorRol();
-    console.log(
-      "CODCLIENTE" + this.codcliente_get,
-      "TARIFA: " + this.cod_precio_venta_modal_codigo1,
-      "DESCT: " + this.descuento_get,
-      "CODALM: " + this.codalmacen_get,
-      "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
-      "FECHA: " + this.fecha_get,
-      "CODMONEDA: " + this.codmoneda_get,
-      "DESC NIVEL: " + this.descuento_nivel_get,
-      "tamanio carrito:", this.tamanio_carrito
-    );
+    // console.log(
+    //   "CODCLIENTE" + this.codcliente_get,
+    //   "TARIFA: " + this.cod_precio_venta_modal_codigo1,
+    //   "DESCT: " + this.descuento_get,
+    //   "CODALM: " + this.codalmacen_get,
+    //   "DESCT_LINEA: " + this.desc_linea_seg_solicitud_get,
+    //   "FECHA: " + this.fecha_get,
+    //   "CODMONEDA: " + this.codmoneda_get,
+    //   "DESC NIVEL: " + this.descuento_nivel_get,
+    //   "tamanio carrito:", this.tamanio_carrito
+    // );
 
     this.dataItemsSeleccionadosMultiple = [];
-    console.log(this.dataItemsSeleccionadosMultiple);
+    // console.log(this.dataItemsSeleccionadosMultiple);
     // this.setFocus();
 
     this.saldoItemServices.disparadorDeSaldoAlm1.subscribe(data => {
-      console.log("Recibiendo Saldo Total: ", data);
+      // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_1 = data.saldo1;
     });
 
     this.saldoItemServices.disparadorDeSaldoAlm2.subscribe(data => {
-      console.log("Recibiendo Saldo Total: ", data);
+      // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_2 = data.saldo2;
     });
 
     this.saldoItemServices.disparadorDeSaldoAlm3.subscribe(data => {
-      console.log("Recibiendo Saldo Total: ", data);
+      // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_3 = data.saldo3;
     });
 
     this.saldoItemServices.disparadorDeSaldoAlm4.subscribe(data => {
-      console.log("Recibiendo Saldo Total: ", data);
+      // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_4 = data.saldo4;
     });
 
     this.saldoItemServices.disparadorDeSaldoAlm5.subscribe(data => {
-      console.log("Recibiendo Saldo Total: ", data);
+      // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_5 = data.saldo5;
     });
 
     //Items seleccionados
     this.itemservice.disparadorDeItemsSeleccionadosAMatriz.subscribe(datav => {
-      console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
+      // console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
       this.item_seleccionados_catalogo_matriz = datav;
       this.tamanio_carrito = this.item_seleccionados_catalogo_matriz.length;
 
-      console.log(this.item_seleccionados_catalogo_matriz, "tamanio del carrito:", this.tamanio_carrito);
+      // console.log(this.item_seleccionados_catalogo_matriz, "tamanio del carrito:", this.tamanio_carrito);
       this.addItemArraySeleccion();
     });
     //
 
     this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
-      console.log("Recibiendo Precio de Venta: ", data);
+      // console.log("Recibiendo Precio de Venta: ", data);
       this.cod_precio_venta_modal_codigo1 = data.precio_venta.codigo;
     });
   }
@@ -329,7 +328,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let nombre_input = focusedElement.id;
     console.log(`Elemento Enfocado: ${nombre_input}`);
     //this.myInputField.nativeElement.focus();
-    this.focusMyInput();
+   // this.focusMyInput();
   }
 
   focusInput() {
@@ -423,7 +422,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.tarifa_get_unico = datav;
           this.cod_precio_venta_modal_codigo1 = this.tarifa_get_unico[0].codigo;
-          console.log(this.cod_precio_venta_modal_codigo1);
+          // console.log(this.cod_precio_venta_modal_codigo1);
         },
 
         error: (err: any) => {
@@ -434,7 +433,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   onCellClick1(item: any): void {
-    console.log("adentro");
+    // console.log("adentro");
     // aca llega el item y se guarda en la varialbe this.item
     // se le quita el espacio del final
     // this.getSaldoItem(this.item);
@@ -487,7 +486,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.id_tipo = datav;
-          console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
+          // console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
           // this.letraSaldos = this.id_tipo[0].resp;
           // this.saldo_variable = this.id_tipo[2];
 
@@ -521,7 +520,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         .subscribe({
           next: (datav) => {
             this.hojas = datav;
-            console.log(this.hojas);
+            // console.log(this.hojas);
             this.initHandsontable(this.hojas);
 
             this.applyFocusMatriz();
@@ -657,9 +656,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       className: 'my-custom-row-class',
 
       beforeKeyDown: function (e) {
-        if (self.permiso_para_vista === true) {
+        // if (self.permiso_para_vista === true) {
           switch (e.key) {
             case 'Enter':
+
               console.log("ENTER PARA ENVIAR ITEM A CARRITO");
               // this.focusPedido();
               // this.focusPedido.nativeElement.focus();
@@ -669,7 +669,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
               const focusedElement = document.activeElement as HTMLElement;
               let nombre_input = focusedElement.id;
-              console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
+              // console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
 
               self.focusEmpaque();
               const focusElement = this.focusEmpaqueElement.nativeElement;
@@ -679,8 +679,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             case 'F9':
               self.modalStockActualF9();
               console.log("Hola lola modalStockActualF9");
+
+              
           }
-        }
+        // }
       }
     });
 
@@ -788,12 +790,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
-    console.log(array);
+    // console.log(array);
     let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
-    console.log(this.valorCelda, cleanText);
+    // console.log(this.valorCelda, cleanText);
 
     if (existe) {
-      console.log("El item ya existe en el array.");
+      // console.log("El item ya existe en el array.");
       this.toastr.warning('¡EL ITEM YA ESTA EN CARRITO!');
 
 
@@ -833,7 +835,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     }
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
-    this.array_items_completo = this.array_items_seleccionado.concat(this.array_items_completo_multiple);
+    this.array_items_completo = this.array_items_seleccionado.push(...this.array_items_completo_multiple);
 
     //LONGITUD DEL CARRITO DE COMPRAS
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
@@ -842,16 +844,16 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     const focusedElement = document.activeElement as HTMLElement;
     focusedElement.id = nombre_input;
 
-    console.log(focusedElement.id);
+    // console.log(focusedElement.id);
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
     this.array_items_completo = this.array_items_seleccionado.concat(this.item_seleccionados_catalogo_matriz);
 
-    console.log("array_items_completo", this.array_items_completo,
-      "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
-      "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
-      "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
-      this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
+    // console.log("array_items_completo", this.array_items_completo,
+    //   "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
+    //   "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
+    //   "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
+    //   this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
 
     this.cant_empaque = undefined;
     this.pedido = undefined;
@@ -870,10 +872,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   mandarItemaProforma() {
     this.spinner.show();
-
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
-    console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
+    // console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
@@ -883,18 +884,21 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         cantidad_pedida: elemento.cantidad_pedida,
         cantidad: elemento.cantidad,
         codcliente: this.codcliente_get,
-        opcion_nivel: this.descuento_nivel_get,
+        opcion_nivel: this.descuento_nivel_get?.toString(),
         codalmacen: this.codalmacen_get,
         desc_linea_seg_solicitud: this.desc_linea_seg_solicitud_get,
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
-        empaque: this.cant_empaque === undefined ? elemento.cantidad_empaque : this.cant_empaque,
+        // empaque: this.cant_empaque,
+        empaque: this.cant_empaque === undefined || this.cant_empaque === 0 ?
+          parseInt(elemento.cantidad_empaque || 0) :
+          parseInt(this.cant_empaque || 0),
         orden_pedido: elemento.nroitem,
         nroitem: elemento.nroitem,
       }
     });
 
-    console.log(a);
+    // console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
     return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, a)
@@ -905,7 +909,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         },
 
         error: (err) => {
@@ -913,7 +917,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         },
         complete: () => {
           // ACA SE ENVIA A LA PROFORMA EN EL SERVICIO enviarItemsAlServicio();
@@ -929,14 +933,14 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
           this.num_hoja = 0;
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         }
       })
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    console.log("Items del carrito PROCESADOS: ", items);
-    console.log("Items del carrito sin procesar: ", items_sin_proceso);
+    // console.log("Items del carrito PROCESADOS: ", items);
+    // console.log("Items del carrito sin procesar: ", items_sin_proceso);
 
     this.itemservice.enviarItemCompletoAProforma(items);
     this.itemservice.enviarItemsSinProcesar(items_sin_proceso);
@@ -1073,7 +1077,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.precioItem = datav;
-          console.log(this.precioItem);
+          // console.log(this.precioItem);
           // this.empaque_view = true;
 
           // this.empaque_item_codigo = this.empaquesItem.codigo;
@@ -1192,7 +1196,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.permiso_para_vista = datav.veEmpaques;
-          console.log(this.permiso_para_vista);
+          // console.log(this.permiso_para_vista);
         },
 
         error: (err: any) => {
@@ -1209,7 +1213,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.hojas = datav;
-          console.log(this.hojas);
+          // console.log(this.hojas);
           this.initHandsontable(this.hojas);
         },
 
@@ -1231,13 +1235,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   modalStockActualF9() {
     this.dialog.open(StockActualF9Component, {
       width: 'auto',
-      height: '55vh',
+      height: '50vh',
       data: { cod_item_celda: this.codigo_item }
     });
   }
 
   seleccionMultipleItemHotTable() {
-    console.log(this.tamanio_carrito);
+    // console.log(this.tamanio_carrito);
 
     this.dialog.open(ItemSeleccionCantidadComponent, {
       width: 'auto',
@@ -1259,7 +1263,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       },
     });
 
-    console.log(this.dataItemsSeleccionadosMultiple);
+    // console.log(this.dataItemsSeleccionadosMultiple);
   }
 
   modalPrecioVenta(): void {

@@ -244,6 +244,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       document.querySelector('app-root'),
       'login-page'
     );
+
+    console.table()
   }
 
   conectarAgencia(agencia) {

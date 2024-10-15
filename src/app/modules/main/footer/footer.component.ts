@@ -44,12 +44,13 @@ export class FooterComponent implements OnInit {
     }
 
     this.getTipoCambioHoyDia();
-    this.getVerificaraDondeEstaConectadoUsuario();
   }
 
   ngOnInit(): void {
+    this.getVerificaraDondeEstaConectadoUsuario();
+
     this.nombre_ventana_service.disparadorDeNombreVentana.subscribe(data => {
-      console.log("Recibiendo Ventana: ", data);
+      // console.log("Recibiendo Ventana: ", data);
       this.nombre_ventana = data.nombre_vent;
     });
   }
@@ -61,13 +62,13 @@ export class FooterComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.tipo_cambio_hoy_dia = datav;
-          console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
+          // console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
 
           this.tipo_cambio_dolar = this.tipo_cambio_hoy_dia.filter((element) => element.moneda === 'US');
           this.tipo_cambio_dolar_dolar = this.tipo_cambio_dolar[0].factor;
           this.tipo_cambio_dolar_moneda_base = this.tipo_cambio_dolar[0].monedabase;
 
-          console.log(this.tipo_cambio_dolar);
+          // console.log(this.tipo_cambio_dolar);
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -82,7 +83,7 @@ export class FooterComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.info_conexion_usuario = datav;
-          console.log('Conexion Usuario: ', this.info_conexion_usuario);
+          // console.log('Conexion Usuario: ', this.info_conexion_usuario);
           this.bd = this.info_conexion_usuario.database
           this.servidor = this.info_conexion_usuario.server
         },
