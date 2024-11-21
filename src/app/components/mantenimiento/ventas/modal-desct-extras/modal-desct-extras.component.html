@@ -29,6 +29,16 @@
     <div class="row">
       <div class="col-md">
         <span style="margin-right: 22px;"><u>Código</u></span>
+        <!-- <mat-form-field>
+          <mat-select matNativeControl (change)="infoDescuento($event.target.value)">
+            <mat-option selected>Elija Opción</mat-option>
+            <mat-option *ngFor="let descuento_segun_tarifas of descuento_segun_tarifa"
+              [value]="descuento_segun_tarifas.codigo">
+              {{ descuento_segun_tarifas.codigo }} - {{ descuento_segun_tarifas.descripcion }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field> -->
+
         <select matNativeControl (change)="infoDescuento($event.target.value)">
           <option selected>Elija Opción</option>
           <option *ngFor="let descuento_segun_tarifas of descuento_segun_tarifa"

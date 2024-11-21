@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DescuentoService } from '../serviciodescuento/descuento.service';
 import { DecimalPipe } from '@angular/common';
+
 @Component({
   selector: 'app-modal-desct-extras',
   templateUrl: './modal-desct-extras.component.html',
@@ -95,18 +96,11 @@ export class ModalDesctExtrasComponent implements OnInit {
       montodoc: element.montodoc,
       montorest: element.montorest,
       codigo: element.coddesextra,
-     // descripcion: element.descripcion,
       descripcion: element.descrip,
-
       porcentaje: element.porcen,
-    }))
-
+    }));
    
     this.dataSource = new MatTableDataSource(this.array_de_descuentos);
-
-    // console.log(this.contra_entrega_get);
-    // console.log(this.cabecera_proforma);
-    // console.log("Array de descuentos que ya estaban: ", this.array_de_descuentos);
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
@@ -119,22 +113,23 @@ export class ModalDesctExtrasComponent implements OnInit {
   }
 
   getPrecioInicial() {
-    this.items_de_proforma = this.items_de_proforma.map((element) => ({
-      ...element,
-      cumple: element.cumple === 1 ? true : false,
-    }));
+    // this.items_de_proforma = this.items_de_proforma.map((element) => ({
+    //   ...element,
+    //   cumple: element.cumple === 1 ? true : false,
+    // }));
 
     let array_post = {
       tabladetalle: this.items_de_proforma,
       dvta: this.cabecera_proforma,
     };
+    console.log("🚀 ~ ModalDesctExtrasComponent ~ getPrecioInicial ~ array_post:", array_post)
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
     return this.api.create('/venta/transac/veproforma/getTarifaPrincipal/' + this.userConn, array_post)
       .subscribe({
         next: (datav) => {
+          console.log("🚀 ~ ModalDesctExtrasComponent ~ getPrecioInicial ~ datav:", datav)
           this.tarifaPrincipal = datav;
-          // console.log(this.tarifaPrincipal);
 
           this.descuentoExtraSegunTarifa(this.tarifaPrincipal.codTarifa);
         },
@@ -232,7 +227,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       this.toastr.error("La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento");
       setTimeout(() => {
         this.spinner.hide();
-      }, 500);
+      }, 50);
       return;
     }
 
@@ -440,28 +435,6 @@ export class ModalDesctExtrasComponent implements OnInit {
 
     this.close();
   }
-
-  // getNombreDeDescuentos(array_descuentos) {
-  //   // console.log(array_descuentos)
-
-  //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/veproforma/getDescripDescExtra/";
-  //   return this.api.create('/venta/transac/veproforma/getDescripDescExtra/' + this.userConn, array_descuentos)
-  //     .subscribe({
-  //       next: (datav) => {
-  //         // console.log(datav)
-  //         this.array_de_descuentos = datav.tabladescuentos;
-  //         this.array_de_descuentos?.map((element) => ({
-  //           ...element,
-  //           descripcion: element?.descrip,
-  //           descrip: element?.descrip
-  //         }));
-  //       },
-  //       error: (err: any) => {
-  //         console.log(err, errorMessage);
-  //       },
-  //       complete: () => { }
-  //     })
-  // }
 
   servicioEnviarAProforma(resultado_validacion) {
     this.descuento_services.disparadorDeDescuentosDelModalTotalDescuentos.emit({

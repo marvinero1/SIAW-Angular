@@ -137,7 +137,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
         console.log("ARCHIVO pdf a enviar correo: ", pdfBlob);
 
         // Guardar el PDF localmente para ver si se genera correctamente
-        //pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
+        // pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
 
         // Enviar el correo cuando ya está generado el PDF
         clearTimeout(this.debounceTimer);
@@ -158,7 +158,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
     console.log(formData.get('pdfFile'));
     console.log(formData);
 
-    const errormesagge = "La Ruta presenta fallos al hacer petición POST -/notif/envioCorreos/envioCorreoProforma/ ";
+    const errormesagge = "La Ruta presenta fallos al hacer petición POST -/notif/envioCorreos/envioCorreoProforma/";
     this.api.createAllWithOutToken(`/notif/envioCorreos/envioCorreoProforma/${this.userConn}/${this.usuarioLogueado}/${this.data_impresion[0].codigo_vendedor}/${this.data_impresion[0].codigo_proforma}`, formData).subscribe({
       next: (datav) => {
         console.log(datav);

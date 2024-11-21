@@ -28,11 +28,11 @@ export class MenuItemComponent implements OnInit {
             this.isExpandable = true;
         }
         this.calculateIsActive(this.router.url);
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .subscribe((event: NavigationEnd) => {
-                this.calculateIsActive(event.url);
-            });
+        // this.router.events
+        //     .pipe(filter((event) => event instanceof NavigationEnd))
+        //     .subscribe((event: NavigationEnd) => {
+        //         this.calculateIsActive(event.url);
+        //     });
     }
 
     public handleMainMenuAction() {

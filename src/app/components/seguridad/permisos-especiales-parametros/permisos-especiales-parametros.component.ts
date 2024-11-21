@@ -10,6 +10,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { DatePipe } from '@angular/common';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
+
 @Component({
   selector: 'app-permisos-especiales-parametros',
   templateUrl: './permisos-especiales-parametros.component.html',
@@ -178,6 +179,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     { codigo: "154", descripcion: "PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO", codigo_descripcion:"154 - PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO"  },
     { codigo: "155", descripcion: "DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO", codigo_descripcion:"155 - DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO"},
     { codigo: "156", descripcion: "PERMITIR PROMOCION PARA PROFORMAS ANTERIORES", codigo_descripcion:"156 - PERMITIR PROMOCION PARA PROFORMAS ANTERIORES"},
+    
     // { codigo: "157", descripcion: "1" },
     // { codigo: "158", descripcion: "1" },
     // { codigo: "159", descripcion: "1" },
@@ -290,7 +292,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.persona_code = datav.persona;
-          // console.log(datav);
+          //console.log(datav);
         },
 
         error: (err: any) => {

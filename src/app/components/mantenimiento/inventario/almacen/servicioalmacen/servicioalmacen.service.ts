@@ -6,6 +6,9 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 export class ServicioalmacenService {
 
   @Output() disparadorDeAlmacenes: EventEmitter<any> = new EventEmitter();
+
+  @Output() disparadorDeAlmacenesBuscadorAvanzadoAnticipos: EventEmitter<any> = new EventEmitter();
+
   
   @Output() disparadorDeAlmacenesOrigen: EventEmitter<any> = new EventEmitter();
   

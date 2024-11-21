@@ -303,6 +303,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
               complete: () => {
                 this.enviarItemsAlServicio(a);
                 this.dialogRef.close();
+                console.clear();
               }
             });
           break;
@@ -332,6 +333,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
               complete: () => {
                 this.enviarItemsAlServicio(a);
                 this.dialogRef.close();
+                console.clear();
               }
             });
           break;
@@ -366,6 +368,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
                 });
                 this.enviarItemsAlServicio(updatedItems);
                 this.dialogRef.close();
+                console.clear();
               }
             });
           break;
@@ -428,6 +431,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
               complete: () => {
                 this.enviarItemsAlServicio(a);
                 this.dialogRef.close();
+                console.clear();
               }
             });
           break;
@@ -491,6 +495,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
                 });
                 this.enviarItemsAlServicio(updatedItems);
                 this.dialogRef.close();
+                console.clear();
               }
             });
           break;
@@ -620,6 +625,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
   enviarItemsAlServicio(items: any[]) {
     this.itemservice.enviarItemsDeSeleccionAMatriz(items);
+    console.clear();
   }
 
   togglePrecio() {

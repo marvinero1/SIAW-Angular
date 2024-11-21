@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
@@ -15,12 +15,13 @@ import { ServicioprecioventaService } from '../servicioprecioventa/serviciopreci
 import Handsontable from 'handsontable';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-matriz-items',
   templateUrl: './matriz-items.component.html',
   styleUrls: ['./matriz-items.component.scss']
 })
-export class MatrizItemsComponent implements OnInit, AfterViewInit {
+export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // @HostListener("document:keydown.F9", []) unloadHandler(event: Event) {
   //   // Verificar si la tecla F9 ya ha sido presionada
@@ -31,10 +32,21 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
-    if (this.permiso_para_vista === true) {
       switch (nombre_input) {
         case '':
-          this.getEmpaqueItem();
+          if (this.permiso_para_vista) {
+            this.getEmpaqueItem();
+          }else{
+            this.cant_empaque === 0;
+
+            const focusElement = this.focusPedido1.nativeElement;
+            this.renderer.selectRootElement(focusElement).focus();
+            focusElement.click();
+
+            if(this.pedido != 0){
+              this.addItemArray();
+            }
+          }
           break;
         case 'focusEmpaque':
           this.getEmpaqueItem();
@@ -55,40 +67,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         case 'idBuscadorHoja':
           this.getHoja();
           break;
-      }
-    } else {
-      switch (nombre_input) {
-        case '':
-          this.getEmpaqueItem();
-          break;
-        case 'focusEmpaque':
-          this.getEmpaqueItem();
-          break;
-        case 'focusPedido':
-          // this.addItemArray();
-          // this.cant_empaque = undefined;
-          console.log(this.pedido);
-          if (this.pedido != 0) {
-            const focusedElement = document.activeElement as HTMLElement;
-            let nombre_input = focusedElement.id;
-            console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
-
-            this.focusCantidad();
-          }
-          break;
-        case 'focusCantidad':
-          // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
-          // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
-          this.addItemArray();
-          // this.cant_empaque = undefined;
-          // this.pedido = undefined;
-          // this.cantidad = undefined;
-          break;
-        case 'idBuscadorHoja':
-          this.getHoja();
-          break;
-      }
-    }
+    } 
   }
 
   @HostListener("document:keydown.tab", []) unloadHandler2(event: Event) {
@@ -183,7 +162,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   desct: any = false;
   tamanio_carro: any;
   permiso_para_vista: boolean;
+  saldoLocal: any;
 
+  id_proforma_get:any;
+  num_id_proforma_get:any;
+
+  private unsubscribe$ = new Subject<void>();
+  
   @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
   @ViewChild("focusPedido", { static: false }) focusPedido1: ElementRef;
   @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
@@ -200,10 +185,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any) {
+    @Inject(MAT_DIALOG_DATA) public precio_de_venta: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any,
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
+    @Inject(MAT_DIALOG_DATA) public num_id_proforma: any
+   ){
 
     this.array_items_proforma_matriz = items?.items;
-    //array_items_completo
+    // array_items_completo
     // si ya existen items en el detalle de la proforma todo se concatena a este array this.array_items_proforma_matriz
 
     this.pedidoInicial = 0;
@@ -222,6 +210,18 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.agencia = '311'
     }
 
+    if(this.usuario_logueado === 'OPERGPS'){
+      this.permiso_para_vista = false;
+    }else{
+      this.permiso_para_vista = true;
+    }
+
+    if(precio_de_venta?.precio_de_venta){
+      this.cod_precio_venta_modal_codigo1 = precio_de_venta?.precio_de_venta;
+    }else{
+      this.getTarifa();
+    }
+
     this.descuento_get = descuento?.descuento;
     this.codcliente_get = codcliente?.codcliente;
     this.codalmacen_get = codalmacen?.codalmacen;
@@ -231,20 +231,20 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     this.descuento_nivel_get = descuento_nivel?.descuento_nivel;
     this.codcliente_real_get = codcliente_real?.codcliente_real;
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
-
-
+    this.id_proforma_get = id_proforma?.id_proforma;
+    this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
     // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
-
     // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
-
+    console.log("🚀 ~ MatrizItemsComponent ~ @Inject ~ cod_precio_venta_modal_codigo1:", this.cod_precio_venta_modal_codigo1)
     //console.log(this.num_hoja);
+    
     this.num_hoja = this.num_hoja;
 
     if (this.num_hoja === undefined || this.num_hoja === 0) {
       this.getHojaPorDefecto();
     }
+    
     this.listaHojas();
-    this.getTarifa();
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -255,7 +255,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     history.pushState(null, '', location.href); // Coloca un estado en la historia
 
-    this.getPermisosBtnPorRol();
+    //this.getPermisosBtnPorRol();
     // console.log(
     //   "CODCLIENTE" + this.codcliente_get,
     //   "TARIFA: " + this.cod_precio_venta_modal_codigo1,
@@ -272,33 +272,33 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // console.log(this.dataItemsSeleccionadosMultiple);
     // this.setFocus();
 
-    this.saldoItemServices.disparadorDeSaldoAlm1.subscribe(data => {
+    this.saldoItemServices.disparadorDeSaldoAlm1.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_1 = data.saldo1;
     });
 
-    this.saldoItemServices.disparadorDeSaldoAlm2.subscribe(data => {
+    this.saldoItemServices.disparadorDeSaldoAlm2.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_2 = data.saldo2;
     });
 
-    this.saldoItemServices.disparadorDeSaldoAlm3.subscribe(data => {
+    this.saldoItemServices.disparadorDeSaldoAlm3.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_3 = data.saldo3;
     });
 
-    this.saldoItemServices.disparadorDeSaldoAlm4.subscribe(data => {
+    this.saldoItemServices.disparadorDeSaldoAlm4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_4 = data.saldo4;
     });
 
-    this.saldoItemServices.disparadorDeSaldoAlm5.subscribe(data => {
+    this.saldoItemServices.disparadorDeSaldoAlm5.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Saldo Total: ", data);
       this.saldo_modal_total_5 = data.saldo5;
     });
 
     //Items seleccionados
-    this.itemservice.disparadorDeItemsSeleccionadosAMatriz.subscribe(datav => {
+    this.itemservice.disparadorDeItemsSeleccionadosAMatriz.pipe(takeUntil(this.unsubscribe$)).subscribe(datav => {
       // console.log("Recibiendo Items Seleccionados Multiple Procesados Para El Carrito: ", datav);
       this.item_seleccionados_catalogo_matriz = datav;
       this.tamanio_carrito = this.item_seleccionados_catalogo_matriz.length;
@@ -308,7 +308,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     });
     //
 
-    this.servicioPrecioVenta.disparadorDePrecioVenta.subscribe(data => {
+    this.servicioPrecioVenta.disparadorDePrecioVenta.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Precio de Venta: ", data);
       this.cod_precio_venta_modal_codigo1 = data.precio_venta.codigo;
     });
@@ -331,6 +331,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
    // this.focusMyInput();
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+  
   focusInput() {
     this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
     this.focusEmpaqueElement.nativeElement.focus();
@@ -418,7 +423,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   getTarifa() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/intarifa/catalogo/";
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuario_logueado)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.tarifa_get_unico = datav;
           this.cod_precio_venta_modal_codigo1 = this.tarifa_get_unico[0].codigo;
@@ -433,39 +438,36 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   onCellClick1(item: any): void {
-    // console.log("adentro");
-    // aca llega el item y se guarda en la varialbe this.item
-    // se le quita el espacio del final
-    // this.getSaldoItem(this.item);
+    // Si item es undefined o null, asigna un string vacío para evitar errores
+    const cleanText = (item || "").replace(/\s+/g, "").trim();
+    const regex = /[!@#$%^&*(),.?":{}|<>\/\\\[\]-]/;
 
-    const cleanText = item.replace(/\s+/g, "").trim();
     this.codigo_item_celda = cleanText;
-    console.log(this.codigo_item);
-
     this.item = cleanText.toUpperCase();
-    this.getlineaProductoID(cleanText);
-    this.validarItemParaVenta(cleanText);
-    this.getAlmacenesSaldos();
-    this.getEmpaquePesoAlmacenLocal(cleanText);
-    this.getSaldoItem(cleanText);
-    this.getEmpaqueItemInfoCantidades(cleanText);
-    this.getPrecioItemSeleccionado(cleanText);
-
-    this.pedido = undefined;
-    this.cantidad = undefined;
-  }
-
-  applyFocusMatriz() {
-
+    let a = regex.test(this.item);
+  
+    // console.warn(this.item, a); // Verificamos qué llega
+    // Controlamos si this.item está vacío o undefined
+    if (this.item && a === false) {  // Verifica si no es "" ni undefined ni null
+      this.getlineaProductoID(cleanText);
+      this.validarItemParaVenta(cleanText);
+      this.getAlmacenesSaldos();
+      this.getEmpaquePesoAlmacenLocal(cleanText);
+      this.getSaldoItem(cleanText);
+      this.getEmpaqueItemInfoCantidades(cleanText);
+      this.getPrecioItemSeleccionado(cleanText);
+    } else {
+      // console.warn("El item está vacío o no se recibió correctamente.");
+    }
   }
 
   getEmpaquePesoAlmacenLocal(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo1 + "/" + this.descuento_get + "/" + item + "/" + this.agencia + "/" + this.BD_storage)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.data_almacen_local = datav;
-          console.log(this.data_almacen_local);
+          // console.log(this.data_almacen_local);
         },
 
         error: (err: any) => {
@@ -480,28 +482,26 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia;
+
+    let array_send={
+      agencia:agencia_concat,
+      codalmacen: this.agencia,
+      coditem: this.item,
+      codempresa: this.BD_storage,
+      usuario: this.usuario_logueado,
+      
+      idProforma: this.id_proforma_get?.toString() === undefined ? " ":this.id_proforma_get?.toString(),
+      nroIdProforma: this.num_id_proforma_get
+    };
+    
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia + "/" + item + "/" + this.BD_storage + "/" + this.usuario_logueado)
-      .subscribe({
+    return this.api.create
+      ('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.id_tipo = datav;
-          // console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
-          // this.letraSaldos = this.id_tipo[0].resp;
-          // this.saldo_variable = this.id_tipo[2];
-
-          // LETRA
-          this.id_tipo[1].forEach(element => {
-            if (element.descripcion === 'Total Saldo') {
-              if (element.valor < 0) {
-                this.saldoItem = 0;
-              } else {
-                this.saldoItem = element.valor;
-              }
-
-              console.log(this.saldoItem);
-            }
-          });
+          // console.log("SALDOS PARA LA VENTA: " + datav);
+          this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
@@ -517,13 +517,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     if (this.num_hoja != 0 || this.num_hoja != undefined) {
       let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/";
       return this.api.getAll('/inventario/mant/inmatriz/' + this.userConn + "/" + this.num_hoja)
-        .subscribe({
+        .pipe(takeUntil(this.unsubscribe$)).subscribe({
           next: (datav) => {
             this.hojas = datav;
             // console.log(this.hojas);
-            this.initHandsontable(this.hojas);
-
-            this.applyFocusMatriz();
+            this.initHandsontable(this.hojas, this.permiso_para_vista);
           },
 
           error: (err: any) => {
@@ -539,11 +537,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   getHojaPorDefecto() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/inmatriz/' + this.userConn + "/01")
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.hojas = datav;
           //console.log(this.hojas);
-          this.initHandsontable(this.hojas);
+          this.initHandsontable(this.hojas, this.permiso_para_vista);
         },
 
         error: (err: any) => {
@@ -569,7 +567,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       })
   }
 
-  initHandsontable(hojas): void {
+  initHandsontable(hojas, permiso): void {
     var self = this;
 
     const container = document.getElementById('example');
@@ -656,45 +654,96 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       className: 'my-custom-row-class',
 
       beforeKeyDown: function (e) {
-        // if (self.permiso_para_vista === true) {
-          switch (e.key) {
-            case 'Enter':
-
-              console.log("ENTER PARA ENVIAR ITEM A CARRITO");
+        //si el rol es true funciona con empaques
+        // si el rol es false funciona directo a pedido
+        console.log(permiso);
+        switch (e.key) {
+          case 'Enter':
+            if(permiso){
+              console.log("ENTER PARA ENVIAR ITEM A CARRITO A");
               // this.focusPedido();
               // this.focusPedido.nativeElement.focus();
               // this.render.selectRootElement('#focusPedido').focus();
               // this.input1.nativeElement.focus();
               // this.setFocus();
 
-              const focusedElement = document.activeElement as HTMLElement;
-              let nombre_input = focusedElement.id;
+              // const focusedElement = document.activeElement as HTMLElement;
+              // let nombre_input = focusedElement.id;
               // console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
 
               self.focusEmpaque();
               const focusElement = this.focusEmpaqueElement.nativeElement;
               focusElement.focus();
-
               break;
-            case 'F9':
-              self.modalStockActualF9();
-              console.log("Hola lola modalStockActualF9");
-
-              
-          }
-        // }
+            }else{
+              console.log("ENTER PARA ENVIAR ITEM A CARRITO B");
+    
+              this.cant_empaque = 0;
+              // const focusedElement = document.activeElement as HTMLElement;
+              // focusedElement.id = nombre_input;
+    
+              const focusElement = this.focusPedido1.nativeElement;
+              this.renderer.selectRootElement(focusElement).focus();
+              // this.focusPedido();
+              focusElement.click();
+              break;
+        }
+        }
       }
     });
+
+    // Interceptar el evento Enter y mantener la selección
+    // hot.addHook('beforeKeyDown', (event: KeyboardEvent) => {
+    //   const selectedCoords = hot.getSelected();
+    //   const focusedElement = document.activeElement as HTMLElement;
+    //   let nombre_input = focusedElement.id;
+
+    //   if (event.key === 'Enter' && selectedCoords) {
+    //     event.preventDefault(); // Evitar el movimiento por defecto
+    //     const [startRow, startCol] = selectedCoords[0];
+    //     console.warn(`Elemento enfocado Matriz: ${nombre_input}`);
+    //     hot.selectCell(startRow, startCol); // Esto fuerza la selección en la misma celda
+    //     switch (nombre_input) {
+    //       case "":
+    //         console.log("HOLA LOLA");
+    //           this.focusEmpaque();
+    //           const focusElement = this.focusEmpaqueElement.nativeElement.focus();
+    //           focusElement.focus();
+
+    //         break;
+    //       case "focusEmpaque":
+    //         this.getEmpaqueItem();
+          
+    //         break;
+    //       case "focusPedido":
+    //         this.addItemArray();
+    //         this.cantidad = this.pedido;
+    //         console.log("🚀 ~ MatrizItemsComponent ~ hot.addHook ~ cantidad:", this.cantidad, this.pedido)
+            
+    //         break;
+    //       default:
+    //         break;
+    //     }
+        
+    //     // Vuelve a seleccionar la celda actual para evitar que se mueva
+    //     setTimeout(() => {
+    //       hot.selectCell(startRow, startCol); // Esto fuerza la selección en la misma celda
+    //     });
+
+    //     const cellData = hot.getDataAtCell(startRow, startCol);
+    //     this.onCellClick1(cellData); // Ejecuta la función
+    //   }
+    // });
 
     hot.addHook('afterSelectionEnd', () => {
       const selectedCoords = hot.getSelected();
       if (selectedCoords) {
         const [startRow, startCol] = selectedCoords[0];
-        console.log('Coordenada de la celda seleccionada:', startRow, startCol);
+        // console.log('Coordenada de la celda seleccionada:', startRow, startCol);
         // Obtener la data de la celda seleccionada
         const cellData = hot.getDataAtCell(startRow, startCol);
         this.valorCelda = cellData;
-        console.log('Data de la celda seleccionada:', cellData);
+        // console.log('Data de la celda seleccionada:', cellData);
 
         this.onCellClick1(cellData);
       }
@@ -723,7 +772,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         });
 
         this.dataItemsSeleccionadosMultiple = data;
-        console.log('Valores de los rangos seleccionados:', this.dataItemsSeleccionadosMultiple);
+        // console.log('Valores de los rangos seleccionados:', this.dataItemsSeleccionadosMultiple);
       } else {
         console.log('No se ha seleccionado ningún rango.');
       }
@@ -758,11 +807,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let j = this.array_items_completo.length + this.array_items_proforma_matriz.length;
     // let i = this.array_items_completo.length + 1;
     this.tamanio_carrito = this.array_items_proforma_matriz.length + 1;
-    console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length)
+    // console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length)
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
     //LONGITUD DEL CARRITO DE COMPRAS
-    console.log(this.tamanio_carrito);
+    // console.log(this.tamanio_carrito);
 
     let array = {
       coditem: cleanText,
@@ -790,7 +839,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     };
 
     //ARRAY DE 1 ITEM SELECCIONADO
-    // console.log(array);
+    console.log(array);
     let existe = this.array_items_completo.some(item => item.coditem === array.coditem);
     // console.log(this.valorCelda, cleanText);
 
@@ -818,7 +867,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // this.toastr.warning('¡La cantidad y el pedido no pueden ser 0!');
     //return;
     //}
-
     // //CUANDO NO HAY NADA EN EL CARRITO Y ES EL PRIMER ITEM SE AGREGA ACA,
     // //Y SI YA TIENE ITEMS SE TIENEN QUE IR AGREGANDO AL ARRAY SIN BORRARSE
     // if (this.array_items_seleccionados_length === undefined) {
@@ -829,9 +877,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // }
 
     if (this.pedido != 0 && this.pedido != undefined) {
+      console.log("🚀 ~ MatrizItemsComponent ~ addItemArray ~ pedido:", this.pedido);
       this.array_items_seleccionado.push(array);
     } else {
-      this.toastr.warning("El Pedido Cantidad No Puede ser 0");
+      if(this.permiso_para_vista){
+        this.toastr.warning("EL PEDIDO CANTIDAD NO PUEDE SER 0");
+      }
     }
 
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
@@ -845,20 +896,18 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     focusedElement.id = nombre_input;
 
     // console.log(focusedElement.id);
-
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
     this.array_items_completo = this.array_items_seleccionado.concat(this.item_seleccionados_catalogo_matriz);
-
     // console.log("array_items_completo", this.array_items_completo,
     //   "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
     //   "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
     //   "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
     //   this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
+    this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
     this.cant_empaque = undefined;
     this.pedido = undefined;
     this.cantidad = undefined;
-    this.tamanio_lista_item_pedido = this.array_items_completo.length;
   }
 
   addItemArraySeleccion() {
@@ -902,10 +951,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
     return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, a)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.items_post = datav;
-          console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
+          // console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
 
           setTimeout(() => {
             this.spinner.hide();
@@ -941,7 +990,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
     // console.log("Items del carrito PROCESADOS: ", items);
     // console.log("Items del carrito sin procesar: ", items_sin_proceso);
-
     this.itemservice.enviarItemCompletoAProforma(items);
     this.itemservice.enviarItemsSinProcesar(items_sin_proceso);
   }
@@ -979,10 +1027,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   validarItemParaVenta(value) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/transac/veproforma/getItemParaVta/' + this.userConn + "/" + value)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.item_valido = datav;
-          console.log('item valido: ', this.item_valido);
+          // console.log('item valido: ', this.item_valido);
           if (this.item_valido == true) {
             this.getlineaProductoID(value);
           } else {
@@ -1020,10 +1068,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/inmatriz/infoItemRes/";
     return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + item1 + "/" +
       this.cod_precio_venta_modal_codigo1 + "/" + this.descuento_get + "/" + this.codcliente_real_get)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
-          console.log('item seleccionado: ', this.item_obtenido);
+          // console.log('item seleccionado: ', this.item_obtenido);
 
           this.codigo_item = this.item_obtenido.codigo;
           this.descripcion_item = this.item_obtenido.descripcion;
@@ -1032,9 +1080,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
         },
 
         error: (err: any) => {
-          console.log(err, errorMessage);
+          // console.log(err, errorMessage);
           this.item_valido = false;
-          console.log(this.item_valido);
+          // console.log(this.item_valido);
         },
         complete: () => {
         }
@@ -1048,13 +1096,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   getEmpaqueItemInfoCantidades(item) {
-    console.log("EMPAQUE");
+    // console.log("EMPAQUE");
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getempaques/' + this.userConn + "/" + item)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.empaquesItem = datav;
-          console.log(this.empaquesItem);
+          // console.log(this.empaquesItem);
           this.empaque_view = true;
 
           this.empaque_item_codigo = this.empaquesItem.codigo;
@@ -1074,7 +1122,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   getPrecioItemSeleccionado(item) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getPreciosItem/";
     return this.api.getAll('/venta/transac/veproforma/getPreciosItem/' + this.userConn + "/" + item + "/" + this.codalmacen_get + "/" + this.codmoneda_get)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.precioItem = datav;
           // console.log(this.precioItem);
@@ -1106,8 +1154,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       d_tipo_precio_desct = "Descuento"
     };
 
-
-
     if (this.cant_empaque === 0) {
       const focusedElement = document.activeElement as HTMLElement;
       focusedElement.id = nombre_input;
@@ -1116,18 +1162,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
       this.renderer.selectRootElement(focusElement).focus();
       focusElement.click();
     } else {
+
       if (this.cant_empaque === undefined) {
         this.cant_empaque = '';
       }
-      return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+      if(this.cant_empaque !== ''){
+        return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
-
-            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+            // console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
             this.pedido = datav.total;
-            //this.cantidad = datav.total;
-
-            console.log(this.pedido);
+            console.log("El total del empaque: ", this.pedido);
           },
 
           error: (err: any) => {
@@ -1136,6 +1181,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             console.log(err, errorMessage);
           },
           complete: () => {
+            // console.clear();
             const focusedElement = document.activeElement as HTMLElement;
             focusedElement.id = nombre_input;
 
@@ -1145,16 +1191,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
             focusElement.click();
           }
         })
+      }
     };
   }
 
   getAlmacenesSaldos() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCodAlmSlds/";
     return this.api.getAll('/venta/transac/veproforma/getCodAlmSlds/' + this.userConn + "/" + this.usuario_logueado)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.almacenes_saldos = datav;
-          console.log("Almacenes Parametros: ", this.almacenes_saldos);
+          // console.log("Almacenes Parametros: ", this.almacenes_saldos);
         },
 
         error: (err: any) => {
@@ -1165,8 +1212,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   pasarHoja(lado: string, numero_hoja) {
-    console.log(numero_hoja);
-
     switch (lado) {
       case "derecha":
         const indiceActual1 = this.lista_hojas.indexOf(numero_hoja);
@@ -1193,10 +1238,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     // esta funcion mas que todo es para Don Percy ya que la matriz se personaliza para su uso exclusivo de el.
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/verColEmpbyUser/";
     return this.api.getAll('/venta/transac/veproforma/verColEmpbyUser/' + this.userConn + "/" + this.usuario_logueado)
-      .subscribe({
+    .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.permiso_para_vista = datav.veEmpaques;
-          // console.log(this.permiso_para_vista);
+          console.log("Rol: ",this.permiso_para_vista);
         },
 
         error: (err: any) => {
@@ -1210,11 +1255,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
     console.log(hoja);
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/";
     return this.api.getAll('/inventario/mant/inmatriz/' + this.userConn + "/" + hoja)
-      .subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.hojas = datav;
           // console.log(this.hojas);
-          this.initHandsontable(this.hojas);
+          this.initHandsontable(this.hojas, this.permiso_para_vista);
         },
 
         error: (err: any) => {
@@ -1241,8 +1286,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit {
   }
 
   seleccionMultipleItemHotTable() {
-    // console.log(this.tamanio_carrito);
-
     this.dialog.open(ItemSeleccionCantidadComponent, {
       width: 'auto',
       height: 'auto',

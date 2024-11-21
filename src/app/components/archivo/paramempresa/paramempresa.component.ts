@@ -155,32 +155,42 @@ export class ParamempresaComponent implements OnInit {
       })
   }
 
-  fileChangeEvent(fileInput: any) {
-    if (fileInput.target.files && fileInput.target.files[0]) {
-      this.myfilename = '';
-      Array.from(fileInput.target.files).forEach((file: File) => {
-        console.log(file);
-        this.myfilename += file.name + ',';
-      });
+  fileChangeEvent(fileInput: Event) {
+    const target = fileInput.target as HTMLInputElement; // Asegúrate de que el target es un HTMLInputElement
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const image = new Image();
-        image.src = e.target.result;
-        image.onload = rs => {
+    if (target.files && target.files.length > 0) {
+        this.myfilename = '';
 
-          // Return Base64 Data URL
-          const imgBase64Path = e.target.result;
+        // Convierte a un array de File y itera sobre los archivos
+        Array.from(target.files).forEach((file: File) => {
+            console.log(file); // Muestra el archivo en la consola
+            this.myfilename += file.name + ', '; // Agrega el nombre del archivo
+        });
+
+        // Utiliza el primer archivo para leerlo como Data URL
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+            const imgBase64Path = e.target?.result; // Asegúrate de que target no sea nulo
+            if (imgBase64Path) {
+                const image = new Image();
+                image.src = imgBase64Path as string; // Asegúrate de que sea un string
+
+                image.onload = () => {
+                    // Aquí puedes usar la imagen una vez que se haya cargado
+                };
+            }
         };
-      };
-      reader.readAsDataURL(fileInput.target.files[0]);
 
-      // Reset File Input to Selct Same file again
-      this.uploadFileInput.nativeElement.value = "";
+        // Lee el primer archivo como Data URL
+        reader.readAsDataURL(target.files[0]);
+
+        // Reinicia el input de archivo para permitir seleccionar el mismo archivo nuevamente
+        this.uploadFileInput.nativeElement.value = '';
     } else {
-      this.myfilename = 'Select File';
+        this.myfilename = 'Select File';
     }
-  }
+}
+
 
   detectFiles(event) {
     console.log(event.currentTarget.files[0].webkitRelativePath);

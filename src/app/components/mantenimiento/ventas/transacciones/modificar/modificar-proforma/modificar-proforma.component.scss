@@ -222,29 +222,22 @@ mat-row, mat-header-row, mat-footer-row{
 }
 
 
+:host ::ng-deep .p-datatable .p-datatable-wrapper > tr > th {
+  overflow: visible;
+}
 
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  overflow: visible;
+}
 
-
-   :host ::ng-deep .p-datatable .p-datatable-wrapper > tr > th {
-    overflow: visible;
+@media screen and (max-width: 64em) {
+  :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    top: 0px;
   }
-
-
-   :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-        position: -webkit-sticky;
-        position: sticky;
-        top: 0px;
-        overflow: visible;
-    }
-
-    @media screen and (max-width: 64em) {
-        :host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-            top: 0px;
-        }
-    }
-
-
-
+}
 
 
 ::ng-deep {
@@ -277,6 +270,8 @@ mat-row, mat-header-row, mat-footer-row{
   .p-inputtext{
     // padding: 0rem 0rem !important;
     color: black;
+    height: calc(0.8rem + 0px) !important;
+    padding: 0.50rem 0.50rem 0.50rem 0.50rem !important;
   }
 
   .p-cell-editing {
@@ -337,6 +332,7 @@ mat-row, mat-header-row, mat-footer-row{
   // }
   .mat-mdc-tab .mdc-tab__text-label {
     padding: 0px 0px 0px 0px !important;
+    
   }
   // .mdc-data-table__cell, .mdc-data-table__header-cell{
   //   padding: 0px 0px 0px 0px !important;
@@ -368,17 +364,8 @@ mat-row, mat-header-row, mat-footer-row{
 
 
     .mat-mdc-form-field-subscript-wrapper{
-        display: none;
+      display: none;
     }
-
-
-
-
-
-
-
-
-
 
     /* Cambiar el tamaño de la fuente y el fondo de la tabla AG Grid */
   .ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row, .ag-theme-alpine-auto-dark .ag-row .ag-header-cell{
@@ -390,7 +377,6 @@ mat-row, mat-header-row, mat-footer-row{
     white-space: nowrap;
     line-height: 1.5;
   }
-
 
   .custom-ag-grid .ag-row {
     background-color: #e9ecef;

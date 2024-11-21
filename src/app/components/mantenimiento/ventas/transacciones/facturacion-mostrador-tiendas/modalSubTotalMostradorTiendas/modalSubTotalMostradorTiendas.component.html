@@ -1,0 +1,73 @@
+<section style="background-color: #f0f0f0;">
+  <div class="container-fluid">
+
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;">Obtención del Sub Total Tiendas</mat-card-title>
+        </div>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Monto.........................................</th>
+              <td>{{ (formatNumberTotalSub(sub_totabilizar_post.a?.toString().replace(',', '.')) ) }}</td>
+            </tr>
+            <tr>
+              <th scope="row">( - ) Descuento por NIvel Linea</th>
+              <td> {{ (formatNumberTotalSub(sub_totabilizar_post.b?.toString().replace(',', '.')) ) }}</td>
+            </tr>
+
+            <hr style="background-color: #d2b600;">
+
+            <tr>
+              <th scope="row"></th>
+              <td>
+                {{ (formatNumberTotalSub(sub_totabilizar_post.c?.toString().replace(',', '.')) ) }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">( - ) Descuentos Especiales</th>
+              <td>
+                {{ (formatNumberTotalSub(sub_totabilizar_post.d?.toString().replace(',', '.')) ) }}
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Desglose</th>
+              <td>
+                <div style="background-color: black;color: #d2b600e7;width: 100%;height: 6rem;max-height: 10rem;">
+                  <p *ngFor="let item of desglose">
+                    Total: {{ (formatNumberTotalSub(item.total?.toString().replace(',', '.')) ) }}
+                    <br>
+                    Descuento: {{ item.descuento }}
+                  </p>
+                </div>
+              </td>
+            </tr>
+            <hr style="background-color: #d2b600;">
+
+            <tr>
+              <th scope="row">Sub Total</th>
+              <td>
+                {{ (formatNumberTotalSub(sub_totabilizar_post.e?.toString().replace(',', '.')) ) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </ng-container>
+  </div>
+</section>

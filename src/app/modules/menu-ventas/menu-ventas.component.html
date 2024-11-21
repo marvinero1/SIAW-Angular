@@ -28,7 +28,7 @@
 
 
   <a mat-menu-item (click)="guardarRutaLOG('nota-remision-factura', 'venta/transacciones/facturacion-fel-mostrador')"> 
-    Facturación Mostrador Tiendas (FEL) 🟡
+    Facturación Mostrador Tiendas (FEL)  ✅ 
   </a>
   <a mat-menu-item>Notas de Credito (FEL)</a>
   <mat-divider class="p-2"></mat-divider>
@@ -46,7 +46,7 @@
     Remisión ✅</a>
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Cambiar Datos de Facturacion</a>
-  <a mat-menu-item>Reimpresion / Anulacion de Facturas (FEL)</a>
+  <a mat-menu-item (click)="guardarRutaLOG('facturacion-modificar-mostrador','/venta/modificaciones/facturacion-fel-mostrador');">Reimpresion / Anulacion de Facturas (FEL) 🟡</a>
   <a mat-menu-item>Regenerar Facturas de Notas de Remision</a>
   <mat-divider class="p-2"></mat-divider>
   <a mat-menu-item>Proforma (Liviana)</a>

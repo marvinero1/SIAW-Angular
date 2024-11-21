@@ -443,7 +443,12 @@ import { MatrizItemsListaComponent } from '@components/mantenimiento/ventas/matr
 import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/transacciones/facturas/factura-template/factura-template.component';
 import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/facturacion-mostrador-tiendas.component';
 import { ModalFormaPagoComponent } from '@components/mantenimiento/ventas/transacciones/factura-nota-remision/modal-forma-pago/modal-forma-pago.component';
-
+import { ModalSubTotalMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/modalSubTotalMostradorTiendas/modalSubTotalMostradorTiendas.component';
+import { TranferirMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/tranferirMostradorTiendas/tranferirMostradorTiendas.component';
+import { ModalDescuentosTiendaComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/modal-descuentos-tienda/modal-descuentos-tienda.component';
+import { BuscadorAvanzadoAnticiposComponent } from '@components/uso-general/buscador-avanzado-anticipos/buscador-avanzado-anticipos.component';
+import { ModalAnticiposComponent } from '@components/mantenimiento/ventas/modal-anticipos/modal-anticipos.component';
+import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -532,7 +537,13 @@ registerPlugin(UndoRedo);
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
         ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
         EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent, ModalFormaPagoComponent,
-        FacturaTemplateComponent,FacturacionMostradorTiendasComponent,
+        FacturaTemplateComponent,FacturacionMostradorTiendasComponent, ModalSubTotalMostradorTiendasComponent, TranferirMostradorTiendasComponent, ModalDescuentosTiendaComponent,
+        BuscadorAvanzadoAnticiposComponent,ModalAnticiposComponent, ModificarFacturacionMostradorTiendasComponent
+
+
+        
+
+
 
 
 

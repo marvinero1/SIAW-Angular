@@ -76,7 +76,7 @@ export class AnticiposProformaComponent implements OnInit {
   displayedColumns = ['doc', 'monto', 'usuario', 'fecha', 'hora', 'vendedor', 'cod_moneda', 'accion'];
 
   displayedColumnsAnticipado = ['doc', 'cliente', 'vendedor', 'anulado', 'cliente_real', 'nit',
-    'fecha', 'pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg', 'accion'];
+    'fecha', 'doc_aplicados','pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();

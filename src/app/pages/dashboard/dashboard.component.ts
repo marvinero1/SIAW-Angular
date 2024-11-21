@@ -25,10 +25,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   public vents_vendedor: any = [];
   public resultado_proformas_filtrado: any = [];
   public rol: string;
+  fecha_transform:any;
 
   public ventana = "Dashboard";
   data_graficar: any;
   options_grafica: any;
+
+  fecha_actual: any;
+  hora_fecha_server: any;
 
   constructor(private api: ApiService, private datePipe: DatePipe, public dialog: MatDialog,
     private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService) {
@@ -39,6 +43,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.mandarNombre();
+    this.getHoraFechaServidorBckEnd();
+
+    const fecha = new Date();
+    
+    if (this.agencia_logueado === 'Loc') {
+      this.agencia_logueado = '311'
+    }
+
+    this.fecha_transform = this.datePipe.transform(fecha, "yyyy-MM-dd");
+    console.log("🚀 ~ DashboardComponent ~ fecha_transform:", this.fecha_transform);
+    
   }
 
   ngOnInit(): void {
@@ -50,6 +65,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     //Add 'implements AfterViewInit' to the class.
     this.getRolUserParaVentana();
     this.graficarVentasSIAWvsSIA();
+    this.getDataGrafica();
+  }
+
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          
+          this.fecha_actual = this.datePipe.transform(datav.fecha, "yyyy-MM-dd");
+          this.hora_fecha_server = datav.horaServidor;
+          console.log(this.fecha_actual, this.hora_fecha_server, datav.fecha);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   getRolUserParaVentana() {
@@ -120,7 +155,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           //TODOS
           this.resultado_proformas_filtrado = datav;
-          console.log("Info Ventas Gerencia: ", this.resultado_proformas_filtrado);
+          // console.log("Info Ventas Gerencia: ", this.resultado_proformas_filtrado);
         },
 
         error: (err: any) => {
@@ -129,6 +164,50 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         complete: () => { }
       })
   }
+
+  getDataGrafica(){
+    //trae todas las proformas aprobadas
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/DetallePFAprobadasWF/";
+    // return this.api.getAll('/venta/usoSIAW/ventasbyVendedorSIAW_SIA/' + this.userConn + "/" +  this.fecha_transform + "/" + this.agencia_logueado )
+    return this.api.getAll('/venta/usoSIAW/ventasbyVendedorSIAW_SIA/' + this.userConn + "/" +"2024-10-10"+ "/" + this.agencia_logueado )
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ DashboardComponent ~ getDataGrafica ~ datav:", datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

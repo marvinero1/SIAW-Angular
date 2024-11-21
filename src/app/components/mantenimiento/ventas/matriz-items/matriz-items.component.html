@@ -173,13 +173,11 @@
 
       <div class="col-md-6">
         <div class="row">
-          <ng-container *ngIf="permiso_para_vista === true">
-            <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
-              <mat-label>Empaque</mat-label>
-              <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
-                #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
-            </mat-form-field>&nbsp;
-          </ng-container>
+          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+            <mat-label>Empaque</mat-label>
+            <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
+              #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
+          </mat-form-field>&nbsp;
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
@@ -296,8 +294,9 @@
             (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true">
         </ng-container>
       </ng-container>
-      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;font-size: 0.82rem !important;"><strong><u>F9 = Información
-            Item</u></strong></span>
+      <span style="color: rgb(15, 15, 131);padding-block-start: 3px;font-size: 0.82rem !important;">
+        <strong><u>F9 = Información Item</u></strong>
+      </span>
     </div>
     <!-- finSaldos -->
 
@@ -313,7 +312,7 @@
 
             <ng-container *ngIf="empaque_view">
               <div *ngFor="let empaquesItems of empaquesItem">
-                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;font-size: 0.82rem !important;">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;font-size: 0.82rem !important;background-color: black;color: rgb(230, 230, 0);">
                   ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
                 </div>
               </div>
@@ -327,23 +326,27 @@
     <!-- Precio Item  -->
     <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
           <div class="input-group">
-            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;"><strong>Precios</strong> </span>
+            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;">
+              <strong>Precios</strong>
+            </span>
+
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
             </ng-container>
 
             <ng-container *ngIf="empaque_view">
-              <div type="text" class="form-control form-control-sm inputsSaldos" style="font-size: 0.82rem !important;">
-                {{precioItem.precios}}
+              <div type="text" class="form-control form-control-sm inputsSaldos" 
+              style="font-size: 0.82rem !important;background-color: black;color: rgb(230, 230, 0);">
+                {{ precioItem.precios }}|
               </div>
             </ng-container>
           </div>
         </div>
 
-        <div class="col-md">
-          <span style="font-size: 0.82rem !important;"><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
+        <div class="col-md-3">
+          <span style="font-size: 0.82rem !important;"><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;
           <span style="font-size: 0.82rem !important;"><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
         </div>
       </div>

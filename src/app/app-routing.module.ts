@@ -120,6 +120,7 @@ import { EtiquetaTuercasProformaComponent } from '@components/mantenimiento/vent
 import { ModificarNotaRemisionComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-nota-remision/modificar-nota-remision.component';
 import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/transacciones/facturas/factura-template/factura-template.component';
 import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/facturacion-mostrador-tiendas.component';
+import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -420,7 +421,7 @@ const routes: Routes = [
 
 
 
-
+            
 
 
 
@@ -640,15 +641,9 @@ const routes: Routes = [
                 component: NumeracionComprobantesComponent,
                 canActivate: [AuthGuard]
             },
-
-
-
-
-
-
-
-
             // fin mantenimiento/contabilidad
+
+
 
             {
                 path: 'usuario/parametros_usuarios',
@@ -681,6 +676,16 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'venta/modificaciones/facturacion-fel-mostrador',
+                component: ModificarFacturacionMostradorTiendasComponent,
+                canActivate: [AuthGuard]
+            },
+
+
+
+
+            
+            {
                 path: 'admin/system/log',
                 component: LogComponent,
                 canActivate: [AuthGuard]
@@ -690,9 +695,6 @@ const routes: Routes = [
                 component: LogUsuarioComponent,
                 canActivate: [AuthGuard]
             },
-
-
-
 
             // ventas
             {
@@ -705,8 +707,6 @@ const routes: Routes = [
                 component: ModificarProformaComponent,
                 canActivate: [AuthGuard]
             },
-
-
             // {
             //     path: 'blank',
             //     component: BlankComponent
@@ -741,10 +741,6 @@ const routes: Routes = [
 
 
 
-
-
-
-
             //PDF REPORTES DESDE ACA
             {
                 path: 'proformaPDF',
@@ -767,9 +763,6 @@ const routes: Routes = [
                 path: 'etiquetaImpresionProforma',
                 component: EtiquetaImpresionProformaComponent
             },
-
-
-
         ]
     },
     {

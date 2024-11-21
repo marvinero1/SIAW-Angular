@@ -1,7 +1,29 @@
-<div class="no-printme">
+<!-- <div class="no-printme">
   <mat-icon (click)="printFunction()" style="cursor: pointer;color: rgb(101, 127, 162);">print</mat-icon>
   <mat-icon (click)="generatePDF()" style="cursor: pointer;color: red;">picture_as_pdf</mat-icon>
+</div> -->
+
+<div class="no-printme" style="text-align: center;">
+  <!-- <mat-icon (click)="printFunction(data_cabecera_footer_proforma)" 
+  style="cursor: pointer;color: #093070;width: 50px !important;font-size: 34px !important; height: 35px !important;">
+    print</mat-icon> -->
+
+    <mat-icon (click)="mandarImprimirPDF(data_cabecera_footer_proforma, tuercas_detalle)" 
+  style="cursor: pointer;color: #093070;width: 50px !important;font-size: 34px !important; height: 35px !important;">
+    print</mat-icon>
+
+  <mat-icon (click)="generatePDFDownload(data_cabecera_footer_proforma, tuercas_detalle)" style="cursor: pointer;color: red;width: 50px !important;font-size: 34px !important; height: 35px !important;">
+    picture_as_pdf
+  </mat-icon>
+  
+  <mat-icon (click)="vistaPreviaPDF(data_cabecera_footer_proforma, tuercas_detalle)" 
+  style="cursor: pointer;color: #fbd800;width: 50px !important;font-size: 34px !important; height: 35px !important;">remove_red_eye</mat-icon>
 </div>
+
+
+
+
+
 
 <div id="content">
   <div class="cabecera header">

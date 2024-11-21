@@ -3,7 +3,6 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
-import { ServicioclienteService } from '@components/mantenimiento/ventas/serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
 import { TipoidService } from '@components/mantenimiento/ventas/serviciotipoid/tipoid.service';
 import { ApiService } from '@services/api.service';
@@ -102,14 +101,15 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   codproforma: any;
   estadodoc: any;
 
-
   //fechas
   fecha: any;
   pago_contado_anticipado_view: any;
   fecha_confirmada: any;
   fechaaut: any;
   fecha_reg: any;
-  fecha_inicial: any;
+  fecha_inicial: any; 
+  fecha_anulacion: any;
+  fecha_anulacion_input: any;
 
   horareg: any;
   hora: any;
@@ -137,7 +137,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   item_seleccionados_catalogo_matriz: any = [];
   recargo_de_recargos: any = [];
   public item_obtenido: any = [];
-
 
   dataform: any = '';
   userConn: any;
@@ -170,19 +169,18 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   codigo_control: any;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
-    private servicioCliente: ServicioclienteService, private _formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService,
     private serviciotipoid: TipoidService, private toastr: ToastrService, private spinner: NgxSpinnerService,
     private log_module: LogService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
-    public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public nombre_ventana_service: NombreVentanaService,
-    public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
+    public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+    this.FormularioData = this.createForm();
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
-    this.FormularioData = this.createForm();
+    this.getParametrosIniciales();
   }
 
   ngOnInit() {
@@ -388,8 +386,22 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
       })
   }
 
-  fecha_anulacion: any;
-  fecha_anulacion_input: any;
+  getParametrosIniciales() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/principal/getParamIniciales/";
+    return this.api.getAll('/principal/getParamIniciales/' + this.userConn + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          this.agencia_logueado = datav.codAlmacenUsr;
+          this.BD_storage = datav.codempresa;
+
+          console.log('data', this.agencia_logueado);
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   imprimir_proforma_tranferida(proforma) {
     console.log("Imprimir Proforma Transferida: ", proforma, proforma.habilitado);
@@ -600,7 +612,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   itemDataAll(codigo) {
-    // this.getSaldoEmpaquePesoAlmacenLocal(codigo);
     this.getEmpaqueItem(codigo);
     this.getSaldoItemSeleccionadoDetalle(codigo);
     this.getAlmacenesSaldos();
@@ -614,10 +625,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   getSaldoItemSeleccionadoDetalle(item) {
-    if (this.agencia_logueado === "Loc") {
-      this.agencia_logueado = "311";
-    }
-
     this.item_seleccionados_catalogo_matriz_codigo = item;
 
     let agencia_concat = "AG" + this.agencia_logueado;
@@ -638,8 +645,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   }
 
   getAlmacenesSaldos() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/venta/transac/veproforma/getCodAlmSlds/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {

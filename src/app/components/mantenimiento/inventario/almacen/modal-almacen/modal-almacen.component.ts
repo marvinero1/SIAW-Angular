@@ -24,6 +24,8 @@ export class ModalAlmacenComponent implements OnInit {
   public agencia_view: any = [];
   private debounceTimer: any;
 
+  public nombre_ventana_origen:string;
+
   agencia_get: any = [];
   origen_get: string;
   destino_get: string;
@@ -39,9 +41,11 @@ export class ModalAlmacenComponent implements OnInit {
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalAlmacenComponent>,
     private servicioAlmacen: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public origen: any,
-    @Inject(MAT_DIALOG_DATA) public destino: any, @Inject(MAT_DIALOG_DATA) public almacen: any) {
+    @Inject(MAT_DIALOG_DATA) public destino: any, @Inject(MAT_DIALOG_DATA) public almacen: any,
+    @Inject(MAT_DIALOG_DATA) public ventana: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.nombre_ventana_origen = ventana.ventana;
   }
 
   ngOnInit() {
@@ -82,6 +86,10 @@ export class ModalAlmacenComponent implements OnInit {
       });
     } if (this.almacen_get) {
       this.servicioAlmacen.disparadorDeAlmacenes.emit({
+        almacen: this.agencia_view,
+      });
+    }if(this.nombre_ventana_origen === "ventana_buscador_general_anticipos"){
+      this.servicioAlmacen.disparadorDeAlmacenesBuscadorAvanzadoAnticipos.emit({
         almacen: this.agencia_view,
       });
     }

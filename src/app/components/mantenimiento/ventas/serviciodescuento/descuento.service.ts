@@ -10,6 +10,9 @@ export class DescuentoService {
   @Output() disparadorDeDescuentosDetalle: EventEmitter<any> = new EventEmitter();
   @Output() disparadorDeDescuentosMatrizCantidad: EventEmitter<any> = new EventEmitter();
 
+  @Output() disparadorDeDescuentosMostradorTiendas: EventEmitter<any> = new EventEmitter();
+
+
   constructor() {
 
   }

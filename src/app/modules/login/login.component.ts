@@ -1,43 +1,14 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Renderer2,
-  HostBinding,
-  ViewChild,
-  ElementRef,
-  AfterViewInit
-} from '@angular/core';
-import {
-  UntypedFormControl,
-  Validators,
-  FormGroup,
-  FormBuilder
-} from '@angular/forms';
-import {
-  ToastrService
-} from 'ngx-toastr';
-import {
-  ApiService
-} from '@services/api.service';
-import {
-  NgxSpinnerService
-} from 'ngx-spinner';
-import {
-  Router
-} from '@angular/router';
-import {
-  MatDialog
-} from '@angular/material/dialog';
-import {
-  MatSnackBar
-} from '@angular/material/snack-bar';
-import {
-  TransformacionDigitalComponent
-} from '@modules/transformacion-digital/transformacion-digital.component';
-import {
-  LogService
-} from '@services/log-service.service';
+import { Component, OnInit, OnDestroy, Renderer2, HostBinding, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { UntypedFormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from '@services/api.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
+import { LogService } from '@services/log-service.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -45,7 +16,6 @@ import {
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostBinding('class') class = 'login-box';
-
 
   public isAuthLoading = false;
   public isGoogleLoading = false;
@@ -150,30 +120,30 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     // 2) Una vez q se elige agencia, pasamos los datos del usuario
     if (this.BDForm.valid && login != null) {
       try {
-        console.log("json completo");
+        console.log("json completo", login, this.BDForm.valid);
 
         // aca se hace el login
         this.guardarStorageUsuario(login);
         this.conectarBD(select_bd);
-        this.guardarStorageBD(bd);
+        //this.guardarStorageBD(bd);
         this.guardarStorageuserConn(userConn);
-        this.login(userConn, dataForm); //login                  
-
+        this.login(userConn, dataForm); //login  
+        
         this.isAuthLoading = true;
         // await this.appService.loginByAuth(this.loginForm.value);
-        this.isAuthLoading = false;
+        //this.isAuthLoading = false;
       } catch (error) {
         console.log("No se pudo hacer login");
 
         this._snackBar.open('¡ No se pudo Iniciar Sesion, verifique su conexion !', '🤖', {
-          duration: 3000,
+          duration: 1000,
           panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
         });
       }
     }
     if (agencia == null) {
       this._snackBar.open('¡ Agencia no encontrada o sin conexion !', '📡', {
-        duration: 3000,
+        duration: 1000,
         panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
       });
     }
@@ -186,6 +156,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     let agencia = dataFormAgencia.agencia; //agencia
     let login = dataForm.login; //usuario
     console.log(agencia, data);
+    
 
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /seg_adm/login/authenticate/";
@@ -207,6 +178,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
 
             this.toastr.success('Bienvenido! 🎉');
+            this.getParametrosIniciales(userConn, dataForm.login);
             this.isAuthLoading = false;
             this.obtenerBDUsuario(login, agencia);
 
@@ -258,7 +230,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           if (agencias) {
             console.log("Se Verifico la AG seleccionada: ", agencia);
 
-            sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
+            // sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
             this.ip_servidores = false;
             this.bd_datos = false;
             return agencias;
@@ -335,11 +307,44 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   obtenerBDUsuario(usuario, agencia) {
     this.spinner.show();
     let bd = this.BDForm1.value;
+    console.log(bd.bd);
     let userConn = usuario + "_" + agencia + "_" + bd.bd;
     console.log("/seg_adm/mant/adempresa/getFirstEmpresa/", userConn);
 
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/adempresa/getFirstEmpresa/";
     return this.api.getAll("/seg_adm/mant/adempresa/getFirstEmpresa/" + userConn)
+      .subscribe({
+        next: (datav) => {
+          // this.first_empresa = datav;
+          console.log("Usuario BD getFirstEmpresa: ", datav.empresa);
+         // this.guardarStorageBD(bd);
+          
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+          this._snackBar.open('¡ EL USUARIO BD NO ESTA DISPONIBLE !', '⚠️', {
+            duration: 3000,
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+          })
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
+
+  getVerificaraDondeEstaConectadoUsuario(usuario, agencia) {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/oper/infoConexion/getConnectionInfo/";
+    return this.api.getAll("/seg_adm/mant/adempresa/getFirstEmpresa/" + usuario)
       .subscribe({
         next: (datav) => {
           // this.first_empresa = datav;
@@ -369,9 +374,63 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   atras() {
     this.ip_servidores = true;
     this.bd_datos = true;
+  }
+
+  getParametrosIniciales(userConn, usuario) {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/principal/getParamIniciales/";
+    return this.api.getAll('/principal/getParamIniciales/' + userConn + "/" + usuario)
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ LoginComponent ~ getParametrosIniciales ~ datav:", datav)
+          this.guardarStorageBD(datav.codempresa);
+          sessionStorage.setItem('agencia_logueado', JSON.stringify(datav.codAlmacenUsr));
+         // this.agencia_logueado = datav.codAlmacenUsr;
+         // this.BD_storage = datav.codempresa;
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   guardarToken(token) {

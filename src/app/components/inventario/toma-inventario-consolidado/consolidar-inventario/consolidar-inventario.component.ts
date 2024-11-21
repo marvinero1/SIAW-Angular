@@ -70,9 +70,10 @@ export class ConsolidarInventarioComponent implements OnInit {
           this.data = datav;
           console.log(this.data);
 
-          this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
+          // this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+
         },
         error: (err: any) => {
           console.log(err, errorMessage);
@@ -154,32 +155,31 @@ export class ConsolidarInventarioComponent implements OnInit {
   }
 
   checkUncheckAll() {
-    let tama = this.data.length;
-    for (var i = 0; i < tama; i++) {
-      this.data[i].consolidado = this.allSelected;
+    const tama = this.data.length;
+
+    for (let i = 0; i < tama; i++) {
+        this.data[i].consolidado = this.allSelected;
     }
 
-    // mapeo que cambia un valor de un array
-    this.data.map(function (dato) {
-      console.log(dato);
+    // Mapeo que cambia un valor de un array
+    this.data = this.data.map((dato) => {
+        console.log(dato);
 
-      if (dato.consolidado = "true") {
+        // Usa '===' para comparación
+        if (dato.consolidado === "true") {
+            dato.consolidado = "false";
+        } else {
+            dato.consolidado = "true";
+        }
 
-        dato.consolidado = "false";
+        return dato; // Devuelve el dato actualizado
+    });
 
-        this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
-        this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+    // Actualiza la dataSource una vez después de completar el mapeo
+    // this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
+    this.dataSource.paginator = this.paginatorPageSize; // Asegúrate de que esto sea el paginator correcto
+}
 
-      } else {
-        dato.consolidado = "true";
-
-        this.dataSource = new MatTableDataSource<ConsolidacionInventario>(this.data);
-        this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-      }
-
-      return dato;
-    })
-  }
 
   isAllSelected(data) {
     console.log(data);

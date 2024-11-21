@@ -85,6 +85,24 @@
 
     <hr>
 
+    <p>El rol actual es: {{ rol }}</p>
+    <ng-container *ngIf="['ADM_GERENC_CORP', 'DPD'].includes(rol)">
+      <div class="row">
+        <div class="col-md-12">
+          <mat-card style="max-height: 440px;">
+            <mat-card-title class="text-center"><strong>Proformas Por Vendedor</strong></mat-card-title>
+            <mat-card-content>
+              <div class="card">
+                <p-chart type="bar" [data]="data_graficar" [options]="options_grafica" />
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </ng-container>
+
+    <hr>
+
     <div class="row">
       <div class="col-md-3">
         <mat-card class="example-card">
@@ -269,25 +287,6 @@
     </div>
 
     <hr>
-    <p>El rol actual es: {{ rol }}</p>
-    <ng-container *ngIf="['ADM_GERENC_CORP', 'DPD'].includes(rol)">
-      <div class="row">
-        <div class="col-md-12">
-          <mat-card style="max-height: 440px;">
-            <mat-card-title class="text-center"><strong>Proformas Por Vendedor</strong></mat-card-title><br>
-            <mat-card-content>
-              <div class="card">
-                <p-chart type="bar" [data]="data_graficar" [options]="options_grafica" />
-              </div>
-
-
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </div>
-    </ng-container>
   </div>
-
-
   <br><br><br>
 </section>

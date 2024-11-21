@@ -1,4 +1,4 @@
-import {Action} from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import * as AuthActions from './actions';
 
 const initialState = {
@@ -10,24 +10,33 @@ const initialState = {
     }
 };
 
-export function authReducer(
-    state = initialState,
-    action: AuthActions.LoginUser
-) {
-    switch (action.type) {
-        case AuthActions.LOGIN_USER:
-            localStorage.setItem('token', action.payload);
-            return {
-                ...state,
-                isLoggedIn: true,
-                token: action.payload
-            };
-            break;
-        case AuthActions.LOGOUT_USER:
-            break;
-        case AuthActions.LOAD_USER:
-            break;
-        default:
-            return state;
-    }
+const _authReducer = createReducer(
+    initialState,
+    on(AuthActions.LoginUser, (state, { payload }) => {
+        localStorage.setItem('token', payload);
+        return {
+            ...state,
+            isLoggedIn: true,
+            token: payload
+        };
+    }),
+    on(AuthActions.LogoutUser, (state) => {
+        localStorage.removeItem('token');
+        return {
+            ...state,
+            isLoggedIn: false,
+            token: null,
+            currentUser: { email: '', picture: null } // Resetea el usuario actual
+        };
+    }),
+    on(AuthActions.LoadUser, (state, { payload }) => {
+        return {
+            ...state,
+            currentUser: payload // Suponiendo que el payload tiene el formato correcto
+        };
+    })
+);
+
+export function authReducer(state: any, action: Action) {
+    return _authReducer(state, action);
 }

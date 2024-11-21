@@ -10,7 +10,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "update": "ng update --force @angular/cli @angular/core",
-    "postinstall": "ngcc",
     "dev": "lite-server"
   },
   "lint-staged": {

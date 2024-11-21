@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { fonts } from '../../../../../../config/pdfFonts';
 
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "./../../../../../../../assets/vfs_fonts.js";
 
@@ -85,43 +83,43 @@ export class ProformaPdfComponent implements OnInit {
   }
 
   generatePDF() {
-    const content = document.getElementById('content');
-    if (content) {
-      // Ajustar la escala para mejorar la calidad de la imagen
-      html2canvas(content, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
+    // const content = document.getElementById('content');
+    // if (content) {
+    //   // Ajustar la escala para mejorar la calidad de la imagen
+    //   html2canvas(content, { scale: 2 }).then((canvas) => {
+    //     const imgData = canvas.toDataURL('image/jpeg', 0.75); // Cambiado a JPEG con calidad 0.75
 
-        // Crear un nuevo documento PDF
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'letter' // Formato Carta (Letter)
-        });
+    //     // Crear un nuevo documento PDF
+    //     const pdf = new jsPDF({
+    //       orientation: 'portrait',
+    //       unit: 'mm',
+    //       format: 'letter' // Formato Carta (Letter)
+    //     });
 
-        // Calcular el ancho y alto del PDF con márgenes
-        const margin = 10;
-        const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
-        const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
+    //     // Calcular el ancho y alto del PDF con márgenes
+    //     const margin = 10;
+    //     const pdfWidth = pdf.internal.pageSize.getWidth() - 2 * margin;
+    //     const pdfHeight = pdf.internal.pageSize.getHeight() - 2 * margin;
 
-        // Obtener el ancho y alto de la imagen en el canvas
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
+    //     // Obtener el ancho y alto de la imagen en el canvas
+    //     const imgWidth = canvas.width;
+    //     const imgHeight = canvas.height;
 
-        // Calcular la relación de aspecto de la imagen
-        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+    //     // Calcular la relación de aspecto de la imagen
+    //     const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
-        const newWidth = imgWidth * ratio;
-        const newHeight = imgHeight * ratio;
+    //     // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
+    //     const newWidth = imgWidth * ratio;
+    //     const newHeight = imgHeight * ratio;
 
-        // Agregar la imagen al PDF con márgenes
-        pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
+    //     // Agregar la imagen al PDF con márgenes
+    //     pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
 
-        // Descargar el PDF
-        pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
+    //     // Descargar el PDF
+    //     pdf.save(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
 
-      });
-    }
+    //   });
+    // }
   }
 
   // aca se dibuja el pdf y se envia a imprimir
@@ -299,7 +297,7 @@ export class ProformaPdfComponent implements OnInit {
       content: [{
           table: {
             headerRows: 1,
-            widths: [17, 55, 170, 70, 30, 40, 70, 15, 50, 50],
+            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
             border:[false, true,false,false],
             body: [
               [
@@ -665,7 +663,7 @@ export class ProformaPdfComponent implements OnInit {
       content: [{
           table: {
             headerRows: 1,
-            widths: [17, 55, 170, 70, 30, 40, 70, 15, 50, 50],
+            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
             border:[false, true,false,false],
             body: [
               [
@@ -796,7 +794,9 @@ export class ProformaPdfComponent implements OnInit {
             //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
             // ],
             margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
-          },    
+
+            
+          },
       ],
 
       footer: function (currentPage, pageCount) {
@@ -851,6 +851,7 @@ export class ProformaPdfComponent implements OnInit {
     };
     console.log(groupedData);
     pdfMake.createPdf(docDefinition).download(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial +'.pdf');
+  
   }
 
   vistaPreviaPDF(data_cabecera, items_get, etiqueta) {
@@ -1031,7 +1032,7 @@ export class ProformaPdfComponent implements OnInit {
       content: [{
           table: {
             headerRows: 1,
-            widths: [17, 55, 170, 70, 30, 40, 70, 15, 50, 50],
+            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
             border:[false, true,false,false],
             body: [
               [
@@ -1167,22 +1168,7 @@ export class ProformaPdfComponent implements OnInit {
 
       footer: function (currentPage, pageCount) {
         return {
-          columns: [
-        //     { text: [
-        //       { text:  data_cabecera.rtotalliteral }
-        //     ],
-        //     margin: [0, 0, 0, 0],
-        //     fontSize: 9,
-        //     font: 'Courier',
-        //    },
-        //    { text: [
-        //     { text:  data_cabecera.rdsctosdescrip }
-        //   ],
-        //   margin: [0, 0, 0, 0],
-        //   fontSize: 9,
-        //   font: 'Courier',
-        //  },
-           
+          columns: [           
             {
               text: 'Pagina ' + currentPage + ' de ' + pageCount,
               alignment: 'right',

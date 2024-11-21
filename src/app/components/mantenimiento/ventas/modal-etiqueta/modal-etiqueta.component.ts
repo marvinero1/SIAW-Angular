@@ -3,8 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { EtiquetaService } from './servicio-etiqueta/etiqueta.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-modal-etiqueta',
   templateUrl: './modal-etiqueta.component.html',
@@ -43,13 +43,11 @@ export class ModalEtiquetaComponent implements OnInit {
     private api: ApiService, public _snackBar: MatSnackBar, public servicioEtiqueta: EtiquetaService,
     private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente_proforma1: any,
-    @Inject(MAT_DIALOG_DATA) public id_proforma: any,
+    @Inject(MAT_DIALOG_DATA) public id_proforma: any, @Inject(MAT_DIALOG_DATA) public latitud: any,
     @Inject(MAT_DIALOG_DATA) public numero_id: any, @Inject(MAT_DIALOG_DATA) public nom_cliente: any,
     @Inject(MAT_DIALOG_DATA) public desc_linea: any, @Inject(MAT_DIALOG_DATA) public id_sol_desct: any,
-    @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any,
-    @Inject(MAT_DIALOG_DATA) public direccion: any, @Inject(MAT_DIALOG_DATA) public latitud: any,
-    @Inject(MAT_DIALOG_DATA) public longitud: any, @Inject(MAT_DIALOG_DATA) public linea2: any,
-    @Inject(MAT_DIALOG_DATA) public etiqueta_elegida: any) {
+    @Inject(MAT_DIALOG_DATA) public nro_id_sol_desct: any, @Inject(MAT_DIALOG_DATA) public etiqueta_elegida: any,
+    @Inject(MAT_DIALOG_DATA) public direccion: any, @Inject(MAT_DIALOG_DATA) public longitud: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
@@ -64,14 +62,15 @@ export class ModalEtiquetaComponent implements OnInit {
     this.direccion_get = direccion.direccion;
     this.longitud_get = longitud.longitud;
     this.latitud_get = latitud.latitud;
-    this.linea2_input = linea2.linea2 === undefined || null ? "":linea2.linea2;
     this.data_map_con_etiqueta_elegida = etiqueta_elegida.etiqueta_elegida === undefined || null ? []:etiqueta_elegida.etiqueta_elegida;
-    
+      
+    this.linea2_input = this.data_map_con_etiqueta_elegida[0]?.linea2;
 
-    console.log("🚀 ~ ModalEtiquetaComponent ~ @Inject ~ data_map_con_etiqueta_elegida:", this.data_map_con_etiqueta_elegida)
+    console.log("🚀 ~ ModalEtiquetaComponent ~ @Inject ~ data_map_con_etiqueta_elegida:", this.data_map_con_etiqueta_elegida, "linea2:", this.linea2_input, this.linea2_input);
+
     this.longitud_data_map = this.data_map_con_etiqueta_elegida.length;
+    
     console.log("🚀 ~ ModalEtiquetaComponent ~ @Inject ~ longitud_data_map:", this.longitud_data_map)
-
     this.longitud_etiqueta = 0;
     
     // console.log(this.cod_cliente_proforma, this.id_proforma_get, this.numero_id_proforma, this.nombre_cliente_get,
@@ -88,7 +87,6 @@ export class ModalEtiquetaComponent implements OnInit {
     //EL DESCUENTO DE LINEA SEGUN SOLICITUD ESTA DESHABILITADO A LA FECHA QUE SE CREO ESTE COMPONENTE 8-3-2024
     // POR ENDE EL CAMPO  this.desc_linea_proforma, this.id_sol_desct_proforma, this.nro_id_sol_desct_proforma SE LOS
     // ENVIA VALOR FALSE 0, 0 RESPECTIVAMENTE
-
   }
 
   getDataEtiquetaClientesinDescuento() {
@@ -136,7 +134,8 @@ export class ModalEtiquetaComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => {
+        }
       })
   }
 
@@ -145,20 +144,19 @@ export class ModalEtiquetaComponent implements OnInit {
 
     this.data_map = [etiqueta].map((element) => ({
       ...element,
-      linea2: valor_linea_2.slice(0, 25),
+      linea1: element?.linea1.slice(0, 25) === undefined ? "":element?.linea1?.slice(0, 25),
+      linea2: valor_linea_2?.slice(0, 25) === undefined ? "":valor_linea_2?.slice(0, 25),
       elegida:true,
 
-      // ciudad:element.ciudad?.slice(0, 30),
+      ciudad:element.ciudad?.slice(0, 30),
       // codcliente: this.cod_cliente_proforma,
       // representante: this.direccion_get,
-      // longitud_entrega: this.longitud_get?.slice(0, 25),
-      // latitud_entrega: this.latitud_get?.slice(0, 25),
-
+      longitud_entrega: element.longitud_entrega?.slice(0, 25),
+      latitud_entrega: element.latitud_entrega?.slice(0, 25),
     }));
     this.longitud_etiqueta = this.data_map.length
 
     console.log("ETIQUETA ELEGIDA MAP: ", this.data_map, this.data_map.length);
-
   }
 
   enviarArrayToProforma() {

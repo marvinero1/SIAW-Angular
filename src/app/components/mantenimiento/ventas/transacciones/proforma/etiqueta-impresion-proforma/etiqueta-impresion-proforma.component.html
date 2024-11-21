@@ -4,9 +4,11 @@
 </div>
 
 <div id="content">
-  <div class="row">
+  <div class="row p-4">
+    
     <ng-container *ngIf="cod_cliente_get !== cod_cliente_real_get;else cltRef">
       <div class="col-md-4 p-1 content-box">
+        <p class="pe"><strong>{{ data_etiqueta.linea2 }}</strong></p><br>
         <p class="pe"><strong>{{ data_etiqueta.linea1 }}</strong></p><br>
         <span class="espan"><strong>{{ representante_string_acortado }}</strong></span>
         <div style="text-align: left !important;">
@@ -18,7 +20,7 @@
             <div class="col" style="padding-right: 0px !important;">
               <div style="border: 4px solid black; height: 50px !important;"></div>
             </div>
-          </div>
+          </div><br>
           <p class="pe"><strong>{{ data_etiqueta.ciudad }}</strong></p>
         </div>
 
@@ -28,6 +30,7 @@
           </p>
         </div>
       </div>
+      <div class="col-md-9"></div>
     </ng-container>
 
     <ng-template #cltRef>

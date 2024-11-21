@@ -168,6 +168,55 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
   }
 
   printFunction() {
-    window.print();
+    const content = document.getElementById('content');
+    if (content) {
+      // Ajustar la escala para mejorar la calidad de la imagen
+      html2canvas(content, { scale: 3 }).then((canvas) => {
+        const imgData = canvas.toDataURL('image/jpeg', 1.0); // Imagen en JPEG con calidad 0.75
+  
+        // Crear un nuevo documento PDF
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'letter' // Formato Carta (Letter)
+        });
+  
+        // Calcular el ancho y alto del PDF con márgenes
+        const margin = 10;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+  
+        // Obtener el ancho y alto de la imagen en el canvas
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+  
+        // Calcular la relación de aspecto de la imagen
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+  
+        // Calcular el nuevo ancho y alto de la imagen para mantener la proporción
+        const newWidth = imgWidth * ratio;
+        const newHeight = imgHeight * ratio;
+  
+        // Agregar la imagen al PDF con márgenes
+        pdf.addImage(imgData, 'JPEG', margin, margin, newWidth, newHeight);
+  
+        // Configurar autoPrint para que el PDF se imprima automáticamente
+        pdf.autoPrint();
+  
+        // Abrir el PDF en una nueva ventana para la impresión
+        const pdfBlob = pdf.output('blob'); // Obtener el PDF como un blob
+        const pdfUrl = URL.createObjectURL(pdfBlob); // Crear una URL para el blob
+  
+        // Abrir la nueva ventana y forzar la impresión
+        const printWindow = window.open(pdfUrl, '_blank');
+        if (printWindow) {
+          printWindow.addEventListener('load', () => {
+            printWindow.focus(); // Asegurar el foco en la ventana nueva
+            printWindow.print(); // Ejecutar la impresión
+          });
+        }
+      });
+    }
   }
+  
 }

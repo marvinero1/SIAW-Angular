@@ -67,15 +67,24 @@
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
-            matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-th gray" aria-hidden="true"></i>
-          </button>
+          <ng-container *ngIf="!permiso_para_vista">
+            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
+              matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+              <i class="fa fa-th gray" aria-hidden="true"></i>
+            </button>
+          </ng-container>
 
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
-            matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-th blue" aria-hidden="true"></i>
-          </button>
+          <ng-container *ngIf="permiso_para_vista">
+            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
+              matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+              <i class="fa fa-th gray" aria-hidden="true"></i>
+            </button>
+            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
+              matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+              <i class="fa fa-th blue" aria-hidden="true"></i>
+            </button>
+          </ng-container>
+
 
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizLista()"
             matTooltip="Matriz Item Lista" matTooltipClass="custom-tooltip" matTooltipPosition="above">
@@ -109,9 +118,9 @@
           </button>
 
           <button class="btn btn-outline-secondary form-control-sm" type="button"
-          (click)="detalleProformaCarritoTOExcel();">
-          <i class="fa fa-paper-plane" aria-hidden="true"></i>
-        </button>
+            (click)="detalleProformaCarritoTOExcel();">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+          </button>
 
 
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
@@ -189,11 +198,12 @@
                 <ng-container>
                   <input type="text" class="form-control form-control-sm" formControlName="id"
                     [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo" (blur)="onLeaveIDTipo($event)"
-                    style="margin-left: 16px;" [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
+                    style="margin-left: 17px;" [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)"
+                    readonly>
                 </ng-container>
                 <div class="input-group-append">
                   <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
-                    style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                    disabled style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
                   </button>
                 </div>
               </div>
@@ -212,15 +222,15 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha"
-              [(ngModel)]="fecha_actual" [readOnly]="true">
-            <input type="text" formControlName="fechareg" [(ngModel)]="fecha_actual" hidden>
-            <input type="text" formControlName="hora" [(ngModel)]="hora_fecha_server" hidden>
-            <input type="text" formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" hidden>
-            <input type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
-            <input type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
-            <input type="text" formControlName="usuarioreg" [(ngModel)]="usuarioLogueado" hidden>
-            <input type="text" formControlName="horaaut" [(ngModel)]="hora_fecha_server" hidden>
+            <input id="fecha_actual" type="text" class="form-control form-control-sm" style="margin-left: 21px;"
+              formControlName="fecha" [(ngModel)]="fecha_actual" [readOnly]="true">
+            <input id="fechareg" type="text" formControlName="fechareg" [(ngModel)]="fecha_actual" hidden>
+            <input id="hora" type="text" formControlName="hora" [(ngModel)]="hora_fecha_server" hidden>
+            <input id="hora_inicial" type="text" formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" hidden>
+            <input id="horareg" type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
+            <input id="horareg1" type="text" formControlName="horareg" [(ngModel)]="hora_fecha_server" hidden>
+            <input id="usuarioLogueado" type="text" formControlName="usuarioreg" [(ngModel)]="usuarioLogueado" hidden>
+            <input id="horaaut" type="text" formControlName="horaaut" [(ngModel)]="hora_fecha_server" hidden>
           </div>
 
           <div class="input-group">
@@ -228,7 +238,7 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" [(ngModel)]="fecha_actual"
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(ngModel)]="fecha_actual"
               [readOnly]="true" formControlName="fecha_inicial">
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
               formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" [readOnly]="true">
@@ -239,7 +249,7 @@
               <div class="input-group">
                 <div class="input-group-">
                   <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                    style="padding: 10px 1px 0px 0px;border: 0 !important;">
                     <u>
                       <div *ngIf="submitted && f.codalmacen.invalid" class="invalid-feedback">
                         <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Almacen">info
@@ -547,9 +557,9 @@
                 style="padding: 9px 8px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
             </div>
             <!-- <ng-container *ngIf="codigo_cliente === 'SIN NOMBRE'"> -->
-              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
-                formControlName="razon_social" [(ngModel)]="razon_social" value="{{ razon_social }}"
-                [readonly]="!codigo_cliente?.startsWith('SN')">
+            <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
+              formControlName="razon_social" [(ngModel)]="razon_social" value="{{ razon_social }}"
+              [readonly]="!codigo_cliente?.startsWith('SN')">
             <!-- </ng-container> -->
 
             <!-- <ng-container *ngIf="razon_social !== 'SIN NOMBRE'">
@@ -559,7 +569,8 @@
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-                [disabled]="!codigo_cliente?.startsWith('SN')" (click)="guardarNombreCliente();"><i class="fa fa-save"></i>
+                [disabled]="!codigo_cliente?.startsWith('SN')" (click)="guardarNombreCliente();"><i
+                  class="fa fa-save"></i>
               </button>
             </div>
           </div>
@@ -571,8 +582,8 @@
             </div>
 
             <!-- <ng-container *ngIf="razon_social === 'SIN NOMBRE';else nft"> -->
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
-              value="{{ razon_social }}" formControlName="nomcliente"  [readonly]="!codigo_cliente?.startsWith('SN')">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
+              value="{{ razon_social }}" formControlName="nomcliente" [readonly]="!codigo_cliente?.startsWith('SN')">
             <!-- </ng-container> -->
 
             <!-- <ng-template #nft>
@@ -592,16 +603,16 @@
             </div>
 
             <!-- <ng-container *ngIf="razon_social === 'SIN NOMBRE'; else tipodocidnit"> -->
-              <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
-                [(ngModel)]="tipo_doc_cliente" [disabled]="!codigo_cliente?.startsWith('SN')"
-                [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)">
-                <mat-option *ngFor="let documento_identidads of documento_identidad"
-                  [value]="documento_identidads.codigoclasificador" >
-                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
-              </mat-select>
+            <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+              [(ngModel)]="tipo_doc_cliente" [disabled]="!codigo_cliente?.startsWith('SN')"
+              [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)">
+              <mat-option *ngFor="let documento_identidads of documento_identidad"
+                [value]="documento_identidads.codigoclasificador">
+                {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+            </mat-select>
             <!-- </ng-container> -->
             <!-- <ng-template #tipodocidnit>  -->
-              <!-- <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
+            <!-- <mat-select class="custom-select1 form-control-sm" formControlName="tipo_docid" style="margin-left: 3px;"
                 [(ngModel)]="tipo_doc_cliente"
                 [class.is-invalid]="f.tipo_docid.invalid && (f.tipo_docid.dirty || f.tipo_docid.touched)" disabled>
                 <mat-option *ngFor="let documento_identidads of documento_identidad"
@@ -613,7 +624,7 @@
 
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 41px;border: 0 !important;">
+              <span class="input-group-text form-control-sm" style="padding: 8px 6px 0px 41px;border: 0 !important;">
                 <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback">
                   <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar NIT">info</mat-icon>
                 </div>
@@ -621,55 +632,62 @@
               </span>
 
               <!-- <ng-container *ngIf="razon_social !== 'SIN NOMBRE';"> -->
-                <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
-                  [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)" [readonly]="!codigo_cliente?.startsWith('SN')"
-                  [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)" readonly>
+              <!-- <input type="text" class="form-control form-control-sm" formControlName="nit" placeholder="N.I.T."
+                [(ngModel)]="nit_cliente" style="margin-left: 3px;" (paste)="onPaste($event)"
+                [readonly]="!codigo_cliente?.startsWith('SN')"  (keypress)="onlyNumbers($event)" 
+                (paste)="onPasteNIT($event)"
+                [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)"> -->
               <!-- </ng-container> -->
               <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
             </div>
 
-            <div class="col-sm">
-              <ng-container *ngIf="razon_social === 'SIN NOMBRE';">
-                <container-element [ngSwitch]="tipo_doc_cliente">
-                  <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
-                  <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
-                  <ng-container *ngSwitchCase="1">
-                    <div class="input-group-prepend">
-                      <input type="number" class="form-control form-control-sm" placeholder="CI - CEDULA DE IDENTIDAD"
-                        style="font-size: 0.55rem !important;width: 80%;" [(ngModel)]="valor_nit" min="0">
-                      <input type="text" class="form-control-sm" formControlName="complemento_ci"
-                        [(value)]="complemento_ci" style="width: 18%;">
-                    </div>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="2">
-                    <input type="text" class="form-control form-control-sm"
-                      placeholder="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO"
-                      style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="valor_nit">
-                  </ng-container>
-                  <ng-container *ngSwitchCase="3">
-                    <input type="text" class="form-control form-control-sm" placeholder="PAS - PASAPORTE"
-                      style="font-size: 0.55rem !important;width: 100%;" [(ngModel)]="valor_nit">
-                  </ng-container>
-                  <ng-container *ngSwitchCase="4">
-                    <input type="text" class="form-control form-control-sm"
-                      placeholder="OD - OTRO DOCUMENTO DE IDENTIDAD" style="font-size: 0.55rem !important;width: 100%;"
-                      [(ngModel)]="valor_nit">
-                  </ng-container>
-                  <ng-container *ngSwitchCase="5">
-                    <input type="number" class="form-control form-control-sm"
-                      placeholder="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" min="0"
-                      style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="valor_nit">
-                  </ng-container>
-                </container-element>
+            <container-element [ngSwitch]="tipo_doc_cliente" style="width: 80%;">
+              <!-- CI/NIT  VALIDAR QUE SOLO SEAN NUMEROS -->
+              <!-- CEX - CEDULA DE IDENTIDAD EXTRANJERO PAS - PASOPORTE OTRO-DOCUMENTO -->
+              <ng-container *ngSwitchCase="1">
+                <div class="input-group-prepend">
+                  <!-- <input type="number" class="form-control form-control-sm" placeholder="CI - CEDULA DE IDENTIDAD"
+                    style="font-size: 0.55rem !important;width: 80%;" [(ngModel)]="valor_nit" min="0" hidden> -->
+                  <input type="number" class="form-control form-control-sm" formControlName="nit" placeholder="CARNET IDENTIDAD"
+                    [readonly]="!codigo_cliente?.startsWith('SN')" (paste)="onPaste($event)"
+                    [(ngModel)]="nit_cliente" style="width: 66%;" [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
+                    <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+                    <input type="text" class="form-control form-control-sm" formControlName="complemento_ci" placeholder="COMPLEMENTO"
+                    [(ngModel)]="complemento_ci" [readonly]="!codigo_cliente?.startsWith('SN')" style="width: 34%;">
+                </div>
               </ng-container>
-            </div>
+              <ng-container *ngSwitchCase="2">
+                <input type="text" class="form-control form-control-sm" (paste)="onPaste($event)" formControlName="nit"
+                  placeholder="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO" [readonly]="!codigo_cliente?.startsWith('SN')"
+                  style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="nit_cliente" [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)" >
+                  <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+              </ng-container>
+              <ng-container *ngSwitchCase="3">
+                <input type="text" class="form-control form-control-sm" placeholder="PAS - PASAPORTE" (paste)="onPaste($event)" formControlName="nit"
+                  style="font-size: 0.55rem !important;width: 100%;" [(ngModel)]="nit_cliente" [readonly]="!codigo_cliente?.startsWith('SN')"
+                  [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)"> <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+              </ng-container>
+              <ng-container *ngSwitchCase="4">
+                <input type="text" class="form-control form-control-sm" (paste)="onPaste($event)" formControlName="nit"
+                  placeholder="OD - OTRO DOCUMENTO DE IDENTIDAD" style="font-size: 0.55rem !important;width: 100%;"
+                  [(ngModel)]="nit_cliente" [readonly]="!codigo_cliente?.startsWith('SN')" [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)" >
+                  <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+              </ng-container>
+              <ng-container *ngSwitchCase="5">
+                <input type="number" class="form-control form-control-sm" (paste)="onPaste($event)" formControlName="nit"
+                  placeholder="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" min="0" [readonly]="!codigo_cliente?.startsWith('SN')"
+                  style="width: 100%;font-size: 0.55 rem !important;" [(ngModel)]="nit_cliente" [class.is-invalid]="f.nit.invalid && (f.nit.dirty || f.nit.touched)">
+                  <div *ngIf="submitted && f.nit.invalid" class="invalid-feedback"></div>
+              </ng-container>
+            </container-element>
           </div>
 
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 40px;border: 0 !important;">
                 <u (click)="setEmailDefault();" style="cursor: pointer;">
-                  <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;" aria-hidden="true"></i> Email
+                  <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;" aria-hidden="true"></i>
+                  Email
                 </u></span>
             </div>
             <ng-container *ngIf="!email_cliente">
@@ -744,7 +762,7 @@
                     <u>Item</u>
                     <p-sortIcon field="item" />
                   </th>
-                  <th pSortableColumn="descripcion" style="width:18%;" class="center">
+                  <th pSortableColumn="descripcion" style="width:21%;" class="center">
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
@@ -802,7 +820,8 @@
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
+                <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
+                  [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
                   (click)="itemDataAll(products?.coditem)">
 
                   <td class="center1"> {{ products.nroitem }} </td>
@@ -834,39 +853,44 @@
                   </td>
 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
+                  <td class="center1" [pEditableColumn]="products.cantidad_pedida"
+                    pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0" 
+                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                           (input)="onInputChange(products, $event.target.value)">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
-                          <span>{{ products.cantidad_pedida }}</span> 
-                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                        <ng-container
+                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
+                          <span>{{ products.cantidad_pedida }}</span>
+                          <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
-                          <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <span
+                            style="color: #1414B8 !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="onInputChange(products, $event.target.value)"
+                            (change)="onInputChange(products, $event.target.value)"
                             style="color: rgba(0, 0, 255, 0.824);"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
-                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <span
+                            style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="onInputChange(products, $event.target.value)"
+                            (change)="onInputChange(products, $event.target.value)"
                             style="color: rgba(255, 0, 0, 0.824);"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumple === false">
-                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad_pedida }}</span>
+                          <!-- NEGATIVOS -->
+                          <span style="color: #5050e2 !important;font-weight: 900;">{{ products.cantidad_pedida }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);"> -->
+                              (change)="onInputChange(products, $event.target.value)"
+                              style="color: rgba(255, 0, 0, 0.824);"> -->
                         </ng-container>
                       </ng-template>
                     </p-cellEditor>
@@ -877,40 +901,45 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                        (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
+                          (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
                       </ng-template>
 
                       <ng-template pTemplate="output">
-                        <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
-                          <span>{{ products.cantidad }}</span> 
-                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                        <ng-container
+                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
+                          <span>{{ products.cantidad }}</span>
+                          <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
-                          <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
-                         <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                          <span
+                            style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span>
+                          <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
+                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(0, 0, 255, 0.824) !important;"> -->
                         </ng-container>
 
-                        <ng-container *ngIf="products?.cumpleMin === false" >
-                         <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
-                         <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                        <ng-container *ngIf="products?.cumpleMin === false">
+                          <span
+                            style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span>
+                          <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                             id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
                         <ng-container *ngIf="products?.cumple === false" >
-                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">{{ products.cantidad }}</span> 
-                          <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                          <!-- NEGATIVOS -->
+                        <span style="color: #5050e2 !important;font-weight: 900;">{{ products.cantidad }}</span> 
+                        <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                              id="input_cantidad"
-                             (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
+                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                              style="color: rgba(255, 0, 0, 0.824) !important;"> -->
-                         </ng-container>
+                        </ng-container>
                       </ng-template>
                     </p-cellEditor>
                   </td>
+                  <!-- FIN COLUMNA CANTIDAD -->
 
                   <td class="right">{{ products.porcen_mercaderia }}</td>
 
@@ -933,9 +962,8 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
-                          [(ngModel)]="products.coddescuento"
-                          [value]="products?.coddescuento"
-                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)" 
+                          [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"
+                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)"
                           (change)="DEChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedDescuento(products)">
                       </ng-template>
@@ -1284,7 +1312,7 @@
               <ng-container matColumnDef="codControl">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion text-center"> Cod. </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ element.CodControl }} </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important"> {{ element.codControl }} </td>
               </ng-container>
 
               <!-- descripcion Column -->
@@ -1292,7 +1320,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion">
                   Descripción </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion" style="text-align: left !important; 
-                padding: 0 0px 0 0px !important;">{{ element.Descripcion }}</td>
+                padding: 0 0px 0 0px !important;">{{ element.descripcion }}</td>
               </ng-container>
 
               <!-- valido Column -->
@@ -1300,7 +1328,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion text-center"> Valido </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important;color:rgb(202, 6, 6)">
-                  <ng-container *ngIf="element.Valido === 'SI'; else validoo">
+                  <ng-container *ngIf="element.valido === 'SI'; else validoo">
                     <strong style="color:green">SI</strong>
                   </ng-container>
                   <ng-template #validoo>
@@ -1313,31 +1341,29 @@
               <ng-container matColumnDef="cod_servicio">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Cod. Servicio </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.CodServicio }}</td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codServicio }}</td>
               </ng-container>
 
               <!-- Descuento Servicio Column -->
               <ng-container matColumnDef="desct_servicio">
                 <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Desc. Servicio </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DescServicio }}
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.descServicio }}
                 </td>
               </ng-container>
 
               <!-- Dato A Column -->
               <ng-container matColumnDef="datoA">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato
-                  A </th>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato A </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DatoA }} </td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.datoA }} </td>
               </ng-container>
 
               <!-- Dato B Column -->
               <ng-container matColumnDef="datoB">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato
-                  B </th>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-resultado-validacion"> Dato B </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.DatoB }}</td>
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.datoB }}</td>
               </ng-container>
 
               <!-- Clave Servicio Column -->
@@ -1347,10 +1373,10 @@
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
 
                   <ng-container *ngIf="element.ClaveServicio === 'AUTORIZADO';else claveelse">
-                    <p style="color: green;"><strong>{{ element.ClaveServicio }}</strong></p>
+                    <p style="color: green;"><strong>{{ element.claveServicio }}</strong></p>
                   </ng-container>
                   <ng-template #claveelse>
-                    <p style="color: red;">{{ element.ClaveServicio }}</p>
+                    <p style="color: red;">{{ element.claveServicio }}</p>
                   </ng-template>
                 </td>
               </ng-container>
@@ -1361,27 +1387,20 @@
                   Resolver</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  <ng-container *ngIf="element.Accion === 'Pedir_Servicio';">
+                  <ng-container *ngIf="element.accion === 'Pedir_Servicio';">
                     <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                       style="margin-block-start: 9px;"
-                      (click)="resolverValidacionEnValidar(element.DatoA, element.DatoB, element.DescServicio, element.CodServicio, element);">
+                      (click)="resolverValidacionEnValidar(element.datoA, element.datoB, element.descServicio, element.codServicio, element);">
                       <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i></span>
                     </button>
                   </ng-container>
 
-                  <ng-container *ngIf="element.Accion === 'Confirmar_SiNo'">
+                  <ng-container *ngIf="element.accion === 'Confirmar_SiNo'">
                     <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                       style="margin-block-start: 9px;" (click)="resolverValidacionEnValidarMensaje(element);">
                       <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i></span>
                     </button>
                   </ng-container>
-
-                  <!-- <ng-container *ngIf="element.DatoA != '' && element.DatoB !='' ">
-                    <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                      style="margin-block-start: 9px;" (click)="resolverValidacionEnValidarMensaje(element);">
-                      <span><i class="fa fa-magic" aria-hidden="true" style="color: #ffc107;"></i></span>
-                    </button>
-                  </ng-container> -->
                 </td>
               </ng-container>
 
@@ -1393,7 +1412,7 @@
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
                   <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
                     style="margin-block-start: 10px;margin-block-end: 10px;"
-                    (click)="modalDetalleObservaciones(element.Observacion, element.ObsDetalle);">
+                    (click)="modalDetalleObservaciones(element.observacion, element.obsDetalle);">
                     <span><i class="fa fa-eye" aria-hidden="true" style="color: #ffc107;"></i>
                       Obs.</span>
                   </button>
@@ -1406,7 +1425,9 @@
                   Validar</th>
                 <td mat-cell *matCellDef="let element" class="mat-column-resultado-validacion"
                   style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
+                  <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                    style="margin-block-start: 9px;">
+                    <!-- (click)="validarDeUno(element);" -->
                     <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i></span>
                   </button>
                 </td>
@@ -1590,7 +1611,7 @@
                           <input type="text" [(ngModel)]="longitud_cliente" formControlName="longitud_entrega" hidden>
                         </div>
                       </div>
-    
+
                       <div class="col-md-6">
                         <div class="input-group">
                           <a href="{{ URL_maps }}" target="_blank" style="padding-top: 6px;">
@@ -1599,14 +1620,14 @@
 
                           <span class="input-group-text form-control-sm"
                             style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Ubicación</u></span>
-  
+
                           <ng-container>
                             <!-- <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [readonly]="true"> -->
                             <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [(ngModel)]="ubicacion_central" [readonly]="true">
                           </ng-container>
-  
+
                           <!-- <ng-template #central_ubicacion1>
                             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
                               formControlName="ubicacion" [readonly]="true">
@@ -1656,7 +1677,8 @@
                                 <span class="input-group-text form-control-sm" style="height: calc(2.3rem + 2px) !important;
                                   padding: 10px 0px 0px 6px;border: 0 !important;"><u>Observación</u></span>
                               </div>
-                              <input class="form-control" formControlName="obs" [(ngModel)]="obs" style="margin-left: 5px;">
+                              <input class="form-control" formControlName="obs" [(ngModel)]="obs"
+                                style="margin-left: 5px;">
                             </div>
                           </div>
                         </div>
@@ -2254,8 +2276,8 @@
                           style="margin-left: 15px;border: 0 !important;"><u>Aplicar Desct. de Nivel
                             Actuales del Cliente</u></span>
                       </div>
-                      <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual" style="width: 18%;"
-                        formControlName="niveles_descuento">
+                      <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual"
+                        style="width: 18%;" formControlName="niveles_descuento">
                         <option value="ACTUAL" selected>ACTUAL</option>
                         <option value="ANTERIOR">ANTERIOR</option>
                       </select>
@@ -2277,27 +2299,27 @@
                       </div>
                     </div>
                   </form>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 129px;border: 0 !important;">
-                          <u>Tipo Descuento de Nivel</u></span>
-                      </div>
-
-                      <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel" >
-                        <option *ngFor="let valor_desct_nivels of valor_desct_nivel"
-                         [value]="valor_desct_nivels.desc_nivel">{{ valor_desct_nivels.desc_nivel }}</option>
-                      </select>&nbsp;
-
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()" 
-                           readonly="!tarifaPrincipal_value">
-                          <i class="fa fa-cog"> Aplicar Descuento</i>
-                        </button>
-                      </div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 10px 0px 0px 129px;border: 0 !important;">
+                        <u>Tipo Descuento de Nivel</u></span>
                     </div>
-                  
+
+                    <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel">
+                      <option *ngFor="let valor_desct_nivels of valor_desct_nivel"
+                        [value]="valor_desct_nivels.desc_nivel">{{ valor_desct_nivels.desc_nivel }}</option>
+                    </select>&nbsp;
+
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-primary form-control-sm" type="button"
+                        style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()"
+                        readonly="!tarifaPrincipal_value">
+                        <i class="fa fa-cog"> Aplicar Descuento</i>
+                      </button>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </mat-tab>

@@ -1,28 +1,17 @@
 import { HttpEvent, HttpHandler, HttpRequest, HttpInterceptor } from "@angular/common/http";
-import {
-	Injectable
-} from "@angular/core";
-import {
-	MatSnackBar
-} from "@angular/material/snack-bar";
-import {
-	Observable,
-	catchError,
-	firstValueFrom,
-	throwError
-} from "rxjs";
-import {
-	ApiService
-} from "./api.service";
-import {
-	ToastrService
-} from "ngx-toastr";
+import { Injectable } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Observable, catchError, firstValueFrom, throwError } from "rxjs";
+import { ApiService } from "./api.service";
+import { ToastrService } from "ngx-toastr";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogConfirmacionComponent } from "@modules/dialog-confirmacion/dialog-confirmacion.component";
 import { NgxSpinnerService } from "ngx-spinner";
+
 @Injectable({
 	providedIn: 'root'
 })
+
 export class Interceptor implements HttpInterceptor {
 
 	public err;
@@ -41,7 +30,7 @@ export class Interceptor implements HttpInterceptor {
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(request).pipe(catchError(err => {
-			console.log(this.error_code, this.status);			
+			console.log(this.error_code, this.status);
 
 			this.err = err.error;
 			this.status = err.status;
@@ -61,13 +50,16 @@ export class Interceptor implements HttpInterceptor {
 					break;
 			}
 
+			if(this.error_code != "error devolvio nulo" && this.error_code != 801){
+				this.toastr.warning(this.error_code);
+			}	
+
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA transac / veproforma / getempaques
-
 			if (this.error_code === 801 || this.error_code === undefined) {
 				console.log("NO TOAST xD");
 			} else {
-				this.toastr.error(this.err.resp);
+				//this.toastr.error(this.err.resp);
 				this.spinner.hide();
 			}
 

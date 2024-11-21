@@ -1,263 +1,203 @@
+<h2 mat-dialog-title>Factura</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="no-printme p-3 center" style="text-align: center;">
+    <mat-icon (click)="imprimirPDF(data_detalle_proforma)" 
+    style="cursor: pointer;color: #093070;width: 50px !important;font-size: 34px !important; height: 35px !important;"> print </mat-icon>
 
-<div class="no-printme p-3 center" style="text-align: center;">
-  
-  <mat-icon (click)="imprimirPDF(data_detalle_proforma)" 
-  style="cursor: pointer;color: #093070;width: 50px !important;font-size: 34px !important; height: 35px !important;"> print </mat-icon>
+    <!-- <mat-icon (click)="descargaPDF()" 
+    style="cursor: pointer;color: red;width: 50px !important;font-size: 34px !important; height: 35px !important;">picture_as_pdf</mat-icon>
+    -->
 
-  
-  <!-- <mat-icon (click)="descargaPDF()" 
-  style="cursor: pointer;color: red;width: 50px !important;font-size: 34px !important; height: 35px !important;">picture_as_pdf</mat-icon>
-  -->
-  <!-- <mat-icon (click)="vistaPreviaPDF()" 
-  style="cursor: pointer;color: #fbd800;width: 50px !important;font-size: 34px !important; height: 35px !important;">remove_red_eye</mat-icon> -->
+    <!-- <mat-icon (click)="vistaPreviaPDF()" 
+    style="cursor: pointer;color: #fbd800;width: 50px !important;font-size: 34px !important; height: 35px !important;">remove_red_eye</mat-icon> -->
 
-</div>
-<section id="sectionAboutUs" class="shotcode-1 about-home-2 text-center-xs text-center-sm">
-  <div class="content section-content">
+    <mat-icon (click)="close()" 
+    style="cursor: pointer;color: #000000;width: 50px !important;font-size: 34px !important; height: 35px !important;">close</mat-icon>
+  </div>
 
-    <div class="clearfix"></div>
-    <div class="row" style="display: block; margin-right: 0px;">
-      <div class="col-md col-sm">
-        <div class="x_panel">
-          <div style="padding: 25px; padding-right: 15px;">
-            <div class="row" style="text-align: center; height: 170px;">
-              
-              <div class="col-md-2 col-sm-12" style="margin-top: 8px;">
-                <img src="assets/img/logo.png" alt="Pertec S.R.L &copy;" width="125px">
-              </div>
+  <!-- <section id="sectionAboutUs" class="shotcode-1 about-home-2 text-center-xs text-center-sm">
+    <div class="content section-content"> -->
+      <div style="padding: 25px; padding-right: 15px;">
+        <div class="row" style="text-align: center; height: 170px;">
+          
+          <div class="col-md-2 col-sm-12" style="margin-top: 8px;">
+            <img src="assets/img/logo.png" alt="Pertec S.R.L &copy;" width="125px">
+          </div>
 
-              <div class="col-md-3 col-sm-12 alineacion"><br>
-                <h6 class="font-frank-demi color-black" style="font-size: 1.4rem;">PERTEC S.R.L.</h6>
-                <h6 class="font-frank-medium color-black">CASA MATRIZ</h6>
-                <p class="infoFactura">Gral. Achá N°330</p>
-                <p class="infoFactura">Tels: 4259660 - 4250800</p>
-                <p class="infoFactura">Cochabamba - Bolivia</p>
+          <div class="col-md-3 col-sm-12 alineacion"><br>
+            <h6 class="font-frank-demi color-black" style="font-size: 1.4rem;">PERTEC S.R.L.</h6>
+            <h6 class="font-frank-medium color-black">CASA MATRIZ</h6>
+            <p class="infoFactura">Gral. Achá N°330</p>
+            <p class="infoFactura">Tels: 4259660 - 4250800</p>
+            <p class="infoFactura">Cochabamba - Bolivia</p>
 
-                <h6 class="font-frank-medium color-black">Sucursal N° </h6>
-                <h6 class="font-frank-medium color-black">Punto de Vta.: 0 </h6>
+            <h6 class="font-frank-medium color-black">Sucursal N° {{ sucursal }}</h6>
+            <h6 class="font-frank-medium color-black">Punto de Vta.: {{ codptovta }} </h6>
 
-                <p class="infoFactura"></p>
-                <p class="infoFactura">Telefono: </p>
-                <p class="infoFactura"></p>
+            <p class="infoFactura">{{ direccion }}</p>
+            <p class="infoFactura">Telefono: {{ telefono }}</p>
+            <p class="infoFactura">{{ lugarEmision }}</p>
+          </div>
 
-              </div>
-
-              <div class="col-md-3 col-sm-12" style="height: 170px; display: table;">
-                <div style="display: table-cell; vertical-align: middle;"><br>
-                  <h6 class="font-frank-demi color-black" style="font-size: 1.5rem; line-height: 0px; margin: 0;">
-                    FACTURA</h6><br>
-                  <h6 class="font-frank-demi color-black">CON DERECHO A CREDITO FISCAL</h6>
-
-
-
-                  <br><br><br>
-                  <!-- {{-- <div class="bacgroundAnulada"></div> --}} -->
-                  <!-- <p style="font-size: 2.8rem;color: #ff4040;text-align: center;"><strong>ANULADO</strong></p> -->
-
-                </div>
-              </div>
-
-              <div class="col-md-4 col-sm-12">
-                <div class="row">
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">NIT: </h6>
-                    <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">Factura
-                      Nro:
-                    </h6>
-                    <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">Cód
-                      Autorización: </h6>
-                  </div>
-                  <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 0;">
-                    <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: left;">1023109029
-                    </h6>
-                    <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: left;">
-                      0000000</h6>
-                    <h6 class="font-frank-demi color-black"
-                      style="margin-bottom: 5px; text-align: left; word-wrap: break-word;">
-                    </h6>
-                  </div>
-                </div>
-              </div>
-
-            </div><br>
-
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="col-md-3 col-sm-6 col-xs-6">
-                    <h6 class="font-frank-demi color-black inf-per-fac-1"
-                      style="margin-bottom: 8px; line-height: 17px; padding-right: 0px;">Lugar y Fecha :</h6>
-                    <h6 class="font-frank-demi color-black inf-per-fac-1"
-                      style="margin-bottom: 8px; line-height: 17px; padding-right: 0px;">Nom/Razon Social :</h6>
-                  </div>
-                  <div class="col-md-9 col-sm-6 col-xs-6">
-                    <h6 class="font-frank-book color-black inf-per-fac-2"
-                      style="margin: 0 30px 8px -30px; line-height: 17px; padding-left: 0px;">
-                      Hrs.</h6>
-                    <h6 class="font-frank-book color-black inf-per-fac-2"
-                      style="margin: 0 30px 8px -30px; line-height: 17px; padding-left: 0px;">
-                    </h6>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4" style="text-align: right;">
-                <div class="row">
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h6 class="font-frank-demi color-black"
-                      style="margin-bottom: 8px; line-height: 17px; text-align: right;">Nit/Ci/Cex :</h6>
-                    <h6 class="font-frank-demi color-black"
-                      style="margin-bottom: 8px; line-height: 17px; text-align: right;">Código Cliente :</h6>
-                  </div>
-                  <div class="col-md-6 col-sm-6 col-xs-6">
-                    <h6 class="font-frank-book color-black"
-                      style="margin-bottom: 8px; line-height: 17px; text-align: left;"> </h6>
-                    <h6 class="font-frank-book color-black"
-                      style="margin-bottom: 8px; line-height: 17px; text-align: left;"></h6>
-                  </div>
-                </div>
-              </div>
+          <div class="col-md-3 col-sm-12" style="height: 170px; display: table;">
+            <div style="display: table-cell; vertical-align: middle;"><br>
+              <h6 class="font-frank-demi color-black" style="font-size: 1.5rem; line-height: 0px; margin: 0;">
+                FACTURA</h6><br>
+              <h6 class="font-frank-demi color-black">CON DERECHO A CREDITO FISCAL</h6>
+              <br><br><br>
+              <!-- {{-- <div class="bacgroundAnulada"></div> --}} -->
+              <!-- <p style="font-size: 2.8rem;color: #ff4040;text-align: center;"><strong>ANULADO</strong></p> -->
             </div>
+          </div>
 
+          <div class="col-md-4 col-sm-12">
             <div class="row">
-              <div class="col-md-12">
-                <div class="x_content table-responsive">
-                  <table class="table greyGridTable">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>CODIGO PRODUCTO</th>
-                        <th colspan="2" style="text-align: center;">DESCRIPCION</th>
-                        <th>UNIDAD DE MEDIDA</th>
-                        <th style="text-align: right;">CANTIDAD</th>
-                        <th style="text-align: right;">PRECIO UNITARIO</th>
-                        <th style="text-align: right;">DESCUENTO</th>
-                        <th style="text-align: right;">SUBTOTAL(BS)</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      
-                     
-                      <tr *ngFor="let data_detalle_proformas of data_detalle_proforma">
-                        <td>{{ data_detalle_proformas.nroitem }}</td>
-                        <td>{{ data_detalle_proformas.coditem }}</td>
-                        <td class="alingLeft">{{ data_detalle_proformas.descripcion }}</td>
-
-                        <td class="alingLeft">{{ data_detalle_proformas.medida }}</td>
-                        <td class="alingLeft">{{ data_detalle_proformas.udm }}</td>
-                        <td class="alingCenter">{{ data_detalle_proformas.cantidad }}</td>
-                        <td class="alingRight">{{ data_detalle_proformas.precioneto }}</td>
-                        <td class="alingRight">{{ data_detalle_proformas.preciodesc }}</td>
-                        <td class="alingRight">
-                          TOTAL
-                        </td>
-                      </tr>
-                     
-                    </tbody>
-
-                    <tfoot>
-                      <tr>
-                        <td colspan="5" rowspan="2" class="alingLeft"
-                          style="border-bottom: 2px solid #333333; padding: 0px 0px;">
-                          SON:
-                        </td>
-                        <!-- <td colspan="5" rowspan="2" class="alingLeft"  style="border-bottom: 2px solid #333333; padding: 0px 0px;">
-                          SON:  Equivalentes a
-                        
-                        DOLAR AMERICANO
-                        </td> -->
-                        <td colspan="3" style="padding: 0px 2%;">Sub Total(BS):</td>
-                        <td class="font-frank-book" style="padding: 0px 0px;"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="3" style="padding: 0px 2%;">Descuentos(BS):</td>
-                        <td class="font-frank-book" style="padding: 0px 0px;">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="5" rowspan="2"></td>
-                        <td colspan="3" style="padding: 0px 2%;">Total(BS):</td>
-                        <td class="font-frank-book" style="padding: 0px 0px;"></td>
-                      </tr>
-                      <tr>
-                        <td colspan="3" style="padding: 0px 2%;">Importe Base Crédito Fiscal(BS):
-                        </td>
-                        <td class="font-frank-book" style="padding: 0px 0px;"></td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="text-align:center;">
-              <div class="col-md-8" style="padding: 0px 40px 0px 40px;">
-                <h6 class="font-frank-demi color-black" style="margin-bottom: 8px; line-height: 17px;">
-                  ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO DE ESTA SERÁ
-                  SANCIONADO PENALMENTE DE ACUERDO A LEY.
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">NIT: </h6>
+                <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">Factura
+                  Nro: 0000{{ nrofactura }}
                 </h6>
-                <p class="infoFactura" style="text-align: center !important"></p>
-                <!-- @if($en_linea != 0 )
-                <p class="infoFactura" style="text-align: center !important">
-                  Este documento es la Representación Gráfica de un Documento Fiscal Digital
-                  emitido en una
-                  modalidad de facturación en linea.
-                </p><br>
-                @else
-                <p class="infoFactura" style="text-align: center !important">
-                  Este documento es la Representación Gráfica de un Documento Fiscal Digital
-                  emitido en una
-                  modalidad de facturación en fuera de línea.
-                </p><br>
-                @endif -->
-
-                <p class="infoFactura" style="text-align: center !important;">
-                  La factura tambien se encuentra disponible en el siguiente enlace:
-                  <a href="https://pertec.com.bo/consultasDigitales" target="blank">www.pertec.com.bo</a>
-                </p><br>
-                <p class="infoFactura" style="text-align: right;"></p><br>
-              </div>
-              <div class="col-md-4"><br>
-
-                <p style="font-size: 1.15rem;text-align: center;padding-block-start: 4px;">Código Web: </p>
+                <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: right;">
+                  Cód  Autorización: {{ cuf }}</h6>
               </div>
 
+              <div class="col-md-6 col-sm-6 col-xs-6" style="padding-left: 0;">
+                <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: left;">1023109029
+                </h6>
+                <h6 class="font-frank-demi color-black" style="margin-bottom: 5px; text-align: left;">0000000</h6>
+                <h6 class="font-frank-demi color-black"
+                  style="margin-bottom: 5px; text-align: left; word-wrap: break-word;">
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div><br>
+
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-3 col-sm-6 col-xs-6">
+                <h6 class="font-frank-demi color-black inf-per-fac-1"
+                  style="margin-bottom: 8px; line-height: 17px; padding-right: 0px;">Lugar y Fecha : {{ lugarFechaHora }}</h6>
+                <h6 class="font-frank-demi color-black inf-per-fac-1"
+                  style="margin-bottom: 8px; line-height: 17px; padding-right: 0px;">Nom/Razon Social : {{ nomcliente }}</h6>
+              </div>
+              <div class="col-md-9 col-sm-6 col-xs-6">
+                <h6 class="font-frank-book color-black inf-per-fac-2"
+                  style="margin: 0 30px 8px -30px; line-height: 17px; padding-left: 0px;"></h6>
+                <h6 class="font-frank-book color-black inf-per-fac-2"
+                style="margin: 0 30px 8px -30px; line-height: 17px; padding-left: 0px;">
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4" style="text-align: right;">
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <h6 class="font-frank-demi color-black"
+                  style="margin-bottom: 8px; line-height: 17px; text-align: right;">Nit/Ci/Cex : {{ nit_cliente }}</h6>
+                <h6 class="font-frank-demi color-black"
+                  style="margin-bottom: 8px; line-height: 17px; text-align: right;">Código Cliente : {{ nit_cliente }}</h6>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <h6 class="font-frank-book color-black"
+                  style="margin-bottom: 8px; line-height: 17px; text-align: left;"> </h6>
+                <h6 class="font-frank-book color-black"
+                  style="margin-bottom: 8px; line-height: 17px; text-align: left;"></h6>
+              </div>
             </div>
           </div>
         </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="x_content table-responsive">
+              <table class="table greyGridTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>CODIGO PRODUCTO</th>
+                    <th colspan="2" style="text-align: center;">DESCRIPCION</th>
+                    <th>UNIDAD DE MEDIDA</th>
+                    <th style="text-align: right;">CANTIDAD</th>
+                    <th style="text-align: right;">PRECIO UNITARIO</th>
+                    <th style="text-align: right;">DESCUENTO</th>
+                    <th style="text-align: right;">SUBTOTAL(BS)</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let data_detalle_proformas of data_detalle_proforma">
+                    <td>{{ data_detalle_proformas.nroitem }}</td>
+                    <td>{{ data_detalle_proformas.coditem }}</td>
+                    <td class="alingLeft">{{ cortarStringSiEsLargo(data_detalle_proformas.descripcion) }}</td>
+                    <td class="alingLeft">{{ data_detalle_proformas.medida }}</td>
+                    <td class="alingLeft">{{ data_detalle_proformas.udm }}</td>
+                    <td class="alingCenter">{{ formatNumberTotalSubTOTALES(data_detalle_proformas.cantidad) }}</td>
+                    <td class="alingRight">{{ data_detalle_proformas.precioneto }}</td>
+                    <td class="alingRight">{{ data_detalle_proformas.preciodesc }}</td>
+                    <td class="alingRight"> {{ formatNumberTotalSub(data_detalle_proformas.total) }} </td>
+                  </tr>
+                </tbody>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="5" rowspan="2" class="alingLeft"
+                      style="border-bottom: 2px solid #333333; padding: 0px 0px;">
+                      SON: {{ total_literal }}
+                    </td>
+                    <!-- <td colspan="5" rowspan="2" class="alingLeft"  style="border-bottom: 2px solid #333333; padding: 0px 0px;">
+                      SON:  Equivalentes a DOLAR AMERICANO
+                    </td> -->
+                    <td colspan="3" style="padding: 0px 2%;">Sub Total(BS): </td>
+                    <td class="font-frank-book" style="padding: 0px 0px;">{{ subtotal }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="padding: 0px 2%;">Descuentos(BS): </td>
+                    <td class="font-frank-book" style="padding: 0px 0px;">{{ descuentos }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" rowspan="2"></td>
+                    <td colspan="3" style="padding: 0px 2%;">Total(BS): </td>
+                    <td class="font-frank-book" style="padding: 0px 0px;">{{ total }}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" style="padding: 0px 2%;">Importe Base Crédito Fiscal(BS):
+                    </td>
+                    <td class="font-frank-book" style="padding: 0px 0px;">{{ total }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="text-align:center;">
+          <div class="col-md-8" style="padding: 0px 40px 0px 40px;">
+            <h6 class="font-frank-demi color-black" style="margin-bottom: 8px; line-height: 17px;">
+              <strong>ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO DE ESTA SERÁ
+              SANCIONADO PENALMENTE DE ACUERDO A LEY.</strong>
+            </h6>
+            <p class="infoFactura" style="text-align: center !important"></p>
+            <h4>{{ leyenda_ley }}</h4>
+            <h4>{{ leyenda }}</h4>
+
+            <p class="infoFactura" style="text-align: center !important;">
+              La factura tambien se encuentra disponible en el siguiente enlace:
+              <a href="https://pertec.com.bo/consultasDigitales" target="blank">www.pertec.com.bo</a>
+            </p><br>
+            <p class="infoFactura" style="text-align: right;"></p><br>
+          </div>
+
+          <div class="col-md-4"><br>
+            <qrcode [qrdata]="QR_value_string" [width]="85" [errorCorrectionLevel]="'M'"></qrcode>
+            <p style="font-size: 1.15rem;text-align: center;padding-block-start: 4px;">Código Web:{{ codfactura_web }}</p>
+          </div>
+        </div>
       </div>
-    </div><br><br>
-
-    <div style="float: right;">
-      <div class="row">
-        <div class="col-md-4">
-          <button class="btn btn-primary btn-lg" type="button" onClick="history.go(-1);"><i
-              class="fa fa-arrow-left"></i> &nbsp;Atras
-          </button>
-        </div>
-        <div class="col-md-4">
-          <!-- {{-- <a class="btn btn-primary btn-lg" type="button" href="">
-          Descargar PDF &nbsp;<i class="fa fa-file-pdf-o"></i>
-          </a> --}} -->
-
-          <a class="btn btn-primary btn-lg" type="button" href="">
-            Descargar PDF &nbsp;<i class="fa fa-file-pdf-o"></i></a>
-        </div>
-        <div class="col-md-4">
-          <!-- {{-- <a class="btn btn-primary btn-lg" type="button" href="">
-          Descargar Rollo <i class="fa fa-print"></i>
-          </a> --}} -->
-          <a class="btn btn-primary btn-lg" type="button" href="">
-            Descargar Rollo &nbsp;<i class="fa fa-print"></i></a>
-
-          <!-- {{-- <a class="btn btn-primary btn-lg" type="button" href="">
-          Impresion Rollo <i class="fa fa-print"></i>&nbsp;
-          </a> --}} -->
-        </div>
-      </div>
-    </div>
-
-
-  </div><br><br><br><br><br><br>
-</section>
+      <br><br><br><br><br><br>
+    <!-- </div> -->
+  <!-- </section> -->
+</mat-dialog-content>

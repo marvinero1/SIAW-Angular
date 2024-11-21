@@ -49,6 +49,11 @@ export class ApiService {
   // private readonly API_URL = 'http://192.168.30.5/API_SIAW/api'; // CBBA
   // private readonly API_URL = 'http://192.168.80.5/API_SIAW/api'; // STCZ
 
+
+  // TIENDAS
+  // private readonly API_URL = 'http://192.168.33.99/API_SIAW/api'; // CBBA QUILLACOLLO
+
+
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,
     public periodoSistemaService: PeriodoSistemaService) {
@@ -227,7 +232,7 @@ export class ApiService {
           if (datav == true) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 1500);
+            }, 50);
           }
         },
         error: (err: any) => {
@@ -238,7 +243,7 @@ export class ApiService {
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 50);
         }
       })
   }
@@ -351,6 +356,9 @@ export class ApiService {
 
     // localStorage.removeItem("user_conn");
     sessionStorage.removeItem("user_conn");
+
+     // localStorage.removeItem("contrasenia");
+     sessionStorage.removeItem("contrasenia");
 
     this.eliminarToken();
     // localStorage.removeItem("token");

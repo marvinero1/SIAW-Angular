@@ -25,7 +25,6 @@ $my-app-theme: mat.define-light-theme((
 // Include all component themes
 @include mat.all-component-themes($my-app-theme);
 
-
 // The warn palette is optional (defaults to red).
 $adminlte-warn: mat.define-palette(mat.$red-palette);
 
@@ -52,7 +51,7 @@ $adminlte-theme: mat.define-light-theme((color: (primary: $adminlte-primary,
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap';
 
-@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+// @import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
 
@@ -96,10 +95,10 @@ input::placeholder {
   /* Firefox */
 }
 
-::-webkit-scrollbar {
-  width: 6.8px;
-  height: 6px;
-}
+// ::-webkit-scrollbar {
+//   width: 6.8px;
+//   height: 6px;
+// }
 
 //para colocarle background al scroll
 /* Track */
@@ -115,13 +114,30 @@ input::placeholder {
 // }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb{
-  background-color: #fbd800;
-   border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #093070; 
-}
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #093070 #fbd800;
+    scrollbar-width: thin;
+
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 15px;
+    
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #fbd800;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #093070;
+    border-radius: 10px;
+    border: 4px dotted #ffffff;
+  }
 //fin para colocarle background al scroll
 
 
@@ -307,7 +323,7 @@ body {
 }
 
 .mdc-text-field {
-  overflow: inherit !important;
+  //overflow: inherit !important;
 }
 
 .mat-mdc-paginator-container {
@@ -382,7 +398,7 @@ mat-icon-button1 .mat-icon-button1 .mat-mdc-icon-button .mat-mdc-icon-button.mat
 
 .mat-mdc-dialog-container .mdc-dialog__content {
   font-size: 0.7rem !important;
-  padding: 7px 10px 7px 10px !important;
+  padding: 0px 0px 0px 13px !important;
 }
 
 .mat-label,

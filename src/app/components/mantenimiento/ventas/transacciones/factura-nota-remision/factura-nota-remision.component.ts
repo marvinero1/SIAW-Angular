@@ -19,6 +19,11 @@ import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-
 import { FormaPagoService } from './modal-forma-pago/services-forma-pago/forma-pago.service';
 import { ModalFormaPagoComponent } from './modal-forma-pago/modal-forma-pago.component';
 import { FacturaTemplateComponent } from '../facturas/factura-template/factura-template.component';
+
+import * as QRCode from 'qrcode';
+import pdfMake from "pdfmake/build/pdfmake";
+import { VentanaValidacionesComponent } from '../../ventana-validaciones/ventana-validaciones.component';
+
 @Component({
   selector: 'app-factura-nota-remision',
   templateUrl: './factura-nota-remision.component.html',
@@ -122,6 +127,46 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
   valor_string_QR:string;
 
+  //PDF
+  //cabecera
+  codfactura_web:any;
+  codmoneda:any;
+  complemento_ci:any;
+  descuentos:any;
+  leyenda_ley:any;
+  nomcliente:any;
+  cuf:any;
+  id:any = "";
+  numeroid:any;
+  nrofactura:any;
+  fecha:any;
+  hora:string;
+
+  //segundaColumna
+  codptovta:any;
+  direccion:any;
+  fax:any;
+  lugarEmision:any;
+  sucursal:any;
+  telefono:any;
+  lugarFechaHora:any;
+
+  //FOOTER
+  qrCodeImage: string = ''; // Aquí guardaremos la imagen del QR generada
+
+  public data_impresion: any = [];
+  public data_cabecera_footer_proforma: any = [];
+  public data_detalle_proforma: any = [];
+  public data_detalle_etiqueta: any = [];
+
+  QR_value_string:string;
+  total_literal:string;
+  leyenda:string;
+  // FIN PDF
+
+  nombre_XML:any;
+  codigo_factura:any;
+
   public subtotal: number = 0.00;
   public recargos: number = 0;
   public des_extra: number = 0;
@@ -138,7 +183,9 @@ export class FacturaNotaRemisionComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-
+    if (this.agencia_logueado === 'Loc') {
+      this.agencia_logueado = '311'
+    }
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
@@ -173,7 +220,8 @@ export class FacturaNotaRemisionComponent implements OnInit {
         console.log(this.id_cuenta_forma_pago, this.cod_tipo_pago_forma_pago, 
           this.num_cuenta_formas_pago, this.banco_cheque_formas_pago)
 
-        this.grabarFactura();
+          // ACA VIENE DESPUES DE CERRAR EL MODAL
+          this.grabarFactura();
       });
     //
     this.fecha_actual_format = this.datePipe.transform(this.fecha_actual, 'dd-MM-yyyy');
@@ -185,8 +233,6 @@ export class FacturaNotaRemisionComponent implements OnInit {
     this.getAllmoneda();
     this.getNotaRemision();
     this.getCatalogoFacturas();
-
-    //this.openFormasDePago();
   }
 
   getHoraFechaServidorBckEnd() {
@@ -347,6 +393,18 @@ export class FacturaNotaRemisionComponent implements OnInit {
   }
   
   generarFacturaNRPOST(valProfDespachoFormP, valFechaRemiHoyFormP, valFactContadoFormP, valTipoCamFormP){
+    if (this.num_caja === undefined || this.num_caja === null) {
+      this.dialog.open(VentanaValidacionesComponent, {
+        width: 'auto',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          message: "GENERE CUFD, CON EL BOTON DE CAJA FACTURA",
+        }
+      });
+      return;
+    }
+
     let array_body = {
       idNR: this.id_proforma_numero_id,
       nroIdNR: this.numero_id_nota_remision === undefined ? 0: this.numero_id_nota_remision,
@@ -375,6 +433,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
           this.complemento_tipodocid_cliente = datav.facturas?.cabecera.complemento_ci;
           this.condicionIVA_cliente = datav.facturas?.condicion;
           this.codigo_nota_remision = datav.facturas?.cabecera.codigo;
+          this.cod_tipo_pago_forma_pago = datav.facturas?.cabecera.tipopago;
           
           // fecha del servidor no del lo q me trae
           this.fecha_cliente = datav.facturas?.cabecera.fecha;
@@ -385,13 +444,11 @@ export class FacturaNotaRemisionComponent implements OnInit {
           this.recargos_cabecera = datav.facturas?.cabecera.recargos;
           this.total_cabecera = datav.facturas?.cabecera.total;
 
-
           this.detalle_get = datav.facturas?.detalle;
           this.lista_get = datav.facturas?.lista;
 
           if(!datav.valido){
             await this.openConfirmacionDialog(datav.resp);
-
             // si codigo de servicio es igual a:
             // -1 tipo de cambio
             // 29 es notaremision con fecha pasada
@@ -414,13 +471,15 @@ export class FacturaNotaRemisionComponent implements OnInit {
                   });
       
                   validacionvalFechaRemiHoy.afterClosed().subscribe((result: Boolean) => {
-                    console.warn('PASO LA VALIDACION LOLA', result);
-                    this.valFechaRemiHoyForm = true;
-                    // this.valProfDespachoForm = false;
-                    // this.valFactContadoForm = false;
-                    // this.valTipoCamForm = false;                    
+                    if(result){
+                      console.warn('PASO LA VALIDACION LOLA', result);
+                      this.valFechaRemiHoyForm = true;
+                      // this.valProfDespachoForm = false;
+                      // this.valFactContadoForm = false;
+                      // this.valTipoCamForm = false;                    
                     
-                    this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                      this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    }
                   });
                 }
                 break;
@@ -438,15 +497,17 @@ export class FacturaNotaRemisionComponent implements OnInit {
                      dataCodigoPermiso: datav.objContra.servicio,
                     },
                   });
-      
+  
                   validacionvalTipoVenta.afterClosed().subscribe((result: Boolean) => {
-                    // console.warn('PASO LA VALIDACION LOLA', result);
-                    // this.valFechaRemiHoyForm = false;
-                    // this.valProfDespachoForm = false;
-                    this.valFactContadoForm = true;
-                    // this.valTipoCamForm = false;
+                    if(result){
+                      // console.warn('PASO LA VALIDACION LOLA', result);
+                      // this.valFechaRemiHoyForm = false;
+                      // this.valProfDespachoForm = false;
+                      this.valFactContadoForm = true;
+                      // this.valTipoCamForm = false;
                     
-                    this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                      this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    }
                   });
                 }
                 break;
@@ -466,13 +527,15 @@ export class FacturaNotaRemisionComponent implements OnInit {
                   });
       
                   validacionvalTipoCambio.afterClosed().subscribe((result: Boolean) => {
-                    // console.warn('PASO LA VALIDACION LOLA', result);
-                    // this.valFechaRemiHoyForm = false;
-                    // this.valProfDespachoForm = false;
-                    // this.valFactContadoForm = false;
-                    this.valTipoCamForm = true;
-                    
-                    this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    if(result){
+                      // console.warn('PASO LA VALIDACION LOLA', result);
+                      // this.valFechaRemiHoyForm = false;
+                      // this.valProfDespachoForm = false;
+                      // this.valFactContadoForm = false;
+                      this.valTipoCamForm = true;
+                      
+                      this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    }
                   });
                 }
                 break;
@@ -492,20 +555,21 @@ export class FacturaNotaRemisionComponent implements OnInit {
                   });
       
                   validacionvalDespacho.afterClosed().subscribe((result: Boolean) => {
-                    // console.warn('PASO LA VALIDACION LOLA', result);
-                    // this.valFechaRemiHoyForm = false;
-                    this.valProfDespachoForm = true;
-                    // this.valFactContadoForm = false;
-                    // this.valTipoCamForm = false;
-                    
-                    this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    if(result){
+                      // console.warn('PASO LA VALIDACION LOLA', result);
+                      // this.valFechaRemiHoyForm = false;
+                      this.valProfDespachoForm = true;
+                      // this.valFactContadoForm = false;
+                      // this.valTipoCamForm = false;
+                      
+                      this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
+                    }                  
                   });
                 }
                 break;
               default:
                 break;
-            }           
-
+            }
             setTimeout(() => {
               this.spinner.hide();
             }, 500);
@@ -518,6 +582,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
           this.detalle_respuesta = datav.facturas.detalle; // []
           this.lista_respuesta = datav.facturas.lista; // []
           }
+
           setTimeout(() => {
             // this.spinner.hide();
           }, 500);
@@ -532,13 +597,445 @@ export class FacturaNotaRemisionComponent implements OnInit {
             // this.spinner.hide();
           }, 500);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       });
   }
 
-  nombre_XML:any;
+  //SECCION DONDE SE OBTIENE PDF Y SE DIBUJA
+  async getDataFacturaParaArmar(cadena, codigo_factura:any){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
+    this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + codigo_factura + "/" + this.BD_storage)
+      .subscribe({
+        next: async (datav) => {
+         console.log("🚀 ~ FacturaNotaRemisionComponent ~ getDataFacturaParaArmar ~ datav:", datav)
+          this.valor_string_QR = datav.cadena_QR;
+          //armamos el PDF, se crea, descarga el archivo y se lo envia por email
+
+          if(datav){
+            try {
+              await this.openConfirmacionDialog(cadena);
+              await this.modalPDFFactura(datav);
+              
+              // ACA SE GENERA EL PDF CON SU ARCHIVO BLOB PARA QUE SE ENVIE POR CORREO ELECTRONICO
+              this.descargarPDF(datav);
+            } catch (error) {
+              console.error("Ocurrió un error:", error);
+              this.toastr.error("Hubo un problema en el proceso");
+            }
+          }else{
+            this.toastr.error("NO PASO LA DATA O NO LLEGO")
+          }
+        },
+
+        error: (err: any) => {
+          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      });
+  }
+
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+  
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+  
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+  
+        var dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+  
+      img.onerror = error => {
+        reject(error);
+      };
+  
+      img.src = url;
+    });
+  }
+
+  // Función para generar el código QR en base64
+  generateQRCodeBase64(data: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      QRCode.toDataURL(data, { errorCorrectionLevel: 'M', scale:5, width:85}, (err, url) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(url);  // 'url' contiene la imagen en base64
+        }
+      });
+    });
+  }
+
+  async descargarPDF(data_pdf){
+    console.log("🚀 ~ FacturaNotaRemisionComponent ~ descargarPDF ~ data:", data_pdf)
+    this.data_cabecera_footer_proforma = data_pdf.cabecera;
+    this.QR_value_string = data_pdf?.cadena_QR;
+    this.total_literal = data_pdf?.imp_totalliteral;
+    this.leyenda = data_pdf?.leyendaSIN;
+
+    this.id = data_pdf?.cabecera.id;
+    this.numeroid = data_pdf?.cabecera.numeroid;
+    this.codfactura_web = data_pdf?.cabecera.codfactura_web;
+    this.codmoneda = data_pdf?.cabecera.codmoneda;
+    this.complemento_ci = data_pdf?.cabecera.complemento_ci;
+    this.cuf = data_pdf?.cabecera.cuf;
+    this.nrofactura = data_pdf?.cabecera.nrofactura;
+    this.fecha =  this.datePipe.transform(data_pdf?.cabecera.fecha, "dd/MM/yyyy");
+    this.hora = data_pdf?.cabecera.horareg;
+
+    this.descuentos = data_pdf?.cabecera.descuentos;
+    this.subtotal = data_pdf?.cabecera.subtotal;
+    this.total = data_pdf?.cabecera.total;
+
+    //fecha
+    this.leyenda_ley = data_pdf?.cabecera.leyenda;
+    this.nit_cliente = data_pdf?.cabecera.nit;
+    this.nomcliente = data_pdf?.cabecera.nomcliente;
+
+    //segundaColumna
+    this.codptovta = data_pdf?.paramEmp.codptovta;
+    this.direccion = data_pdf?.paramEmp.direccion;
+    this.fax =  data_pdf?.paramEmp.fax;
+    this.lugarEmision = data_pdf?.paramEmp.lugarEmision;
+    this.sucursal = data_pdf?.paramEmp.sucursal;
+    this.telefono = data_pdf?.paramEmp.telefono;
+
+    this.lugarFechaHora = data_pdf?.paramEmp.lugarFechaHora
+    //data.dtveproforma1 DETALLE
+    this.data_detalle_proforma = data_pdf.detalle;
+
+    // Agregar el número de orden a los objetos de datos
+    data_pdf.detalle.forEach((element, index) => {
+      element.nroitem = index + 1;
+      element.orden = index + 1;
+    });
+
+    try {
+      const imageUrl = 'assets/img/logo.png'; // Ruta de tu imagen
+      const base64Image = await this.getBase64ImageFromURL(imageUrl);
+      // Asegúrate de que el QR ya está generado en qrCodeImage
+      const base64QR = await this.generateQRCodeBase64(this.QR_value_string);
+      const id = this.id;
+      const numeroid = this.numeroid;
+
+      const docDefinition = {
+        pageSize: 'LETTER',
+        pageMargins: [12, 128, 140, 24],
+        info: { title: "FACTURA NOTAS DE REMISION - PERTEC"},
+        header: {
+          columns: [
+            // Columna 1 (Imagen)
+            {
+              stack: [
+                { image: base64Image,  width: 76, height: 76, margin: [13, 12, 9, 5]},
+                { text: "Lugar y Fecha:", alignment: 'left', fontSize: 8, margin: [10, 2, 10, 0], bold: true, font: 'Tahoma' },
+                { text: "Nom/Razon Social: ", alignment: 'left', fontSize: 8, margin: [10, 0, 0, 0], bold: true, font: 'Tahoma' },
+              ],
+              margin: [12, 5, 0, 0], // Margen ajustado
+              width: 'auto', // Auto ajuste de tamaño
+            },
+            // Columna 2 (Texto)
+            {
+              stack: [
+                { text: "PERTEC S.R.L", alignment: 'center', fontSize: 9, bold: true, font: 'BookMan', margin:[0, 0, 4, 0]},
+                { text: "CASA MATRIZ", alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: "Gral. Achá N° 330", alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: "Tels: 4259660 - 4250800 - Fax: "+ this.fax, alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: "Cochabamba - Bolivia", alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: this.sucursal, alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: this.codptovta, alignment: 'center', fontSize: 6, bold: true, font: 'Arial' },
+                { text: this.direccion, alignment: 'center', fontSize: 6, font: 'Arial' },
+                { text: this.telefono, alignment: 'center', fontSize: 6, font: 'Arial' },
+                { text: this.lugarEmision, alignment: 'center', fontSize: 6, margin:[0, 0, 0, 8], font: 'Arial' },
+
+                { text: " " + this.lugarFechaHora, alignment: 'left', fontSize: 8, font: 'Tahoma' },
+                { text: " " + this.nomcliente, alignment: 'left', fontSize: 8, colSpan: 6, font: 'Tahoma' },
+              ],
+              margin: [0, 12, 12, 15], // Margen ajustado
+              width: 'auto', // Auto ajuste de tamaño
+            },
+            // Columna 3 (Texto)
+            {
+              stack: [{
+                text: "FACTURA",
+                alignment: 'center',
+                margin: [2, 40, 5, 0], // Ajuste de margen superior
+                fontSize: 11,
+                font: 'BookMan',
+                bold: true 
+              },
+              {
+                text: "CON DERECHO A CREDITO FISCAL",
+                alignment: 'center',
+                margin: [0, 0, 0, 0],
+                fontSize: 8,
+                font: 'BookMan',
+                bold: true 
+              },
+            ]
+            },
+            // Columna 4 (Texto)
+            {
+              stack: [
+                { text: [ { text: 'NIT: ', bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma'},  // 'NIT:' en negrita
+                          { text: '1023109029', bold: true, alignment: 'left', font: 'Tahoma' }  // Número sin negrita
+                        ], fontSize: 7, margin:[0, 12, 52, 0]},
+
+                { text: [{text:"Factura Nro: ", bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma'},
+                          {text:"00000"+ this.nrofactura, bold: true, alignment: 'left', font: 'Tahoma'}], fontSize: 7, 
+                          margin:[0, 0, 63, 0]},
+
+                { table: {
+                  widths: [65, 70], // Ajusta las columnas
+                  body: [
+                    [
+                      {
+                        text: "Cód. Autorización:",
+                        bold: true,
+                        alignment: 'right',
+                        fontSize: 7,
+                        font: 'Tahoma',
+                        margin: [0, 0, 0, 0]
+                      },
+                      {
+                        text: this.insertarSaltosDeLinea(this.cuf), 
+                        bold: true,
+                        alignment: 'left',
+                        characterSpacing: 0,
+                        fontSize: 7,
+                        font: 'Tahoma',
+                        margin: [0, 0, 0, 25]
+                      }
+                    ]
+                  ]
+                },
+                layout: 'noBorders', // Elimina los bordes si no los necesitas
+              },
+
+                { text: [{text:"Nit/Ci/Cex: ", bold: true, alignment: 'right'},
+                   { text:this.nit_cliente + this.complemento_ci, bold: false}], fontSize: 8, font: 'Tahoma',
+                    margin:[0, 0, 56, 0]},
+                { text: [{text:"Código Cliente: ", bold: true, alignment: 'right', font: 'Tahoma'}, 
+                  { text: this.nit_cliente, bold: false, font: 'Tahoma'}], fontSize: 8, margin:[0, 0, 48, 0]},
+              ],
+              margin: [10, 10, 10, 0], // Margen ajustado
+            },
+          ],
+          margin: [0, 4, 2, 0], // Margen del header
+        },
+  
+        content: [
+          // Línea encima de la cabecera
+          {
+            canvas: [{
+              type: 'line', x1: 12, y1: 0, x2: 575, y2: 0, lineWidth: 1 
+            }],
+            margin: [0, 0, 0, 0], // Espacio entre la línea superior y la tabla
+          },
+
+          // Tabla con cabecera y contenido
+          {
+            table: {
+              headerRows: 1,
+              widths: [18, 56, 140, 56, 48, 48, 48, 58, 64],
+              
+              body: [
+                  [
+                    { text: '#', style: 'tableHeader', alignment: 'left', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma'},
+                    { text: 'CODIGO PRODUCTO', style: 'tableHeader', alignment: 'center', fontSize: 8, bold: true, font: 'Tahoma' },
+                    { text: 'DESCRIPCION', colSpan: 2, style: 'tableHeader', alignment: 'center', fontSize: 8, noWrap: false, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
+                    {}, // Columna vacía para ajustar con el colSpan
+                    { text: 'UNIDAD DE MEDIDA', style: 'tableHeader', alignment: 'center', fontSize: 8, bold: true, font: 'Tahoma' },
+                    { text: 'CANTIDAD', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
+                    { text: 'PRECIO UNITARIO', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, font: 'Tahoma' },
+                    { text: 'DESCUENTO', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
+                    { text: 'SUBTOTAL'+ "("+this.codmoneda+")", style: 'tableHeader', alignment: 'right', fontSize: 8,  bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
+                  ],
+
+                  ...this.data_detalle_proforma.map(items => [
+                    { text: items.nroitem, alignment: 'left', fontSize: 8, font: 'Tahoma' },
+                    { text: items.coditem, alignment: 'center', fontSize: 8, font: 'Tahoma' },
+                    { text: this.cortarStringSiEsLargo(items.descripcion), alignment: 'left', fontSize: 8, font: 'Tahoma' },
+                    { text: items.medida, alignment: 'left', fontSize: 8, font: 'Tahoma' },
+                    { text: items.udm, alignment: 'center', fontSize: 8, font: 'Tahoma' },
+                    { text: this.formatNumberTotalSubTOTALES(items.cantidad), alignment: 'right', fontSize: 8, font: 'Tahoma' },
+                    { text: items.precioneto, alignment: 'right', fontSize: 8, font: 'Tahoma' },
+                    { text: items.preciodesc, alignment: 'right', fontSize: 8, font: 'Tahoma'},
+                    { text: this.formatNumberTotalSub(items.total), alignment: 'right', fontSize: 8, font: 'Tahoma' }
+                  ]),
+
+                  [{ text: '___________________________________________________________________________________', colSpan: 9, margin: [0, 0, 0, 0] }, {}, {}, {}, {}, {}, {}, {}, {}],
+
+                  [{ text: this.total_literal, characterSpacing: 0, margin: [10, 0, 0, 0], bold:true, fontSize: 8, colSpan: 6, font: 'Tahoma' },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
+                  { text: 'Sub Total'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: this.subtotal, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+
+                  [{ text: '________________________________________________________', margin: [0, 0, 0, 0], colSpan: 6, },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: 'Descuentos'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: this.descuentos, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+
+                  [{ text: '', characterSpacing: 0, margin: [10, 0, 0, 0], bold:true, colSpan: 6 },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },              
+                  { text: 'Total'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], 
+                    colSpan: 2, font: 'Tahoma'},
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
+                  { text: this.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+
+                  [{ text: [{text:"ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS, EL USO ILICITO DE ESTA SERA SANCIONADO PENALMENTE DE ACUERDO A LA LEY \n", 
+                    bold:true, fontSize:8, alignment: 'center', font: 'Tahoma' },
+                    { text: this.leyenda_ley + "\n", bold:false, fontSize:6, alignment: 'center', font: 'Tahoma' },
+                    {text: this.leyenda + "\n", bold:false, fontSize:6, alignment: 'center', font: 'Tahoma' },
+                    {text:"Esta factura se encuentra tambien disponible en el siguiente enlace", bold:false, fontSize:6, font: 'Tahoma' }], characterSpacing: 0, margin: [10, 0, 0, 0], colSpan: 5, alignment: 'center'},
+                  
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: 'Importe Base Credito Fiscal'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma'}, 
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
+                  { text: this.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+
+                  [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { image: base64QR, colSpan: 3, alignment: 'center', margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }],
+
+                  [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0], },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: 'Código WEB: ' + this.codfactura_web, alignment: 'center', fontSize:7, margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma' },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                    { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }],
+                ],
+            },
+            margin: [12, 0, 10, 0], // Ajusta el espacio alrededor de la tabla
+            layout: {
+              // 'headerLineOnly',
+              headerLineOnly: true,
+              hLineWidth: function (i, node) {
+                // Dibuja una línea solo debajo del encabezado
+                return (i === 1) ? 1 : 0;
+              },
+              vLineWidth: function (i, node) {
+                // Sin líneas verticales
+                return 0;
+              },
+              hLineColor: function (i, node) {
+                // Color de la línea horizontal
+                return (i === 1) ? 'black' : 'white';
+              },
+              paddingLeft: function(i, node) { return 1.5; },
+              paddingRight: function(i, node) { return 1.5; },
+              paddingTop: function(i, node) { return 2.5; },
+              paddingBottom: function(i, node) { return 1.5; }
+            },
+          },
+        //   [{ table: {
+        //     body: [
+        //       [
+        //         {
+        //           text: [
+        //             { text: "ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS, EL USO ILICITO DE ESTA SERA SANCIONADO PENALMENTE DE ACUERDO A LA LEY", bold: true, fontSize: 8 },
+        //             { text: "\nLey N 453 EL proveedor debera entrega el producto en las modalidades y terminos ofertados y terminos acordados o convenidos", bold: false, fontSize: 6 },
+        //             { text: "\nEste Documento es la representacion grafica de un documento en Fisico Digital emitido en la modalidad de facturacion en linea", bold: false, fontSize: 6 },
+        //             { text: "\nEsta factura se encuentra tambien disponible en el siguiente enlace", bold: false, fontSize: 6 }
+        //           ],
+        //           characterSpacing: 0,
+        //           margin: [10, 10, 0, 0],
+        //           colSpan: 5,
+        //           alignment: 'center'
+        //         },
+        //         {}, {}, {}, {}  // Celdas vacías para aplicar el colSpan
+        //       ],
+        //       [
+        //         {}, {}, {}, {}, // Más celdas vacías
+        //         {
+        //          image: base64QR,
+        //         }
+        //       ]
+        //     ]
+        //   }
+        // }]
+          // {
+          //   canvas: [{ 
+          //     type: 'line', x1: 12, y1: 0, x2: 585, y2: 0, lineWidth: 1 
+          //   }],
+          //   margin: [0, 0, 0, 0] // Espacio entre la línea superior y la tabla
+          // },          
+        ],
+
+        footer: function (currentPage, pageCount) {
+          return {
+            columns: [             
+              {
+                text: 'Pagina ' + currentPage + ' de ' + pageCount +" - "+ id + "-" + numeroid,
+                alignment: 'center',
+                margin: [4, 0, 10, 4],
+                fontSize: 7,
+                font: 'Arial',
+              }
+            ]
+          };
+        },
+
+        styles: {
+          header: {
+            fontSize: 15,
+          },
+          content: {
+            margin:[0, 0, 0, 0],
+          }
+        },
+        
+        defaultStyle: {
+          fontSize: 12,
+          font: 'Arial',
+        },
+      };
+  
+      const archivo_pdf = pdfMake.createPdf(docDefinition);
+
+      archivo_pdf.getBlob((pdfBlob: Blob) => {
+        this.enviarFacturaEmail(pdfBlob);  // Llamamos a la función con el Blob
+      });
+    } catch (error) {
+      console.error("Error al cargar la imagen: ", error);
+    }
+  }
+  //FIN SECCION DONDE SE OBTIENE PDF Y SE DIBUJA
+
   grabarFactura(){
     let array_post={
       idfactura: this.id_factura_catalogo,
@@ -567,37 +1064,34 @@ export class FacturaNotaRemisionComponent implements OnInit {
       dgvfacturas:this.lista_get,
     }
 
-
     console.warn("🚀 ~ FacturaNotaRemisionComponent ~ grabarFactura ~ array_post:", array_post);
     console.warn("🚀 ~ FacturaNotaRemisionComponent ~ grabarFactura ~ acodigoNotaRemision:", this.codigo_nota_remision);
-
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/grabarFacturasNR/";
     return this.api.create('/venta/transac/prgfacturarNR_cufd/grabarFacturasNR/' + this.userConn + "/" + this.codigo_nota_remision, array_post)
       .subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log("🚀 ~ FacturaNotaRemisionComponent ~ grabarFactura ~ datav:", datav);
           this.eventosLogs = datav.eventosLog;
           this.eventosLogs = this.eventosLogs.map(log => ({ label: log }));
+          this.nombre_XML = datav.nomArchivoXML;
+          this.codigo_factura = datav.codFactura;
+
           console.log("🚀 ~ FacturaNotaRemisionComponent ~ grabarFactura ~ this.eventosLogs:", this.eventosLogs)
           this.nombre_XML = datav.nomArchivoXML;
 
-          if(datav.msgAlertas){
+          if(datav.msgAlertas.length > 0){
             this.openConfirmacionDialog(datav.msgAlertas);
           }
-
-          if(datav.imprime){
-            this.modalDetalleObservaciones(datav.resp, datav.cadena + "  Codigo Factura: " +datav.codFactura);
-
-            // si sale imprimir = true, se consume las rutas getDataFactura, enviarFacturaEmail
-            this.getDataFacturaParaArmar(datav.codFactura);
-
-            // si sale imprimir = true, se consume las rutas getDataFactura, enviarFacturaEmail
-            this.enviarFacturaEmail(datav.codFactura, datav.nomArchivoXML);
-
+          
+          if (datav.imprime) {
+            // Espera a que termine de armar la factura
+            this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
+         
+            // Muestra la notificación de éxito
             this.toastr.success(datav.resp);
-            //this.toastr.success("FACTURA GRABADA CON EXITO ✅");
-          }else{
-            this.modalDetalleObservaciones(datav.resp, datav.cadena + "  Codigo Factura: " +datav.codFactura);
+          }
+          else{
+            this.openConfirmacionDialog(datav.resp + "\n" + datav.cadena + "  Codigo Factura: " +datav.codFactura);
           }
         },
 
@@ -605,79 +1099,64 @@ export class FacturaNotaRemisionComponent implements OnInit {
           //this.toastr.warning("OCURRIO ALGO AL GRABAR LA FACTURA");
           console.log(err, errorMessage);
         },
+
         complete: () => {
-          //window.location.reload();
+          // window.location.reload();
          }
       });
   }
 
-  getDataFacturaParaArmar(codigo_factura:any){
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
-    return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + codigo_factura + "/" + this.BD_storage)
-      .subscribe({
-        next: (datav) => {
-         console.log("🚀 ~ FacturaNotaRemisionComponent ~ getDataFacturaParaArmar ~ datav:", datav)
-          this.valor_string_QR = datav.cadena_QR;
-          this.modalPDFFactura(datav);
-        },
+  // Función para enviar el PDF
+  enviarFacturaEmail(pdfBlob: Blob) {
+    console.log("🚀 ~ FacturaNotaRemisionComponent ~ enviarFacturaEmail ~ pdfBlob:", pdfBlob);
 
-        error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+    // Crear FormData y agregar el archivo
+    const formData = new FormData();
+    formData.append('pdfFile', pdfBlob, `FACTURA-NOTA-REMISION-PERTEC.pdf`);
 
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      });
+    console.log(formData.get('pdfFile'));
+    console.log(formData);
+
+    let errorMessage = "Error al enviar la factura por email.";
+    
+    // Realizar la petición POST usando formData
+    this.api.create(
+      `/venta/transac/prgfacturarNR_cufd/enviarFacturaEmail/${this.userConn}/${this.BD_storage}/${this.usuarioLogueado}/${this.codigo_factura}/${this.nombre_XML}`,
+      formData
+    ).subscribe({
+      next: (datav) => {
+        console.warn("🚀 Se envió la data para el email:", datav);
+      },
+      error: (err) => {
+        this.toastr.warning("No se envió el email");
+        console.error(err, errorMessage);
+      },
+      complete: () => {
+        console.log("Envio completado");
+      }
+    });
   }
 
-
-  enviarFacturaEmail(codigo_factura:any, nombre_XML:any){
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
-    return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + codigo_factura + "/" + this.BD_storage)
-      .subscribe({
-        next: (datav) => {
-         console.log("🚀 ~ FacturaNotaRemisionComponent ~ getDataFacturaParaArmar ~ datav:", datav)
-         
-
-        },
-
-        error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
-
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      });
+  verificarConexionSIN(){
+    let errorMessage = "Error al enviar la factura por email.";
+    // Realizar la petición POST usando formData
+    this.api.getAll(`/venta/transac/prgfacturarNR_cufd/getVerifComunicacionSIN/${this.userConn}/${this.agencia_logueado}`
+    ).subscribe({
+      next: (datav) => {
+        console.warn("🚀 Verificacion con el SIN: ", datav);
+        if(datav.resp === "Verificacion conexion con el SIN exitosa"){
+          this.toastr.success("CONEXION EXITOSA CON EL SIN ");
+        }else{
+          this.toastr.error("NO HAY CONEXION CON EL SIN");
+        }
+      },
+      error: (err) => {
+        this.toastr.warning("OCURRIO UN PROBLEMA AL VERIFICAR");
+        console.error(err, errorMessage);
+      },
+      complete: () => {  }
+    });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -712,16 +1191,18 @@ export class FacturaNotaRemisionComponent implements OnInit {
   }
 
   openFormasDePago() {
+    console.warn(this.cod_tipo_pago_forma_pago);
     const dialogRef = this.dialog.open(ModalFormaPagoComponent, {
       width: '450px',
       height: 'auto',
       disableClose: true,
+      data:{ tipo_pago:this.cod_tipo_pago_forma_pago}
     });
 
     return firstValueFrom(dialogRef.afterClosed());
   }
 
-  modalDetalleObservaciones(obs, obsDetalle) {
+  async modalDetalleObservaciones(obs, obsDetalle): Promise<void> {
     this.dialog.open(ModalDetalleObserValidacionComponent, {
       width: '700px',
       height: 'auto',
@@ -761,15 +1242,47 @@ export class FacturaNotaRemisionComponent implements OnInit {
     });
   }
 
-  modalPDFFactura(data) {
-    this.dialog.open(FacturaTemplateComponent, {
+  async modalPDFFactura(data: any): Promise<any> {
+    const dialogRef = this.dialog.open(FacturaTemplateComponent, {
       width: 'auto',
       height: 'auto',
-      data:{
-        valor_PDF: data,
-      }
+      data: { valor_PDF: data },
     });
+  
+    // Espera hasta que el modal se cierre y devuelve el resultado
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+  
+  insertarSaltosDeLinea(texto: string, limite: number = 21): string {
+    let resultado = '';
+    for (let i = 0; i < texto.length; i += limite) {
+      resultado += texto.substring(i, i + limite);
+    }
+    // console.log(resultado);
+    return resultado.trim(); // Quita el salto de línea final si no lo deseas
+  }
+  
+  cortarStringSiEsLargo(texto: string): string {
+    if (texto.length >= 27) {
+      return texto.slice(0, 27);  // Corta a los primeros 28 caracteres
+    }
+    return texto;  // Retorna el texto original si tiene menos de 28 caracteres
   }
 
-  servicio
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+  }
+  
 }

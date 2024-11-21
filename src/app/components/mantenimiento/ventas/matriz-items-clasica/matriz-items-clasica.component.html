@@ -127,7 +127,7 @@
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text form-control-sm"
-              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Venta</u> </span>
+              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Venta</u></span>
           </div>
 
           <ng-container>
@@ -183,13 +183,26 @@
 
       <div class="col-md-6">
         <div class="row">
-          <ng-container *ngIf="permiso_para_vista === true">
+          <ng-container *ngIf="usuario_logueado !== 'opergps'; else oculto">
             <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
               <mat-label>Empaque</mat-label>
-              <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
-                #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
+              <input 
+                type="number" 
+                matInput 
+                id="focusEmpaque" 
+                maxlength="7" 
+                min="0" 
+                [(ngModel)]="cant_empaque"
+                #focusEmpaque 
+                (click)="focusInput()" 
+                (keydown)="handleKeyDown($event)">
             </mat-form-field>&nbsp;
           </ng-container>
+          
+          <ng-template #oculto>
+            <!-- Aquí puedes definir algún contenido alternativo si es necesario -->
+          </ng-template>
+          
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
@@ -267,14 +280,14 @@
       <div class="row">
         <div class="col-sm">
           <div class="input-group">
-            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;">Empaques</span>
+            <span class="input-group-text form-control-sm" style="font-size: 0.84rem !important;">Empaques</span>
             <ng-container *ngIf="!empaque_view">
               <div type="text" class="form-control form-control-sm inputsSaldos"> </div>
             </ng-container>
 
             <ng-container *ngIf="empaque_view">
               <div *ngFor="let empaquesItems of empaquesItem">
-                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;font-size: 0.82rem !important;">
+                <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;font-size: 0.82rem !important;background-color: black;color: rgb(230, 230, 0);">
                   ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad | number:'2.2-5' }}
                 </div>
               </div>
@@ -288,36 +301,22 @@
     <!-- Precio Item  -->
     <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
           <div class="input-group">
-            <span class="input-group-text form-control-sm" style="font-size: 0.82rem !important;">Precios</span>
+            <span class="input-group-text form-control-sm" style="font-size: 0.84rem !important;">Precios</span>
             <ng-container *ngIf="!empaque_view">
-              <div type="text" class="form-control form-control-sm inputsSaldos"style="font-size: 0.82rem !important;"> </div>
+              <div type="text" class="form-control form-control-sm inputsSaldos"style="font-size: 0.82rem !important;background-color: black;color: rgb(230, 230, 0);"> </div>
             </ng-container>
 
             <ng-container *ngIf="empaque_view">
-              <div type="text" class="form-control form-control-sm inputsSaldos" style="font-size: 0.82rem !important;">
+              <div type="text" class="form-control form-control-sm inputsSaldos" style="font-size: 0.82rem !important;background-color: black;color: rgb(230, 230, 0);">
                 {{precioItem.precios}}
               </div>
             </ng-container>
           </div>
         </div>
-
-        <!-- <div class="col-md">
-          <table>
-            <tbody>
-              <tr>
-                <td style="float: left;"> </td>
-                <td style="float: right;"><strong></strong></td>
-              </tr>
-              <tr>
-                <td style="float: left;"> </td>
-                <td style="float: right;"><strong></strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div> -->
-        <div class="col-md">
+        
+        <div class="col-md-3">
           <span style="font-size: 0.82rem !important;"><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
           <span style="font-size: 0.82rem !important;"><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
         </div>

@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormaPagoService } from './services-forma-pago/forma-pago.service';
@@ -33,22 +33,31 @@ export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
   agencia_logueado: any;
   BD_storage: any;
 
+  tipo_pago_nota_remision:any;
+
   constructor(public dialog: MatDialog, private api: ApiService, public dialogRef: MatDialogRef<ModalFormaPagoComponent>,
-    private toastr: ToastrService,private formaPagoService:FormaPagoService) {
+    private toastr: ToastrService,private formaPagoService:FormaPagoService,
+    @Inject(MAT_DIALOG_DATA) public tipo_pago: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+      
+
+
+    this.tipo_pago_nota_remision = tipo_pago.tipo_pago;
+    console.log("🚀 ~ ModalFormaPagoComponent ~ tipo_pago_nota_remision:", this.tipo_pago_nota_remision)
+  
   }
 
   ngOnInit() {
+    
     this.getCatalogoTipoPago();
     this.getCatalogoFncuentas();
 
-    //valor por defecto del array
-    
-    //this.getCatalogoBancosCheques();
+    // valor por defecto del array
+    // this.getCatalogoBancosCheques();
   }
 
   ngAfterViewInit(): void {
@@ -82,11 +91,13 @@ export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
 
   getValorDefaultArray() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/transac/prgfacturarNR_cufd/getDataDefectPedirTipoPago/";
-    return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataDefectPedirTipoPago/' + this.userConn +"/"+ this.BD_storage +"/"+ this.usuarioLogueado)
+
+    if(this.tipo_pago_nota_remision === 0){
+      return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataDefectPedirTipoPago/' + this.userConn +"/"+ this.BD_storage +"/"+ this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
           console.log(datav);
-          
+          let b;
           this.catalogo_cuentas_bancos = datav.codcuentab;
           this.selected_cuentas_bancos_cheques = datav.codbanco;
 
@@ -97,7 +108,7 @@ export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
           this.selectedfn_cuenta = this.catalogo_fn_cuentas.find(item => item.id === datav.idcuenta);
           this.numero_cheque = datav.nrocheque;
 
-          let b = {
+          b = {
             codbanco: this.selected_cuentas_bancos_cheques,
             codcuentab: this.catalogo_cuentas_bancos,
             codtipopago: this.selected_cotippago,
@@ -111,9 +122,16 @@ export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => {}
       })
+    }else{
+      this.selected_cuentas_bancos_cheques = "";
+      this.catalogo_cuentas_bancos = "";
+      this.selected_cotippago = "1";
+      this.selectedfn_cuenta ="";
+      this.numero_cheque="";
+    };     
+    
   }
 
   getCatalogoTipoPago() {

@@ -39,18 +39,63 @@
                             "node_modules/primeng/resources/primeng.min.css"
                         ],
                         "scripts": [],
-                        
                         "vendorChunk": true,
-                        "extractLicenses": false,
+                        "extractLicenses": true,
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true,
                         "allowedCommonJsDependencies": [
-                            "gatekeeper-client-sdk",
+                            "canvg",
+                            "rgbcolor",
+                            "qrcode",
+                            "handsontable",
+                            "dompurify",
+                            "moment",
+                            "html2canvas",
+                            "numbro",
+                            "file-saver",
                             "path",
                             "os",
-                            "fs"
+                            "fs",
+                            "raf",
+
+                            "pdfmake/build/pdfmake",
+                            "core-js/modules/esnext.set.union.v2",
+                            "core-js/modules/es.json.stringify",
+                            "esnext.set.is-superset-of.v2.js'",
+                            "core-js/modules/gatekeeper-client-sdk",
+                            "core-js/modules/esnext.set.is-disjoint-from.v2.js",
+                            "core-js/modules/esnext.set.is-subset-of.v2.js",
+                            "core-js/modules/esnext.set.difference.v2.js",
+                            "core-js/modules/esnext.set.union.v2.js",
+                            "core-js/modules/es.error.cause.js",
+                            "core-js/modules/web.immediate.js",
+                            "core-js/modules/es.array.push.js",
+                            "core-js/modules/es.string.replace-all.js",
+                            "core-js/modules/es.array.at.js",
+                            "core-js/modules/es.array.unscopables.flat.js",
+                            "core-js/modules/web.immediate.js",
+                            "core-js/modules/esnext.set.intersection.v2.js",
+                            "core-js/modules/esnext.set.is-superset-of.v2.js",
+                            "core-js/modules/esnext.set.symmetric-difference.v2.js",
+                            "core-js/modules/es.json.stringify.js",
+                            "core-js/modules/es.object.from-entries.js",
+                            "core-js/modules/es.array.unscopables.flat-map.js",
+                            "core-js/modules/es.array.index-of.js",
+                            "core-js/modules/es.array.iterator.js",
+                            "core-js/modules/es.array.reduce.js",
+                            "core-js/modules/es.promise.js",
+                            "core-js/modules/es.regexp.to-string.js",
+                            "core-js/modules/es.array.reverse.js",
+                            "core-js/modules/es.string.ends-with.js",
+                            "core-js/modules/es.string.includes.js",
+                            "core-js/modules/es.string.match.js",
+                            "core-js/modules/es.string.split.js",
+                            "core-js/modules/es.string.trim.js",
+                            "core-js/modules/web.dom-collections.iterator.js",
+                            "core-js/modules/es.string.replace.js",
+                            "core-js/modules/es.string.starts-with.js"
                         ]
                     },
                     "configurations": {
@@ -62,7 +107,6 @@
                                 }
                             ],
                             "optimization": true,
-                            "outputHashing": "all",
                             "aot": true,
                             "sourceMap": true,
                             "namedChunks": true,
@@ -98,7 +142,6 @@
                         "development": {
                             "buildTarget": "angularApp:build:development",
                             "proxyConfig": "src/proxy.conf.json"
-
                         }
                     }
                 },

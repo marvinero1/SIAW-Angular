@@ -531,6 +531,22 @@ export interface IDNotasRemision {
   tipo: string
 }
 
+
+export interface IDFacturas {
+  id: string,
+  descripcion: string,
+  nroactual: number,
+  tipodoc: number,
+  habilitado: boolean,
+  descarga: boolean,
+  horareg: string,
+  fechareg: string,
+  usuarioreg: string,
+  codunidad: string,
+  reversion: boolean,
+  tipo: string
+}
+
 export interface Rubro {
   codigo: string,
   descripcion: string,

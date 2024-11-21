@@ -55,24 +55,10 @@ export class FacturaTemplateComponent implements OnInit {
   lugarEmision:any;
   sucursal:any;
   telefono:any;
-
   lugarFechaHora:any;
-
-
-
-
-
-
-
 
   //FOOTER
   qrCodeImage: string = ''; // Aquí guardaremos la imagen del QR generada
-
-
-
-
-
-
 
 
   userConn: any;
@@ -80,20 +66,23 @@ export class FacturaTemplateComponent implements OnInit {
   usuarioLogueado: any;
   agencia_logueado: any;
 
-  constructor(private api: ApiService, private datePipe: DatePipe, @Inject(MAT_DIALOG_DATA) public valor_PDF: any) { 
+  constructor(private api: ApiService, private datePipe: DatePipe, public dialogRef: MatDialogRef<FacturaTemplateComponent>,
+    @Inject(MAT_DIALOG_DATA) public valor_PDF: any) { 
+      
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-
   
     this.data_impresion = valor_PDF.valor_PDF;
     console.log("🚀 ~ FacturaTemplateComponent ~ constructor ~ data_impresion:", this.data_impresion);
+
+    this.imprimirPDF(this.data_impresion);
   }
 
   ngOnInit() {
     // SOLO ACTIVAR CUANDO SE TESTEE PASANDO SUS DATOS PARA OBTENER LA DATA
-    //this.getDataPDF();
+    // this.getDataPDF();
   }
 
   getBase64ImageFromURL(url) {
@@ -182,7 +171,6 @@ export class FacturaTemplateComponent implements OnInit {
         }
       })
   }
-  
 
   // Uso de la función
   async generateQR(valor:string) {
@@ -210,7 +198,49 @@ export class FacturaTemplateComponent implements OnInit {
     });
   }
 
-  async imprimirPDF(data_detalle_proforma) {
+  async imprimirPDF(data) {
+    this.data_cabecera_footer_proforma = data.cabecera;
+    this.QR_value_string = data?.cadena_QR;
+    this.total_literal = data?.imp_totalliteral;
+    this.leyenda = data?.leyendaSIN;
+
+    this.id = data?.cabecera.id;
+    this.numeroid = data?.cabecera.numeroid;
+    this.codfactura_web = data?.cabecera.codfactura_web;
+    this.codmoneda = data?.cabecera.codmoneda;
+    this.complemento_ci = data?.cabecera.complemento_ci;
+    this.cuf = data?.cabecera.cuf;
+    this.nrofactura = data?.cabecera.nrofactura;
+    this.fecha =  this.datePipe.transform(data?.cabecera.fecha, "dd/MM/yyyy");
+    this.hora = data?.cabecera.horareg;
+
+    this.descuentos = data?.cabecera.descuentos;
+    this.subtotal = data?.cabecera.subtotal;
+    this.total = data?.cabecera.total;
+
+    //fecha
+    this.leyenda_ley = data?.cabecera.leyenda;
+    this.nit_cliente = data?.cabecera.nit;
+    this.nomcliente = data?.cabecera.nomcliente;
+
+    //segundaColumna
+    this.codptovta = data?.paramEmp.codptovta;
+    this.direccion = data?.paramEmp.direccion;
+    this.fax =  data?.paramEmp.fax;
+    this.lugarEmision = data?.paramEmp.lugarEmision;
+    this.sucursal = data?.paramEmp.sucursal;
+    this.telefono = data?.paramEmp.telefono;
+
+    this.lugarFechaHora = data?.paramEmp.lugarFechaHora
+    //data.dtveproforma1 DETALLE
+    this.data_detalle_proforma = data.detalle;
+
+    // Agregar el número de orden a los objetos de datos
+    data.detalle.forEach((element, index) => {
+      element.nroitem = index + 1;
+      element.orden = index + 1;
+    });
+
     try {
       const imageUrl = 'assets/img/logo.png'; // Ruta de tu imagen
       const base64Image = await this.getBase64ImageFromURL(imageUrl);
@@ -356,7 +386,7 @@ export class FacturaTemplateComponent implements OnInit {
                   { text: 'SUBTOTAL'+ "("+this.codmoneda+")", style: 'tableHeader', alignment: 'right', fontSize: 8,  bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
                 ],
 
-                ...data_detalle_proforma.map(items => [
+                ...data.detalle.map(items => [
                   { text: items.nroitem, alignment: 'left', fontSize: 8, font: 'Tahoma' },
                   { text: items.coditem, alignment: 'center', fontSize: 8, font: 'Tahoma' },
                   { text: this.cortarStringSiEsLargo(items.descripcion), alignment: 'left', fontSize: 8, font: 'Tahoma' },
@@ -376,7 +406,7 @@ export class FacturaTemplateComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                { text: 'Sub Total'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
+                { text: 'Sub Total'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: this.subtotal, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
 
@@ -386,7 +416,7 @@ export class FacturaTemplateComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Descuentos'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
+                { text: 'Descuentos'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: this.descuentos, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
 
@@ -396,7 +426,7 @@ export class FacturaTemplateComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },              
-                { text: 'Total'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], 
+                { text: 'Total'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], 
                   colSpan: 2, font: 'Tahoma'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
                 { text: this.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
@@ -411,7 +441,7 @@ export class FacturaTemplateComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Importe Base Credito Fiscal'+"("+this.codmoneda+"): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma'}, 
+                { text: 'Importe Base Credito Fiscal'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma'}, 
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
                 { text: this.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
@@ -528,8 +558,7 @@ export class FacturaTemplateComponent implements OnInit {
     } catch (error) {
       console.error("Error al cargar la imagen: ", error);
     }
-  }
-  
+  }  
 
   cortarStringSiEsLargo(texto: string): string {
     if (texto.length >= 27) {
@@ -559,8 +588,11 @@ export class FacturaTemplateComponent implements OnInit {
     for (let i = 0; i < texto.length; i += limite) {
       resultado += texto.substring(i, i + limite);
     }
-    console.log(resultado);
+    // console.log(resultado);
     return resultado.trim(); // Quita el salto de línea final si no lo deseas
   }
 
+  close(){
+    this.dialogRef.close();
+  }
 }

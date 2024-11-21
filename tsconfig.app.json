@@ -8,3 +8,16 @@
     "include": ["**/*.d.ts"],
     "exclude": ["node_modules"]
 }
+// {
+//     "compilerOptions": {
+//       "target": "ES2022",
+//       "useDefineForClassFields": false,
+//       "module": "esnext",
+//       "strict": true,
+//       "skipLibCheck": true,
+//       "noImplicitAny": false,  // ESTO COLOCAR A TRUE SI NO NO SALEN LOS ERRORES
+//       "strictNullChecks": false, // ESTO ES PARA Q NO SEA ESTRICTO CON LOS VALORES NULL
+//       "forceConsistentCasingInFileNames": true
+//     }
+//   }
+  

@@ -14,7 +14,7 @@
         <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Ver Factura Template</span>
       </button> -->
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="submit"
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="verificarConexionSIN();"
         style="float: right !important;">
         <span><i class="fa fa-cogs" aria-hidden="true" style="color: #ffc107;"></i>
            Verificar Estado Conexion SIN
@@ -173,7 +173,7 @@
           </div>
           <div class="col-md-2" style="text-align: right;">
             <button class="btn btn-outline-success form-control-sm right1" type="button" 
-            (click)="generarFacturaNRPOST(valProfDespachoForm, valFechaRemiHoyForm, valFactContadoForm, valTipoCamForm);"
+              (click)="generarFacturaNRPOST(valProfDespachoForm, valFechaRemiHoyForm, valFactContadoForm, valTipoCamForm);"
               style="border-color: #04b7048b;" matTooltip="Generar Factura" matTooltipClass="custom-tooltip"
               matTooltipPosition="above"><i class="fa fa-cog"></i> Generar Factura
             </button>
@@ -262,7 +262,7 @@
                         Sub-Total
                       </th>
                       <th pSortableColumn="descuentos" class="right1" style="width:3%;">
-                        <u>Descuentos</u>
+                        Descuentos
                       </th>
                       <th pSortableColumn="recargos" style="width:3%;" class="right1">
                         Recargos
@@ -384,16 +384,14 @@
     </mat-tab>
 
 
-
     <mat-tab label="LOG de Transacciones">
       <div style="background-color: black;color: yellow;">
         <span>RESULTADO DE ENVIO DE FACTURA</span>
       </div>
       <p-listbox [options]="eventosLogs" [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
-      </p-listbox>\
+      </p-listbox>
       <br><br>
     </mat-tab>
-
 
 
     <mat-tab label="Resultados de Facturación">
@@ -465,7 +463,6 @@
       </div>
       <br><br>
     </mat-tab>
-
 
 
     <!-- <mat-tab label="Generación Automatica"> </mat-tab>
