@@ -57,6 +57,7 @@ import { saveAs } from 'file-saver';
 import { FacturaTemplateComponent } from '../facturas/factura-template/factura-template.component';
 import { BuscadorAvanzadoAnticiposComponent } from '@components/uso-general/buscador-avanzado-anticipos/buscador-avanzado-anticipos.component';
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
+import { Router } from '@angular/router';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = fonts;
@@ -372,19 +373,21 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService,
     private saldoItemServices: SaldoItemMatrizService, private serviciMoneda: MonedaServicioService,
     private servicioPrecioVenta: ServicioprecioventaService,private servicioDesctEspecial: DescuentoService,
-    private servicioCliente: ServicioclienteService, private itemservice: ItemServiceService,
+    private servicioCliente: ServicioclienteService, private itemservice: ItemServiceService,private router:Router,
     private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, private _snackBar: MatSnackBar,
     public nombre_ventana_service: NombreVentanaService, public servicioCatalogoFacturas: CatalogoFacturasService,
     private toastr: ToastrService, private almacenservice: ServicioalmacenService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {    
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
     this.api.getRolUserParaVentana(this.nombre_ventana);
 
-    
     this.getAlmacenParamUsuario();
     this.getHoraFechaServidorBckEnd();
-    this.getParametrosIniciales();
+    //this.getParametrosIniciales();
 
     this.FormularioData = this.createForm();
     this.tipopago = 0;
@@ -946,7 +949,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         complete: () => { }
       })
   }
-
+  codigo_proforma_tranferencia:any;
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
     // this.id_tipo_view_get_codigo = this.id_tipo_view_get_codigo;
@@ -997,14 +1000,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.tipo_cambio_moneda_catalogo = proforma.cabecera.tdc;
     this.tipopago = proforma.cabecera.tipopago;
     this.transporte = proforma.cabecera.transporte;
-    this.documento_nro = proforma.cabecera.codigo;
+
+    this.codigo_proforma_tranferencia = proforma.cabecera.codigo;
 
     this.subtotal = proforma.cabecera.subtotal;
     this.recargos = proforma.cabecera.recargos;
     this.des_extra = proforma.cabecera.descuentos;
     this.iva = proforma.cabecera.iva;
     this.total = proforma.cabecera.total;
-
 
  
     this.array_de_descuentos_ya_agregados = proforma.descuentos;
@@ -1207,60 +1210,154 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   //FIN Exportar a EXCEL
 
   limpiar(){
-    this.codigo_secreto_vendedor = undefined;
-    this.nroticket = undefined;
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ ESTA SEGUR@ DE LIMPIAR LA FACTURA ?" },
+      disableClose: true,
+    });
 
-    this.codigo_cliente = "";
-    this.codigo_cliente_catalogo_real = "";
-    this.nombre_comercial_cliente = "";
-    this.nombre_factura = "";
-    this.razon_social = "";
-    this.complemento_ci = ""; 
-    this.nombre_comercial_razon_social = "";
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.codigo_secreto_vendedor = undefined;
+        this.nroticket = undefined;
     
-    this.nit_cliente = "facturasventas@pertec.com.bo";
-    this.email_cliente = "";
-    this.cliente_casual = false;
-    this.cliente_habilitado_get = "";
-    // this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial;
-
-    this.cod_vendedor_cliente = "";
-    this.moneda = "";
-    this.venta_cliente_oficina = false;
-    this.tipo_cliente = "";
-
-    this.direccion = "";
-    this.whatsapp_cliente = "0";
-    this.latitud_cliente = "";
-    this.longitud_cliente = "";
-    this.condicicion_cliente = "";
-    this.transporte = "";
-    this.fletepor= "";
-    this.direccion = "";
-
-    this.num_idd = "";
-    this.num_id = "";
-
-    this.peso = 0.00;
-    this.total = 0.00;
-    this.subtotal = 0.00;
-    this.des_extra = 0.00;
-    this.recargos = 0.00;
-
-    this.recargo_de_recargos = [];
-    this.array_de_descuentos_ya_agregados = [];
-    this.array_items_carrito_y_f4_catalogo = [];
-    this.validacion_post = [];
-    this.validacion_post_negativos = [];
-    this.validacion_post_max_ventas = [];
-
-    this.toastr.info("FACTURACION TIENDAS LIMPIO ");
+        this.codigo_cliente = "";
+        this.codigo_cliente_catalogo_real = "";
+        this.nombre_comercial_cliente = "";
+        this.nombre_factura = "";
+        this.razon_social = "";
+        this.complemento_ci = ""; 
+        this.nombre_comercial_razon_social = "";
+        
+        this.nit_cliente = "facturasventas@pertec.com.bo";
+        this.email_cliente = "";
+        this.cliente_casual = false;
+        this.cliente_habilitado_get = "";
+        this.transporte = "";
+        // this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial;
+    
+        this.cod_vendedor_cliente = "";
+        this.moneda = "";
+        this.venta_cliente_oficina = false;
+        this.tipo_cliente = "";
+    
+        this.direccion = "";
+        this.whatsapp_cliente = "0";
+        this.latitud_cliente = "";
+        this.longitud_cliente = "";
+        this.condicicion_cliente = "";
+        this.transporte = "";
+        this.fletepor= "";
+        this.direccion = "";
+    
+        this.num_idd = "";
+        this.num_id = "";
+    
+        this.peso = 0.00;
+        this.total = 0.00;
+        this.subtotal = 0.00;
+        this.des_extra = 0.00;
+        this.recargos = 0.00;
+    
+        this.recargo_de_recargos = [];
+        this.array_de_descuentos_ya_agregados = [];
+        this.array_items_carrito_y_f4_catalogo = [];
+        this.validacion_post = [];
+        this.validacion_post_negativos = [];
+        this.validacion_post_max_ventas = [];
+    
+        this.toastr.info("FACTURACION TIENDAS LIMPIO ");
+      }
+    });
   }
 
+  empaquesCerradosValidacion() {
+    this.spinner.show()
+    let mesagge: string;
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesCerradosVerifica/";
+    return this.api.create('/venta/transac/veproforma/empaquesCerradosVerifica/' + this.userConn + "/" + this.codigo_cliente, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
 
+          if (datav.cumple === true) {
+            mesagge = "CUMPLE";
+          } else {
+            mesagge = "NO CUMPLE";
+            // this.pinta_empaque_minimo = false;
+          }
 
+          this.modalDetalleObservaciones(datav.reg, mesagge);
+          this.toastr.success('EMPAQUES CERRADOS PROCESANDO ⚙️');
 
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.nroitem = index + 1;
+            element.orden = index + 1;
+          });
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      })
+  }
+
+  empaquesMinimosPrecioValidacion() {
+    let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
+    return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+
+          if (datav.cumple === true) {
+            mesagge = "CUMPLE";
+          } else {
+            mesagge = "NO CUMPLE";
+          }
+
+          this.modalDetalleObservaciones(datav.reg, mesagge);
+          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
+          
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            element.nroitem = index + 1;
+            element.orden = index + 1;
+          });
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      });
+  }
 
 
 
@@ -1305,7 +1402,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       //data de la primera fila
       nrocaja: [this.dataform.nrocaja, Validators.compose([Validators.required])],
       CUFD: this.dataform.CUFD,
-      nroautorizacion:this.dataform.cufd,
+      nroautorizacion: "0",
       codigo_control:this.dataform.codigo_control_get,
       dtpfecha_limite:this.dataform.dtpfecha_limite_get,
       nrolugar:this.dataform.nrolugar_get,
@@ -1356,7 +1453,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       idcuenta: this.cta_ingreso,
       idfc: this.dataform.idfc === undefined ? "":this.dataform.idfc,
       nroidfc: this.dataform.numeroidfc === undefined ? "":this.dataform.numeroidfc,
-      fechalimite: this.dataform.fecha_limite,
+      fechalimite: this.datePipe.transform(this.dataform.fechalimite, "yyyy-MM-dd"),   
      
       tdc: [this.dataform.tdc],
       anulada: [false],
@@ -1416,84 +1513,28 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       idanticipo:this.dataform.idanticipo === undefined ? "" : this.dataform.idanticipo,
       numeroidanticipo: this.dataform.numeroidanticipo === undefined ? "" : this.dataform.numeroidanticipo,
       monto_anticipo: this.dataform.monto_anticipo === undefined ? "" : this.dataform.monto_anticipo,
+
+
+      // solicitudUrgente
+      idpf_solurgente: this.dataform.idpf_solurgente === undefined ? "0" : this.dataform.idpf_solurgente,
+      noridpf_solurgente: this. dataform.noridpf_solurgente === undefined ? "0" : this.dataform.noridpf_solurgente,
+
     });
   }
 
   // BTN grabar
   async submitData() {
     let total_proforma_concat: any = [];
-    //this.totabilizar();
-    this.validar();
-
-    if (this.nrocaja === undefined) {
-      this.toastr.error("LA CAJA NO PUEDE SER 0");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 500);
-      return;
-    };
-
-    if(this.codigo_vendedor === undefined){
-      this.toastr.error("FALTA CODIGO VENDEDOR");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 500);
-      return;
-    };
-
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
+
     if (this.validacion_post && this.validacion_post_negativos) {
       let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
       let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
-      let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
-      let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
+      // let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
+      // let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
 
-      // console.log("NEGATIVOS,", array_negativos_aun_existe_tamanio, "tamanio:", array_negativos_aun_existe_tamanio.length);
-      // console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
-      // Aquí puedes continuar con tu lógica...
-      // console.log(array_validacion_existe_aun_no_validos);
-      // console.log(array_negativos_aun_existe);
-
-      try {
-        if (array_validacion_existe_aun_no_validos_tamanio > 0) {
-          const result = await this.openConfirmacionDialog(`La Proforma ${this.id_factura}-${this.documento_nro} tiene validaciones las cuales tienen que ser revisadas.`);
-          if (!result) {
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 500);
-            return;
-          }
-        }
-
-        if (array_negativos_aun_existe_tamanio > 0) {
-          const result = await this.openConfirmacionDialog(`La Proforma ${this.id_factura}-${this.documento_nro} genera saldos negativos.`);
-          if (!result) {
-            setTimeout(() => {
-              this.spinner.hide();
-            }, 500);
-            return;
-          }
-        }
-      } catch (error) {
-        console.error('Error al realizar las validaciones:', error);
-      }
     } else {
       console.error('validacion_post o validacion_post_negativos están vacios o todo correcto');
-    }
-
-    // if (!this.FormularioData.valid) {
-    //   this.toastr.info("VALIDACION ACTIVA 🚨");
-    //   console.warn("HAY QUE VALIDAR DATOS");
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 50);
-    // }
-
-    if (this.validacion_post.length === 0) {
-      this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 50);
     }
 
     if (this.total === 0.00) {
@@ -1561,25 +1602,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       idanticipo:this.id_catalogo_anticipos === undefined ? "" : this.id_catalogo_anticipos,
       numeroidanticipo: this.num_id_anticipo_get_buscador === undefined ? 0 : this.num_id_anticipo_get_buscador,
       monto_anticipo: this.monto_anticipo === undefined ? 0 : this.monto_anticipo,
-    }));
 
-    // data = {
-    //   ...data,
-    //   codcliente_real: this.codigo_cliente,
-    //   numeroid: this.documento_nro,
-    //   // codcliente_real: this.codigo_cliente_catalogo_real,
-    //   descuentos: this.des_extra,
-    //   // idpf_complemento: this.idpf_complemento_view === undefined ? " " : this.idpf_complemento_view, // complemento de complementar proforma
-    //   // nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de complementar proforma
-    //   // tipo_complementopf: this.tipo_complementopf_input === undefined ? 3 : this.tipo_complementopf_input,
-    //   // tipo_complementopf: this.tipo_complementopf_input,
-    //   idsoldesctos: "0",
-    //   // pago_contado_anticipado: this.pago_contado_anticipado
-    //   idcuenta: this.cta_ingreso,
-    //   idfc: this.dataform.idfc,
-    //   nroidfc: this.dataform.numeroidfc,
-    //   fecha_limite: this.dtpfecha_limite_get,
-    // }
+      codproforma: this.codigo_proforma_tranferencia === undefined ? 0:this.codigo_proforma_tranferencia,
+    }));
 
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
       ...element,
@@ -1611,8 +1636,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       complemento_ci: this.complemento_ci,
       factnomb: this.razon_social,
-      ids_proforma: "",
-      nro_id_proforma: 0,
+
+      ids_proforma: this.num_idd === undefined ? "":this.num_idd,
+      nro_id_proforma: this.num_id === undefined ? 0:this.num_id,
       
       cabecera: data[0],
       detalle:this.array_items_carrito_y_f4_catalogo,
@@ -1649,7 +1675,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         if(datav.imprime === true){
           // Mandar a Imprimir
-          //this.mandarAImprimir(datav.codFactura);
+          // this.mandarAImprimir(datav.codFactura);
 
           // Mandar Correo
           this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
@@ -1673,7 +1699,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       },
 
       complete: () => {
-        this.abrirTabPorLabel("Observaciones");
+        //this.abrirTabPorLabel("Observaciones");
+        this.toastr.success("! PROFORMA GRABADA CON EXITO !")
       }
     });
   }
@@ -1697,6 +1724,428 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       },
 
       complete: () => {}
+    });
+  }
+
+  async validar() {
+    this.totabilizar();
+
+    if (this.nrocaja === undefined) {
+      this.toastr.error("LA CAJA NO PUEDE SER 0");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    };
+
+    if (this.total === 0) {
+      //this.toastr.error("LA CAJA NO PUEDE SER 0");
+      this.totabilizar();
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    };
+
+    if(this.codigo_vendedor === undefined){
+      this.toastr.error("FALTA CODIGO VENDEDOR");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    }
+
+    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
+    // VACIO - TODOS LOS CONTROLES
+    let valor_formulario = [this.FormularioData.value];
+    valor_formulario.map((element: any) => {
+      if (this.tipopago === 1) {
+        element.contra_entrega = false;
+        element.estado_contra_entrega = "";
+      }
+
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: this.razon_social?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente?.toString() || '',
+        nomcliente_real: this.razon_social?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        nrocaja:this.nrocaja?.toString(),
+        fecha_actual:this.fecha_actual,
+        nroticket:this.nroticket,
+
+        desclinea_segun_solicitud: false,
+        pago_con_anticipo: false,
+        vta_cliente_en_oficina: false,
+
+        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
+        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+
+        // footer
+        nombre_transporte: "",
+        transporte: element.transporte === undefined ? "" : element.transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: "",
+        direccion: element.direccion,
+        latitud: "",
+        longitud: "",
+        ubicacion: "",
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        // fon footer
+
+        // datos del complemento mayotista - dimediado
+        idpf_complemento: element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
+        // fin datos del complemento mayotista - dimediado
+        
+        tipo_complemento: '0',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        tipo_cliente: this.tipo_cliente,
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+        nroidsol_nivel: "0",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "0",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+
+        // solicitudesUrgentes
+        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
+
+        fechalimite_dosificacion: this.datePipe.transform(this.dtpfecha_limite_get, "yyyy-MM-dd"),       
+        niveles_descuento: "",
+        preparacion: "",
+
+        tipo_caja: this.tipo_get,
+        nroautorizacion: "",
+        idsol_nivel: "",
+        version_codcontrol: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+  
+        codempresa: this.BD_storage,
+        codtipopago: this.tipopago,
+      }
+    });
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
+      ...element,
+      codcobranza_contado: element.codcobranza_contado === null ? 0 : element.codcobranza_contado,
+      codcobranza: element.codcobranza === null ? 0 : element.codcobranza,
+      codanticipo: element.codanticipo === null ? 0 : element.codanticipo,
+      descripcion: element.descrip,
+    }));
+
+    // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: this.recargo_de_recargos,
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
+    };
+    console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ validar ~ proforma_validar:", proforma_validar)
+
+    this.submitted = true;
+    this.spinner.show();
+    this.toastr.info("VALIDACION EN CURSO ⚙️");
+
+    const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (datav) => {
+        this.validacion_post = datav;
+        console.log("INFO VALIDACIONES:", datav);
+        let validaciones_valido_NO;
+        let validaciones_negativos;
+        let validacion_max_venta_sobrepasan;
+
+        this.abrirTabPorLabel("Resultado de Validacion");
+        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+
+        this.toggleValidacionesAll = true;
+        this.toggleValidos = false;
+        this.toggleNoValidos = false;
+
+        datav.forEach(element => {
+          if(element.Codigo === 60){
+            this.validacion_post_negativos = element.Dtnegativos;
+            this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          }
+
+          if(element.Codigo === 58){
+            this.validacion_post_max_ventas = element.Dtnocumplen;
+            this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+          }
+        });
+
+        this.toastr.info("VALIDACION EXITOSA ✅");
+
+        validaciones_valido_NO = this.validacion_post.filter((element) => {
+          return element.Valido === "NO";
+        });
+
+        validaciones_negativos = this.validacion_post_negativos.filter((element) => {
+          return element.obs === "Genera Negativo";
+        });
+
+        validacion_max_venta_sobrepasan = this.validacion_post_max_ventas.filter((element) => {
+          return element.obs != "Cumple";
+        });
+
+
+        console.warn("Validaciones NO VALIDAS",validaciones_valido_NO.length, "Validaciones Negativas", validaciones_negativos.length, "Validaciones Maximas:", validacion_max_venta_sobrepasan.length)
+        
+        if(validaciones_valido_NO.length === 0 ){
+          if(validaciones_negativos.length === 0 ){
+            // if(validacion_max_venta_sobrepasan.length === 0){
+              this.submitData();
+            // }else{
+              // this.toastr.warning("GENERA MAXIMOS DE VENTAS FAVOR REVISAR");
+            // }
+          }else{
+            this.toastr.warning("GENERA NEGATIVOS FAVOR REVISAR");
+          }
+        }else{
+          this.toastr.warning("AUN HAY VALIDACIONES QUE REVISAR");
+        }
+
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+
+      complete: () => {
+        this.abrirTabPorLabel("Resultado de Validacion");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      }
+    });
+  }
+
+  soloValidar(){
+    this.totabilizar();
+
+    if (this.nrocaja === undefined) {
+      this.toastr.error("LA CAJA NO PUEDE SER 0");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    };
+
+    if (this.total === 0) {
+      //this.toastr.error("LA CAJA NO PUEDE SER 0");
+      this.totabilizar();
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    };
+
+    if(this.codigo_vendedor === undefined){
+      this.toastr.error("FALTA CODIGO VENDEDOR");
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 500);
+      return;
+    }
+
+    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
+    // VACIO - TODOS LOS CONTROLES
+    let valor_formulario = [this.FormularioData.value];
+    valor_formulario.map((element: any) => {
+      if (this.tipopago === 1) {
+        element.contra_entrega = false;
+        element.estado_contra_entrega = "";
+      }
+
+      this.valor_formulario_copied_map_all = {
+        coddocumento: 0,
+        id: element.id.toString() || '',
+        numeroid: element.numeroid?.toString() || '',
+        codcliente: element.codcliente?.toString() || '',
+        nombcliente: this.razon_social?.toString() || '',
+        nitfactura: element.nit?.toString() || '',
+        tipo_doc_id: element.tipo_docid?.toString() || '',
+        codcliente_real: element.codcliente?.toString() || '',
+        nomcliente_real: this.razon_social?.toString() || '',
+        codmoneda: element.codmoneda?.toString() || '',
+        codalmacen: element.codalmacen?.toString() || '',
+        codvendedor: element.codvendedor?.toString() || '',
+        preciovta: element.preciovta?.toString() || '',
+        noridanticipo: element.numeroidanticipo?.toString() || '',
+        nrocaja:this.nrocaja?.toString(),
+        fecha_actual:this.fecha_actual,
+        nroticket:this.nroticket,
+
+        desclinea_segun_solicitud: false,
+        pago_con_anticipo: false,
+        vta_cliente_en_oficina: false,
+
+        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
+        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+
+        // footer
+        nombre_transporte: "",
+        transporte: element.transporte === undefined ? "" : element.transporte,
+        fletepor: element.fletepor === undefined ? "" : element.fletepor,
+        tipoentrega: "",
+        direccion: element.direccion,
+        latitud: "",
+        longitud: "",
+        ubicacion: "",
+        nroitems: this.array_items_carrito_y_f4_catalogo.length,
+        // fon footer
+
+        // datos del complemento mayotista - dimediado
+        idpf_complemento: element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
+        // fin datos del complemento mayotista - dimediado
+        
+        tipo_complemento: '0',
+        fechadoc: element.fecha,
+        idanticipo: element.idanticipo,
+        monto_anticipo: element.monto_anticipo,
+        nrofactura: "0",
+        tipo_cliente: this.tipo_cliente,
+        subtotaldoc: element.subtotal,
+        totaldoc: element.total,
+        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+        nroidsol_nivel: "0",
+        estado_doc_vta: "NUEVO",
+        codtarifadefecto: "0",
+        desctoespecial: "0",
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        totrecargos: 0,
+
+        // solicitudesUrgentes
+        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
+
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),       
+        niveles_descuento: "",
+        preparacion: "",
+
+        tipo_caja: this.tipo_get,
+        nroautorizacion: "",
+        idsol_nivel: "",
+        version_codcontrol: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+  
+        codempresa: this.BD_storage,
+        codtipopago: this.tipopago,
+      }
+    });
+
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
+      ...element,
+      codcobranza_contado: element.codcobranza_contado === null ? 0 : element.codcobranza_contado,
+      codcobranza: element.codcobranza === null ? 0 : element.codcobranza,
+      codanticipo: element.codanticipo === null ? 0 : element.codanticipo,
+      descripcion: element.descrip,
+    }));
+
+    // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
+    let proforma_validar = {
+      datosDocVta: this.valor_formulario_copied_map_all,
+      detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: this.recargo_de_recargos,
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
+    };
+    console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ validar ~ proforma_validar:", proforma_validar)
+
+    this.submitted = true;
+    this.spinner.show();
+    this.toastr.info("VALIDACION EN CURSO ⚙️");
+
+    const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (datav) => {
+        this.validacion_post = datav;
+        console.log("INFO VALIDACIONES:", datav);
+        let validaciones_valido_NO;
+        let validaciones_negativos;
+        let validacion_max_venta_sobrepasan;
+
+        this.abrirTabPorLabel("Resultado de Validacion");
+        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
+
+        this.toggleValidacionesAll = true;
+        this.toggleValidos = false;
+        this.toggleNoValidos = false;
+
+        datav.forEach(element => {
+          if(element.Codigo === 60){
+            this.validacion_post_negativos = element.Dtnegativos;
+            this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          }
+
+          if(element.Codigo === 58){
+            this.validacion_post_max_ventas = element.Dtnocumplen;
+            this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+          }
+        });
+
+        this.toastr.info("VALIDACION EXITOSA ✅");
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+
+      complete: () => {
+        this.abrirTabPorLabel("Resultado de Validacion");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      }
     });
   }
 
@@ -2375,9 +2824,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   // fin eventos de seleccion en la tabla
 
   itemDataAll(codigo) {
-    // this.getSaldoEmpaquePesoAlmacenLocal(codigo);
+    this.getSaldoEmpaquePesoAlmacenLocal(codigo);
     this.getEmpaqueItem(codigo);
-    //this.getSaldoItemSeleccionadoDetalle(codigo);
+    this.getSaldoItemSeleccionadoDetalle(codigo);
     this.getAlmacenesSaldos();
     this.getSaldoItem(codigo);
     this.getPorcentajeVentaItem(codigo);
@@ -2395,22 +2844,22 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.recargos = 0.00;
   }
 
-  // getSaldoEmpaquePesoAlmacenLocal(item) {
-  //   console.log(this.agencia_logueado);
-  //   let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/pesoEmpaqueSaldo/";
-  //   return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage)
-  //     .subscribe({
-  //       next: (datav) => {
-  //         this.data_almacen_local = datav;
-  //         console.log(this.data_almacen_local);
-  //       },
+  getSaldoEmpaquePesoAlmacenLocal(item) {
+    console.log(this.agencia_logueado);
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/pesoEmpaqueSaldo/";
+    return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+          this.data_almacen_local = datav;
+          console.log(this.data_almacen_local);
+        },
 
-  //       error: (err: any) => {
-  //         console.log(err, errorMessage);
-  //       },
-  //       complete: () => { }
-  //     })
-  // }
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   getEmpaqueItem(item){
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
@@ -2650,42 +3099,28 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       })
   }
 
-  async validar() {
-    if (this.nrocaja === undefined) {
-      this.toastr.error("LA CAJA NO PUEDE SER 0");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 500);
-      return;
-    };
+  validarProformaSoloMaximoVenta() {
+    // console.clear();
+    // 00058 - VALIDAR MAXIMO DE VENTA
 
-    if (this.total === 0) {
-      //this.toastr.error("LA CAJA NO PUEDE SER 0");
-      this.totabilizar();
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 500);
-      return;
-    };
+    // if (!this.FormularioData.valid) {
+    //   this.toastr.error("¡ REVISE FORMULARIO 🚨!");
+    //   setTimeout(() => {
+    //     this.spinner.hide();
+    //   }, 500);
+    //   return;
+    // };
 
-    if(this.codigo_vendedor === undefined){
-      this.toastr.error("FALTA CODIGO VENDEDOR");
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 500);
-      return;
-    }
+    let validacion_post_max_ventas = [this.FormularioData.value];
 
-    // ACA TRAE TODAS LAS VALIDACIONES QUE SE REALIZAN EN EL BACKEND
-    // VACIO - TODOS LOS CONTROLES
-    let valor_formulario = [this.FormularioData.value];
-    valor_formulario.map((element: any) => {
+    validacion_post_max_ventas.map((element: any) => {
       if (this.tipopago === 1) {
         element.contra_entrega = false;
         element.estado_contra_entrega = "";
       }
 
-      this.valor_formulario_copied_map_all = {
+      return validacion_post_max_ventas = {
+        ...element,
         coddocumento: 0,
         id: element.id.toString() || '',
         numeroid: element.numeroid?.toString() || '',
@@ -2700,7 +3135,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja.toString(),
+        nrocaja:this.nrocaja?.toString(),
         fecha_actual:this.fecha_actual,
         nroticket:this.nroticket,
 
@@ -2744,10 +3179,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
+
+        // solicitudesUrgentes
+        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
+
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),       
         niveles_descuento: "",
         preparacion: "",
 
@@ -2760,188 +3197,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
-      }
-    });
-
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
-      ...element,
-      codcobranza_contado: element.codcobranza_contado === null ? 0 : element.codcobranza_contado,
-      codcobranza: element.codcobranza === null ? 0 : element.codcobranza,
-      codanticipo: element.codanticipo === null ? 0 : element.codanticipo,
-      descripcion: element.descrip,
-    }));
-
-    // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-    let proforma_validar = {
-      datosDocVta: this.valor_formulario_copied_map_all,
-      detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
-      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
-      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
-      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-      detalleRecargos: this.recargo_de_recargos,
-      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [],
-    };
-    console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ validar ~ proforma_validar:", proforma_validar)
-
-    this.submitted = true;
-    this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
-
-    const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-    this.api.create(url, proforma_validar).pipe(takeUntil(this.unsubscribe$)).subscribe({
-      next: (datav) => {
-        this.validacion_post = datav;
-        console.log("INFO VALIDACIONES:", datav);
-
-        this.abrirTabPorLabel("Resultado de Validacion");
-        this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
-
-        this.toggleValidacionesAll = true;
-        this.toggleValidos = false;
-        this.toggleNoValidos = false;
-
-        datav.forEach(element => {
-          if(element.Codigo === 60){
-            this.validacion_post_negativos = element.Dtnegativos;
-            this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-          }
-
-          if(element.Codigo === 58){
-            this.validacion_post_max_ventas = element.Dtnocumplen;
-            this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
-          }
-        });
-
-        this.toastr.info("VALIDACION EXITOSA ✅");
-
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 500);
-      },
-
-      error: (err) => {
-        console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 500);
-      },
-
-      complete: () => {
-        this.abrirTabPorLabel("Resultado de Validacion");
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 500);
-      }
-    });
-  }
-
-  validarProformaSoloMaximoVenta() {
-    // console.clear();
-    // 00058 - VALIDAR MAXIMO DE VENTA
-
-    // if (!this.FormularioData.valid) {
-    //   this.toastr.error("¡ REVISE FORMULARIO 🚨!");
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 500);
-    //   return;
-    // };
-
-    let validacion_post_max_ventas = [this.FormularioData.value];
-
-    validacion_post_max_ventas.map((element: any) => {
-      if (this.tipopago === 1) {
-        element.contra_entrega = false;
-        element.estado_contra_entrega = "";
-      }
-
-      return validacion_post_max_ventas = {
-        ...element,
-        coddocumento: 0,
-        id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString() || '',
-        codcliente: element.codcliente?.toString() || '',
-        nombcliente: this.razon_social?.toString() || '',
-        nitfactura: element.nit?.toString() || '',
-        tipo_doc_id: element.tipo_docid?.toString() || '',
-        codcliente_real: element.codcliente?.toString() || '',
-        nomcliente_real: this.razon_social?.toString() || '',
-        codmoneda: element.codmoneda?.toString() || '',
-        codalmacen: element.codalmacen?.toString() || '',
-        codvendedor: element.codvendedor?.toString() || '',
-        preciovta: element.preciovta?.toString() || '',
-        noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja.toString(),
-
-        desclinea_segun_solicitud: false,
-        pago_con_anticipo: false,
-        vta_cliente_en_oficina: false,
-
-        contra_entrega: element.contra_entrega === true ? "SI" : "NO",
-        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
-
-        // footer
-        nombre_transporte: "",
-        transporte: element.transporte,
-        fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: "",
-        direccion: element.direccion,
-        latitud: "",
-        longitud: "",
-        ubicacion: "",
-        nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        // fon footer
-
-        // datos del complemento mayotista - dimediado
-        idpf_complemento: element.idpf_complemento,
-        nroidpf_complemento: element.nroidpf_complemento?.toString(),
-        // fin datos del complemento mayotista - dimediado
-        
-        
-        tipo_complemento: '0',
-        fechadoc: element.fecha,
-        idanticipo: element.idanticipo,
-        monto_anticipo: 0,
-        nrofactura: "0",
-        tipo_cliente: this.tipo_cliente,
-        subtotaldoc: element.subtotal,
-        totaldoc: element.total,
-        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
-        nroidsol_nivel: "0",
-        estado_doc_vta: "NUEVO",
-        codtarifadefecto: "0",
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
-        
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
-        niveles_descuento: "",
-        preparacion: "",
-        
-        
-        nroticket: this.nroticket,
-        tipo_caja: this.tipo_get,
-        nroautorizacion: "",
-        idsol_nivel: "",
-        version_codcontrol: "",
-        idFC_complementaria: "",
-        nroidFC_complementaria: "",
-  
-        codempresa: this.BD_storage,
-        codtipopago: this.tipopago,
-
-
-        // codtarifadefecto: this.codTarifa_get?.toString(),
-        // idpf_complemento: this.idpf_complemento_view,
-        // nroidpf_complemento: this.input_complemento_view?.toString(),
-        // tipo_complementopf: this.tipo_complementopf_input,
       }
     });
 
@@ -3019,7 +3274,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       }
 
       return valor_formulario_negativos = {
-        ...element,
         coddocumento: 0,
         id: element.id.toString() || '',
         numeroid: element.numeroid?.toString() || '',
@@ -3034,8 +3288,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja.toString(),
-        
+        nrocaja:this.nrocaja?.toString(),
+        fecha_actual:this.fecha_actual,
+        nroticket:this.nroticket,
+
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
         vta_cliente_en_oficina: false,
@@ -3045,7 +3301,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         // footer
         nombre_transporte: "",
-        transporte: element.transporte,
+        transporte: element.transporte === undefined ? "" : element.transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
         tipoentrega: "",
         direccion: element.direccion,
@@ -3059,7 +3315,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
         
         tipo_complemento: '0',
         fechadoc: element.fecha,
@@ -3078,14 +3333,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
         
+        // solicitudesUrgentes
+        idpf_solurgente: element.idpf_solurgente === undefined ? 0 : element.idpf_solurgente,
+        noridpf_solurgente: element.noridpf_solurgente?.toString(),
+
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
         niveles_descuento: "",
-        preparacion: "",
-        
-        
-        nroticket: this.nroticket,
+        preparacion: "",        
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
         idsol_nivel: "",
@@ -3095,12 +3349,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
-
-
-        // codtarifadefecto: this.codTarifa_get?.toString(),
-        // idpf_complemento: this.idpf_complemento_view,
-        // nroidpf_complemento: this.input_complemento_view?.toString(),
-        // tipo_complementopf: this.tipo_complementopf_input,
       }
     });
 
@@ -3133,9 +3381,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav)
           this.toastr.info("VALIDACION CORRECTA DE NEGATIVOS ✅");
-          if (datav[0].Dtnegativos) {
-            this.validacion_post_negativos = datav[0].Dtnegativos;
-          }
+          // if (datav[0].Dtnegativos) {
+          //   this.validacion_post_negativos = datav[0].Dtnegativos;
+          // }
 
           this.toggleTodosNegativos = true;
           this.toggleNegativos = false;
@@ -3191,7 +3439,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja.toString(),
+        nrocaja:this.nrocaja?.toString(),
         fecha_actual:this.fecha_actual,
         nroticket:this.nroticket,
 
@@ -3236,13 +3484,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
         
+        // solicitudesUrgentes
+        idpf_solurgente: element.idpf_solurgente,
+        noridpf_solurgente: element.noridpf_solurgente?.toString(),
+
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
         niveles_descuento: "",
-        preparacion: "",
-        
-        
+        preparacion: "",        
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
         idsol_nivel: "",
@@ -4471,6 +4719,23 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
 
     return firstValueFrom(dialogRef.afterClosed());
+  }
+
+  alMenu(){
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ ESTA SEGUR@ DE SALIR AL MENU PRINCIPAL ?" },
+      disableClose: true,
+    });
+
+
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.router.navigateByUrl('');
+      }
+    });
+
   }
   
   // getAlmacenParamUsuario() {

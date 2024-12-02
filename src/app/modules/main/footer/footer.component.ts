@@ -39,10 +39,6 @@ export class FooterComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
-    if (this.agencia_storage === 'Loc') {
-      this.agencia_storage = 'Maq. Rodri'
-    }
-
     this.getTipoCambioHoyDia();
   }
 

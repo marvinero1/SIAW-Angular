@@ -43,6 +43,7 @@ export class ApiService {
   public agencia_storage;
   public periodo_abierto;
   public statusInternet: boolean = true;
+  
 
   private readonly API_URL = 'http://192.168.31.240/API_SIAW/api'; // MAQUINA RODRI
   // private readonly API_URL = 'http://192.168.40.5/API_SIAW/api'; // LA PAZ
@@ -52,7 +53,6 @@ export class ApiService {
 
   // TIENDAS
   // private readonly API_URL = 'http://192.168.33.99/API_SIAW/api'; // CBBA QUILLACOLLO
-
 
   constructor(private http: HttpClient, private router: Router, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, public dialog: MatDialog, private toastr: ToastrService, private datePipe: DatePipe,

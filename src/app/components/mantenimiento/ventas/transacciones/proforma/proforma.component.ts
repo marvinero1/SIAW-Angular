@@ -65,6 +65,7 @@ import { MatrizItemsListaComponent } from '../../matriz-items-lista/matriz-items
 import { MatSelectChange } from '@angular/material/select';
 import { element } from 'protractor';
 import { environment } from 'environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proforma',
@@ -398,6 +399,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   public maximo_validacion: any = [];
   public tabla_anticipos: any;
 
+  //VALIDACIONES
+  validacion_solo_validos: any = [];
+  validacion_no_validos: any = [];
+  toggleValidacionesAll: boolean = false;
+  toggleValidos: boolean = false;
+  toggleNoValidos: boolean = false;
+
   // public tipo_complementopf_input: any = 3;
   public tipo_complementopf_input: any;
   public pinta_empaque_minimo: boolean = false;
@@ -474,7 +482,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
     private anticipo_servicio: AnticipoProformaService, public nombre_ventana_service: NombreVentanaService,
-    private communicationService: ComunicacionproformaService) {
+    private communicationService: ComunicacionproformaService, private router:Router) {
       
     if (!environment.production) {
       console.log('Componente inicializado en desarrollo');
@@ -488,10 +496,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     // console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);
-    this.getParametrosIniciales();
+    //this.getParametrosIniciales();
   }
 
   @HostListener('window:popstate', ['$event'])
@@ -1057,7 +1067,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.id_tipo_view_get_array_copied = this.id_tipo_view_get_array.slice();
           this.id_tipo_view_get_first = this.id_tipo_view_get_array_copied.shift();
 
-          this.id_tipo_view_get_codigo = this.id_tipo_view_get_first.id;
+          this.id_tipo_view_get_codigo = this.id_tipo_view_get_first?.id;
           // console.log(this.id_tipo_view_get_codigo);
 
           this.getIdTipoNumeracion(this.id_tipo_view_get_codigo);
@@ -1566,37 +1576,31 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getSaldoItem(item) {
-    let agencia_concat = "AG" + this.agencia_logueado;
+    let agencia_concat = "AG" + this.almacn_parame_usuario_almacen;
+    let array_send={
+    agencia:agencia_concat,
+    codalmacen: this.almacn_parame_usuario_almacen,
+    coditem: item,
+    codempresa: this.BD_storage,
+    usuario: this.usuarioLogueado,
+    
+    idProforma: this.id_tipo_view_get_codigo?.toString() === undefined ? " ":this.id_tipo_view_get_codigo?.toString(),
+    nroIdProforma: this.id_proforma_numero_id
+    };
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getsaldosCompleto/";
-    return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
+      .subscribe({
         next: (datav) => {
-          this.id_tipo = datav;
-          // console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
-          // this.letraSaldos = this.id_tipo[0].resp;
-          // this.saldo_variable = this.id_tipo[2];
-
-          // LETRA
-          this.id_tipo[1].forEach(element => {
-            if (element.descripcion === 'Total Saldo') {
-              if (element.valor < 0) {
-                this.saldoItem = 0;
-              } else {
-                this.saldoItem = element.valor;
-              }
-
-              console.log(this.saldoItem);
-            }
-          });
+        console.log('data', datav);
+        this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          
         },
-        complete: () => {
-        }
+        complete: () => {}
       })
   }
 
@@ -3660,13 +3664,22 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return parseFloat(value.toString().replace(',', '.'));
   }
 
-  formatNumberTotalSubTOTALES(numberString: number): string {
-    if (numberString === null || numberString === undefined) {
-      return '0.00'; // O cualquier valor predeterminado que desees devolver
+  formatNumberTotalSubTOTALES(numberString: number | string): string {
+    if (numberString === null || numberString === undefined || numberString === '') {
+      return '0.00'; // Valor predeterminado
     }
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    
+    // Intentar convertir a número, considerando posibles entradas como cadenas
+    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    
+    if (isNaN(parsedNumber)) {
+      return '0.00'; // Manejar entradas no válidas
+    }
+  
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parsedNumber);
   }
 
   formatNumberTotalSub(numberString: number): string {
@@ -3674,13 +3687,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
-
-  //VALIDACIONES
-  validacion_solo_validos: any = [];
-  validacion_no_validos: any = [];
-  toggleValidacionesAll: boolean = false;
-  toggleValidos: boolean = false;
-  toggleNoValidos: boolean = false;
 
   async validarProformaAll() {
     console.clear();
@@ -3695,7 +3701,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     };
 
-    if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
+    if (!this.FormularioData.valid || tamanio_array_etiqueta === 0){
       this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
       setTimeout(() => {
         this.spinner.hide();
@@ -3721,7 +3727,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           console.error("Error durante la ejecución de las funciones:", error);
           this.toastr.error("Hubo un problema durante la validación.");
         }
-
       } else {
         //ESTE TOTABILIZAR ES EXCLUSIVO SOLO DETIENE EL SPINNER
         //CUANDO SALGA ALGUN ERROR
@@ -7311,5 +7316,22 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.calcularEmpaquePorPrecio = false;
       }
     }
+  }
+
+  alMenu(){
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ ESTA SEGUR@ DE SALIR AL MENU PRINCIPAL ?" },
+      disableClose: true,
+    });
+
+
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.router.navigateByUrl('');
+      }
+    });
+
   }
 }

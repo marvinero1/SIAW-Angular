@@ -51,6 +51,25 @@ span{
 
 
 
+/* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
+@media (max-width: 1366px) {
+  .miTabGroupDetalle {
+    height: 33vh;
+    max-height: 41vh;
+    --mat-tab-animation-duration: 500ms;
+  }
+}
+
+/* Para monitores mayores a 19 pulgadas (resoluciones superiores a 1366px) */
+@media (min-width: 1367px) {
+  .miTabGroupDetalle {
+    height: 45vh;
+    max-height: 47vh;
+    --mat-tab-animation-duration: 500ms;
+  }
+}
+
+
 // Tabla SCSS
 table {
   border-collapse: collapse;

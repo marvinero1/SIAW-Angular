@@ -525,10 +525,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
     this.api.getRolUserParaVentana(this.nombre_ventana);
 
-    this.getParametrosIniciales();
+    //this.getParametrosIniciales();
     this.mandarNombre();
 
     this.disableSelect.value = false;
@@ -2095,35 +2097,31 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getSaldoItem(item) {
-    let agencia_concat = "AG" + this.agencia_logueado;
+    let agencia_concat = "AG" + this.almacn_parame_usuario_almacen;
+    let array_send={
+    agencia:agencia_concat,
+    codalmacen: this.almacn_parame_usuario_almacen,
+    coditem: item,
+    codempresa: this.BD_storage,
+    usuario: this.usuarioLogueado,
+    
+    idProforma: this.id_tipo_view_get_codigo?.toString() === undefined ? " ":this.id_tipo_view_get_codigo?.toString(),
+    nroIdProforma: this.id_proforma_numero_id
+    };
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getsaldosCompleto/";
-    return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
+      .subscribe({
         next: (datav) => {
-          this.id_tipo = datav;
-          // console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
-          // this.letraSaldos = this.id_tipo[0].resp;
-          // this.saldo_variable = this.id_tipo[2];
-
-          // LETRA
-          this.id_tipo[1].forEach(element => {
-            if (element.descripcion === 'Total Saldo') {
-              if (element.valor < 0) {
-                this.saldoItem = 0;
-              } else {
-                this.saldoItem = element.valor;
-              }
-              // console.log(this.saldoItem);
-            }
-          });
+        console.log('data', datav);
+        this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          
         },
-        complete: () => { }
+        complete: () => {}
       })
   }
 
@@ -6993,5 +6991,22 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.calcularEmpaquePorPrecio = false;
       }
     }
+  }
+
+  alMenu(){
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ ESTA SEGUR@ DE SALIR AL MENU PRINCIPAL ?" },
+      disableClose: true,
+    });
+
+
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.router.navigateByUrl('');
+      }
+    });
+
   }
 }

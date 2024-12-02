@@ -1,5 +1,4 @@
-<section style="background-color:#ffffc0 !important;margin-left: 0px;padding: 5px;margin-right: 7.5px;flex: 1;height: 100vh;
-  box-sizing: border-box;">
+<section style="background-color:#ffffc0 !important;margin-left: 0px;padding: 5px;margin-right: 7.5px;flex: 1;box-sizing: border-box;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -11,41 +10,40 @@
         <div class="input-group-append text-center" style="float: left;">
           <!-- BOTONES -->
           <div class="input-group-append">
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
-              <span><i class="fa fa-save" aria-hidden="true" style="color: #ffc107;"></i> Grabar</span>
-            </button>
+            <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
+              <span><i class="fa fa-save" style="color: #ffc107;"></i> Grabar</span>
+            </button> -->
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
             (click)="habilitarProformaMostradorTiendas();">
-              <span><i class="fa fa-check" aria-hidden="true" style="color: green;"></i> Habilitar </span>
+              <span><i class="fa fa-check" style="color: green;"></i> Habilitar </span>
             </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="anularProformaMostradorTiendas();">
-              <span><i class="fa fa-times" aria-hidden="true" style="color: rgb(251, 58, 58);"></i> Anular </span>
+              <span><i class="fa fa-times" style="color: rgb(251, 58, 58);"></i> Anular </span>
             </button>
 
-
-
+            
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="getDataFacturaArmarYenviarEmail();">
                <!-- ESTO AL ULTIMO -->
-              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Enviar Mail</span>
+              <span><i class="fa fa-check" style="color: #ffc107;"></i> Enviar Mail</span>
             </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="getDataFacturaParaArmar();">
-              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Exportar a PDF</span>
+              <span><i class="fa fa-check" style="color: #ffc107;"></i> Exportar a PDF</span>
             </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="enviarAnulacionCorreo();">
-              <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Enviar Mail Anulación</span>
+              <span><i class="fa fa-check" style="color: #ffc107;"></i> Enviar Mail Anulación</span>
             </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="enviarReversionCorreo();">
-              <span> <i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Enviar Mail Reversion</span>
+              <span> <i class="fa fa-check" style="color: #ffc107;"></i> Enviar Mail Reversion</span>
             </button>
           </div>
 
@@ -58,16 +56,16 @@
         <div class="input-group-append text-center" style="float: right;">
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
               matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-              <i class="fa fa-th gray" aria-hidden="true"></i>
+              <i class="fa fa-th gray" ></i>
           </button> -->
 
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Matriz Item Vendedores"
             matTooltipClass="custom-tooltip" matTooltipPosition="above" (click)="modalMatrizProductos()">
-            <i class="fa fa-th blue" aria-hidden="true"></i>
+            <i class="fa fa-th blue" ></i>
           </button> -->
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button"
             matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-inbox gray" aria-hidden="true"></i>
+            <i class="fa fa-inbox gray" ></i>
           </button> -->
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Estado Mora"
             matTooltipClass="custom-tooltip" matTooltipPosition="above">
@@ -79,20 +77,22 @@
           </button> -->
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
             (click)="validarProformaSoloNegativos();" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-inbox blue" aria-hidden="true"></i>
+            <i class="fa fa-inbox blue" ></i>
           </button> -->
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-question-circle black" aria-hidden="true"></i>
+            <i class="fa fa-question-circle black"></i>
           </button> -->
-          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+
+          <!-- este funciona -->
+          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()"
             matTooltipPosition="above">
-            <i class="fa fa-inbox red" aria-hidden="true"></i>
-          </button>
+            <i class="fa fa-inbox red"></i>
+          </button> -->
 
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Validar Empaques Minimo de Precio" matTooltipPosition="above" (click)="imprimirAgain();">
-            <i class="fa fa-print" aria-hidden="true"></i>
+            <i class="fa fa-print"></i>
           </button>
 
           <!-- <button mat-button [matMenuTriggerFor]="beforeMenu">
@@ -104,13 +104,13 @@
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
                   (click)="detalleProformaCarritoTOExcel();">
-                  <i class="fa fa-paper-plane" aria-hidden="true"></i> Detalle a Excel
+                  <i class="fa fa-paper-plane" ></i> Detalle a Excel
                 </button>
               </mat-list-item>
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
                   (click)="cargarDataExcel();">
-                  <i class="fa fa-file-excel green" aria-hidden="true"></i> Cargar
+                  <i class="fa fa-file-excel green"></i> Cargar
                 </button>
               </mat-list-item>
             </mat-list>
@@ -215,7 +215,7 @@
           </div>
           <ng-container>
             <div style="width: 71px;">
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="nrolugar" formControlName="nrolugar"
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="numero_factura" formControlName="numero_factura"
                 style="margin-left: 6px;background-color: black;color: #ffc107;" readonly>
             </div>
           </ng-container>
@@ -328,17 +328,17 @@
       <div class="col-md-2 col-lg-2 col-sm-2">
         <!-- <div class="input-group"> -->
         <div class="input-group">
-          <a type="button"><mat-icon style="color: green !important;">refresh</mat-icon></a>
+          <a type="button" (click)="Cambiar_en_Linea();"><mat-icon style="color: green !important;">refresh</mat-icon></a>
           <span class="input-group-text form-control-sm" style="padding: 3px 66px 4px 10px;border: 0 !important;">
             <u>En Linea</u></span>
-          <input type="checkbox" formControlName="en_linea" [(ngModel)]="en_linea">
+          <input type="checkbox" formControlName="en_linea" [(ngModel)]="en_linea" disabled>
         </div>
 
         <div class="input-group">
-          <a type="button"><mat-icon style="color: green !important;">refresh</mat-icon></a>
+          <a type="button" (click)="cambiarEnLineaSIN();"><mat-icon style="color: green !important;">refresh</mat-icon></a>
           <span class="input-group-text form-control-sm" style="padding: 3px 10px 4px 10px;border: 0 !important;">
             <u>En Linea con el SIN</u></span>
-          <input type="checkbox" formControlName="en_linea_SIN" [(ngModel)]="en_linea_SIN">
+          <input type="checkbox" formControlName="en_linea_SIN" [(ngModel)]="en_linea_SIN" disabled>
         </div>
 
         <div class="input-group">
@@ -404,7 +404,7 @@
 
                 <!-- Caso para 902 -->
                 <div *ngSwitchCase="902" style="border: 2px solid #ff2f2f; color: #d22020;">
-                  <span> </span>
+                  <span><strong>RECEPCION RECHAZADA</strong></span>
                 </div>
 
                 <!-- Caso para 908 -->
@@ -453,10 +453,10 @@
 
           <div class="input-group-append">
             <span class="input-group-text form-control-sm" style="cursor: pointer; border: 1;">
-              <i class="fa fa-search" aria-hidden="true" disabled style="color: #093070;"></i>
+              <i class="fa fa-search" disabled style="color: #093070;"></i>
             </span>
             <span class="input-group-text form-control-sm" style="cursor: pointer; border: 1;">
-              <i class="fa fa-eye" aria-hidden="true" disabled style="color: #093070;"></i>
+              <i class="fa fa-eye" disabled style="color: #093070;"></i>
             </span>
           </div>
 
@@ -556,8 +556,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 45px;border: 0 !important;"><u
                 (click)="setEmailDefault();" style="cursor: pointer;">
-                <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;"
-                  aria-hidden="true"></i>Email </u></span>
+                <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;"></i>Email </u></span>
           </div>
           <ng-container *ngIf="!email_cliente ">
             <input type="email" class="form-control form-control-sm" formControlName="email" style="margin-left: 4px;"
@@ -602,11 +601,10 @@
   </form>
   <!-- fin cabecera -->
 
-
   <!-- InicioTabla -->
   <div class="row">
     <div class="col">
-      <mat-tab-group style="height: 33vh !important; max-height: 34vh;" class="miTabGroupDetalle" #tabGroup>
+      <mat-tab-group class="miTabGroupDetalle" #tabGroup>
         <mat-tab label="Detalle de la Factura">
           <ng-container *ngIf="verDetalle">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
@@ -615,13 +613,6 @@
               (onRowUnselect)="onRowUnselect($event)">
               <ng-template pTemplate="header">
                 <tr>
-                  <!-- <th pSortableColumn="nroitem" class="center1" style="width:2%;">
-                    OrdP
-                  </th> -->
-                  <!-- <th pSortableColumn="orden" class="center1" style="width:4%;">
-                    Orden
-                    <p-sortIcon class="iconGrid" field="orden" />
-                  </th> -->
                   <th pSortableColumn="item" style="width:9%;" class="center1"
                     style="text-align: center !important; cursor: pointer;">
                     <u>Item</u>
@@ -674,9 +665,6 @@
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}"
                   (click)="itemDataAll(products?.coditem)">
-                  <!-- <td class="center1">
-                    {{ products.orden }}
-                  </td> -->
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}</td>
                   <td class="center1">{{ products.medida }}</td>
@@ -684,7 +672,7 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="center1"> {{ products.cantidad }} </td>
+                  <td class="center1"> {{ formatNumberTotalSubTOTALES(products.cantidad) }} </td>
                   <td class="center1"> {{ products.codtarifa }}</td>
                   <td class="center1"> {{ products?.coddescuento }}</td>
                   <td class="right1">{{ formatNumberTotalSub(products.preciolista) }}</td>
@@ -701,7 +689,80 @@
             </p-table>
           </ng-container>
         </mat-tab>
-        <mat-tab label="Observaciones SIN"></mat-tab>
+
+        <mat-tab label="Observaciones SIN">
+          <div class="row" style="position: fixed;width: 100%;z-index: 1000;background-color: #ffffc0 !important;">
+            <div class="col-md-6">
+              <button mat-raised-button (click)="generarCUFD();"
+                class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                <span><i class="fa fa-cogs" style="color: #ffc107;"></i> Generar CUF</span>
+              </button>
+
+              <input type="text" [(ngModel)]="nuevo_CUFD" style="width: 384px;" disabled> 
+
+              <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                <span><i class="fa fa-cog" style="color: #ffc107;"></i> Actualizar CUF</span>
+              </button> -->
+              <ng-container *ngIf="btn_anular_sin;else btn_anular">
+                <button mat-raised-button (click)="anularSIN()"
+                  class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                  <span><i class="fa fa-times" style="color: #ff0707;"></i> Anular en el SIN</span>
+                </button>
+              </ng-container>
+              <ng-template #btn_anular>
+                <button mat-raised-button (click)="anularSIN()" disabled
+                class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                <span><i class="fa fa-times" style="color: #ff0707;"></i> Anular en el SIN</span>
+              </button>
+              </ng-template> 
+            </div>
+  
+            <div class="col-md-6" style="display: flex;justify-content: flex-end;">
+              <!-- <ng-container *ngIf="btn_generar_xml_firma_enviar;else btn_generar_xml">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                  <span><i class="fa fa-history" style="color: #ffc107;"></i> Genera XML - Enviar al SIN</span>
+                </button>
+              </ng-container> -->
+              <!-- <ng-template #btn_generar_xml>
+                <button mat-raised-button disabled class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                  <span><i class="fa fa-history" style="color: #ffc107;"></i> Genera XML - Enviar al SIN</span>
+                </button>
+              </ng-template> -->
+              
+
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                (click)="verificarNITCliente();">
+                <span><i class="fa fa-history" style="color: #ffc107;"></i> Verificar NIT Cliente</span>
+              </button>
+
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                (click)="verificarConexionSIN();">
+                <span><i class="fa fa-history" style="color: #ffc107;"></i> Verificar Conexion SIN</span>
+              </button>
+
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                (click)="verificarFacturaEnSIN();" type="button">
+                <span><i class="fa fa-search" style="color: #ffc107;"></i> Verificar Estado Factura en el SIN</span>
+              </button>
+            </div>
+          </div><br><br>
+
+          <div class="col-md-12">
+            <div style="background-color: black;color: yellow;">
+              <span>RESULTADO DE ENVIO DE FACTURA</span>
+            </div>
+            <div class="content-scroll">
+              <p-listbox 
+                [options]="eventosLogs" 
+                [(ngModel)]="selectedEvento" 
+                optionLabel="label" 
+                [metaKeySelection]="false" 
+                scrollHeight="250px">
+              </p-listbox>
+            </div>
+          </div>
+        </mat-tab>
+
         <mat-tab label="Anulacion Automatica"></mat-tab>
         <mat-tab label="LOG Factura SIN"></mat-tab>
         <mat-tab label="Generacion Cod Web Automatica"></mat-tab>
@@ -711,8 +772,8 @@
 
 
   <!-- inicioPiePagina -->
-  <div>
-    <div class="row">
+  <div mat-dialog-footer class="footersito">
+    <div class="row" >
       <div class="col-md-10">
         <mat-tab-group class="miTabGroupProformaFooter" style="border-style: ridge;padding: 1px;" #tabGroupfooter>
           <form class="example-form" [formGroup]="FormularioData">
@@ -800,14 +861,12 @@
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text form-control-sm" style="padding: 8px 6px 0px 41px;border: 0 !important;">
-                        <u> Formas de Pago: &nbsp;</u> {{ codtipopagodescripcion }}
+                        <u> Formas de Pago: </u> &nbsp;{{ codtipopagodescripcion }}
                       </span>
                     </div>
-                   
                   </div>
                 </div>
               </div>
-
             </mat-tab>
 
             <mat-tab label="Anticipo Contado"><br>
@@ -826,7 +885,7 @@
                     
                     <button class="btn btn-outline-secondary form-control-sm" type="button" style="color:black;"
                       (click)="imprimirAnticipo();" >
-                      <i class="fa fa-print" style="color:black;" aria-hidden="true"></i> Imprimir Anticipo
+                      <i class="fa fa-print" style="color:black;"></i> Imprimir Anticipo
                     </button>
                   </div>
                 </div>
@@ -846,23 +905,44 @@
                 </div>
               </div>
             </mat-tab>
-
-            <mat-tab label="Factura Electronica"> </mat-tab>
-            <mat-tab label="Descuento de Linea Segun Solicitud"> </mat-tab>
-            <mat-tab label="Datos Complementaria"> </mat-tab>
-            <mat-tab label="Imprimir Solicitud Anulacion Factura">
-
-            </mat-tab>
-            <mat-tab label="Anulacion Automatica">
-
-            </mat-tab>
-            <mat-tab label="Archivos Correo">
-
-            </mat-tab>
-            <mat-tab label="Datos Complementaria">
-
-            </mat-tab>
           </form>
+            <!-- <mat-tab label="Descuento de Linea Segun Solicitud"></mat-tab> -->
+            <!-- <mat-tab label="Datos Complementaria"> </mat-tab> -->
+
+            <mat-tab label="Imprimir Solicitud Anulacion Factura"><br>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 7px 11px 0px 20px;border: 0 !important;">
+                        <u> Nombre del que lo solicita </u>
+                      </span>
+                    </div>
+                    <input type="text" [(ngModel)]="nombre_solicitud_anulacion">
+                  </div>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 7px 84px 0px 20px;border: 0 !important;">
+                        <u> Numero C.I </u>
+                      </span>
+                    </div>
+
+                    <input type="number" [(ngModel)]="ci_solicitud_anulacion">
+                    
+                    <button class="btn btn-outline-secondary form-control-sm" type="button" style="color:black;"
+                      (click)="imprimirSolAnulacion()" [disabled]="!nombre_solicitud_anulacion && !ci_solicitud_anulacion">
+                      <i class="fa fa-print" style="color:black;"></i> Imprimir Solicitud Anulacion
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Anulacion Automatica"></mat-tab>
+            <!-- <mat-tab label="Datos Complementaria"></mat-tab> -->
         </mat-tab-group>
       </div>
 
@@ -876,11 +956,11 @@
               </span>
             </div>
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ subtotal }}</span>
+              <span>{{ formatNumberTotalSubTOTALES(subtotal) }}</span>
               <input type="text" [(ngModel)]="subtotal" formControlName="subtotal" [hidden]="true">
             </div>
 
-            <div class="col text-right">
+            <div class="col">
               <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
                 (click)="modalSubTotal();">
                 <mat-icon>monetization_on</mat-icon>
@@ -894,7 +974,7 @@
                 style="padding: 5px 2px 0px 0px;border: 0 !important;"><u>(+) Recargos</u></span>
             </div>
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ recargos }} </span>
+              <span>{{ formatNumberTotalSubTOTALES(recargos) }} </span>
               <input type="text" [(ngModel)]="recargos" formControlName="recargos" [hidden]="true">
             </div>
             <div class="col text-right">
@@ -911,7 +991,7 @@
                 style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>(-) Descuento</u></span>
             </div>
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span> {{ des_extra }}</span>
+              <span> {{ formatNumberTotalSubTOTALES(des_extra) }}</span>
               <input type="number" [(ngModel)]="des_extra" formControlName="des_extra" hidden="true">
             </div>
             <div class="col text-right">
@@ -927,7 +1007,7 @@
                 style="padding: 5px 0px 0px 19px;border: 0 !important;padding-right: 15px;"><u>(+) IVA</u></span>
             </div>
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ iva }}</span>
+              <span>{{ formatNumberTotalSubTOTALES(iva) }}</span>
               <input type="text" [(ngModel)]="iva" formControlName="iva" [hidden]="true">
             </div>
             <div class="col text-right">
@@ -943,7 +1023,7 @@
                 style="padding: 5px 0px 0px 16px;border: 0 !important;padding-right: 12px;"><u>(=) Total</u></span>
             </div>
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ total }}</span>
+              <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
               <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
             </div>
             <div class="col text-right">
@@ -956,6 +1036,95 @@
       </div>
       <!-- finTotales -->
     </div>
-  </div>
 
+    <div class="row">
+      <div class="col-md-10">
+        <!-- Saldos -->
+        <div class="row pl-2">
+          <input type="text" class="inputsSaldos inputsSaldos2"
+            value="{{ almacn_parame_usuario_almacen }}: {{ formatNumberTotalSubTOTALES(saldoItem) }}"
+            style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+            placeholder="0.00">
+
+          <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="formatNumberTotalSubTOTALES(saldo_modal_total_1)"
+              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="formatNumberTotalSubTOTALES(saldo_modal_total_2)"
+              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="formatNumberTotalSubTOTALES(saldo_modal_total_3)"
+              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="formatNumberTotalSubTOTALES(saldo_modal_total_4)"
+              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="formatNumberTotalSubTOTALES(saldo_modal_total_5)"
+              style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+          </ng-container>
+        </div>
+        <!-- finSaldos -->
+
+        <!-- BUSCADOR GENERAL AVANZADO -->
+        <div class="row">
+          <div class="input-group" style="padding-left: 7px;">
+            <span class="input-group-text form-control-sm">ID:</span>
+            
+            <input type="text" [(ngModel)]="id_factura" readonly>
+
+            <!-- <mat-form-field class="mat-mdc-form-field"
+              style="width: 280px !important; background-color: white !important;"> -->
+              <!-- <mat-select [(ngModel)]="num_idd">
+                <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
+                  [value]="ids_complementar_proformas.id">
+                  {{ ids_complementar_proformas.id }} - {{ ids_complementar_proformas.descripcion }}
+                  <hr>
+                </mat-option>
+              </mat-select> -->
+            <!-- </mat-form-field> -->
+
+            <div style="width: 15% !important; padding-right: 5px;">
+              <input type="number" placeholder="0" [(ngModel)]="num_id" class="form-control form-control-sm"
+                style="margin-left: 5px;" id="input_search">
+            </div>
+
+            <div class="input-group-append">
+              <button type="button" class="btn btn-outline-primary form-control-sm" (click)="transferirFactura()"
+                style="border-color: #ffc107;">
+                <i class="fa fa-search"></i>
+              </button>
+              <button style="height: 24px !important; font-size: 0.8rem; background-color: #fbd800;"
+                (click)="modalBuscadorAvanzado()" class="mdc-button mdc-button--raised">
+                <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
+                <span class="mdc-button__label">
+                  <i class="fa fa-search"></i> Busqueda Avanzada</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <div style="text-align: center;">
+          <input type="date" formControlName="fecha" [(ngModel)]="fecha_anulacion_input">
+          <button mat-icon-button class="btn btn-secondary" (click)="CambiarFechaAnulacion(fecha_anulacion_input);"
+            matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-cog"></i></button>
+
+          <span style="color:rgb(218, 28, 28);text-align: right;"><strong></strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

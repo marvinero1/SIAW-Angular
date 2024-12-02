@@ -294,13 +294,14 @@ span{
   color: #00c600;
   opacity: 0.8;
 }
-
 .footersito{
-  position: sticky !important;
-  bottom: 27px !important;
-  background: #ffe0c0 !important;
+  position: fixed !important;
+  display: contents;
+  width: 100%;
+  background: #ceffff !important;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
-  z-index: 1 !important;
+  z-index: 1000;
+  //height: 94px;
 }
 
   ::ng-deep {
@@ -320,7 +321,7 @@ span{
   }
 
   .tablitaDetalle{
-    height: 35vh !important;
+    // height: 35vh !important;
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -328,7 +329,25 @@ span{
     flex-grow: 1;
     padding-top: 2px;
   }
-  
+
+  /* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
+  @media (max-width: 1366px) {
+    .tablitaDetalle {
+      height: 26vh;
+      max-height: 36vh;
+      --mat-tab-animation-duration: 500ms;
+    }
+  }
+
+  /* Para monitores mayores a 19 pulgadas (resoluciones superiores a 1366px) */
+  @media (min-width: 1367px) {
+    .tablitaDetalle {
+      height: 41vh;
+      max-height: 44vh;
+      --mat-tab-animation-duration: 500ms;
+    }
+  }
+
   .p-treetable .p-datatable-wrapper .p-datatable-tbody {
     height: 12px !important;
   }

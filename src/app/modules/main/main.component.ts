@@ -17,24 +17,25 @@ export class MainComponent implements OnInit {
 	public titulo_agencia: any;
 	public ui: Observable<UiState>;
 
-	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma', 'etiquetaTuercasProforma'];
+	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma', 'etiquetaTuercasProforma',
+		'Proforma', 'Facturacion Mostrador FEL', 'Modificar Proforma'];
+
 	nombre_ventana: string;
 	isProformaPdfPage = false;
+	isProformPage = false;
 
 	constructor(private renderer: Renderer2, private store: Store<AppState>, private router: Router,
 		public nombre_ventana_service: NombreVentanaService) {
 
 		this.titulo_agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-		if (this.titulo_agencia === 'Loc') {
-			this.titulo_agencia = 'Maq. Rodri'
-		}
+		// if (this.titulo_agencia === 'Loc') {
+		// 	this.titulo_agencia = 'Maq. Rodri'
+		// }
 
 		this.nombre_ventana_service.disparadorDeNombreVentana.subscribe(data => {
-			// console.log("Recibiendo Ventana: ", data.nombre_vent);
+			console.log("Recibiendo Ventana: ", data.nombre_vent);
 			this.nombre_ventana = data.nombre_vent;
 			this.isProformaPdfPage = this.proformaPdfRoutes.includes(this.nombre_ventana);
-
-			// console.log("VALOR BOOL:", this.isProformaPdfPage)
 		});
 	}
 

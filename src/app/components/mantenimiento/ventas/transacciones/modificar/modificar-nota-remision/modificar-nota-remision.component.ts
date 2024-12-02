@@ -176,11 +176,13 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.FormularioData = this.createForm();
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
-    this.getParametrosIniciales();
+   // this.getParametrosIniciales();
   }
 
   ngOnInit() {

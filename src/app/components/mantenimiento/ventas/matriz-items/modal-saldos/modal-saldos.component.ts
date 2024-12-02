@@ -137,7 +137,23 @@ export class ModalSaldosComponent implements OnInit {
   }
 
 
-
+  formatNumberTotalSubTOTALES(numberString: number | string): string {
+    if (numberString === null || numberString === undefined || numberString === '') {
+      return '0.00'; // Valor predeterminado
+    }
+    
+    // Intentar convertir a número, considerando posibles entradas como cadenas
+    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    
+    if (isNaN(parsedNumber)) {
+      return '0.00'; // Manejar entradas no válidas
+    }
+  
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parsedNumber);
+  }
 
 
 

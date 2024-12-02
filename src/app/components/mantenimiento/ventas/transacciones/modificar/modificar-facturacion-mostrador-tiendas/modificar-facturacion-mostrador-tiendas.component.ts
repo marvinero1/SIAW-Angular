@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,16 +12,17 @@ import { ModalSubTotalMostradorTiendasComponent } from '../../facturacion-mostra
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { FacturaTemplateComponent } from '../../facturas/factura-template/factura-template.component';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 
 import pdfFonts from "../../../../../../../assets/vfs_fonts.js";
 import { fonts } from '../../../../../../config/pdfFonts';
 
-
 import * as QRCode from 'qrcode';
 import pdfMake from "pdfmake/build/pdfmake";
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
+import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/buscador-avanzado-facturas/buscador-avanzado-facturas.component';
 @Component({
   selector: 'app-modificar-facturacion-mostrador-tiendas',
   templateUrl: './modificar-facturacion-mostrador-tiendas.component.html',
@@ -29,12 +30,25 @@ import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/
 })
 export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement){
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "input_search":
+          this.transferirFactura();
+          break;
+      }
+    }
+  };
+
   //data inicial
   codigo_ultima_factura:number;
   btn_anular_sin:boolean=false;
   btn_generar_xml_firma_enviar:boolean=false;
   // fin data inicial
-
   
   // primera barra de arriba CUFD
   CUFD: any;
@@ -79,6 +93,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   public direccion:any;
   public tipo_cambio_moneda_catalogo:any;
   public codigo_estado_siat:number;
+  numero_factura:any;
 
   // formulario
   FormularioData: FormGroup;
@@ -121,14 +136,22 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   public condicicion_cliente:any="";
   public horareg:any;
   public pinta_empaque_minimo:boolean;
+  public codigo:any;
 
   //formas pago
   public codtipopagodescripcion:any;
+
+  //array de LOG/OBSERVACION
+  array_observacions_logs:any=[];
 
   // antcipos
   id_anticipo:any;
   numero_anticipo:any;
   monto_anticipo:any;
+
+  // Solicitud Anulacion
+  public nombre_solicitud_anulacion:any;
+  public ci_solicitud_anulacion:any;
 
   // Datos TOTALES de footer
   public subtotal: number = 0.00;
@@ -142,6 +165,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   public tablaIva: any = [];
   public array_de_descuentos_ya_agregados: any = [];
 
+  public nuevo_CUFD:any;
 
   // saldos empaques
   saldo_modal_total_1: any;
@@ -153,22 +177,33 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   public almacenes_saldos: any = [];
   public saldoItem: number;
 
+  // TAB OBSERVACIONES
+  eventosLogs:any=[];
+  selectedEvento: { label: string } | null = null; // Modelo para el elemento seleccionado
+
+  //buscador avanzado
+  num_idd: any;
+  num_id: any;
+  private unsubscribe$ = new Subject<void>();
+
   // parametros del constructor
   userConn: any;
   BD_storage: any;
   usuarioLogueado: any;
   agencia_logueado: any;
 
+  fecha_anulacion_input:any;
+
   constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder,  private toastr: ToastrService,
-    private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar, ) {
+    private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    // this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-    // this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.FormularioData = this.createForm();
-    this.getParametrosIniciales();
+    //this.getParametrosIniciales();
   }
 
   ngOnInit() {
@@ -249,7 +284,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         complete: () => { }
       })
   }
-
+  
   getDataUltimaFactura(codigo_ultima_factura){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifvefactura_nsf/mostrarDatosFact/";
     return this.api.getAll('/venta/modif/docmodifvefactura_nsf/mostrarDatosFact/' + this.userConn + "/" + codigo_ultima_factura +"/"+ this.usuarioLogueado)
@@ -262,9 +297,12 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.CUFD = datav.cabecera.cufd;
           this.dtpfecha_limite_get = datav.cabecera.fechalimite;
           this.nrolugar = datav.cabecera.nrolugar;
-
+          this.numero_factura = datav.cabecera.nrofactura;
           this.id_factura = datav.cabecera.id;
+
           this.documento_nro = datav.cabecera.numeroid;
+          this.codigo = datav.cabecera.codigo;
+
           this.codigo_control_get = datav.cabecera.codigocontrol;
           this.fecha_actual = this.datePipe.transform(datav.cabecera.fechareg, "yyyy-MM-dd");
           this.horareg = datav.cabecera.horareg;
@@ -291,7 +329,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.tipo_cambio_moneda_catalogo = datav.cabecera.tdc;
           this.tipopago = datav.cabecera.tipopago;
           this.transporte = datav.cabecera.transporte;
-          this.documento_nro = datav.cabecera.codigo;
+          
           this.codigo_estado_siat= datav.cabecera.cod_estado_siat
 
           this.verDetalle = datav.verDetalle;
@@ -320,6 +358,9 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.id_anticipo = datav.cabecera.idanticipo;
           this.numero_anticipo = datav.cabecera.numeroidanticipo;
           this.monto_anticipo = datav.cabecera.monto_anticipo;
+
+          // fecha anulacion
+          this.fecha_anulacion_input = this.fecha_actual;
         },
 
         error: (err: any) => {
@@ -428,12 +469,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     }
   }
 
-  formatNumberTotalSub(numberString: number): string {
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
-  }
-  
   empaquesMinimosPrecioValidacion() {
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/empaquesMinimosVerifica/";
     return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
@@ -477,9 +512,38 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       });
   }
 
+  transferirFactura() {
+    console.log(this.num_idd, this.num_id);
 
+    this.spinner.show()
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifvefactura_nsf/getCodigoFact/";
 
+    return this.api.getAll('/venta/modif/docmodifvefactura_nsf/getCodigoFact/' + this.userConn + "/" + this.id_factura + "/" + this.num_id)
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ transferirFactura ~ datav:", datav)
 
+          this.getDataUltimaFactura(datav.codigoFact.codigo);
+          this.toastr.success('! TRANSFERENCIA EXITOSA !');
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      })
+  }
 
 
 
@@ -499,7 +563,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       dtpfecha_limite:this.dataform.dtpfecha_limite_get,
       nrolugar:this.dataform.nrolugar,
       codigo_recepcion_siat :this.dataform.codigo_recepcion_siat,
-
+      numero_factura:this.dataform.numero_factura,
 
       id: [this.dataform.id, Validators.compose([Validators.required])],
       numeroid: this.dataform.numeroid,
@@ -608,13 +672,9 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       monto_anticipo: this.dataform.monto_anticipo === undefined ? "" : this.dataform.monto_anticipo,
       
 
-      en_linea:this.dataform.en_linea,
-      en_linea_SIN:this.dataform.en_linea_SIN,
+      en_linea:{value:this.dataform.en_linea, disabled:true},
+      en_linea_SIN:{value:this.dataform.en_linea_SIN, disabled:true},
     });
-  }
-
-  submitData(){
-
   }
 
   setEmailDefault() {
@@ -655,13 +715,28 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       })
   }
 
-  formatNumberTotalSubTOTALES(numberString: number): string {
-    if (numberString === null || numberString === undefined) {
-      return '0.00'; // O cualquier valor predeterminado que desees devolver
+  formatNumberTotalSubTOTALES(numberString: number | string): string {
+    if (numberString === null || numberString === undefined || numberString === '') {
+      return '0.00'; // Valor predeterminado
     }
+    
+    // Intentar convertir a número, considerando posibles entradas como cadenas
+    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    
+    if (isNaN(parsedNumber)) {
+      return '0.00'; // Manejar entradas no válidas
+    }
+  
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parsedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
   verificarNit() {
@@ -1190,7 +1265,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA 😧");
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -1272,19 +1347,480 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   }
  // FIN SECCION ENVIAR MAIL REVERSION
 
-  habilitarProformaMostradorTiendas(){
+  async habilitarProformaMostradorTiendas(){
+    let valor_boolean:boolean = false;
+    //pide clave
+    const url = `/venta/modif/docmodifvefactura_nsf/HabilitarFactura/${this.userConn}/${this.usuarioLogueado}/${this.documento_nro}/${this.BD_storage}/${valor_boolean}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
+    this.api.create(url, []).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
+        if(!datav.resp){
+          this.openConfirmationDialog(datav.msgAlert)
+        }else{
+          valor_boolean = true;
+          // si devuelve true hay q hacer mas cosas
+        }
+        
+        setTimeout(() => {
+        this.spinner.hide();
+      }, 50);
+      },
+
+      error: (err) => {
+        console.log(err, errorMessage);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      },
+
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      }
+    });
   }
 
   anularProformaMostradorTiendas(){
 
   }
 
+  async imprimirAnticipo(){
+    const url = `/venta/transac/docvefacturamos_cufd/imprimirReciboAnticipo/${this.userConn}/${this.documento_nro}/${this.BD_storage}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
-  imprimirAnticipo(){
-
-  }
+    const result = await this.openConfirmationDialog(`¿ESTA SEGURO DE IMPRIMIR LA BOLETA DE ANTICIPO?`);
+    if (result) {
+      this.api.getAll(url).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
+          this.toastr.success("IMPRIMIENDO 🖨️");
+          setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+        },
   
+        error: (err) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+  
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+    }
+  }
+
+  async imprimirSolAnulacion(){
+    let array_SolAnulacion:any = {
+      nom_solicita_anulacion: this.nombre_solicitud_anulacion,
+      ci_solicita_anulacion: this.ci_solicitud_anulacion.toString(),
+    };
+
+    const url = `/venta/modif/docmodifvefactura_nsf/imprimirSolAnulacion/${this.userConn}/${this.documento_nro}/${this.BD_storage}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    const result = await this.openConfirmationDialog(`¿ESTA SEGURO DE IMPRIMIR LA SOLICITUD DE FACTURA?`);
+    if (result) {
+      this.api.create(url, array_SolAnulacion).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
+          this.toastr.success("IMPRIMIENDO 🖨️");
+          setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+        },
+  
+        error: (err) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+  
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+    }
+  }
+
+  async Cambiar_en_Linea(){
+    // this.spinner.show();
+    let valor_boolean:boolean = true;
+
+    const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_en_Linea/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${this.en_linea}/${valor_boolean}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    
+    const result = await this.openConfirmationDialog(`¿Esta seguro de cambiar el estado de la factura a: FUERA DE LINEA ?`);
+
+    if (result) {
+      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+        width: '450px',
+        height: 'auto',
+        data: {
+          dataA: this.id_factura+"-"+this.documento_nro,
+          dataB: "CAMBIAR ESTADO EN LINEA",
+          dataPermiso: "TRANSFERIR PROFORMA",
+          dataCodigoPermiso: "143",
+          //abrir: true,
+        },
+      });
+
+      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+        console.log(result);
+        if (result) {
+          await this.api.create(url, []).subscribe({
+            next: async (datav) => {
+            console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
+              
+              await this.openConfirmacionDialog(datav.msgAlert);
+
+              this.num_idd = this.id_factura;
+              this.num_id = this.documento_nro;
+              this.transferirFactura()
+                  
+              setTimeout(() => {
+              this.spinner.hide();
+            }, 50);
+            },
+    
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+    
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+          return;
+        } else {
+          this.toastr.error('! CANCELADO !');
+        }
+      });
+    }
+  }
+
+  async cambiarEnLineaSIN(){
+    // this.spinner.show();
+    let valor_boolean:boolean = true;
+    let en_linea_SIN;
+    if(this.en_linea_SIN === true){
+      en_linea_SIN = true;
+      valor_boolean = true;
+    }else{
+      en_linea_SIN = false;
+      valor_boolean = true;
+    }
+
+    const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_en_Linea_SIN/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${en_linea_SIN}/${valor_boolean}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    
+    const result = await this.openConfirmationDialog(`¿Esta seguro de cambiar el estado de la factura en el SIN a : FUERA DE LINEA ?`);
+
+    if (result) {
+      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+        width: '450px',
+        height: 'auto',
+        data: {
+          dataA: this.id_factura+"-"+this.documento_nro,
+          dataB: "CAMBIAR ESTADO EN LINEA SIN",
+          dataPermiso: "",
+          dataCodigoPermiso: "143",
+          //abrir: true,
+        },
+      });
+
+      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+        console.log(result);
+        if (result) {
+          await this.api.create(url, []).subscribe({
+            next: async (datav) => {
+              console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
+              
+              await this.openConfirmacionDialog(datav.msgAlert);
+              //this.en_linea_SIN = datav.resp;
+
+              this.num_idd = this.id_factura;
+              this.num_id = this.documento_nro;
+              this.transferirFactura();
+                  
+              setTimeout(() => {
+              this.spinner.hide();
+            }, 50);
+            },
+    
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+    
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+          return;
+        } else {
+          this.toastr.error('! CANCELADO !');
+        }
+      });
+    }
+  }
+
+  async CambiarFechaAnulacion(fecha){
+    // this.spinner.show();
+    let valor_boolean:boolean = true;
+
+    const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_Fecha_Anulacion/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${fecha}/${valor_boolean}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    
+    const result = await this.openConfirmationDialog(`¿Esta seguro de cambiar la FECHA DE ANULACION ?`);
+
+    if (result) {
+      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+        width: '450px',
+        height: 'auto',
+        data: {
+          dataA: this.id_factura,
+          dataB: this.documento_nro,
+          dataPermiso: "",
+          dataCodigoPermiso: "75",
+          //abrir: true,
+        },
+      });
+
+      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+        console.log(result);
+        if (result) {
+          await this.api.create(url, []).subscribe({
+            next: async (datav) => {
+              console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
+              
+              await this.openConfirmacionDialog(datav.msgAlert);
+              //this.en_linea_SIN = datav.resp;
+
+              this.num_idd = this.id_factura;
+              this.num_id = this.documento_nro;
+              this.transferirFactura();
+                  
+              setTimeout(() => {
+              this.spinner.hide();
+            }, 50);
+            },
+    
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+    
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+          return;
+        } else {
+          this.toastr.error('! CANCELADO !');
+        }
+      });
+    }
+  }
+
+  generarCUFD(){
+    this.spinner.show();
+    const url = `/venta/modif/docmodifvefactura_nsf/getGenerarCuf/${this.userConn}/${this.BD_storage}/${this.agencia_logueado}/${this.en_linea}/${this.en_linea_SIN}/${this.numero_factura}/${this.codigo_control_get}/${this.id_factura}/${this.documento_nro}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    this.api.getAll(url).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
+      
+        if(datav.resp === true){
+          this.nuevo_CUFD = datav.cuf
+        }
+
+        setTimeout(() => {
+        this.spinner.hide();
+      }, 50);
+      },
+
+      error: (err) => {
+        console.log(err, errorMessage);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      },
+
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      }
+    });
+  }
+
+  anularSIN(){
+    const url = `/venta/modif/docmodifvefactura_nsf/Revertir_Anulacion_Factura_SIN/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    this.api.create(url, []).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav)
+        this.openConfirmacionDialog(datav.msgAlert);
+
+        // agregar al array de eventos
+        const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+        this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+        console.log(this.eventosLogs);
+
+        setTimeout(() => {
+        this.spinner.hide();
+      }, 50);
+      },
+
+      error: (err) => {
+        console.log(err, errorMessage);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      },
+
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+      }
+    });
+  }
+
+  verificarFacturaEnSIN(){
+    this.spinner.show();
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
+    this.api.getAll('/venta/modif/docmodifvefactura_nsf/Verificar_Estado_Factura_en_el_SIN/' + this.userConn + "/" +this.usuarioLogueado
+      +"/"+ this.documento_nro + "/" + this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ verificarFacturaEnSIN ~ datav:", datav)
+        this.openConfirmacionDialog(datav.msgAlert);
+
+        // agregar al array de eventos
+        const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+        this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+        console.log(this.eventosLogs);
+         
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+        },
+
+        error: (err: any) => {
+          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => { 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });  
+  }
+
+  verificarConexionSIN(){
+    this.spinner.show();
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/modif/docmodifvefactura_nsf/Verificar_Comunicacion_SIN/";
+    this.api.getAll('/venta/modif/docmodifvefactura_nsf/Verificar_Comunicacion_SIN/' + this.userConn + "/" +this.usuarioLogueado + "/" + this.BD_storage+"/"+this.agencia_logueado)
+      .subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ verificarFacturaEnSIN ~ datav:", datav)
+        this.openConfirmacionDialog(datav.msgAlert);
+
+        // agregar al array de eventos
+        const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+        this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+        console.log(this.eventosLogs);
+         
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+        },
+
+        error: (err: any) => {
+          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => { 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+  }
+
+  verificarNITCliente(){
+    this.spinner.show();
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifvefactura_nsf/Verificar_NIT_Factura/";
+    this.api.getAll('/venta/modif/docmodifvefactura_nsf/Verificar_NIT_Factura/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.codigo +"/"+ this.BD_storage)
+      .subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ verificarFacturaEnSIN ~ datav:", datav)
+        this.openConfirmacionDialog(datav.msgAlert);
+
+        // agregar al array de eventos
+        const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+        this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+        console.log(this.eventosLogs);
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 50);
+        },
+
+        error: (err: any) => {
+          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => { 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+  }
+
+
+
+
+
 
 
 
@@ -1346,7 +1882,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       height: 'auto',
       data: {
         dataA: this.id_factura,
-        dataB: this.documento_nro,
+        dataB: this.codigo,
         dataPermiso: "REIMPRESION DE FACTURA",
         dataCodigoPermiso: 28,
       },
@@ -1398,4 +1934,29 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
+  modalSaldos(cod_almacen, posicion_fija): void {
+    this.dialog.open(ModalSaldosComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        cod_almacen: cod_almacen,
+       // cod_item: this.item_seleccionados_catalogo_matriz_codigo,
+        posicion_fija: posicion_fija,
+        id_proforma: this.documento_nro,
+        numero_id: this.documento_identidad
+      },
+    });
+  }
+
+  modalBuscadorAvanzado() {
+    this.dialog.open(BuscadorAvanzadoFacturasComponent, {
+      disableClose: true,
+      width: '820px',
+      height: 'auto',
+      data: {
+        ventana: "modificar_proforma"
+      },
+    });
+  }
 }

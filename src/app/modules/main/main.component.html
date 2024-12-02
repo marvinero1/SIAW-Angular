@@ -1,11 +1,18 @@
 <title>{{ titulo_agencia }} - Pertec SIAW </title>
 
+
 <div *ngIf="!isProformaPdfPage">
   <app-header style="z-index: 10 !important; padding: 0.2rem 0.2rem !important;" class="no-printme"></app-header>
   <app-menu-sidebar class="bck-azul" style="z-index: 10 !important;" class="no-printme"></app-menu-sidebar>
 </div>
 
-<!-- <div class="content-wrapper"> con esta linea las cabeceras no salen, le quitare si pasa algo en el disenio gra;l
+
+<div *ngIf="isProformPage">
+  <app-header style="display: none !important;" class="no-printme"></app-header>
+  <app-menu-sidebar class="bck-azul" style="display: none !important;" class="no-printme"></app-menu-sidebar>
+</div>
+
+<!-- <div class="content-wrapper"> con esta linea las cabeceras no salen, le quitare si pasa algo en el disenio gral
   volver a colocarlo, pero se perdera los headers q se repita en cada hoja -->
 <div>
   <router-outlet></router-outlet>

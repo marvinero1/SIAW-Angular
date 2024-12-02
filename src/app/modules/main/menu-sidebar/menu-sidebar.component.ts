@@ -79,9 +79,9 @@ export class MenuSidebarComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     
 
-    if (this.agencia_storage === 'Loc') {
-      this.agencia_storage = 'Maq. Rodri'
-    }
+    // if (this.agencia_storage === 'Loc') {
+    //   this.agencia_storage = 'Maq. Rodri'
+    // }
   }
 
   ngOnInit() {
@@ -125,7 +125,7 @@ export class MenuSidebarComponent implements OnInit {
           console.log("Hay tipo de cambio?: ", this.tipo_cambio);
 
           if (this.tipo_cambio == false) {
-            const dialogRef = this.dialog.open(TipocambiovalidacionComponent, {
+            this.dialog.open(TipocambiovalidacionComponent, {
               disableClose: true,
               width: 'auto',
               panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -225,9 +225,7 @@ export class MenuSidebarComponent implements OnInit {
       error: (err: any) => {
         console.log(err);
       },
-      complete: () => {
-
-      }
+      complete: () => { }
     });
   }
 }

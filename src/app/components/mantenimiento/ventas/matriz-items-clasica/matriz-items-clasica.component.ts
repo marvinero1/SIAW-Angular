@@ -200,14 +200,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    if (this.BD_storage === 'Loc') {
-      this.BD_storage = '311'
-    }
-
-    if (this.agencia === 'Loc') {
-      this.agencia = '311'
-    }
-
     if(this.usuario_logueado === 'opergps'){
       this.permiso_para_vista = false;
     }else{
@@ -482,6 +474,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       })
   }
 
+  saldoItem_number:number;
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia;
 
@@ -505,6 +498,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           console.log(datav);
 
           this.saldoItem = datav.totalSaldo;
+          this.saldoItem_number = parseInt(datav.totalSaldo);
         },
 
         error: (err: any) => {
@@ -1230,6 +1224,81 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         complete: () => { }
       })
   }
+
+  formatNumberTotalSubTOTALES(numberString: number | string): string {
+    if (numberString === null || numberString === undefined || numberString === '') {
+      return '0.00'; // Valor predeterminado
+    }
+    
+    // Intentar convertir a número, considerando posibles entradas como cadenas
+    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    
+    if (isNaN(parsedNumber)) {
+      return '0.00'; // Manejar entradas no válidas
+    }
+  
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(parsedNumber);
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   modalSaldos(cod_almacen, posicion_fija): void {
     this.dialog.open(ModalSaldosComponent, {

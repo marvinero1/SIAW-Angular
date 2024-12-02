@@ -29,7 +29,7 @@
                 <ng-container matColumnDef="valor">
                   <th mat-header-cell *matHeaderCellDef> Saldo Local </th>
                   <td mat-cell *matCellDef="let element" style="text-align: right !important;">
-                    {{ element.cantidad_ag_local_incluye_cubrir | number:'1.2-2'}}
+                    {{ formatNumberTotalSubTOTALES(element.cantidad_ag_local_incluye_cubrir) }}
                   </td>
                 </ng-container>
 
@@ -57,7 +57,7 @@
                 <ng-container matColumnDef="valor">
                   <th mat-header-cell *matHeaderCellDef> Saldo Local </th>
                   <td mat-cell *matCellDef="let element" style="text-align: left;">
-                    {{ element.valor | number:'1.2-2'}}
+                    {{ element.valor }}
                   </td>
                 </ng-container>
 
@@ -80,8 +80,7 @@
 
       <div class="col">
         <mat-label><u>&nbsp;Saldo de Local</u></mat-label>&nbsp;
-        <input type="text" value="{{ saldoLocal | number:'1.2-2' }}" readonly="true"
-          style="width: 40%;text-align: right;">
+        <input type="text" value="{{ saldoLocal }}" readonly="true" style="width: 40%;text-align: right;">
       </div>
     </div>
   </mat-card-footer>

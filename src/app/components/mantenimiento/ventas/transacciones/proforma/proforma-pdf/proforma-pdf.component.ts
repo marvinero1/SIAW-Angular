@@ -249,7 +249,6 @@ export class ProformaPdfComponent implements OnInit {
                 margin: [10, 0, 15, 2], // Margen ajustado
                 fontSize: 9,
                 font: 'Courier',
-                
               }
             ]
           },
@@ -320,7 +319,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
                 // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
                 { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                { text: items.cantidad, alignment: 'right', font: 'Arial', fontSize: 8 },
+                { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
                 { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                 { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                 { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
@@ -685,7 +684,7 @@ export class ProformaPdfComponent implements OnInit {
                   { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
                  // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
                   { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: items.cantidad, alignment: 'right', font: 'Arial', fontSize: 8 },
+                  { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                   { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
@@ -1054,7 +1053,7 @@ export class ProformaPdfComponent implements OnInit {
                   { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
                  // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
                   { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: items.cantidad, alignment: 'right', font: 'Arial', fontSize: 8 },
+                  { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                   { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },

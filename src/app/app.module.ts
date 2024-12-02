@@ -449,6 +449,7 @@ import { ModalDescuentosTiendaComponent } from '@components/mantenimiento/ventas
 import { BuscadorAvanzadoAnticiposComponent } from '@components/uso-general/buscador-avanzado-anticipos/buscador-avanzado-anticipos.component';
 import { ModalAnticiposComponent } from '@components/mantenimiento/ventas/modal-anticipos/modal-anticipos.component';
 import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
+import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/buscador-avanzado-facturas/buscador-avanzado-facturas.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -535,23 +536,12 @@ registerPlugin(UndoRedo);
         VerificarCreditoDisponibleComponent, ItemSeleccionCantidadComponent, AnticiposProformaComponent, ModalSolicitarUrgenteComponent,
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
-        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent, DialogConfirmacionComponent,
-        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent, ModalFormaPagoComponent,
-        FacturaTemplateComponent,FacturacionMostradorTiendasComponent, ModalSubTotalMostradorTiendasComponent, TranferirMostradorTiendasComponent, ModalDescuentosTiendaComponent,
-        BuscadorAvanzadoAnticiposComponent,ModalAnticiposComponent, ModificarFacturacionMostradorTiendasComponent
-
-
+        ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent,
+        DialogConfirmacionComponent, BuscadorAvanzadoFacturasComponent, ModalDescuentosTiendaComponent,TranferirMostradorTiendasComponent, 
+        EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
+        ModalFormaPagoComponent, ModificarFacturacionMostradorTiendasComponent, ModalAnticiposComponent, ModalSubTotalMostradorTiendasComponent, FacturaTemplateComponent,
+        FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent,
         
-
-
-
-
-
-
-
-
-
-
 
 
 

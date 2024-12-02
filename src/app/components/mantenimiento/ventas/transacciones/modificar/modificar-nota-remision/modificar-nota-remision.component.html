@@ -1,5 +1,5 @@
 <section
-  style="background-color:#ffe0c0 !important;padding: 5px !important;flex: 1;width: 100%;height: 100vh;box-sizing: border-box;">
+  style="background-color:#ffe0c0 !important;padding: 5px !important;flex: 1;width: 100%;box-sizing: border-box;">
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
@@ -28,7 +28,7 @@
             </button>
           </div>
           <!-- botones - fin -->
-          <div class="pt-2" style="padding-left: 23rem;">
+          <div class="pt-2" style="padding-left: 30rem;">
             <h3><strong><u>MODIFICAR NOTA DE REMISION</u></strong></h3>
           </div>
         </div>
@@ -559,11 +559,11 @@
                     <div class="row">
                       <div class="input-group">
                         <span class="input-group-text form-control-sm"
-                          style="height: calc(2.3rem + 5px) !important;padding: 10px 0px 0px 48px;border: 0 !important;">
+                          style="padding: 10px 0px 0px 48px;border: 0 !important;">
                           <u>Dirección</u></span>
 
-                        <textarea class="form-control" formControlName="direccion" [(ngModel)]="direccion" rows="1"
-                          style="font-size: 0.79rem !important;margin-left: 6px;" readonly></textarea>
+                        <input class="form-control" formControlName="direccion" [(ngModel)]="direccion" rows="1"
+                          style="font-size: 0.79rem !important;margin-left: 6px;" readonly>
                       </div>
                     </div>
                   </div>
@@ -653,8 +653,6 @@
                 <input type="text" [(ngModel)]="hora_inicial" formControlName="hora_inicial" hidden>
                 <input type="text" [(ngModel)]="hora_confirmada" formControlName="hora_confirmada" hidden>
                 <input type="text" [(ngModel)]="codigo_cliente_real" formControlName="codcliente_real" hidden>
-
-
 
                 <input type="text" [(ngModel)]="usuarioLogueado" formControlName="usuarioLogueado" hidden>
                 <input type="text" [(ngModel)]="fecha_actual_server" formControlName="fecha_actual_server" hidden>
@@ -834,7 +832,7 @@
         <div class="row">
           <div style="padding-left: 7px;display: flex;"><span class="input-group-text form-control-sm">ID</span>
             <mat-select [(ngModel)]="num_idd" style="width: 280px !important; background-color: white !important;
-          height: 26px !important;padding-left:7px;border-radius: 5px;">
+              height: 26px !important;padding-left:7px;border-radius: 5px;">
               <mat-option *ngFor="let ids_complementar_proformas of ids_complementar_proforma"
                 [value]="ids_complementar_proformas.id">
                 {{ ids_complementar_proformas.id }} - {{ ids_complementar_proformas.descripcion }}

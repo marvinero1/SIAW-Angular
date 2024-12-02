@@ -171,10 +171,84 @@ mat-row, mat-header-row, mat-footer-row{
   border-top: none;
   border-bottom: none;
 }
-.miTabGroupDetalle .mat-mdc-tab-body {
-  /* Estilos específicos para el tab 1 */
-  height: 215px;
+// .miTabGroupDetalle .mat-mdc-tab-body {
+//   /* Estilos específicos para el tab 1 */
+//   height: 215px;
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
+@media (max-width: 1024px) {
+  .miTabGroupDetalle {
+    height: 35vh;
+    max-height: 36vh;
+  }
 }
+
+/* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
+@media (max-width: 1366px) {
+  .miTabGroupDetalle {
+    height: 19.5vh;
+    max-height: 20vh;
+  }
+}
+
+/* Para monitores mayores a 19 pulgadas (resoluciones superiores a 1366px) */
+@media (min-width: 1367px) {
+  .miTabGroupDetalle {
+    height: 46vh;
+    max-height: 48vh;
+    --mat-tab-animation-duration: 500ms;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .miTabGroupProformaFooter .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
   height: 195px !important;
@@ -213,12 +287,17 @@ mat-row, mat-header-row, mat-footer-row{
   padding-right: 7px;
 }
 
+
+
+
 .footersito{
-  position: sticky !important;
-  bottom: 0 !important;
-  background: #ffffc0 !important;
+  position: fixed !important;
+  display: contents;
+  width: 100%;
+  background: #ceffff !important;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
-  z-index: 1 !important;
+  z-index: 1000;
+  //height: 94px;
 }
 
 
