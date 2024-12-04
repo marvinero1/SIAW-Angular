@@ -30,10 +30,6 @@ export class LogComponent implements OnInit, AfterViewInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
     private datePipe: DatePipe, private _formBuilder: FormBuilder) {
-
-
-    // this.api.getRolUserParaVentana('/logs');
-
     this.FormularioData = this.createForm();
   }
 

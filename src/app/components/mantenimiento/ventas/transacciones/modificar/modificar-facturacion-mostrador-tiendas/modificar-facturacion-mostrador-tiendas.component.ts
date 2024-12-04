@@ -23,12 +23,20 @@ import pdfMake from "pdfmake/build/pdfmake";
 import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/buscador-avanzado-facturas/buscador-avanzado-facturas.component';
+import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
+import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-modificar-facturacion-mostrador-tiendas',
   templateUrl: './modificar-facturacion-mostrador-tiendas.component.html',
   styleUrls: ['./modificar-facturacion-mostrador-tiendas.component.scss']
 })
 export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
+
+  public nombre_ventana: string = "docveproforma.vb";
+  public ventana: string = "Modificar Factura Mostrador FEL";
+  public detalle = "Doc.Proforma";
+  public tipo = "transaccion-docveproforma-POST";
 
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     const focusedElement = document.activeElement as HTMLElement;
@@ -193,9 +201,12 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   agencia_logueado: any;
 
   fecha_anulacion_input:any;
+  anulada:boolean=false;
 
   constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder,  private toastr: ToastrService,
-    private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar) {
+    private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar,
+    public servicioBuscadorAvanzado: BuscadorAvanzadoService, public nombre_ventana_service: NombreVentanaService,
+    private router:Router) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -207,9 +218,17 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.mandarNombre();
     this.getParamUsuario();
     this.getDataInicial();
     this.getTipoDocumentoIdentidadProforma();
+
+    //ventana modal BuscadorGeneral
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDModificarFacturaMostradorTiendas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo ID y numeroID Buscador: ", data);
+      this.getDataUltimaFactura(data.codigo);
+    });
+    //fin ventana modal BuscadorGeneral
   }
 
   onPaste(event: any) {
@@ -299,6 +318,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.nrolugar = datav.cabecera.nrolugar;
           this.numero_factura = datav.cabecera.nrofactura;
           this.id_factura = datav.cabecera.id;
+          this.anulada = datav.cabecera.anulada;
 
           this.documento_nro = datav.cabecera.numeroid;
           this.codigo = datav.cabecera.codigo;
@@ -360,7 +380,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.monto_anticipo = datav.cabecera.monto_anticipo;
 
           // fecha anulacion
-          this.fecha_anulacion_input = this.fecha_actual;
+          this.fecha_anulacion_input = this.datePipe.transform(datav.cabecera.fecha_anulacion, 'yyyy-MM-dd');
         },
 
         error: (err: any) => {
@@ -1817,7 +1837,24 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       });
   }
 
+  array_de_logs:any=[];
+  getLogPorIDNumeroID(){
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/modif/docmodifvefactura_nsf/refrescarLogs/";
+    return this.api.getAll
+      ('/venta/modif/docmodifvefactura_nsf/refrescarLogs/' + this.userConn + "/" + this.id_factura + "/" + this.documento_nro )
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ getLogPorIDNumeroID ~ datav:", datav)
+          this.array_de_logs = datav;
 
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
+  }
 
 
 
@@ -1941,7 +1978,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       disableClose: true,
       data: {
         cod_almacen: cod_almacen,
-       // cod_item: this.item_seleccionados_catalogo_matriz_codigo,
+        // cod_item: this.item_seleccionados_catalogo_matriz_codigo,
         posicion_fija: posicion_fija,
         id_proforma: this.documento_nro,
         numero_id: this.documento_identidad
@@ -1952,11 +1989,34 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   modalBuscadorAvanzado() {
     this.dialog.open(BuscadorAvanzadoFacturasComponent, {
       disableClose: true,
-      width: '820px',
-      height: 'auto',
-      data: {
-        ventana: "modificar_proforma"
-      },
+      width: '745px',
+      height: '588px',
+      // data: {
+      //   ventana: "modificar_proforma"
+      // },
     });
+  }
+
+  mandarNombre() {
+    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
+      nombre_vent: this.ventana,
+    });
+  }
+
+  alMenu(){
+    const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: 'auto',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ ESTA SEGUR@ DE SALIR AL MENU PRINCIPAL ?" },
+      disableClose: true,
+    });
+
+
+    dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.router.navigateByUrl('');
+      }
+    });
+
   }
 }

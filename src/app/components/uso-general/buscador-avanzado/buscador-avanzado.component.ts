@@ -87,7 +87,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
   userConn: any;
   BD_storage: any;
-
   usuarioLogueado: any;
   agencia_logueado: any;
   codigo_documento: any;

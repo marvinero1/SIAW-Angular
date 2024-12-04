@@ -332,6 +332,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   // TAB COMPLEMENTARIAS
   id_tipo_para_complementar:any;
 
+  // Desct. Promociones
+  public desct_nivel_actual: any;
+  public tarifaPrincipal_value:any;
+  public tipo_desct_nivel:any;
+  public valor_desct_nivel:any=[];
+
 
   // TABS DEL DETALLE PROFORMA
     displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
@@ -403,6 +409,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.getDescuentos();
     this.mandarNombre();
     this.getCatalogoAnticipos();
+    this.getTipoDescNivel();
     // this.getAllmoneda();
 
     // Id Tipo
@@ -960,11 +967,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     // this.tipoentrega = proforma.cabecera.tipoentrega;
     // this.central_ubicacion = proforma.cabecera.central;
     // this.obs = proforma.cabecera.obs;
-    // this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
     // this.ubicacion_central = proforma.cabecera.ubicacion;
     // this.preparacion = proforma.cabecera.preparacion;
     // this.codigo_cliente = proforma.cabecera.codcliente_real;
-
     // this.fecha_actual = this.fecha_actual;
     // this.almacn_parame_usuario = proforma.cabecera.codalmacen;
     // this.venta_cliente_oficina = proforma.cabecera.venta_cliente_oficina;
@@ -1000,6 +1005,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.tipo_cambio_moneda_catalogo = proforma.cabecera.tdc;
     this.tipopago = proforma.cabecera.tipopago;
     this.transporte = proforma.cabecera.transporte;
+    this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
 
     this.codigo_proforma_tranferencia = proforma.cabecera.codigo;
 
@@ -1829,7 +1835,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.dtpfecha_limite_get, "yyyy-MM-dd"),       
-        niveles_descuento: "",
+        niveles_descuento: element.niveles_descuento,
         preparacion: "",
 
         tipo_caja: this.tipo_get,
@@ -2055,7 +2061,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),       
-        niveles_descuento: "",
+        niveles_descuento: element.niveles_descuento,
         preparacion: "",
 
         tipo_caja: this.tipo_get,
@@ -3338,7 +3344,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         noridpf_solurgente: element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        niveles_descuento: "",
+        niveles_descuento: element.niveles_descuento,
         preparacion: "",        
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
@@ -3489,7 +3495,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         noridpf_solurgente: element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        niveles_descuento: "",
+        niveles_descuento: element.niveles_descuento,
         preparacion: "",        
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
@@ -4231,7 +4237,104 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
+  // MAT-TAB Desct.Promocion
+  getPrecioMayorEnDetalle() {
+    let array_cumple:any=[];
+    array_cumple = [this.FormularioData.value].map((element)=>({
+      ...element,
+      cumple: element.cumple === 1 ? true:false
+    }));
+    console.log("🚀 ~ ProformaComponent ~ array_cumple=[this.FormularioData.value].map ~ array_cumple:", array_cumple)
 
+    let array_post = {
+      tabladetalle: this.array_items_carrito_y_f4_catalogo,
+      dvta:  array_cumple[0],
+    };
+
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
+    return this.api.create('/venta/transac/veproforma/getTarifaPrincipal/' + this.userConn, array_post)
+      .subscribe({
+        next: (datav) => {
+          this.tarifaPrincipal_value = datav.codTarifa;
+
+          console.log(this.tarifaPrincipal_value);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+
+        complete: () => { }
+      })
+  }
+
+  getTipoDescNivel(){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getTipoDescNivel/";
+    return this.api.getAll('/venta/transac/veproforma/getTipoDescNivel/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+        this.valor_desct_nivel = datav;
+        console.log("🚀 ~ ProformaComponent ~ getTipoDescNivel ~ datav:", this.valor_desct_nivel)
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      })
+  }
+
+  aplicarDescuentoNivel(){
+    let array_descuentos_nivel={
+      cmbtipo_desc_nivel: this.tipo_desct_nivel === undefined ? "":this.tipo_desct_nivel,
+      fechaProf: this.fecha_actual?.toString(),
+      codtarifa_main: this.tarifaPrincipal_value,
+      codcliente: this.codigo_cliente?.toString(),
+      codcliente_real: this.codigo_cliente_catalogo_real?.toString(),
+      codclientedescripcion: this.razon_social
+    };
+
+    console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
+
+    let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicarDescuentoCliente/";
+    return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn, array_descuentos_nivel)
+      .subscribe({
+        next: (datav) => {
+          // console.log("Descuento de Nivel: ", datav);
+          if(datav.resp){
+            this.toastr.info(datav.resp);
+          }
+          
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err, mesagge);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      });
+  }
+  // FIN MAT-TAB Desct.Promocion
 
 
 

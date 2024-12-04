@@ -274,33 +274,37 @@
 
 
 
-
-  /* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
-  @media (max-width: 1024px) {
-    .miTabGroupDetalle {
-      height: 35vh;
-      max-height: 36vh;
-    }
+/* Para pantallas más pequeñas (hasta tablets) */
+@media (max-width: 1024px) {
+  .miTabGroupDetalle {
+    height: 35vh;
+    max-height: 36vh;
   }
+}
 
-  /* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
-  @media (max-width: 1366px) {
-    .miTabGroupDetalle {
-      height: 25.5vh;
-      max-height: 26vh;
-    }
+/* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .miTabGroupDetalle {
+    height: 36.2vh;
+    max-height: 38vh;
   }
+}
 
-  /* Para monitores mayores a 19 pulgadas (resoluciones superiores a 1366px) */
-  @media (min-width: 1367px) {
-    .miTabGroupDetalle {
-      height: 50vh;
-      max-height: 52vh;
-    }
+/* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
+@media (min-width: 1367px) and (max-width: 1920px) {
+  .miTabGroupDetalle {
+    height: 58.5vh;
+    max-height: 59vh;
   }
+}
 
-
-
+/* Para pantallas ultra grandes (más de 1920px) */
+@media (min-width: 1921px) {
+  .miTabGroupDetalle {
+    height: 48.5vh;
+    max-height: 49vh;
+  }
+}
 
 
 

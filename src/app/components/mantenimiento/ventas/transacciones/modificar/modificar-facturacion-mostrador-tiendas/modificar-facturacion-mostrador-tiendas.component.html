@@ -13,7 +13,10 @@
             <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="submitData();">
               <span><i class="fa fa-save" style="color: #ffc107;"></i> Grabar</span>
             </button> -->
-
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="alMenu();">
+              <span><i class="fa fa-arrow-left"  style="color: #ffc107;"></i> Menu</span>
+            </button> | &nbsp;
+            
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
             (click)="habilitarProformaMostradorTiendas();">
               <span><i class="fa fa-check" style="color: green;"></i> Habilitar </span>
@@ -763,9 +766,65 @@
           </div>
         </mat-tab>
 
-        <mat-tab label="Anulacion Automatica"></mat-tab>
-        <mat-tab label="LOG Factura SIN"></mat-tab>
-        <mat-tab label="Generacion Cod Web Automatica"></mat-tab>
+        <mat-tab label="Anulación Automatica"></mat-tab>
+
+        <mat-tab label="LOG Factura SIN">
+          <p-table [value]="array_de_logs" [tableStyle]="{'min-width': '60rem'}"
+          styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
+          [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
+          (onRowUnselect)="onRowUnselect($event)">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="fecha" class="center1" style="text-align: center !important; cursor: pointer;">
+                <u>Fecha</u>
+              </th>
+              <th pSortableColumn="hora" class="center">
+                Hora
+              </th>
+              <th pSortableColumn="id_doc" class="center1">
+                ID
+              </th>
+              <th pSortableColumn="ud" class="center1">
+                Nro ID
+              </th>
+              <th pSortableColumn="iva" class="center1">
+                Usuario
+              </th>
+              <th pSortableColumn="cantidad" class="center1">
+                Ventana
+              </th>
+              <th pSortableColumn="TP" class="center1">
+                Tipo
+              </th>
+              <th pSortableColumn="DE" class="center1">
+                Detalle
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-logs let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="logs" [pSelectableRowIndex]="rowIndex" [ngStyle]="{height: '10px'}">
+              <td class="center1">{{ logs?.fecha | date:'yyyy-mm-dd' }}</td>
+              <td class="left">{{ logs?.hora }}</td>
+              <td class="center1">{{ logs?.id_doc }}</td>
+              <td class="center1">{{ logs?.numeroid_doc }}</td>
+              <td class="center1">{{ logs?.usuario }}</td>
+              <td class="center1">{{ logs?.ventana }}</td>
+              <td class="center1"> {{ logs?.tipo }}</td>
+              <td class="center1"> {{ logs?.detalle }}</td>
+            </tr>
+          </ng-template>
+          </p-table>
+
+          <div class="row" style="text-align: center;position: fixed;z-index: 999999;display: contents !important;">
+            <button class="btn btn-outline-secondary form-control-sm" (click)="getLogPorIDNumeroID();"
+              matTooltip="Refrescar LOG Factura Actual" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+              <i class="fa fa-cogs"></i> Refrescar LOG Factura Actual
+            </button>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Generación Cod Web Automatica"></mat-tab>
       </mat-tab-group>
     </div>
   </div>
@@ -906,43 +965,43 @@
               </div>
             </mat-tab>
           </form>
-            <!-- <mat-tab label="Descuento de Linea Segun Solicitud"></mat-tab> -->
-            <!-- <mat-tab label="Datos Complementaria"> </mat-tab> -->
+          <!-- <mat-tab label="Descuento de Linea Segun Solicitud"></mat-tab> -->
+          <!-- <mat-tab label="Datos Complementaria"> </mat-tab> -->
 
-            <mat-tab label="Imprimir Solicitud Anulacion Factura"><br>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text form-control-sm"
-                        style="padding: 7px 11px 0px 20px;border: 0 !important;">
-                        <u> Nombre del que lo solicita </u>
-                      </span>
-                    </div>
-                    <input type="text" [(ngModel)]="nombre_solicitud_anulacion">
+          <mat-tab label="Imprimir Solicitud Anulacion Factura"><br>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 7px 11px 0px 20px;border: 0 !important;">
+                      <u> Nombre del que lo solicita </u>
+                    </span>
+                  </div>
+                  <input type="text" [(ngModel)]="nombre_solicitud_anulacion">
+                </div>
+
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text form-control-sm"
+                      style="padding: 7px 84px 0px 20px;border: 0 !important;">
+                      <u> Numero C.I </u>
+                    </span>
                   </div>
 
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text form-control-sm"
-                        style="padding: 7px 84px 0px 20px;border: 0 !important;">
-                        <u> Numero C.I </u>
-                      </span>
-                    </div>
-
-                    <input type="number" [(ngModel)]="ci_solicitud_anulacion">
-                    
-                    <button class="btn btn-outline-secondary form-control-sm" type="button" style="color:black;"
-                      (click)="imprimirSolAnulacion()" [disabled]="!nombre_solicitud_anulacion && !ci_solicitud_anulacion">
-                      <i class="fa fa-print" style="color:black;"></i> Imprimir Solicitud Anulacion
-                    </button>
-                  </div>
+                  <input type="number" [(ngModel)]="ci_solicitud_anulacion">
+                  
+                  <button class="btn btn-outline-secondary form-control-sm" type="button" style="color:black;"
+                    (click)="imprimirSolAnulacion()" [disabled]="!nombre_solicitud_anulacion && !ci_solicitud_anulacion">
+                    <i class="fa fa-print" style="color:black;"></i> Imprimir Solicitud Anulacion
+                  </button>
                 </div>
               </div>
-            </mat-tab>
+            </div>
+          </mat-tab>
 
-            <mat-tab label="Anulacion Automatica"></mat-tab>
-            <!-- <mat-tab label="Datos Complementaria"></mat-tab> -->
+          <mat-tab label="Anulacion Automatica"></mat-tab>
+          <!-- <mat-tab label="Datos Complementaria"></mat-tab> -->
         </mat-tab-group>
       </div>
 
@@ -1117,12 +1176,22 @@
 
       <div class="col-md-2">
         <div style="text-align: center;">
-          <input type="date" formControlName="fecha" [(ngModel)]="fecha_anulacion_input">
-          <button mat-icon-button class="btn btn-secondary" (click)="CambiarFechaAnulacion(fecha_anulacion_input);"
-            matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+          <ng-container *ngIf="anulada else anld;" >
+            <span style="color:rgb(218, 28, 28);text-align: right;"><strong>ANULADA</strong></span>&nbsp;
+            <input type="date" [(ngModel)]="fecha_anulacion_input" disabled>
+          </ng-container>
+          <ng-template #anld>
+            <span style="color:rgba(20, 151, 15, 0.794);text-align: right;"><strong>NO ANULADA</strong></span>&nbsp;
+            <input type="date" [(ngModel)]="fecha_anulacion_input">
+            <button mat-icon-button class="btn btn-secondary" (click)="CambiarFechaAnulacion(fecha_anulacion_input);"
+              matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-cog"></i></button>
+          </ng-template>
 
-          <span style="color:rgb(218, 28, 28);text-align: right;"><strong></strong></span>
+          <!-- <input type="date" formControlName="fecha" [(ngModel)]="fecha_anulacion_input" [disabled]="anulada"> -->
+          <!-- <button mat-icon-button class="btn btn-secondary" (click)="CambiarFechaAnulacion(fecha_anulacion_input);"
+          matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+          <i class="fa fa-cog"></i></button> -->
         </div>
       </div>
     </div>

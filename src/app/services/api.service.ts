@@ -44,12 +44,10 @@ export class ApiService {
   public periodo_abierto;
   public statusInternet: boolean = true;
   
-
   private readonly API_URL = 'http://192.168.31.240/API_SIAW/api'; // MAQUINA RODRI
   // private readonly API_URL = 'http://192.168.40.5/API_SIAW/api'; // LA PAZ
   // private readonly API_URL = 'http://192.168.30.5/API_SIAW/api'; // CBBA
   // private readonly API_URL = 'http://192.168.80.5/API_SIAW/api'; // STCZ
-
 
   // TIENDAS
   // private readonly API_URL = 'http://192.168.33.99/API_SIAW/api'; // CBBA QUILLACOLLO

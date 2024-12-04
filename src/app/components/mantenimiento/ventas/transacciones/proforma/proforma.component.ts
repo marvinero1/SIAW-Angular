@@ -5253,6 +5253,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // MAT-TAB Desct.Promocion
   aplicarDescuentoNivel(){
     let array_descuentos_nivel={
       cmbtipo_desc_nivel: this.tipo_desct_nivel === undefined ? "":this.tipo_desct_nivel,
@@ -5319,7 +5320,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
   }
-
+// FIN MAT-TAB Desct.Promocion
 
 
 

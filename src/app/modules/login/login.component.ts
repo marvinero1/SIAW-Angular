@@ -436,7 +436,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   guardarToken(token) {
     // localStorage.setItem('token', JSON.stringify(token));
     sessionStorage.setItem('token', JSON.stringify(token));
-    sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
+   // sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
   }
 
   guardarStorageUsuario(usuario) {
@@ -457,7 +457,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   // obtenerStorage() {
   //   this.dato_local_storage = localStorage.getItem('usuario_logueado');
   //   this.dato_local_session = sessionStorage.getItem('usuario_logueado');
-
   //   console.log(this.dato_local_storage, JSON.parse(this.dato_local_storage));
   // }
 

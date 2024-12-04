@@ -1,10 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import {Observable} from 'rxjs';
-import {AppService} from '@services/app.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { AppService } from '@services/app.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -24,8 +22,7 @@ export class AuthGuard  {
         if(sessionStorage.length == 0){
             this.router.navigate(['/login']);
             this.toastr.info('Tiene que Iniciar Sesion, AuthGuard Activo 🛡️');
-            console.log("No hay Session, no puede ingresar al sistema.");
-
+            //console.log("No hay Session, no puede ingresar al sistema.");
             return false; 
         }else{
             return true;

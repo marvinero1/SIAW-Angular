@@ -1530,6 +1530,64 @@
                   </div>
                 </div>
               </mat-tab>
+
+              <mat-tab label="Desct. Promocion">
+                <div class="row p-2">
+                  <div class="col-md">
+                    <form class="example-form" [formGroup]="FormularioData">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text form-control-sm"
+                            style="margin-left: 15px;border: 0 !important;"><u>Aplicar Desct. de Nivel
+                              Actuales del Cliente</u></span>
+                        </div>
+                        <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual"
+                          style="width: 18%;" formControlName="niveles_descuento">
+                          <option value="ACTUAL" selected>ACTUAL</option>
+                          <option value="ANTERIOR">ANTERIOR</option>
+                        </select>
+                      </div>
+
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text form-control-sm"
+                            style="padding: 10px 0px 0px 116px;border: 0 !important;">
+                            <u>Precio Principal del Pedido</u>
+                          </span>
+                        </div>
+                        <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal_value" readonly>
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                            (click)="getPrecioMayorEnDetalle();" style="border-color: #ffc107;">
+                            <i class="fa fa-check"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 129px;border: 0 !important;">
+                          <u>Tipo Descuento de Nivel</u></span>
+                      </div>
+
+                      <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel">
+                        <option *ngFor="let valor_desct_nivels of valor_desct_nivel"
+                          [value]="valor_desct_nivels.desc_nivel">{{ valor_desct_nivels.desc_nivel }}</option>
+                      </select>&nbsp;
+
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()"
+                          readonly="!tarifaPrincipal_value">
+                          <i class="fa fa-cog"> Aplicar Descuento</i>
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </mat-tab>
            
               <mat-tab label="Totales">
               </mat-tab>
@@ -1733,11 +1791,12 @@
         <div class="col-md-2">
         </div>
       </div>
+      <div>
+        <app-footer></app-footer>
+        <app-control-sidebar></app-control-sidebar>
+      </div>      
     </div>
   <!-- finpiePagina -->
 
-  <div>
-    <app-footer></app-footer>
-    <app-control-sidebar></app-control-sidebar>
-  </div>
+
 </section>
