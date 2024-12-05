@@ -40,7 +40,8 @@
         <tr>
           <td width="18%">
             <span>ID:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();"
+            style="margin-left: 38px;">
               Todas
             </mat-slide-toggle>
           </td>
@@ -53,7 +54,7 @@
             <div class="input-group">
               <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
-                [disabled]="!id_bool">
+                [disabled]="!id_bool" style="margin-left: 14px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
@@ -72,7 +73,8 @@
         <tr>
           <td width="18%">
             <span>Cliente:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_cliente" (click)="habilitarTodo();">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_cliente" (click)="habilitarTodo();"
+            style="margin-left: 13px;">
               Todas
             </mat-slide-toggle>
           </td>
@@ -85,7 +87,7 @@
             <div class="input-group">
               <span class="input-group-text"><u>Cliente:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_cliente1"
-                [disabled]="!cliente_bool">
+                [disabled]="!cliente_bool" style="margin-left: 13px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalClientes();"
                 [disabled]="!cliente_bool">
                 <i class="fa fa-search"></i>
@@ -104,7 +106,8 @@
         <tr>
           <td width="18%">
             <span>Almacén:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();"
+            style="margin-left: 4px;">
               Todas
             </mat-slide-toggle>
           </td>
@@ -117,7 +120,7 @@
             <div class="input-group">
               <span class="input-group-text"><u>Almacén:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
-                [disabled]="!almacen_bool">
+                [disabled]="!almacen_bool" style="margin-left: 4px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
                 [disabled]="!almacen_bool">
                 <i class="fa fa-search"></i>
@@ -168,7 +171,8 @@
         <tr>
           <td width="18%">
             <span>Fecha:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();"
+            style="margin-left: 17px;">
               Todas
             </mat-slide-toggle>
           </td>
@@ -196,11 +200,6 @@
           </td>
         </tr>
       </table>
-
-
-
-
-
       <!-- fin buscadores -->
 
       <hr>

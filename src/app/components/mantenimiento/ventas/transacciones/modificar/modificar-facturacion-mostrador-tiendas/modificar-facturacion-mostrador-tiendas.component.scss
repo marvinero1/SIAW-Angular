@@ -285,16 +285,16 @@
 /* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
 @media (min-width: 1025px) and (max-width: 1366px) {
   .miTabGroupDetalle {
-    height: 36.2vh;
-    max-height: 38vh;
+    height: 34.2vh;
+    max-height: 35vh;
   }
 }
 
 /* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
 @media (min-width: 1367px) and (max-width: 1920px) {
   .miTabGroupDetalle {
-    height: 58.5vh;
-    max-height: 59vh;
+    height: 56.5vh;
+    max-height: 57vh;
   }
 }
 

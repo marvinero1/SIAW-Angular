@@ -188,7 +188,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   cod_precio_venta_modal: any = [];
   cod_precio_venta_modal_first: any = [];
   cod_precio_venta_modal_codigo: number;
-
+  tarifaPrincipal:any=[]
 
   cod_descuento_modal: any = [];
   cod_descuento_modal_codigo: number = 0;
@@ -927,7 +927,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.getHoraFechaServidorBckEnd();
-    this.getIdTipo();
+    //this.getIdTipo();
     this.getAlmacen();
     this.getAlmacenParamUsuario();
     this.getVendedorCatalogo();
@@ -1586,63 +1586,63 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     
   }
 
-  getIdTipo() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
-    return this.api.getAll('/venta/mant/venumeracion/catalogoNumProfxUsuario/' + this.userConn + "/" + this.usuarioLogueado)
-      .subscribe({
-        next: (datav) => {
-          this.id_tipo_view_get_array = datav;
-          // console.log(this.id_tipo_view_get_array);
+  // getIdTipo() {
+  //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
+  //   return this.api.getAll('/venta/mant/venumeracion/catalogoNumProfxUsuario/' + this.userConn + "/" + this.usuarioLogueado)
+  //     .subscribe({
+  //       next: (datav) => {
+  //         this.id_tipo_view_get_array = datav;
+  //         // console.log(this.id_tipo_view_get_array);
 
-          this.id_tipo_view_get_array_copied = this.id_tipo_view_get_array.slice();
-          this.id_tipo_view_get_first = this.id_tipo_view_get_array_copied.shift();
+  //         this.id_tipo_view_get_array_copied = this.id_tipo_view_get_array.slice();
+  //         this.id_tipo_view_get_first = this.id_tipo_view_get_array_copied.shift();
 
-          this.id_tipo_view_get_codigo = this.id_tipo_view_get_first.id;
-          // console.log(this.id_tipo_view_get_codigo);
+  //         this.id_tipo_view_get_codigo = this.id_tipo_view_get_first.id;
+  //         // console.log(this.id_tipo_view_get_codigo);
 
-          this.getIdTipoNumeracion(this.id_tipo_view_get_codigo);
-        },
+  //         this.getIdTipoNumeracion(this.id_tipo_view_get_codigo);
+  //       },
 
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
+  //       error: (err: any) => {
+  //         console.log(err, errorMessage);
+  //       },
+  //       complete: () => { }
+  //     })
+  // }
 
-  getIdTipoNumeracion(id_tipo) {
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getNumActProd/";
-    return this.api.getAll('/venta/transac/veproforma/getNumActProd/' + this.userConn + "/" + id_tipo)
-      .subscribe({
-        next: (datav) => {
-          this.id_proforma_numero_id = datav;
-          // console.log('data', datav);
-        },
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
+  // getIdTipoNumeracion(id_tipo) {
+  //   let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getNumActProd/";
+  //   return this.api.getAll('/venta/transac/veproforma/getNumActProd/' + this.userConn + "/" + id_tipo)
+  //     .subscribe({
+  //       next: (datav) => {
+  //         this.id_proforma_numero_id = datav;
+  //         // console.log('data', datav);
+  //       },
+  //       error: (err: any) => {
+  //         console.log(err, errorMessage);
+  //       },
+  //       complete: () => { }
+  //     })
+  // }
 
-  onLeaveIDTipo(event: any) {
-    // console.log(this.id_tipo_view_get_array);
-    const inputValue = event.target.value;
+  // onLeaveIDTipo(event: any) {
+  //   // console.log(this.id_tipo_view_get_array);
+  //   const inputValue = event.target.value;
 
-    let cadena = inputValue.toString();
-    // console.log(cadena);
-    // Verificar si el valor ingresado está presente en los objetos del array
-    const encontrado = this.id_tipo_view_get_array.some(objeto => objeto.id === cadena.toUpperCase());
+  //   let cadena = inputValue.toString();
+  //   // console.log(cadena);
+  //   // Verificar si el valor ingresado está presente en los objetos del array
+  //   const encontrado = this.id_tipo_view_get_array.some(objeto => objeto.id === cadena.toUpperCase());
 
-    if (!encontrado) {
-      // Si el valor no está en el array, dejar el campo vacío
-      event.target.value = '';
-      console.log("NO ENCONTRADO VALOR DE INPUT");
-    } else {
-      event.target.value = cadena;
-      this.getIdTipoNumeracion(cadena);
-    }
-  }
+  //   if (!encontrado) {
+  //     // Si el valor no está en el array, dejar el campo vacío
+  //     event.target.value = '';
+  //     console.log("NO ENCONTRADO VALOR DE INPUT");
+  //   } else {
+  //     event.target.value = cadena;
+  //     this.getIdTipoNumeracion(cadena);
+  //   }
+  // }
 
   abrirTabPorLabel(label: string) {
     //abre tab por el id de su etiqueta, muy buena funcion xD
@@ -5862,45 +5862,44 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
 
 
-
-
-
-
-  tarifaPrincipal:any=[]
   
-  quitarDescDeposito23() {
+  async quitarDescDeposito23() {
     console.log(this.array_de_descuentos_ya_agregados);
-    this.spinner.show();
+    const result = await this.openConfirmationDialog(`¿Esta seguro de quitar el Desct 23 ?`);
 
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/reqstQuitarDescDeposito/"
-    return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage, this.array_de_descuentos_ya_agregados)
-      .subscribe({
-        next: (datav) => {
-          this.tarifaPrincipal = datav;
-          console.log(this.tarifaPrincipal);
-          this.spinner.hide();
-
-          this.total = 0
-          this.subtotal = 0;
-          this.des_extra = 0;
-          this.recargos = 0;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-          this.spinner.hide();
-        },
-
-        complete: () => {
-          this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.filter(desct =>
-            desct.coddesextra !== 23,
-          );
-          this.spinner.hide();
-          console.log(this.array_de_descuentos_ya_agregados);
-        }
-      })
+    if (result) {
+      this.spinner.show();
+      let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/reqstQuitarDescDeposito/"
+      return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage, this.array_de_descuentos_ya_agregados)
+        .subscribe({
+          next: (datav) => {
+            this.tarifaPrincipal = datav;
+            console.log(this.tarifaPrincipal);
+            this.spinner.hide();
+  
+            this.total = 0
+            this.subtotal = 0;
+            this.des_extra = 0;
+            this.recargos = 0;
+          },
+  
+          error: (err: any) => {
+            console.log(err, errorMessage);
+            this.spinner.hide();
+          },
+  
+          complete: () => {
+            this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados.filter(desct =>
+              desct.coddesextra !== 23,
+            );
+            this.spinner.hide();
+            console.log(this.array_de_descuentos_ya_agregados);
+          }
+        })
+    }else{
+      console.log("SE CANCELO LA ACCION");
+    }
   }
-
 
   eliminarItemTabla(orden, coditem) {
     console.log(orden, coditem, this.array_items_carrito_y_f4_catalogo);

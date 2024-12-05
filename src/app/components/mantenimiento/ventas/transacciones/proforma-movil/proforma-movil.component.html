@@ -1,0 +1,227 @@
+<div class="container">
+  <header class="header">
+    <h1>Mi Proforma Móvil</h1>
+  </header>
+
+  <main class="main-content">
+    <div class="row">
+      <div class="col">
+        <span class="input-group-text form-control-sm"><strong>ID Tipo: &nbsp;</strong>
+          {{ id_tipo }} - {{ id_tipo_descripcion }} - {{ id_factura_numero_id }}</span>
+      </div>
+      <div class="col">
+        <span class="input-group-text form-control-sm"><strong>Fecha - Hora:&nbsp; </strong>
+          {{ fecha_actual }} - {{ hora_fecha_server }}</span>
+      </div>
+      <div class="col">
+        <span class="input-group-text form-control-sm"><strong>Almacen:&nbsp; </strong>{{ almacn_parame_usuario_almacen }}</span>
+      </div>
+    </div>
+
+
+    <mat-stepper orientation="vertical">
+      <mat-step>
+        <ng-template matStepLabel>Paso 1 Seleccionar Cliente: </ng-template>
+ 
+        <ng-template matStepContent>
+          <div class="col">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 9px 0px 0px 18px;border: 0 !important;">
+                  <u> Cod. Cliente </u>
+                </span>
+              </div>
+  
+              <input type="text" class="form-control cliente form-control-sm" 
+                [(ngModel)]="codigo_cliente" style="margin-left: 6.5px;" id="inputCatalogoCliente"
+                placeholder="COD. CLIENTE" #cod_cliente>
+             
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" (click)="modalClientes();"
+                  style="cursor: pointer; border: 1;">
+                  <i class="fa fa-search" style="color: #093070;"></i>
+                </span>
+                <span class="input-group-text form-control-sm" (click)="getClientByID(codigo_cliente);"
+                  style="cursor: pointer; border: 1;">
+                  <i class="fa fa-eye" style="color: #093070;"></i>
+                </span>
+              </div>
+              <div class="input-group-append">
+                <button class="input-group-text form-control-sm" type="button" [disabled]="!codigo_cliente"
+                  (click)="modalClientesInfo('900ms', '900ms');">
+                  <i class="fa fa-info-circle" style="color: #093070;"></i>
+                </button>
+              </div>
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 9px 8px 0px 0px;border: 0 !important;"><u>Nombre Cliente </u></span>
+              </div>
+    
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente"
+                [(ngModel)]="razon_social" value="{{ razon_social }}"
+                [readonly]="!codigo_cliente?.startsWith('SN')">
+
+  
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"><i
+                    class="fa fa-save"></i>
+                </button>
+              </div>
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 7px 5px 0px 0px;border: 0 !important;"><u>Nombre Factura </u> </span>
+              </div>
+  
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="razon_social"
+                value="{{ razon_social }}" formControlName="nomcliente" [readonly]="!codigo_cliente?.startsWith('SN')">
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 9px 6px 0px 42px;border: 0 !important;">
+                  <u> Doc. Id.</u>
+                </span>
+              </div>
+  
+              <mat-select class="custom-select1 form-control-sm" style="width: 84% !important;" [(ngModel)]="tipo_doc_cliente">
+                <mat-option *ngFor="let documento_identidads of documento_identidad"
+                  [value]="documento_identidads.codigoclasificador">
+                  {{ documento_identidads.codigoclasificador }} - {{ documento_identidads.descripcion }}</mat-option>
+              </mat-select>
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 8px 6px 0px 41px;border: 0 !important;">
+                  <u><i class="fa fa-eye" (click)="verificarNit()" style="cursor:pointer"></i> N.I.T</u>
+                </span>
+              </div>
+  
+              <container-element [ngSwitch]="tipo_doc_cliente" style="width: 80%;">
+                <ng-container *ngSwitchCase="1">
+                  <div class="input-group-prepend">
+                    <input type="number" class="form-control form-control-sm" placeholder="CARNET IDENTIDAD"
+                      [readonly]="!codigo_cliente?.startsWith('SN')" (paste)="onPaste($event)"
+                      [(ngModel)]="nit_cliente" style="width: 66%;">
+                      <input type="text" class="form-control form-control-sm"  placeholder="COMPLEMENTO"
+                      [(ngModel)]="complemento_ci" [readonly]="!codigo_cliente?.startsWith('SN')" style="width: 34%;">
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="2">
+                  <input type="text" class="form-control form-control-sm" (paste)="onPaste($event)"
+                    placeholder="CEX - CÉDULA DE IDENTIDAD DE EXTRANJERO" [readonly]="!codigo_cliente?.startsWith('SN')"
+                    style="width: 100%;font-size: 0.55rem !important;" [(ngModel)]="nit_cliente">
+                </ng-container>
+                <ng-container *ngSwitchCase="3">
+                  <input type="text" class="form-control form-control-sm" placeholder="PAS - PASAPORTE" (paste)="onPaste($event)"
+                    style="font-size: 0.55rem !important;width: 100%;" [(ngModel)]="nit_cliente" [readonly]="!codigo_cliente?.startsWith('SN')">
+                </ng-container>
+                <ng-container *ngSwitchCase="4">
+                  <input type="text" class="form-control form-control-sm" (paste)="onPaste($event)"
+                    placeholder="OD - OTRO DOCUMENTO DE IDENTIDAD" style="font-size: 0.55rem !important;width: 100%;"
+                    [(ngModel)]="nit_cliente" [readonly]="!codigo_cliente?.startsWith('SN')">
+                </ng-container>
+                <ng-container *ngSwitchCase="5">
+                  <input type="number" class="form-control form-control-sm" (paste)="onPaste($event)"
+                    placeholder="NIT - NÚMERO DE IDENTIFICACIÓN TRIBUTARIA" min="0" [readonly]="!codigo_cliente?.startsWith('SN')"
+                    style="width: 100%;font-size: 0.55 rem !important;" [(ngModel)]="nit_cliente">
+                </ng-container>
+              </container-element>
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 40px;border: 0 !important;">
+                  <u (click)="setEmailDefault();" style="cursor: pointer;">
+                    <i class="fa fa-magic" (click)="setEmailDefault();" style="cursor: pointer;" ></i>
+                    Email
+                  </u></span>
+              </div>
+              <ng-container *ngIf="!email_cliente">
+                <input type="email" class="form-control form-control-sm" style="margin-left: 4px;"
+                  style="margin-left: 2px;" [(ngModel)]="email">
+              </ng-container>
+  
+              <ng-container *ngIf="email_cliente">
+                <input type="email" class="form-control form-control-sm" 
+                  [(ngModel)]="email_cliente" style="margin-left: 2px;">
+              </ng-container>
+  
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  (click)="guardarCorreo();" [disabled]="!email_cliente"><i class="fa fa-save"></i>
+                </button>
+              </div>
+            </div>
+  
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 9px 3px 0px 32px;border: 0 !important;"><u>Whatsapp </u></span>
+              </div>
+  
+              <input type="text" class="form-control form-control-sm" style="margin-left: 2px;"
+                [(ngModel)]="whatsapp_cliente">
+  
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" id="inputMoneda" 
+                  [(ngModel)]="moneda_get_catalogo" placeholder="Moneda" readonly>
+              </ng-container>
+              <div class="input-group-append">
+                <a class="btn btn-outline-primary form-control-sm" type="button" (click)="modalCatalogoMoneda();"
+                  style="border-color: #093070;"><i class="fa fa-search"></i>
+                </a>
+              </div>
+  
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="tipo_cambio_moneda_catalogo"
+                readOnly="true" style="text-align: left !important;">
+            </div>
+          </div><br><br><br>
+
+
+
+
+
+
+          <button mat-button matStepperNext>Next</button>
+        </ng-template>
+
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Paso 2</ng-template>
+        <ng-template matStepContent>
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizLista()"
+            matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-th blue"></i>
+          </button>
+
+
+
+
+
+
+
+
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </ng-template>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Paso 3</ng-template>
+        <p>This content was rendered eagerly</p>
+        <button mat-button matStepperPrevious>Back</button>
+      </mat-step>
+    </mat-stepper>
+  </main>
+
+  <footer class="footer">
+    <app-footer class="no-printme"></app-footer>
+    <app-control-sidebar class="no-printme"></app-control-sidebar>
+  </footer>
+</div>

@@ -149,7 +149,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         case "input_matriz":
           this.empaqueChangeMatrix('', 0);
           break;
-
       }
     }
   };
@@ -416,6 +415,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   valor_desct_nivel:any=[];
   tarifaPrincipal_value:any;
   permiso_para_vista:any;
+
+  // Contador de clics TODOS
+  contadorClicks = 0;
+  contadorClicksRestaur = 0;
+  tarifaPrincipal:any=[]
 
   // TABS DEL DETALLE PROFORMA
   displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
@@ -1056,29 +1060,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.FormularioData.controls;
   }
 
-  getIdTipo() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
-    return this.api.getAll('/venta/mant/venumeracion/catalogoNumProfxUsuario/' + this.userConn + "/" + this.usuarioLogueado)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          this.id_tipo_view_get_array = datav;
-          // console.log(this.id_tipo_view_get_array);
 
-          this.id_tipo_view_get_array_copied = this.id_tipo_view_get_array.slice();
-          this.id_tipo_view_get_first = this.id_tipo_view_get_array_copied.shift();
-
-          this.id_tipo_view_get_codigo = this.id_tipo_view_get_first?.id;
-          // console.log(this.id_tipo_view_get_codigo);
-
-          this.getIdTipoNumeracion(this.id_tipo_view_get_codigo);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
 
   getHoraFechaServidorBckEnd() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
@@ -1108,6 +1090,30 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.id_proforma_numero_id = datav;
           // console.log('data', datav);
         },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getIdTipo() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
+    return this.api.getAll('/venta/mant/venumeracion/catalogoNumProfxUsuario/' + this.userConn + "/" + this.usuarioLogueado)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.id_tipo_view_get_array = datav;
+          // console.log(this.id_tipo_view_get_array);
+
+          this.id_tipo_view_get_array_copied = this.id_tipo_view_get_array.slice();
+          this.id_tipo_view_get_first = this.id_tipo_view_get_array_copied.shift();
+
+          this.id_tipo_view_get_codigo = this.id_tipo_view_get_first?.id;
+          // console.log(this.id_tipo_view_get_codigo);
+
+          this.getIdTipoNumeracion(this.id_tipo_view_get_codigo);
+        },
+
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -1841,11 +1847,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       element.empaque = 0;
     }
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCantItemsbyEmp/";
     this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + element.empaque)
     .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          // console.log(datav);
+        console.log("🚀 ~ .empaqueChangeMatrix ~ datav:", datav)
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
           element.empaque = Number(newValue);
@@ -1863,7 +1869,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.empaqueChangeMatrix(products, value);
-    }, 500); // 300 ms de retardo
+    }, 1500); // 300 ms de retardo
   }
 
   onInputChange(products: any, value: any) {
@@ -1871,7 +1877,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.pedidoChangeMatrix(products, value);
-    }, 2200); // 300 ms de retardo
+    }, 2000); // 300 ms de retardo
   }
 
   pedidoChangeMatrix(element: any, newValue: number) {
@@ -1900,6 +1906,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           element.preciolista = Number(datav.preciolista);
           element.preciodesc = Number(datav.preciodesc);
           element.precioneto = Number(datav.precioneto);
+          element.porcen_mercaderia = Number(datav.porcen_mercaderia);
         },
 
         error: (err: any) => {
@@ -1913,7 +1920,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.cantidadChangeMatrix(products, value);
-    }, 500); // 300 ms de retardo
+    }, 1000); // 300 ms de retardo
   }
 
   cantidadChangeMatrix(elemento: any, newValue: number) {
@@ -1935,12 +1942,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           //this.almacenes_saldos = datav;
-          // console.log("Total al cambio de DE en el detalle: ", datav);
+          console.log("Total al cambio de DE en el detalle: ", datav);
           // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
           elemento.coddescuento = Number(datav.coddescuento);
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
+          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
         },
 
         error: (err: any) => {
@@ -5755,10 +5763,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Contador de clics TODOS
-  contadorClicks = 0;
-  contadorClicksRestaur = 0;
-
   aplicarCantidadSugeridadParaCumplirEmpaqueATODO(carrito, sugerencia_array) {
     let carrito1 = carrito.filteredData;
     let array_sugerido = sugerencia_array.filteredData;
@@ -5822,9 +5826,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(carrito1, this.contadorClicksRestaur);
   }
   // FIN MAT-TAB Precios - Descuentos Especiales
-
-
-
 
 
 
@@ -5914,13 +5915,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   //FIN Importar a EXCEL
 
-
-
-
   // Exportar a EXCEL
   exportProformaZIP(cod_proforma: any) {
-    console.log("El usuario hizo clic en Aceptar.");
-
     this.api.descargarArchivo('/venta/transac/veproforma/exportProforma/' + this.userConn + "/" + cod_proforma + "/" + this.codigo_cliente, { responseType: 'arraybuffer' })
       .subscribe({
         next: (datav: ArrayBuffer) => {
@@ -5982,7 +5978,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       disableClose: true,
     });
 
-
     dialogRefExcel.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         // Convertir los datos a una hoja de cálculo
@@ -6018,7 +6013,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onRowSelectForDelete() {
-    console.log('Array de Items para eliminar: ', this.selectedProducts);
+    // console.log('Array de Items para eliminar: ', this.selectedProducts);
 
     // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
@@ -6040,12 +6035,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onRowUnselect(event: any) {
-    console.log('Row Unselected:', event.data);
+    // console.log('Row Unselected:', event.data);
     this.updateSelectedProducts();
   }
 
   updateSelectedProducts() {
-    console.log('Selected Products:', this.selectedProducts);
+    // console.log('Selected Products:', this.selectedProducts);
 
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
@@ -6065,8 +6060,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return this.array_items_carrito_y_f4_catalogo;
   }
-
- 
 
   getPermisosBtnPorRol() {
     // esta funcion devuelve un booleano para verificar que tiene permiso para ver el input y la funcional de empaques
@@ -6134,58 +6127,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  tarifaPrincipal:any=[]
-  quitarDescDeposito23() {
+  
+  async quitarDescDeposito23() {
     console.log(this.array_de_descuentos_ya_agregados);
     let borrarDesct23 = [{
       codproforma: 0,
@@ -6204,26 +6147,31 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       montorest: 0
     }];
 
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/reqstQuitarDescDeposito/"
-    return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage, borrarDesct23)
-      .subscribe({
-        next: (datav) => {
-          this.tarifaPrincipal = datav;
-          console.log(this.tarifaPrincipal);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-
-        complete: () => {
-          this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.filter(desct =>
-            desct.coddesextra !== 23,
-          );
-
-          // console.log(this.array_de_descuentos_ya_agregados);
-        }
-      })
+    const result = await this.openConfirmationDialog(`¿Esta seguro de quitar el Desct 23 ?`);
+    if (result) {
+      let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/reqstQuitarDescDeposito/"
+      return this.api.create('/venta/transac/veproforma/reqstQuitarDescDeposito/' + this.userConn + "/" + this.BD_storage, borrarDesct23)
+        .subscribe({
+          next: (datav) => {
+            this.tarifaPrincipal = datav;
+            console.log(this.tarifaPrincipal);
+          },
+  
+          error: (err: any) => {
+            console.log(err, errorMessage);
+          },
+  
+          complete: () => {
+            this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.filter(desct =>
+              desct.coddesextra !== 23,
+            );
+  
+            // console.log(this.array_de_descuentos_ya_agregados);
+          }
+        })
+    }else{
+      console.log("LE DIO A CANCELAR");
+    }
   }
 
 
@@ -6435,20 +6383,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // if (this.desct_nivel_actual === undefined) {
-    //   this.dialog.open(VentanaValidacionesComponent, {
-    //     width: 'auto',
-    //     height: 'auto',
-    //     disableClose: true,
-    //     data: {
-    //       message: "SELECCIONE NIVEL DE DESCT.",
-    //     }
-    //   });
-    //   return;
-    // }
-
-    console.log(this.agencia_logueado);
-    // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsClasicaComponent, {
       width: '100vw',
       height: '100vh',

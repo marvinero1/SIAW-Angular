@@ -1,0 +1,58 @@
+/* Estilo general */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: #3498db;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.nav {
+  background-color: #2ecc71;
+
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      flex: 1;
+      text-align: center;
+
+      a {
+        display: block;
+        padding: 1rem;
+        color: white;
+        text-decoration: none;
+
+        &:hover {
+          background-color: darken(#2ecc71, 10%);
+        }
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+}
+
+.footer {
+  background-color: #ddd;
+  text-align: center;
+  padding:1rem;
+}

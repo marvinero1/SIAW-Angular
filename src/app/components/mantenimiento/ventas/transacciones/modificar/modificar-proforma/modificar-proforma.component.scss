@@ -202,16 +202,16 @@ mat-row, mat-header-row, mat-footer-row{
 /* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
 @media (min-width: 1025px) and (max-width: 1366px) {
   .miTabGroupDetalle {
-    height: 20.2vh;
-    max-height: 22vh;
+    height: 21.9vh;
+    max-height: 22.3vh;
   }
 }
 
 /* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
 @media (min-width: 1367px) and (max-width: 1920px) {
   .miTabGroupDetalle {
-    height: 47.5vh;
-    max-height: 49vh;
+    height: 45.5vh;
+    max-height: 47.5vh;
   }
 }
 
@@ -255,7 +255,7 @@ mat-row, mat-header-row, mat-footer-row{
 
 .miTabGroupProformaFooter .mat-mdc-tab-body {
   /* Estilos específicos para el tab 1 */
-  height: 195px !important;
+  height: 130px !important;
 }
 .selected-row {
   background-color: #093070; /* Color de fondo cuando se selecciona la fila */
@@ -324,6 +324,9 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 ::ng-deep {
+  label{
+    margin-bottom: 0px !important;
+  }
   .p-icon {
     width: 0.55rem !important;
     height: 0.55rem !important;
@@ -376,7 +379,7 @@ mat-row, mat-header-row, mat-footer-row{
   }
   .miTabGroupProformaFooter .mat-mdc-tab-body{
     //height: 14rem !important;
-    height: 146px !important;
+    height: 127px !important;
   }
   .mdc-data-table__cell, .mdc-data-table__header-cell{
     padding: 0px 10px 0px 10px !important;

@@ -26,6 +26,7 @@ import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/busca
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { Router } from '@angular/router';
+import { TiposAnulacionFelComponent } from './tipos-anulacion-fel/tipos-anulacion-fel.component';
 @Component({
   selector: 'app-modificar-facturacion-mostrador-tiendas',
   templateUrl: './modificar-facturacion-mostrador-tiendas.component.html',
@@ -184,6 +185,9 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   public id_tipo: any = [];
   public almacenes_saldos: any = [];
   public saldoItem: number;
+
+  // LOGS
+  array_de_logs:any=[];
 
   // TAB OBSERVACIONES
   eventosLogs:any=[];
@@ -1209,7 +1213,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
   // SECCION IMPRIMIR
   autorizarImprimir(){
-    const url = `/venta/modif/docmodifvefactura_nsf/autorizaReimpresion/${this.userConn}/${this.agencia_logueado}/"28"/${this.documento_nro}`;
+    const url = `/venta/modif/docmodifvefactura_nsf/autorizaReimpresion/${this.userConn}/${this.agencia_logueado}/"28"/${this.codigo}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.getAll(url).subscribe({
@@ -1264,7 +1268,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   //SECCION DONDE SE OBTIENE PDF Y SE DIBUJA
   async getDataFacturaParaArmar(){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
-    this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + this.documento_nro + "/" + this.BD_storage)
+    this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + this.codigo + "/" + this.BD_storage)
       .subscribe({
         next: async (datav) => {
          console.log("🚀 ~ FacturaNotaRemisionComponent ~ getDataFacturaParaArmar ~ datav:", datav)
@@ -1370,7 +1374,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   async habilitarProformaMostradorTiendas(){
     let valor_boolean:boolean = false;
     //pide clave
-    const url = `/venta/modif/docmodifvefactura_nsf/HabilitarFactura/${this.userConn}/${this.usuarioLogueado}/${this.documento_nro}/${this.BD_storage}/${valor_boolean}`;
+    const url = `/venta/modif/docmodifvefactura_nsf/HabilitarFactura/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${valor_boolean}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, []).subscribe({
@@ -1403,9 +1407,96 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  anularProformaMostradorTiendas(){
+  async anularProformaMostradorTiendas(){
+    // this.spinner.show();
+    let valor_boolean:boolean = true;
 
+    const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_Fecha_Anulacion/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    
+    const result = await this.openConfirmationDialog(`¿Esta seguro de ANULAR esta factura ?`);
+
+    if (result) {
+      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+        width: '450px',
+        height: 'auto',
+        data: {
+          dataA: this.codigo_cliente,
+          dataB: this.razon_social,
+          dataPermiso: "",
+          dataCodigoPermiso: "83",
+          //abrir: true,
+        },
+      });
+
+      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+        console.log(result);
+        if (result) {
+          // se abre la ventanita de COMO REALIZAR LA ANULACION
+          this.dialog.open(TiposAnulacionFelComponent, {
+            width: '716px',
+            height: 'auto',
+            data: {
+             
+             
+            },
+          });
+
+
+
+
+
+
+
+
+
+
+
+
+          await this.api.create(url, []).subscribe({
+            next: async (datav) => {
+              console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
+              
+              await this.openConfirmacionDialog(datav.msgAlert);
+              //this.en_linea_SIN = datav.resp;
+
+              this.num_idd = this.id_factura;
+              this.num_id = this.documento_nro;
+              this.transferirFactura();
+                  
+              setTimeout(() => {
+              this.spinner.hide();
+            }, 50);
+            },
+    
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+    
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+          return;
+        } else {
+          this.toastr.error('! CANCELADO !');
+        }
+      });
+    }
   }
+
+
+
+
+
+
+
+
 
   async imprimirAnticipo(){
     const url = `/venta/transac/docvefacturamos_cufd/imprimirReciboAnticipo/${this.userConn}/${this.documento_nro}/${this.BD_storage}`;
@@ -1738,7 +1829,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
     this.api.getAll('/venta/modif/docmodifvefactura_nsf/Verificar_Estado_Factura_en_el_SIN/' + this.userConn + "/" +this.usuarioLogueado
-      +"/"+ this.documento_nro + "/" + this.BD_storage)
+      +"/"+ this.codigo + "/" + this.BD_storage)
       .subscribe({
         next: (datav) => {
         console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ verificarFacturaEnSIN ~ datav:", datav)
@@ -1837,7 +1928,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       });
   }
 
-  array_de_logs:any=[];
   getLogPorIDNumeroID(){
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/modif/docmodifvefactura_nsf/refrescarLogs/";
     return this.api.getAll

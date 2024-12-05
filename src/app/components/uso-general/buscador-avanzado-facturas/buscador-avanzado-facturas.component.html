@@ -43,14 +43,14 @@
             <div class="input-group">
               <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
-                [disabled]="!id_bool" style="margin-left: 14px;">
+               (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool" style="margin-left: 14px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo2"
-                [disabled]="!id_bool">
+               (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
@@ -76,14 +76,14 @@
             <div class="input-group">
               <span class="input-group-text"><u>Almacén:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
-                [disabled]="!almacen_bool" style="margin-left: 5px;">
+                (blur)="onLeaveAlmacen($event)" [disabled]="!almacen_bool" style="margin-left: 5px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
                 [disabled]="!almacen_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen2"
-                [disabled]="!almacen_bool">
+                (blur)="onLeaveAlmacen($event)" [disabled]="!almacen_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
                 [disabled]="!almacen_bool">
                 <i class="fa fa-search"></i>
@@ -108,14 +108,14 @@
             <div class="input-group">
               <span class="input-group-text"><u>Vendedor:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente1"
-                [disabled]="!vendedor_bool">
+               (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
                 [disabled]="!vendedor_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente2"
-                [disabled]="!vendedor_bool">
+               (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
                 [disabled]="!vendedor_bool">
                 <i class="fa fa-search"></i>
@@ -141,14 +141,14 @@
             <div class="input-group">
               <span class="input-group-text"><u>Cliente:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_cliente1"
-                [disabled]="!cliente_bool" style="margin-left: 14px;">
+                [disabled]="!cliente_bool" (blur)="onLeaveCliente($event)" style="margin-left: 14px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalClientes();"
                 [disabled]="!cliente_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="codigo_cliente2"
-                [disabled]="!cliente_bool">
+                [disabled]="!cliente_bool" (blur)="onLeaveCliente($event)">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalClientes();"
                 [disabled]="!cliente_bool">
                 <i class="fa fa-search"></i>

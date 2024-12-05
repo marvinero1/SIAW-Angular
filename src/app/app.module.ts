@@ -450,6 +450,8 @@ import { BuscadorAvanzadoAnticiposComponent } from '@components/uso-general/busc
 import { ModalAnticiposComponent } from '@components/mantenimiento/ventas/modal-anticipos/modal-anticipos.component';
 import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/buscador-avanzado-facturas/buscador-avanzado-facturas.component';
+import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transacciones/proforma-movil/proforma-movil.component';
+import { TiposAnulacionFelComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/tipos-anulacion-fel/tipos-anulacion-fel.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -540,13 +542,18 @@ registerPlugin(UndoRedo);
         DialogConfirmacionComponent, BuscadorAvanzadoFacturasComponent, ModalDescuentosTiendaComponent,TranferirMostradorTiendasComponent, 
         EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
         ModalFormaPagoComponent, ModificarFacturacionMostradorTiendasComponent, ModalAnticiposComponent, ModalSubTotalMostradorTiendasComponent, FacturaTemplateComponent,
-        FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent,
+        FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent,
+
+
+
+
+
+
+
         
 
-
-
-
-
+        ProformaMovilComponent,
+        
 
     ],
     bootstrap: [AppComponent],

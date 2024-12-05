@@ -50,74 +50,17 @@
             </button>
           </div>
 
-          <!-- <div class="pt-1" style="padding-left: 80px !important;">
+          <div class="pt-1" style="padding-left: 150px !important;">
             <h3><strong><u>MODIFICAR FACTURACION MOSTRADOR (FEL)</u></strong></h3>
-          </div> -->
+          </div>
           <!-- BOTONES FIN -->
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
-              matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-              <i class="fa fa-th gray" ></i>
-          </button> -->
-
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Matriz Item Vendedores"
-            matTooltipClass="custom-tooltip" matTooltipPosition="above" (click)="modalMatrizProductos()">
-            <i class="fa fa-th blue" ></i>
-          </button> -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button"
-            matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-inbox gray" ></i>
-          </button> -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Estado Mora"
-            matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <mat-icon class="red">photo_size_select_small</mat-icon>
-          </button> -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Pagos Cliente"
-            matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <mat-icon class="blue">photo_size_select_small</mat-icon>
-          </button> -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltip="Validar Negativos"
-            (click)="validarProformaSoloNegativos();" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-inbox blue" ></i>
-          </button> -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
-            <i class="fa fa-question-circle black"></i>
-          </button> -->
-
-          <!-- este funciona -->
-          <!-- <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Validar Empaques Minimo de Precio" (click)="empaquesMinimosPrecioValidacion()"
-            matTooltipPosition="above">
-            <i class="fa fa-inbox red"></i>
-          </button> -->
-
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Validar Empaques Minimo de Precio" matTooltipPosition="above" (click)="imprimirAgain();">
             <i class="fa fa-print"></i>
           </button>
-
-          <!-- <button mat-button [matMenuTriggerFor]="beforeMenu">
-            <mat-icon>expand_more</mat-icon>
-          </button> -->
-
-          <!-- <mat-menu #beforeMenu="matMenu" xPosition="before">
-            <mat-list role="list">
-              <mat-list-item role="listitem" class="list-button">
-                <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  (click)="detalleProformaCarritoTOExcel();">
-                  <i class="fa fa-paper-plane" ></i> Detalle a Excel
-                </button>
-              </mat-list-item>
-              <mat-list-item role="listitem" class="list-button">
-                <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  (click)="cargarDataExcel();">
-                  <i class="fa fa-file-excel green"></i> Cargar
-                </button>
-              </mat-list-item>
-            </mat-list>
-          </mat-menu> -->
         </div>
       </div>
     </div>
@@ -1135,7 +1078,7 @@
         <!-- finSaldos -->
 
         <!-- BUSCADOR GENERAL AVANZADO -->
-        <div class="row">
+        <div class="row pb-3">
           <div class="input-group" style="padding-left: 7px;">
             <span class="input-group-text form-control-sm">ID:</span>
             
@@ -1172,20 +1115,22 @@
 
           </div>
         </div>
+        
       </div>
 
       <div class="col-md-2">
-        <div style="text-align: center;">
+        <div style="text-align: left;">
           <ng-container *ngIf="anulada else anld;" >
             <span style="color:rgb(218, 28, 28);text-align: right;"><strong>ANULADA</strong></span>&nbsp;
-            <input type="date" [(ngModel)]="fecha_anulacion_input" disabled>
-          </ng-container>
-          <ng-template #anld>
-            <span style="color:rgba(20, 151, 15, 0.794);text-align: right;"><strong>NO ANULADA</strong></span>&nbsp;
+
             <input type="date" [(ngModel)]="fecha_anulacion_input">
             <button mat-icon-button class="btn btn-secondary" (click)="CambiarFechaAnulacion(fecha_anulacion_input);"
               matTooltip="Modificar Fecha Anulación" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-cog"></i></button>
+            <i class="fa fa-cog"></i></button> 
+          </ng-container>
+          <ng-template #anld>
+            <span style="color:rgba(20, 151, 15, 0.794);text-align: right;"><strong>NO ANULADA</strong></span>&nbsp;
+            <input type="date" [(ngModel)]="fecha_anulacion_input" disabled>
           </ng-template>
 
           <!-- <input type="date" formControlName="fecha" [(ngModel)]="fecha_anulacion_input" [disabled]="anulada"> -->
@@ -1195,5 +1140,8 @@
         </div>
       </div>
     </div>
+
+    <app-footer class="no-printme"></app-footer>
+    <app-control-sidebar class="no-printme"></app-control-sidebar>
   </div>
 </section>

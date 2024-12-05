@@ -1,36 +1,16 @@
-import {
-  AppState
-} from '@/store/state';
-import {
-  UiState
-} from '@/store/ui/state';
-import {
-  DatePipe
-} from '@angular/common';
-import {
-  Component,
-  HostBinding,
-  OnInit,
-  NgZone
-} from '@angular/core';
-import {
-  MatDialog
-} from '@angular/material/dialog';
-import {
-  MatSnackBar
-} from '@angular/material/snack-bar';
-import {
-  TipocambiovalidacionComponent
-} from '@components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component';
-import {
-  Store
-} from '@ngrx/store';
-import {
-  ApiService
-} from '@services/api.service';
+import { AppState } from '@/store/state';
+import { UiState } from '@/store/ui/state';
+import { DatePipe } from '@angular/common';
+import { Component, HostBinding, OnInit, NgZone } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TipocambiovalidacionComponent } from '@components/seguridad/tipocambiovalidacion/tipocambiovalidacion.component';
+import { Store } from '@ngrx/store';
+import { ApiService } from '@services/api.service';
 import { AppService } from '@services/app.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ToggleControlSidebar, ToggleSidebarMenu } from '@/store/ui/actions';
 
 const BASE_CLASSES = 'bck-azul elevation-4 main-sidebar sidebar-dark-warning';
 @Component({
@@ -215,7 +195,6 @@ export class MenuSidebarComponent implements OnInit {
     }, 1000);
   }
 
-
   verificarIP_VPN() {
     return this.api.getSimple("https://api.ipify.org?format=json").subscribe({
       next: (datav) => {
@@ -227,5 +206,9 @@ export class MenuSidebarComponent implements OnInit {
       },
       complete: () => { }
     });
+  }
+
+  cerrarMenu(){
+    this.store.dispatch(new ToggleSidebarMenu());
   }
 }

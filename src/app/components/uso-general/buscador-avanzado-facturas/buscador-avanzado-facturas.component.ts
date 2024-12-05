@@ -85,11 +85,18 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
   public nombre_cliente: any;
 
+  //GETS
+  public clientes: any=[];
+  public almacen_get: any=[];
+  public vendedor_get: any=[];
+  public id_tipo_view_get_array: any=[];
+
   id_buscador:any;
   num_id_buscador:any;
   codigo_documento:any;
 
   userConn: any;
+  usuarioLogueado: any;
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<BuscadorAvanzadoFacturasComponent>, private toastr: ToastrService,
     private almacenservice: ServicioalmacenService, private serviciovendedor: VendedorService,
@@ -99,16 +106,21 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public ventana: any) {
 
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-  }
+      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    }
 
   ngOnInit() {
+    this.getIdTipo();
+    this.getClienteCatalogo();
+    this.getAlmacen();
+    this.getVendedorCatalogo();
+
     // Id Tipo
     this.servicioCatalogoFacturas.disparadorDeIDFacturas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo ID Tipo Factura: ", data.factura);
       this.id_tipo_view_get_codigo1 = data.factura.id;
       this.id_tipo_view_get_codigo2 = data.factura.id;
     });
-
 
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
@@ -235,10 +247,10 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
   }
 
   habilitarTodoID() {
-    if (!this.todas_id) {
-      this.todas_id = true;
-    } else {
+    if (this.todas_id) {
       this.id_bool = false;
+    } else {
+      this.id_bool = true;
     }
   }
 
@@ -268,7 +280,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
   habilitarAlmacen() {
     if (this.todas_almacen) {
-      this.todas_almacen = false;
+      this.almacen_bool = false;
     } else {
       this.almacen_bool = true;
     }
@@ -365,6 +377,132 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
 
 
+
+
+  //GETS
+  getClienteCatalogo() {
+    // this.spinner.show();
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
+    return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.clientes = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveCliente(event: any) {
+    const inputValue = event.target.value;
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.clientes.some(objeto => objeto.codigo === inputValue);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = inputValue;
+    }
+  }
+
+  getAlmacen() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.almacen_get = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveAlmacen(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.almacen_get.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  getVendedorCatalogo() {
+    let a
+    let errorMessage: string;
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/vevendedor/catalogo/";
+    return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.vendedor_get = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveVendedor(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.vendedor_get.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  getIdTipo() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
+    return this.api.getAll('/venta/mant/venumeracion/catalogoNumProfxUsuario/' + this.userConn + "/" + this.usuarioLogueado)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.id_tipo_view_get_array = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveIDTipo(event: any) {
+    const inputValue = event.target.value;
+    let cadena = inputValue.toString();
+    const encontrado = this.id_tipo_view_get_array.some(objeto => objeto.id === cadena.toUpperCase());
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = cadena;
+    }
+  }
 
 
 

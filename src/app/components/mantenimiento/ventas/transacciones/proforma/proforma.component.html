@@ -952,7 +952,7 @@
                   </td>
                   <!-- FIN COLUMNA CANTIDAD -->
 
-                  <td class="right">{{ products.porcen_mercaderia }}</td>
+                  <td class="right">{{ formatNumberTotalSubTOTALES(products.porcen_mercaderia) }}</td>
 
                   <td class="center1" [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
                     <p-cellEditor>
@@ -2434,14 +2434,19 @@
 
             <!-- BTN ABAJO TOTAL -->
             <div class="text-center" style="text-align: center;">
-              <div>
-                <button mat-raised-button (click)="aplicarDesctPorDepositoHTML();"
-                  style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Aplicar Desc.
-                  Deposito</button>
-
-                <button mat-raised-button (click)="quitarDescDeposito23();"
-                  style="height: 20px !important;font-size: 0.8rem;background-color: #fbd800;">Quitar Desc.
-                  Deposito</button>
+              <div class="row">
+                <div class="col">
+                  <button mat-raised-button (click)="aplicarDesctPorDepositoHTML();"
+                  style="height: 20px !important;background-color: #fbd800;">
+                  Apli Desc. Deposito
+                  </button>
+                </div>
+                <div class="col">
+                  <button mat-raised-button (click)="quitarDescDeposito23();"
+                    style="height: 20px !important;background-color: #fbd800;">
+                    Quitar Desc. Deposito
+                  </button>
+                </div>
               </div>
             </div>
             <!-- FIN BTN ABAJO TOTAL -->
@@ -2540,7 +2545,7 @@
                     <div type="text" class="form-control form-control-sm inputsSaldos" style="width: 100% !important;">
                       ({{empaquesItems.codigo}}){{empaquesItems.descripcion}}-{{empaquesItems.cantidad }}
                     </div>
-                  </div>
+                  </div><br>
                 </ng-template>
               </div>
             </div>
@@ -2581,11 +2586,9 @@
         </div>
       </div>
     </div>
-    <!-- finpiePagina -->
-      <app-footer class="no-printme"></app-footer>
-      <app-control-sidebar class="no-printme"></app-control-sidebar>
-    <div>
 
-    </div>
+    <!-- finpiePagina -->
+    <app-footer class="no-printme"></app-footer>
+    <app-control-sidebar class="no-printme"></app-control-sidebar>
   </div>
 </section>

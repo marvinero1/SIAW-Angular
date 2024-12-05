@@ -1,0 +1,40 @@
+<section class="p-3" style="background-color:#ffffc0 !important">
+  <p>Opciones para realizar Anulación</p>
+
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="soloFactura();" style="background-color: #cdebfe;">
+        <mat-icon style="color: #093070;">gavel</mat-icon>
+        <span>
+          Solo Factura
+        </span>
+      </button>
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="facturaNRDesapruebaProforma();" style="background-color: #d9fbdb;">
+        <mat-icon style="color: #093070;">gavel</mat-icon>
+        <span>
+          Factura, NR y Desaprobar Proforma
+        </span>
+      </button>
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="anularTodo();" style="background-color: #cfd9fc;">
+        <mat-icon style="color: #093070 ;">offline_bolt</mat-icon>
+        <span> Anular Factura, NRemision y Proforma </span>
+      </button>
+
+      <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="btnFactura();">
+        <mat-icon style="color: #093070 ;">email</mat-icon>
+        <span> Ver Factura </span>
+      </button> -->
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button" (click)="close();">
+        <mat-icon color="primary">close</mat-icon>
+        <span>Cerrar</span>
+      </button>
+    </div>
+  </div>
+</section>

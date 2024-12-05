@@ -333,7 +333,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   id_tipo_para_complementar:any;
 
   // Desct. Promociones
-  public desct_nivel_actual: any;
+  public desct_nivel_actual: any = "ACTUAL";
   public tarifaPrincipal_value:any;
   public tipo_desct_nivel:any;
   public valor_desct_nivel:any=[];
@@ -1645,6 +1645,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       ids_proforma: this.num_idd === undefined ? "":this.num_idd,
       nro_id_proforma: this.num_id === undefined ? 0:this.num_id,
+
+      niveles_descuento: this.desct_nivel_actual,
       
       cabecera: data[0],
       detalle:this.array_items_carrito_y_f4_catalogo,
@@ -1668,7 +1670,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.toastr.info(datav.resp + "✅");
 
         //aca los mensajes
-        this.openConfirmacionDialog(datav.cadena[0]);
+        this.openConfirmacionDialog(datav?.cadena[0] + datav?.cadena[1] + datav?.cadena[2] + datav?.cadena[3] + datav?.cadena[4]);
 
         if(datav.msgAlertas.length > 0){
           this.openConfirmacionDialog(datav.msgAlertas);
@@ -1681,7 +1683,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         if(datav.imprime === true){
           // Mandar a Imprimir
-          // this.mandarAImprimir(datav.codFactura);
+          this.mandarAImprimir(datav.codFactura);
 
           // Mandar Correo
           this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
@@ -1706,7 +1708,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       complete: () => {
         //this.abrirTabPorLabel("Observaciones");
-        this.toastr.success("! PROFORMA GRABADA CON EXITO !")
+        this.toastr.success("! PROFORMA GRABADA CON EXITO !");
+        // window.location.reload();
       }
     });
   }
