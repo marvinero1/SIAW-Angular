@@ -189,6 +189,9 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   // LOGS
   array_de_logs:any=[];
 
+  //saber si es tienda o agencia
+  esTienda_bool:boolean;
+  
   // TAB OBSERVACIONES
   eventosLogs:any=[];
   selectedEvento: { label: string } | null = null; // Modelo para el elemento seleccionado
@@ -258,13 +261,15 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
   getDataInicial() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifvefactura_nsf/getDataInicial/";
-    return this.api.getAll('/venta/modif/docmodifvefactura_nsf/getDataInicial/' + this.userConn + "/" + this.usuarioLogueado)
+    return this.api.getAll('/venta/modif/docmodifvefactura_nsf/getDataInicial/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.agencia_logueado)
       .subscribe({
         next: (datav) => {
           console.log('Parametros Iniciales: ', datav);
           this.codigo_ultima_factura = datav.codUltimaFact;
           this.btn_anular_sin = datav.btnanular_en_el_sin;
           this.btn_generar_xml_firma_enviar = datav.btn_generar_xml_firmar_enviar;
+
+          this.esTienda_bool = datav.esTienda;
 
           this.getDataUltimaFactura(datav.codUltimaFact);
         },
@@ -1415,14 +1420,15 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     
     const result = await this.openConfirmationDialog(`¿Esta seguro de ANULAR esta factura ?`);
-
     if (result) {
       const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
         width: '450px',
         height: 'auto',
+        disableClose: true,
         data: {
           dataA: this.codigo_cliente,
           dataB: this.razon_social,
+
           dataPermiso: "",
           dataCodigoPermiso: "83",
           //abrir: true,
@@ -1436,33 +1442,21 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           this.dialog.open(TiposAnulacionFelComponent, {
             width: '716px',
             height: 'auto',
+            disableClose: true,
             data: {
-             
-             
+             codigo_factura:this.codigo,
+             datoA:this.codigo_cliente,
+             datoB: this.razon_social,
+             es_tienda: this.esTienda_bool
             },
           });
-
-
-
-
-
-
-
-
-
-
-
 
           await this.api.create(url, []).subscribe({
             next: async (datav) => {
               console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
               
               await this.openConfirmacionDialog(datav.msgAlert);
-              //this.en_linea_SIN = datav.resp;
-
-              this.num_idd = this.id_factura;
-              this.num_id = this.documento_nro;
-              this.transferirFactura();
+          
                   
               setTimeout(() => {
               this.spinner.hide();

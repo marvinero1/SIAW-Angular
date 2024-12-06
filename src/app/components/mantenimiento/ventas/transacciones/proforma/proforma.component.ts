@@ -1917,9 +1917,16 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onInputChangecantidadChangeMatrix(products: any, value: any) {
+    let valor_input = value;
+    if(value === '' || value === undefined){
+      valor_input=0;
+      products.cantidad = 0;
+    };
+
+    console.log("Valor Entrada:"+ value, valor_input);
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
-      this.cantidadChangeMatrix(products, value);
+      this.cantidadChangeMatrix(products, valor_input);
     }, 1000); // 300 ms de retardo
   }
 
@@ -6640,11 +6647,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   modalAnticiposProforma(): void {
-    // Validaciones necesarias:
-    // codcliente
-    // tipopago === contado
-    // total != 0
-
     if (this.tipopago === 1 || this.tipopago === undefined) {
       this.dialog.open(VentanaValidacionesComponent, {
         width: 'auto',
@@ -6789,12 +6791,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       return;
     }
-
-    // if (this.tipopago === 0) {
-    //   this.tipopago = 0;
-    // } else {
-    //   this.tipopago = 1;
-    // }
 
     this.submitted = true;
     console.log("Array de descuentos que ya estaban en proforma: ", this.array_de_descuentos_ya_agregados,

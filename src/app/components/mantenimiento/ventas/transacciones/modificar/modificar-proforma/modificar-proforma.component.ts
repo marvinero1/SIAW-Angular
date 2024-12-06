@@ -2306,6 +2306,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   onInputChangecantidadChangeMatrix(products: any, value: any) {
+    let valor_input = value;
+    if(value === '' || value === undefined){
+      valor_input=0;
+      products.cantidad = 0;
+    };
+    
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.cantidadChangeMatrix(products, value);

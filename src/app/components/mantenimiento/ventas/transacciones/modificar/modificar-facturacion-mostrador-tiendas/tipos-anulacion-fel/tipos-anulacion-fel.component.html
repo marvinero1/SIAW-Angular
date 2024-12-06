@@ -3,37 +3,107 @@
 
   <div class="row">
     <div class="col">
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-        (click)="soloFactura();" style="background-color: #cdebfe;">
-        <mat-icon style="color: #093070;">gavel</mat-icon>
-        <span>
-          Solo Factura
-        </span>
-      </button>
+      <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Cutest dog breeds">
+        <mat-chip-option>
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+            (click)="obtenerValorMotivo('FC');" style="background-color: #cdebfe;">
+            <mat-icon style="color: #093070;">gavel</mat-icon>
+            <span>
+              Solo Factura
+            </span>
+          </button>
+        </mat-chip-option>
+        
+        <mat-chip-option [disabled]="es_tienda_get">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+            (click)="obtenerValorMotivo('NR-FC');" style="background-color: #d9fbdb;" [disabled]="es_tienda_get">
+            <mat-icon style="color: #093070;">gavel</mat-icon>
+            <span>
+              Factura, Nota Remisión y Desaprobar Proforma
+            </span>
+          </button>
+        </mat-chip-option>
+        <mat-chip-option [disabled]="es_tienda_get">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+            (click)="obtenerValorMotivo('NR-FC-PF');" style="background-color: #cfd9fc;" [disabled]="es_tienda_get">
+            <mat-icon style="color: #093070 ;">offline_bolt</mat-icon>
+            <span> Anular Factura, Nota Remisión y Proforma </span>
+          </button>
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+  </div>
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-        (click)="facturaNRDesapruebaProforma();" style="background-color: #d9fbdb;">
-        <mat-icon style="color: #093070;">gavel</mat-icon>
-        <span>
-          Factura, NR y Desaprobar Proforma
-        </span>
-      </button>
+  <div class="row">
+    <div class="col">
+      <mat-accordion>
+        <mat-expansion-panel hideToggle #myAcordion>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Motivo Anulación </mat-panel-title>
+            <mat-panel-description> Elija un Motivo </mat-panel-description>
+          </mat-expansion-panel-header>
 
-      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-        (click)="anularTodo();" style="background-color: #cfd9fc;">
-        <mat-icon style="color: #093070 ;">offline_bolt</mat-icon>
-        <span> Anular Factura, NRemision y Proforma </span>
-      </button>
+          <div class="row">
+            <div class="input-group" style="margin-bottom: 6px;">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                  <u>Motivo S.I.A</u>
+                </span>
+              </div>
+              <mat-select class="custom-select1 form-control-sm" [(ngModel)]="motivo_sia"
+                style="margin-left: 5px;border: 1px solid #ced4da;width: 88% !important;">
+                <mat-option value="CAMBIO DE DATOS DEL CLIENTE">CAMBIO DE DATOS DEL CLIENTE</mat-option>
+                <mat-option value="CAMBIO DE MERCADERIA">CAMBIO DE MERCADERIA</mat-option>
+                <mat-option value="DEVOLUCION DE MERCADERIA">DEVOLUCION DE MERCADERIA</mat-option>
+                <mat-option value="UMODIFICACION DE DESCUENTOS">UMODIFICACION DE DESCUENTOS</mat-option>
+                <mat-option value="ERROR DE IMPRESION">ERROR DE IMPRESION</mat-option>
+                <mat-option value="ERROR DE USUARIO AL IMPRIMIR">ERROR DE USUARIO AL IMPRIMIR</mat-option>
+                <mat-option value="OTRO">OTRO</mat-option>
+              </mat-select>
+            </div><br>
 
-      <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-        (click)="btnFactura();">
-        <mat-icon style="color: #093070 ;">email</mat-icon>
-        <span> Ver Factura </span>
-      </button> -->
+            <div class="input-group" style="margin-bottom: 6px;">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 10px 4px 0px 0px;border: 0 !important;">
+                  <u>Motivo S.I.N</u>
+                </span>
+              </div>
+              <mat-select class="custom-select1 form-control-sm" [(ngModel)]="motivo_sin"
+              style="border: 1px solid #ced4da !important;width: 88% !important;" >
+                <mat-option *ngFor="let array_motivos_SINs of array_motivos_SIN"
+                [value]="array_motivos_SINs">
+                {{ array_motivos_SINs.codigoclasificador }} - {{ array_motivos_SINs.descripcion }}
+                <hr>
+              </mat-option>
+              </mat-select>
+            </div>
 
+            <div class="row"><br>
+              <mat-slide-toggle class="example-margin" [(ngModel)]="anular_refacturar">
+                Anular y Refacturar
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+
+
+
+
+
+  <br>
+  <div class="row">
+    <div class="col" style="text-align: right;">
       <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button" (click)="close();">
         <mat-icon color="primary">close</mat-icon>
         <span>Cerrar</span>
+      </button>
+  
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button" (click)="anularFactura(sin_validar_anulacion, sin_validar_inventario);">
+        <mat-icon color="primary">check</mat-icon>
+        <span>Anular</span>
       </button>
     </div>
   </div>
