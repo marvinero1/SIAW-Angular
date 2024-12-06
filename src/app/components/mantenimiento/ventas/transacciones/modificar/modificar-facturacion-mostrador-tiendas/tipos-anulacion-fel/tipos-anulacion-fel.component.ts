@@ -9,6 +9,7 @@ import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
+import { ServicioCierreService } from '../servicio-cierre-ventana/servicio-cierre.service';
 
 @Component({
   selector: 'app-tipos-anulacion-fel',
@@ -40,14 +41,10 @@ export class TiposAnulacionFelComponent implements OnInit {
 
 
   constructor(public dialogRef: MatDialogRef<TiposAnulacionFelComponent>, private router: Router,
-    private toastr: ToastrService, private api: ApiService, 
+    private toastr: ToastrService, private api: ApiService, public servicio_cierre_ventana:ServicioCierreService,
     private spinner: NgxSpinnerService, private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public codigo_factura: any,
-    @Inject(MAT_DIALOG_DATA) public datoA: any, @Inject(MAT_DIALOG_DATA) public datoB: any, @Inject(MAT_DIALOG_DATA) public es_tienda: any
-
-    
-
-  ) {
+    @Inject(MAT_DIALOG_DATA) public datoA: any, @Inject(MAT_DIALOG_DATA) public datoB: any, @Inject(MAT_DIALOG_DATA) public es_tienda: any ) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -70,7 +67,6 @@ export class TiposAnulacionFelComponent implements OnInit {
     this.panel.open();
     console.log("🚀 ~ TiposAnulacionFelComponent ~ obtenerValorMotivo ~ this.valor_motivo:", this.tipo_motivo)
   }
-
 
   getSelectMotivoSIN(){
     const url = `/venta/modif/docmodifvefactura_nsf/cargarMotivosAnulaSIN/${this.userConn}`;
@@ -126,7 +122,7 @@ export class TiposAnulacionFelComponent implements OnInit {
 
         if (result){
           // 83 permiso_especial
-          // 84 
+          // 84 fuer de mes o inventario
           // 48 inventario
           if(datav.resp === false && datav.codigo_control === 83){
             const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
@@ -145,7 +141,8 @@ export class TiposAnulacionFelComponent implements OnInit {
             dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
               console.log(result);
               if (result) {
-                this.anularFactura(true, false)
+                this.anularFactura(true, false);
+                this.close();
               }
             });
           }
@@ -167,14 +164,35 @@ export class TiposAnulacionFelComponent implements OnInit {
             dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
               console.log(result);
               if (result) {
-                this.anularFactura(true, true)
+                this.anularFactura(true, true);
+                this.close();
               }
             });
           }
 
-        }
-
-        
+          if(datav.resp === false && datav.codigo_control === 84){
+            const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+              width: '450px',
+              height: 'auto',
+              disableClose: true,
+              data: {
+                dataA: this.codigo_cliente,
+                dataB: this.razon_social_cliente,
+                dataPermiso: "",
+                dataCodigoPermiso: datav.codigo_control.toString(),
+                //abrir: true,
+              },
+            });
+      
+            dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+              console.log(result);
+              if (result) {
+                this.anularFactura(true, true);
+                this.close();
+              }
+            });
+          }
+        }    
         setTimeout(() => {
           this.spinner.hide();
         }, 50);
@@ -210,6 +228,9 @@ export class TiposAnulacionFelComponent implements OnInit {
   close() {
     this.dialogRef.close();
 
+    this.servicio_cierre_ventana.disparadorDeBooleanCierreModalAnulacion.emit({
+      cierre_ventana:true
+    })
     // window.location.reload();
   }
 

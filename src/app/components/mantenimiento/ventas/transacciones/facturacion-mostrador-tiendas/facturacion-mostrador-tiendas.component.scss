@@ -386,6 +386,13 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 ::ng-deep {
+  label{
+    margin-bottom: 0px !important;
+  }
+  .p-icon {
+    width: 0.55rem !important;
+    height: 0.55rem !important;
+  }
   .p-icon {
     width: 0.55rem !important;
     height: 0.55rem !important;

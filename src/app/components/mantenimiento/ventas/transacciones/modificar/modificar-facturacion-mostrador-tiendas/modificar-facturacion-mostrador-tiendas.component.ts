@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,6 +27,8 @@ import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscad
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { Router } from '@angular/router';
 import { TiposAnulacionFelComponent } from './tipos-anulacion-fel/tipos-anulacion-fel.component';
+import { ServicioCierreService } from './servicio-cierre-ventana/servicio-cierre.service';
+import { MatTabGroup } from '@angular/material/tabs';
 @Component({
   selector: 'app-modificar-facturacion-mostrador-tiendas',
   templateUrl: './modificar-facturacion-mostrador-tiendas.component.html',
@@ -34,9 +36,9 @@ import { TiposAnulacionFelComponent } from './tipos-anulacion-fel/tipos-anulacio
 })
 export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
-  public nombre_ventana: string = "docveproforma.vb";
+  public nombre_ventana: string = "docmodifvefactura_nsf.vb";
   public ventana: string = "Modificar Factura Mostrador FEL";
-  public detalle = "Doc.Proforma";
+  public detalle = "Mod.Factura Mostrador FEL";
   public tipo = "transaccion-docveproforma-POST";
 
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
@@ -209,11 +211,14 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
   fecha_anulacion_input:any;
   anulada:boolean=false;
+  boolean_cierre_ventana:boolean;
+
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder,  private toastr: ToastrService,
     private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar,
     public servicioBuscadorAvanzado: BuscadorAvanzadoService, public nombre_ventana_service: NombreVentanaService,
-    private router:Router) {
+    public servicio_cierre_ventana:ServicioCierreService, private router:Router) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -221,7 +226,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.FormularioData = this.createForm();
-    //this.getParametrosIniciales();
   }
 
   ngOnInit() {
@@ -236,12 +240,35 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       this.getDataUltimaFactura(data.codigo);
     });
     //fin ventana modal BuscadorGeneral
+
+    this.servicio_cierre_ventana.disparadorDeBooleanCierreModalAnulacion.pipe(takeUntil(this.unsubscribe$)).subscribe(async data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.boolean_cierre_ventana = data.cierre_ventana;
+      if(this.boolean_cierre_ventana){
+        this.num_idd = this.id_factura;
+        this.num_id = this.documento_nro;
+  
+        await this.transferirFactura();
+        // this.abrirTabPorLabel("Observaciones SIN");
+        // await this.verificarFacturaEnSIN();
+      }
+    });
   }
 
   onPaste(event: any) {
     event.preventDefault();
     // También puedes mostrar un mensaje al usuario indicando que el pegado está bloqueado
     alert("EVENTO BLOQUEADO, NO PEGAR");
+  }
+  
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    // console.log(tabs);
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
   }
 
   getParamUsuario() {
@@ -554,7 +581,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
           this.getDataUltimaFactura(datav.codigoFact.codigo);
           this.toastr.success('! TRANSFERENCIA EXITOSA !');
-
+          this.nuevo_CUFD="";
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -1215,7 +1242,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   }
   // FIN SECCION EMAIL
 
-
   // SECCION IMPRIMIR
   autorizarImprimir(){
     const url = `/venta/modif/docmodifvefactura_nsf/autorizaReimpresion/${this.userConn}/${this.agencia_logueado}/"28"/${this.codigo}`;
@@ -1279,7 +1305,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
          console.log("🚀 ~ FacturaNotaRemisionComponent ~ getDataFacturaParaArmar ~ datav:", datav)
           //this.valor_string_QR = datav.cadena_QR;
           //armamos el PDF, se crea, descarga el archivo y se lo envia por email
-
           if(datav){
             try {
               await this.modalPDFFactura(datav);
@@ -1383,13 +1408,21 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, []).subscribe({
-      next: (datav) => {
+      next: async (datav) => {
         console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
         if(!datav.resp){
-          this.openConfirmationDialog(datav.msgAlert)
+          await this.openConfirmacionDialog(datav.mensaje);
+          await this.openConfirmacionDialog(datav.eventos[0]=== undefined ? "":datav.eventos[0] +
+                                            datav.eventos[1]=== undefined ? "":datav.eventos[1] +
+                                            datav.eventos[2]=== undefined ? "":datav.eventos[2] +
+                                            datav.eventos[3]=== undefined ? "":datav.eventos[3]);
         }else{
-          valor_boolean = true;
-          // si devuelve true hay q hacer mas cosas
+          
+          await this.openConfirmacionDialog(datav.mensaje);
+          await this.openConfirmacionDialog(datav.eventos[0]=== undefined ? "":datav.eventos[0] +
+                                            datav.eventos[1]=== undefined ? "":datav.eventos[1] +
+                                            datav.eventos[2]=== undefined ? "":datav.eventos[2] +
+                                            datav.eventos[3]=== undefined ? "":datav.eventos[3]);
         }
         
         setTimeout(() => {
@@ -1414,10 +1447,10 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
   async anularProformaMostradorTiendas(){
     // this.spinner.show();
-    let valor_boolean:boolean = true;
+    // let valor_boolean:boolean = true;
 
-    const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_Fecha_Anulacion/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    // const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_Fecha_Anulacion/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/`;
+    // const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     
     const result = await this.openConfirmationDialog(`¿Esta seguro de ANULAR esta factura ?`);
     if (result) {
@@ -1428,7 +1461,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         data: {
           dataA: this.codigo_cliente,
           dataB: this.razon_social,
-
           dataPermiso: "",
           dataCodigoPermiso: "83",
           //abrir: true,
@@ -1450,32 +1482,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
              es_tienda: this.esTienda_bool
             },
           });
-
-          await this.api.create(url, []).subscribe({
-            next: async (datav) => {
-              console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
-              
-              await this.openConfirmacionDialog(datav.msgAlert);
-          
-                  
-              setTimeout(() => {
-              this.spinner.hide();
-            }, 50);
-            },
-    
-            error: (err) => {
-              console.log(err, errorMessage);
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 50);
-            },
-    
-            complete: () => {
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 50);
-            }
-          });
           return;
         } else {
           this.toastr.error('! CANCELADO !');
@@ -1483,6 +1489,19 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       });
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1790,18 +1809,20 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, []).subscribe({
-      next: (datav) => {
-        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav)
-        this.openConfirmacionDialog(datav.msgAlert);
+      next: async (datav) => {
+        console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
 
+        await this.openConfirmacionDialog(datav.mensaje);
         // agregar al array de eventos
         const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
         this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
-        console.log(this.eventosLogs);
 
+        if(datav.enviar_mail_rever_anulacion){
+          this.enviarReversionCorreo();
+        }
         setTimeout(() => {
-        this.spinner.hide();
-      }, 50);
+          this.spinner.hide();
+        }, 50);
       },
 
       error: (err) => {
@@ -1818,6 +1839,95 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
       }
     });
   }
+
+  async cambiarCUF(){
+    let sin_validar_pedir_clave:boolean = false;
+    const result = await this.openConfirmationDialog(`¿Esta seguro de cambiar el CUF DE LA FACTURA ?`);
+
+    if (result) {
+      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+        width: '450px',
+        height: 'auto',
+        data: {
+          dataA: this.id_factura +"-"+ this.documento_nro,
+          dataB: "CAMBIAR CUF DE FACTURA",
+          dataPermiso: "",
+          dataCodigoPermiso: "144",
+        },
+      });
+
+      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => { 
+        if (result) {
+          sin_validar_pedir_clave = true;
+
+          const url = `/venta/modif/docmodifvefactura_nsf/cambiar_CUF/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${this.nuevo_CUFD}/${sin_validar_pedir_clave}`;
+          const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+      
+          this.api.create(url, []).subscribe({
+            next: async (datav) => {
+            console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
+              await this.openConfirmacionDialog(datav.msgAlert);
+              
+              // agregar al array de eventos
+              const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+              this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+           
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+      
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+      
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+        }else{
+          sin_validar_pedir_clave = false;
+
+          const url = `/venta/modif/docmodifvefactura_nsf/cambiar_CUF/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/${this.nuevo_CUFD}/${sin_validar_pedir_clave}`;
+          const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+      
+          this.api.create(url, []).subscribe({
+            next: async (datav) => {
+              console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ next: ~ datav:", datav)
+              await this.openConfirmacionDialog(datav.msgAlert);
+              
+              // agregar al array de eventos
+              const nuevosEventos = datav.eventos.map((log: string) => ({ label: log }));
+              this.eventosLogs = [...this.eventosLogs, ...nuevosEventos];
+                   
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+      
+            error: (err) => {
+              console.log(err, errorMessage);
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            },
+      
+            complete: () => {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 50);
+            }
+          });
+        }
+      });
+    }
+  }
+
 
   verificarFacturaEnSIN(){
     this.spinner.show();

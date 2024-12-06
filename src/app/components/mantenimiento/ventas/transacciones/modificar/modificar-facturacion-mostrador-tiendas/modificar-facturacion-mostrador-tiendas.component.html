@@ -521,27 +521,6 @@
           </div>
         </div>
       </div>
-
-      <!-- fila inferior -->
-      <!-- <div class="col-md-5">
-        <div class="input-group" style="width: 88% !important;">
-          <div class="input-group-prepend">
-            <span class="input-group-text form-control-sm"
-              style="padding: 8px 58px 0px 0px;border: 0 !important;"><u>CUF</u></span>
-          </div>
-          <input type="text" class="form-control form-control-sm" style="width: ;"
-          formControlName="CUF" [(ngModel)]="CUF" readonly>
-        </div>
-        
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text form-control-sm"
-              style="padding: 9px 6px 0px 0px;border: 0 !important;"><u>Cod. Recepcion SIAT: </u></span>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 2px;width: 368px;"
-              formControlName="codigo_recepcion_siat" [(ngModel)]="codigo_recepcion_siat">
-          </div>
-        </div>
-      </div> -->
     </div>
   </form>
   <!-- fin cabecera -->
@@ -635,31 +614,33 @@
           </ng-container>
         </mat-tab>
 
-        <mat-tab label="Observaciones SIN">
+        <mat-tab label="Observaciones SIN" >
           <div class="row" style="position: fixed;width: 100%;z-index: 1000;background-color: #ffffc0 !important;">
             <div class="col-md-6">
               <button mat-raised-button (click)="generarCUFD();"
-                class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                class="btn btn-outline-secondary form-control-sm" type="button">
                 <span><i class="fa fa-cogs" style="color: #ffc107;"></i> Generar CUF</span>
               </button>
+              <input type="text" [(ngModel)]="nuevo_CUFD" style="width: 270px;" disabled> 
 
-              <input type="text" [(ngModel)]="nuevo_CUFD" style="width: 384px;" disabled> 
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                (click)="cambiarCUF()" type="button" [disabled]="!nuevo_CUFD">
+                <span><mat-icon style="color: #0fa92b;">refresh</mat-icon> CUF</span>
+              </button>
 
-              <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
-                <span><i class="fa fa-cog" style="color: #ffc107;"></i> Actualizar CUF</span>
-              </button> -->
-              <ng-container *ngIf="btn_anular_sin;else btn_anular">
-                <button mat-raised-button (click)="anularSIN()"
-                  class="btn btn-outline-secondary form-control-sm mr-1" type="button">
-                  <span><i class="fa fa-times" style="color: #ff0707;"></i> Anular en el SIN</span>
-                </button>
-              </ng-container>
-              <ng-template #btn_anular>
-                <button mat-raised-button (click)="anularSIN()" disabled
+              <!-- <ng-container *ngIf="btn_anular_sin;else btn_anular"> -->
+              <button mat-raised-button (click)="anularSIN()"
                 class="btn btn-outline-secondary form-control-sm mr-1" type="button">
                 <span><i class="fa fa-times" style="color: #ff0707;"></i> Anular en el SIN</span>
               </button>
-              </ng-template> 
+
+              <!-- </ng-container> -->
+              <!-- <ng-template #btn_anular> -->
+                <!-- <button mat-raised-button (click)="anularSIN()" disabled
+                  class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                  <span><i class="fa fa-times" style="color: #ff0707;"></i> Anular en el SIN</span>
+                </button> -->
+              <!-- </ng-template>  -->
             </div>
   
             <div class="col-md-6" style="display: flex;justify-content: flex-end;">
@@ -707,9 +688,7 @@
             </div>
           </div>
         </mat-tab>
-
-        <mat-tab label="Anulación Automatica"></mat-tab>
-
+        <!-- <mat-tab label="Anulacion Automatica"></mat-tab> -->
         <mat-tab label="LOG Factura SIN">
           <p-table [value]="array_de_logs" [tableStyle]="{'min-width': '60rem'}"
           styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
@@ -765,7 +744,6 @@
             </button>
           </div>
         </mat-tab>
-
         <mat-tab label="Generación Cod Web Automatica"></mat-tab>
       </mat-tab-group>
     </div>
@@ -942,7 +920,7 @@
             </div>
           </mat-tab>
 
-          <mat-tab label="Anulacion Automatica"></mat-tab>
+          <!-- <mat-tab label="Anulacion Automatica"></mat-tab> -->
           <!-- <mat-tab label="Datos Complementaria"></mat-tab> -->
         </mat-tab-group>
       </div>
@@ -1114,7 +1092,6 @@
 
           </div>
         </div>
-        
       </div>
 
       <div class="col-md-2">
@@ -1138,7 +1115,7 @@
           <i class="fa fa-cog"></i></button> -->
         </div>
       </div>
-    </div>
+    </div><br>
 
     <app-footer class="no-printme"></app-footer>
     <app-control-sidebar class="no-printme"></app-control-sidebar>

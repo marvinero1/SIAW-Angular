@@ -1658,22 +1658,26 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
     
     this.spinner.show();
-    
     console.log("🚀ESTE ARRAY SE ENVIA AL GRABAR: submitData total_proforma_concat:", total_proforma_concat);
     const url = `/venta/transac/docvefacturamos_cufd/grabarFacturaTienda/${this.userConn}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     this.api.create(url, total_proforma_concat).subscribe({
-      next: (datav) => {
+      next: async (datav) => {
         console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
         this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_factura, this.documento_nro);
         this.totabilizar_post = datav;
         this.toastr.info(datav.resp + "✅");
 
         //aca los mensajes
-        this.openConfirmacionDialog(datav?.cadena[0] + datav?.cadena[1] + datav?.cadena[2] + datav?.cadena[3] + datav?.cadena[4]);
+        this.openConfirmacionDialog(datav?.cadena[0] === undefined ? "":datav?.cadena[0] +
+                                    datav?.cadena[1] === undefined ? "":datav?.cadena[1] + 
+                                    datav?.cadena[2] === undefined ? "":datav?.cadena[2] +
+                                    datav?.cadena[3] === undefined ? "":datav?.cadena[3] +
+                                    datav?.cadena[4] === undefined ? "":datav?.cadena[4]);
 
         if(datav.msgAlertas.length > 0){
-          this.openConfirmacionDialog(datav.msgAlertas);
+          await this.openConfirmacionDialog(datav.msgAlertas);
+          window.location.reload();
         }
 
         this.eventosLogs = datav.eventosLog;
@@ -1709,7 +1713,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       complete: () => {
         //this.abrirTabPorLabel("Observaciones");
         this.toastr.success("! PROFORMA GRABADA CON EXITO !");
-        // window.location.reload();
       }
     });
   }

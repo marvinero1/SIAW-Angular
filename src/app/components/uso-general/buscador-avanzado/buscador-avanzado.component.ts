@@ -118,6 +118,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
       if (this.id_tipo_view_get_codigo1 === undefined) {
         this.id_tipo_view_get_codigo1 = data.id_tipo.id;
+        this.id_tipo_view_get_codigo2 = data.id_tipo.id;
       } else {
         this.id_tipo_view_get_codigo2 = data.id_tipo.id;
       }
@@ -130,6 +131,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
       if (this.almacn_parame_usuario_almacen1 === undefined) {
         this.almacn_parame_usuario_almacen1 = data.almacen.codigo;
+        this.almacn_parame_usuario_almacen2 = data.almacen.codigo;
       } else {
         this.almacn_parame_usuario_almacen2 = data.almacen.codigo;
       }
@@ -141,9 +143,10 @@ export class BuscadorAvanzadoComponent implements OnInit {
       console.log("Recibiendo Vendedor: ", data);
 
       if (this.cod_vendedor_cliente1 === undefined) {
-        this.cod_vendedor_cliente1 = data.vendedor;
+        this.cod_vendedor_cliente1 = data.vendedor.codigo;
+        this.cod_vendedor_cliente2 = data.vendedor.codigo;
       } else {
-        this.cod_vendedor_cliente2 = data.vendedor;
+        this.cod_vendedor_cliente2 = data.vendedor.codigo;
       }
     });
     //finvendedor
@@ -154,6 +157,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
       if (this.codigo_cliente1 === undefined) {
         this.codigo_cliente1 = data.cliente.codigo;
+        this.codigo_cliente2 = data.cliente.codigo;
       } else {
         this.codigo_cliente2 = data.cliente.codigo;
       }
@@ -165,6 +169,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
       console.log("Recibiendo ID y numeroID Buscador Avanzado Nota Remision: ", data);
       if (this.id_tipo_view_get_codigo1 === undefined) {
         this.id_tipo_view_get_codigo1 = data.proforma.id;
+        this.id_tipo_view_get_codigo2 = data.proforma.id;
       } else {
         this.id_tipo_view_get_codigo2 = data.proforma.id;
       }

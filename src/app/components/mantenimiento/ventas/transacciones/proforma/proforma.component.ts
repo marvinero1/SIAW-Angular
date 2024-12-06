@@ -3687,7 +3687,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // Intentar convertir a número, considerando posibles entradas como cadenas
     const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
     
-    if (isNaN(parsedNumber)) {
+    if (isNaN(parsedNumber)){
       return '0.00'; // Manejar entradas no válidas
     }
   

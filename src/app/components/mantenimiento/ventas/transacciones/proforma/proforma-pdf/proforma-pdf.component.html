@@ -164,7 +164,7 @@
           <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;"><strong>Sub Total</strong> </td>
           <td class="right" style="border: 0px;">
-            {{ data_cabecera_footer_proforma.rsubtotal }}</td>
+            {{ formatNumberTotalSub2Decimals(data_cabecera_footer_proforma.rsubtotal )}}</td>
         </tr>
         <tr>
           <td style="border: 0px;"></td>
@@ -176,7 +176,7 @@
           <td class="right" style="border: 0px;"></td>
           <td class="left" style="border: 0px;"><strong>Recargos:</strong> </td>
           <td class="right" style="border: 0px;">
-            {{ data_cabecera_footer_proforma.rrecargos }}</td>
+            {{ formatNumberTotalSub2Decimals(data_cabecera_footer_proforma.rrecargos) }}</td>
         </tr>
         <tr>
           <td style="border: 0px;"></td>
@@ -190,7 +190,7 @@
             <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
           </td>
           <td class="right" style="border: 0px;">
-            {{ data_cabecera_footer_proforma.rdescuentos }}
+            {{ formatNumberTotalSub2Decimals(data_cabecera_footer_proforma.rdescuentos) }}
             <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;">
           </td>
         </tr>
@@ -207,7 +207,7 @@
             <!-- <hr style="border: 1px solid black;width: 100%;margin-top: 0rem !important;margin-bottom: 0rem !important;"> -->
           </td>
           <td class="right" style="border: 0px">
-            {{ data_cabecera_footer_proforma.rtotalimp }}</td>
+            {{ formatNumberTotalSub2Decimals(data_cabecera_footer_proforma.rtotalimp) }}</td>
         </tr>
       </tbody>
     </table>

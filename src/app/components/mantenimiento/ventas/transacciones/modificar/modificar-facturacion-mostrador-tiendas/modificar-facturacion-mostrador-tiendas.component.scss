@@ -409,6 +409,10 @@
   
   
   ::ng-deep {
+    form{
+      margin-block-end: 0 !important;
+    }
+    
     .p-listbox .p-listbox-list{
       padding: 0rem 0 !important;
     }
