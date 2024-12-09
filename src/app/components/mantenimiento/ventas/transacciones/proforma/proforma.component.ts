@@ -3008,7 +3008,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       // Aquí puedes continuar con tu lógica...
       // console.log(array_validacion_existe_aun_no_validos);
       // console.log(array_negativos_aun_existe);
-
       try {
         if (array_validacion_existe_aun_no_validos_tamanio > 0) {
           const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?`);
@@ -3222,10 +3221,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // console.log("NEGATIVOS tamanio", array_negativos_aun_existe_tamanio);
     // console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
-
     this.spinner.show();
     this.totabilizar();
-
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (array_validacion_existe_aun_no_validos.length > 0 || array_negativos_aun_existe.length > 0) {
       // Aquí puedes continuar con tu lógica...

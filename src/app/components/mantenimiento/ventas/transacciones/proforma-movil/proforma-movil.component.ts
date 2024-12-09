@@ -30,6 +30,7 @@ import { ModalClienteInfoComponent } from '../../modal-cliente-info/modal-client
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { MonedaCatalogoComponent } from '@components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component';
 import { MatrizItemsListaComponent } from '../../matriz-items-lista/matriz-items-lista.component';
+import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 
 @Component({
   selector: 'app-proforma-movil',
@@ -224,11 +225,13 @@ export class ProformaMovilComponent implements OnInit {
           // if(this.cliente.cliente.codigo?.startsWith('SN')){
           //   this.razon_social = this.cliente.cliente.razonsocial;
           // };
+          
+         
 
           this.codigo_cliente = this.cliente.cliente.codigo;
-          // this.codigo_cliente_catalogo_real = this.cliente.cliente.codigo;
+          this.codigo_cliente_catalogo_real = this.cliente.cliente.codigo;
           this.nombre_comercial_cliente = this.cliente.cliente.nombre_comercial.trim();
-          // this.nombre_factura = this.cliente.cliente.nombre_fact;
+          this.nombre_factura = this.cliente.cliente.nombre_fact;
           this.razon_social = this.cliente.cliente.razonsocial.trim();
           this.complemento_ci = this.cliente.cliente.complemento_ci
           this.nombre_comercial_razon_social = this.nombre_comercial_cliente;
@@ -239,7 +242,7 @@ export class ProformaMovilComponent implements OnInit {
           this.cliente_habilitado_get = this.cliente.cliente.habilitado;
           this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial.trim();
 
-          // this.cod_vendedor_cliente = this.cliente.cliente.codvendedor;
+          this.cod_vendedor_cliente = this.cliente.cliente.codvendedor;
           this.moneda = this.cliente.cliente.moneda;
           // this.venta_cliente_oficina = this.cliente.cliente.venta_cliente_oficina;
           // this.tipo_cliente = this.cliente.cliente.tipo;
@@ -463,7 +466,25 @@ export class ProformaMovilComponent implements OnInit {
       })
   }
 
+  definirClienteReferencia(codcliente_real, casual) {
+    console.log(codcliente_real, casual)
+    if (casual) {
+      const dialogRefcasual = this.dialog.open(DialogConfirmActualizarComponent, {
+        width: 'auto',
+        height: 'auto',
+        data: { mensaje_dialog: "El código del Cliente: " + codcliente_real + " no es casual, por tanto no puede vincular con otro cliente, ¿Esta seguro de continuar?" },
+        disableClose: true,
+      });
 
+      dialogRefcasual.afterClosed().subscribe((result: Boolean) => {
+        if (result) {
+          // this.modalClientesparaReferencia();
+        }
+      });
+    } else {
+      // this.modalClientesparaReferencia();
+    }
+  }
 
 
 

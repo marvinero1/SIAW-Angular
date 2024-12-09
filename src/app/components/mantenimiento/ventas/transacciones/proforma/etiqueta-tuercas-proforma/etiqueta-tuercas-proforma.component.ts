@@ -313,7 +313,7 @@ export class EtiquetaTuercasProformaComponent implements OnInit {
                 { text: items.descripcion, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.medida, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.udm, fontSize: 9, font: 'Arial', alignment: 'left'},
-                { text: items.cantidad, alignment: 'right'},
+                { text: this.formatNumberTotalSub(items.cantidad), alignment: 'right'},
                 { text: "", alignment: 'right'},
               ])
             ]
@@ -509,7 +509,7 @@ export class EtiquetaTuercasProformaComponent implements OnInit {
                 { text: items.descripcion, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.medida, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.udm, fontSize: 9, font: 'Arial', alignment: 'left'},
-                { text: items.cantidad, alignment: 'right'},
+                { text: this.formatNumberTotalSub(items.cantidad), alignment: 'right'},
                 { text: "", alignment: 'right'},
               ])
             ]
@@ -705,7 +705,7 @@ export class EtiquetaTuercasProformaComponent implements OnInit {
                 { text: items.descripcion, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.medida, fontSize: 9, font: 'Arial', alignment: 'left'},
                 { text: items.udm, fontSize: 9, font: 'Arial', alignment: 'left'},
-                { text: items.cantidad, alignment: 'right'},
+                { text: this.formatNumberTotalSub(items.cantidad), alignment: 'right'},
                 { text: "", alignment: 'right'},
               ])
             ]

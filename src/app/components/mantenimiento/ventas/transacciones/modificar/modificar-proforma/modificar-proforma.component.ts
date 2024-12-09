@@ -3030,7 +3030,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let tamanio_array_validaciones = this.validacion_post.length;
     let total_proforma_concat: any = [];
-    this.totabilizar();
+    //this.totabilizar();
 
     const transformedArray = this.validacion_post.map((validaciones) => ({
       ...validaciones,
@@ -3278,7 +3278,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   // grabarYAprobar
   async submitDataModificarProformaAprobar() {
-    this.totabilizar();
+    //this.totabilizar();
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let total_proforma_concat: any = [];
     let tamanio_array_validaciones = this.validacion_post.length;

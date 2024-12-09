@@ -291,8 +291,7 @@ export class ProformaPdfComponent implements OnInit {
           { canvas: [{ type: 'line', x1: 20, y1: 2, x2: 580, y2: 2, lineWidth: 1 }] }, // Ajustado y1 y y2 para reducir espacio
         ];
       }.bind(this),
-      
-
+    
       content: [{
           table: {
             headerRows: 1,
@@ -323,7 +322,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                 { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                 { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                { text: items.total, alignment: 'right', font: 'Arial', fontSize: 8 },
+                { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
               ]),
 
               [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -338,7 +337,7 @@ export class ProformaPdfComponent implements OnInit {
               { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: data_cabecera.rsubtotal, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
               [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -349,7 +348,7 @@ export class ProformaPdfComponent implements OnInit {
               { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: data_cabecera.rrecargos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
               [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -360,7 +359,7 @@ export class ProformaPdfComponent implements OnInit {
               { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: data_cabecera.rdescuentos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
               [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
 
@@ -374,7 +373,7 @@ export class ProformaPdfComponent implements OnInit {
               { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
               { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
               { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: data_cabecera.rtotalimp, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
               [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -688,7 +687,7 @@ export class ProformaPdfComponent implements OnInit {
                   { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                   { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: items.total, alignment: 'right', font: 'Arial', fontSize: 8 },
+                  { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
                 ]),
 
                 [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -703,7 +702,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rsubtotal, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
                 [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -714,7 +713,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rrecargos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
                 [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -725,11 +724,9 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rdescuentos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
-
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
                 [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
-
 
                 [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0]},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -740,7 +737,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rtotalimp, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
                 [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -1057,7 +1054,7 @@ export class ProformaPdfComponent implements OnInit {
                   { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
                   { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
                   { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: items.total, alignment: 'right', font: 'Arial', fontSize: 8 },
+                  { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
                 ]),
 
                 [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -1072,7 +1069,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rsubtotal, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
                 [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -1083,7 +1080,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rrecargos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
 
                 [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -1094,7 +1091,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rdescuentos, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
                 [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
@@ -1109,7 +1106,7 @@ export class ProformaPdfComponent implements OnInit {
                 { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: data_cabecera.rtotalimp, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
                 [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
@@ -1203,6 +1200,8 @@ export class ProformaPdfComponent implements OnInit {
     console.log(groupedData);
     pdfMake.createPdf(docDefinition).open();
   }
+
+  
 
   formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número

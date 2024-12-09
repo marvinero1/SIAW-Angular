@@ -2951,36 +2951,31 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia_logueado;
+    let array_send={
+    agencia:agencia_concat,
+    codalmacen: this.agencia_logueado,
+    coditem: item,
+    codempresa: this.BD_storage,
+    usuario: this.usuarioLogueado,
+    
+    idProforma: this.id_factura?.toString() === undefined ? " ":this.id_factura?.toString(),
+    nroIdProforma: this.documento_nro
+    };
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /venta/transac/veproforma/getsaldosCompleto/";
-    return this.api.getAll
-      ('/venta/transac/veproforma/getsaldosCompleto/' + this.userConn + "/" + agencia_concat + "/" + this.agencia_logueado + "/" + item + "/" + this.BD_storage + "/" + this.usuarioLogueado)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
-          this.id_tipo = datav;
-          console.log('data', datav, "+++ MENSAJE SALDO VPN: " + this.id_tipo[0].resp);
-          // this.letraSaldos = this.id_tipo[0].resp;
-          // this.saldo_variable = this.id_tipo[2];
-
-          // LETRA
-          this.id_tipo[1].forEach(element => {
-            if (element.descripcion === 'Total Saldo') {
-              if (element.valor < 0) {
-                this.saldoItem = 0;
-              } else {
-                this.saldoItem = element.valor;
-              }
-
-              console.log(this.saldoItem);
-            }
-          });
+        console.log('data', datav);
+        this.id_tipo = datav;
+        this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          
         },
-        complete: () => {
-        }
+        complete: () => { console.log(this.saldoItem); }
       })
   }
 

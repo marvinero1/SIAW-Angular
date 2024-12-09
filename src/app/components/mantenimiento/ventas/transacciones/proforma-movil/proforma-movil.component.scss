@@ -48,11 +48,26 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 1rem;
+  //padding: 1rem;
 }
 
 .footer {
   background-color: #ddd;
   text-align: center;
   padding:1rem;
+}
+
+.input-group-text{
+  background-color: white;
+}
+
+
+
+
+
+
+::ng-deep {
+  .mat-vertical-content{
+    padding: 0 24px 9px 9px !important;
+  }
 }
