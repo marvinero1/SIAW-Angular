@@ -334,9 +334,11 @@ export class AnticiposProformaComponent implements OnInit {
           console.log(datav);
 
           if (datav.value === true) {
-            console.warn(this.anticipos_asignados_table);
+            console.warn(this.anticipos_asignados_table, this.codanticipo_elegido);
 
+            // const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.codanticipo_elegido);
             const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.anticipo);
+            
             if (!encontrado) {
               // Si el valor no está en el array, dejar el campo vacío
               this.preparaParaAgregar();
@@ -402,7 +404,6 @@ export class AnticiposProformaComponent implements OnInit {
         codmoneda: this.cod_moneda_proforma,
         codvendedor: this.vendedor_get.toString(),
       };
-
     }
 
     if (this.ventana_nom === "docmodifveproforma.vb") {
@@ -422,7 +423,6 @@ export class AnticiposProformaComponent implements OnInit {
         codmoneda: this.cod_moneda_proforma,
         codvendedor: this.vendedor_get.toString(),
       };
-
     }
 
     console.warn(b);
@@ -490,6 +490,7 @@ export class AnticiposProformaComponent implements OnInit {
         }
       })
   }
+  codanticipo_elegido:any;
 
 
   elegirAnticipo(element) {
@@ -515,6 +516,7 @@ export class AnticiposProformaComponent implements OnInit {
       this.anticipo = element.numeroid;
       this.id_anticipo = element.id;
       this.cod_proforma = element.codanticipo;
+      this.codanticipo_elegido = element.codanticipo;
       this.fecha_anticipo = element.fechareg;
 
       console.log(this.id_get + "-" + this.numero_id_get);
