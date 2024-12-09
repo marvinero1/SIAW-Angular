@@ -82,6 +82,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
+  @HostListener("click", []) unloadHandler(event: KeyboardEvent) {
+    this.onCellClick1(this.valorCelda);
+  };
+
   FormularioBusqueda: FormGroup
   dataform: any = '';
   num_hoja: any;
@@ -699,7 +703,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         this.valorCelda = cellData;
         // console.log('Data de la celda seleccionada:', cellData);
 
-        this.onCellClick1(cellData);
+        // this.onCellClick1(cellData);
       }
     });
 
