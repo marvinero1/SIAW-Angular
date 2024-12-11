@@ -7,6 +7,7 @@ import { ToastrService } from "ngx-toastr";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogConfirmacionComponent } from "@modules/dialog-confirmacion/dialog-confirmacion.component";
 import { NgxSpinnerService } from "ngx-spinner";
+import { MessageService } from "primeng/api";
 
 @Injectable({
 	providedIn: 'root'
@@ -22,7 +23,7 @@ export class Interceptor implements HttpInterceptor {
 	public refresh: any = [];
 
 	constructor(public _snackBar: MatSnackBar, public api: ApiService, private toastr: ToastrService, private spinner: NgxSpinnerService,
-		private dialog: MatDialog) {
+		private dialog: MatDialog, private messageService: MessageService,) {
 
 		this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 		this.tokken = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
@@ -42,7 +43,7 @@ export class Interceptor implements HttpInterceptor {
 			
 			switch (this.error_code) {
 				case "La impresora no está dispobible.":
-					this.toastr.info("SE GUARDO CON EXITO, PERO NO SALIO LA IMPRESION, REVISE IMPRESORA");
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'SE GUARDO CON EXITO, PERO NO SALIO LA IMPRESION, REVISE IMPRESORA' });
 					this.spinner.hide();
 					break;
 			
@@ -51,7 +52,7 @@ export class Interceptor implements HttpInterceptor {
 			}
 
 			if(this.error_code != "error devolvio nulo" && this.error_code != 801){
-				this.toastr.warning(this.error_code);
+				this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: this.error_code });
 			}	
 
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
@@ -59,11 +60,9 @@ export class Interceptor implements HttpInterceptor {
 			if (this.error_code === 801 || this.error_code === undefined) {
 				console.log("NO TOAST xD");
 			} else {
-				//this.toastr.error(this.err.resp);
 				this.spinner.hide();
 			}
-
-			// this.error_code === 801 ? console.log("NO TOAST xD") : this.toastr.error(this.err.resp);
+			
 			// this.error_code === undefined ? console.log("NO TOAST xD") : console.log("NO TOAST xD");
 			// this.error_code ===  ? console.log("NO TOAST xD") : console.log("NO TOAST xD");
 

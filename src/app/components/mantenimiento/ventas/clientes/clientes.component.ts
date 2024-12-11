@@ -18,6 +18,7 @@ import { CatalogoPuntoVentaComponent } from '../punto-venta/catalogo-punto-venta
 import { ProvinciasService } from '@components/mantenimiento/administracion/provinciadptopais/services-provincias/provincias.service';
 import { PuntoventaService } from '../punto-venta/servicio-punto-venta/puntoventa.service';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
@@ -64,7 +65,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   public ventana = "Clientes";
 
   constructor(private _formBuilder: FormBuilder, private api: ApiService, public dialog: MatDialog,
-    private spinner: NgxSpinnerService, public log_module: LogService, private datePipe: DatePipe, private toastr: ToastrService,
+    private spinner: NgxSpinnerService, public log_module: LogService, private datePipe: DatePipe, private messageService: MessageService,
     public servicioCliente: ServicioclienteService, public servicesPuntoVenta: PuntoventaService,
     public nombre_ventana_service: NombreVentanaService, public servicioRubro: ServiciorubroService,
     public servicioZona: ServiciozonaService, public provinciaService: ProvinciasService) {
@@ -420,17 +421,16 @@ export class ClientesComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.cliente_create = datav;
           this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-          this.toastr.success('Guardado con Exito! 🎉');
-
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO CON EXITO !' })
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 0);
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE GUARDO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GUARDO !' });
         },
         complete: () => { }
       })
@@ -458,15 +458,12 @@ export class ClientesComponent implements OnInit, AfterViewInit {
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
-
-          this.toastr.success('Actualizado con Exito! 🎉');
+          }, 0);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ACTUALIZADO CON EXITO' })
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE GUARDO !');
-
         },
         complete: () => { }
       })
@@ -491,18 +488,16 @@ export class ClientesComponent implements OnInit, AfterViewInit {
           .subscribe({
             next: () => {
               this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-
-              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ELIMINADO EXITOSAMENTE !' })
               location.reload();
             },
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ELIMINADO !');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }
@@ -575,21 +570,20 @@ export class ClientesComponent implements OnInit, AfterViewInit {
               console.log(datav);
               if (datav == 206) {
                 this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-                this.toastr.success('!ACTUALIZADO EXITOSAMENTE!');
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ACTUALIZADO EXITOSAMENTE !' })
                 location.reload();
               } else {
-                this.toastr.error('! NO ACTUALIZADO RUTA!');
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO ACTUALIZADO RUTA !' });
               }
             },
 
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ACTUALIZADO PERMISO!');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO CLIENTE TRUE!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO CLIENTE !' });
       }
     });
   }
@@ -622,21 +616,20 @@ export class ClientesComponent implements OnInit, AfterViewInit {
               console.log(datav);
               if (datav == 206) {
                 this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-                this.toastr.success('!ACTUALIZADO EXITOSAMENTE!');
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ACTUALIZADO EXITOSAMENTE !' })
                 location.reload();
               } else {
-                this.toastr.error('! NO ACTUALIZADO !');
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO ACTUALIZADO !' });
               }
             },
 
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ACTUALIZADO !');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO CLIENTE!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO CLIENTE !' });
       }
     });
   }

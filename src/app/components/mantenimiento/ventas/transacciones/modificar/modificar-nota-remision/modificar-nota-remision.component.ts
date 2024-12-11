@@ -23,6 +23,7 @@ import { PermisosEspecialesParametrosComponent } from '@components/seguridad/per
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { firstValueFrom } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modificar-nota-remision',
@@ -170,7 +171,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService,
-    private serviciotipoid: TipoidService, private toastr: ToastrService, private spinner: NgxSpinnerService,
+    private serviciotipoid: TipoidService, private messageService: MessageService, private spinner: NgxSpinnerService,
     private log_module: LogService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
 
@@ -315,7 +316,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
             this.openConfirmacionDialog(datav.resp);
           }
 
-          this.toastr.success('! TRANSFERENCIA CON EXITO ! ✅');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA CON EXITO ! ✅' })
           this.spinner.show();
 
           setTimeout(() => {
@@ -324,7 +325,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          // this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
         },
         complete: () => {
         }
@@ -673,7 +673,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     }
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -759,18 +759,16 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
                   next: (datav) => {
                     this.totabilizar_post = datav;
                     console.log(this.totabilizar_post);
-                    this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
+                    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
                     console.log(this.array_items_carrito_y_f4_catalogo);
 
                     setTimeout(() => {
                       this.spinner.hide();
-                    }, 1500);
+                    }, 0);
                   },
 
                   error: (err) => {
                     console.log(err, errorMessage);
-                    this.toastr.error('! NO SE TOTALIZO !');
 
                     setTimeout(() => {
                       this.spinner.hide();
@@ -795,7 +793,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
                   }
                 })
             } else {
-              this.toastr.info("VALIDACION ACTIVA 🚨");
+              this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
               console.log("HAY QUE VALIDAR DATOS");
             }
           }
@@ -825,7 +823,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           // console.log(datav);
           this.transferirNotaRemisionUltima(datav.codigoNR.codigo);
-          this.toastr.success('! TRANSFERENCIA EXITOSA !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EXITOSA !' })
 
           setTimeout(() => {
             this.spinner.hide();
@@ -833,7 +831,6 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
           setTimeout(() => {
             this.spinner.hide();
           }, 1000);
@@ -929,7 +926,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         this.api.create('/venta/modif/docmodifveremision/anularNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/"
           + this.autUltInventario + "/" + this.autNResReversion, []).subscribe({
             next: (datav) => {
-              this.toastr.info("ANULADO CON EXITO ✅");
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ANULADO CON EXITO ✅' })
               this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
               this.codigo_control = datav.tipoPermiso;
               console.log(datav);
@@ -974,10 +971,9 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
                           error: (err: any) => {
                             console.log(err, errorMessage);
-                            // this.toastr.error("Formulario T. Entrega Error");
                           },
                           complete: () => {
-                            this.toastr.success("GUARDADO EXITOSAMENTE");
+                            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE' })
                           }
                         })
                     });
@@ -1018,10 +1014,9 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
                           error: (err: any) => {
                             console.log(err, errorMessage);
-                            // this.toastr.error("Formulario T. Entrega Error");
                           },
                           complete: () => {
-                            this.toastr.success("GUARDADO EXITOSAMENTE");
+                            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE' })
                           }
                         })
                     });
@@ -1037,7 +1032,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
             error: (err) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO SE ANULO, OCURRIO UN PROBLEMA !');
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE ANULO, OCURRIO UN PROBLEMA !' });
 
               setTimeout(() => {
                 this.spinner.hide();
@@ -1072,7 +1067,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
         this.api.update('/venta/modif/docmodifveremision/cambiarFechaAnulNR/' + this.userConn + "/" + this.codigo_proforma + "/" + this.datePipe.transform(this.fecha_anulacion_input, 'yyyy-MM-dd') + "/false", []).subscribe({
           next: (datav) => {
             this.spinner.show();
-            this.toastr.info("FECHA ANULACION ACTUALIZADA ✅");
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'FECHA ANULACION ACTUALIZADA ✅' })
             this.log_module.guardarLog(this.ventana, "Modificar" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
             console.log(datav);
@@ -1085,7 +1080,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! FECHA ANULACION NO ACTUALIZADA !');
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! FECHA ANULACION NO ACTUALIZADA !' });
 
             setTimeout(() => {
               this.spinner.hide();
@@ -1103,7 +1098,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     this.api.create('/venta/modif/docmodifveremision/genPlanPagosFalt/' + this.userConn + "/" + this.codigo_proforma + "/" + this.BD_storage, []).subscribe({
       next: (datav) => {
         this.spinner.show();
-        this.toastr.info("PLAN DE PAGOS CREADO ✅");
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'PLAN DE PAGOS CREADO ✅' })
         this.log_module.guardarLog(this.ventana, "Crear" + this.totabilizar_post.codProf, "POST", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
 
         console.log(datav);

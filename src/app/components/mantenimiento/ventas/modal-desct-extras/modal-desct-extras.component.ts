@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DescuentoService } from '../serviciodescuento/descuento.service';
 import { DecimalPipe } from '@angular/common';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-desct-extras',
@@ -52,7 +53,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   decimalPipe: any;
 
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
-    public dialogRef: MatDialogRef<ModalDesctExtrasComponent>, private toastr: ToastrService,
+    public dialogRef: MatDialogRef<ModalDesctExtrasComponent>, private messageService: MessageService,
     public descuento_services: DescuentoService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public cabecera: any, @Inject(MAT_DIALOG_DATA) public array_cabe_cuerpo: any,
@@ -224,7 +225,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     // }))
 
     if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
-      this.toastr.error("La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -233,7 +234,7 @@ export class ModalDesctExtrasComponent implements OnInit {
 
     if (this.info_descuento) {
       if (existe_en_array) {
-        this.toastr.warning("EL DESCUENTO YA ESTA AGREGADO")
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
       } else {
         this.validarDescuento();
         if (tamanio > 0) {
@@ -244,7 +245,7 @@ export class ModalDesctExtrasComponent implements OnInit {
             this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
            
           } else {
-            this.toastr.error("NO VALIDO PARA SER AGREGADO");
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO VALIDO PARA SER AGREGADO' });
           }
         } else {
           console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
@@ -307,7 +308,7 @@ export class ModalDesctExtrasComponent implements OnInit {
 
           if (this.validacion_bool_descuento.status === false) {
             console.log("entro aca!");
-            this.toastr.error(this.validacion_bool_descuento.resp);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: this.validacion_bool_descuento.resp });
 
             let tamanio = this.array_de_descuentos_con_descuentos.length;
             if (tamanio === 0) {
@@ -343,7 +344,7 @@ export class ModalDesctExtrasComponent implements OnInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("NO SE PUEDE AGREGAR EL DESCUENTO");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE PUEDE AGREGAR EL DESCUENTO' });
         },
         complete: () => {
 
@@ -430,9 +431,7 @@ export class ModalDesctExtrasComponent implements OnInit {
         },
         complete: () => { }
       });
-
-    this.toastr.success("¡ DESCUENTO AGREGADOS EXITOSAMENTE Y VALIDADO !");
-
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '¡ DESCUENTO AGREGADOS EXITOSAMENTE Y VALIDADO !' })
     this.close();
   }
 

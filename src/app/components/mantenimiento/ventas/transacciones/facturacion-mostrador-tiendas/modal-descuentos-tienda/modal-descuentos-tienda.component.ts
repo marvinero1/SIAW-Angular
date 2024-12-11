@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DecimalPipe } from '@angular/common';
 import { DescuentoService } from '@components/mantenimiento/ventas/serviciodescuento/descuento.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-descuentos-tienda',
@@ -57,7 +58,7 @@ export class ModalDescuentosTiendaComponent implements OnInit {
   decimalPipe: any;
 
   constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
-    public dialogRef: MatDialogRef<ModalDescuentosTiendaComponent>, private toastr: ToastrService,
+    public dialogRef: MatDialogRef<ModalDescuentosTiendaComponent>, private messageService: MessageService,
     private spinner: NgxSpinnerService, public descuento_services:DescuentoService,
     @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public cabecera: any, 
@@ -199,41 +200,13 @@ export class ModalDescuentosTiendaComponent implements OnInit {
   }
 
   anadirArray() {
-    // if(){
-
-    // }
-
     let tamanio = this.array_de_descuentos_con_descuentos.length;
     const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
     console.log(existe_en_array);
 
-    // this.array_de_descuentos = this.array_de_descuentos_con_descuentos?.map((element) => ({
-    //   aplicacion: element.aplicacion,
-    //   codanticipo: element.codanticipo,
-    //   codcobranza: element.codcobranza,
-    //   codcobranza_contado: element.codcobranza_contado,
-    //   coddesextra: element.coddesextra,
-    //   codmoneda: element.codmoneda,
-    //   codproforma: element.codproforma,
-    //   id: element.id,
-    //   montodoc: element.montodoc,
-    //   montorest: element.montorest,
-    //   codigo: element.coddesextra,
-    //   descripcion: element.descripcion,
-    //   porcentaje: element.porcen,
-    // }))
-
-    // if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
-    //   this.toastr.error("La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento");
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 50);
-    //   return;
-    // }
-
     if (this.info_descuento) {
       if (existe_en_array) {
-        this.toastr.warning("EL DESCUENTO YA ESTA AGREGADO");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
       } else {
         this.validarDescuento();
         if (tamanio > 0) {
@@ -243,7 +216,7 @@ export class ModalDescuentosTiendaComponent implements OnInit {
             // Concatenar el nuevo descuento con los descuentos existentes
             this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
           } else {
-            this.toastr.error("NO VALIDO PARA SER AGREGADO");
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO VALIDO PARA SER AGREGADO' });
           }
         } else {
           console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
@@ -309,7 +282,7 @@ export class ModalDescuentosTiendaComponent implements OnInit {
 
           if (this.validacion_bool_descuento.status === false) {
             console.log("entro aca!");
-            this.toastr.error(this.validacion_bool_descuento.resp);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: this.validacion_bool_descuento.resp });
 
             let tamanio = this.array_de_descuentos_con_descuentos.length;
             if (tamanio === 0) {
@@ -339,17 +312,14 @@ export class ModalDescuentosTiendaComponent implements OnInit {
               this.array_valida_detalle = this.array_valida_detalle.concat(a);
             }
             console.log(this.array_valida_detalle, tamanio);
-            //this.toastr.error(this.validacion_bool_descuento.resp);
             return;
           }
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("NO SE PUEDE AGREGAR EL DESCUENTO");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE PUEDE AGREGAR EL DESCUENTO' });
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -394,8 +364,7 @@ export class ModalDescuentosTiendaComponent implements OnInit {
         complete: () => { }
       });
 
-    this.toastr.success("¡ DESCUENTO AGREGADOS EXITOSAMENTE Y VALIDADO !");
-
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '¡ DESCUENTO AGREGADOS EXITOSAMENTE Y VALIDADO !' });
     this.close();
   }
 

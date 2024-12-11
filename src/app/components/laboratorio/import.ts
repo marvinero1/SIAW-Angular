@@ -187,7 +187,8 @@ import { NgModule } from '@angular/core';
         SplitButtonModule,
         StepsModule,
         TableModule,
-        AutoFocusModule
+        AutoFocusModule,
+        
     ],
     exports: [
         AvatarModule,

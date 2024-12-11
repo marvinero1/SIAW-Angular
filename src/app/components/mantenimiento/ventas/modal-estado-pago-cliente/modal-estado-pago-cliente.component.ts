@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modal-estado-pago-cliente',
   templateUrl: './modal-estado-pago-cliente.component.html',
@@ -53,7 +53,7 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
 
   displayedColumnsAnticipos = ['id', 'numero', 'recibo', 'fecha', 'monto', 'restante'];
 
-  constructor(public dialogRef: MatDialogRef<ModalEstadoPagoClienteComponent>, private toastr: ToastrService,
+  constructor(public dialogRef: MatDialogRef<ModalEstadoPagoClienteComponent>, private messageService: MessageService,
     private api: ApiService, public _snackBar: MatSnackBar, private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, private spinner: NgxSpinnerService) {
     this.cod_cliente_get = cod_cliente.cod_cliente;
@@ -99,15 +99,15 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
           this.dataSource_cheques = new MatTableDataSource(this.cheques_cliente);
 
           if (this.cheques_cliente.length === 0) {
-            this.toastr.warning("NO HAY CHEQUES");
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CHEQUES' });
           }
 
           if (this.pagos_cliente.length === 0) {
-            this.toastr.warning("NO HAY PAGOS");
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY PAGOS' });
           }
 
           if (this.anticipos_cliente.length === 0) {
-            this.toastr.warning("NO HAY ANTICIPOS");
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY ANTICIPOS' });
           }
 
           setTimeout(() => {
@@ -146,14 +146,12 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
           this.total_seleccionado_id = element.id;
           this.total_seleccionado_numero_id = element.numeroid;
 
-          //this.log_module.guardarLog(this.ventana, this.detalle, this.tipo);
-          // this.spinner.show();
-          this.toastr.success('CALCULADO' + " " + element.id + " " + element.numeroid);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'CALCULADO' + " " + element.id + " " + element.numeroid })
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE CALCULADO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE CALCULADO !' });
         },
         complete: () => { }
       })

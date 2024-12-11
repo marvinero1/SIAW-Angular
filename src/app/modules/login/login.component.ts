@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
 import { LogService } from '@services/log-service.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -64,7 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private renderer: Renderer2, private _formBuilder: FormBuilder, private router: Router,
     private toastr: ToastrService, private api: ApiService, public log_module: LogService,
-    private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,
+    private spinner: NgxSpinnerService, public _snackBar: MatSnackBar,private messageService: MessageService,
     public dialog: MatDialog) {
 
     this.BDForm = this.createFormBD();
@@ -175,22 +176,24 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           if (datav != null) {
             //aca se guarda el TOKEN
             this.guardarToken(datav);
-            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-
-            this.toastr.success('Bienvenido! 🎉');
-            this.getParametrosIniciales(userConn, dataForm.login);
             this.isAuthLoading = false;
+
+            this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");            
+            this.getParametrosIniciales(userConn, dataForm.login);
             this.obtenerBDUsuario(login, agencia);
 
             this._snackBar.open('¡ Bienvenido al SIAW !', '🎉', {
-              duration: 2500,
+              duration: 2200,
               panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             }),
 
-              console.log("DATOS CORRECTOS");
+            setTimeout(() => {
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BIENVENIDO! 🎉' })
+            }, 0); // Ejecuta el método después de que Angular complete la carga.
+
+            console.log("DATOS CORRECTOS");
 
             this.router.navigate(['/']);
-            // event.preventDefault();
             setTimeout(() => {
               this.spinner.hide();
             }, 1000);

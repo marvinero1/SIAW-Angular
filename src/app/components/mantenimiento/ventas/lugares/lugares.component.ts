@@ -15,6 +15,7 @@ import { PersonaCatalogoComponent } from '@components/mantenimiento/persona-cata
 import { ServicePersonaService } from '@components/mantenimiento/persona-catalogo/service-persona/service-persona.service';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
 import { ServiciozonaService } from '../serviciozona/serviciozona.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-lugares',
   templateUrl: './lugares.component.html',
@@ -66,7 +67,7 @@ export class LugaresComponent implements OnInit, AfterViewInit {
   public tipo = "lugar-CREATE";
 
   constructor(public dialog: MatDialog, private api: ApiService, public lugar_service: LugarService, private spinner: NgxSpinnerService,
-    public _snackBar: MatSnackBar, public log_module: LogService, private toastr: ToastrService, private _formBuilder: FormBuilder,
+    public _snackBar: MatSnackBar, public log_module: LogService, private messageService: MessageService, private _formBuilder: FormBuilder,
     public nombre_ventana_service: NombreVentanaService, private datePipe: DatePipe, public servicioZona: ServiciozonaService,
     private servicioPersona: ServicePersonaService) {
 
@@ -145,11 +146,13 @@ export class LugaresComponent implements OnInit, AfterViewInit {
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 2000);
-          this.toastr.success('! SE GUARDO EXITOSAMENTE !');
+          }, 0);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! SE GUARDO EXITOSAMENTE !' })
           this._snackBar.open('Se ha guardado correctamente!', 'Ok', {
-            duration: 3000,
+            duration: 2000,
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
+
           location.reload();
         },
 
@@ -202,12 +205,11 @@ export class LugaresComponent implements OnInit, AfterViewInit {
           this.lugar_save = datav;
 
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-          this.toastr.success('! SE EDITO EXITOSAMENTE !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! SE EDITO EXITOSAMENTE !' })
           location.reload();
         },
 
         error: (err: any) => {
-          this.toastr.error('! NO SE EDITO !');
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -233,18 +235,16 @@ export class LugaresComponent implements OnInit, AfterViewInit {
           .subscribe({
             next: () => {
               this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-
-              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ELIMINADO EXITOSAMENTE !' })
               this.limpiar();
             },
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ELIMINADO !');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }

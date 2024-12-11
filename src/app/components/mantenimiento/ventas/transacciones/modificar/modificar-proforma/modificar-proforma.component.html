@@ -791,8 +791,8 @@
                 class="mat-mdc-header-cell mdc-data-table__header-cell cdk-header-cell mat-column-max-ventas cdk-column-descripcion mat-column-descripcion ng-star-inserted">
                 <tr
                   class="mat-mdc-header-cell mdc-data-table__header-cell cdk-header-cell mat-column-max-ventas cdk-column-descripcion mat-column-descripcion ng-star-inserted">
-                  <th pSortableColumn="nroitem" class="center1" style="width:3%;">
-                    Or Ped
+                  <th pSortableColumn="nroitem" class="center1" style="width:2%;">
+                    OrPed
                   </th>
                   <th pSortableColumn="orden" class="center1" style="width:4%">
                     Orden
@@ -812,7 +812,7 @@
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
-                  <th pSortableColumn="ud" class="center1" style="width:4%">
+                  <th pSortableColumn="ud" class="center1" style="width:3%">
                     Ud
                   </th>
                   <th pSortableColumn="iva" class="center1" style="width:2%">
@@ -820,7 +820,7 @@
                   </th>
                   <th pSortableColumn="empaque" class="center1">
                     Empaque
-                    <p-sortIcon field="empaque" />
+                    <!-- <p-sortIcon field="empaque" /> -->
                   </th>
                   <th pSortableColumn="pedido" class="center1">
                     Pedido
@@ -835,16 +835,16 @@
                   </th>
                   <th pSortableColumn="TP" class="center1">
                     TP
-                    <p-sortIcon field="TP" />
+                    <!-- <p-sortIcon field="TP" /> -->
                   </th>
                   <th pSortableColumn="DE" class="center1">
                     DE
-                    <p-sortIcon field="DE" />
+                    <!-- <p-sortIcon field="DE" /> -->
                   </th>
                   <th pSortableColumn="PUL" class="right1" style="width:4%">
                     PUL
                   </th>
-                  <th pSortableColumn="NIV" class="right1" style="width:4%">
+                  <th pSortableColumn="NIV" class="right1" style="width:3%">
                     NIV
                   </th>
                   <th pSortableColumn="%" class="right1" style="width:3%">
@@ -911,26 +911,6 @@
                     pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <!-- <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input #inputCantidad pInputText type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (change)="pedidoChangeMatrix(products, $event.target.value)">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input #inputCantidad pInputText type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input #inputCantidad pInputText type="number" class="pedido"
-                            [(ngModel)]="products.cantidad_pedida" min="0"
-                            (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container> -->
-
                         <input pInputText type="text" [(ngModel)]="products.cantidad_pedida" min="0"
                         (input)="onInputChange(products, $event.target.value)"> 
                       </ng-template>
@@ -973,22 +953,6 @@
                   <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <!-- <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (change)="cantidadChangeMatrix(products, $event.target.value);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad" min="0"
-                            (change)="cantidadChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input pInputText type="number" class="pedido" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (change)="pedidoChangeMatrix(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container> -->
                         <input pInputText type="text" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                         (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
                       </ng-template>

@@ -4,6 +4,7 @@ import { ApiService } from '@services/api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -34,38 +35,34 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   fecha_actual: any;
   hora_fecha_server: any;
 
-  constructor(private api: ApiService, private datePipe: DatePipe, public dialog: MatDialog,
+  constructor(private api: ApiService, private datePipe: DatePipe, public dialog: MatDialog,  private messageService: MessageService,
     private spinner: NgxSpinnerService, public nombre_ventana_service: NombreVentanaService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     this.mandarNombre();
     this.getHoraFechaServidorBckEnd();
+    // this.toatsQA();
 
     const fecha = new Date();
-    
-    if (this.agencia_logueado === 'Loc') {
-      this.agencia_logueado = '311'
-    }
-
     this.fecha_transform = this.datePipe.transform(fecha, "yyyy-MM-dd");
-    console.log("🚀 ~ DashboardComponent ~ fecha_transform:", this.fecha_transform);
-    
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.getRolUserParaVentana();
+    this.graficarVentasSIAWvsSIA();
 
   }
 
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.getRolUserParaVentana();
-    this.graficarVentasSIAWvsSIA();
-    this.getDataGrafica();
+  
+    // this.getDataGrafica();
   }
 
   getHoraFechaServidorBckEnd() {
@@ -88,8 +85,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getRolUserParaVentana() {
+    let usuarioLoguead1o = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET, en la ruta /seg_adm/mant/adusuario/";
-    return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + this.usuarioLogueado)
+    return this.api.getAll('/seg_adm/mant/adusuario/' + this.userConn + "/" + usuarioLoguead1o)
       .subscribe({
         next: (datav) => {
           this.rol = datav.codrol;
@@ -166,10 +165,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getDataGrafica(){
+    let agencia_logueadoa = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+
     //trae todas las proformas aprobadas
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/DetallePFAprobadasWF/";
     // return this.api.getAll('/venta/usoSIAW/ventasbyVendedorSIAW_SIA/' + this.userConn + "/" +  this.fecha_transform + "/" + this.agencia_logueado )
-    return this.api.getAll('/venta/usoSIAW/ventasbyVendedorSIAW_SIA/' + this.userConn + "/" +"2024-10-10"+ "/" + this.agencia_logueado )
+    return this.api.getAll('/venta/usoSIAW/ventasbyVendedorSIAW_SIA/' + this.userConn + "/" +"2024-10-10"+ "/" + agencia_logueadoa )
       .subscribe({
         next: (datav) => {
           console.log("🚀 ~ DashboardComponent ~ getDataGrafica ~ datav:", datav);
@@ -183,7 +184,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
 
-
+  // toatsQA(){
+  //   this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Bienvenido! 🎉' })
+  // }
 
 
 

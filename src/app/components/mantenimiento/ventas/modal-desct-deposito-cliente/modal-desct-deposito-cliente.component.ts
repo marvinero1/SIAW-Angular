@@ -5,8 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { ModalDetalleObserValidacionComponent } from '../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modal-desct-deposito-cliente',
   templateUrl: './modal-desct-deposito-cliente.component.html',
@@ -47,7 +47,7 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
     'nro_id_cbza_contado', 'monto_desc', 'accion', 'numero_id_deposito'];
 
   constructor(public dialogRef: MatDialogRef<ModalDesctDepositoClienteComponent>, private api: ApiService,
-    private toastr: ToastrService, public log_module: LogService, private spinner: NgxSpinnerService,
+    private messageService: MessageService, public log_module: LogService, private spinner: NgxSpinnerService,
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public nombre_cliente: any,
@@ -131,8 +131,6 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
       return { ...element, borrar: true };
     });
 
-    console.log(a);
-
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET-/venta/transac/prgdesctodeposito_pendiente/deleteDescProf/";
     return this.api.create('/venta/transac/prgdesctodeposito_pendiente/deleteDescProf/' + this.userConn + "/prgdesctodeposito_pendiente/" + this.usuarioLogueado, a)
       .subscribe({
@@ -140,25 +138,24 @@ export class ModalDesctDepositoClienteComponent implements OnInit {
           // this.pendientes = datav;
           console.log(datav);
           this.getData1Tab();
-          this.toastr.success(datav.resp);
-
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp })
           this.log_module.guardarLog("prgdesctodeposito_pendiente", "eliminarDescuentoDepositoProforma", "modalVerificarDepositoProforma", "", "");
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 0);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 0);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 0);
         }
       })
   }

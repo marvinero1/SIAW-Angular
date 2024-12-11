@@ -29,6 +29,7 @@ import { Router } from '@angular/router';
 import { TiposAnulacionFelComponent } from './tipos-anulacion-fel/tipos-anulacion-fel.component';
 import { ServicioCierreService } from './servicio-cierre-ventana/servicio-cierre.service';
 import { MatTabGroup } from '@angular/material/tabs';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modificar-facturacion-mostrador-tiendas',
   templateUrl: './modificar-facturacion-mostrador-tiendas.component.html',
@@ -212,10 +213,10 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   fecha_anulacion_input:any;
   anulada:boolean=false;
   boolean_cierre_ventana:boolean;
-
+  fechaMinima: string;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-  constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder,  private toastr: ToastrService,
+  constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder, private messageService: MessageService,
     private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService, private _snackBar: MatSnackBar,
     public servicioBuscadorAvanzado: BuscadorAvanzadoService, public nombre_ventana_service: NombreVentanaService,
     public servicio_cierre_ventana:ServicioCierreService, private router:Router) {
@@ -417,6 +418,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
           // fecha anulacion
           this.fecha_anulacion_input = this.datePipe.transform(datav.cabecera.fecha_anulacion, 'yyyy-MM-dd');
+          // this.fechaMinima = this.fecha_anulacion_input.toISOString().split('T')[0]; // Formato YYYY-MM-DD
         },
 
         error: (err: any) => {
@@ -540,14 +542,9 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'EMPAQUES MINIMO PROCESANDO ⚙️' });
           
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
-
-          // this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
-          //   element.nroitem = index + 1;
-          //   element.orden = index + 1;
-          // });
 
           setTimeout(() => {
             this.spinner.hide();
@@ -580,7 +577,8 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ transferirFactura ~ datav:", datav)
 
           this.getDataUltimaFactura(datav.codigoFact.codigo);
-          this.toastr.success('! TRANSFERENCIA EXITOSA !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EXITOSA !' });
+
           this.nuevo_CUFD="";
           setTimeout(() => {
             this.spinner.hide();
@@ -588,7 +586,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -750,10 +747,8 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     return this.api.update('/venta/transac/veproforma/actualizarCorreoCliente/' + this.userConn, data)
       .subscribe({
         next: (datav) => {
-          // this.log_module.guardarLog(this.ventana, this.detalle, "PUT", "", "");
           this.email_save = datav;
-          this.toastr.success('!CORREO GUARDADO!');
-          // this.log_module.guardarLog(this.ventana, "Creacion", "POST", "ACTUALIZAR CORREO TIENDA", this.email_cliente);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! CORREO GUARDADO 📧 ! ' });
 
           this._snackBar.open('!CORREO GUARDADO!', '📧', {
             duration: 3000,
@@ -763,11 +758,8 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! Ingrese un correo valido ! 📧');
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -802,7 +794,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           // console.log(datav);
           if(datav.nit_es_valido === "VALIDO"){
-            this.toastr.success(datav.nit_es_valido);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -810,7 +802,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
               disableClose: true,
             });
           }else{
-            this.toastr.error(datav.nit_es_valido);
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -838,12 +830,12 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
             // ACA SE GENERA EL PDF CON SU ARCHIVO BLOB PARA QUE SE ENVIE POR CORREO ELECTRONICO
             this.generarPDF(datav);
           }else{
-            this.toastr.error("NO PASO LA DATA O NO LLEGO")
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO PASO LA DATA O NO LLEGO' });
           }
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE PUDO TRAER INFORMACION DE LA FACTURA 😧 ' });
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -1252,11 +1244,11 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
         if(datav.esTienda){
           this.mandarAImprimir();
-          this.toastr.success("IMPRIMIENDO 🖨️");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRIMIENDO 🖨️' });
         }else{
           // abrir el modal donde solo se visualiza
           this.getDataFacturaParaArmar();
-          this.toastr.success("GENERANDO FACTURA");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GENERANDO FACTURA' });
         }        
       },
 
@@ -1281,7 +1273,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     this.api.getAll(url).subscribe({
       next: (datav) => {
         console.warn("🚀 IMPRIMIENDO...", datav);
-        this.toastr.success("IMPRIMIENDO 🖨️");
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRIMIENDO 🖨️' });
       },
 
       error: (err) => {
@@ -1311,15 +1303,15 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
               
             } catch (error) {
               console.error("Ocurrió un error:", error);
-              this.toastr.error("Hubo un problema en el proceso");
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'PROBLEMA EN EL PROCESO' });
             }
           }else{
-            this.toastr.error("NO PASO LA DATA O NO LLEGO")
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO PASO LA DATA O NO LLEGO ' });
           }
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA 😧");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE PUDO TRAER INFORMACION DE LA FACTURA 😧' });
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -1446,48 +1438,51 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
   }
 
   async anularProformaMostradorTiendas(){
-    // this.spinner.show();
-    // let valor_boolean:boolean = true;
-
-    // const url = `/venta/modif/docmodifvefactura_nsf/Cambiar_Fecha_Anulacion/${this.userConn}/${this.usuarioLogueado}/${this.codigo}/${this.BD_storage}/`;
-    // const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
-    
-    const result = await this.openConfirmationDialog(`¿Esta seguro de ANULAR esta factura ?`);
-    if (result) {
-      const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
-        width: '450px',
-        height: 'auto',
-        disableClose: true,
-        data: {
-          dataA: this.codigo_cliente,
-          dataB: this.razon_social,
-          dataPermiso: "",
-          dataCodigoPermiso: "83",
-          //abrir: true,
-        },
-      });
-
-      dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
-        console.log(result);
-        if (result) {
-          // se abre la ventanita de COMO REALIZAR LA ANULACION
-          this.dialog.open(TiposAnulacionFelComponent, {
-            width: '716px',
-            height: 'auto',
-            disableClose: true,
-            data: {
-             codigo_factura:this.codigo,
-             datoA:this.codigo_cliente,
-             datoB: this.razon_social,
-             es_tienda: this.esTienda_bool
-            },
-          });
-          return;
-        } else {
-          this.toastr.error('! CANCELADO !');
-        }
-      });
+    if(this.anulada){
+      const resultEstaAnulada = await this.openConfirmacionDialog(`ESTA FACTURA YA ESTA ANULADA`);
+      if (resultEstaAnulada) {}
+    }else{
+      const result = await this.openConfirmationDialog(`¿Esta seguro de ANULAR esta factura ?`);
+      if (result) {
+        const dialogRefParams = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+          width: '450px',
+          height: 'auto',
+          disableClose: true,
+          data: {
+            dataA: this.codigo_cliente,
+            dataB: this.razon_social,
+            dataPermiso: "",
+            dataCodigoPermiso: "83",
+            //abrir: true,
+          },
+        });
+  
+        dialogRefParams.afterClosed().subscribe(async (result: Boolean) => {
+          console.log(result);
+          if (result) {
+            // se abre la ventanita de COMO REALIZAR LA ANULACION
+            this.dialog.open(TiposAnulacionFelComponent, {
+              width: '716px',
+              height: 'auto',
+              disableClose: true,
+              data: {
+               codigo_factura:this.codigo,
+               datoA:this.codigo_cliente,
+               datoB: this.razon_social,
+               es_tienda: this.esTienda_bool
+              },
+            });
+            return;
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
+          }
+        });
+      }
     }
+
+
+    
+
   }
 
 
@@ -1519,8 +1514,8 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     if (result) {
       this.api.getAll(url).subscribe({
         next: (datav) => {
-          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
-          this.toastr.success("IMPRIMIENDO 🖨️");
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRIMIENDO 🖨️' });
           setTimeout(() => {
           this.spinner.hide();
         }, 50);
@@ -1555,8 +1550,8 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     if (result) {
       this.api.create(url, array_SolAnulacion).subscribe({
         next: (datav) => {
-          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav)
-          this.toastr.success("IMPRIMIENDO 🖨️");
+          console.log("🚀 ~ ModificarFacturacionMostradorTiendasComponent ~ this.api.getAll ~ datav:", datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRIMIENDO 🖨️' });
           setTimeout(() => {
           this.spinner.hide();
         }, 50);
@@ -1633,7 +1628,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           });
           return;
         } else {
-          this.toastr.error('! CANCELADO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
         }
       });
     }
@@ -1703,7 +1698,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           });
           return;
         } else {
-          this.toastr.error('! CANCELADO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
         }
       });
     }
@@ -1765,7 +1760,7 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
           });
           return;
         } else {
-          this.toastr.error('! CANCELADO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
         }
       });
     }
@@ -1928,7 +1923,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
     }
   }
 
-
   verificarFacturaEnSIN(){
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
@@ -1950,7 +1944,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
@@ -1984,7 +1977,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
@@ -2018,7 +2010,6 @@ export class ModificarFacturacionMostradorTiendasComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();

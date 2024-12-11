@@ -107,6 +107,9 @@ import { LogService } from '@services/log-service.service';
 import { NgPipesModule } from 'ngx-pipes';
 import { HotTableModule } from '@handsontable/angular';
 import { registerAllModules } from 'handsontable/registry';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { Ripple, RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
 
 
 import { ModalMinimoComplementariasComponent } from '@components/archivo/paramempresa/modales/modalMinimoComplementarias/modalMinimoComplementarias.component';
@@ -452,6 +455,7 @@ import { ModificarFacturacionMostradorTiendasComponent } from '@components/mante
 import { BuscadorAvanzadoFacturasComponent } from '@components/uso-general/buscador-avanzado-facturas/buscador-avanzado-facturas.component';
 import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transacciones/proforma-movil/proforma-movil.component';
 import { TiposAnulacionFelComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/tipos-anulacion-fel/tipos-anulacion-fel.component';
+import { MessageService } from 'primeng/api';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -615,6 +619,8 @@ registerPlugin(UndoRedo);
         ImportsModule,
         ChartModule,
         QRCodeModule,
+        ToastModule,
+        RippleModule,
 
         ToastrModule.forRoot({
             timeOut: 5000, // Duración infinita
@@ -624,9 +630,9 @@ registerPlugin(UndoRedo);
             tapToDismiss: true, // No se oculta al hacer clic
         })],
 
-    providers: [MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
+    providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
         MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
-        TomaInventarioConsolidadoComponent, ProductService,
+        TomaInventarioConsolidadoComponent, ProductService, MessageService,
         { provide: ServiceRefreshItemsService },
         { provide: LOCALE_ID, useValue: 'es-BO' },
         { provide: LocationStrategy, useClass: PathLocationStrategy },

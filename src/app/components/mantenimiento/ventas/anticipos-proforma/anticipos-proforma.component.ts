@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AnticipoProformaService } from './servicio-anticipo-proforma/anticipo-proforma.service';
 import { subMonths } from 'date-fns';
 import { MatTabGroup } from '@angular/material/tabs';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-anticipos-proforma',
   templateUrl: './anticipos-proforma.component.html',
@@ -88,10 +88,9 @@ export class AnticiposProformaComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-
   constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
     private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
-    private anticipo_servicio: AnticipoProformaService,
+    private anticipo_servicio: AnticipoProformaService, private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any, @Inject(MAT_DIALOG_DATA) public tipoPago: any,
     @Inject(MAT_DIALOG_DATA) public cod_moneda: any, @Inject(MAT_DIALOG_DATA) public totalProf: any,
@@ -106,10 +105,6 @@ export class AnticiposProformaComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-
-    if (this.agencia_logueado === "Loc") {
-      this.agencia_logueado = "311";
-    }
 
     this.id_get = id.id;
     this.numero_id_get = numero_id.numero_id;
@@ -136,19 +131,16 @@ export class AnticiposProformaComponent implements OnInit {
     console.log("TAMANIO ARRAY DE ANTICIPOS:", this.array_tabla_anticipos_get?.length);
 
     if (this.cod_cliente_proforma == undefined || this.cod_cliente_proforma == "") {
-      this.toastr.error('SELECCIONE CLIENTE ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE CLIENTE"
     }
 
     if (this.cod_moneda_proforma == undefined || this.cod_moneda_proforma == "") {
-      this.toastr.error('SELECCIONE MONEDA ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE MONEDA"
     }
 
     if (this.tipo_de_pago_proforma == undefined || this.tipo_de_pago_proforma === 1) {
-      this.toastr.error('SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA ⚠️');
       this.validacion = true;
       return this.message = "SELECCIONE TIPO DE PAGO CONTADO EN LA PROFORMA"
     }
@@ -265,12 +257,12 @@ export class AnticiposProformaComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     if (monto_del_input == 0) {
-      this.toastr.error("¡ EL MONTO NO PUEDE SER 0 !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ EL MONTO NO PUEDE SER 0 !' });
       return;
     }
 
     if (monto_del_input > this.monto_restante) {
-      this.toastr.error("¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ EL MONTO A ASIGNAR NO PUEDE SER MAYOR AL TOTAL !' });
       return;
     }
 
@@ -280,23 +272,7 @@ export class AnticiposProformaComponent implements OnInit {
 
     if (this.ventana_nom === "docmodifveproforma.vb") {
       if (longitud_array_anticipos > 0) {
-
         this.anticipos_asignados_table;
-
-        // this.anticipos_asignados_table = [{
-        //   codproforma: this.cod_proforma,
-        //   codanticipo: this.cod_anticipo,
-        //   nroid_anticipo: this.anticipo,
-        //   id_anticipo: this.id_anticipo,
-        //   docanticipo: this.id_anticipo + "-" + this.anticipo,
-        //   fechareg: this.fecha_formateada1,
-        //   monto: this.monto_a_asignar === undefined ? 0 : this.monto_a_asignar,
-        //   usuarioreg: this.usuarioLogueado,
-        //   horareg: hora_actual_complete,
-        //   tdc: this.tdc_get,
-        //   codmoneda: this.cod_moneda_proforma,
-        //   codvendedor: this.vendedor_get.toString(),
-        // }];
       } else {
         this.anticipos_asignados_table = [];
       }
@@ -322,9 +298,7 @@ export class AnticiposProformaComponent implements OnInit {
       } else {
         this.anticipos_asignados_table = [];
       }
-
     }
-
     console.log(this.anticipos_asignados_table);
 
     this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
@@ -336,18 +310,18 @@ export class AnticiposProformaComponent implements OnInit {
           if (datav.value === true) {
             console.warn(this.anticipos_asignados_table, this.codanticipo_elegido);
 
-            // const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.codanticipo_elegido);
-            const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.anticipo);
+            const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.codanticipo_elegido);
+            //const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.anticipo);
             
             if (!encontrado) {
               // Si el valor no está en el array, dejar el campo vacío
               this.preparaParaAgregar();
             } else {
-              this.toastr.error('! ANTICIPO YA ELEGIDO EN EL DETALLE, NO PUEDE VOLVER A ASIGNAR UN ANTICIPO YA ASIGNADO !');
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: '! ANTICIPO YA ELEGIDO EN EL DETALLE, NO PUEDE VOLVER A ASIGNAR UN ANTICIPO YA ASIGNADO !' });
               this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem?.monto, 0);
             }
           } else {
-            this.toastr.error('NO SE AÑADIO ' + (datav.resp || ''));
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE AÑADIO ' + (datav.resp || '') });
             this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem?.monto, 0);
           }
 
@@ -359,7 +333,7 @@ export class AnticiposProformaComponent implements OnInit {
 
         error: (err) => {
           console.log(err);
-          this.toastr.error('! Anticipo NO Agregado !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! Anticipo NO Agregado !' });
           this.total_anticipos = this.anticipos_asignados_table?.reduce((total, currentItem) => total + currentItem?.monto, 0);
 
           setTimeout(() => {
@@ -498,14 +472,14 @@ export class AnticiposProformaComponent implements OnInit {
     //comparar el codvendedor del anticipo elegido con el vendedor de la proforma que esta en el primer tab
     //comparar el montoRest del anticipo elegido si el anticipo es igual o menor a 0 tonces no dejar seleccionarlo 
     if (element.montorest <= 0) {
-      this.toastr.warning("EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + " NO TIENE SALDO RESTANTE");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + " NO TIENE SALDO RESTANTE" });
       return;
     }
 
     if (element.codvendedor != this.vendedor_get) {
-      this.toastr.warning("EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + "TIENE UN VENDEDOR DISTINTO A LA DE LA PROFORMA");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + "TIENE UN VENDEDOR DISTINTO A LA DE LA PROFORMA" });
     } else {
-      this.toastr.success("ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo);
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: "ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo })
 
       this.cod_anticipo = element.numeroid;
       this.monto = element.monto;

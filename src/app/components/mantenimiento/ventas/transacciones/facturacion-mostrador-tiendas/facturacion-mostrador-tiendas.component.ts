@@ -6,7 +6,6 @@ import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/alma
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { ModalVendedorComponent } from '../../modal-vendedor/modal-vendedor.component';
 import { MonedaCatalogoComponent } from '@components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component';
 import { ModalPrecioVentaComponent } from '../../modal-precio-venta/modal-precio-venta.component';
@@ -58,6 +57,7 @@ import { FacturaTemplateComponent } from '../facturas/factura-template/factura-t
 import { BuscadorAvanzadoAnticiposComponent } from '@components/uso-general/buscador-avanzado-anticipos/buscador-avanzado-anticipos.component';
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 pdfMake.fonts = fonts;
@@ -382,7 +382,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     private servicioCliente: ServicioclienteService, private itemservice: ItemServiceService,private router:Router,
     private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, private _snackBar: MatSnackBar,
     public nombre_ventana_service: NombreVentanaService, public servicioCatalogoFacturas: CatalogoFacturasService,
-    private toastr: ToastrService, private almacenservice: ServicioalmacenService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {    
+    private messageService: MessageService, private almacenservice: ServicioalmacenService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {    
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -849,7 +849,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDosificacionCaja/' + this.userConn + "/" + this.fecha_actual + "/" + this.almacn_parame_usuario_almacen)
       .subscribe({
         next: (datav) => {
-          this.toastr.info("DOSIFICADO ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'DOSIFICADO ✅' });
           console.log("🚀 ~ FacturaNotaRemisionComponent ~ generarFactura ~ datav:", datav);
 
           this.cod_control = datav.codigo_control;
@@ -867,7 +867,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO HAY CUFD GENERADO PARA HOY DIA ❌ 🗓️");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CUFD GENERADO PARA HOY DIA ❌ 🗓️' });
           console.error(err, errorMessage);
         },
         complete: () => { }
@@ -927,13 +927,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           // console.log('data', datav);
           this.codigo_vendedor = datav.codvendedor;
-          this.toastr.success("VENDEDOR ENCONTRADO ✅");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VENDEDOR ENCONTRADO ✅' });
           this.codigo_secreto_vendedor = undefined;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("VENDEDOR NO ENCONTRADO ❌");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'VENDEDOR NO ENCONTRADO ❌' });
         },
         complete: () => { }
       })
@@ -1065,7 +1065,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('Usuario Inexiste! ⚠️');
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Usuario Inexiste! ⚠️' });
         },
         complete: () => {
 
@@ -1272,8 +1272,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.validacion_post = [];
         this.validacion_post_negativos = [];
         this.validacion_post_max_ventas = [];
-    
-        this.toastr.info("FACTURACION TIENDAS LIMPIO ");
+        
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'FACTURACION TIENDAS LIMPIO' });
       }
     });
   }
@@ -1286,19 +1286,16 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
           if (datav.cumple === true) {
             mesagge = "CUMPLE";
           } else {
             mesagge = "NO CUMPLE";
-            // this.pinta_empaque_minimo = false;
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES CERRADOS PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EMPAQUES CERRADOS PROCESANDO ⚙️' });
 
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
-
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
             element.nroitem = index + 1;
             element.orden = index + 1;
@@ -1337,7 +1334,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EMPAQUES MINIMO PROCESANDO ⚙️' });
           
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
@@ -1536,15 +1533,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     if (this.validacion_post && this.validacion_post_negativos) {
       let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.Valido === "NO");
       let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
-      // let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
-      // let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
-
     } else {
       console.error('validacion_post o validacion_post_negativos están vacios o todo correcto');
     }
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0, PARA GRABAR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -1666,8 +1660,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
         this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_factura, this.documento_nro);
         this.totabilizar_post = datav;
-        this.toastr.info(datav.resp + "✅");
-
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp + "✅" });
         //aca los mensajes
         this.openConfirmacionDialog(datav?.cadena[0] === undefined ? "":datav?.cadena[0] +
                                     datav?.cadena[1] === undefined ? "":datav?.cadena[1] + 
@@ -1691,9 +1684,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
           // Mandar Correo
           this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
-          this.toastr.success("IMPRESION EXITOSA");
+
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRESION EXITOSA' });
         }else{
-          this.toastr.warning("NO SE IMPRIMIO, SALIO FALSE EN IMPRIMIR XD");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE IMPRIMIO, SALIO FALSE EN IMPRIMIR XD' });
         }
 
         setTimeout(() => {
@@ -1703,7 +1697,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -1711,8 +1705,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       },
 
       complete: () => {
-        //this.abrirTabPorLabel("Observaciones");
-        this.toastr.success("! PROFORMA GRABADA CON EXITO !");
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! PROFORMA GRABADA CON EXITO !' });
       }
     });
   }
@@ -1728,7 +1721,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -1742,8 +1735,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   async validar() {
     this.totabilizar();
 
-    if (this.nrocaja === undefined) {
-      this.toastr.error("LA CAJA NO PUEDE SER 0");
+    if (this.nrocaja === undefined){
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'LA CAJA NO PUEDE SER 0' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -1751,7 +1744,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
 
     if (this.total === 0) {
-      //this.toastr.error("LA CAJA NO PUEDE SER 0");
       this.totabilizar();
       setTimeout(() => {
         this.spinner.hide();
@@ -1760,7 +1752,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
 
     if(this.codigo_vendedor === undefined){
-      this.toastr.error("FALTA CODIGO VENDEDOR");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'FALTA CODIGO VENDEDOR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -1878,8 +1870,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
     this.submitted = true;
     this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
-
+    this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
     const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
@@ -1910,7 +1901,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }
         });
 
-        this.toastr.info("VALIDACION EXITOSA ✅");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'VALIDACION EXITOSA ✅' });
 
         validaciones_valido_NO = this.validacion_post.filter((element) => {
           return element.Valido === "NO";
@@ -1924,23 +1915,17 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           return element.obs != "Cumple";
         });
 
-
         console.warn("Validaciones NO VALIDAS",validaciones_valido_NO.length, "Validaciones Negativas", validaciones_negativos.length, "Validaciones Maximas:", validacion_max_venta_sobrepasan.length)
         
         if(validaciones_valido_NO.length === 0 ){
           if(validaciones_negativos.length === 0 ){
-            // if(validacion_max_venta_sobrepasan.length === 0){
               this.submitData();
-            // }else{
-              // this.toastr.warning("GENERA MAXIMOS DE VENTAS FAVOR REVISAR");
-            // }
           }else{
-            this.toastr.warning("GENERA NEGATIVOS FAVOR REVISAR");
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'GENERA NEGATIVOS FAVOR REVISAR' });
           }
         }else{
-          this.toastr.warning("AUN HAY VALIDACIONES QUE REVISAR");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'AUN HAY VALIDACIONES QUE REVISAR' });
         }
-
 
         setTimeout(() => {
           this.spinner.hide();
@@ -1949,7 +1934,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
 
         setTimeout(() => {
           this.spinner.hide();
@@ -1967,9 +1951,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   soloValidar(){
     this.totabilizar();
-
     if (this.nrocaja === undefined) {
-      this.toastr.error("LA CAJA NO PUEDE SER 0");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'LA CAJA NO PUEDE SER 0' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -1977,7 +1960,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
 
     if (this.total === 0) {
-      //this.toastr.error("LA CAJA NO PUEDE SER 0");
       this.totabilizar();
       setTimeout(() => {
         this.spinner.hide();
@@ -1986,7 +1968,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
 
     if(this.codigo_vendedor === undefined){
-      this.toastr.error("FALTA CODIGO VENDEDOR");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'FALTA CODIGO VENDEDOR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -2104,8 +2086,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
     this.submitted = true;
     this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
 
+    this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
     const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
@@ -2136,8 +2118,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }
         });
 
-        this.toastr.info("VALIDACION EXITOSA ✅");
-
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EXITOSA ✅' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -2145,8 +2126,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO SE VALIDÓ, OCURRIÓ UN PROBLEMA !' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -2180,16 +2160,15 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
               //await this.modalPDFFactura(datav);
             } catch (error) {
               console.error("Ocurrió un error:", error);
-              this.toastr.error("Hubo un problema en el proceso");
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema en el proceso' });
             }
-
           }else{
-            this.toastr.error("NO PASO LA DATA O NO LLEGO")
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO PASO LA DATA O NO LLEGO' });
           }
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE PUDO TRAER INFORMACION DE LA FACTURA😧' });
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -2557,7 +2536,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         console.warn("🚀 Se envió la data para el email:", datav);
       },
       error: (err) => {
-        this.toastr.warning("No se envió el email");
         console.error(err, errorMessage);
       },
       complete: () => {
@@ -2637,7 +2615,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           // console.log(datav);
           if(datav.nit_es_valido === "VALIDO"){
-            this.toastr.success(datav.nit_es_valido);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -2645,7 +2623,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
               disableClose: true,
             });
           }else{
-            this.toastr.error(datav.nit_es_valido);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -2697,7 +2675,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           this.usuario_creado_save = datav;
           console.log(this.usuario_creado_save);
-          this.toastr.success('!CLIENTE GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! CLIENTE GUARDADO !' });
           this.log_module.guardarLog(this.ventana, "Creacion" + detalle, "POST", this.razon_social, this.nit_cliente);
 
           this.modalCatalogoClienteCreado(datav.codcliente);
@@ -2741,7 +2719,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           this.log_module.guardarLog(this.ventana, this.detalle, "PUT", "", "");
           this.email_save = datav;
-          this.toastr.success('!CORREO GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '!CORREO GUARDADO 📧!' });
           this.log_module.guardarLog(this.ventana, "Creacion", "POST", "ACTUALIZAR CORREO TIENDA", this.email_cliente);
 
           this._snackBar.open('!CORREO GUARDADO!', '📧', {
@@ -2752,7 +2730,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! Ingrese un correo valido ! 📧');
         },
         complete: () => {
 
@@ -2769,8 +2746,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     return this.api.getAll('/venta/modif/docmodifveproforma/obtProfxModif/' + this.userConn + "/" + this.num_idd + "/" + this.num_id + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
-          //this.imprimir_proforma_tranferida(datav);
-          this.toastr.success('! TRANSFERENCIA EXITOSA !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EXITOSA !' });
 
           setTimeout(() => {
             this.spinner.hide();
@@ -2778,7 +2754,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌ ' });
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -3044,7 +3020,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     let total_proforma_concat: any = [];
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
@@ -3071,7 +3047,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           //aca se pinta los items con la info q llega del backend
           this.array_items_carrito_y_f4_catalogo = datav.tabla_detalle;
 
-          this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -3079,7 +3055,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE TOTALIZO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
 
           setTimeout(() => {
             this.spinner.hide();
@@ -3107,17 +3083,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   }
 
   validarProformaSoloMaximoVenta() {
-    // console.clear();
-    // 00058 - VALIDAR MAXIMO DE VENTA
-
-    // if (!this.FormularioData.valid) {
-    //   this.toastr.error("¡ REVISE FORMULARIO 🚨!");
-    //   setTimeout(() => {
-    //     this.spinner.hide();
-    //   }, 500);
-    //   return;
-    // };
-
     let validacion_post_max_ventas = [this.FormularioData.value];
 
     validacion_post_max_ventas.map((element: any) => {
@@ -3235,7 +3200,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA MAX. VENTAS ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA MAX. VENTAS ✅' });
           this.validacion_post_max_ventas = datav[0].Dtnocumplen;
           // console.log(this.validacion_post_max_ventas);
 
@@ -3250,7 +3215,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -3262,10 +3227,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }, 500);
         }
       });
-    // } else {
-    //   this.toastr.info("VALIDACION ACTIVA 🚨");
-    //   console.log("HAY QUE VALIDAR DATOS");
-    // }
   }
 
   validarProformaSoloNegativos() {
@@ -3386,11 +3347,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav)
-          this.toastr.info("VALIDACION CORRECTA DE NEGATIVOS ✅");
-          // if (datav[0].Dtnegativos) {
-          //   this.validacion_post_negativos = datav[0].Dtnegativos;
-          // }
+          console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA DE NEGATIVOS ✅' });
 
           this.toggleTodosNegativos = true;
           this.toggleNegativos = false;
@@ -3403,7 +3361,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -3415,10 +3373,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }, 500);
         }
       });
-    // } else {
-      // this.toastr.info("VALIDACION ACTIVA 🚨");
-      // console.log("HAY QUE VALIDAR DATOS");
-    // }
   }
 
   validarDeUno(validacion_seleccionada){
@@ -3532,7 +3486,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
     this.submitted = true;
     this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
+    this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
 
     const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
@@ -3549,7 +3503,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.toggleValidos = false;
         this.toggleNoValidos = false;
 
-        this.toastr.info("VALIDACION EXITOSA ✅");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EXITOSA ✅' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -3557,7 +3511,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO SE VALIDÓ, OCURRIÓ UN PROBLEMA !' });
 
         setTimeout(() => {
           this.spinner.hide();
@@ -3759,7 +3713,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.Codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL Codigo" + element.Codigo + "ya se encuentra resuelto" });
           console.log('El elemento ya está presente en el array.');
         }
         // Filtrar los elementos de array1 que no están presentes en array2
@@ -3803,7 +3757,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }
         });
       } else {
-        this.toastr.error('¡CANCELADO!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ CANCELADO !' });
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.Codigo === element.Codigo);
         if (indice !== -1) {
@@ -3842,7 +3796,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.Codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL Codigo" + element.Codigo + "ya se encuentra resuelto" });
           console.log('El elemento ya está presente en el array.');
         }
         // Filtrar los elementos de array1 que no están presentes en array2
@@ -3886,7 +3840,6 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           }
         });
       } else {
-        // this.toastr.error('¡CANCELADO!');
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.Codigo === element.Codigo);
         if (indice !== -1) {
@@ -4313,7 +4266,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         next: (datav) => {
           // console.log("Descuento de Nivel: ", datav);
           if(datav.resp){
-            this.toastr.info(datav.resp);
+            this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp });
           }
           
           setTimeout(() => {

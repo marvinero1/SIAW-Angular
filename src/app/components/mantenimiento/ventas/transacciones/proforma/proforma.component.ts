@@ -8,7 +8,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ItemDetalle, veCliente } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { ServicioclienteService } from '../../serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '../../serviciosItem/item-service.service';
 import { ServicioalmacenService } from '../../../inventario/almacen/servicioalmacen/servicioalmacen.service';
@@ -66,6 +65,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { element } from 'protractor';
 import { environment } from 'environments/environment';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-proforma',
@@ -128,7 +128,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener("document:keydown.F5", []) unloadHandler2(event: Event) {
     console.log("No se puede actualizar");
     event.preventDefault();
-    this.toastr.warning('TECLA DESHABILITADA ⚠️');
   }
 
   @HostListener("document:keydown.F6", []) unloadHandler4(event: Event) {
@@ -156,7 +155,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener("document:keydown.F9", []) unloadHandler6(event: Event) {
     console.log("No se puede en proforma");
     event.preventDefault();
-    this.toastr.warning('TECLA DESHABILITADA ⚠️');
+    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️' });
   }
 
   @HostListener("document:keydown.Delete", []) unloadHandler7(event: Event) {
@@ -482,11 +481,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     private serviciovendedor: VendedorService, private servicioPrecioVenta: ServicioprecioventaService,
     private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private subtotal_service: SubTotalService,
     private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
-    private toastr: ToastrService, private spinner: NgxSpinnerService, private log_module: LogService, private saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService,private saldoItemServices: SaldoItemMatrizService,private communicationService: ComunicacionproformaService, 
+    private spinner: NgxSpinnerService, private log_module: LogService, private router:Router, public nombre_ventana_service: NombreVentanaService,
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
-    private anticipo_servicio: AnticipoProformaService, public nombre_ventana_service: NombreVentanaService,
-    private communicationService: ComunicacionproformaService, private router:Router) {
+    private anticipo_servicio: AnticipoProformaService) {
       
     if (!environment.production) {
       console.log('Componente inicializado en desarrollo');
@@ -637,7 +636,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           element.empaque = 0;
         }
       }
-
       return this.array_items_carrito_y_f4_catalogo;
     });
     //
@@ -800,7 +798,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     //modalClientesDireccion
     this.servicioCliente.disparadorDeDireccionesClientes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Direccion Cliente: ", data);
-      this.toastr.success("ETIQUETA LIMPIADA ");
+      this.messageService.add({ severity: 'Accion Completada', summary: 'Success', detail: 'ETIQUETA LIMPIADA' })
       this.etiqueta_get_modal_etiqueta = [];
       
       this.direccion = data.direccion;
@@ -983,7 +981,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
         niveles_descuento: element.niveles_descuento,
         transporte: element.transporte,
-        nombre_transporte: element.nombre_transporte,
+        nombre_transporte: element.nombre_transporte === undefined ? "": element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
         tipoentrega: "",
         direccion: element.direccion,
@@ -1037,20 +1035,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       preparacion: this.preparacion,
     }
-    // console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-    // console.log("Valor Formulario Enviando Btn mandarEntregar: ", proforma_validar);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/get_entrega_pedido/"
     return this.api.create('/venta/transac/veproforma/get_entrega_pedido/' + this.userConn + "/" + this.BD_storage, proforma_validar)
     .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.tipoentrega = datav.mensaje;
-          // console.log(datav);
+          console.log(datav);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("FALTA NOMBRE TRANSPORTE");
         },
         complete: () => { }
       });
@@ -1059,8 +1054,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   get f() {
     return this.FormularioData.controls;
   }
-
-
 
   getHoraFechaServidorBckEnd() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
@@ -1378,11 +1371,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('Usuario Inexiste! ⚠️');
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
 
@@ -1721,9 +1711,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // this.tablaInicializada();
         this.limpiarEtiqueta();
-      } else {
-        this.toastr.info("SE CANCELO LA LIMPIEZA");
-      }
+      } 
     });
   }
 
@@ -1746,7 +1734,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           this.log_module.guardarLog(ventana, detalle, tipo_transaccion, "", "");
           this.email_save = datav;
-          this.toastr.success('!CORREO GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! CORREO GUARDADO !' })
           this.log_module.guardarLog(this.ventana, "Creacion" + detalle, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
 
           this._snackBar.open('!CORREO GUARDADO!', 'Ok', {
@@ -1757,10 +1745,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! Ingrese un correo valido ! 📧');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! Ingrese un correo valido ! 📧' });
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
@@ -1789,7 +1776,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           this.usuario_creado_save = datav;
           console.log(this.usuario_creado_save);
-          this.toastr.success('!CLIENTE GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '!CLIENTE GUARDADO!' })
+
           this.log_module.guardarLog(this.ventana, "Creacion" + detalle, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
 
           this._snackBar.open('!CLIENTE GUARDADO!', 'Ok', {
@@ -2319,8 +2307,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       if (result) {
         this.tranferirProforma();
         this.log_module.guardarLog(ventana, detalle, tipo, "", "");
-      } else {
-        this.toastr.error('! CANCELADO !');
       }
     });
   }
@@ -2624,7 +2610,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(proforma_validar);
 
     if (this.total === 0) {
-      this.toastr.error("TOTALICE ANTES DE COMPLEMENTAR");
+
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TOTALICE ANTES DE COMPLEMENTAR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -2645,9 +2632,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tipo_complementopf_input = 3;
             this.idpf_complemento_view = "";
             this.input_complemento_view = "";
-
           } else {
-            this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'PROFORMA COMPLEMENTADA CON EXITO ✅' })
           }
 
           setTimeout(() => {
@@ -2657,7 +2643,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err) => {
           console.log(err);
-          this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !' });
           // this.complementopf = false;
           this.disableSelectComplemetarProforma = false;
           setTimeout(() => {
@@ -3044,7 +3030,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!this.FormularioData.valid) {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       console.warn("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
@@ -3052,14 +3038,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.validacion_post.length === 0) {
-      this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ TIENE QUE VALIDAR ANTES DE GRABAR !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
     }
 
     if (tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3067,7 +3053,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3157,7 +3143,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
-        this.toastr.info("GUARDADO CON EXITO ✅");
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'GUARDADO CON EXITO ✅' });
         this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
         this.totabilizar_post = datav;
         // console.log(this.totabilizar_post);
@@ -3169,8 +3155,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
-
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -3194,7 +3179,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             // aca manda a imprimir la proforma guardada
             this.modalBtnImpresiones();
           } else {
-            // this.toastr.error("NO SE DESCARGO ZIP");
             //aca manda a imprimir la proforma guardada
             this.modalBtnImpresiones();
           }
@@ -3238,7 +3222,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!this.FormularioData.valid) {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       console.warn("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
@@ -3246,14 +3230,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.validacion_post.length === 0) {
-      this.toastr.error("¡ TIENE QUE VALIDAR ANTES DE GRABAR !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ TIENE QUE VALIDAR ANTES DE GRABAR !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
     }
 
     if (tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -3261,7 +3245,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -3476,9 +3460,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         alerts = datav.alerts;
     
         // Mostrar el mensaje de guardado con éxito
-        this.toastr.info(resp + "✅");
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: resp + "✅" })
+  
         this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
-    
         // Si hay alertas, abrir el primer modal y esperar a que se cierre
         if (alerts) {
           const dialogRefAlerts = this.dialog.open(DialogConfirmacionComponent, {
@@ -3521,38 +3505,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
       },
 
       complete: () => {
-        //aca exporta a ZIP
-        // const dialogRefZIP = this.dialog.open(DialogConfirmActualizarComponent, {
-        //   width: '450px',
-        //   height: 'auto',
-        //   data: {
-        //     mensaje_dialog: resp + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + " con Exito. ¿Desea Exportar el Documento? "
-        //   },
-        //   disableClose: true,
-        // });
-
-        // dialogRefZIP.afterClosed().subscribe((result: Boolean) => {
-        //   if (result) {
-        //     this.exportProformaZIP(this.totabilizar_post.codProf);
-
-        //     //aca manda a imprimir la proforma guardada
-        //     this.modalBtnImpresiones();
-        //   } else {
-        //     // this.toastr.error("NO SE DESCARGO ZIP");
-
-        //     //aca manda a imprimir la proforma guardada
-        //     this.modalBtnImpresiones();
-        //   }
-        // });
-
-        // this.guardarDataImpresion(this.totabilizar_post.codProf, true);
         setTimeout(() => {
           this.spinner.hide();
         }, 50);
@@ -3577,7 +3536,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA'});
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -3612,7 +3571,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log("totabilizado llegando del backend: ", this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completa', detail: '! TOTALIZADO EXITOSAMENTE !' })
 
             setTimeout(() => {
               this.spinner.hide();
@@ -3621,7 +3580,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE TOTALIZO' });
 
             setTimeout(() => {
               this.spinner.hide();
@@ -3656,11 +3615,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'VERIFIFIQUE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
-      }, 50);
+      }, 0);
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
     }
   }
 
@@ -3706,7 +3668,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     //SI EL USUARIO VALIDA PERO NO GRABO PRIMERAMENTE LA ETIQUETA QUE LE SALGA LA VENTANA DE LA ETIQUETA Y Q GRABRE XD XD
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -3714,7 +3676,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     if (!this.FormularioData.valid || tamanio_array_etiqueta === 0){
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ GRABE ETIQUETA PRIMERO!' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -3733,17 +3695,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         console.warn("APLICARA DESCT DEPOSITO");
         try {
           await this.aplicarDesctPorDepositoBTNModal();  // Espera a que aplique el descuento
-          // await this.totabilizar();  // Luego, espera a que totabilice
-          // await this.validar();  // Finalmente, realiza la validación
         } catch (error) {
           console.error("Error durante la ejecución de las funciones:", error);
-          this.toastr.error("Hubo un problema durante la validación.");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'HUBO UN PROBLEMA DURANTE LA VALIDACION' });
         }
       } else {
         //ESTE TOTABILIZAR ES EXCLUSIVO SOLO DETIENE EL SPINNER
         //CUANDO SALGA ALGUN ERROR
         console.warn("NO APLICARA DESCT DEPOSITO");
-
         // Después de las validaciones, validamos acá
         this.validar();
       }
@@ -3769,7 +3728,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA'});
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -3815,13 +3774,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log("totabilizado llegando del backend: ", this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
           },
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
-
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
             setTimeout(() => {
               this.spinner.hide();
             }, 10);
@@ -3855,7 +3813,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -3902,7 +3860,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           let msa: any = datav.respOculto;
           // if (datav.respOculto) {
             // const result = await this.openConfirmacionDialog(msa);
-            this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' })
             if (datav.respOculto) {
             // const result = await this.openConfirmationOKDialog(msa);
               // if (result) {
@@ -3937,7 +3895,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     let total_proforma_concat: any = [];
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     this.array_items_carrito_y_f4_catalogo.map((element) => ({
@@ -3982,16 +3940,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log("Array que me devuelve el bck al totabilizar:", this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
           },
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
-
-            // setTimeout(() => {
-            //   this.spinner.hide();
-            // }, 500);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
           },
           complete: async () => {
             this.mandarEntregar();
@@ -4020,7 +3974,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4203,7 +4157,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
           if (datav[0].Dtnegativos) {
             this.validacion_post_negativos = datav[0].Dtnegativos;
           }
@@ -4223,7 +4177,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4235,7 +4188,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4396,9 +4349,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA MAX VENTAS ✅");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA MAX VENTAS ✅' })
           this.validacion_post_max_ventas = datav[0].Dtnocumplen;
-          // console.log(this.validacion_post_max_ventas);
 
           this.toggleTodosMaximoVentas = true;
           this.toggleMaximoVentaSobrepasan = false;
@@ -4411,7 +4363,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4423,7 +4375,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4571,7 +4523,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.submitted = true;
     this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
+    this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
 
     const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/vacio/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
@@ -4588,7 +4540,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toggleValidos = false;
         this.toggleNoValidos = false;
 
-        this.toastr.info("VALIDACION EXITOSA ✅");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EXITOSA ✅' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -4596,8 +4548,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -4619,7 +4569,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           // console.log(datav);
           if(datav.nit_es_valido === "VALIDO"){
-            this.toastr.success(datav.nit_es_valido);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido })
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -4627,7 +4577,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               disableClose: true,
             });
           }else{
-            this.toastr.error(datav.nit_es_valido);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -4666,7 +4616,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES CERRADOS PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'EMPAQUES CERRADOS PROCESANDO ⚙️' })
 
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
@@ -4709,8 +4659,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
-          
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'EMPAQUES MINIMO PROCESANDO ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -4778,7 +4727,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             if (result) {
               //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
               this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' })
+  
             } else {
               //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
               this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
@@ -4850,7 +4800,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             if (result) {
               //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
               this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' })
+  
 
             } else {
               //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
@@ -5001,14 +4952,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     console.log("🚀 ~ ProformaComponent ~ aplicarDesctPorDepositoYValidar ~ a:", a)
 
-    this.toastr.success('DESCT. POR DEPOSITO APLICANDO ⚙️');
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. POR DEPOSITO APLICANDO ⚙️' })
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicar_descuento_por_deposito/";
     return this.api.create('/venta/transac/veproforma/aplicar_descuento_por_deposito/' + this.userConn + "/" + this.codigo_cliente + "/" +
       this.codigo_cliente_catalogo_real + "/" + this.nit_cliente + "/" + this.BD_storage + "/" + this.subtotal + "/" + this.moneda_get_catalogo + "/" + 0, a)
       .subscribe({
         next: async (datav) => {
           console.log(datav);
-          this.toastr.success('DESCT. POR DEPOSITO APLICADO ✅');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. POR DEPOSITO APLICADO ✅ ' })
           let msa: any = datav.respOculto;
 
           if (datav.respOculto) {
@@ -5016,7 +4967,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             if (result) {
               //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
               this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' });
             } else {
               //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
               this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
@@ -5166,7 +5117,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
     console.log("Valor Formulario Mapeado: ", this.valor_formulario_copied_map_all);
-
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
@@ -5182,13 +5132,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log("Largo del array detalleContoles: ", [this.validacion_post].length);
 
     if (this.total === 0) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0' });
       return;
     }
 
     if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
       setTimeout(() => {
         this.spinner.hide();
       }, 500);
@@ -5197,7 +5146,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.submitted = true;
     this.spinner.show();
-    this.toastr.info("VALIDACION EN CURSO ⚙️");
+    this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
 
     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/vacio/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
@@ -5214,7 +5163,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toggleValidos = false;
         this.toggleNoValidos = false;
 
-
         datav.jsonResult.forEach(element => {
           if(element.codigo === 60){
             this.validacion_post_negativos = element.dtnegativos;
@@ -5227,18 +5175,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         });
 
-        // al traer todas las validaciones tambien se traen los negativos
-        // this.validacion_post_negativos = datav[56]?.Dtnegativos;
-        
-        // this.validacion_post_negativos = datav[56]?.Dtnegativos;
-        // this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-
-        // maximo de ventas
-        // this.validacion_post_max_ventas = datav[54]?.Dtnocumplen;
-        // this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
-
         this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
-        this.toastr.info("VALIDACION EXITOSA ✅");
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION EXITOSA ✅' })
 
         setTimeout(() => {
           this.spinner.hide();
@@ -5249,8 +5187,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO SE VALIDÓ, OCURRIÓ UN PROBLEMA !' });
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -5284,7 +5221,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           // console.log("Descuento de Nivel: ", datav);
           if(datav.resp){
-            this.toastr.info(datav.resp);
+            this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp });
           }
           
           setTimeout(() => {
@@ -5438,8 +5375,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
-          this.toastr.success('DESCT. ESPECIAL S/TIPO PRECIO PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. ESPECIAL S/TIPO PRECIO PROCESANDO ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           //siempre sera uno
@@ -5477,8 +5413,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   borrarDesct() {
     this.spinner.show();
     this.array_items_carrito_y_f4_catalogo.map((element) => {
-      element.coddescuento = 0
-      this.toastr.success("BORRANDO DESCUENTOS ⚙️");
+      element.coddescuento = 0;
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BORRANDO DESCUENTOS ⚙️' })
     });
     setTimeout(() => {
       this.spinner.hide();
@@ -5514,8 +5450,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
-          this.toastr.success('VALIDAR EMPAQUE DESC. ESPECIAL ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDAR EMPAQUE DESC. ESPECIAL ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           //siempre sera uno
@@ -5585,7 +5520,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           if(datav.resp === "Los items ya cumplen con empaques, no se dividiran."){
             this.modalDetalleObservaciones(datav.resp, " ");
-            this.toastr.success(datav?.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp })
 
             setTimeout(() => {
               this.spinner.hide();
@@ -5593,8 +5528,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           }else{
             this.modalDetalleObservaciones(datav.alertMsg, " ");
 
-            this.toastr.success('DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESADO ⚙️');
-            this.toastr.success(datav?.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESADO ⚙️' });
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp });
   
             this.array_items_carrito_y_f4_catalogo = datav?.tabladetalle;
             console.log(this.array_items_carrito_y_f4_catalogo);
@@ -5639,13 +5574,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           console.log(datav);
-
           if (datav.status === false) {
-            this.toastr.warning(datav.resp);
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.resp });
             return;
           }
 
-          this.toastr.success('VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️' })
           this.array_items_carrito_y_f4_catalogo = [...datav.tabladetalle];
 
           //siempre sera uno
@@ -5659,8 +5593,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           console.log("Data Sugerida: ", datav.tabla_sugerencia)
           //console.log("Data del Carrito: ", this.array_items_carrito_y_f4_catalogo);
-          this.toastr.warning(datav.msgDetalle);
-
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.msgDetalle });
           this.dataSource_precios_desct = new MatTableDataSource(datav.tabla_sugerencia);
 
           setTimeout(() => {
@@ -5879,7 +5812,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe({
           next: (datav) => {
             //console.log(datav);
-            this.toastr.success("ARCHIVO ZIP CARGADO EXITOSAMENTE ✅");
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
             this.imprimir_zip_importado(datav);
 
             setTimeout(() => {
@@ -5888,7 +5821,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           error: (err: any) => {
             console.log(err);
-            this.toastr.error("ERROR AL CARGAR EL ARCHIVO ❌");
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'ERROR AL CARGAR EL ARCHIVO ❌' });
             setTimeout(() => {
               this.spinner.hide();
             }, 500);
@@ -5901,7 +5834,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     } else {
       console.error('Please upload a valid ZIP file.');
-      this.toastr.error("SOLO SELECCIONAR FORMATO .ZIP ❌");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SOLO SELECCIONAR FORMATO .ZIP ❌' });
     }
   }
 
@@ -5925,7 +5858,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav: ArrayBuffer) => {
           console.log(datav);
-          this.toastr.success("DESCARGA EN PROCESO");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
 
           // Convertir ArrayBuffer a Blob
           const blob = new Blob([datav], { type: 'application/zip' });
@@ -6339,7 +6272,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: this.array_items_carrito_y_f4_catalogo,
+        items: [],
         descuento_nivel: this.desct_nivel_actual,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
 
@@ -6395,7 +6328,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       panelClass: 'full-screen-modal',
       disableClose: true,
       data: {
-        //esta info tarifa ya esta en la matriz xd
+        // esta info tarifa ya esta en la matriz xd
         // tarifa: this.cod_precio_venta_modal_codigo,
         descuento: this.cod_descuento_modal,
         codcliente: this.codigo_cliente,
@@ -6406,7 +6339,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: this.array_items_carrito_y_f4_catalogo,
+        items: [ ],
         descuento_nivel: this.desct_nivel_actual,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
         
@@ -6488,7 +6421,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud === false ? "false" : "true",
         codmoneda: this.moneda_get_catalogo,
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: this.array_items_carrito_y_f4_catalogo,
+        items: [],
         descuento_nivel: this.desct_nivel_actual,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
         // tamanio_carrito_compras: ultimo_valor?.nroitem,
@@ -6822,12 +6755,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           cliente_real: this.codigo_cliente_catalogo_real,
           detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
         }
-
       });
       console.log("Valor Formulario Para ver Descuentos:", a);
     } else {
       console.log("Valor Formulario Para ver Descuentos ValidacionVentana FormData.value createForm:", this.FormularioData.value);
-      this.toastr.warning("REVISE FORMULARIO");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'REVISE FORMULARIO' });
     }
   }
 
@@ -6866,7 +6798,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   limpiarEtiqueta() {
-    this.toastr.success("ETIQUETA LIMPIADA ");
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
     this.etiqueta_get_modal_etiqueta = [];
     this.direccion = "";
     this.latitud_cliente = "";
@@ -6899,7 +6831,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tranferirProforma();
         //this.log_module.guardarLog(ventana, detalle, tipo);
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! CANCELADO !' });
       }
     });
   }
@@ -7069,7 +7001,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO' + element.codigo + "YA SE ENCUENTRA RESUELTO"});
           console.log('El elemento ya está presente en el array.');
         }
         // Filtrar los elementos de array1 que no están presentes en array2
@@ -7115,7 +7047,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           return this.validacionesNOValidosFilterToggle();
         });
       } else {
-        this.toastr.error('¡CANCELADO!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ CANCELADO !' });
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.codigo === element.codigo);
         if (indice !== -1) {
@@ -7156,7 +7088,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL Codigo" + element.codigo + "ya se encuentra resuelto" });
           console.log('El elemento ya está presente en el array.');
         }
         // Filtrar los elementos de array1 que no están presentes en array2
@@ -7202,7 +7134,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           return this.validacionesNOValidosFilterToggle();
         });
       } else {
-        // this.toastr.error('¡CANCELADO!');
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.codigo === element.codigo);
         if (indice !== -1) {

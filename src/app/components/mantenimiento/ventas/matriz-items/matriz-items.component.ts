@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
-import { ToastrService } from 'ngx-toastr';
 import { ModalSaldosComponent } from './modal-saldos/modal-saldos.component';
 import { StockActualF9Component } from './stock-actual-f9/stock-actual-f9.component';
 import { SaldoItemMatrizService } from './services-saldo-matriz/saldo-item-matriz.service';
@@ -12,10 +11,12 @@ import { ServicioF9Service } from './stock-actual-f9/servicio-f9.service';
 import { DatePipe } from '@angular/common';
 import { ModalPrecioVentaComponent } from '../modal-precio-venta/modal-precio-venta.component';
 import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
-import Handsontable from 'handsontable';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 import { Subject, takeUntil } from 'rxjs';
+import { MessageService } from 'primeng/api';
+
+import Handsontable from 'handsontable';
 @Component({
   selector: 'app-matriz-items',
   templateUrl: './matriz-items.component.html',
@@ -38,7 +39,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getEmpaqueItem();
           }else{
             this.cant_empaque === 0;
-
             const focusElement = this.focusPedido1.nativeElement;
             this.renderer.selectRootElement(focusElement).focus();
             focusElement.click();
@@ -61,7 +61,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
           this.addItemArray();
           // this.cant_empaque = undefined;
-          // this.pedido = undefined;
+          // this.pedido = null;
           // this.cantidad = undefined;
           break;
         case 'idBuscadorHoja':
@@ -83,7 +83,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   @HostListener("click", []) unloadHandler(event: KeyboardEvent) {
-    this.onCellClick1(this.valorCelda);
+    if(this.valorCelda){
+      this.onCellClick1(this.valorCelda);
+    }
   };
 
   FormularioBusqueda: FormGroup
@@ -182,7 +184,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2, private spinner: NgxSpinnerService,
-    private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService, public saldoItemServices: SaldoItemMatrizService,
     public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
 
     @Inject(MAT_DIALOG_DATA) public descuento: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any,
@@ -311,15 +313,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
+    // Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    // Add 'implements AfterViewInit' to the class.
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {
-      this.toastr.error('¡' + this.messages.join(', ') + '!');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡' + this.messages.join(', ') + '!' });
     }
-
     console.log("item de seleccion:", this.array_items_completo);
-
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
     console.log(`Elemento Enfocado: ${nombre_input}`);
@@ -348,19 +348,19 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log("Hola Lola en el input", nombre_input);
 
       if (nombre_input === 'focusEmpaque') {
-        this.cant_empaque = undefined;
+        this.cant_empaque = null;
       }
 
       if (nombre_input === '') {
-        this.cant_empaque = undefined;
+        this.cant_empaque = null;
       }
 
       if (nombre_input === 'focusPedido') {
-        this.pedido = undefined;
+        this.pedido = null;
       }
 
       if (nombre_input === 'focusCantidad') {
-        this.cantidad = undefined;
+        this.cantidad = null;
       }
     }
   }
@@ -469,7 +469,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         error: (err: any) => {
           console.log(err, errorMessage);
           this.data_almacen_local.saldo = 0;
-          //this.toastr.error('¡CELDA NO VALIDA!');
         },
         complete: () => {
         }
@@ -483,7 +482,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     let array_send={
       agencia:agencia_concat,
       codalmacen: this.agencia,
-      coditem: this.item,
+      coditem: item,
       codempresa: this.BD_storage,
       usuario: this.usuario_logueado,
       
@@ -678,7 +677,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
               break;
             }else{
               console.log("ENTER PARA ENVIAR ITEM A CARRITO B");
-    
               this.cant_empaque = 0;
               // const focusedElement = document.activeElement as HTMLElement;
               // focusedElement.id = nombre_input;
@@ -747,7 +745,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         // console.log('Data de la celda seleccionada:', cellData);
 
         // if(cellData){
-    
         // }
 
         //this.onCellClick1(cellData);
@@ -850,26 +847,23 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (existe) {
       // console.log("El item ya existe en el array.");
-      this.toastr.warning('¡EL ITEM YA ESTA EN CARRITO!');
-
-
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM YA ESTA EN CARRITO !' });
       // Luego, para quitar el foco
       this.focusEmpaqueElement.nativeElement.blur();
 
-      this.cant_empaque = undefined;
-      this.pedido = undefined;
-      this.cantidad = undefined;
+      this.cant_empaque = null;
+      this.pedido = null;
+      this.cantidad = null;
       return;
     }
 
     if (!this.item_valido) {
       console.log('¡EL ITEM NO ESTA EN VENTA!', this.item_valido);
-      //this.toastr.error('¡EL ITEM NO ESTA EN VENTA!');
+      // this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
       return;
     }
 
     // if (this.pedido === 0 || this.pedido === undefined) {
-    // this.toastr.warning('¡La cantidad y el pedido no pueden ser 0!');
     //return;
     //}
     // //CUANDO NO HAY NADA EN EL CARRITO Y ES EL PRIMER ITEM SE AGREGA ACA,
@@ -886,7 +880,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.array_items_seleccionado.push(array);
     } else {
       if(this.permiso_para_vista){
-        this.toastr.warning("EL PEDIDO CANTIDAD NO PUEDE SER 0");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL PEDIDO CANTIDAD NO PUEDE SER 0' });
       }
     }
 
@@ -910,9 +904,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     //   this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
 
-    this.cant_empaque = undefined;
-    this.pedido = undefined;
-    this.cantidad = undefined;
+    this.cant_empaque = null;
+    this.pedido = null;
+    this.cantidad = null;
   }
 
   addItemArraySeleccion() {
@@ -951,7 +945,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         nroitem: elemento.nroitem,
       }
     });
-
     // console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
@@ -1023,9 +1016,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.medida_item = "";
     this.porcen_item = "";
 
-    this.pedido = undefined;
-    this.cantidad = undefined;
-    this.num_hoja = undefined;
+    this.pedido = null;
+    this.cantidad = null;
+    this.num_hoja = null;
     this.tamanio_lista_item_pedido = 0;
   }
 
@@ -1039,7 +1032,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.item_valido == true) {
             this.getlineaProductoID(value);
           } else {
-            // this.toastr.warning('!ITEM NO VALIDO PARA LA VENTA!');
             this.no_venta = "ITEM NO VENTA";
             this.si_venta = "";
           }
@@ -1047,7 +1039,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          // this.toastr.warning('SELECCIONE UN ITEM');
           this.si_venta = "ITEM VENTA";
           this.no_venta = "";
           this.descripcion_item = '';
@@ -1175,13 +1166,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
         .subscribe({
           next: (datav) => {
-            // console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
             this.pedido = datav.total;
             console.log("El total del empaque: ", this.pedido);
           },
 
           error: (err: any) => {
-            this.pedido = undefined;
+            this.pedido = null;
             this.cantidad = this.pedido;
             console.log(err, errorMessage);
           },

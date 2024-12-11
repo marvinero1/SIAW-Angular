@@ -16,6 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
+import { MessageService } from 'primeng/api';
 
 interface buscadorGeneral {
   id: any,
@@ -98,7 +99,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
   userConn: any;
   usuarioLogueado: any;
 
-  constructor(private api: ApiService, public dialogRef: MatDialogRef<BuscadorAvanzadoFacturasComponent>, private toastr: ToastrService,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<BuscadorAvanzadoFacturasComponent>, private messageService: MessageService,
     private almacenservice: ServicioalmacenService, private serviciovendedor: VendedorService,
     public servicioCatalogoFacturas: CatalogoFacturasService, public servicioBuscadorAvanzado: BuscadorAvanzadoService,
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService,
@@ -215,13 +216,17 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
         console.log(datav);
         this.buscadorObj = datav
 
+        if(datav.length === 0){
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY INFORMACION' });
+        }
+
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
       },
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! OCURRIO UN PROBLEMA AL BUSCAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL BUSCAR !' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -367,7 +372,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
       codigo: this.codigo_documento,
     });
 
-    this.toastr.success("FACTURA TRANSFERIDA CON EXITO !");
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! FACTURA TRANSFERIDA CON EXITO !' });
     setTimeout(() => {
       this.spinner.hide();
     }, 500);
@@ -375,9 +380,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
     this.close();
   }
 
-
-
-
+  
 
   //GETS
   getClienteCatalogo() {

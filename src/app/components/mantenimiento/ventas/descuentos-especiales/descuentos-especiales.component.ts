@@ -13,6 +13,7 @@ import { DescuentoService } from '../serviciodescuento/descuento.service';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
 import { LineasPorcentajeDesctComponent } from './lineas-porcentaje-desct/lineas-porcentaje-desct.component';
 import { PreciosPermitidoDesctComponent } from './precios-permitido-desct/precios-permitido-desct.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-descuentos-especiales',
   templateUrl: './descuentos-especiales.component.html',
@@ -40,7 +41,7 @@ export class DescuentosEspecialesComponent implements OnInit {
   public detalle = "destEspecial";
   public tipo = "desceunto-especial-CREATE";
 
-  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private messageService: MessageService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService,
     public servicioDescuento: DescuentoService, public almacenservice: ServicioalmacenService, private _formBuilder: FormBuilder,
     private datePipe: DatePipe) {
@@ -99,13 +100,12 @@ export class DescuentosEspecialesComponent implements OnInit {
 
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Guardado con Exito! 🎉 ' })
           location.reload();
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
@@ -124,13 +124,12 @@ export class DescuentosEspecialesComponent implements OnInit {
 
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Guardado con Exito! 🎉 ' })
           location.reload();
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE EDITO !');
         },
         complete: () => { }
       })
@@ -151,18 +150,16 @@ export class DescuentosEspecialesComponent implements OnInit {
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-
-              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ELIMINADO EXITOSAMENTE !' })
               location.reload();
             },
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ELIMINADO !');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }

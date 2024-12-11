@@ -17,6 +17,7 @@ import { ServicioalmacenService } from '../../inventario/almacen/servicioalmacen
 import { DatePipe } from '@angular/common';
 import { Interceptor } from '@services/interceptor';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-clientes-iguales',
   templateUrl: './clientes-iguales.component.html',
@@ -85,7 +86,7 @@ export class ClientesIgualesComponent implements OnInit, AfterContentInit {
   public tipo = "clientes-iguales-CREATE";
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService,
-    public log_module: LogService, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService,
+    public log_module: LogService,  private messageService: MessageService, public nombre_ventana_service: NombreVentanaService,
     public servicioCliente: ClientesIgulesService, public almacenservice: ServicioalmacenService,
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public interc: Interceptor) {
 
@@ -162,12 +163,11 @@ export class ClientesIgualesComponent implements OnInit, AfterContentInit {
 
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.spinner.show();
-          this.toastr.success('Guardado con Exito! 🎉');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Guardado con Exito! 🎉' })
           this.getClientesIguales();
         },
 
         error: (err) => {
-          this.toastr.error('! NO SE GUARDO !');
         },
         complete: () => { }
       })
@@ -213,18 +213,16 @@ export class ClientesIgualesComponent implements OnInit, AfterContentInit {
           .subscribe({
             next: () => {
               this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-
-              this.toastr.success('!ELIMINADO EXITOSAMENTE!');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! ELIMINADO EXITOSAMENTE !' })
               location.reload();
             },
             error: (err: any) => {
               console.log(err, errorMessage);
-              this.toastr.error('! NO ELIMINADO !');
             },
             complete: () => { }
           })
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }

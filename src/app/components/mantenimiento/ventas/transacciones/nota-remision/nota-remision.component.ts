@@ -30,6 +30,7 @@ import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { CatalogoNotasRemisionService } from './servicio-catalogo-notas-remision/catalogo-notas-remision.service';
 import { ModalDetalleObserValidacionComponent } from '../../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-nota-remision',
@@ -50,7 +51,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener("document:keydown.F5", []) unloadHandler2(event: Event) {
     console.log("No se puede actualizar");
     event.preventDefault();
-    this.toastr.warning('TECLA DESHABILITADA ⚠️');
+    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️' });
   }
 
   @HostListener("document:keydown.Delete", []) unloadHandler7() {
@@ -306,7 +307,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private servicioCliente: ServicioclienteService, private _formBuilder: FormBuilder,
-    private serviciotipoid: TipoidService, private toastr: ToastrService, private spinner: NgxSpinnerService,
+    private serviciotipoid: TipoidService, private messageService: MessageService, private spinner: NgxSpinnerService,
     private log_module: LogService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService,
     public nombre_ventana_service: NombreVentanaService) {
@@ -351,12 +352,12 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       dialogRefTransfeProformaCotizacion.afterClosed().subscribe((result: Boolean) => {
         if (result) {
           this.spinner.show();
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EN PROGESO ! ⚙️' })
           //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
           this.imprimir_proforma_tranferida(data.proforma_transferir);
           this.codigo_proforma = data.proforma_transferir.data.cabecera.codigo;
         } else {
-          this.toastr.error('! CANCELADO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO ! ❌' });
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -588,7 +589,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          // this.toastr.warning('Usuario Inexiste! ⚠️');
           this.limpiar();
         },
         complete: () => {
@@ -802,7 +802,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("Formulario T. Entrega Error");
         },
         complete: () => { }
       });
@@ -1308,7 +1307,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       },
                       error: (err: any) => {
                         console.log(err, errorMessage);
-                        // this.toastr.error("Formulario T. Entrega Error");
                       },
                       complete: async () => {
                         // this.toastr.success("GUARDADO EXITOSAMENTE");
@@ -1319,7 +1317,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                   });
                 }else{
-                  this.toastr.error("SE CANCELO")
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SE CANCELO' });
                 }
               });
               break;
@@ -1374,7 +1372,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                       }
                     });
                 }else{
-                  this.toastr.error("SE CANCELO")
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SE CANCELO' });
                 }
               });
               break;
@@ -1421,7 +1419,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     error: (err: any) => {
                       console.log(err, errorMessage);
-                      // this.toastr.error("Formulario T. Entrega Error");
                     },
                     complete: async () => {
                       // this.toastr.success("GUARDADO EXITOSAMENTE");
@@ -1432,7 +1429,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                   });
                 }else{
-                  this.toastr.error("SE CANCELO")
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SE CANCELO' });
                 }
               });
               break;
@@ -1480,7 +1477,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     error: (err: any) => {
                       console.log(err, errorMessage);
-                      // this.toastr.error("Formulario T. Entrega Error");
                     },
                     complete: async () => {
                       // this.toastr.success("GUARDADO EXITOSAMENTE");
@@ -1491,7 +1487,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                   });
                 }else{
-                  this.toastr.error("SE CANCELO")
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SE CANCELO' });
                 }
               });
               break;
@@ -1538,7 +1534,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     error: (err: any) => {
                       console.log(err, errorMessage);
-                      // this.toastr.error("Formulario T. Entrega Error");
                     },
                     complete: async () => {
                       // this.toastr.success("GUARDADO EXITOSAMENTE");
@@ -1549,7 +1544,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                   });
                 }else{
-                  this.toastr.error("SE CANCELO")
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SE CANCELO"' });
                 }
               });
               break;
@@ -1594,7 +1589,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.warning("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     // si hay negativos no tiene q dejar grabar
@@ -1645,7 +1640,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log(this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
             this.log_module.guardarLog(this.ventana, "GRABAR" + datav.codNotRemision, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
 
             this.getNombreDeDescuentos(datav.totales.tablaDescuentos);
@@ -1657,7 +1652,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
 
             setTimeout(() => {
               this.spinner.hide();
@@ -1700,7 +1694,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -1836,8 +1830,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           this.log_module.guardarLog(this.ventana, "Impresion" + datav.codproforma, "POST", this.cod_id_tipo_modal, this.id_proforma_numero_id);
           console.log(datav);
-          this.toastr.success("IMPRIMIENDO 🖨️");
-
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRIMIENDO 🖨️' })
           // la data se guarda en la session storage para poder mandarlo a imprimir
           // pero creo q no sera necesario
           this.guardarDataImpresion(cod_nota_remision);
@@ -1888,7 +1881,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     let total_proforma_concat: any = [];
 
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA ' });
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -1922,8 +1915,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log(this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
             console.log(this.array_items_carrito_y_f4_catalogo);
 
             this.getNombreDeDescuentos(datav.totales.tablaDescuentos);
@@ -1935,7 +1927,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
 
             setTimeout(() => {
               this.spinner.hide();
@@ -1968,7 +1959,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -2066,7 +2057,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(proforma_validar);
 
     if (this.total === 0) {
-      this.toastr.error("TOTALICE ANTES DE COMPLEMENTAR");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'TOTALICE ANTES DE COMPLEMENTAR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 150);
@@ -2089,7 +2080,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
             this.nroidpf_complemento_view = "";
 
           } else {
-            this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'PROFORMA COMPLEMENTADA CON EXITO ✅' })
           }
 
           setTimeout(() => {
@@ -2099,7 +2090,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         error: (err) => {
           console.log(err);
-          this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !' });
           // this.complementopf = false;
           this.disableSelectComplemetarProforma = false;
           setTimeout(() => {
@@ -2328,7 +2319,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' });
           if (datav.jsonResult) {
             this.validacion_post_negativos = datav.jsonResult[0].dtnegativos;
           }
@@ -2349,7 +2340,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
           setTimeout(() => {
             this.spinner.hide();
           }, 150);
@@ -2361,7 +2351,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' })
       console.log("HAY QUE VALIDAR DATOS");
     }
   }

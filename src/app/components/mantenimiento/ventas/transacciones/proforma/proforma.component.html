@@ -4,6 +4,8 @@
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
   </ngx-spinner>
+  
+  <p-toast></p-toast>
 
   <div class="row mb-2">
     <div class="col">
@@ -75,26 +77,25 @@
           <ng-container *ngIf="!permiso_para_vista">
             <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
               matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-              <i class="fa fa-th gray" ></i>
+              <i class="fa fa-th gray"></i>
             </button>
           </ng-container>
 
           <ng-container *ngIf="permiso_para_vista">
             <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
               matTooltip="Matriz Item Clasica" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-              <i class="fa fa-th gray" ></i>
+              <i class="fa fa-th gray"></i>
             </button>
             <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizProductos()"
               matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-              <i class="fa fa-th blue" ></i>
+              <i class="fa fa-th blue"></i>
+            </button>
+            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizLista()"
+              matTooltip="Matriz Item Lista" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+              <i class="fa fa-th black"></i>
             </button>
           </ng-container>
 
-
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizLista()"
-            matTooltip="Matriz Item Lista" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-th black" ></i>
-          </button>
 
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
             matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
@@ -797,11 +798,11 @@
                   </th>
                   <th pSortableColumn="TP" class="center1">
                     TP
-                    <p-sortIcon field="TP" />
+                    <!-- <p-sortIcon field="TP" /> -->
                   </th>
                   <th pSortableColumn="DE" class="center1">
                     DE
-                    <p-sortIcon field="DE" />
+                    <!-- <p-sortIcon field="DE" /> -->
                   </th>
                   <th pSortableColumn="PUL" class="right1" style="width:4%">
                     PUL
@@ -848,7 +849,6 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.empaque"
-                          style="text-align: center !important;"
                           (input)="onInputChangeMatrix(products, $event.target.value)" />
                       </ng-template>
                       <ng-template pTemplate="output">
@@ -2414,7 +2414,7 @@
                 </div>
               </div>
 
-              <div class="row" style="height: calc(1.4rem + 2px) !important;">
+              <div class="row" style="height: calc(1.4rem + 2px) !important;margin-block-end: 5px;">
                 <div class="col">
                   <span class="input-group-text form-control-sm"
                     style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
@@ -2437,14 +2437,12 @@
               <div class="row">
                 <div class="col">
                   <button mat-raised-button (click)="aplicarDesctPorDepositoHTML();"
-                  style="height: 20px !important;background-color: #fbd800;">
-                  Apli Desc. Deposito
+                    style="background-color: #fbd800;"> Apli Desc. Deposito
                   </button>
                 </div>
                 <div class="col">
                   <button mat-raised-button (click)="quitarDescDeposito23();"
-                    style="height: 20px !important;background-color: #fbd800;">
-                    Quitar Desc. Deposito
+                      style="background-color: #fbd800;"> Quitar Desc. Deposito
                   </button>
                 </div>
               </div>

@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
 import { SubTotalService } from './sub-total-service/sub-total.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-sub-total',
@@ -29,7 +30,7 @@ export class ModalSubTotalComponent implements OnInit {
   descuento_nivel_get: any;
   fecha_actual = new Date();
 
-  constructor(public dialogRef: MatDialogRef<ModalSubTotalComponent>, private toastr: ToastrService,
+  constructor(public dialogRef: MatDialogRef<ModalSubTotalComponent>, private messageService: MessageService,
     private api: ApiService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
     public itemservice: ItemServiceService, public subtotal_service: SubTotalService,
     @Inject(MAT_DIALOG_DATA) public items: any,
@@ -91,7 +92,7 @@ export class ModalSubTotalComponent implements OnInit {
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE TOTALIZO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 1500);

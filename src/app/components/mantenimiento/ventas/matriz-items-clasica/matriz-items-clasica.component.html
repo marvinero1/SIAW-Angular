@@ -188,7 +188,7 @@
               <mat-label>Empaque</mat-label>
               <input 
                 type="number" 
-                matInput 
+                matInput
                 id="focusEmpaque" 
                 maxlength="7" 
                 min="0" 
@@ -203,7 +203,6 @@
             <!-- Aquí puedes definir algún contenido alternativo si es necesario -->
           </ng-template>
           
-
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
             <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
@@ -213,7 +212,7 @@
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
             <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : 'Placeholder predeterminado'">
+              (keydown)="handleKeyDown($event)" [value]="pedido">
           </mat-form-field>
 
           <!-- <mat-icon (click)="loseFocus()">bug_report</mat-icon> -->

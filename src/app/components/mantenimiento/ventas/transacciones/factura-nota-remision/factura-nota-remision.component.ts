@@ -23,6 +23,7 @@ import { FacturaTemplateComponent } from '../facturas/factura-template/factura-t
 import * as QRCode from 'qrcode';
 import pdfMake from "pdfmake/build/pdfmake";
 import { VentanaValidacionesComponent } from '../../ventana-validaciones/ventana-validaciones.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-factura-nota-remision',
@@ -176,7 +177,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService,
     private servicioFacturas: CatalogoFacturasService, private almacenservice: ServicioalmacenService, public router: Router,
-    public servicioCatalogoNotasRemision: CatalogoNotasRemisionService, private toastr: ToastrService, private spinner: NgxSpinnerService,
+    public servicioCatalogoNotasRemision: CatalogoNotasRemisionService, private messageService: MessageService, private spinner: NgxSpinnerService,
     private formaPagoService:FormaPagoService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -366,7 +367,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
     return this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDosificacionCaja/' + this.userConn + "/" + this.fecha_actual + "/" + this.almacn_parame_usuario_almacen)
       .subscribe({
         next: (datav) => {
-          this.toastr.info("DOSIFICADO ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'DOSIFICADO ✅' });
           console.log("🚀 ~ FacturaNotaRemisionComponent ~ generarFactura ~ datav:", datav);
 
           this.cod_control = datav.codigo_control;
@@ -384,8 +385,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
         },
 
         error: (err: any) => {
-          this.toastr.warning("OCURRIO ALGO INESPERADO 😧");
-
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'OCURRIO ALGO INESPERADO 😧' });
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -559,8 +559,6 @@ export class FacturaNotaRemisionComponent implements OnInit {
                       // console.warn('PASO LA VALIDACION LOLA', result);
                       // this.valFechaRemiHoyForm = false;
                       this.valProfDespachoForm = true;
-                      // this.valFactContadoForm = false;
-                      // this.valTipoCamForm = false;
                       
                       this.generarFacturaNRPOST(this.valProfDespachoForm, this.valFechaRemiHoyForm, this.valFactContadoForm, this.valTipoCamForm);
                     }                  
@@ -576,7 +574,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
             return;
           }else{
             //aca ya es cuando la resp es VALIDO = TRUE
-          this.toastr.success("FACTURA GENERADA ✅");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'FACTURA GENERADA ✅' });
           this.totalFacturaFooter = datav.facturas.totfactura;
           this.cabecera_respuesta = datav.facturas.cabecera; // []
           this.detalle_respuesta = datav.facturas.detalle; // []
@@ -584,17 +582,12 @@ export class FacturaNotaRemisionComponent implements OnInit {
           }
 
           setTimeout(() => {
-            // this.spinner.hide();
           }, 500);
         },
 
         error: (err) => {
           console.log(err);
-          // this.toastr.error('');
-          // this.complementopf = false;
-          // this.disableSelectComplemetarProforma = false;
           setTimeout(() => {
-            // this.spinner.hide();
           }, 500);
         },
         complete: () => { }
@@ -620,15 +613,15 @@ export class FacturaNotaRemisionComponent implements OnInit {
               this.descargarPDF(datav);
             } catch (error) {
               console.error("Ocurrió un error:", error);
-              this.toastr.error("Hubo un problema en el proceso");
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'Hubo un problema en el proceso' });
             }
           }else{
-            this.toastr.error("NO PASO LA DATA O NO LLEGO")
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO PASO LA DATA O NO LLEGO' });
           }
         },
 
         error: (err: any) => {
-          this.toastr.warning("NO SE PUDO TRAER INFORMACION DE LA FACTURA😧");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE PUDO TRAER INFORMACION DE LA FACTURA😧' });
           console.log(err, errorMessage);
         },
         complete: () => { }
@@ -1087,8 +1080,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
             // Espera a que termine de armar la factura
             this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
          
-            // Muestra la notificación de éxito
-            this.toastr.success(datav.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
           }
           else{
             this.openConfirmacionDialog(datav.resp + "\n" + datav.cadena + "  Codigo Factura: " +datav.codFactura);
@@ -1096,13 +1088,10 @@ export class FacturaNotaRemisionComponent implements OnInit {
         },
 
         error: (err: any) => {
-          //this.toastr.warning("OCURRIO ALGO AL GRABAR LA FACTURA");
           console.log(err, errorMessage);
         },
 
-        complete: () => {
-          // window.location.reload();
-         }
+        complete: () => { }
       });
   }
 
@@ -1128,7 +1117,7 @@ export class FacturaNotaRemisionComponent implements OnInit {
         console.warn("🚀 Se envió la data para el email:", datav);
       },
       error: (err) => {
-        this.toastr.warning("No se envió el email");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'No se envió el email' });
         console.error(err, errorMessage);
       },
       complete: () => {
@@ -1145,13 +1134,13 @@ export class FacturaNotaRemisionComponent implements OnInit {
       next: (datav) => {
         console.warn("🚀 Verificacion con el SIN: ", datav);
         if(datav.resp === "Verificacion conexion con el SIN exitosa"){
-          this.toastr.success("CONEXION EXITOSA CON EL SIN ");
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'CONEXION EXITOSA CON EL SIN ' });
         }else{
-          this.toastr.error("NO HAY CONEXION CON EL SIN");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY CONEXION CON EL SIN' });
         }
       },
       error: (err) => {
-        this.toastr.warning("OCURRIO UN PROBLEMA AL VERIFICAR");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'OCURRIO UN PROBLEMA AL VERIFICAR' });
         console.error(err, errorMessage);
       },
       complete: () => {  }

@@ -64,6 +64,7 @@ import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog
 import { MatSelectChange } from '@angular/material/select';
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
 import { MatrizItemsListaComponent } from '@components/mantenimiento/ventas/matriz-items-lista/matriz-items-lista.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modificar-proforma',
   templateUrl: './modificar-proforma.component.html',
@@ -124,7 +125,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   @HostListener("document:keydown.F5", []) unloadHandler2(event: Event) {
     console.log("No se puede actualizar");
     event.preventDefault();
-    this.toastr.warning('TECLA DESHABILITADA ⚠️');
+    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️ ' });
   }
 
   @HostListener("document:keydown.F6", []) unloadHandler4(event: Event) {
@@ -152,7 +153,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   @HostListener("document:keydown.F9", []) unloadHandler6(event: Event) {
     console.log("No se puede en proforma");
     event.preventDefault();
-    this.toastr.warning('TECLA DESHABILITADA ⚠️');
+    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️' });
   }
 
   @HostListener("document:keydown.Delete", []) unloadHandler7(event: Event) {
@@ -513,7 +514,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     private serviciovendedor: VendedorService, private servicioPrecioVenta: ServicioprecioventaService,
     private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private subtotal_service: SubTotalService,
     private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
-    private toastr: ToastrService, private spinner: NgxSpinnerService, private log_module: LogService, private saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, private saldoItemServices: SaldoItemMatrizService,
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
     private anticipo_servicio: AnticipoProformaService, public nombre_ventana_service: NombreVentanaService,
@@ -627,7 +628,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.latitud_cliente = data.latitud_direccion;
       this.longitud_cliente = data.longitud_direccion;
 
-      this.toastr.success("ETIQUETA LIMPIADA ");
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
       this.etiqueta_get_modal_etiqueta = [];
     });
     //
@@ -1257,7 +1258,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error("Formulario T. Entrega Error");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Formulario T. Entrega Error' });
         },
         complete: () => { }
       });
@@ -1292,8 +1293,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           // console.log("DATA ULTIMA PROFORMA: ", datav);
           this.imprimir_proforma_tranferida(datav);
           //this.getUbicacionCliente(datav.cabecera.codcliente, datav.cabecera.direccion);
-
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EN PROGESO ! ⚙️' })
           this.spinner.show();
 
           setTimeout(() => {
@@ -1302,7 +1302,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌' });
         },
         complete: () => {
         }
@@ -1320,15 +1320,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
 
           this.imprimir_proforma_tranferida(datav);
-          this.toastr.success('! TRANSFERENCIA EXITOSA !');
-
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EXITOSA ! ' })
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌' });
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -1874,7 +1873,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          // this.toastr.warning('Usuario Inexiste! ⚠️');
         },
         complete: () => {
           this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
@@ -1895,7 +1893,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('Usuario Inexiste! ⚠️');
         },
         complete: () => {
           this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
@@ -2187,7 +2184,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.log_module.guardarLog(ventana, detalle, tipo_transaccion, "", "");
           this.email_save = datav;
-          this.toastr.success('!CORREO GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '!CORREO GUARDADO! 📧' })
           this._snackBar.open('!CORREO GUARDADO!', 'Ok', {
             duration: 3000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -2196,7 +2193,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! Ingrese un correo valido ! 📧');
         },
         complete: () => { }
       })
@@ -2232,7 +2228,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           this.usuario_creado_save = datav;
           // console.log(this.usuario_creado_save);
-          this.toastr.success('!CLIENTE GUARDADO!');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! CLIENTE GUARDADO !' })
           this._snackBar.open('!CLIENTE GUARDADO!', 'Ok', {
             duration: 2000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -2903,10 +2899,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       preparacion: this.preparacion,
     }
 
-    // console.log(proforma_validar);
-
     if (this.total === 0) {
-      this.toastr.error("TOTALICE ANTES DE COMPLEMENTAR");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'TOTALICE ANTES DE COMPLEMENTAR' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -2929,7 +2923,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             this.nroidpf_complemento_view = "";
 
           } else {
-            this.toastr.success("PROFORMA COMPLEMENTADA CON EXITO ✅")
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'PROFORMA COMPLEMENTADA CON EXITO ✅' })
           }
 
           setTimeout(() => {
@@ -2939,7 +2933,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         error: (err) => {
           console.log(err);
-          this.toastr.error('! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL COMPLEMENTAR FAVOR REVISAR CON SISTEMAS !' });
           // this.complementopf = false;
           this.disableSelectComplemetarProforma = false;
           setTimeout(() => {
@@ -3122,8 +3116,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
 
-    if (!this.FormularioData.valid) {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+    if (!this.FormularioData.valid){
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
@@ -3133,7 +3127,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     console.log("tamanio etiqueta:", tamanio_array_etiqueta, "tamanio validaciones:", tamanio_array_validaciones);
 
     if (tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3141,20 +3135,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     } 
 
     if (tamanio_array_validaciones === 0) {
-      this.toastr.error("¡ FALTA VALIDAR, VALIDE PORFAVOR !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA VALIDAR, VALIDE PORFAVOR !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
       return;
     } else {
-      // this.toastr.success("¡ VALIDADO !");
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
     }
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0, PARA GRABAR PROFORMA' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3224,9 +3217,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
-        this.spinner.show();
-        //this.toastr.info("GUARDADO CON EXITO ✅");
-   
+        this.spinner.show();   
         this.totabilizar_post = datav;
         // console.log(this.totabilizar_post);
         this.log_module.guardarLog(this.ventana, "GRABAR" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
@@ -3238,7 +3229,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR ! ' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
@@ -3262,7 +3253,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             // aca manda a imprimir la proforma guardada
             this.modalBtnImpresiones(false);
           } else {
-            //this.toastr.error("NO SE DESCARGO ZIP");
             //aca manda a imprimir la proforma guardada
             this.modalBtnImpresiones(false);
           }
@@ -3287,7 +3277,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
 
     if (!this.FormularioData.valid) {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       // console.log("HAY QUE VALIDAR DATOS");
       setTimeout(() => {
         this.spinner.hide();
@@ -3295,7 +3285,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
 
     if (tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3303,20 +3293,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
 
     if (tamanio_array_validaciones === 0) {
-      this.toastr.error("¡ FALTA VALIDAR, VALIDE PORFAVOR !");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA VALIDAR, VALIDE PORFAVOR !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
       return;
     } else {
-     // this.toastr.success("¡ VALIDADO !");
      setTimeout(() => {
       this.spinner.hide();
     }, 50);
     }
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0, PARA GRABAR Y APROBAR PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0, PARA GRABAR Y APROBAR PROFORMA' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3504,7 +3493,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     this.api.create(url, total_proforma_concat).subscribe({
       next: async (datav) => {
-        this.toastr.info("GUARDADO CON EXITO ✅");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "GUARDADO CON EXITO ✅" });
         this.totabilizar_post = datav;
         console.log(this.totabilizar_post);
     
@@ -3512,7 +3501,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         alerts = datav.alerts;
     
         // Mostrar el mensaje de guardado con éxito
-        this.toastr.info(resp + "✅");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: resp + "✅" });
         this.log_module.guardarLog(this.ventana, "Creacion" + this.totabilizar_post.codProf, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
     
         // Si hay alertas, abrir el primer modal y esperar a que se cierre
@@ -3557,7 +3546,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA AL GRABAR !' });
         
         setTimeout(() => {
           this.spinner.hide();
@@ -3577,8 +3566,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     } else {
       this.complementopf = 1;
     }
-    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+    if (this.array_items_carrito_y_f4_catalogo.length === 0){
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -3616,8 +3605,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
-            // console.log(this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
 
             setTimeout(() => {
               this.spinner.hide();
@@ -3626,8 +3614,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
-
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
             setTimeout(() => {
               this.spinner.hide();
             }, 10);
@@ -3661,7 +3648,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO ' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -3677,7 +3664,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       }
 
       if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-        this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA ' });
         reject("No hay items en el detalle de la proforma");
         return;
       }
@@ -3712,8 +3699,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           .pipe(takeUntil(this.unsubscribe$)).subscribe({
             next: (datav) => {
               this.totabilizar_post = datav;
-              this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
               setTimeout(() => {
                 this.spinner.hide();
               }, 50);
@@ -3746,7 +3732,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             },
             error: (err) => {
               console.log(err, "Error en la ruta de creación");
-              this.toastr.error('! NO SE TOTALIZO !');
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE TOTALIZO !' });
 
               setTimeout(() => {
                 this.spinner.hide();
@@ -3756,7 +3742,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             }
           });
       } else {
-        this.toastr.info("VALIDACION ACTIVA 🚨");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
         console.log("HAY QUE VALIDAR DATOS");
         reject("Datos no validados");
       }
@@ -3786,7 +3772,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
               console.log(datav);
               // se guarda LOG al anular
               this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
-              this.toastr.success(datav.resp);
+  
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp })
               setTimeout(() => {
                 this.spinner.hide();
               }, 50);
@@ -3841,7 +3828,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
 
     if (this.total === 0.00) {
-      this.toastr.error("EL TOTAL NO PUEDE SER 0");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3849,7 +3836,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
 
     if (!this.FormularioData.valid || tamanio_array_etiqueta === 0) {
-      this.toastr.error("¡ FALTA GRABAR ETIQUETA 🚨!");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
@@ -3873,7 +3860,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           //await this.validar();  // Finalmente, realiza la validación
         } catch (error) {
           console.error("Error durante la ejecución de las funciones:", error);
-          this.toastr.error("Hubo un problema durante la validación.");
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema durante la validación.' });
         }
       } else {
         console.warn("NO APLICARA DESCT DEPOSITO");
@@ -4050,7 +4037,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
       this.api.create(url, proforma_validar).pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA NEGATIVOS ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' });
           if (datav.jsonResult) {
             this.validacion_post_negativos = datav.jsonResult[0].dtnegativos;
           }
@@ -4070,7 +4057,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -4082,7 +4069,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO ' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4244,9 +4231,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
-          this.toastr.info("VALIDACION CORRECTA MAX VENTAS ✅");
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA MAX VENTAS ✅' });
           this.validacion_post_max_ventas = datav[0].dtnocumplen;
-          // console.log(this.validacion_post_max_ventas);
 
           this.toggleTodosMaximoVentas = true;
           this.toggleMaximoVentaSobrepasan = false;
@@ -4259,7 +4245,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         },
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4271,7 +4257,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4316,7 +4302,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         next: (datav) => {
           // console.log(datav);
           if(datav.nit_es_valido === "VALIDO"){
-            this.toastr.success(datav.nit_es_valido);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido })
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -4324,7 +4310,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
               disableClose: true,
             });
           }else{
-            this.toastr.error(datav.nit_es_valido);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
               height: 'auto',
@@ -4383,7 +4369,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES CERRADOS PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'EMPAQUES CERRADOS PROCESANDO ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
@@ -4423,7 +4409,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
-          this.toastr.success('EMPAQUES MINIMO PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'EMPAQUES MINIMO PROCESANDO ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
@@ -4487,7 +4473,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           console.log(datav);
           let msa: any = datav.respOculto;
            // if (datav.respOculto) {
-          this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' })
           if (datav.respOculto) {
           // const result = await this.openConfirmationOKDialog(msa);
             // if (result) {
@@ -4532,7 +4518,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.complementopf = 1;
     }
     if (this.array_items_carrito_y_f4_catalogo.length === 0) {
-      this.toastr.error("NO HAY ITEM'S EN EL DETALLE DE PROFORMA");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -4567,17 +4553,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           next: (datav) => {
             this.totabilizar_post = datav;
             console.log("Array que me devuelve el bck al totabilizar:", this.totabilizar_post);
-            this.toastr.success('! TOTALIZADO EXITOSAMENTE !');
-
-            // setTimeout(() => {
-            //   this.spinner.hide();
-            // }, 50);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TOTALIZADO EXITOSAMENTE !' })
           },
 
           error: (err) => {
             console.log(err, errorMessage);
-            this.toastr.error('! NO SE TOTALIZO !');
-
             setTimeout(() => {
               this.spinner.hide();
             }, 10);
@@ -4608,7 +4588,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
         })
     } else {
-      this.toastr.info("VALIDACION ACTIVA 🚨");
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -4738,7 +4718,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
     this.api.create(url, proforma_validar).subscribe({
       next: (datav) => {
-        this.toastr.info("VALIDACION EN CURSO ⚙️");
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION EN CURSO ⚙️' });
         this.validacion_post = datav.jsonResult;
         console.log("INFO VALIDACIONES:", datav);
 
@@ -4770,8 +4750,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         console.log(err, errorMessage);
-        this.toastr.error('¡NO SE VALIDÓ, OCURRIÓ UN PROBLEMA!');
-
         setTimeout(() => {
           this.spinner.hide();
         }, 500);
@@ -4849,7 +4827,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             if (result) {
               //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
               this.modalDetalleObservaciones(datav.msgVentCob, datav.megAlert);
-              this.toastr.success('DESCT. DEPOSITO APLICANDO ⚙️');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. DEPOSITO APLICANDO ⚙️' })
             } else {
               //ACA SE HACE EL MAPEO PORQ YA LLEGA LOS DESCT
               this.array_de_descuentos_ya_agregados = datav.tabladescuentos;
@@ -5075,9 +5053,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.create('/venta/transac/veproforma/aplicar_desc_esp_seg_precio/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
-          // console.log(datav);
-
-          this.toastr.success('DESCT. ESPECIAL S/TIPO PRECIO PROCESANDO ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCT. ESPECIAL S/TIPO PRECIO PROCESANDO ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           //siempre sera uno
@@ -5117,7 +5093,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.spinner.show();
     this.array_items_carrito_y_f4_catalogo.map((element) => {
       element.coddescuento = 0
-      this.toastr.success("BORRANDO DESCUENTOS ⚙️");
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BORRANDO DESCUENTOS ⚙️ ' })
     });
     setTimeout(() => {
       this.spinner.hide();
@@ -5152,9 +5128,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.create('/venta/transac/veproforma/valEmpDescEsp/' + this.userConn, array)
       .subscribe({
         next: (datav) => {
-          // console.log(datav);
-
-          this.toastr.success('VALIDAR EMPAQUE DESC. ESPECIAL ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDAR EMPAQUE DESC. ESPECIAL ⚙️' })
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           //siempre sera uno
@@ -5225,7 +5199,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           if(datav.resp === "Los items ya cumplen con empaques, no se dividiran."){
             this.modalDetalleObservaciones(datav.resp, " ");
-            this.toastr.success(datav?.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp })
 
             setTimeout(() => {
               this.spinner.hide();
@@ -5233,8 +5207,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }else{
             this.modalDetalleObservaciones(datav.alertMsg, " ");
 
-            this.toastr.success('DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESADO ⚙️');
-            this.toastr.success(datav?.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESADO ⚙️' })
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp })
   
             this.array_items_carrito_y_f4_catalogo = datav?.tabladetalle;
             console.log(this.array_items_carrito_y_f4_catalogo);
@@ -5281,11 +5255,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           // console.log(datav);
 
           if (datav.status === false) {
-            this.toastr.warning(datav.resp);
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.resp });
             return;
           }
 
-          this.toastr.success('VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDAR EMPAQUE DESCT. ESPECIAL ⚙️' })
           this.array_items_carrito_y_f4_catalogo = [...datav.tabladetalle];
 
           //siempre sera uno
@@ -5299,9 +5273,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
           this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
           console.log("Data Sugerida: ", datav.tabla_sugerencia)
-          //console.log("Data del Carrito: ", this.array_items_carrito_y_f4_catalogo);
-          this.toastr.warning(datav.msgDetalle);
-
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.msgDetalle });
           this.dataSource_precios_desct = new MatTableDataSource(datav.tabla_sugerencia);
 
           setTimeout(() => {
@@ -5496,7 +5468,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         .subscribe({
           next: (datav) => {
             //console.log(datav);
-            this.toastr.success("ARCHIVO ZIP CARGADO EXITOSAMENTE ✅");
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅ ' })
             this.imprimir_zip_importado(datav);
 
             setTimeout(() => {
@@ -5505,7 +5477,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           },
           error: (err: any) => {
             console.log(err);
-            this.toastr.error("ERROR AL CARGAR EL ARCHIVO ❌");
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'ERROR AL CARGAR EL ARCHIVO ❌' });
             setTimeout(() => {
               this.spinner.hide();
             }, 50);
@@ -5518,7 +5490,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         });
     } else {
       console.error('Please upload a valid ZIP file.');
-      this.toastr.error("SOLO SELECCIONAR FORMATO .ZIP ❌");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SOLO SELECCIONAR FORMATO .ZIP ❌' });
     }
   }
 
@@ -5564,7 +5536,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           .subscribe({
             next: (datav: ArrayBuffer) => {
               // console.log(datav);
-              this.toastr.success("DESCARGA EN PROCESO");
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
 
               // Convertir ArrayBuffer a Blob
               const blob = new Blob([datav], { type: 'application/zip' });
@@ -5599,7 +5571,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             }
           });
       } else {
-        this.toastr.error("NO SE DESCARGO");
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE DESCARGO' });
       }
     });
   }
@@ -5716,7 +5688,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           console.log("Descuento de Nivel: ", datav);
 
           if(datav.resp){
-            this.toastr.info(datav.resp);
+            this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp});
           }
         
           setTimeout(() => {
@@ -6407,7 +6379,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         }
       });
     } else {
-      this.toastr.error("REVISE FORMULARIO");
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'REVISE FORMULARIO' });
     }
   }
 
@@ -6456,7 +6428,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.des_extra = 0;
     this.recargos = 0;
 
-    this.toastr.success("ETIQUETA LIMPIADA ");
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
   }
   //FIN SECCION TOTALES
 
@@ -6480,7 +6452,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.tranferirProformaModal();
         //this.log_module.guardarLog(ventana, detalle, tipo);
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }
@@ -6817,7 +6789,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.Codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL Codigo" + element.Codigo + "ya se encuentra resuelto" });
           console.log('El elemento ya está presente en el array.');
           //si ya esta presente eliminarlo de validaciones NO VALIDAS
         }
@@ -6868,7 +6840,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         console.log("Array original actualizado:", this.validacion_post);
         return this.validacionesNOValidosFilterToggle();
       } else {
-        this.toastr.error('¡CANCELADO!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡CANCELADO!' });
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.codigo === element.codigo);
         if (indice !== -1) {
@@ -6909,7 +6881,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.push(element);
         } else {
           // El elemento ya está presente en el array
-          this.toastr.warning("EL Codigo" + element.codigo + "ya se encuentra resuelto");
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL Codigo" + element.codigo + "ya se encuentra resuelto" });
           console.log('El elemento ya está presente en el array.');
         }
         // Filtrar los elementos de array1 que no están presentes en array2
@@ -6956,7 +6928,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         // Después de todo el mapeo, mostrar el array original completo
         console.log("Array original actualizado:", this.validacion_post);
       } else {
-        this.toastr.error('¡CANCELADO!');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡CANCELADO! ' });
         // Encontrar el índice del elemento seleccionado en el array original
         const indice = this.array_original_de_validaciones_copied.findIndex(item => item.codigo === element.codigo);
         if (indice !== -1) {

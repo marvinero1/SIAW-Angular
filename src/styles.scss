@@ -585,3 +585,26 @@ app-nota-remision {
   height: 100%;  // Hace que tome todo el alto del contenedor
   box-sizing: border-box;  // Incluye padding y border en el tamaño total
 }
+
+
+
+/* Ajustar el tamaño del Toast */
+.p-toast {
+  width: 300px; /* Cambia el ancho del toast */
+  font-size: 12px; /* Tamaño de fuente */
+}
+
+/* Estilo para los mensajes */
+.p-toast-message {
+  font-family: Arial, sans-serif; /* Cambia la fuente */
+  font-size: 12px; /* Cambia el tamaño de texto */
+  line-height: 1.5; /* Espaciado entre líneas */
+}
+
+/* Modificar el icono del Toast */
+.p-toast-icon {
+  font-size: 18px; /* Cambia el tamaño del icono */
+}
+.p-toast .p-toast-message .p-toast-message-content{
+  padding: 6px;
+}

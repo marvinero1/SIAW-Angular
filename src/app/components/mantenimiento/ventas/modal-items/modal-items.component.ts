@@ -7,8 +7,8 @@ import { ApiService } from '@services/api.service';
 import { Item } from '@services/modelos/objetos';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
-import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modal-items',
   templateUrl: './modal-items.component.html',
@@ -48,10 +48,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   displayedColumns = ['codigo', 'descripcion', 'medida'];
 
   dataSource = new MatTableDataSource<Item>();
-  dataSourceWithPageSize = new MatTableDataSource();
-
-  @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+  dataSourceWithPageSize = new MatTableDataSource();  
 
   options: Item[] = [];
   filteredOptions: Observable<Item[]>;
@@ -67,11 +64,15 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   desc_linea_seg_solicitud_get: any;
   fecha_get: any;
   codmoneda_get: any;
-  @ViewChildren('rowElement') rowElements: QueryList<ElementRef>;
+  
   private selectedIndexSubject = new BehaviorSubject<number>(0);
   selectedIndex$ = this.selectedIndexSubject.asObservable();
 
-  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalItemsComponent>, private toastr: ToastrService,
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
+  @ViewChildren('rowElement') rowElements: QueryList<ElementRef>;
+  
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalItemsComponent>, private messageService: MessageService,
     private servicioItem: ItemServiceService, private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public tarifa: any,
     @Inject(MAT_DIALOG_DATA) public descuento: any,
@@ -88,9 +89,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    if (this.agencia === 'Loc') {
-      this.agencia = '311'
-    }
 
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
@@ -147,7 +145,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {
-      this.toastr.error('¡' + this.messages.join(', ') + '!');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡' + this.messages.join(', ') + '!' });
     }
   }
 
@@ -233,16 +231,15 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
           if (this.item_valido == true) {
             this.btn_confirmar = true;
-            // this.getlineaProductoID(value);
           } else {
-            this.toastr.warning('!ITEM NO VALIDO PARA LA VENTA!');
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! ITEM NO VALIDO PARA LA VENTA !' });
             this.btn_confirmar = false;
           }
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.warning('SELECCIONE UN ITEM');
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SELECCIONE UN ITEM' });
         },
         complete: () => { }
       })

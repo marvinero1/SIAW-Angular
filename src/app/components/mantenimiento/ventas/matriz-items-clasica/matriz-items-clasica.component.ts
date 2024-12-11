@@ -3,11 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
 import { ItemServiceService } from '../serviciosItem/item-service.service';
-import { ToastrService } from 'ngx-toastr';
 import { DatePipe } from '@angular/common';
 import { ModalPrecioVentaComponent } from '../modal-precio-venta/modal-precio-venta.component';
 import { ServicioprecioventaService } from '../servicioprecioventa/servicioprecioventa.service';
-import Handsontable from 'handsontable';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
 import { SaldoItemMatrizService } from '../matriz-items/services-saldo-matriz/saldo-item-matriz.service';
@@ -16,7 +14,9 @@ import { ModalSaldosComponent } from '../matriz-items/modal-saldos/modal-saldos.
 import { StockActualF9Component } from '../matriz-items/stock-actual-f9/stock-actual-f9.component';
 import { ItemSeleccionCantidadComponent } from '../matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component';
 import { Subject, takeUntil } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
+import Handsontable from 'handsontable';
 @Component({
   selector: 'app-matriz-items-clasica',
   templateUrl: './matriz-items-clasica.component.html',
@@ -36,13 +36,13 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         case '':
           if (this.permiso_para_vista) {
             this.getEmpaqueItem();
+            this.onCellClick1(this.valorCelda);
           }else{
             this.cant_empaque === 0;
-
             const focusElement = this.focusPedido1.nativeElement;
             this.renderer.selectRootElement(focusElement).focus();
             focusElement.click();
-
+            this.onCellClick1(this.valorCelda);
             if(this.pedido != 0){
               this.addItemArray();
             }
@@ -61,7 +61,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
           this.addItemArray();
           // this.cant_empaque = undefined;
-          // this.pedido = undefined;
+          // this.pedido = null;
           // this.cantidad = undefined;
           break;
         case 'idBuscadorHoja':
@@ -83,7 +83,9 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   }
 
   @HostListener("click", []) unloadHandler(event: KeyboardEvent) {
-    this.onCellClick1(this.valorCelda);
+    if(this.valorCelda){
+      this.onCellClick1(this.valorCelda);
+    }
   };
 
   FormularioBusqueda: FormGroup
@@ -181,7 +183,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsClasicaComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2, private spinner: NgxSpinnerService,
-    private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService, public saldoItemServices: SaldoItemMatrizService,
     public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
 
     @Inject(MAT_DIALOG_DATA) public descuento: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any,
@@ -313,7 +315,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     //Add 'implements AfterViewInit' to the class.
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {
-      this.toastr.error('¡' + this.messages.join(', ') + '!');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡' + this.messages.join(', ') + '!'});
     }
 
     console.log("item de seleccion:", this.array_items_completo);
@@ -346,19 +348,19 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       console.log("Hola Lola en el input", nombre_input);
 
       if (nombre_input === 'focusEmpaque') {
-        this.cant_empaque = undefined;
+        this.cant_empaque = 0;
       }
 
       if (nombre_input === '') {
-        this.cant_empaque = undefined;
+        this.cant_empaque = 0;
       }
 
       if (nombre_input === 'focusPedido') {
-        this.pedido = undefined;
+        this.pedido = 0;
       }
 
       if (nombre_input === 'focusCantidad') {
-        this.cantidad = undefined;
+        this.cantidad = 0;
       }
     }
   }
@@ -454,9 +456,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     } else {
       // console.warn("El item está vacío o no se recibió correctamente.");
     }
-  
-    this.pedido = undefined;
-    this.cantidad = undefined;
   }
 
   getEmpaquePesoAlmacenLocal(item) {
@@ -471,7 +470,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         error: (err: any) => {
           console.log(err, errorMessage);
           this.data_almacen_local.saldo = 0;
-          //this.toastr.error('¡CELDA NO VALIDA!');
         },
         complete: () => {
         }
@@ -671,7 +669,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
               // const focusedElement = document.activeElement as HTMLElement;
               // let nombre_input = focusedElement.id;
               // console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
-
+          
               self.focusEmpaque();
               const focusElement = this.focusEmpaqueElement.nativeElement;
               focusElement.focus();
@@ -683,7 +681,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
               // const focusedElement = document.activeElement as HTMLElement;
               // focusedElement.id = nombre_input;
     
-              const focusElement = this.focusPedido1.nativeElement;
+              const focusElement = this.focusPedido1.nativeElement === undefined ? "":this.focusPedido1.nativeElement;
               this.renderer.selectRootElement(focusElement).focus();
               // this.focusPedido();
               focusElement.click();
@@ -703,7 +701,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         this.valorCelda = cellData;
         // console.log('Data de la celda seleccionada:', cellData);
 
-        // this.onCellClick1(cellData);
+        //this.onCellClick1(cellData);
       }
     });
 
@@ -802,27 +800,23 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     // console.log(this.valorCelda, cleanText);
 
     if (existe) {
-      // console.log("El item ya existe en el array.");
-      this.toastr.warning('¡EL ITEM YA ESTA EN CARRITO!');
-
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM YA ESTA EN CARRITO !' });
 
       // Luego, para quitar el foco
       this.focusEmpaqueElement.nativeElement.blur();
 
-      this.cant_empaque = undefined;
-      this.pedido = undefined;
-      this.cantidad = undefined;
+      this.cant_empaque = null;
+      this.pedido = null;
+      this.cantidad = null;
       return;
     }
 
     if (!this.item_valido) {
       console.log('¡EL ITEM NO ESTA EN VENTA!', this.item_valido);
-      //this.toastr.error('¡EL ITEM NO ESTA EN VENTA!');
       return;
     }
 
     // if (this.pedido === 0 || this.pedido === undefined) {
-    // this.toastr.warning('¡La cantidad y el pedido no pueden ser 0!');
     //return;
     //}
 
@@ -839,7 +833,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       this.array_items_seleccionado.push(array);
     } else {
       if(this.permiso_para_vista){
-        this.toastr.warning("El Pedido Cantidad No Puede ser 0");
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL PEDIDO CANTIDAD NO PUEDE SER 0' });
       }
     }
 
@@ -864,9 +858,9 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     //   "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
     //   this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
 
-    this.cant_empaque = undefined;
-    this.pedido = undefined;
-    this.cantidad = undefined;
+    this.cant_empaque = null;
+    this.pedido = null;
+    this.cantidad = null;
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
   }
 
@@ -978,9 +972,9 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.medida_item = "";
     this.porcen_item = "";
 
-    this.pedido = undefined;
-    this.cantidad = undefined;
-    this.num_hoja = undefined;
+    this.pedido = 0;
+    this.cantidad = 0;
+    this.num_hoja = 0;
     this.tamanio_lista_item_pedido = 0;
   }
 
@@ -994,7 +988,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           if (this.item_valido == true) {
             this.getlineaProductoID(value);
           } else {
-            // this.toastr.warning('!ITEM NO VALIDO PARA LA VENTA!');
             this.no_venta = "ITEM NO VENTA";
             this.si_venta = "";
           }
@@ -1002,7 +995,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          // this.toastr.warning('SELECCIONE UN ITEM');
           this.si_venta = "ITEM VENTA";
           this.no_venta = "";
           this.descripcion_item = '';
@@ -1132,11 +1124,12 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           next: (datav) => {
             console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
             this.pedido = datav.total;
-            console.log(this.pedido);
+            console.log("El total del empaque: ", this.pedido);
           },
 
           error: (err: any) => {
-            this.pedido = undefined;
+            //this.pedido = null;
+            this.pedido = 0;
             this.cantidad = this.pedido;
             console.log(err, errorMessage);
           },

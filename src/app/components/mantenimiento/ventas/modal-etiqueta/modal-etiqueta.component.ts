@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { EtiquetaService } from './servicio-etiqueta/etiqueta.service';
-import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-modal-etiqueta',
@@ -41,7 +41,7 @@ export class ModalEtiquetaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalEtiquetaComponent>,
     private api: ApiService, public _snackBar: MatSnackBar, public servicioEtiqueta: EtiquetaService,
-    private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
+    @Inject(MAT_DIALOG_DATA) public cliente_real: any, private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) public cod_cliente_proforma1: any,
     @Inject(MAT_DIALOG_DATA) public id_proforma: any, @Inject(MAT_DIALOG_DATA) public latitud: any,
     @Inject(MAT_DIALOG_DATA) public numero_id: any, @Inject(MAT_DIALOG_DATA) public nom_cliente: any,
@@ -111,21 +111,6 @@ export class ModalEtiquetaComponent implements OnInit {
           this.data = datav;
           console.log('data', this.data);
           this.data_map = this.data.etiquetas;
-          // datav.forEach(element => {
-          //   if(element.central){
-          //     this.direccion = element.direccion;
-          //   }
-          // });
-
-          // this.data_map = this.data.map((element) => ({
-          //   ...element,
-          //   ciudad:element.ciudad?.slice(0, 30),
-          //   codcliente: this.cod_cliente_proforma,
-          //   representante: this.direccion_get,
-          //   longitud_entrega: this.longitud_get?.slice(0, 25),
-          //   latitud_entrega: this.latitud_get?.slice(0, 25),
-          //   linea2: this.linea2_input?,
-          // }));
 
           // console.log("Data Etiqueta Mapeada: ", this.data_map);
           this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.data_map.latitud_entrega + "%2C" + this.data_map.longitud_entrega;
@@ -165,7 +150,7 @@ export class ModalEtiquetaComponent implements OnInit {
     });
 
     this.close();
-    this.toastr.success("ETIQUETA GRABADA CON EXITO !");
+    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA GRABADA CON EXITO !' })
   }
 
   close() {

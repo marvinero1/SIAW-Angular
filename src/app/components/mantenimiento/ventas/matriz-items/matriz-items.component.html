@@ -188,7 +188,7 @@
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
             <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : 'Placeholder predeterminado'">
+              (keydown)="handleKeyDown($event)" [value]="pedido">
           </mat-form-field>
 
           <mat-icon (click)="loseFocus()">bug_report</mat-icon>
