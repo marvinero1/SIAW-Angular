@@ -15,7 +15,8 @@
     <ng-container *ngIf="validacion; else val">
       <p>Para ver credito disponible seleccione: &nbsp;<strong>{{ message }}</strong></p>
     </ng-container>
-
+    <p-toast></p-toast>
+    
     <ng-template #val>
       <mat-tab-group style="background-color: #ffe0c0;" #tabGroup>
         <mat-tab label="{{ id_get }} - {{ numero_id_get }}">

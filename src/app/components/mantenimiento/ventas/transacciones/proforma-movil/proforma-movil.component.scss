@@ -13,7 +13,7 @@ body {
 }
 
 .header {
-  background-color: #3498db;
+  background-color: #093070;
   color: white;
   text-align: center;
   padding: 1rem;
@@ -66,8 +66,63 @@ body {
 
 
 
+
+
+
+
+
+
+
+
+.mat-mdc-select{
+  display: contents !important;
+}
+
+
+
+
 ::ng-deep {
   .mat-vertical-content{
     padding: 0 24px 9px 9px !important;
   }
+
+  .mat-vertical-stepper-header{
+    padding: calc((var(--mat-stepper-header-height) - 33px) / 2) 10px !important;
+  }
+  
+  .mat-vertical-content-container{
+    margin-left: 21px !important;
+  }
+
+
+  .mat-step-icon-selected{
+    background-color: #fbd800 !important;
+  }
+  
+  .mat-step-icon-state-edit{
+    background-color: #093070 !important;
+  }
+
+
+
+
+
+
+
+
+
+
+
+  .form-control-sm{
+    padding: .25rem -1rem !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper{
+    display:contents !important;
+    margin-bottom:2.5px;
+  }
 }
+
+
+
+

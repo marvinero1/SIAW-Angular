@@ -189,8 +189,8 @@ mat-row, mat-header-row, mat-footer-row{
 /* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
 @media (min-width: 1025px) and (max-width: 1366px) {
   .miTabGroupDetalle {
-    height: 22.2vh;
-    max-height: 23.2vh;
+    height: 24.2vh;
+    // max-height: 25.2vh;
   }
 }
 

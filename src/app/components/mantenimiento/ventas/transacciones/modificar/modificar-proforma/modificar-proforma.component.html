@@ -4,7 +4,7 @@
     <br>
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
   </ngx-spinner>
-
+  <p-toast></p-toast>
   <div class="row mb-1">
     <div class="col">
       <div class="divTable">
@@ -806,7 +806,6 @@
                   </th>
                   <th pSortableColumn="descripcion" style="width:21%;" class="center">
                     Descripción
-                    <p-sortIcon field="descripcion" />
                   </th>
                   <th pSortableColumn="medida" class="center1" style="width:7%">
                     Medida
@@ -895,10 +894,10 @@
 
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" min="0"
+                        <input pInputText type="number" min="0" id="empaques_input"
                           [value]="products.empaque === null ? 0 : products.empaque"
-                          style="text-align: center !important;"
-                          (change)="onInputChangeMatrix(products, $event.target.value)" />
+                          style="text-align: right !important;"
+                          (input)="onInputChangeMatrix(products, $event.target.value)" />
                       </ng-template>
 
                       <ng-template pTemplate="output">

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
@@ -15,6 +15,12 @@ import { ModalSaldosComponent } from '../matriz-items/modal-saldos/modal-saldos.
 import { StockActualF9Component } from '../matriz-items/stock-actual-f9/stock-actual-f9.component';
 import { ItemSeleccionCantidadComponent } from '../matriz-items/item-seleccion-cantidad/item-seleccion-cantidad.component';
 import { Item } from '../../../../services/modelos/objetos';
+import { Subject, takeUntil } from 'rxjs';
+
+interface City {
+  name: string,
+  code: string
+}
 
 @Component({
   selector: 'app-matriz-items-lista',
@@ -35,6 +41,8 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
         case 'focusEmpaque':
           this.getEmpaqueItem(this.valorCelda);
           break;
+
+
         case 'focusPedido':
           this.addItemArray();
           //this.cant_empaque = undefined;
@@ -150,6 +158,9 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
   desct: any = false;
   tamanio_carro: any;
   permiso_para_vista: boolean;
+  
+  hideMultipleSelectionIndicator = signal(false);
+  private unsubscribe$ = new Subject<void>();
 
   @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
   @ViewChild("focusPedido", { static: false }) focusPedido1: ElementRef;
@@ -160,6 +171,9 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
 
   @ViewChild('example') focusTabla: ElementRef;
 
+  cities!: City[];
+  selectedCity!: City;
+
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsListaComponent>,
     public itemservice: ItemServiceService, public renderer: Renderer2, private spinner: NgxSpinnerService,
     private toastr: ToastrService, public saldoItemServices: SaldoItemMatrizService,
@@ -167,7 +181,7 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
 
     @Inject(MAT_DIALOG_DATA) public descuento: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
-    @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any, @Inject(MAT_DIALOG_DATA) public fecha: any,
+    @Inject(MAT_DIALOG_DATA) public desc_linea_seg_solicitud: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any) {
 
@@ -183,27 +197,16 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    if (this.BD_storage === 'Loc') {
-      this.BD_storage = '311'
-    }
-
-    if (this.agencia === 'Loc') {
-      this.agencia = '311'
-    }
-
     this.descuento_get = descuento?.descuento;
     this.codcliente_get = codcliente?.codcliente;
     this.codalmacen_get = codalmacen?.codalmacen;
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud?.desc_linea_seg_solicitud;
-    this.fecha_get = fecha?.fecha;
     this.codmoneda_get = codmoneda?.codmoneda;
     this.descuento_nivel_get = descuento_nivel?.descuento_nivel;
     this.codcliente_real_get = codcliente_real?.codcliente_real;
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
 
-
     console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
-
     console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
 
     //console.log(this.num_hoja);
@@ -212,6 +215,7 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
     if (this.num_hoja === undefined || this.num_hoja === 0) {
       this.getHojaPorDefecto();
     }
+
     this.listaHojas();
     this.getTarifa();
   }
@@ -227,6 +231,7 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
 
     this.getPermisosBtnPorRol();
     this.getCatalogoItems();
+    this.getHoraFechaServidorBckEnd();
 
     console.log(
       "CODCLIENTE" + this.codcliente_get,
@@ -320,11 +325,8 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           console.log("🚀 ~ MatrizItemsListaComponent ~ getCatalogoItems ~ log:", datav)
-
-          this.items_catalogo = datav;
-          // this.dataSource = new MatTableDataSource(this.items);
-          // this.dataSource.paginator = this.paginator;
-          // this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
+          this.items_catalogo = datav.slice(0, 1000);
+          
         },
 
         error: (err: any) => {
@@ -334,7 +336,20 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
       })
   }
 
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.fecha_get = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
   getSelectedItem() {
     if (this.selected_Item) {
@@ -402,6 +417,25 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
       case 'focusEmpaque':
         this.getEmpaqueItem(this.valorCelda);
         break;
+        case 'focusEmpaque':
+          this.getEmpaqueItem(this.valorCelda);
+          break;
+        case 'focusPedido':
+          this.addItemArray();
+          //this.cant_empaque = undefined;
+          this.cantidad = this.pedido;
+          break;
+        case 'focusCantidad':
+          // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
+          // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
+          this.addItemArray();
+          // this.cant_empaque = undefined;
+          // this.pedido = undefined;
+          // this.cantidad = undefined;
+          break;
+        case 'idBuscadorHoja':
+          this.getHoja();
+          break;
     }
   }
 
@@ -464,6 +498,18 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
     this.cantidad = undefined;
   }
 
+  simulateEnter(){
+    // const inputElement = document.querySelector('input'); // Cambia el selector según tu necesidad
+    // if (inputElement) {
+      const enterEvent = new KeyboardEvent('keydown', {
+        key: 'Enter',
+        code: 'Enter',
+        keyCode: 13,
+        which: 13,
+        bubbles: true // Asegura que el evento se propague
+      });
+    
+  }
 
   handleKeyDown(event: KeyboardEvent) {
     // para borrar los inputs
@@ -623,7 +669,7 @@ export class MatrizItemsListaComponent implements OnInit, AfterViewInit {
   }
 
   focusMyInput() {
-    this.focusEmpaqueElement.nativeElement.focus();
+    // this.focusEmpaqueElement.nativeElement.focus();
   }
 
   addItemArray() {

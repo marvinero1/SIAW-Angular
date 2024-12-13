@@ -1,18 +1,18 @@
 <section class="all mat-elevation-z8 p-2">
   <div style="position: sticky;padding-top: 6px;">
     <div class="row">
-      <div class="col-md-9" style="padding-left: 20px;">
-        <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
+      <div class="col-md" style="padding-left: 10px;">
+        <!-- <mat-form-field appearance="outline" class="example-full-width" style="width: 60%;">
           <mat-label># Hoja</mat-label>
-          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja"
-            name="enable-tab-navigation">
-        </mat-form-field>
-        <button mat-raised-button color="secondary" (click)="getHoja();">
+          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja">
+        </mat-form-field> -->
+
+        <!-- <button mat-raised-button color="secondary" (click)="getHoja();">
           <i class="fa fa-search"></i>
-        </button>
+        </button>  -->
 
         <ng-container>
-          <a (click)="pasarHoja(izquierda, num_hoja);">
+          <!-- <a (click)="pasarHoja(izquierda, num_hoja);">
             <mat-icon style="padding-block-start: 5px !important;">
               keyboard_arrow_left
             </mat-icon>
@@ -21,33 +21,37 @@
             <mat-icon style="padding-block-start: 5px !important;">
               keyboard_arrow_right
             </mat-icon>
-          </a>
+          </a> -->
+
+          <mat-icon color="primary" (click)="close();" style="padding-top: 5px;">close</mat-icon>
         </ng-container>
 
-        <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" [disabled]="!item_valido"
-          id="seleccion">
+        <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" 
+          [disabled]="!item_valido" id="seleccion">
           <i class="fa fa-plus"></i> Selección
-        </button>&nbsp;
-
-        <button mat-raised-button color="warn" (click)="limpiarMatriz();"><i class="fa fa-eraser"></i> Limpiar
         </button>&nbsp;
 
         <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
           <i class="fa fa-cart-plus"></i> OK
-        </button>&nbsp;
+        </button>
+
+        <!-- <button mat-raised-button color="warn" (click)="limpiarMatriz();">
+          <i class="fa fa-eraser"></i> Limpiar
+        </button>&nbsp; -->
+        
         <!-- MENU CARRITO DE COMPRAS-->
         <mat-menu #menu="matMenu" xPosition="after">
           <ng-container>
             <table style="padding: 8px 8px !important;">
               <tr>
-                <th style="border: 1px solid #ffc107;">Ord. Ped</th>
-                <th style="border: 1px solid #ffc107;">Item</th>
-                <th style="border: 1px solid #ffc107;" width="250">Descripción</th>
-                <th style="border: 1px solid #ffc107;" width="175">Medida</th>
-                <th style="border: 1px solid #ffc107;">Empaque</th>
-                <th style="border: 1px solid #ffc107;">Precio</th>
-                <th style="border: 1px solid #ffc107;">Pedido</th>
-                <th style="border: 1px solid #ffc107;">Cant.</th>
+                <th style="border: 1px solid #ffc107;"><span>Ord. Ped</span></th>
+                <th style="border: 1px solid #ffc107;"><span>Item</span></th>
+                <th style="border: 1px solid #ffc107;" width="250"><span>Descripción</span></th>
+                <th style="border: 1px solid #ffc107;" width="175"><span>Medida</span></th>
+                <th style="border: 1px solid #ffc107;"><span>Empaque</span></th>
+                <th style="border: 1px solid #ffc107;"><span>Precio</span></th>
+                <th style="border: 1px solid #ffc107;"><span>Pedido</span></th>
+                <th style="border: 1px solid #ffc107;"><span>Cant.</span></th>
                 <th style="border: 1px solid #ffc107;">
                   <i class="fa fa-trash" aria-hidden="true" color="danger" style="font-size: 0.5rem; color: red;"></i>
                 </th>
@@ -117,7 +121,7 @@
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text form-control-sm"
-              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Venta</u> </span>
+              style="padding: 0px 6px 0px 10px;border: 0 !important;"><u>Precio de Venta</u> </span>
           </div>
 
           <ng-container>
@@ -135,27 +139,23 @@
           <ng-container *ngIf="permiso_para_vista === true">
             <span class="form-control-sm" style="border: 0 !important;">
               <u>Calcular Empa. por Precio</u>
-              <input type="checkbox" [checked]="precio" (change)="togglePrecio()">
+              <input type="checkbox" [checked]="precio" (change)="togglePrecio()" style="margin-left: 25px;">
             </span>
 
             <span class="form-control-sm" style="border: 0 !important;">
               <u>Calcular Empa. por Descuento</u>
-              <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
+              <input type="checkbox" [checked]="desct" (change)="toggleDescuento()" style="margin-left: 3px;">
             </span>
           </ng-container>
           <!-- <button (click)="applyFocusMatriz()"> FOCUS</button> -->
         </div>
       </div>
-
-      <div class="col-md-3 text-right">
-        <mat-icon color="primary" (click)="close();">close</mat-icon>
-      </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6" style="padding-left: 21px;">
-        <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
-          style="width: 16%;">
+    <div class="">
+      <div class="col-md-6" style="padding-left: 12px;">
+        <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" 
+        class="input_data_item" style="width: 25%;">
 
         <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
         <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
@@ -168,67 +168,138 @@
         <ng-container *ngIf="item_valido === true">
           <span style="color: rgb(rgb(0, 171, 0));"><strong>SI VENTA</strong></span>
         </ng-container>
-        <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
-      </div>
 
-      <div class="col-md-6">
+        <hr>
+
         <div class="row">
-          <ng-container *ngIf="permiso_para_vista === true">
-            <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
+          <div class="col" style="text-align: center;">
+            <mat-form-field appearance="outline" class="example-full-width" style="width: 28%;">
               <mat-label>Empaque</mat-label>
               <input type="number" matInput id="focusEmpaque" maxlength="7" min="0" [(ngModel)]="cant_empaque"
                 #focusEmpaque (click)="focusInput()" (keydown)="handleKeyDown($event)">
             </mat-form-field>&nbsp;
-          </ng-container>
-
-          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
-            <mat-label>Pedido</mat-label>
-            <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
-              (keydown)="handleKeyDown($event)" #focusPedido>
-          </mat-form-field>&nbsp;
-
-          <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
-            <mat-label>Cantidad</mat-label>
-            <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : 'Placeholder predeterminado'">
-          </mat-form-field>
-
-          <mat-icon (click)="loseFocus()">bug_report</mat-icon>
+            
+            <mat-form-field appearance="outline" class="example-full-width" style="width: 28%;">
+              <mat-label>Pedido</mat-label>
+              <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
+                (keydown)="handleKeyDown($event)" #focusPedido>
+            </mat-form-field>&nbsp;
+  
+            <mat-form-field appearance="outline" class="example-full-width" style="width: 28%;">
+              <mat-label>Cantidad</mat-label>
+              <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
+                (keydown)="handleKeyDown($event)" [value]="pedido ? pedido.toString() : ''">
+            </mat-form-field>
+            <mat-icon (click)="simulateEnterKey()">bug_report</mat-icon>
+          </div>
         </div>
+        <hr>
       </div>
     </div>
   </div>
 
-  <mat-dialog-content class="dialog-matriz">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card flex justify-content-center">
-          <p-listbox #listboxElement [options]="items_catalogo" [(ngModel)]="selected_Item" [virtualScroll]="true"
-            [virtualScrollItemSize]="10" optionLabel="codigo" [filter]="true" scrollHeight="358px"
-            [style]=" {'width':'100%', 'height' : 'calc(1.3rem + 0px) !important' }" (click)="getSelectedItemInfo()"
-            (keydown.space)="getSelectedItemInfo()" (keydown.enter)="getSelectedItemInfo()" id="listbox">
-            <ng-template let-item pTemplate="item">
-              <tbody>
-                <tr>
-                  <td>{{item.codigo}}</td>
-                  <td>{{item.descripcion}}</td>
-                  <td>{{item.medida}}</td>&nbsp;&nbsp;&nbsp;
-                  <td>
-                    <i class="fa fa-plus" (click)="getSelectedItem()" style="color:#093070;cursor: pointer;"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </ng-template>
-          </p-listbox>
 
+
+
+
+  <mat-dialog-content>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <div class="row">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Línea General</mat-panel-title>
+                <mat-panel-description>
+                  <div class="col-xs-12 col-sm-12 col-md-6 product-item aling-rigth">
+                    <div class="product-cart centerImage">
+                      <a class="btn btn-secondary btn-block btn-gereric test"></a>
+                    </div>
+                </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+             
+                <h3>Multiple selection</h3>
+                <div>
+                  <mat-button-toggle-group appearance="legacy" 
+                    name="ingredients"
+                    aria-label="Ingredients"
+                    [hideMultipleSelectionIndicator]="hideMultipleSelectionIndicator()"
+                    multiple>
+                    <mat-button-toggle value="flour">GRADO 2 PERNO HEX, CARR, TUE SAE</mat-button-toggle>
+                    <mat-button-toggle value="eggs">GRADO 5, GRADO 8 PERNO </mat-button-toggle>
+                    <mat-button-toggle value="sugar">CLASE 8, 8.8, 9, 10, PERNO & TUERCA HEX</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+
+                <mat-dialog-content class="dialog-matriz">
+                  <div class="row">
+                    <div class="col-md">
+                      <div class="card flex justify-content-center">
+                        <p-listbox #listboxElement [options]="items_catalogo" [(ngModel)]="selected_Item" [virtualScroll]="false"
+                          [virtualScrollItemSize]="10" optionLabel="codigo" [filter]="true" scrollHeight="358px"
+                          [style]=" {'width':'100%', 'height' : 'calc(1.3rem + 0px) !important' }" (click)="getSelectedItemInfo()"
+                          (keydown.space)="getSelectedItemInfo()" (keydown.enter)="getSelectedItemInfo()" id="listbox">
+                          <ng-template let-item pTemplate="item">
+                            <tbody>
+                              <tr>
+                                <td>{{item.codigo}}</td>
+                                <td>{{item.descripcion}}</td>
+                                <td>{{item.medida}}</td>&nbsp;&nbsp;&nbsp;
+                                <td>
+                                  <i class="fa fa-plus" (click)="getSelectedItem()" style="color:#093070;cursor: pointer;"></i>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </ng-template>
+                        </p-listbox>
+              
+                      </div>
+                    </div>
+                  </div>
+                </mat-dialog-content>
+                
+            
+
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div> 
+
+        <hr>
+
+        <div class="row">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Línea <br> Automotríz 
+                </mat-panel-title>
+                
+                <mat-panel-description>
+                  <div class="col-xs-12 col-sm-12 col-md-6 product-item aling-left">
+                    <div class="product-cart centerImage">
+                      <a class="btn btn-secondary btn-block btn-gereric test2"></a>
+                    </div>
+                  </div>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+
+            </mat-expansion-panel>
+          </mat-accordion>
         </div>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </mat-dialog-content>
+
+
+
+
+
 
   <div mat-dialog-footer>
     <!-- Saldos -->
-    <div class="row pl-3 pt-1">
+    <!-- <div class="row pl-3 pt-1">
       <ng-container *ngIf="saldoItem > 0; else saldo">
         <input type="text" class="inputsSaldos" value="{{ agencia }} : {{ saldoItem | number:'2.2-2'}}"
           style="font-size: 0.82rem;width:10%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true">
@@ -268,11 +339,11 @@
       </ng-container>
       <span style="color: rgb(15, 15, 131);padding-block-start: 3px;font-size: 0.82rem !important;"><strong>
         <u>F9 = Información Item</u></strong></span>
-    </div>
+    </div> -->
     <!-- finSaldos -->
 
     <!-- Empaques -->
-    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
+    <!-- <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
         <div class="col-sm">
           <div class="input-group">
@@ -291,12 +362,11 @@
           </div>
         </div>
       </div>
-    </mat-dialog-content>
+    </mat-dialog-content> -->
     <!-- finempaque -->
-     
 
     <!-- Precio Item  -->
-    <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
+    <!-- <mat-dialog-content class="dialog-matriz" style="padding: 0px 0px 0px 9px !important;">
       <div class="row">
         <div class="col-md-8">
           <div class="input-group">
@@ -311,7 +381,7 @@
               </div>
             </ng-container>
           </div>
-        </div>
+        </div> -->
 
         <!-- <div class="col-md">
           <table>
@@ -327,12 +397,14 @@
             </tbody>
           </table>
         </div> -->
-        <div class="col-md">
+
+        <!-- <div class="col-md">
           <span style="font-size: 0.82rem !important;"><strong>Empaque Minimo: </strong> {{ data_almacen_local.empaque }}</span> &nbsp;&nbsp;&nbsp;
           <span style="font-size: 0.82rem !important;"><strong>Peso Minimo: </strong>{{ data_almacen_local.pesomin | number:'1.2-5'}}</span>
         </div>
       </div>
-    </mat-dialog-content>
+    </mat-dialog-content> -->
     <!-- finempaque -->
+
   </div>
 </section>

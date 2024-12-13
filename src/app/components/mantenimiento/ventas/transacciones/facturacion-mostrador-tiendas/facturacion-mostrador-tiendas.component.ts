@@ -4249,15 +4249,16 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   }
 
   aplicarDescuentoNivel(){
-    let array_descuentos_nivel={
+    // en tiendas no hay cliente real ni su descripcion que tendria q ser la razonsocial pero dicen que nop
+    // 11-12-2024
+    let array_descuentos_nivel = {
       cmbtipo_desc_nivel: this.tipo_desct_nivel === undefined ? "":this.tipo_desct_nivel,
       fechaProf: this.fecha_actual?.toString(),
       codtarifa_main: this.tarifaPrincipal_value,
       codcliente: this.codigo_cliente?.toString(),
       codcliente_real: this.codigo_cliente_catalogo_real?.toString(),
-      codclientedescripcion: this.razon_social
+      codclientedescripcion: ""
     };
-
     console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
 
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicarDescuentoCliente/";

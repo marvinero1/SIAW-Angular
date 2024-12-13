@@ -457,6 +457,10 @@ import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transac
 import { TiposAnulacionFelComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/tipos-anulacion-fel/tipos-anulacion-fel.component';
 import { MessageService } from 'primeng/api';
 
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { ListboxModule } from 'primeng/listbox';
+
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
     return () => defineCustomElements(window);
@@ -572,6 +576,7 @@ registerPlugin(UndoRedo);
         MatMenuModule,
         ReactiveFormsModule,
         FormsModule,
+        InputTextModule,
         MatFormFieldModule,
         MatSelectModule,
         MatAutocompleteModule,
@@ -607,7 +612,7 @@ registerPlugin(UndoRedo);
         MatProgressBarModule,
         MatProgressSpinnerModule,
         MatRadioModule,
-        MatRippleModule,
+        // MatRippleModule,
         MatSliderModule,
         MatSortModule,
         MatToolbarModule,
@@ -620,7 +625,8 @@ registerPlugin(UndoRedo);
         ChartModule,
         QRCodeModule,
         ToastModule,
-        RippleModule,
+        ListboxModule,
+
 
         ToastrModule.forRoot({
             timeOut: 5000, // Duración infinita

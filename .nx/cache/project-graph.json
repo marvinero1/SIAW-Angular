@@ -11242,13 +11242,22 @@
         "hash": "sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA=="
       }
     },
+    "npm:primeicons": {
+      "type": "npm",
+      "name": "npm:primeicons",
+      "data": {
+        "version": "7.0.0",
+        "packageName": "primeicons",
+        "hash": "sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw=="
+      }
+    },
     "npm:primeng": {
       "type": "npm",
       "name": "npm:primeng",
       "data": {
-        "version": "17.18.1",
+        "version": "17.18.13",
         "packageName": "primeng",
-        "hash": "sha512-pMuXOgLQw5Xz0w9d3YTp2DAlYR8svK1Jz5gSWAhk6AyH7u7akwL1JX96RXVzLS8v2YeLUCvkMM+QROOvR3yKug=="
+        "hash": "sha512-G+4isb+tz2drez744i8LswxyaD+mqGupQeIzXc4hn5tb0KZCoe2G61/cEHUvUENFlBWBj2IPju1Zqu7klKNTTw=="
       }
     },
     "npm:process": {

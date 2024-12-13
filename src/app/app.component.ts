@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { SesionExpiradaComponent } from '@pages/errors/sesion-expirada/sesion-expirada.component';
+import { PrimeNGConfig } from 'primeng/api';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,13 +20,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-  constructor() {
+  constructor(private primengConfig: PrimeNGConfig) {
 
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());
   }
 
   ngOnInit(): void {
+    this.primengConfig.ripple = true; // Habilita las animaciones ripple globalmente
     // 900 = 15 minute
     // 600 = 10 minute
     // 60 = 1 minute

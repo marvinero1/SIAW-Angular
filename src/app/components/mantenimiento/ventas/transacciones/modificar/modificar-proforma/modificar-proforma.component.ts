@@ -2280,7 +2280,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
-    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + element.empaque)
+    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + newValue)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           // console.log(datav)
@@ -2289,7 +2289,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           // this.cantidad = datav.total;
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-          element.cantidad_empaque = Number(newValue);
+          element.empaque = newValue;
           element.cantidad = Number(datav.total);
           element.cantidad_pedida = Number(datav.total);
         },
@@ -2353,7 +2353,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.pedidoChangeMatrix(products, value);
-    }, 2200); // 300 ms de retardo    
+    }, 1250); // 300 ms de retardo    
   }
 
   pedidoChangeMatrix(element: any, newValue: number) {
@@ -3024,7 +3024,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let tamanio_array_validaciones = this.validacion_post.length;
     let total_proforma_concat: any = [];
-    //this.totabilizar();
+
+    this.totabilizar();
 
     const transformedArray = this.validacion_post.map((validaciones) => ({
       ...validaciones,
@@ -3268,7 +3269,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   // grabarYAprobar
   async submitDataModificarProformaAprobar() {
-    //this.totabilizar();
+    this.totabilizar();
+
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let total_proforma_concat: any = [];
     let tamanio_array_validaciones = this.validacion_post.length;
@@ -3568,6 +3570,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
     if (this.array_items_carrito_y_f4_catalogo.length === 0){
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA' });
+
+      this.total = 0.00;
+      this.subtotal = 0.00;
+      this.des_extra = 0.00;
+      this.recargos = 0.00;
     };
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -4775,10 +4782,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   onInputChangeMatrix(products: any, value: any) {
+    console.log(value);
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.empaqueChangeMatrix(products, value);
-    }, 2500); // 300 ms de retardo
+    }, 1250); // 300 ms de retardo
   }
 
   //btn
@@ -5677,7 +5685,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       codtarifa_main: this.tarifaPrincipal_value,
       codcliente: this.codigo_cliente.toString(),
       codcliente_real: this.codigo_cliente_catalogo_real.toString(),
-      codclientedescripcion: this.razon_social
+      codclientedescripcion: this.nombre_cliente_catalogo_real
     };
 
     console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
@@ -5891,6 +5899,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       element.orden = index + 1;
       element.nroitem = index + 1;
     });
+
+    this.totabilizar();
 
     // Actualizar el origen de datos del MatTableDataSource
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);

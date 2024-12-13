@@ -455,16 +455,16 @@
                 style="padding: 10px 3px 0px 0px;border: 0 !important;"><u>Estado Contra Entrega</u> </span>
             </div>
             <ng-container *ngIf="tipopago === 0">
-              <select class="custom-select1 form-control-sm" formControlName="estado_contra_entrega"
+              <mat-select class="custom-select1 form-control-sm" formControlName="estado_contra_entrega"
                 [(ngModel)]="estado_contra_entrega_input">
-                <option value="YA CANCELO">YA CANCELO</option>
-                <option value="POR CANCELAR">POR CANCELAR</option>
-              </select>
+                <mat-option value="YA CANCELO">YA CANCELO</mat-option>
+                <mat-option value="POR CANCELAR">POR CANCELAR</mat-option>
+              </mat-select>
             </ng-container>
             <ng-container *ngIf="tipopago === 1">
-              <select class="custom-select1 form-control-sm">
-                <option value=""></option>
-              </select>
+              <mat-select class="custom-select1 form-control-sm">
+                <mat-option value=""></mat-option>
+              </mat-select>
             </ng-container>
           </div>
 
@@ -752,7 +752,7 @@
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
               [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
-              (onRowUnselect)="onRowUnselect($event)">
+              (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
               <ng-template pTemplate="header">
                 <tr>
                   <th pSortableColumn="nroitem" class="center1" style="width:2%;">
@@ -825,11 +825,11 @@
                   </th>
                 </tr>
               </ng-template>
+
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
                   [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
                   (click)="itemDataAll(products?.coditem)">
-
                   <td class="center1"> {{ products.nroitem }} </td>
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
@@ -838,8 +838,7 @@
                     {{ products.orden }}
                   </td>
                   <td class="center1">{{ products.coditem }}</td>
-                  <td class="left">{{ products.descripcion }}
-                  </td>
+                  <td class="left">{{ products.descripcion }}</td>
                   <td class="center1">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
                   <td class="center1">{{ products.porceniva }}</td>
@@ -847,23 +846,26 @@
                   <!-- COLUMNA EMPAQUE -->
                   <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
                     <p-cellEditor>
-                      <ng-template pTemplate="input">
-                        <input pInputText type="number" min="0" [(ngModel)]="products.empaque"
-                          (input)="onInputChangeMatrix(products, $event.target.value)" />
-                      </ng-template>
-                      <ng-template pTemplate="output">
-                        {{ formatNumberTotalSubTOTALES(products.empaque === null ? 0 : products.empaque) }}
-                      </ng-template>
+                        <ng-template pTemplate="input">
+                            <input
+                                pInputText
+                                type="number"
+                                min="0"
+                                [(ngModel)]="products.empaque"
+                                (onEditComplete)="empaqueChangeMatrix(products, $event.value)"
+                            />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ formatNumberTotalSubTOTALES(products.empaque === null ? 0 : products.empaque) }}
+                        </ng-template>
                     </p-cellEditor>
                   </td>
-
+                
                   <!-- COLUMNA PEDIDO -->
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida"
-                    pEditableColumnField="cantidad_pedida">
+                  <td class="center1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                          (input)="onInputChange(products, $event.target.value)">
+                        <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0">
                       </ng-template>
 
                       <ng-template pTemplate="output">
@@ -909,15 +911,14 @@
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                          (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
+                          (onEditComplete)="cantidadChangeMatrix(products, $event.value)">
                       </ng-template>
 
                       <ng-template pTemplate="output">
                         <ng-container
                           *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
                           <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
-                          <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                          <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"-->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
@@ -925,7 +926,6 @@
                             style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(0, 0, 255, 0.824) !important;"> -->
                         </ng-container>
 
@@ -935,7 +935,6 @@
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                             id="input_cantidad"
-                            (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
                         <ng-container *ngIf="products?.cumple === false" >
@@ -944,7 +943,6 @@
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
                         <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                              id="input_cantidad"
-                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
                              style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
                       </ng-template>
@@ -974,7 +972,7 @@
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
                           [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"
-                          (blur)="onLeaveDescuentoEspecialDetalle($event, products)"
+                          (input)="onLeaveDescuentoEspecialDetalle($event, products)"
                           (change)="DEChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedDescuento(products)">
                       </ng-template>
@@ -1134,7 +1132,7 @@
               </div>
               <div class="col-md" style="float: left;">
                 <mat-slide-toggle (click)="negativosPositivosFilterToggle()" [checked]="togglePositivos">
-                  <span style="color:#ff8000 !important">Solo Items NO Generan Saldos Negativos</span>
+                  <span style="color:#ff8000 !important">Solo Items Que NO Generan Saldos Negativos</span>
                 </mat-slide-toggle>
               </div>
               <div class="col-md" style="float: left;">
@@ -1734,11 +1732,6 @@
                               disabled> -->
                           </div><br>
                           <div style="text-align: center;">
-                            <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
-                              (click)="modalAnticiposProforma();" [disabled]="!anticipo_button"
-                              style="border-color: #ffc107;"><i class="fa fa-archive"></i> Asignar Anticipo
-                            </button> -->
-
                             <button class="btn btn-outline-primary form-control-sm" type="button"
                               (click)="modalAnticiposProforma();" style="border-color: #ffc107;"
                               [disabled]="!pago_contado_anticipado">
@@ -2584,8 +2577,8 @@
         </div>
       </div>
     </div>
-
     <!-- finpiePagina -->
+
     <app-footer class="no-printme"></app-footer>
     <app-control-sidebar class="no-printme"></app-control-sidebar>
   </div>
