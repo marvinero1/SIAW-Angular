@@ -12,7 +12,6 @@ import { MessageService } from "primeng/api";
 @Injectable({
 	providedIn: 'root'
 })
-
 export class Interceptor implements HttpInterceptor {
 
 	public err;
@@ -31,7 +30,7 @@ export class Interceptor implements HttpInterceptor {
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(request).pipe(catchError(err => {
-			console.log(this.error_code, this.status);
+			console.log(this.error_code, this.status, this.err);
 
 			this.err = err.error;
 			this.status = err.status;
@@ -52,7 +51,7 @@ export class Interceptor implements HttpInterceptor {
 			}
 
 			if(this.error_code != "error devolvio nulo" && this.error_code != 801){
-				this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: this.error_code });
+				this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: this.error_code  });
 			}	
 
 			// CODIGO DE ERROR PARA QUE NO SALGA EL TOAST DE ITEM NO VALIDO EN LA RUTA / inventario / mant / inmatriz / infoItemRes
@@ -85,6 +84,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "203":
+					this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ Contraseña Erronea ! 🛡️' });
+
 					this._snackBar.open('¡ Contraseña Erronea !', '😠', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -92,6 +93,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "205":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ Su contraseña ya vencio, registre una nueva ! 🛡️' });
+
 					this._snackBar.open('¡ Su contraseña ya vencio, registre una nueva !', '🛡️', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -100,6 +103,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "207":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ Usuario NO ACTIVO, Informe al Dpto. de Sistemas ! 🛡️' });
+
 					this._snackBar.open('¡ Usuario NO ACTIVO, Informe al Dpto. de Sistemas !', '😥', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -107,6 +112,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "209":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ La contraseña no cumple los requisitos ! 🛡️' });
+
 					this._snackBar.open('¡ La contraseña  no cumple los requisitos !', '❌', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -114,13 +121,17 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "211":
-					this._snackBar.open('¡ La contraseña no puede ser la misma !', '❌', {
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ La contraseña no puede ser la misma ! 🛡️' });
+
+					this._snackBar.open('', '❌', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
 					});
 					break;
 
 				case "213":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ No se encontro un registro con los datos proporcionados (rol) ! 🛡️' });
+
 					this._snackBar.open('¡ No se encontro un registro con los datos proporcionados (rol). !', '❌', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -128,6 +139,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "215":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ La Contraseña ah expirado su VENCIMIENTO, favor consulte al DIOS DEL SISTEMA ! 🛡️' });
+					
 					this._snackBar.open('¡ La Contraseña ah expirado su VENCIMIENTO, favor consulte al DIOS DEL SISTEMA !', '❌', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -135,6 +148,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "701":
+					this.messageService.add({ severity: 'info', summary: 'Informacion', detail: '¡ No hay Tipo de Cambio para el dia de Hoy! 🛡️' });
+
 					this._snackBar.open('¡ No hay Tipo de Cambio para el dia de Hoy!', '😥', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -142,6 +157,8 @@ export class Interceptor implements HttpInterceptor {
 					break;
 
 				case "713":
+					this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ Contraseña Incorrecta ! ❌' });
+
 					this._snackBar.open('¡ Contraseña Incorrecta !', '❌', {
 						duration: 3000,
 						panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -219,5 +236,4 @@ export class Interceptor implements HttpInterceptor {
 
 		return firstValueFrom(dialogRef.afterClosed());
 	}
-
 }

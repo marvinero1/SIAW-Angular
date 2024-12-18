@@ -37,6 +37,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         case '':
           if (this.permiso_para_vista) {
             this.getEmpaqueItem();
+            if(this.valorCelda){
+              this.onCellClick1(this.valorCelda);
+            }
           }else{
             this.cant_empaque === 0;
             const focusElement = this.focusPedido1.nativeElement;
@@ -49,6 +52,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           break;
         case 'focusEmpaque':
+          if(this.valorCelda){
+            this.onCellClick1(this.valorCelda);
+          }
+
           this.getEmpaqueItem();
           break;
         case 'focusPedido':
@@ -499,8 +506,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.log("SALDOS PARA LA VENTA: " + datav);
           this.saldoItem = datav.totalSaldo;
           this.saldoItem_number = parseInt(datav.totalSaldo);
-
-          
           console.log("🚀 ~ MatrizItemsComponent ~ .pipe ~ saldoItem_number:", this.saldoItem_number);
         },
 
@@ -812,8 +817,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log("tamanio carrito:", i, "tamanio q se agrega", this.array_items_completo.length)
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
-    //LONGITUD DEL CARRITO DE COMPRAS
-    // console.log(this.tamanio_carrito);
 
     let array = {
       coditem: cleanText,

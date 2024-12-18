@@ -128,7 +128,6 @@
             <i class="fa fa-paper-plane" ></i>
           </button>
 
-
           <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
             <mat-icon class="yellow"> monetization_on</mat-icon>
           </button> -->
@@ -187,6 +186,7 @@
     </div>
   </div>
 
+  
   <div>
     <!-- cabecera -->
     <form class="example-form" [formGroup]="FormularioData">
@@ -826,11 +826,11 @@
                 </tr>
               </ng-template>
 
-              <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
+              <ng-template pTemplate="body" let-products let-rowIndex="rowIndex" >
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
                   [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
                   (click)="itemDataAll(products?.coditem)">
-                  <td class="center1"> {{ products.nroitem }} </td>
+                  <td class="center1" > {{ products.nroitem }} </td>
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
                       padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
@@ -844,15 +844,14 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <!-- COLUMNA EMPAQUE -->
-                  <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
-                    <p-cellEditor>
+                  <td class="center1">
+                    <p-cellEditor [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
                         <ng-template pTemplate="input">
                             <input
                                 pInputText
                                 type="number"
                                 min="0"
                                 [(ngModel)]="products.empaque"
-                                (onEditComplete)="empaqueChangeMatrix(products, $event.value)"
                             />
                         </ng-template>
                         <ng-template pTemplate="output">
@@ -862,8 +861,8 @@
                   </td>
                 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
-                    <p-cellEditor>
+                  <td class="center1">
+                    <p-cellEditor [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0">
                       </ng-template>
@@ -907,11 +906,10 @@
                   </td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
-                    <p-cellEditor>
+                  <td class="center1" >
+                    <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                          (onEditComplete)="cantidadChangeMatrix(products, $event.value)">
+                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
                       </ng-template>
 
                       <ng-template pTemplate="output">
@@ -937,11 +935,12 @@
                             id="input_cantidad"
                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
+
                         <ng-container *ngIf="products?.cumple === false" >
                           <!-- NEGATIVOS -->
-                        <span style="color: #5050e2 !important;font-weight: 900;">
+                          <span style="color: #5050e2 !important;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
-                        <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
+                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                              id="input_cantidad"
                              style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
@@ -952,8 +951,8 @@
 
                   <td class="right">{{ formatNumberTotalSubTOTALES(products.porcen_mercaderia) }}</td>
 
-                  <td class="center1" [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
-                    <p-cellEditor>
+                  <td class="center1" >
+                    <p-cellEditor [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.codtarifa"
                           id="inputCatalogoPrecioVentaDetalle" [value]="products?.codtarifa"
@@ -967,8 +966,8 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1" [pEditableColumn]="products.coddescuento" pEditableColumnField="coddescuento">
-                    <p-cellEditor>
+                  <td class="center1" >
+                    <p-cellEditor [pEditableColumn]="products.coddescuento" pEditableColumnField="coddescuento">
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
                           [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"
@@ -1745,13 +1744,13 @@
                 </div>
               </mat-tab>
 
-              <mat-tab label="Cliente Real - Referencial"><br>
+              <mat-tab label="Cliente Real - Referencial">
                 <form class="example-form" [formGroup]="FormularioData">
                   <div class="row">
                     <div class="col-md-6">
                       <div class="row">
                         <div class="col">
-                          <div class="input-group-prepend text-center p-2">
+                          <div class="input-group-prepend text-center">
                             <span class="input-group-text form-control-sm"
                               style="padding: 10px 0px 0px 0px;border: 0 !important;">
                               <u>El Cliente Referencia-Real que realiza el pedido es:</u></span>
@@ -2278,13 +2277,13 @@
                       <div class="input-group">
                         <div class="input-group-prepend">
                           <span class="input-group-text form-control-sm"
-                            style="margin-left: 15px;border: 0 !important;"><u>Aplicar Desct. de Nivel
+                            style="margin-left: 18px;border: 0 !important;"><u>Aplicar Desct. de Nivel
                               Actuales del Cliente</u></span>
                         </div>
-                        <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual"
+                        <select style="margin-left: 5px;" [(ngModel)]="desct_nivel_actual" [value]="desct_nivel_actual" [disabled]="true"
                           style="width: 18%;" formControlName="niveles_descuento">
-                          <option value="ACTUAL" selected>ACTUAL</option>
-                          <option value="ANTERIOR">ANTERIOR</option>
+                          <!-- <option value="ACTUAL" selected>ACTUAL</option>
+                          <option value="ANTERIOR">ANTERIOR</option> -->
                         </select>
                       </div>
 
@@ -2295,9 +2294,9 @@
                             <u>Precio Principal del Pedido</u>
                           </span>
                         </div>
-                        <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal_value" readonly>
+                        <input type="number" style="margin-left: 6px;" [value]="tarifaPrincipal_value" disabled readonly>
                         <div class="input-group-append">
-                          <button class="btn btn-outline-primary form-control-sm" type="button"
+                          <button class="btn btn-outline-primary form-control-sm" type="button" disabled
                             (click)="getPrecioMayorEnDetalle();" style="border-color: #ffc107;">
                             <i class="fa fa-check"></i>
                           </button>
@@ -2311,14 +2310,14 @@
                           <u>Tipo Descuento de Nivel</u></span>
                       </div>
 
-                      <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel">
+                      <select style="margin-left: 5px;" [(ngModel)]="tipo_desct_nivel" disabled>
                         <option *ngFor="let valor_desct_nivels of valor_desct_nivel"
                           [value]="valor_desct_nivels.desc_nivel">{{ valor_desct_nivels.desc_nivel }}</option>
                       </select>&nbsp;
 
                       <div class="input-group-append">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()"
+                          style="border-color: #ffc107;" (click)="aplicarDescuentoNivel()" disabled
                           readonly="!tarifaPrincipal_value">
                           <i class="fa fa-cog"> Aplicar Descuento</i>
                         </button>

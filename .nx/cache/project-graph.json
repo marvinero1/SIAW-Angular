@@ -11255,9 +11255,9 @@
       "type": "npm",
       "name": "npm:primeng",
       "data": {
-        "version": "17.18.13",
+        "version": "17.18.9",
         "packageName": "primeng",
-        "hash": "sha512-G+4isb+tz2drez744i8LswxyaD+mqGupQeIzXc4hn5tb0KZCoe2G61/cEHUvUENFlBWBj2IPju1Zqu7klKNTTw=="
+        "hash": "sha512-1FT0B8wtgvs/joduB1DDOLe2IsP1pegOiEfSPAHSbc6otgNx/6iLR0k2M/xr2c9Ur1aC7tAikkVfH3FGpWof3w=="
       }
     },
     "npm:process": {

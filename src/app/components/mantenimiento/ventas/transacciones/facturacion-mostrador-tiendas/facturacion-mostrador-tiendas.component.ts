@@ -2666,7 +2666,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       codvendedor: this.cod_vendedor_cliente,
       usuarioreg: this.usuarioLogueado,
     };
-    console.log(cliente_nuevo);
+    // console.log(cliente_nuevo);
 
     this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/crearCliente/";

@@ -163,6 +163,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onRowSelectForDelete();
   }
 
+  @HostListener("document:keydown.backspace", []) unloadHandler8(event: Event) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "inputCatalogoCliente":
+          this.eventoBackspaceLimpiarCliente();
+          break;
+      }
+    }
+  }
+
   @ViewChild("input_cantidad_pedida") inputCantidadPedida: ElementRef;
   @ViewChild("cod_cliente") myInputField: ElementRef;
   @ViewChild("cant_empaque") myInputFieldEmpaque: ElementRef;
@@ -1005,7 +1019,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-        tipoentrega: "",
+        tipoentrega: this.tipoentrega === undefined ? "":this.tipoentrega,
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
@@ -1016,11 +1030,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",
+        desctoespecial: this.cod_descuento_modal?.toString(),
         totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2030-04-10",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -1216,9 +1230,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
+          // console.log("🚀 ~ .pipe ~ datav:", datav)
           this.vendedor_get = datav;
-          a = this.vendedor_get.shift();
-          this.cod_vendedor_cliente = a.codigo;
+          // a = this.vendedor_get.shift();
+          this.cod_vendedor_cliente = datav[3].codigo;
         },
 
         error: (err: any) => {
@@ -1695,6 +1710,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.nroidpf_complemento_view = "";
         this.desct_nivel_actual = "ACTUAL";
 
+        this.desct_nivel_actual = "ACTUAL";
+        this.tarifaPrincipal_value = 0;        
+
         this.email_cliente = "";
         this.subtotal = 0;
         this.recargos = 0;
@@ -1782,9 +1800,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.usuario_creado_save = datav;
           console.log(this.usuario_creado_save);
           this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '!CLIENTE GUARDADO!' })
-
           this.log_module.guardarLog(this.ventana, "Creacion" + detalle, "POST", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
 
+          this.modalCatalogoClienteCreado(datav.codcliente);
+          this.mandarCodCliente(datav.codcliente);
           this._snackBar.open('!CLIENTE GUARDADO!', 'Ok', {
             duration: 2000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -1792,7 +1811,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
 
         error: (err: any) => {
@@ -1800,12 +1819,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         }
       })
   }
@@ -1822,15 +1841,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
-
-  onInputChangeMatrix(products: any, value: any) {
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.empaqueChangeMatrix(products, value);
-    }, 1250); // 300 ms de retardo
-  }
-
   onEditComplete(event: any) {
     const updatedElement = event.data; // La fila editada
     const updatedField = event.field; // El campo editado (en este caso, "empaque")
@@ -1843,11 +1853,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.empaqueChangeMatrix(this.item_obj_seleccionado, newValue);
     }
 
-    if(updatedField ==='cantidad_pedida'){ }
+    if(updatedField === 'cantidad_pedida'){
+      this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, newValue);
+    }
 
-    if(updatedField ==='cantidad'){
+    if(updatedField === 'cantidad'){
       this.cantidadChangeMatrix(this.item_obj_seleccionado, newValue)
     }
+  }
+
+  copiarValorCantidadPedidaACantidad(product: any, newValue: number){
+    return product.cantidad = product.cantidad_pedida;
   }
 
   empaqueChangeMatrix(product: any, newValue: number) {
@@ -1858,8 +1874,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     const d_tipo_precio_desct = this.precio ? "Precio" : "Descuento";
     // Asegurar un empaque válido
     product.empaque = nuevoEmpaque;
-    // Llamada a la API para obtener nuevos datos
-    this.api
+    if(nuevoEmpaque === 0){
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! EMPAQUE 0! NO CALCULA'});
+    }else{
+      // Llamada a la API para obtener nuevos datos
+      this.api
       .getAll(`/venta/transac/veproforma/getCantItemsbyEmp/${this.userConn}/${d_tipo_precio_desct}/${this.cod_precio_venta_modal_codigo}/${product.coditem}/${nuevoEmpaque}`)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
@@ -1875,11 +1894,49 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               console.error("Error al consultar la API:", err);
           },
       });
+    }
+  }
+
+  cantidadChangeMatrix(elemento: any, newValue: number) {
+    console.log("🚀 ~ cantidadChangeMatrix ~ elemento:", elemento, newValue)
+    this.total = 0.00;
+    this.subtotal = 0.00;
+    this.iva = 0.00;
+    this.des_extra = 0.00;
+    this.recargos = 0.00;
+
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
+
+    this.total_desct_precio = false;
+    this.total_X_PU = true;
+
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
+      + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
+      "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+          elemento.coddescuento = Number(datav.coddescuento);
+          elemento.preciolista = Number(datav.preciolista);
+          elemento.preciodesc = Number(datav.preciodesc);
+          elemento.precioneto = Number(datav.precioneto);
+          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      });
   }
 
 
-
   
+
+
 
 
 
@@ -1944,42 +2001,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // }, 1000); // 300 ms de retardo
   }
 
-  cantidadChangeMatrix(elemento: any, newValue: number) {
-    console.log("🚀 ~ cantidadChangeMatrix ~ elemento:", elemento, newValue)
-    
-    this.total = 0.00;
-    this.subtotal = 0.00;
-    this.iva = 0.00;
-    this.des_extra = 0.00;
-    this.recargos = 0.00;
 
-    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
 
-    this.total_desct_precio = false;
-    this.total_X_PU = true;
 
-    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
-      + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
-      "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          //this.almacenes_saldos = datav;
-          console.log("Total al cambio de DE en el detalle: ", datav);
-          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
-          elemento.coddescuento = Number(datav.coddescuento);
-          elemento.preciolista = Number(datav.preciolista);
-          elemento.preciodesc = Number(datav.preciodesc);
-          elemento.precioneto = Number(datav.precioneto);
-          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      });
-  }
 
   // PRECIO VENTA DETALLE
   TPChangeMatrix(element: any, newValue: number) {
@@ -2480,6 +2504,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cod_vendedor_cliente = zip_json.cabeceraList[0].codvendedor;
     this.venta_cliente_oficina = zip_json.cabeceraList[0].venta_cliente_oficina;
     this.tipo_cliente = zip_json.cabeceraList[0].tipo === undefined ? " " : " ";
+    this.tipo_cliente = zip_json.clienteList[0].tipo;
+
+
     this.direccion = zip_json.cabeceraList[0].direccion;
     this.whatsapp_cliente = zip_json.cabeceraList[0].celular;
     this.latitud_cliente = zip_json.cabeceraList[0].latitud_entrega;
@@ -2488,7 +2515,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.obs = zip_json.cabeceraList[0].obs;
     this.desct_nivel_actual = zip_json.cabeceraList[0].niveles_descuento;
     this.whatsapp_cliente = "0";
-    this.tipo_cliente = zip_json.clienteList[0].tipo;
+   
     this.whatsapp_cliente = zip_json.etiquetaList[0].celular;
 
 
@@ -2592,7 +2619,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: "",
+        tipoentrega: this.tipoentrega === undefined ? "":this.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -2604,25 +2631,27 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         codtarifadefecto: this.codTarifa_get?.toString(),
 
-
-
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+        tipo_cliente: this.tipo_cliente,
+        totdesctos_extras: this.des_extra,
+        
+        
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "1990-00-00",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
 
@@ -3396,7 +3425,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         nroitems: this.array_items_carrito_y_f4_catalogo.length,
@@ -3413,6 +3442,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         totdesctos_extras: this.des_extra,
         tipo_cliente: this.tipo_cliente,
 
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+
 
 
         monto_anticipo: 0,
@@ -3421,12 +3457,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipo_caja: "",
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",        
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -4140,7 +4172,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -4161,7 +4193,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
         codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
+        desctoespecial: this.cod_descuento_modal?.toString(),
+
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
@@ -4171,7 +4204,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -4331,7 +4364,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -4356,7 +4389,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         idsol_nivel: "",
         nroidsol_nivel: "0",
         version_codcontrol: "",
-        desctoespecial: "0",
+        desctoespecial: this.cod_descuento_modal?.toString(),
 
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
@@ -4366,7 +4399,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -4517,7 +4550,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -4534,6 +4567,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         totdesctos_extras: this.des_extra,
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
 
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+
 
         monto_anticipo: 0,
         nrofactura: "0",
@@ -4541,12 +4581,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipo_caja: "",
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -4958,7 +4994,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -4976,6 +5012,13 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         totdesctos_extras: this.des_extra,
 
 
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+
 
         monto_anticipo: 0,
         nrofactura: "0",
@@ -4983,12 +5026,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipo_caja: "",
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -5129,7 +5168,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         transporte: element.transporte,
         nombre_transporte: element.nombre_transporte,
         fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
+        tipoentrega: element.tipoentrega === undefined ? "":element.tipoentrega,
         direccion: element.direccion,
         ubicacion: element.ubicacion,
         latitud: element.latitud_entrega,
@@ -5147,7 +5186,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         totdesctos_extras: this.des_extra,
 
 
-
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
 
         monto_anticipo: 0,
         nrofactura: "0",
@@ -5155,12 +5199,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipo_caja: "",
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "NUEVO",
-        desctoespecial: "0",
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
@@ -5276,10 +5316,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
 
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicarDescuentoCliente/";
-    return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn, array_descuentos_nivel)
+    return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn +"/"+ this.usuarioLogueado, array_descuentos_nivel)
       .subscribe({
         next: (datav) => {
-          // console.log("Descuento de Nivel: ", datav);
+          console.log("Descuento de Nivel: ", datav);
           if(datav.resp){
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp });
           }
@@ -6855,17 +6895,23 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  limpiarEtiqueta() {
-    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
-    this.etiqueta_get_modal_etiqueta = [];
-    this.direccion = "";
-    this.latitud_cliente = "";
-    this.longitud_cliente = "";
-
-    this.total = 0;
-    this.subtotal = 0;
-    this.des_extra = 0;
-    this.recargos = 0;
+  async limpiarEtiqueta() {
+    const result = await this.openConfirmationDialog(`¿Esta Segur@ de limpiar la etiqueta?`);
+    if (result) { 
+      this.etiqueta_get_modal_etiqueta = [];
+      this.direccion = "";
+      this.latitud_cliente = "";
+      this.longitud_cliente = "";
+  
+      this.total = 0;
+      this.subtotal = 0;
+      this.des_extra = 0;
+      this.recargos = 0;
+  
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
+    }else{
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'ETIQUETA NO LIMPIADA' })
+    }
   }
   //FIN SECCION TOTALES
 
@@ -7223,6 +7269,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  modalCatalogoClienteCreado(codcliente): void {
+    this.dialog.open(ModalClienteComponent, {
+      width: '700px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        ventana: "ventana_catalogo",
+        codcliente:codcliente
+      }
+    });
+  }
+
   changeValueCheck(type: string) {
     if (type === 'precio') {
       if (this.calcularEmpaquePorPrecio) {
@@ -7249,6 +7307,29 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl('');
       }
     });
+  }
+
+  eventoBackspaceLimpiarCliente(){
+    this.codigo_cliente = "";
+    this.codigo_cliente_catalogo_real = "";
+    this.nombre_comercial_cliente = "";
+    this.nombre_factura = "";
+    this.razon_social = "";
+    this.complemento_ci = ""
+    this.nombre_comercial_razon_social = "";
+    this.tipo_doc_cliente = "";
+    this.nit_cliente = "";
+    this.email_cliente = "";
+    this.cliente_casual = false;
+    this.cliente_habilitado_get = "";
+    this.nombre_cliente_catalogo_real = "";
+
+    this.cod_vendedor_cliente = "31101";
+    
+    this.whatsapp_cliente = "0";
+    this.latitud_cliente = "0";
+    this.longitud_cliente = "0";
+    this.central_ubicacion = "";
 
   }
 }

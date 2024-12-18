@@ -786,7 +786,7 @@
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
               [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
-              (onRowUnselect)="onRowUnselect($event)">
+              (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
               <ng-template pTemplate="header"
                 class="mat-mdc-header-cell mdc-data-table__header-cell cdk-header-cell mat-column-max-ventas cdk-column-descripcion mat-column-descripcion ng-star-inserted">
                 <tr
@@ -878,26 +878,13 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
-                    <!-- <p-cellEditor>
-                      <ng-template pTemplate="input">
-                        <ng-container *ngIf="products.empaque === 'null'">
-                          <input pInputText type="number" class="pedido" min="0" [value]=0
-                            (change)="empaqueChangeMatrix(products, $event.target.value)"
-                            style="text-align: center !important;">
-                        </ng-container>
-                      </ng-template>
-
-                      <ng-template pTemplate="output">
-                        {{ products.empaque }}
-                      </ng-template>
-                    </p-cellEditor> -->
-
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" min="0" id="empaques_input"
-                          [value]="products.empaque === null ? 0 : products.empaque"
-                          style="text-align: right !important;"
-                          (input)="onInputChangeMatrix(products, $event.target.value)" />
+                        <input
+                        pInputText
+                        type="number"
+                        min="0"
+                        [(ngModel)]="products.empaque" />
                       </ng-template>
 
                       <ng-template pTemplate="output">
@@ -906,44 +893,30 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida"
-                    pEditableColumnField="cantidad_pedida">
+                  <td class="center1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="products.cantidad_pedida" min="0"
-                        (input)="onInputChange(products, $event.target.value)"> 
+                        <input pInputText type="text" [(ngModel)]="products.cantidad_pedida" min="0"> 
                       </ng-template>
+
                       <ng-template pTemplate="output">
-                        <!-- {{ products.cantidad_pedida }} -->
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
-                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span> 
-                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
-                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(0, 0, 255, 0.824);"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
-                          <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            (input)="onInputChange(products, $event.target.value)"
-                            style="color: rgba(255, 0, 0, 0.824);"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumple === false" >
                           <!-- NEGATIVOS -->
                           <span style="color: #5050e2 !important;font-weight: 900;">{{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span> 
-                        <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                             id="input_cantidad"
-                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
                       </ng-template>
                     </p-cellEditor>
@@ -952,43 +925,27 @@
                   <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                        (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);">
+                        <input pInputText type="text" [(ngModel)]="products.cantidad" min="0" id="input_cantidad">
                       </ng-template>
-                      
 
                       <ng-template pTemplate="output">
-                        <!-- {{ products.cantidad }} -->
                         <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true">
-                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
-                         <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
+                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
-                         <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(0, 0, 255, 0.824) !important;"> -->
+                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false" >
                          <span style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">
-                          {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
-                         <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad"
-                            (input)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                          {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                         </ng-container>
                         <ng-container *ngIf="products?.cumple === false" >
                           <!-- NEGATIVOS -->
                           <span style="color: #5050e2 !important;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
-                        <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                             id="input_cantidad"
-                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);"
-                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                         </ng-container>
                       </ng-template>
                     </p-cellEditor>
@@ -1001,7 +958,7 @@
                       <ng-template pTemplate="input">
                         <input pInputText type="number" class="pedido" min="0" [(ngModel)]="products.codtarifa"
                           id="inputCatalogoPrecioVentaDetalle" (blur)="onLeavePrecioVentaDetalle($event, products)"
-                          [value]="products?.codtarifa" (change)="TPChangeMatrix(products, $event.target.value)"
+                          (change)="TPChangeMatrix(products, $event.target.value)"
                           (click)="inputClickedPrecioVenta(products)">
                       </ng-template>
 
@@ -1298,8 +1255,6 @@
                   <ng-template #prctvt>
                     <strong style="color: green;">NO</strong>
                   </ng-template>
-                  Lo que estas pidiendo: {{element.cantidad }} - Lo que puedes vender:
-                  {{element.cantidad_permitida_seg_porcen}}
                 </td>
               </ng-container>
 
@@ -2700,9 +2655,8 @@
         </div>
       </div>
     </div><br>
-
-    <!-- finpiePagina -->
-    <app-footer class="no-printme"></app-footer>
-    <app-control-sidebar class="no-printme"></app-control-sidebar>
   </div>
+  <!-- finpiePagina -->
+  <app-footer class="no-printme"></app-footer>
+  <app-control-sidebar class="no-printme"></app-control-sidebar>
 </section>

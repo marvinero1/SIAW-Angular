@@ -181,6 +181,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   id_tipo_view_get_codigo: string;
   id_proforma_numero_id: any;
   moneda_base: any;
+  hay_negativos_bool:boolean;
 
   agencia_logueado: any;
   almacen_get: any = [];
@@ -352,6 +353,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   public item_obtenido: any = [];
 
   public disableSelectComplemetarProforma: boolean = false;
+  public item_obj_seleccionado:any;
 
   porcen_item: string;
   valor_nit: any;
@@ -1091,7 +1093,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       contra_entrega: this.contra_entrega,
       estado_contra_entrega: [this.dataform.estado_contra_entrega === undefined ? "" : this.dataform.estado_contra_entrega],
 
-      odc: this.odc,
+      odc: this.odc === undefined ? "":this.odc,
       desclinea_segun_solicitud: [this.dataform.desclinea_segun_solicitud === undefined ? 0 : this.dataform.desclinea_segun_solicitud], //Descuentos de Linea de Solicitud
 
       idanticipo: [this.id_anticipo], // anticipo VentasL
@@ -1201,29 +1203,32 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo === null ? "" : element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        tipo_cliente: this.tipo_cliente,
+        codtarifadefecto: this.codTarifa_get?.toString(),
+        idpf_complemento: element.idpf_complemento === undefined ? "" : element.idpf_complemento,
+        nroidpf_complemento: element.nroidpf_complemento?.toString(),
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+
+
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
-        codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
-
-        idpf_complemento: element.idpf_complemento === undefined ? "" : element.idpf_complemento,
-        nroidpf_complemento: element.nroidpf_complemento?.toString(),
-
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2030-04-10",
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -1486,7 +1491,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.longitud_cliente = proforma.cabecera.longitud_entrega;
     this.central_ubicacion = proforma.cabecera.central;
     this.obs = proforma.cabecera.obs;
-    this.odc = proforma.cabecera.odc
+    this.odc = proforma.cabecera.odc === undefined ? "":proforma.cabecera.odc;
     this.desct_nivel_actual = proforma.cabecera.niveles_descuento;
     this.whatsapp_cliente = proforma?.etiquetaProf?.length ? proforma.etiquetaProf[0].celular : null;
     this.linea2 = proforma?.etiquetaProf[0]?.linea2,
@@ -1539,36 +1544,38 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.estado_contra_entrega_input = proforma.cabecera.estado_contra_entrega;
 
     //aca se pintan las validaciones en su tabla
-    this.validacion_post = proforma.detalleValida.map((element) => ({
-      codServicio: element.codservicio.toString(),
-      accion: element.accion,
-      claveServicio: element.clave_servicio,
-      codControl: element.codcontrol,
-      codProforma: element.codproforma,
-      datoA: element.datoa,
-      datoB: element.datob,
-      descGrabar: element.desc_grabar,
-      descripcion: element.descripcion,
-      descServicio: element.descservicio,
-      descuentos: element.descuentos,
-      grabar: element.grabar,
-      grabarAprobar: element.grabar_aprobar,
-      nit: element.nit,
-      nroItems: element.nroitems,
-      obsDetalle: element.obsdetalle,
-      observacion: element.observacion,
-      orden: element.orden,
-      recargos: element.recargos,
-      subtotal: element.subtotal,
-      total: element.total,
-      valido: element.valido,
-      // estos valores no me llegan y me piden para enviar asi q lo pongo en vacio y en string porq asi pide el modelo
-      contra_Entrega:"",
-      descGrabarAprobar:"",
-      preparacion:"",
-      tipoVenta:"",
-    }));
-
+    // this.validacion_post = proforma.detalleValida.map((element) => ({
+    //   codServicio: element.codservicio.toString(),
+    //   accion: element.accion,
+    //   claveServicio: element.clave_servicio,
+    //   codControl: element.codcontrol,
+    //   codProforma: element.codproforma,
+    //   datoA: element.datoa,
+    //   datoB: element.datob,
+    //   descGrabar: element.desc_grabar,
+    //   descripcion: element.descripcion,
+    //   descServicio: element.descservicio,
+    //   descuentos: element.descuentos,
+    //   grabar: element.grabar,
+    //   grabarAprobar: element.grabar_aprobar,
+    //   nit: element.nit,
+    //   nroItems: element.nroitems,
+    //   obsDetalle: element.obsdetalle,
+    //   observacion: element.observacion,
+    //   orden: element.orden,
+    //   recargos: element.recargos,
+    //   subtotal: element.subtotal,
+    //   total: element.total,
+    //   valido: element.valido,
+    //   // estos valores no me llegan y me piden para enviar asi q lo pongo en vacio y en string porq asi pide el modelo
+    //   contra_Entrega:"",
+    //   descGrabarAprobar:"",
+    //   preparacion:"",
+    //   tipoVenta:"",
+    // }));
+    
+    // VACIO PARA QUE LE OBLIGUE A VALIDAR NUEVAMENTE
+    this.validacion_post = [];
     this.dataSource_validacion = new MatTableDataSource(this.validacion_post);
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
@@ -2110,7 +2117,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
-        console.log('data', datav);
+        // console.log('data', datav);
         this.saldoItem = datav.totalSaldo;
         },
 
@@ -2158,6 +2165,21 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           this.porcen_item = this.item_obtenido.porcen_maximo;
         },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getDescuentos() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vedescuento/catalogo/";
+    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.descuentos_get = datav;
+          //this.cod_descuento_modal_codigo = 0;
+        },
         error: (err: any) => {
           console.log(err, errorMessage);
         },
@@ -2260,61 +2282,76 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     alert("EVENTO BLOQUEADO, NO PEGAR");
   }
 
+
+
   selectRow(index: number) {
     this.selectedRowIndex = index;
   }
 
-  empaqueChangeMatrix(element: any, newValue: number) {
-    console.log(element);
-    // element.cantidad_empaque
-    // element.coditem
-    // element.cantidad
-    // element.cantidad_pedida
+  onEditComplete(event: any) {
+    const updatedElement = event.data; // La fila editada
+    const updatedField = event.field; // El campo editado (en este caso, "empaque")
+    const newValue = event.newValue;  // El nuevo valor ingresado
 
-    var d_tipo_precio_desct: string;
-
-    if (this.precio === true) {
-      d_tipo_precio_desct = "Precio";
-    } else {
-      d_tipo_precio_desct = "Descuento"
+    console.log("🚀 ~ onEditComplete ~ Item a editar empaque:", this.item_obj_seleccionado)
+    console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, updatedElement, newValue);
+  
+    if (updatedField === 'empaque') {
+      this.empaqueChangeMatrix(this.item_obj_seleccionado, newValue);
     }
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
-    return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + newValue)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          // console.log(datav)
-          // this.empaquesItem = datav;
-          // this.pedido = datav.total;
-          // this.cantidad = datav.total;
+    if(updatedField === 'cantidad_pedida'){
+      this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, newValue);
+    }
 
-          // Actualizar la cantidad en el elemento correspondiente en tu array de datos
-          element.empaque = newValue;
-          element.cantidad = Number(datav.total);
-          element.cantidad_pedida = Number(datav.total);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
+    if(updatedField === 'cantidad'){
+      this.cantidadChangeMatrix(this.item_obj_seleccionado, newValue)
+    }
   }
 
-  onInputChangecantidadChangeMatrix(products: any, value: any) {
-    let valor_input = value;
-    if(value === '' || value === undefined){
-      valor_input=0;
-      products.cantidad = 0;
-    };
-    
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.cantidadChangeMatrix(products, value);
-    }, 500); // 300 ms de retardo
+  copiarValorCantidadPedidaACantidad(product: any, newValue: number){
+    return product.cantidad = product.cantidad_pedida;
+  }
+
+  empaqueChangeMatrix(product: any, newValue: number) {
+    console.log("Producto antes de la actualización:", product, newValue);
+    // Evitar valores nulos o inválidos
+    const nuevoEmpaque = Number(product.empaque) || 0;
+    // Preparar el tipo de precio o descuento
+    const d_tipo_precio_desct = this.precio ? "Precio" : "Descuento";
+    // Asegurar un empaque válido
+    product.empaque = nuevoEmpaque;
+    if(nuevoEmpaque === 0){
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! EMPAQUE 0! NO CALCULA'});
+    }else{
+      // Llamada a la API para obtener nuevos datos
+      this.api
+      .getAll(`/venta/transac/veproforma/getCantItemsbyEmp/${this.userConn}/${d_tipo_precio_desct}/${this.cod_precio_venta_modal_codigo}/${product.coditem}/${nuevoEmpaque}`)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+          next: (datav) => {
+              console.log("Respuesta API:", datav);
+
+              // Actualizar valores directamente en el objeto del producto
+              product.empaque = nuevoEmpaque
+              product.cantidad = Number(datav.total);
+              product.cantidad_pedida = Number(datav.total);
+          },
+          error: (err) => {
+              console.error("Error al consultar la API:", err);
+          },
+      });
+    }
   }
 
   cantidadChangeMatrix(elemento: any, newValue: number) {
+    console.log("🚀 ~ cantidadChangeMatrix ~ elemento:", elemento, newValue)
+    this.total = 0.00;
+    this.subtotal = 0.00;
+    this.iva = 0.00;
+    this.des_extra = 0.00;
+    this.recargos = 0.00;
+
     let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
 
@@ -2326,20 +2363,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          // this.almacenes_saldos = datav;
+          //this.almacenes_saldos = datav;
           console.log("Total al cambio de DE en el detalle: ", datav);
           // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
           elemento.coddescuento = Number(datav.coddescuento);
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
-          elemento.porcen_mercaderia =Number(datav.porcen_mercaderia);
-
-          this.total = 0.00;
-          this.subtotal = 0.00;
-          this.iva = 0.00;
-          this.des_extra = 0.00;
-          this.recargos = 0.00;
+          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
         },
 
         error: (err: any) => {
@@ -2349,12 +2380,32 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onInputChange(products: any, value: any) {
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.pedidoChangeMatrix(products, value);
-    }, 1250); // 300 ms de retardo    
-  }
+
+
+  
+
+
+
+
+  // onInputChangecantidadChangeMatrix(products: any, value: any) {
+  //   let valor_input = value;
+  //   if(value === '' || value === undefined){
+  //     valor_input=0;
+  //     products.cantidad = 0;
+  //   };
+    
+  //   clearTimeout(this.debounceTimer);
+  //   this.debounceTimer = setTimeout(() => {
+  //     this.cantidadChangeMatrix(products, value);
+  //   }, 500); // 300 ms de retardo
+  // }
+
+  // onInputChange(products: any, value: any) {
+  //   clearTimeout(this.debounceTimer);
+  //   this.debounceTimer = setTimeout(() => {
+  //     this.pedidoChangeMatrix(products, value);
+  //   }, 1250); // 300 ms de retardo    
+  // }
 
   pedidoChangeMatrix(element: any, newValue: number) {
     element.cantidad = element.cantidad_pedida;
@@ -2507,21 +2558,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.iva = 0
     this.des_extra = 0;
     this.recargos = 0;
-  }
-
-  getDescuentos() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vedescuento/catalogo/";
-    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          this.descuentos_get = datav;
-          //this.cod_descuento_modal_codigo = 0;
-        },
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
   }
 
   onLeaveDescuentoEspecial(event: any) {
@@ -2865,25 +2901,31 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo === null ? "" : element.idanticip,
         noridanticipo: element.numeroidanticipo?.toString() || '',
+        tipo_cliente: this.tipo_cliente,
+        codtarifadefecto: this.codTarifa_get?.toString(),
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+
+
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+  
+
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
-        codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "2030-04-10",
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
 
@@ -3116,6 +3158,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     };
 
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat);
+    console.log("tamanio etiqueta:", tamanio_array_etiqueta, "tamanio validaciones:", tamanio_array_validaciones);
 
     if (!this.FormularioData.valid){
       this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'REVISE FORMULARIO' });
@@ -3123,9 +3166,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.spinner.hide();
       }, 50);
-    }
-
-    console.log("tamanio etiqueta:", tamanio_array_etiqueta, "tamanio validaciones:", tamanio_array_validaciones);
+    }    
 
     if (tamanio_array_etiqueta === 0) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ FALTA GRABAR ETIQUETA !' });
@@ -3164,20 +3205,13 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       });
     }
 
+    let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.valido === "NO");
+    let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
+    let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
+    let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
+
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (this.validacion_post && this.validacion_post_negativos) {
-      let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.valido === "NO");
-      let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
-      let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
-      let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
-
-      // console.log("NEGATIVOS,", array_negativos_aun_existe_tamanio, "tamanio:", array_negativos_aun_existe_tamanio.length);
-      // console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
-
-      // Aquí puedes continuar con tu lógica...
-      // console.log(array_validacion_existe_aun_no_validos);
-      // console.log(array_negativos_aun_existe);
-
       try {
         if (array_validacion_existe_aun_no_validos_tamanio > 0) {
           const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} tiene validaciones las cuales tienen que ser revisadas. ¿Esta seguro de grabar la proforma?`);
@@ -3189,12 +3223,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
         }
 
-        if (array_negativos_aun_existe_tamanio > 0) {
+       if (array_negativos_aun_existe_tamanio > 0) {
           const result = await this.openConfirmationDialog(`La Proforma ${this.id_tipo_view_get_codigo}-${this.id_proforma_numero_id} genera saldos negativos. ¿Esta seguro de grabar la proforma?`);
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 50);
+            }, 500);
             return;
           }
         }
@@ -3212,10 +3246,15 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       }
     }
 
-    console.log("FORMULARIO VALIDADO ENVIADO AL BACKEND: ", total_proforma_concat);
-    const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}`;
-    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+    if (array_negativos_aun_existe_tamanio > 0) {
+      this.hay_negativos_bool = true;
+    }else{
+      this.hay_negativos_bool = false;
+    }
 
+    console.log("FORMULARIO VALIDADO ENVIADO AL BACKEND: ", total_proforma_concat);
+    const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/false/${this.codigo_cliente_catalogo_real}/${this.hay_negativos_bool}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     this.api.create(url, total_proforma_concat).subscribe({
       next: (datav) => {
         this.spinner.show();   
@@ -3276,6 +3315,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let tamanio_array_validaciones = this.validacion_post.length;
     let data = this.FormularioData.value;
 
+    let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.valido === "NO");
+    let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
+    let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
+    let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
+
     this.spinner.show();
 
     if (!this.FormularioData.valid) {
@@ -3331,17 +3375,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     // Asegúrate de que las variables estén definidas antes de aplicar el filtro
     if (this.validacion_post && this.validacion_post_negativos) {
-      let array_validacion_existe_aun_no_validos = this.validacion_post.filter(element => element.valido === "NO");
-      let array_negativos_aun_existe = this.validacion_post_negativos.filter(element => element.obs === 'Genera Negativo');
-      let array_negativos_aun_existe_tamanio = array_negativos_aun_existe.length;
-      let array_validacion_existe_aun_no_validos_tamanio = array_validacion_existe_aun_no_validos.length;
-
-      // console.log("NEGATIVOS,", array_negativos_aun_existe_tamanio, "tamanio:", array_negativos_aun_existe_tamanio.length);
-      // console.log("NO VALIDOS", array_validacion_existe_aun_no_validos, "tamanio:", array_validacion_existe_aun_no_validos.length);
-      // Aquí puedes continuar con tu lógica...
-      // console.log(array_validacion_existe_aun_no_validos);
-      // console.log(array_negativos_aun_existe);
-
       try {
         //validacion cuando hay validaciones NO VALIDADADAS PERO IGUAL QUIERES GUARDAR
         if (array_validacion_existe_aun_no_validos_tamanio > 0) {
@@ -3362,7 +3395,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           if (!result) {
             setTimeout(() => {
               this.spinner.hide();
-            }, 50);
+            }, 500);
             return;
           }
         }
@@ -3490,8 +3523,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let resp:any;
     let alerts:any;
 
+    if (array_negativos_aun_existe_tamanio > 0) {
+      this.hay_negativos_bool = true;
+    }else{
+      this.hay_negativos_bool = false;
+    }
+
     console.log("Formulario que se envia al BACKEND: ", total_proforma_concat, "FORMULARIO VALIDADO");
-    const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/true/${this.codigo_cliente_catalogo_real}`;
+    const url = `/venta/modif/docmodifveproforma/guardarProforma/${this.userConn}/${this.codigo_proforma}/${this.BD_storage}/true/${this.codigo_cliente_catalogo_real}/${this.hay_negativos_bool}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
     this.api.create(url, total_proforma_concat).subscribe({
       next: async (datav) => {
@@ -3990,7 +4029,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
         codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
+        desctoespecial: this.cod_descuento_modal?.toString(),
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
@@ -4001,7 +4040,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         idFC_complementaria: "",
         nroidFC_complementaria: "0",
-        fechalimite_dosificacion: "2024-04-10T14:26:09.532Z",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
 
         idpf_solurgente: "",
         noridpf_solurgente: "0",
@@ -4123,7 +4162,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   toggleMaximoVentasNoSobrepasan: boolean = false;
 
   validarProformaSoloMaximoVenta() {
-    console.clear();
+    // console.clear();
     // 00058 - VALIDAR MAXIMO DE VENTA
     // VACIO - TODOS LOS CONTROLES
     this.valor_formulario = [this.FormularioData.value];
@@ -4192,7 +4231,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
         codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
+        desctoespecial: this.cod_descuento_modal?.toString(),
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
@@ -4203,7 +4242,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: "1900-04-10T14:26:09.532Z",
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -4238,8 +4277,9 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
       this.api.create(url, proforma_validar).subscribe({
         next: (datav) => {
+          console.log("🚀 ~ this.api.create ~ datav:", datav)
           this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA MAX VENTAS ✅' });
-          this.validacion_post_max_ventas = datav[0].dtnocumplen;
+          this.validacion_post_max_ventas = datav.jsonResult[0].dtnocumplen;
 
           this.toggleTodosMaximoVentas = true;
           this.toggleMaximoVentaSobrepasan = false;
@@ -4248,19 +4288,19 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 0);
         },
         error: (err) => {
           console.log(err, errorMessage);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 0);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 0);
         }
       });
     } else {
@@ -4663,26 +4703,33 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo === null ? "" : element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        tipo_cliente: this.tipo_cliente,
+        codtarifadefecto: this.codTarifa_get?.toString(),
+        idpf_complemento: this.idpf_complemento_view,
+        nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
+        tipo_complemento: tipo_complemento,
+
+
+
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+
+
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
-        codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
 
-        idpf_complemento: this.idpf_complemento_view,
-        nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
-        tipo_complemento: tipo_complemento,
 
         idFC_complementaria: "",
         nroidFC_complementaria: "",
@@ -4913,30 +4960,33 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         fechadoc: element.fecha,
         idanticipo: element.idanticipo === null ? "" : element.idanticipo,
         noridanticipo: element.numeroidanticipo?.toString() || '',
+        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+        totdesctos_extras: this.des_extra,
+        tipo_cliente: this.tipo_cliente,
+        codtarifadefecto: this.codTarifa_get?.toString(),
+        idpf_complemento: this.idpf_complemento_view,
+        nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
+        tipo_complemento: this.tipo_complementopf_input,
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+
+
+        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
+        idsol_nivel: "",
+        nroidsol_nivel: "0",
+        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
+        desctoespecial: this.cod_descuento_modal?.toString(),
+        totrecargos: this.recargos,
+        
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
         tipo_caja: "",
-        tipo_cliente: this.tipo_cliente,
         nroautorizacion: "",
         nrocaja: "",
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
         version_codcontrol: "",
         estado_doc_vta: "EDITAR",
-        codtarifadefecto: this.codTarifa_get?.toString(),
-        desctoespecial: "0",
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        totrecargos: 0,
-
-        idpf_complemento: this.idpf_complemento_view,
-        nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
-        tipo_complemento: this.tipo_complementopf_input,
-
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         idpf_solurgente: "0",
         noridpf_solurgente: "0",
       }
@@ -5633,6 +5683,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   onRowSelect(event: any) {
     console.log(event);
+    this.item_obj_seleccionado = event.data;
+
     this.itemDataAll(event.data.coditem);
 
     this.total = 0.00;
@@ -5690,7 +5742,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicarDescuentoCliente/";
-    return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn, array_descuentos_nivel)
+    return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn +"/"+ this.usuarioLogueado, array_descuentos_nivel)
       .subscribe({
         next: (datav) => {
           console.log("Descuento de Nivel: ", datav);
@@ -6427,18 +6479,23 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  limpiarEtiqueta() {
-    this.etiqueta_get_modal_etiqueta = [];
-    this.direccion = "";
-    this.latitud_cliente = "";
-    this.longitud_cliente = "";
-
-    this.total = 0;
-    this.subtotal = 0;
-    this.des_extra = 0;
-    this.recargos = 0;
-
-    this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
+  async limpiarEtiqueta() {
+    const result = await this.openConfirmationDialog(`¿Esta Segur@ de limpiar la etiqueta?`);
+    if (result) { 
+      this.etiqueta_get_modal_etiqueta = [];
+      this.direccion = "";
+      this.latitud_cliente = "";
+      this.longitud_cliente = "";
+  
+      this.total = 0;
+      this.subtotal = 0;
+      this.des_extra = 0;
+      this.recargos = 0;
+  
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ETIQUETA LIMPIADA' })
+    }else{
+      this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'ETIQUETA NO LIMPIADA' })
+    }
   }
   //FIN SECCION TOTALES
 

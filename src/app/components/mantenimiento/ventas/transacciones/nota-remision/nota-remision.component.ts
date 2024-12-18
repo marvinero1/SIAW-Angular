@@ -356,6 +356,9 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           //SE PINTA LA DATA TRANSFERIDA A LA NOTA DE REMISION
           this.imprimir_proforma_tranferida(data.proforma_transferir);
           this.codigo_proforma = data.proforma_transferir.data.cabecera.codigo;
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 0);
         } else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO ! ❌' });
           setTimeout(() => {
@@ -892,122 +895,122 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   
   imprimir_proforma_tranferida(proforma) {
     this.spinner.show();
-    console.log("Imprimir Proforma: ", proforma.data);
+    console.log("Imprimir Proforma: ", proforma);
 
-    if (proforma.data.cabecera.nroidpf_complemento > 0) {
+    if (proforma.datos.cabecera.nroidpf_complemento > 0) {
       this.disableSelectComplemetarProforma = true;
     }
 
     this.tipoventa = 0;
-    this.tipopago = proforma.data.cabecera.tipopago
-    this.codigo_proforma = proforma.data.cabecera.codigo;
-    this.total_cabecera = proforma.data.cabecera.total;
-    this.moneda_cabecera = proforma.data.cabecera.codmoneda;
-    this.complemento_proforma = proforma.data.cabecera.complemento_proforma;
+    this.tipopago = proforma.datos.cabecera.tipopago
+    this.codigo_proforma = proforma.datos.cabecera.codigo;
+    this.total_cabecera = proforma.datos.cabecera.total;
+    this.moneda_cabecera = proforma.datos.cabecera.codmoneda;
+    this.complemento_proforma = proforma.datos.cabecera.complemento_proforma;
 
-    // this.cod_id_tipo_modal = proforma.data.cabecera.id;
-    // this.id_proforma_numero_id = proforma.data.cabecera.numeroid;
+    // this.cod_id_tipo_modal = proforma.cabecera.id;
+    // this.id_proforma_numero_id = proforma.cabecera.numeroid;
 
-    this.id_proforma = proforma.data.cabecera.id;
-    this.nro_id_proforma = proforma.data.cabecera.numeroid;
+    this.id_proforma = proforma.datos.cabecera.id;
+    this.nro_id_proforma = proforma.datos.cabecera.numeroid;
 
-    this.almacn_parame_usuario = proforma.data.cabecera.codalmacen;
-    this.cod_vendedor_cliente_modal = proforma.data.cabecera.codvendedor;
-    this.venta_cliente_oficina = proforma.data.cabecera.venta_cliente_oficina;
-    this.codigo_cliente = proforma.data.cabecera.codcliente;
-    this.nombre_cliente = proforma.data.cabecera.nomcliente;
-    this.nombre_comercial_cliente = proforma.data.cabecera.nombre_comercial;
-    this.nombre_factura = proforma.data.cabecera.nombre_fact;
-    this.complemento_ci = proforma.data.cabecera.complemento_ci;
-    this.tipo_doc_cliente = proforma.data.cabecera.tipo_docid;
-    this.nit_cliente = proforma.data.cabecera.nit;
-    this.email_cliente = proforma.data.cabecera.email;
-    this.cliente_casual = proforma.data.cabecera.casual;
-    this.preparacion = proforma.data.cabecera.preparacion;
-    this.almacn_parame_usuario_almacen = proforma.data.cabecera.codalmacen;
+    this.almacn_parame_usuario = proforma.datos.cabecera.codalmacen;
+    this.cod_vendedor_cliente_modal = proforma.datos.cabecera.codvendedor;
+    this.venta_cliente_oficina = proforma.datos.cabecera.venta_cliente_oficina;
+    this.codigo_cliente = proforma.datos.cabecera.codcliente;
+    this.nombre_cliente = proforma.datos.cabecera.nomcliente;
+    this.nombre_comercial_cliente = proforma.datos.cabecera.nombre_comercial;
+    this.nombre_factura = proforma.datos.cabecera.nombre_fact;
+    this.complemento_ci = proforma.datos.cabecera.complemento_ci;
+    this.tipo_doc_cliente = proforma.datos.cabecera.tipo_docid;
+    this.nit_cliente = proforma.datos.cabecera.nit;
+    this.email_cliente = proforma.datos.cabecera.email;
+    this.cliente_casual = proforma.datos.cabecera.casual;
+    this.preparacion = proforma.datos.cabecera.preparacion;
+    this.almacn_parame_usuario_almacen = proforma.datos.cabecera.codalmacen;
 
-    this.moneda_get_catalogo = proforma.data.cabecera.codmoneda;
-    this.tdc = proforma.data.cabecera.tdc;
+    this.moneda_get_catalogo = proforma.datos.cabecera.codmoneda;
+    this.tdc = proforma.datos.cabecera.tdc;
 
-    this.codcliente_real_para_parametro = proforma.data.codcliente_real;
-    this.codcliente_real_descripcion = proforma.data.codclientedescripcion;
+    this.codcliente_real_para_parametro = proforma.datos.codcliente_real;
+    this.codcliente_real_descripcion = proforma.datos.codclientedescripcion;
 
     // codcliente de cabecera se utiliza este
-    this.codigo_cliente_catalogo_real = proforma.data.cabecera.codcliente_real;
+    this.codigo_cliente_catalogo_real = proforma.datos.cabecera.codcliente_real;
 
-    this.estado_contra_entrega_input = proforma.data.cabecera.estado_contra_entrega;
-    this.contra_entrega = proforma.data.cabecera.contra_entrega;
-    this.codigo_proforma = proforma.data.cabecera.codigo;
-    this.id_nro_id_proforma = proforma.data.cabecera.id + "-" + proforma.data.cabecera.numeroid;
+    this.estado_contra_entrega_input = proforma.datos.cabecera.estado_contra_entrega;
+    this.contra_entrega = proforma.datos.cabecera.contra_entrega;
+    this.codigo_proforma = proforma.datos.cabecera.codigo;
+    this.id_nro_id_proforma = proforma.datos.cabecera.id + "-" + proforma.datos.cabecera.numeroid;
 
-    this.transporte = proforma.data.cabecera.transporte;
-    this.medio_transporte = proforma.data.cabecera.nombre_transporte;
-    this.fletepor = proforma.data.cabecera.fletepor;
-    this.tipoentrega = proforma.data.cabecera.tipoentrega;
-    this.peso = proforma.data.cabecera.peso;
-    this.direccion_central_input = proforma.data.cabecera.direccion;
-    this.odc = proforma.data.cabecera.odc;
+    this.transporte = proforma.datos.cabecera.transporte;
+    this.medio_transporte = proforma.datos.cabecera.nombre_transporte;
+    this.fletepor = proforma.datos.cabecera.fletepor;
+    this.tipoentrega = proforma.datos.cabecera.tipoentrega;
+    this.peso = proforma.datos.cabecera.peso;
+    this.direccion_central_input = proforma.datos.cabecera.direccion;
+    this.odc = proforma.datos.cabecera.odc;
 
-    this.desclinea_segun_solicitud = proforma.data.cabecera.desclinea_segun_solicitud;
+    this.desclinea_segun_solicitud = proforma.datos.cabecera.desclinea_segun_solicitud;
 
-    this.cod_vendedor_cliente = proforma.data.cabecera.codvendedor;
-    this.venta_cliente_oficina = proforma.data.cabecera.venta_cliente_oficina;
-    this.tipo_cliente = proforma.data.tipo_cliente;
-    this.direccion = proforma.data.cabecera.direccion;
-    this.whatsapp_cliente = proforma.data.cabecera.celular;
-    this.latitud_cliente = proforma.data.cabecera.latitud_entrega;
-    this.longitud_cliente = proforma.data.cabecera.longitud_entrega;
-    this.central_ubicacion = proforma.data.cabecera.ubicacion;
-    this.obs = proforma.data.cabecera.obs;
-    this.desct_nivel_actual = proforma.data.cabecera.niveles_descuento;
+    this.cod_vendedor_cliente = proforma.datos.cabecera.codvendedor;
+    this.venta_cliente_oficina = proforma.datos.cabecera.venta_cliente_oficina;
+    this.tipo_cliente = proforma.tipo_cliente;
+    this.direccion = proforma.datos.cabecera.direccion;
+    this.whatsapp_cliente = proforma.datos.cabecera.celular;
+    this.latitud_cliente = proforma.datos.cabecera.latitud_entrega;
+    this.longitud_cliente = proforma.datos.cabecera.longitud_entrega;
+    this.central_ubicacion = proforma.datos.cabecera.ubicacion;
+    this.obs = proforma.datos.cabecera.obs;
+    this.desct_nivel_actual = proforma.datos.cabecera.niveles_descuento;
     this.whatsapp_cliente = "0";
 
-    this.ubicacion_central = proforma.data.cabecera.ubicacion;
-    this.preparacion = proforma.data.cabecera.preparacion;
+    this.ubicacion_central = proforma.datos.cabecera.ubicacion;
+    this.preparacion = proforma.datos.cabecera.preparacion;
 
     //Descuentos De Linea de CLiente
-    this.nivel_descuento = proforma.data.cabecera.niveles_descuento;
+    this.nivel_descuento = proforma.datos.cabecera.niveles_descuento;
 
     //complementarProforma
-    this.idpf_complemento_view = proforma.data.cabecera.idpf_complemento;
-    this.nroidpf_complemento = proforma.data.cabecera.nroidpf_complemento;
-    this.pago_contado_anticipado = proforma.data.cabecera.pago_contado_anticipado;
-    this.tipo_complementopf_input = proforma.data.cabecera.tipo_complementopf === 0 ? 3 : proforma.data.cabecera.tipo_complementopf;
-    this.nroidpf_complemento_view = proforma.data.cabecera.nroidpf_complemento;
+    this.idpf_complemento_view = proforma.datos.cabecera.idpf_complemento;
+    this.nroidpf_complemento = proforma.datos.cabecera.nroidpf_complemento;
+    this.pago_contado_anticipado = proforma.datos.cabecera.pago_contado_anticipado;
+    this.tipo_complementopf_input = proforma.datos.cabecera.tipo_complementopf === 0 ? 3 : proforma.datos.cabecera.tipo_complementopf;
+    this.nroidpf_complemento_view = proforma.datos.cabecera.nroidpf_complemento;
     //complementar proforma
 
     //eso nop porque se totaliza una vez transferida
-    // this.subtotal = proforma.data.cabecera.subtotal;
-    // this.recargos = proforma.data.cabecera.recargos;
-    this.descuento_total = proforma.data.cabecera.descuentos;
-    // this.total = proforma.data.cabecera.total;
+    // this.subtotal = proforma.cabecera.subtotal;
+    // this.recargos = proforma.cabecera.recargos;
+    this.descuento_total = proforma.datos.cabecera.descuentos;
+    // this.total = proforma.cabecera.total;
 
-    this.iva = proforma.data.cabecera.iva;
-    this.tablaIva = proforma.data.iva
+    this.iva = proforma.datos.cabecera.iva;
+    this.tablaIva = proforma.datos.iva
 
-    this.item_seleccionados_catalogo_matriz = proforma.data.detalle;
-    this.array_de_descuentos_ya_agregados = proforma.data.descuentos;
+    this.item_seleccionados_catalogo_matriz = proforma.datos.detalle;
+    this.array_de_descuentos_ya_agregados = proforma.datos.descuentos;
     //this.cod_descuento_total = proforma.descuentos;
 
     //el cuerpo del detalle asignado al carrito
-    this.array_items_carrito_y_f4_catalogo = proforma.data.detalle;
+    this.array_items_carrito_y_f4_catalogo = proforma.datos.detalle;
 
     //fechas
-    // this.fecha = this.datePipe.transform(proforma.data.cabecera.fecha, "yyyy-MM-dd");
-    this.fecha_inicial = this.datePipe.transform(proforma.data.cabecera.fecha_inicial, "yyyy-MM-dd");
-    this.fecha_confirmada = this.datePipe.transform(proforma.data.cabecera.fecha_confirmada, "yyyy-MM-dd");
-    this.fechaaut = this.datePipe.transform(proforma.data.cabecera.fechaaut, "yyyy-MM-dd");
-    this.fecha_reg = this.datePipe.transform(proforma.data.cabecera.fechareg, "yyyy-MM-dd");
+    // this.fecha = this.datePipe.transform(proforma.cabecera.fecha, "yyyy-MM-dd");
+    this.fecha_inicial = this.datePipe.transform(proforma.datos.cabecera.fecha_inicial, "yyyy-MM-dd");
+    this.fecha_confirmada = this.datePipe.transform(proforma.datos.cabecera.fecha_confirmada, "yyyy-MM-dd");
+    this.fechaaut = this.datePipe.transform(proforma.datos.cabecera.fechaaut, "yyyy-MM-dd");
+    this.fecha_reg = this.datePipe.transform(proforma.datos.cabecera.fechareg, "yyyy-MM-dd");
 
-    this.hora_inicial = proforma.data.cabecera.hora_inicial;
-    this.horareg = proforma.data.cabecera.horareg;
-    this.hora = proforma.data.cabecera.hora;
-    this.usuarioreg = proforma.data.cabecera.usuarioreg;
-    this.horaaut = proforma.data.cabecera.horaaut;
-    this.hora_confirmada = proforma.data.cabecera.hora_confirmada;
+    this.hora_inicial = proforma.datos.cabecera.hora_inicial;
+    this.horareg = proforma.datos.cabecera.horareg;
+    this.hora = proforma.datos.cabecera.hora;
+    this.usuarioreg = proforma.datos.cabecera.usuarioreg;
+    this.horaaut = proforma.datos.cabecera.horaaut;
+    this.hora_confirmada = proforma.datos.cabecera.hora_confirmada;
     //fin-fecha
 
-    this.tabla_anticipos = proforma.data?.detalleAnticipos;
+    this.tabla_anticipos = proforma.datos?.detalleAnticipos;
 
     // Agregar el número de orden a los objetos de datos
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -1130,7 +1133,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       subtotal: [this.dataform.subtotal === null ? 0.00 : this.dataform.subtotal], //TOTALES
       recargos: [this.dataform.recargos === null ? 0.00 : this.dataform.recargos], //TOTALES
       //des_extra: [this.dataform.des_extra], //TOTALES
-      iva: [this.dataform.iva === null ? 0.00 : this.dataform.iva], //TOTALES
+      iva: [this.iva === null ? 0.00 : this.iva], //TOTALES
       total: [this.dataform.total === null ? 0.00 : this.dataform.total], //TOTALES
       porceniva: [0],
 
@@ -1198,8 +1201,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/ " + "/ false /" + this.sin_validar_empaques + " / " + this.sin_validar_negativos + " / " + this.sin_validar_monto_min_desc + " / " + this.sin_validar_monto_total + " /" + this.sin_validar_doc_ant_inv
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
       + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
-      + this.txtid_solurgente + "/" + this.txtnroid_solurgente
-      + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
+      + this.txtid_solurgente + "/" + this.txtnroid_solurgente + "/false/" + this.sin_validar_empaques + "/" + this.sin_validar_negativos + "/" + this.sin_validar_monto_min_desc + "/" + this.sin_validar_monto_total + "/" + this.sin_validar_doc_ant_inv, submit_nota_remision)
       .subscribe({
         next: async (datav) => {
           codigo_control = datav.codigo_control,
@@ -1721,27 +1723,35 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       veremision1: this.array_items_carrito_y_f4_catalogo,
       vedesextraremi: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       verecargoremi: [],
-      veremision_iva: this.tablaIva,
+      veremision_iva: this.tablaIva === undefined ? [] : this.tablaIva,
       veremision_chequerechazado: {}
     };
 
-    if (this.txtid_solurgente === "") {
+
+    if (this.txtid_solurgente === "" || this.txtid_solurgente === undefined) {
       this.txtid_solurgente = "0";
     }
+
+    if(this.txtnroid_solurgente === "" || this.txtnroid_solurgente === undefined){
+       this.txtnroid_solurgente = "0";
+    }
+
     console.log(submit_nota_remision, "SIN MODIFICACION, CLICK GUARDAR MODAL");
     this.spinner.show();
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/"
 
     return this.api.create('/venta/transac/veremision/grabarNotaRemision/' + this.userConn + "/" + this.cod_id_tipo_modal + "/" + this.usuarioLogueado
       + "/" + this.desclinea_segun_solicitud + "/" + this.codigo_proforma + "/" + this.id_proforma + "/" + this.nro_id_proforma + "/" + this.BD_storage + "/"
-      + this.txtid_solurgente + "/" + this.txtnroid_solurgente + "/true/false/false/false/false/false", submit_nota_remision)
+      + this.txtid_solurgente + "/" + this.txtnroid_solurgente  + "/true/false/false/false/false/false", submit_nota_remision)
       .subscribe({
         next: async (datav) => {
+          console.log(datav);
           //this.codigo_control = datav.codigo_control,
           this.dataSource_negativos = new MatTableDataSource(datav.dtnegativos_result);
-          this.validacion_post_negativos = datav.dtnegativos_result
-          console.log(datav);
+          this.validacion_post_negativos = datav.dtnegativos_result;
 
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.resp });
+  
           if (datav.resp === false) {
             const result = await this.openConfirmacionDialog(datav.msgsAlert, []);
             if (!result) {

@@ -7,6 +7,7 @@ import { ServicioTransfeNotaRemisionService } from './servicio-tranfe-a-nota-rem
 import { ServicioCatalogoProformasService } from '../../proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
 import { CatalogoProformasComponent } from '../../proforma/catalogo-proformas/catalogo-proformas.component';
 import { ServicioTransfeAProformaService } from '../../proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modal-transfe-nota-remision',
   templateUrl: './modal-transfe-nota-remision.component.html',
@@ -47,7 +48,8 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private api: ApiService, public servicioTransANotasRemision: ServicioTransfeNotaRemisionService,
     public dialogRef: MatDialogRef<ModalTransfeNotaRemisionComponent>, public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
-    private spinner: NgxSpinnerService, private toastr: ToastrService, public servicioCatalogoProformas: ServicioCatalogoProformasService) {
+    private spinner: NgxSpinnerService, private messageService: MessageService,
+    public servicioCatalogoProformas: ServicioCatalogoProformasService) {
 
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -99,14 +101,16 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
           console.log(datav);
           if (datav.resp === "Transfiriendo Proforma") {
             this.transferirANotaRemision(datav.codProforma);
-            this.toastr.success(datav.resp.toUpperCase());
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp.toUpperCase() });
+  
           } else {
-            this.toastr.success("Proforma No Transferida");
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Proforma No Transferida' });
+  
           }
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'TRANSFERENCIA FALLO ! ❌' });
         },
         complete: () => {
           this.close();
@@ -125,7 +129,8 @@ export class ModalTransfeNotaRemisionComponent implements OnInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌' });
+  
         },
         complete: () => {
           this.close();

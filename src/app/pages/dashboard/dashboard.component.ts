@@ -54,8 +54,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void { 
     this.getRolUserParaVentana();
-    this.graficarVentasSIAWvsSIA();
-
+    // this.graficarVentasSIAWvsSIA();
   }
 
   ngAfterViewInit(): void {

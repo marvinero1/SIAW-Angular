@@ -519,6 +519,7 @@ select, textarea {
 
 
 ::ng-deep{
+
   .ag-root-wrapper-body.ag-layout-normal{
     height: 100% !important;
   }
@@ -530,6 +531,14 @@ select, textarea {
   .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label, .mat-mdc-tab-link:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label{
     color: #093070;
   }
+
+  @font-face {
+    font-family: "Inter var";
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+    src: local("Arial");
+}
 }
 
   .mdc-tab{

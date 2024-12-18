@@ -33,7 +33,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   veproforma_get: any = [];
   cabecera_proforma: any = [];
   info_descuento: any = [];
-  array_de_descuentos: any = [];
+  array_de_descuentos: any[] = [];
   tablaanticiposProforma: any = [];
   array_cabe_cuerpo_get: any = [];
   resultado_validacion: any = [];
@@ -84,7 +84,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     //   descripcion: element.descripcion === undefined ? element.descrip : element.descripcion,
     //   porcentaje: element.porcen,
     // }))
-
+    this.array_de_descuentos === undefined ? []:this.array_de_descuentos;
     this.array_de_descuentos = this.array_de_descuentos?.map((element) => ({
       aplicacion: element.aplicacion,
       codanticipo: element.codanticipo,
@@ -177,12 +177,11 @@ export class ModalDesctExtrasComponent implements OnInit {
           console.log(this.info_descuento);
           // this.validarDescuento();
 
-          let array_mapeado = [this.info_descuento].map((element) => ({
+          [this.info_descuento].map((element) => ({
             ...element,
             codigo: element.codigo,
             descripcion: element.descripcion,
             porcentaje: this.info_descuento_porcentaje,
-
           }));
 
           this.info_descuento_peso_minimo = this.info_descuento.peso_minimo;
@@ -203,91 +202,36 @@ export class ModalDesctExtrasComponent implements OnInit {
       });
   }
 
-  anadirArray() {
-    let tamanio = this.array_de_descuentos_con_descuentos.length;
-    const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
-    console.log(existe_en_array);
 
-    // this.array_de_descuentos = this.array_de_descuentos_con_descuentos?.map((element) => ({
-    //   aplicacion: element.aplicacion,
-    //   codanticipo: element.codanticipo,
-    //   codcobranza: element.codcobranza,
-    //   codcobranza_contado: element.codcobranza_contado,
-    //   coddesextra: element.coddesextra,
-    //   codmoneda: element.codmoneda,
-    //   codproforma: element.codproforma,
-    //   id: element.id,
-    //   montodoc: element.montodoc,
-    //   montorest: element.montorest,
-    //   codigo: element.coddesextra,
-    //   descripcion: element.descripcion,
-    //   porcentaje: element.porcen,
-    // }))
-
-    if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento' });
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 50);
-      return;
-    }
-
-    if (this.info_descuento) {
-      if (existe_en_array) {
-        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
-      } else {
-        this.validarDescuento();
-        if (tamanio > 0) {
-          console.log("HAY DESCUENTO EN EL ARRAY LA CARGA SE CONCATENA");
-          // Usar concat para agregar el nuevo descuento al array existente
-          if (this.validacion_bool_descuento.status === true) {
-            // Concatenar el nuevo descuento con los descuentos existentes
-            this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
-           
-          } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO VALIDO PARA SER AGREGADO' });
-          }
-        } else {
-          console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
-          
-          // Inicializa el array si es undefined
-          this.array_de_descuentos = this.array_de_descuentos || [];
-          this.info_descuento = [this.info_descuento].map((element)=>({
-            ...element,
-          }));
-
-          // Usar push para agregar el elemento directamente al array
-          this.array_de_descuentos.push(this.info_descuento[0]);
-        }
-      }
-    }
-    this.dataSource = new MatTableDataSource(this.array_de_descuentos);
-    console.log(this.array_de_descuentos, tamanio);
-  }
-
+  // 1ro VALIDAR DESCUENTOS
   validarDescuento() {
-    this.array_de_descuentos?.map(element => ({
-      codigo: element.codigo,
-      descripcion: element.descripcion,
-      porcentaje: this.info_descuento_porcentaje,
-    }));
+    // this.array_de_descuentos?.map(element => ({
+    //   codigo: element.codigo,
+    //   descripcion: element.descripcion,
+    //   porcentaje: this.info_descuento_porcentaje,
+    // }));
 
-    console.log(this.array_valida_detalle);
+    // console.log(this.array_valida_detalle);
 
     let a = [{
+      codigo:this.info_descuento.codigo,
       codproforma: 0,
       coddesextra: this.info_descuento.codigo,
       porcen: this.info_descuento.porcentaje,
+      porcentaje: this.info_descuento.porcentaje,
       montodoc: this.info_descuento_peso_minimo === undefined ? 0 : this.info_descuento_peso_minimo,
       codcobranza: 0,
       codcobranza_contado: 0,
       codanticipo: 0,
       id: 0,
+      descripcion: this.info_descuento.descripcion,
+      descrip: this.info_descuento.descripcion,
+      codmoneda:this.cabecera_proforma.codmoneda,
     }];
-    // console.log(a);
+    console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ arrayQueSeAgrega:", a)
+    
 
     let ucr;
-
     if (this.cabecera_proforma.tipopago === 0) {
       ucr = "CONTADO";
     } else {
@@ -295,66 +239,128 @@ export class ModalDesctExtrasComponent implements OnInit {
       ucr = "CREDITO";
     }
 
-    //si es true anadir a tabla temporal
-    //ESTO EN EL BOTON DE ANADIR
+    if(this.array_de_descuentos === undefined){
+      this.array_de_descuentos = [];
+    }
+
+    // si es true anadir a tabla temporal
+    // ESTO EN EL BOTON DE ANADIR
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddDescExtraProf/"
     return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + 
       "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real +
-       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_valida_detalle)
+       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_de_descuentos)
       .subscribe({
         next: (datav) => {
           this.validacion_bool_descuento = datav;
           console.log(this.validacion_bool_descuento);
+          console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ this.array_de_descuentos:", this.array_de_descuentos)
 
-          if (this.validacion_bool_descuento.status === false) {
-            console.log("entro aca!");
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: this.validacion_bool_descuento.resp });
-
-            let tamanio = this.array_de_descuentos_con_descuentos.length;
-            if (tamanio === 0) {
-              // Si el array está vacío, simplemente agregamos los nuevos elementos
-              this.array_valida_detalle.push(...a);
-            } else {
-              // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
-              this.array_valida_detalle = this.array_valida_detalle.push(...a);
-            }
-
-            this.array_valida_detalle.pop();
-            this.array_de_descuentos.pop();
-            this.dataSource = new MatTableDataSource(this.array_de_descuentos);
-            console.log(this.array_valida_detalle, tamanio);
-            return;
+          // si sale false no se puede agregar tonces solo sale el mensaje de error
+          if (datav.status === false) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.resp });
           }
 
-          if (this.validacion_bool_descuento.status === true) {
-            console.log("entro acaaaaa!");
+          // si sale true SI se puede agregar porq la validacion asi lo permite
+          if (datav.status === true) {
             let tamanio = this.array_de_descuentos_con_descuentos.length;
 
-            if (tamanio === 0) {
-              // Si el array está vacío, simplemente agregamos los nuevos elementos
-              this.array_valida_detalle.push(...a);
-            } else {
-              // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
-              this.array_valida_detalle = this.array_valida_detalle.concat(a);
+            const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
+
+            console.log("entro acaaaaa don cangrejo! 🦐");
+            console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ existe_en_array:", existe_en_array)            
+            console.log("arrayValida:",this.array_valida_detalle, "arrayDEESCT: ",this.array_de_descuentos, tamanio);
+
+            if(existe_en_array){
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
+            }else{
+              if (tamanio === 0) {
+                // Si el array está vacío, simplemente agregamos los nuevos elementos
+                this.array_de_descuentos.push(...a);
+              } else {
+                // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
+                this.array_de_descuentos = this.array_de_descuentos.concat(a);
+              }
+  
+              this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "Descuento Agregado"+this.validacion_bool_descuento.resp });
+              return this.dataSource = new MatTableDataSource(this.array_de_descuentos);
             }
-            console.log(this.array_valida_detalle, tamanio);
-            //this.toastr.error(this.validacion_bool_descuento.resp);
-            return;
           }
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO SE PUEDE AGREGAR EL DESCUENTO' });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'ERROR AGREGAR EL DESCUENTO' });
         },
-        complete: () => {
-
-        }
+        complete: () => {  }
       })
   }
 
-  eliminarDesct(codigo) {
-    console.log(codigo);
+  // 2do UNA VEZ VALIDADO RECIEN AGREGAR
+  // anadirArray() {
+  //   this.array_de_descuentos === undefined ? []:this.array_de_descuentos;
+  //   let tamanio = this.array_de_descuentos_con_descuentos.length;
+  //   const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
+  //   console.log("🚀 ~ ModalDesctExtrasComponent ~ anadirArray ~ array_de_descuentos:", this.array_de_descuentos, this.info_descuento.codigo)
+  //   console.log(existe_en_array);
 
+  //   this.array_de_descuentos = this.array_de_descuentos_con_descuentos?.map((element) => ({
+  //     aplicacion: element.aplicacion,
+  //     codanticipo: element.codanticipo,
+  //     codcobranza: element.codcobranza,
+  //     codcobranza_contado: element.codcobranza_contado,
+  //     coddesextra: element.coddesextra,
+  //     codmoneda: element.codmoneda,
+  //     codproforma: element.codproforma,
+  //     id: element.id,
+  //     montodoc: element.montodoc,
+  //     montorest: element.montorest,
+  //     codigo: element.coddesextra,
+  //     descripcion: element.descripcion,
+  //     porcentaje: element.porcen,
+  //   }))
+
+  //   if (this.info_descuento.codigo === 74 && this.cabecera_proforma.tipopago === 1) {
+  //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'La Proforma es de tipo pago CREDITO lo cual no esta permitido para este descuento' });
+  //     setTimeout(() => {
+  //       this.spinner.hide();
+  //     }, 50);
+  //     return;
+  //   }
+
+  //   if (this.info_descuento) {
+  //     if (existe_en_array) {
+  //       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
+  //     } else {
+        
+  //       this.validarDescuento();
+  //       // if (tamanio > 0) {
+  //       //   console.log("HAY DESCUENTO EN EL ARRAY LA CARGA SE CONCATENA");
+  //       //   // Usar concat para agregar el nuevo descuento al array existente
+  //       //   if (this.validacion_bool_descuento.status === true) {
+  //       //     // Concatenar el nuevo descuento con los descuentos existentes
+  //       //     this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
+           
+  //       //   } else {
+  //       //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO VALIDO PARA SER AGREGADO' });
+  //       //   }
+  //       // } else {
+  //       //   console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
+          
+  //       //   // Inicializa el array si es undefined
+  //       //   this.array_de_descuentos = this.array_de_descuentos || [];
+  //       //   this.info_descuento = [this.info_descuento].map((element)=>({
+  //       //     ...element,
+  //       //   }));
+
+  //       //   // Usar push para agregar el elemento directamente al array
+  //       //   this.array_de_descuentos.push(this.info_descuento[0]);
+  //       // }
+  //     }
+  //   }
+  //   // this.dataSource = new MatTableDataSource(this.array_de_descuentos);
+  //   console.log(this.array_de_descuentos, tamanio);
+  // }
+
+  eliminarDesct(codigo) {
     this.array_valida_detalle = this.array_valida_detalle.filter(item => item.codigo !== this.array_valida_detalle.coddesextra);
     this.array_de_descuentos = this.array_de_descuentos.filter(item => item.codigo !== codigo);
     console.log(this.array_de_descuentos, this.array_valida_detalle);

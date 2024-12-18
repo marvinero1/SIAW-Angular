@@ -196,7 +196,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             this.router.navigate(['/']);
             setTimeout(() => {
               this.spinner.hide();
-            }, 1000);
+            }, 10);
           }
         },
 
@@ -204,12 +204,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 10);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1000);
+          }, 10);
         }
       })
   }

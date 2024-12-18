@@ -35,8 +35,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       switch (nombre_input) {
         case '':
           if (this.permiso_para_vista) {
+            if(this.valorCelda){
+              this.onCellClick1(this.valorCelda);
+            }
             this.getEmpaqueItem();
-            this.onCellClick1(this.valorCelda);
           }else{
             this.cant_empaque === 0;
             const focusElement = this.focusPedido1.nativeElement;
@@ -49,6 +51,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           }
           break;
         case 'focusEmpaque':
+          if(this.valorCelda){
+            this.onCellClick1(this.valorCelda);
+          }
+ 
           this.getEmpaqueItem();
           break;
         case 'focusPedido':
