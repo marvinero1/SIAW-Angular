@@ -82,7 +82,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     if (focusedElement) {
       const elementTagName = focusedElement.id;
       console.log(`Elemento enfocado: ${elementTagName}`);
-
       switch (elementTagName) {
         case "inputCatalogoIdTipo":
           this.modalTipoID();
@@ -128,11 +127,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️ ' });
   }
 
-  @HostListener("document:keydown.F6", []) unloadHandler4(event: Event) {
+  @HostListener("document:keydown.F6", []) unloadHandler3(event: Event) {
     this.modalMatrizProductos();
   }
 
-  @HostListener("document:keydown.enter", []) unloadHandler5(event: KeyboardEvent) {
+  @HostListener("document:keydown.enter", []) unloadHandler4(event: KeyboardEvent) {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
       const elementTagName = focusedElement.id;
@@ -150,15 +149,29 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     }
   };
 
-  @HostListener("document:keydown.F9", []) unloadHandler6(event: Event) {
+  @HostListener("document:keydown.F9", []) unloadHandler5(event: Event) {
     console.log("No se puede en proforma");
     event.preventDefault();
     this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️' });
   }
 
-  @HostListener("document:keydown.Delete", []) unloadHandler7(event: Event) {
+  @HostListener("document:keydown.Delete", []) unloadHandler6(event: Event) {
     console.log("Borrar items de detalle de carrito");
     this.onRowSelectForDelete();
+  }
+
+  @HostListener("document:keydown.backspace", []) unloadHandler7(event: Event) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "inputCatalogoCliente":
+          this.eventoBackspaceLimpiarCliente();
+          break;
+      }
+    }
   }
 
   @ViewChild("cod_cliente") myInputField: ElementRef;
@@ -7050,6 +7063,28 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         this.router.navigateByUrl('');
       }
     });
+  }
 
+  eventoBackspaceLimpiarCliente(){
+    this.codigo_cliente = "";
+    this.codigo_cliente_catalogo_real = "";
+    this.nombre_comercial_cliente = "";
+    this.nombre_factura = "";
+    this.razon_social = "";
+    this.complemento_ci = ""
+    this.nombre_comercial_razon_social = "";
+    this.tipo_doc_cliente = "";
+    this.nit_cliente = "";
+    this.email_cliente = "";
+    this.cliente_casual = false;
+    this.cliente_habilitado_get = "";
+    this.nombre_cliente_catalogo_real = "";
+
+    this.cod_vendedor_cliente = "31101";
+    
+    this.whatsapp_cliente = "0";
+    this.latitud_cliente = "0";
+    this.longitud_cliente = "0";
+    this.central_ubicacion = "";
   }
 }

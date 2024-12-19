@@ -130,11 +130,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     event.preventDefault();
   }
 
-  @HostListener("document:keydown.F6", []) unloadHandler4(event: Event) {
+  @HostListener("document:keydown.F6", []) unloadHandler3(event: Event) {
     this.modalMatrizProductos();
   }
 
-  @HostListener("document:keydown.enter", []) unloadHandler5(event: KeyboardEvent) {
+  @HostListener("document:keydown.enter", []) unloadHandler4(event: KeyboardEvent) {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
       const elementTagName = focusedElement.id;
@@ -152,18 +152,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  @HostListener("document:keydown.F9", []) unloadHandler6(event: Event) {
+  @HostListener("document:keydown.F9", []) unloadHandler5(event: Event) {
     console.log("No se puede en proforma");
     event.preventDefault();
     this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'TECLA DESHABILITADA ⚠️' });
-  }
+  };
 
-  @HostListener("document:keydown.Delete", []) unloadHandler7(event: Event) {
+  @HostListener("document:keydown.Delete", []) unloadHandler6(event: Event) {
     console.log("Borrar items de detalle de carrito");
     this.onRowSelectForDelete();
-  }
+  };
 
-  @HostListener("document:keydown.backspace", []) unloadHandler8(event: Event) {
+  @HostListener("document:keydown.backspace", []) unloadHandler7(event: Event) {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
       const elementTagName = focusedElement.id;
@@ -175,7 +175,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
       }
     }
-  }
+  };
 
   @ViewChild("input_cantidad_pedida") inputCantidadPedida: ElementRef;
   @ViewChild("cod_cliente") myInputField: ElementRef;
@@ -7330,6 +7330,5 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.latitud_cliente = "0";
     this.longitud_cliente = "0";
     this.central_ubicacion = "";
-
   }
 }

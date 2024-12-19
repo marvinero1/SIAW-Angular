@@ -40,7 +40,7 @@
                         ],
                         "scripts": [],
                         "vendorChunk": true,
-                        "extractLicenses": true,
+                        "extractLicenses": false,
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -106,13 +106,14 @@
                                     "with": "src/environments/environment.prod.ts"
                                 }
                             ],
+                            "vendorChunk": true,
+                            "extractLicenses": true,
+                            "buildOptimizer": true,
+                            "sourceMap": true,
                             "optimization": true,
                             "aot": true,
-                            "sourceMap": true,
-                            "namedChunks": true,
-                            "extractLicenses": true,
-                            "vendorChunk": true,
-                            "buildOptimizer": true,
+                            "namedChunks": false,
+                                                        
                             "budgets": [
                                 {
                                     "type": "initial",

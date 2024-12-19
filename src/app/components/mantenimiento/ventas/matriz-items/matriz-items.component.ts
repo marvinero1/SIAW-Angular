@@ -35,10 +35,19 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
       switch (nombre_input) {
         case '':
+          this.onCellClick1(this.valorCelda);
           if (this.permiso_para_vista) {
-            this.getEmpaqueItem();
             if(this.valorCelda){
-              this.onCellClick1(this.valorCelda);
+              if (!this.item_valido) {
+                console.log('¡ HOLA LOLA HAY ITEM    NO VALIDO !', this.item_valido, this.valorCelda);
+                this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
+                this.loseFocus();
+                return;
+              }else{
+                console.log("HOLA LOLA HAY ITEM VALIDO");
+                this.onCellClick1(this.valorCelda);
+                this.getEmpaqueItem();          
+              }
             }
           }else{
             this.cant_empaque === 0;
@@ -54,9 +63,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'focusEmpaque':
           if(this.valorCelda){
             this.onCellClick1(this.valorCelda);
-          }
-
-          this.getEmpaqueItem();
+            this.getEmpaqueItem();
+          }          
           break;
         case 'focusPedido':
           this.addItemArray();
@@ -506,14 +514,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           // console.log("SALDOS PARA LA VENTA: " + datav);
           this.saldoItem = datav.totalSaldo;
           this.saldoItem_number = parseInt(datav.totalSaldo);
-          console.log("🚀 ~ MatrizItemsComponent ~ .pipe ~ saldoItem_number:", this.saldoItem_number);
+          // console.log("🚀 ~ MatrizItemsComponent ~ .pipe ~ saldoItem_number:", this.saldoItem_number);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
@@ -792,6 +799,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   focusEmpaque() {
+
     // this.renderer.selectRootElement('#focusEmpaque').focus();
     const focusElement = this.focusEmpaqueElement.nativeElement;
     focusElement.focus();
@@ -833,11 +841,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       descripcion: this.descripcion_item,
       medida: this.medida_item,
       cantidad_empaque: this.cant_empaque,
-
       //aca funciona pero cuando se cierra la matriz toma valor 1 y empieza su orden de nuevo
       // orden_pedido: this.array_items_completo.length + 1,
       // nroitem: this.array_items_completo.length + 1,
-
       // aca
       orden_pedido: j + 1,
       nroitem: j + 1,
@@ -860,12 +866,17 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    // console.log("🚀 ~ MatrizItemsComponent ~ addItemArray ~ cleanText === this.item_set:", cleanText, this.item)
     if (!this.item_valido) {
       console.log('¡EL ITEM NO ESTA EN VENTA!', this.item_valido);
-      // this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
       return;
     }
 
+    if(cleanText != this.item){
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ NO ES EL ITEM SELECCIONADO, USTED ELIGIO EL ITEM !  '+ this.item });
+      return;
+    }
     // if (this.pedido === 0 || this.pedido === undefined) {
     //return;
     //}
@@ -900,12 +911,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(focusedElement.id);
     //ACA SE AGREGA CUANDO ELIJES SOLO 1 ITEM al carrito concatenando cuando elijes solo 1 xD
     this.array_items_completo = this.array_items_seleccionado.concat(this.item_seleccionados_catalogo_matriz);
-    // console.log("array_items_completo", this.array_items_completo,
+    console.log("array_items_completo", this.array_items_completo,)
     //   "ITEM SELECCIONADO UNITARIO:", this.array_items_seleccionado,
     //   "ITEM'S SELECCION MULTIPLE:", this.array_items_proforma_matriz,
     //   "TAMANIO CARRITO: ", this.array_items_completo.length, this.array_items_completo.length,
     //   this.array_items_seleccionado.length, this.array_items_proforma_matriz.length);
     this.tamanio_lista_item_pedido = this.array_items_completo.length;
+
 
     this.cant_empaque = null;
     this.pedido = null;
@@ -932,8 +944,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         // tarifa: this.tarifa_get,
         tarifa: elemento.tarifa === undefined ? this.cod_precio_venta_modal_codigo1 : elemento.tarifa,
         descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
-        cantidad_pedida: elemento.cantidad_pedida,
-        cantidad: elemento.cantidad,
+        cantidad_pedida: elemento.cantidad_pedida === null ? 0:elemento.cantidad_pedida,
+        cantidad: elemento.cantidad === null ? 0:elemento.cantidad,
         codcliente: this.codcliente_get,
         opcion_nivel: this.descuento_nivel_get?.toString(),
         codalmacen: this.codalmacen_get,
@@ -1162,34 +1174,54 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       focusElement.click();
     } else {
 
-      if (this.cant_empaque === undefined) {
-        this.cant_empaque = '';
-      }
-      if(this.cant_empaque !== ''){
-        return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
-        .subscribe({
-          next: (datav) => {
-            this.pedido = datav.total;
-            console.log("El total del empaque: ", this.pedido);
-          },
+    if(!this.item_valido){
+      console.log("ITEM VALIDO: ", this.item_valido);
 
-          error: (err: any) => {
-            this.pedido = null;
-            this.cantidad = this.pedido;
-            console.log(err, errorMessage);
-          },
-          complete: () => {
-            // console.clear();
-            const focusedElement = document.activeElement as HTMLElement;
-            focusedElement.id = nombre_input;
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
 
-            const focusElement = this.focusPedido1.nativeElement;
-            this.renderer.selectRootElement(focusElement).focus();
-            // this.focusPedido();
-            focusElement.click();
-          }
-        })
-      }
+      this.valorCelda = 0;
+      this.item_set = "";
+      this.descripcion_item = "";
+      this.medida_item = "";
+      this.porcen_item = "";
+
+      this.item_valido = undefined;
+      this.pedido = null;
+      this.cantidad = null;
+      this.num_hoja = null;
+      
+      this.loseFocus();
+      return;
+    }
+
+    if (this.cant_empaque === undefined) {
+      this.cant_empaque = '';
+    }
+    if(this.cant_empaque !== ''){
+      return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+      .subscribe({
+        next: (datav) => {
+          this.pedido = datav.total;
+          console.log("El total del empaque: ", this.pedido);
+        },
+
+        error: (err: any) => {
+          this.pedido = null;
+          this.cantidad = this.pedido;
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          // console.clear();
+          const focusedElement = document.activeElement as HTMLElement;
+          focusedElement.id = nombre_input;
+
+          const focusElement = this.focusPedido1.nativeElement;
+          this.renderer.selectRootElement(focusElement).focus();
+          // this.focusPedido();
+          focusElement.click();
+        }
+      })
+    }
     };
   }
 

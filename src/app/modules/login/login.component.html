@@ -1,10 +1,17 @@
 <div class="content" style="height: 100%;">
+
   <div class="row" style="height: 100%;">
+    <ngx-spinner bdColor="rgba(84, 84, 84, 0.8)" size="medium" color="#ffc107" type="pacman" [fullScreen]="true">
+      <br>
+      <p style="font-size: 25px; color: rgba(255, 255, 255, 0.8)">🔩 Cargando... 🔩</p>
+    </ngx-spinner>
+
+
     <div class="col-md-6 right">
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content login_content-login">
-            <img src="assets/img/logo.png" alt="Logo Pertec S.R.L" width="130px;" height="130px;"
+            <img src="assets/img/logo.png" alt="Logo Pertec S.R.L" width="120px;" height="120px;"
               style="display:block;margin: auto;">
               
             <div>
@@ -175,9 +182,9 @@
                 <mat-icon style="color: gray;">backspace</mat-icon> Atras
               </button>
 
-              <p class=" text-center">
+              <!-- <p class=" text-center">
                 <a [routerLink]="['/forgot-password']">Olvide mi contraseña</a>
-              </p>
+              </p> -->
             </div><br>
             <!-- bases de datos -->
 
@@ -276,11 +283,6 @@
         </div>
       </div>
     </div>
-
-    <ngx-spinner bdColor="rgba(84, 84, 84, 0.8)" size="medium" color="#ffc107" type="pacman" [fullScreen]="true">
-      <br>
-      <p style="font-size: 25px; color: rgba(255, 255, 255, 0.8)">🔩 Cargando... 🔩</p>
-    </ngx-spinner>
 
     <div class="col-md-6" id="bg-cover-login">
       <div class="bgImgCoverPages"></div>

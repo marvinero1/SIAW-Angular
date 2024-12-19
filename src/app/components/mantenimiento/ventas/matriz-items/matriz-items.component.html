@@ -24,9 +24,10 @@
           </a>
         </ng-container>
 
-        <button mat-raised-button color="primary" (click)="seleccionMultipleItemHotTable();" [disabled]="!item_valido"
-          id="seleccion">
-          <i class="fa fa-plus"></i> Selección
+        <button mat-raised-button color="primary" 
+          (click)="seleccionMultipleItemHotTable();" 
+          [disabled]="!item_valido"
+          id="seleccion"><i class="fa fa-plus"></i> Selección
         </button>&nbsp;
 
         <button mat-raised-button color="warn" (click)="limpiarMatriz();"><i class="fa fa-eraser"></i> Limpiar
@@ -35,6 +36,7 @@
         <button mat-raised-button color="primary" [matMenuTriggerFor]="menu">{{ tamanio_lista_item_pedido }}
           <i class="fa fa-cart-plus"></i> OK
         </button>&nbsp;
+
         <!-- MENU CARRITO DE COMPRAS-->
         <mat-menu #menu="matMenu" xPosition="after">
           <ng-container>
@@ -63,7 +65,7 @@
                   <td style="border: 1px solid #ffc107;" width="250">{{ array_items_completos.descripcion }}</td>
                   <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="175">
                     {{ array_items_completos.medida }} </td>
-                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.empaque }}</td>
+                  <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                   <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td>
@@ -100,6 +102,7 @@
             </button>
           </div>
         </mat-menu>
+        <!-- FIN MENU CARRITO DE COMPRAS-->
 
         <div style="float: right !important;">
           <mat-icon>mobile_friendly</mat-icon>
@@ -226,7 +229,7 @@
                 </td>
                 <td style="border: 1px solid #ffc107;height: auto;word-wrap: initial;line-height: 1.2;" width="200">
                   {{ array_items_completos.medida }} </td>
-                <td style="border: 1px solid #ffc107;">{{ array_items_completos.empaque }}</td>
+                <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_empaque }}</td>
                 <td style="border: 1px solid #ffc107;">{{ array_items_completos.tarifa }}</td>
                 <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad_pedida }}</td>
                 <!-- <td style="border: 1px solid #ffc107;">{{ array_items_completos.cantidad }}</td> -->

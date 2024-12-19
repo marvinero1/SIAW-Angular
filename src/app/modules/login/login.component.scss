@@ -2,7 +2,7 @@
     background: #093070 !important;
 }
 #bg-cover-login{
-    background: url('/assets/img/opcion2Bk.webp');
+    background: url('/assets/img/wallpaperCiudad.webp');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -35,24 +35,32 @@ a{
 .login_wrapper{
     right: 0;
     margin: 0 auto;
-    margin-top: 8%;
+    margin-top: 6%;
     max-width: 340px;
 }
 .mat-mdc-form-field{
     width: inherit !important;
 }
 .h1{
-    font: 400 25px 'Franklin Gothic Book',sans-serif;
-    letter-spacing: -.03em;
+    // font: 400 22px 'Franklin Gothic Book',sans-serif;
+    // letter-spacing: -.03em;
+    // line-height: 20px;
+    // margin: 30px 0px 32px;
+    // line-height : 22px;
+
+    font: 24px "Franklin Gothic Book", sans-serif;
+    letter-spacing: -0.03em;
     line-height: 20px;
-    margin: 30px 0px 32px;
-    line-height : 22px;
+    margin: 25px 0px 27px;
+    line-height: 30px;
 }
+
 .separator{
     border-top: 1px solid #d8d8d8;
     margin-top: 10px;
     padding-top: 10px;
 }
+
 .loginbutton{
     padding: 0 6px 0 6px;
     width: 100%;

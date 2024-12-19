@@ -136,6 +136,20 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     }
   };
 
+  @HostListener("document:keydown.backspace", []) unloadHandler8(event: Event) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+
+      switch (elementTagName) {
+        case "inputCatalogoCliente":
+          this.eventoBackspaceLimpiarCliente();
+          break;
+      }
+    }
+  }
+
   FormularioData: FormGroup;
   public submitted = false;
   public codigo_cliente: string;
@@ -4793,7 +4807,27 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.router.navigateByUrl('');
       }
     });
+  }
 
+  eventoBackspaceLimpiarCliente(){
+    this.codigo_cliente = "";
+    this.codigo_cliente_catalogo_real = "";
+    this.nombre_comercial_cliente = "";
+    this.nombre_factura = "";
+    this.razon_social = "";
+    this.complemento_ci = ""
+    this.nombre_comercial_razon_social = "";
+    this.tipo_doc_cliente = "";
+    this.nit_cliente = "";
+    this.email_cliente = "";
+    this.cliente_casual = false;
+    this.cliente_habilitado_get = "";
+
+    this.cod_vendedor_cliente = "31101";
+    
+    this.whatsapp_cliente = "0";
+    this.latitud_cliente = "0";
+    this.longitud_cliente = "0";
   }
   
   // getAlmacenParamUsuario() {

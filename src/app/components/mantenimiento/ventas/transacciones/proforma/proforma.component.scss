@@ -5,11 +5,11 @@
   background-color: transparent;
   color: black;
 }
-.btn-outline-secondary:hover {
-  color: #fff;
-  background-color: #093070;
-  border-color: #093070;
-}
+// .btn-outline-secondary:hover {
+//   color: #fff;
+//   background-color: #093070;
+//   border-color: #093070;
+// }
 .inputsSaldos{
   width: 5%;
   background-color: black;
@@ -41,8 +41,7 @@ mat-mdc-tab, mdc-tab {
 .blue {color: blue;}
 .gray{color: rgba(111, 111, 157, 0.824)}
 .brown {color: brown;}
-.black {color: black;}
-.green:hover, .yellow:hover, .red:hover, .blue:hover, .brown:hover, .black:hover {color: #fff;}
+.black {color: black;}.black:hover {color: #fff;}
 
 
 // Tabla SCSS

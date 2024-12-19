@@ -34,22 +34,32 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
       switch (nombre_input) {
         case '':
+        this.onCellClick1(this.valorCelda);
           if (this.permiso_para_vista) {
             if(this.valorCelda){
-              this.onCellClick1(this.valorCelda);
+              if (!this.item_valido) {
+                console.log('¡ HOLA LOLA HAY ITEM    NO VALIDO !', this.item_valido, this.valorCelda);
+                this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
+                this.loseFocus();
+                return;
+              }else{
+                console.log("HOLA LOLA HAY ITEM VALIDO");
+                this.onCellClick1(this.valorCelda);
+                this.getEmpaqueItem();          
+              }
             }
-            this.getEmpaqueItem();
           }else{
             this.cant_empaque === 0;
             const focusElement = this.focusPedido1.nativeElement;
             this.renderer.selectRootElement(focusElement).focus();
             focusElement.click();
-            this.onCellClick1(this.valorCelda);
+
             if(this.pedido != 0){
               this.addItemArray();
             }
           }
           break;
+
         case 'focusEmpaque':
           if(this.valorCelda){
             this.onCellClick1(this.valorCelda);
@@ -57,6 +67,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
  
           this.getEmpaqueItem();
           break;
+
         case 'focusPedido':
           this.addItemArray();
           //this.cant_empaque = undefined;
@@ -890,8 +901,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         // tarifa: this.tarifa_get,
         tarifa: elemento.tarifa === undefined ? this.cod_precio_venta_modal_codigo1 : elemento.tarifa,
         descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
-        cantidad_pedida: elemento.cantidad_pedida,
-        cantidad: elemento.cantidad,
+        cantidad_pedida: elemento.cantidad_pedida === null ? 0:elemento.cantidad_pedida,
+        cantidad: elemento.cantidad === null ? 0:elemento.cantidad,
         codcliente: this.codcliente_get,
         opcion_nivel: this.descuento_nivel_get?.toString(),
         codalmacen: this.codalmacen_get,
@@ -1121,36 +1132,58 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       focusElement.click();
     } else {
 
-      if (this.cant_empaque === undefined) {
-        this.cant_empaque = '';
-      }
-      if(this.cant_empaque !== ''){
-        return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
-        .subscribe({
-          next: (datav) => {
-            console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
-            this.pedido = datav.total;
-            console.log("El total del empaque: ", this.pedido);
-          },
+    if(!this.item_valido){
+      console.log("ITEM VALIDO: ", this.item_valido);
 
-          error: (err: any) => {
-            //this.pedido = null;
-            this.pedido = 0;
-            this.cantidad = this.pedido;
-            console.log(err, errorMessage);
-          },
-          complete: () => {
-            console.clear();
-            const focusedElement = document.activeElement as HTMLElement;
-            focusedElement.id = nombre_input;
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
 
-            const focusElement = this.focusPedido1.nativeElement;
-            this.renderer.selectRootElement(focusElement).focus();
-            // this.focusPedido();
-            focusElement.click();
-          }
-        })
-      }
+      this.cant_empaque = "";
+      this.valorCelda = 0;
+      this.item_set = "";
+      this.descripcion_item = "";
+      this.medida_item = "";
+      this.porcen_item = "";
+
+      this.item_valido = undefined;
+      this.pedido = null;
+      this.cantidad = null;
+      this.num_hoja = null;
+      
+      this.loseFocus();
+      return;
+    }
+
+    if (this.cant_empaque === undefined) {
+      this.cant_empaque = '';
+    }
+    
+    if(this.cant_empaque !== ''){
+      return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+      .subscribe({
+        next: (datav) => {
+          console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+          this.pedido = datav.total;
+          console.log("El total del empaque: ", this.pedido);
+        },
+
+        error: (err: any) => {
+          //this.pedido = null;
+          this.pedido = 0;
+          this.cantidad = this.pedido;
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          console.clear();
+          const focusedElement = document.activeElement as HTMLElement;
+          focusedElement.id = nombre_input;
+
+          const focusElement = this.focusPedido1.nativeElement;
+          this.renderer.selectRootElement(focusElement).focus();
+          // this.focusPedido();
+          focusElement.click();
+        }
+      })
+    }
     };
   }
 
