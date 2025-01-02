@@ -96,7 +96,9 @@
                             "core-js/modules/web.dom-collections.iterator.js",
                             "core-js/modules/es.string.replace.js",
                             "core-js/modules/es.string.starts-with.js"
-                        ]
+                        ],
+                        "serviceWorker": true,
+                        "ngswConfigPath": "ngsw-config.json"
                     },
                     "configurations": {
                         "production": {

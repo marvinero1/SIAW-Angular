@@ -16,11 +16,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   IP_api: any = [];
 
   userConn: any;
-
+  public agencia_storage: any;
+  
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
   constructor(private primengConfig: PrimeNGConfig) {
+		this.agencia_storage = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());

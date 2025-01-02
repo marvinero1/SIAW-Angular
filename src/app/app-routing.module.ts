@@ -122,6 +122,7 @@ import { FacturaTemplateComponent } from '@components/mantenimiento/ventas/trans
 import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/facturacion-mostrador-tiendas/facturacion-mostrador-tiendas.component';
 import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transacciones/proforma-movil/proforma-movil.component';
+import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -354,6 +355,29 @@ const routes: Routes = [
                 component: RegistrarInventarioGrupoComponent,
                 canActivate: [AuthGuard]
             },
+
+
+
+
+
+            // Inventarios
+            // transacciones
+            {
+                path: 'inventario/cruds/notaMovimiento',
+                component: NotamovimientoComponent,
+                canActivate: [AuthGuard]
+            },
+
+
+
+
+            
+
+
+
+
+
+
 
 
             //ventas

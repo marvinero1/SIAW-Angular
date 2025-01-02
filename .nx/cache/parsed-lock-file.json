@@ -936,6 +936,15 @@
         "hash": "sha512-/cglLev0USxUNMc4M+EBFGrqw1EpKq87LUJL3+0Ztr012sVSeOU38ad41fs6pPcMBePBDZIw7KmSXypvUJJFMA=="
       }
     },
+    "npm:@angular/service-worker": {
+      "type": "npm",
+      "name": "npm:@angular/service-worker",
+      "data": {
+        "version": "18.2.13",
+        "packageName": "@angular/service-worker",
+        "hash": "sha512-fVC943qEqGNUy923NMmSSzfoIqNw2k2UbG/3Y4QEmel/nZFWHA3PhiYr+lE7J3RhRHFMmnNP1bmXDJgy+R+pzA=="
+      }
+    },
     "npm:@babel/code-frame": {
       "type": "npm",
       "name": "npm:@babel/code-frame",
@@ -13161,6 +13170,11 @@
     },
     {
       "source": "npm:@angular-devkit/build-angular",
+      "target": "npm:@angular/service-worker",
+      "type": "static"
+    },
+    {
+      "source": "npm:@angular-devkit/build-angular",
       "target": "npm:karma",
       "type": "static"
     },
@@ -14136,6 +14150,11 @@
     },
     {
       "source": "npm:@angular/build",
+      "target": "npm:@angular/service-worker",
+      "type": "static"
+    },
+    {
+      "source": "npm:@angular/build",
       "target": "npm:less",
       "type": "static"
     },
@@ -14996,6 +15015,11 @@
     },
     {
       "source": "npm:@angular/router",
+      "target": "npm:tslib",
+      "type": "static"
+    },
+    {
+      "source": "npm:@angular/service-worker",
       "target": "npm:tslib",
       "type": "static"
     },

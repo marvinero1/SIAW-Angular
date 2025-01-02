@@ -17,7 +17,7 @@
 
 <mat-menu #transacacciones_inventarios="matMenu">
   <a mat-menu-item>Pedido</a>
-  <a mat-menu-item>Notas de Movimiento</a>
+  <a mat-menu-item (click)="guardarRutaLOG('notaMovimiento','/inventario/cruds/notaMovimiento');">Notas de Movimiento 🟡</a>
   <a mat-menu-item>Conocimiento de Carga</a>
   <a mat-menu-item>Solicitud de Mercaderia Urgente</a>
   <a mat-menu-item>Lote</a>
@@ -26,7 +26,7 @@
 
 <mat-menu #modificaciones_inventarios="matMenu">
   <a mat-menu-item>Pedido</a>
-  <a mat-menu-item>Notas de Movimiento</a>
+  <a mat-menu-item >Notas de Movimiento</a>
   <a mat-menu-item>Conocimiento de Carga</a>
   <a mat-menu-item>Solicitud de Mercaderia Urgente</a>
   <a mat-menu-item>Lote</a>

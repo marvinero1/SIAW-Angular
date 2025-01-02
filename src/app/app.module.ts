@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
+import { LOCALE_ID, NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER, isDevMode } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { DatePipe, PathLocationStrategy } from '@angular/common';
 import { LocationStrategy, DecimalPipe } from '@angular/common';
@@ -460,6 +460,7 @@ import { MessageService } from 'primeng/api';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
+import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -550,7 +551,7 @@ registerPlugin(UndoRedo);
         DialogConfirmacionComponent, BuscadorAvanzadoFacturasComponent, ModalDescuentosTiendaComponent,TranferirMostradorTiendasComponent, 
         EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
         ModalFormaPagoComponent, ModificarFacturacionMostradorTiendasComponent, ModalAnticiposComponent, ModalSubTotalMostradorTiendasComponent, FacturaTemplateComponent,
-        FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent,
+        FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
 
 
 
@@ -634,7 +635,10 @@ registerPlugin(UndoRedo);
             preventDuplicates: true,
             extendedTimeOut: 0, // No desaparecer cuando se detiene el hover
             tapToDismiss: true, // No se oculta al hacer clic
-        })],
+        }),
+
+        
+],
 
     providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
         MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,

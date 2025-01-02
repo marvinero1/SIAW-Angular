@@ -4067,7 +4067,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isChecked === true) {
       this.estado_contra_entrega_input = 'POR CANCELAR';
     } else {
-      this.estado_contra_entrega_input = 'vacio';
+      this.estado_contra_entrega_input = '';
     }
   }
 
