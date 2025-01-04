@@ -38,7 +38,8 @@
             <!-- BTN ANULAR -->
             <div>
               <ng-container>
-                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="validarSaldos();">
                   <span>
                     <mat-icon
                       style="color: #567284;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
@@ -83,8 +84,8 @@
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" type="button" 
-            matTooltip="Matriz Item Vendedores" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
+            matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
         
@@ -101,152 +102,591 @@
   <div class="content">
     <!-- cabecera -->
     <!-- <form class="example-form" [formGroup]="FormularioData"> -->
-      <div class="mat-elevation-z2 row">
+      <div class="mat-elevation-z2">
         <!-- primeraColumna -->
-        <div class="col-md-12 col-lg-12">
-          <div class="row">
-            <div class="col-md-7" style="padding-right: 0px;padding-left: 6.5px;">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID Nota Movimiento </u></span>
-                </div>
-
-                <ng-container>
-                  <!-- (blur)="onLeaveIDTipo($event)" -->
-                  <input type="text" class="form-control form-control-sm" formControlName="id"
-                   id="inputCatalogoIdTipo"
-                    style="margin-left: 17px;" [readonly]="true">
-                </ng-container>
-                
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" 
-                    [disabled]="true" style="border-color: #093070;" matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                  </button>
-                </div>
+        <div class="row">
+          <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID N. Movimiento</u></span>
               </div>
-            </div>
 
-            <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;">
-              <div class="input-group">
-                <input type="text" class="form-control form-control-sm" formControlName="numeroid">
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                    <u>Vendedor</u>
-                  </span>
-                </div>
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                    formControlName="codvendedor">
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button"
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
-                      class="fa fa-search"></i>
-                  </button>
-                </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id" [readonly]="true">
+              </ng-container>
+              
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" 
+                  matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                </button>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="numeroid" style="width: 113px;" readonly>
               </div>
             </div>
           </div>
 
+          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                  <u>Vendedor</u>
+                </span>
+              </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
+                  [(ngModel)]="codvendedor">
+              </ng-container>
 
-          <div class="row">
-            <div class="col-md-6">
-              <div class="input-group">
-                <div class="input-group-">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                    <u>
-                      <div class="invalid-feedback">
-                        <mat-icon matTooltipClass="custom-tooltip" matTooltip="Validar Almacen">info
-                        </mat-icon>
-                      </div> Almacen
-                    </u>
-                  </span>
-                </div>
-                <ng-container>
-                  <input type="text" class="form-control form-control-sm" 
-                    formControlName="codalmacen" id="inputCatalogoAlmacen" 
-                    style="margin-left: 7px;" readonly>
-                </ng-container>
-
-                <div class="input-group-append">
-                  <button class="btn btn-outline-primary form-control-sm" type="button" 
-                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
-                    [disabled]="true"><i class="fa fa-search"></i>
-                  </button>
-                </div>
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
+                    class="fa fa-search"></i>
+                </button>
               </div>
             </div>
           </div>
+          
+          <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;"></div>
 
-
-
-
-
-
-
-
-
-          <div class="input-group">
+          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
+                style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
+              <input type="date" id="fecha_actual" class="form-control form-control-sm" [(ngModel)]="fecha_actual">
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 21px;" formControlName="fecha" [readOnly]="true">
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
-            </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;">
-            <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" [readOnly]="true">
-          </div>          
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm" style="padding: 10px 0px 0px 0px;border: 0 !important;">
-               
-                <u>Preparación</u>
-              </span>
-            </div>
-            <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;">
-              <mat-option value="NORMAL">NORMAL</mat-option>
-              <mat-option value="URGENTE">URGENTE</mat-option>
-              <mat-option value="FINAL">FINAL</mat-option>
-              <mat-option value="URGENTE PROVINCIAS">URGENTE PROVINCIAS</mat-option>
-              <mat-option value="POR COMISIONISTA">POR COMISIONISTA</mat-option>
-              <mat-option value="CAJA CERRADA RECOGE CLIENTE">CAJA CERRADA RECOGE CLIENTE</mat-option>
-            </mat-select>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Tipo Cliente </u></span>
-            </div>
-            <!-- <span>{{tipo_cliente}}</span> -->
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;">
           </div>
         </div>
-        <!-- segundaColumna -->
-    
 
+        <div class="row">
+          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 42px 0px 0px;border: 0 !important;">
+                  <u>Almacen</u>
+                </span>
+              </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="codalmacen" id="inputCatalogoAlmacen" readonly>
+              </ng-container>
 
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
+                  [disabled]="true"><i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
 
+          <div class="col-md-3" style="padding-right: 6.5px;padding-left: 0px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Concepto</u></span>
+              </div>
 
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="id"
+                  id="inputCatalogoIdTipo" [readonly]="true">
+              </ng-container>
+              
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                  matTooltipClass="custom-tooltip" matTooltip="Buscar Concepto"><i class="fa fa-search"></i>
+                </button>
+                <input type="text" class="form-control form-control-sm" style="width: 109px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;"></div>
+
+          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Origen</u></span>
+              <input id="fecha_actual" type="text" class="form-control form-control-sm" 
+                formControlName="fecha" [readOnly]="true">
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Origen"><i
+                    class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 39px 0px 0px;border: 0 !important;">
+                  <u>Usr. Final</u>
+                </span>
+              </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="codalmacen" id="inputCatalogoAlmacen" readonly>
+              </ng-container>
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
+                  [disabled]="true"><i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-5" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Destino</u></span>
+              <input id="fecha_actual" type="text" class="form-control form-control-sm" [readOnly]="true">
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Destino"><i
+                    class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 51px 0px 0px;border: 0 !important;">
+                  <u>Cliente</u>
+                </span>
+              </div>
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="codalmacen" id="inputCatalogoAlmacen" readonly>
+              </ng-container>
+
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Cliente"
+                  [disabled]="true"><i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-5" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;"></div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5" style="padding-right:  6.5px;padding-left: 6.5px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 22px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
+              <input id="fecha_actual" type="text" class="form-control form-control-sm" >
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>ID-NroID Origen</u></span>
+              </div>
+
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="id"
+                  id="inputCatalogoIdTipo" [readonly]="true">
+              </ng-container>
+              
+              <div class="input-group-append">
+                <input type="text" class="form-control form-control-sm" formControlName="id"
+                id="inputCatalogoIdTipo" [readonly]="true">
+
+                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                  [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"> Habilitar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-1" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          <div class="col-md-4" style="padding-right: 6.5px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Proforma Solicitud Urgente</u></span>
+              </div>
+
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="id"
+                  id="inputCatalogoIdTipo" [readonly]="true">
+              </ng-container>
+              
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                  [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                </button>
+                <input type="text" class="form-control form-control-sm" [readonly]="true">
+              </div>
+            </div>
+          </div>
+        </div>
+     
+        <div class="row">
+          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+            <div class="input-group">
+              <div class="input-group-">
+                <span class="input-group-text form-control-sm"
+                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Proforma de Almacen</u></span>
+              </div>
+
+              <ng-container>
+                <input type="text" class="form-control form-control-sm" formControlName="id"
+                  id="inputCatalogoIdTipo" [readonly]="true">
+              </ng-container>
+              
+            </div>
+          </div>
+
+          <div class="col-md-9">
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" 
+                [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID">
+                Cargar PF Sol. Urgente
+              </button>
+
+              <input type="text" class="form-control form-control-sm" formControlName="id"
+              id="inputCatalogoIdTipo" [readonly]="true" style="width: 19%;">
+
+              <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+               matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente">
+              </button>
+
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text form-control-sm"
+                    style="padding: 0px 0px 0px 7px;border: 0 !important;"><u>Desarmar Conjuntos</u></span>
+                </div>
+                <div class="input-group-prepend">
+                  <div class="input-group-text" style="border: 0 !important;">
+                    <input type="checkbox" formControlName="contra_entrega" >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     <!-- </form> -->
     <!-- finCabezera -->
-  </div>
 
+
+    <!-- InicioTabla -->
+    <div class="row">
+      <div class="col">
+        <mat-tab-group  class="miTabGroupDetalle" #tabGroup>
+          <mat-tab label="Items">
+            <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
+            styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
+            [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
+            (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="item" class="center1" (click)="modalCatalogoProductos()"
+                  style="text-align: left !important; cursor: pointer;width:7%;">
+                  <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;
+                  <u>Item</u>
+                  <p-sortIcon field="item" />
+                </th>
+                <th pSortableColumn="descripcion" style="width:40%;text-align: left;">
+                  Descripción
+                  <p-sortIcon field="descripcion" />
+                </th>
+                <th pSortableColumn="medida" class="center1" style="width:8%">
+                  Medida
+                </th>
+                <th pSortableColumn="ud" class="center1" style="width:4%">
+                  Unidad
+                </th>
+                <th pSortableColumn="pedido" class="center1" style="width:7%">
+                  Cod Aduana
+                  <p-sortIcon field="pedido" />
+                </th>
+                <th pSortableColumn="cantidad" class="right1" style="width:8%">
+                  Cantidad
+                  <p-sortIcon field="cantidad" />
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-products let-rowIndex="rowIndex" >
+              <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
+                [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
+                (click)="itemDataAll(products?.coditem)">
+                <td class="left">
+                  <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
+                    padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
+                  </i>&nbsp;&nbsp;&nbsp;
+                  {{ products?.coditem }}
+                </td>
+                <td class="left">{{ products.descripcion }}</td>
+                <td class="center1">{{ products.medida }}</td>
+                <td class="center1">{{ products.udm }}</td>
+                <td class="center1">0</td>
+
+                <!-- COLUMNA CANTIDAD -->
+                <td class="right1" >
+                  <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                    <ng-template pTemplate="input">
+                      <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
+                    </ng-template>
+
+                    <ng-template pTemplate="output">
+                      <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
+                    </ng-template>
+                  </p-cellEditor>
+                </td>
+                <!-- FIN COLUMNA CANTIDAD -->
+              </tr>
+            </ng-template>
+          </p-table>
+          </mat-tab>
+
+          <mat-tab label="Resultado Validacion Saldos">
+            
+          </mat-tab>
+
+          <mat-tab label="Obs. Validar Cantidades Con Decimales">
+            
+          </mat-tab>
+
+          <mat-tab label="Obs. Validar Saldos">
+            
+          </mat-tab>
+          
+          <mat-tab label="Saldos Negativos">
+            <table mat-table [dataSource]="dataSource_negativos" class="mat-elevation-z8" matSort>
+              <!-- kit Column -->
+              <ng-container matColumnDef="kit">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Kit </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.kit }}</td>
+              </ng-container>
+
+              <!-- N° Parte Column -->
+              <ng-container matColumnDef="nro_partes">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"> N° Parte</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.nro_partes }}</td>
+              </ng-container>
+
+              <!-- Cod. Item Conjunto Column -->
+              <ng-container matColumnDef="coditem_cjto">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cod. Item Conjunto</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coditem_cjto }}</td>
+              </ng-container>
+
+              <!-- Cod. Item Conjunto Column -->
+              <ng-container matColumnDef="coditem_suelto">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cod. Item Suelto</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coditem_suelto }}
+                </td>
+              </ng-container>
+
+              <!-- Cod. Item Conjunto Column -->
+              <ng-container matColumnDef="codigo">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cod. Item</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.codigo }}</td>
+              </ng-container>
+
+              <!-- Cod. Item Conjunto Column -->
+              <ng-container matColumnDef="descitem">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Descripción - Medida
+                </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: left !important; padding: 0 0px 0 0px !important">{{ element.descitem }}</td>
+              </ng-container>
+
+              <!-- Cantidad Column -->
+              <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cant. </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
+                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad) }}</td>
+              </ng-container>
+
+              <!-- Cantidad Pedida en Conjunto Column -->
+              <ng-container matColumnDef="cantidad_conjunto">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cant. Pedida en
+                  Conjunto </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: right !important; padding: 0 0px 0 0px
+                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad_conjunto) }}
+                </td>
+              </ng-container>
+
+              <!-- CSaldo Real Column -->
+              <ng-container matColumnDef="saldo_sin_descontar_reservas">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Saldo Real </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: right !important;">
+                  {{ formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas) }}</td>
+              </ng-container>
+
+              <!-- Cantidad Pedida en Suelto Column -->
+              <ng-container matColumnDef="cantidad_suelta">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important"> Cant. Pedida en Suelto
+                </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: right !important; padding: 0px 2px 0px 9px !important;">
+                  {{ formatNumberTotalSubTOTALES(element.cantidad_suelta) }}
+                </td>
+              </ng-container>
+
+              <!-- Cantidad Reserva Conjunto Column -->
+              <ng-container matColumnDef="cantidad_reservada_para_cjtos">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important">Cant. Reserva Conjunto
+                </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: right !important;">
+                  {{ formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos)}}</td>
+              </ng-container>
+
+              <!-- Cantidad Reserva Conjunto Column -->
+              <ng-container matColumnDef="saldo_descontando_reservas">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important">Saldo Para Venta Suelta
+                </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: right !important;">
+                  {{ formatNumberTotalSubTOTALES(element.saldo_descontando_reservas) }}</td>
+              </ng-container>
+
+              <!-- Observacion Column -->
+              <ng-container matColumnDef="obs">
+                <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
+                  style="padding: 0 0px 0 0px !important">Obs. </th>
+                <td mat-cell *matCellDef="let element" class="mat-column-negativos"
+                  style="text-align: center !important; padding: 0 0px 0 0px !important">
+                  <ng-container *ngIf="element.obs === 'Genera Negativo'; else obs1 ">
+                    <strong style="color: red;">{{ element.obs }}</strong>
+                  </ng-container>
+                  <ng-template #obs1>
+                    <strong style="color: green;">{{ element.obs }}</strong>
+                  </ng-template>
+                </td>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="displayedColumnsNegativos"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumnsNegativos;"></mat-row>
+            </table>
+
+            <div class="row fixed-bottom-bar" style="background-color: #000000 !important;">
+              <div class="col-md" style="float: left;">
+                <mat-slide-toggle (click)="negativosTodosFilterToggle()" [checked]="toggleTodosNegativos">
+                  <span style="color:#ff8000 !important">Todos los Items</span>
+                </mat-slide-toggle>
+              </div>
+              <div class="col-md" style="float: left;">
+                <mat-slide-toggle (click)="negativosPositivosFilterToggle()" [checked]="togglePositivos">
+                  <span style="color:#ff8000 !important">Solo Items Que NO Generan Saldos Negativos</span>
+                </mat-slide-toggle>
+              </div>
+              <div class="col-md" style="float: left;">
+                <mat-slide-toggle (click)="negativosNegativosFilterToggle()" [checked]="toggleNegativos"><span
+                    style="color:#ff8000 !important">Saldo
+                    Items Que SI Generan Saldos Negativos</span>
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+
+    <div mat-dialog-footer class="footersito">
+      <div class="row">
+        <div class="col-md-10">
+          <!-- Saldos -->
+          <div class="row pl-2">
+            <input type="text" class="inputsSaldos inputsSaldos2"
+              value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem }}"
+              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+              placeholder="0.00">
+
+            <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
+              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+
+              <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+              <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5"
+                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+            </ng-container>
+          </div>
+          <!-- finSaldos -->
+        </div>
+
+        <div class="col-md-2" style="height: calc(1.4rem + 2px) !important;margin-block-end: 5px;float:right;">
+          <div class="row">
+            <div class="col">
+              <span class="input-group-text form-control-sm"
+                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
+            </div>
+  
+            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+              <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
+              <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
+            </div>
+  
+            <div class="col text-left">
+              <button class="btn btn-outline-primary form-control-sm" type="button" 
+               (click)="totabilizar();" style="border-color: #093070;">
+                <mat-icon>monetization_on</mat-icon>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

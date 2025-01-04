@@ -40,21 +40,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
-    this.mandarNombre();
-    this.getHoraFechaServidorBckEnd();
-    // this.toatsQA();
 
     const fecha = new Date();
     this.fecha_transform = this.datePipe.transform(fecha, "yyyy-MM-dd");
   }
 
   ngOnInit(): void { 
-    this.getRolUserParaVentana();
     // this.graficarVentasSIAWvsSIA();
+    
+    this.getRolUserParaVentana();
+    this.mandarNombre();
+    this.getHoraFechaServidorBckEnd();
   }
 
   ngAfterViewInit(): void {
@@ -93,7 +92,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           this.rol = datav.codrol;
           console.log(this.rol);
           //aca toda la logica segun el rol
-          switch (this.rol) {
+          switch (datav.codrol) {
             case 'ADM_GERENC_CORP':
               this.getVentasUsuarioGerencia();
               break;
@@ -152,7 +151,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           //TODOS
-          this.resultado_proformas_filtrado = datav;
+          this.resultado_proformas_filtrado = datav.slice(0, 15);
           // console.log("Info Ventas Gerencia: ", this.resultado_proformas_filtrado);
         },
 

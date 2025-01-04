@@ -2495,7 +2495,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tipopago = zip_json.cabeceraList[0].tipopago;
     this.tipo_cliente = zip_json.clienteList[0].tipo;
 
-    this.medio_transporte = zip_json.cabeceraList[0].transporte;
+    this.medio_transporte = zip_json.cabeceraList[0].nombre_transporte;
+    this.transporte= zip_json.cabeceraList[0].transporte;
     this.fletepor = zip_json.cabeceraList[0].fletepor;
     this.tipoentrega = zip_json.cabeceraList[0].tipoentrega;
     this.peso = zip_json.cabeceraList[0].peso;
@@ -2505,7 +2506,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.venta_cliente_oficina = zip_json.cabeceraList[0].venta_cliente_oficina;
     this.tipo_cliente = zip_json.cabeceraList[0].tipo === undefined ? " " : " ";
     this.tipo_cliente = zip_json.clienteList[0].tipo;
-
 
     this.direccion = zip_json.cabeceraList[0].direccion;
     this.whatsapp_cliente = zip_json.cabeceraList[0].celular;
@@ -2518,7 +2518,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
    
     this.whatsapp_cliente = zip_json.etiquetaList[0].celular;
 
-
     this.ubicacion_central = zip_json.cabeceraList[0].ubicacion;
     this.preparacion = zip_json.cabeceraList[0].preparacion;
 
@@ -2527,7 +2526,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.array_de_descuentos_ya_agregados = zip_json.descuentoList;
     this.veproforma_iva = zip_json.ivaList;
     this.total = zip_json.cabeceraList[0].total;
-
 
     this.item_seleccionados_catalogo_matriz = zip_json.detalleList[0];
     this.veproforma1 = zip_json.detalleList[0];
@@ -2548,13 +2546,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       element.nroitem = index + 1;
       element.orden = index + 1;
     });
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+      ...element,
+      cumple: element.cumple === 1 ? true:false
+    }));
     
     this.etiqueta_get_modal_etiqueta = zip_json.etiquetaList;
     this.veproforma_iva = zip_json.ivaList;
     this.recargo_de_recargos = zip_json.recargoList;
     //this.tabla_anticipos = zip_json.detalleAnticipos = null ? [] : zip_json.detalleAnticipos[0];
     this.tabla_anticipos = [];
-
 
     this.getNombreDeDescuentos(zip_json.descuentoList);
 

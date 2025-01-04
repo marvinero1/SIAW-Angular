@@ -868,7 +868,7 @@
 
                       <ng-template pTemplate="output">
                         <ng-container
-                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
+                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1" >
                           <span>{{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
                           <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
