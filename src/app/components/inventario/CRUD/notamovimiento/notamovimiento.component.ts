@@ -23,6 +23,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
 import { CatalogonotasmovimientosComponent } from '../catalogonotasmovimientos/catalogonotasmovimientos.component';
+import { CatalogoNotasMovimientoService } from '../catalogonotasmovimientos/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
+import { CatalogoMovimientoMercaderiaComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/catalogo-movimiento-mercaderia/catalogo-movimiento-mercaderia.component';
 
 @Component({
   selector: 'app-notamovimiento',
@@ -112,7 +114,8 @@ export class NotamovimientoComponent implements OnInit {
       private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
       private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
       private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, 
-      private _snackBar: MatSnackBar,  public nombre_ventana_service: NombreVentanaService, private router: Router) { 
+      private _snackBar: MatSnackBar,  public nombre_ventana_service: NombreVentanaService, private router: Router, 
+      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
 
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -179,6 +182,24 @@ export class NotamovimientoComponent implements OnInit {
       this.saldo_modal_total_5 = data.saldo5;
     });
     //FIN SALDOS ITEM PIE DE PAGINA
+
+
+    //Vendedor
+    this.serviciovendedor.disparadorDeVendedores.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Vendedor: ", data);
+      this.codvendedor = data.vendedor.codigo;
+      //si se cambia de vendedor, los totales tambien se cambian
+      this.total = 0.00;
+    });
+    //finVendedor
+    
+    // Catalogo Notas de Movimiento
+    this.servicioNotasMovimientoCatalogo.disparadorDeCatalogoNotasMovimiento.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+       console.log("Recibiendo ID Catalogo Notas Movimiento: ", data);
+       this.id = data.id_nota_movimiento.codigo;
+       this.numeroid = data.id_nota_movimiento.nroactual;
+    });
+    //
   }
 
   codalmacen:any;
@@ -776,7 +797,7 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
-
+  CatalogoMovimientoMercaderiaComponent
 
 
 
@@ -830,6 +851,14 @@ export class NotamovimientoComponent implements OnInit {
         // //itemss: this.item_seleccionados_catalogo_matriz_sin_procesar,
         // descuento_nivel: this.desct_nivel_actual,
       },
+    });
+  }
+
+  modalCatalogoConceptos(){
+    this.dialog.open(CatalogoMovimientoMercaderiaComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
     });
   }
 

@@ -140,9 +140,9 @@
               </ng-container>
 
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
+                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
-                    class="fa fa-search"></i>
+                  class="fa fa-search"></i>
                 </button>
               </div>
             </div>
@@ -194,7 +194,8 @@
               </ng-container>
               
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
+                <button class="btn btn-outline-primary form-control-sm" type="button"
+                 style="border-color: #093070;" (click)="modalCatalogoConceptos();"
                   matTooltipClass="custom-tooltip" matTooltip="Buscar Concepto"><i class="fa fa-search"></i>
                 </button>
                 <input type="text" class="form-control form-control-sm" style="width: 109px;">

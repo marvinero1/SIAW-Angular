@@ -4,6 +4,7 @@ import { TipoidService } from '@components/mantenimiento/ventas/serviciotipoid/t
 import { ApiService } from '@services/api.service';
 import { veNumeracion } from '@services/modelos/objetos';
 import { Table } from 'primeng/table';
+import { CatalogoNotasMovimientoService } from './servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 
 @Component({
   selector: 'app-catalogonotasmovimientos',
@@ -39,9 +40,11 @@ export class CatalogonotasmovimientosComponent implements OnInit {
   @ViewChildren('para') paras: QueryList<ElementRef>;
 
   constructor(public dialogRef: MatDialogRef<CatalogonotasmovimientosComponent>, private api: ApiService,
-    public servicioTipoID: TipoidService) {
+    public servicioTipoID: TipoidService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) {
+
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.user = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
   }
 
   ngOnInit() {
@@ -97,9 +100,8 @@ export class CatalogonotasmovimientosComponent implements OnInit {
   }
 
   mandarTipoId() {
-    this.servicioTipoID.disparadorDeIDTipo.emit({
-      id_tipo: this.tipo_view,
-      // numero_id:
+    this.servicioNotasMovimientoCatalogo.disparadorDeCatalogoNotasMovimiento.emit({
+      id_nota_movimiento: this.tipo_view,
     });
     this.close();
   }
