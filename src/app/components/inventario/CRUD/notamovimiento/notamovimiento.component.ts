@@ -25,6 +25,11 @@ import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-v
 import { CatalogonotasmovimientosComponent } from '../catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { CatalogoNotasMovimientoService } from '../catalogonotasmovimientos/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { CatalogoMovimientoMercaderiaComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/catalogo-movimiento-mercaderia/catalogo-movimiento-mercaderia.component';
+import { MovimientomercaderiaService } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/serviciomovimientomercaderia/movimientomercaderia.service';
+import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component';
+import { ServicioCatalogoProformasService } from '@components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
+import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
+import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 
 @Component({
   selector: 'app-notamovimiento',
@@ -55,18 +60,49 @@ export class NotamovimientoComponent implements OnInit {
     }
   };
 
+
   //Formulario
   id:any;
   numeroid:any;
   codvendedor:any;
 
 
-  // fin formulario
+  id_concepto:any;
+  id_concepto_descripcion:any;
 
   FormularioData: FormGroup;
   dataform: any = '';
   fecha_actual: any;
   hora_actual: any;
+
+  id_proforma_catalogo:any;
+  numero_id_catalogo_proforma:any;
+  observaciones:any;
+  descripcion_id_catalogo_proforma:any;
+  codalmacen:any;
+  hora_fecha_server:any;
+  cod_cliente:any;
+  id_origen:any;
+  nroid_origen:any;
+  // fin formulario
+
+  // TAB OBSERVACIONES
+  eventosLogs:any=[];
+  // FIN TAB OBSERVACIONES
+
+
+  // Validacion Negativos
+  validacion_post_negativos_filtrados_solo_negativos: any = [];
+  validacion_post_negativos_filtrados_solo_positivos: any = [];
+
+  toggleTodosNegativos: boolean = false;
+  toggleNegativos: boolean = false;
+  togglePositivos: boolean = false;
+  // Fin Validacion Negativos
+
+
+
+
 
   private unsubscribe$ = new Subject<void>();
 
@@ -97,14 +133,16 @@ export class NotamovimientoComponent implements OnInit {
   almacn_parame_usuario_almacen:any;
   cod_precio_venta_modal_codigo:any;
   cod_descuento_modal:any;
-  public saldoItem: number;
 
+  public saldoItem: number;
   saldo_modal_total_1: any;
   saldo_modal_total_2: any;
   saldo_modal_total_3: any;
   saldo_modal_total_4: any;
   saldo_modal_total_5: any;
-
+  // fin saldos
+  
+  
   userConn:any;
   usuarioLogueado:any;
   agencia_logueado:any;
@@ -113,8 +151,9 @@ export class NotamovimientoComponent implements OnInit {
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
       private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
       private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
-      private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, 
+      private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
       private _snackBar: MatSnackBar,  public nombre_ventana_service: NombreVentanaService, private router: Router, 
+      public servicioCatalogoProformas: ServicioCatalogoProformasService,
       private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
 
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -134,7 +173,7 @@ export class NotamovimientoComponent implements OnInit {
 
     //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
-      // console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
+      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
       // console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
 
       if (this.array_items_carrito_y_f4_catalogo.length === 0) {
@@ -149,10 +188,6 @@ export class NotamovimientoComponent implements OnInit {
         ...element,
         codaduana: ""
       }));
-
-      this.codigoAduanaItems(this.array_items_carrito_y_f4_catalogo);
-      this.ponerDui(this.array_items_carrito_y_f4_catalogo);
-      this.getValidaCantDecimal(this.array_items_carrito_y_f4_catalogo);
     });
     //
 
@@ -183,7 +218,6 @@ export class NotamovimientoComponent implements OnInit {
     });
     //FIN SALDOS ITEM PIE DE PAGINA
 
-
     //Vendedor
     this.serviciovendedor.disparadorDeVendedores.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Vendedor: ", data);
@@ -200,12 +234,75 @@ export class NotamovimientoComponent implements OnInit {
        this.numeroid = data.id_nota_movimiento.nroactual;
     });
     //
+
+    // Catalogo Conceptos
+    this.movimientoMercaderia.disparadorDeConceptos.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo ID de Concepto: ", data);
+      this.id_concepto = data.concepto.codigo;
+      this.id_concepto_descripcion = data.concepto.descripcion;
+
+      this.validarPorConcepto(data.concepto.codigo);
+    });
+    //
+
+    // Catalogo Proformas
+    this.servicioCatalogoProformas.disparadorDeIDProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo ID de Proforma: ", data);
+      this.id_proforma_catalogo = data.proforma.id;
+      this.descripcion_id_catalogo_proforma = data.proforma.descripcion;
+    });
+    //
+
+    //Almacen
+    this.almacenservice.disparadorDeAlmacenes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Almacen: ", data,  this.almacen_seleccionado);
+      if(this.almacen_seleccionado === "Origen"){
+        this.codalmorigenText = data.almacen.codigo
+      }
+
+      if(this.almacen_seleccionado === "Destino"){
+        this.codalmdestinoText = data.almacen.codigo
+      }
+
+      if(this.almacen_seleccionado === "Almacen"){
+        this.cod_almacen = data.almacen.codigo
+      }
+      
+    });
+    //
   }
 
-  codalmacen:any;
+  almacen_seleccionado:any;
+  cod_almacen:any;
+  cargar_proforma:boolean;
+  cvenumeracion1:boolean;
+  chkdesglozar_cjtos:boolean;
+
+  codalmdestinoReadOnly:boolean;
+  codalmorigenReadOnly:boolean;
+  fidEnable:boolean;
+  fnumeroidEnable:boolean;
+  codpersonadesdeReadOnly:boolean;
+  codclienteReadOnly:boolean;
+  cargar_proformaEnabled:boolean;
+  cvenumeracion1Enabled:boolean;
+  id_proforma_solReadOnly:boolean;
+  numeroidproforma_solReadOnly:boolean;
+
+  codalmdestinoText:any;
+  codalmorigenText:any;
+  cumple:any;
+
+  factor:any;
+  traspaso:boolean;
+  es_tienda:boolean;
+  es_ag_local:boolean;
+  ver_ch_es_para_invntario:boolean;
+  obtener_cantidades_aprobadas_de_proformas:boolean;
+
   getParametrosIniciales(){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getParametrosInicialesNM/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/getParametrosInicialesNM/' + this.userConn+"/"+this.usuarioLogueado+"/"+this.BD_storage)
+    return this.api.getAll('/inventario/transac/docinmovimiento/getParametrosInicialesNM/'+this.userConn+"/"+this.usuarioLogueado+"/"+this.BD_storage)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
         console.log("🚀 ~ NotamovimientoComponent ~ .getParametrosIniciales ~ getParametrosIniciales:", datav);
@@ -215,14 +312,34 @@ export class NotamovimientoComponent implements OnInit {
           this.codvendedor = datav.codvendedor;
           this.codalmacen = datav.codalmacen;
 
-          // codalmacendescripcion: "ALMACEN CENTRAL",
-          // chkdesglozar_cjtos: false,
-          // cargar_proforma: false,
-          // cvenumeracion1: false,
-          // obtener_cantidades_aprobadas_de_proformas: false,
-          // es_ag_local: false,
-          // es_tienda: false,
-          // ver_ch_es_para_invntario: false
+          //this.cargar_proforma = datav.cargar_proforma; omitido
+          this.cvenumeracion1 = datav.cvenumeracion1;
+          this.chkdesglozar_cjtos = datav.chkdesglozar_cjtos;
+
+          this.es_tienda = datav.es_tienda;
+          this.es_ag_local = datav.es_ag_local;
+          this.ver_ch_es_para_invntario = datav.ver_ch_es_para_invntario;
+          this.obtener_cantidades_aprobadas_de_proformas = datav.obtener_cantidades_aprobadas_de_proformas;
+
+          this.fidEnable = datav.dataPorConcepto.fidEnable;
+          this.fnumeroidEnable = datav.dataPorConcepto.fnumeroidEnable;
+          this.codpersonadesdeReadOnly = datav.dataPorConcepto.codpersonadesdeReadOnly;
+          this.codclienteReadOnly = datav.dataPorConcepto.codclienteReadOnly;
+
+          this.cargar_proformaEnabled = datav.dataPorConcepto.cargar_proformaEnabled;
+
+          this.codalmorigenReadOnly = datav.dataPorConcepto.codalmorigenReadOnly;
+          this.codalmorigenText = datav.dataPorConcepto.codalmorigenText;
+
+          this.codalmdestinoReadOnly = datav.dataPorConcepto.codalmdestinoReadOnly;
+          this.codalmdestinoText = datav.dataPorConcepto.codalmdestinoText;
+
+          this.cvenumeracion1Enabled = datav.dataPorConcepto.cvenumeracion1Enabled;
+          this.id_proforma_solReadOnly = datav.dataPorConcepto.id_proforma_solReadOnly;
+          this.numeroidproforma_solReadOnly = datav.dataPorConcepto.numeroidproforma_solReadOnly;
+
+          this.traspaso = datav.dataPorConcepto.traspaso;
+          this.factor = datav.dataPorConcepto.factor;
         },
 
 
@@ -234,19 +351,34 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  getValidaCantDecimal(items){
+  getValidaCantDecimal(){
+    let item_a_revisar;
+
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getValidaCantDecimal/";
-    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn, items)
+    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ getValidaCantDecimal ~ datav:", datav)
+          console.log("🚀 ~ NotamovimientoComponent ~ getValidaCantDecimal ~ datav:", datav);
+          this.cumple = datav.cumple;
+          
+          datav.detalleObs.forEach(element => {
+            item_a_revisar = element;
+          });
+
+          if(item_a_revisar === undefined){
+            // si no hay observaciones entra aca
+            this.openConfirmacionDialog("EL DETALLE CUMPLE");
+          }else{
+            this.openConfirmacionDialog(datav.cabecera+"\n"+datav.resp+"\n"+"Item a Revisar: "+item_a_revisar);
+            this.eventosLogs = datav.detalleObs;
+            this.eventosLogs = this.eventosLogs.map(log => ({ label: log }));
+          }
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => {  }
       })
   }
 
@@ -257,7 +389,7 @@ export class NotamovimientoComponent implements OnInit {
         next: (datav) => {
           // console.log(datav);
           this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
-          // this.hora_fecha_server = datav.horaServidor;
+          this.hora_fecha_server = datav.horaServidor;
           // console.log(this.fecha_actual, this.hora_fecha_server);
         },
 
@@ -337,9 +469,9 @@ export class NotamovimientoComponent implements OnInit {
     let array = {
       codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
-      codalmorigen: 0,
-      codalmdestino: 0,
-      codconcepto: 0,
+      codalmorigen: this.codalmorigenText,
+      codalmdestino: parseInt(this.codalmdestinoText),
+      codconcepto: this.id_concepto,
       tabladetalle: this.array_items_carrito_y_f4_catalogo
     };
 
@@ -348,33 +480,41 @@ export class NotamovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
+          this.cumple = datav.cumple;
           if(datav.cumple){
             this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+            this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "SALDOS VALIDADOS ✅" });
+            //aca mensaje datav.alerta
+            if(datav.alerta){
+              this.openConfirmacionDialog(datav.alerta);
+            }
           }
-        
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "OCURRIO UN ERROR" });
         },
         complete: () => {
         }
       })
   }
 
-  codigoAduanaItems(items){
+  codigoAduanaItems(){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/copiarAduana/' + this.userConn, items)
+    return this.api.create('/inventario/transac/docinmovimiento/copiarAduana/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
+        console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav);
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "CODIGO ADUANA CON EXITO ✅" });
+        this.array_items_carrito_y_f4_catalogo = datav;
         },
 
         error: (err: any) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "FALLO CODIGO ADUANA" });
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
@@ -383,31 +523,63 @@ export class NotamovimientoComponent implements OnInit {
     return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
-        this.total = datav.total;
+          console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
+          this.total = datav.total;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
-  ponerDui(items){
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
-    return this.api.create('/inventario/transac/docinmovimiento/ponerDui/' + this.userConn + "/" + this.agencia_logueado, items)
+  validarPorConcepto(concepto){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/eligeConcepto/";
+    return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/'+this.userConn+"/"+concepto+"/"+this.agencia_logueado)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
+        console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
+
+          this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
+          this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
+          this.traspaso = datav.traspaso;
+          this.fidEnable = datav.fidEnable;
+          this.fnumeroidEnable = datav.fnumeroidEnable;
+          this.codpersonadesdeReadOnly = datav.codpersonadesdeReadOnly;
+          this.codalmdestinoText = datav.codalmdestinoText;
+          this.codalmorigenText = datav.codalmorigenText;
+          this.factor = datav.factor;
+          this.codclienteReadOnly = datav.codclienteReadOnly;
+          this.cargar_proformaEnabled = datav.cargar_proformaEnabled;
+          this.cvenumeracion1Enabled = datav.cvenumeracion1Enabled;
+          this.id_proforma_solReadOnly = datav.id_proforma_solReadOnly;
+          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly;      
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => { }
+      })
+  }
+
+  ponerDui(){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
+    return this.api.create('/inventario/transac/docinmovimiento/ponerDui/' + this.userConn + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
+        this.array_items_carrito_y_f4_catalogo = datav;
+
+        this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "PONER DUI COMPLETADO ✅" });
+        },
+
+        error: (err: any) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "PONER DUI COMPLETADO" });
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
       })
   }
 
@@ -535,17 +707,135 @@ export class NotamovimientoComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
+  cargarProformaSolicitudUrgente(){
+    let array_PF = {
+      codempresa: this.BD_storage,
+      usuario: this.usuarioLogueado,
+      id_proforma_sol: this.id_proforma_catalogo,
+      numeroidproforma_sol: this.numero_id_catalogo_proforma,
+      codconcepto: this.id_concepto,
+      desglozar_cjtos: this.chkdesglozar_cjtos
+    }
+    console.log("🚀 ~ NotamovimientoComponent ~ cargarProformaSolicitudUrgente ~ array_PF:", array_PF)
+
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/CargardeProforma/";
+    return this.api.create('/inventario/transac/docinmovimiento/CargardeProforma/'+this.userConn, array_PF)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ cargarProformaSolicitudUrgente:", datav);
+          if(datav.resultado){
+            this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+            this.codalmacen = datav.codalmorigen;
+            this.observaciones = datav.obs;
+          }
+          
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  limpiar(){
+    this.array_items_carrito_y_f4_catalogo = [];
+    this.eventosLogs = [];
+
+    this.total = 0;
+    this.id_concepto = "";
+    this.id_concepto_descripcion = "";
+    this.observaciones = "";
+    this.id_proforma_catalogo= "";
+    this.descripcion_id_catalogo_proforma = "";
+    this.numero_id_catalogo_proforma = 0;
+    this.chkdesglozar_cjtos = false;
+    this.codalmorigenText = "";
+    this.codalmdestinoText = "";
+
+
+    this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "Nota de Movimiento Limpia ✅" });
+
+    this.getParametrosIniciales();
+  }
+
+
+
+
+
+  guardarNotaMovimiento(){
+    let array_PF = {
+      cabecera:{
+        id: this.id,
+        numeroid: this.numeroid,
+        fecha: this.fecha_actual,
+        codalmacen: this.cod_almacen,
+        codalmorigen: this.codalmorigenText,
+        codalmdestino: this.codalmdestinoText,
+        obs: this.observaciones,
+        codvendedor: this.codvendedor,
+        codcliente: this.cod_cliente === undefined ? "0":this.cod_cliente,
+        usuarioreg: this.usuarioLogueado,
+        factor: this.factor,
+        fid: this.id_origen,
+        fnumeroid: this.nroid_origen,
+        
+        idproforma: this.id_proforma_catalogo === undefined ? "0":this.id_proforma_catalogo,
+        numeroidproforma: this.descripcion_id_catalogo_proforma === undefined ? 0:this.descripcion_id_catalogo_proforma,
+
+        horareg: this.hora_fecha_server,
+        fechareg: this.fecha_actual,
+        fecha_inicial: this.fecha_actual,
+
+        contabilizada: false,
+        anulada: false,
+        peso: 0,
+
+        codpersona: 0,
+        idproforma_sol: this.id_proforma_catalogo,
+        numeroidproforma_sol: this.numero_id_catalogo_proforma,
+        codconcepto: this.id_concepto,
+
+
+        //este datos nay ni en parametroIniciales
+        comprobante: null,
+      },
+
+
+      tablaDetalle:this.array_items_carrito_y_f4_catalogo
+    }
+    console.log("🚀 ~ NotamovimientoComponent ~ guardarNotaMovimiento ~ array_PF:", array_PF)
+
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
+    return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/'+this.userConn+"/"+this.BD_storage+"/"+this.traspaso, array_PF)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
+
+          
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
   // NEGATIVOS
-  validacion_post_negativos_filtrados_solo_negativos: any = [];
-  validacion_post_negativos_filtrados_solo_positivos: any = [];
-
-  toggleTodosNegativos: boolean = false;
-  toggleNegativos: boolean = false;
-  togglePositivos: boolean = false;
-
   // validarProformaSoloNegativos() {
   //   console.clear();
   //   // 00060 - VALIDAR SALDOS NEGATIVOS
@@ -737,6 +1027,64 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
+  //Importar to ZIP
+  async onFileChangeZIP(event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+
+    if (file.type === 'application/x-zip-compressed' || file.type === 'application/zip') {
+      // Crear un FormData y agregar el archivo
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      this.api.cargarArchivo('/venta/transac/veproforma/importProfinJson/', formData)
+        .subscribe({
+          next: (datav) => {
+            //console.log(datav);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
+            this.imprimir_zip_importado(datav);
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 500);
+          },
+          error: (err: any) => {
+            console.log(err);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'ERROR AL CARGAR EL ARCHIVO ❌' });
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 500);
+          },
+          complete: () => {
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 500);
+          }
+        });
+    } else {
+      console.error('Please upload a valid ZIP file.');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SOLO SELECCIONAR FORMATO .ZIP ❌' });
+    }
+  }
+
+  isZipFile(file: File): boolean {
+    return file.name.endsWith('.zip');
+  }
+
+  readFile(file: File): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.onerror = error => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  imprimir_zip_importado(zip_json) {
+    this.spinner.show();
+    console.log(zip_json);
+  }
+  //FIN Importar ZIP
 
 
 
@@ -797,9 +1145,28 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
-  CatalogoMovimientoMercaderiaComponent
 
 
+
+  modalAlmacen(almacen): void {
+    this.dialog.open(ModalAlmacenComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { almacen: "almacen" }
+    });
+
+    this.almacen_seleccionado = almacen;
+    console.log("🚀 ~ NotamovimientoComponent ~ modalAlmacen ~ this.almacen_seleccionado:", this.almacen_seleccionado)
+  }
+
+  catalogoProformas(){
+    this.dialog.open(CatalogoProformasComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
+  }
 
   modalTipoID(): void {
     this.dialog.open(CatalogonotasmovimientosComponent, {
@@ -860,6 +1227,30 @@ export class NotamovimientoComponent implements OnInit {
       height: 'auto',
       disableClose: true,
     });
+  }
+
+  openConfirmationDialog(message: string): Promise<boolean> {
+    //btn si/no
+    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+
+  openConfirmacionDialog(message: string): Promise<boolean> {
+    //btn aceptar
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
   }
 
   modalMatrizClasica(): void {

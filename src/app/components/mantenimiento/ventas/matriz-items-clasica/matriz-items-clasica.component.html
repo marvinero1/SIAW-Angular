@@ -194,8 +194,7 @@
                 min="0" 
                 [(ngModel)]="cant_empaque"
                 #focusEmpaque 
-                (click)="focusInput()" 
-                (keydown)="handleKeyDown($event)">
+                (click)="focusInput()">
             </mat-form-field>&nbsp;
           </ng-container>
           
@@ -205,16 +204,13 @@
           
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Pedido</mat-label>
-            <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido"
-              (keydown)="handleKeyDown($event)" #focusPedido>
+            <input type="number" matInput id="focusPedido" maxlength="7" min="0" [(ngModel)]="pedido" #focusPedido>
           </mat-form-field>&nbsp;
 
           <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
             <mat-label>Cantidad</mat-label>
-            <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0"
-              (keydown)="handleKeyDown($event)" [value]="pedido">
+            <input type="number" matInput [(ngModel)]="cantidad" id="focusCantidad" maxlength="7" min="0" [value]="pedido">
           </mat-form-field>
-
           <!-- <mat-icon (click)="loseFocus()">bug_report</mat-icon> -->
         </div>
       </div>

@@ -141,6 +141,14 @@
           </button>
           <mat-menu #beforeMenu="matMenu" xPosition="before">
             <mat-list role="list">
+              
+              <mat-list-item role="listitem" class="list-button">
+                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
+                  (click)="refreshLogin()">
+                  <i class="fa fa-key" ></i>&nbsp; Re-Ingresar
+                </button>
+              </mat-list-item>
               <!-- <mat-list-item role="listitem" class="list-button"> -->
               <!-- <button class="btn btn-outline-secondary form-control-sm" type="button">
                   <i class="fa fa-window-restore blue" ></i> 
@@ -219,7 +227,7 @@
             <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;">
               <div class="input-group">
                 <input type="text" class="form-control form-control-sm" formControlName="numeroid"
-                  [(ngModel)]="id_proforma_numero_id" [readonly]="true">
+                  [(ngModel)]="id_proforma_numero_id" readonly>
               </div>
             </div>
           </div>
@@ -230,7 +238,7 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
             </div>
             <input id="fecha_actual" type="text" class="form-control form-control-sm" style="margin-left: 21px;"
-              formControlName="fecha" [(ngModel)]="fecha_actual" [readOnly]="true">
+              formControlName="fecha" [(ngModel)]="fecha_actual" readOnly>
             <input id="fechareg" type="text" formControlName="fechareg" [(ngModel)]="fecha_actual" hidden>
             <input id="hora" type="text" formControlName="hora" [(ngModel)]="hora_fecha_server" hidden>
             <input id="hora_inicial" type="text" formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" hidden>
@@ -246,9 +254,9 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Fecha Hr </u></span>
             </div>
             <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(ngModel)]="fecha_actual"
-              [readOnly]="true" formControlName="fecha_inicial">
+              readOnly formControlName="fecha_inicial">
             <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-              formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" [readOnly]="true">
+              formControlName="hora_inicial" [(ngModel)]="hora_fecha_server" readOnly>
           </div>
 
           <div class="row">
@@ -337,8 +345,7 @@
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Tipo Cliente </u></span>
             </div>
-            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente"
-              [readOnly]="true">
+            <input type="text" class="form-control form-control-sm" style="margin-left: 6px;" [(value)]="tipo_cliente" readOnly>
           </div>
         </div>
 
@@ -759,7 +766,7 @@
                   </th>
                   <th pSortableColumn="orden" class="center1" style="width:4%;">
                     Orden
-                    <p-sortIcon class="iconGrid" field="orden" />
+                    <!-- <p-sortIcon class="iconGrid" field="orden" /> -->
                   </th>
                   <th pSortableColumn="item" style="width:9%;" class="center1" (click)="modalCatalogoProductos()"
                     style="text-align: center !important; cursor: pointer;">
@@ -1567,7 +1574,7 @@
                           readonly> -->
                         <input type="text" class="form-control form-control-sm"
                           style="margin-left: 7px;background-color: #ffff00;color: black;"
-                          formControlName="tipoentrega" [(ngModel)]="tipoentrega" [readOnly]="true">
+                          formControlName="tipoentrega" [(ngModel)]="tipoentrega" readOnly>
 
                         <div class="input-group-append">
                           <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1630,22 +1637,21 @@
 
                         <ng-container>
                           <!-- <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
-                            formControlName="ubicacion" [readonly]="true"> -->
+                            formControlName="ubicacion" readonly> -->
                           <input type="text" class="input-group-text form-control-sm" style="margin-left: 5px;"
-                            formControlName="ubicacion" [(ngModel)]="ubicacion_central" [readonly]="true">
+                            formControlName="ubicacion" [(ngModel)]="ubicacion_central" readonly>
                         </ng-container>
 
                         <!-- <ng-template #central_ubicacion1>
                           <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                            formControlName="ubicacion" [readonly]="true">
+                            formControlName="ubicacion" readonly>
                         </ng-template> -->
                         <div class="input-group-prepend">
                           <span class="input-group-text form-control-sm"
                             style="padding: 10px 0px 0px 4px;border: 0 !important;"><u>Orden de Compra</u></span>
                         </div>
 
-                        <input type="text" class="form-control form-control-sm" style="margin-left: 5px;"
-                          [readOnly]="true" formControlName="odc">
+                        <input type="text" class="form-control form-control-sm" style="margin-left: 5px;" readOnly formControlName="odc">
                       </div>
                     </div>
                   </div>
@@ -2459,34 +2465,34 @@
           <div class="row pl-2">
             <input type="text" class="inputsSaldos inputsSaldos2"
               value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem }}"
-              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" readOnly
               placeholder="0.00">
 
             <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
               <span style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" readOnly placeholder="0.00">
             </ng-container>
           </div>
           <!-- finSaldos -->

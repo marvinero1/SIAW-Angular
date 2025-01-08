@@ -101,7 +101,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
 
   @HostListener("click", []) unloadHandler(event: KeyboardEvent) {
     if(this.valorCelda){
+      console.log("🚀 ~ MatrizItemsClasicaComponent ~ @HostListener ~ this.valorCelda:", this.valorCelda)
       this.onCellClick1(this.valorCelda);
+    }else{
+      console.log("🚀 evento vacio", this.valorCelda)
     }
   };
 
@@ -354,34 +357,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.focusEmpaqueElement.nativeElement.focus();
   }
 
-  handleKeyDown(event: KeyboardEvent) {
-    // para borrar los inputs
-    if (event.key === 'Backspace') {
-
-      const focusedElement = document.activeElement as HTMLElement;
-      let nombre_input = focusedElement.id;
-      console.log(`Elemento enfocado Matriz: ${nombre_input}`);
-
-      console.log("Hola Lola en el input", nombre_input);
-
-      if (nombre_input === 'focusEmpaque') {
-        this.cant_empaque = 0;
-      }
-
-      if (nombre_input === '') {
-        this.cant_empaque = 0;
-      }
-
-      if (nombre_input === 'focusPedido') {
-        this.pedido = 0;
-      }
-
-      if (nombre_input === 'focusCantidad') {
-        this.cantidad = 0;
-      }
-    }
-  }
-
   togglePrecio() {
     if (this.precio) {
       this.precio = false;
@@ -514,7 +489,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.id_tipo = datav;
-          console.log(datav);
+          // console.log(datav);
 
           this.saldoItem = datav.totalSaldo;
           this.saldoItem_number = parseInt(datav.totalSaldo);
@@ -583,89 +558,46 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       })
   }
 
+  private hot: Handsontable | null = null; // Mantener una referencia a la instancia de Handsontable
   initHandsontable(hojas, permiso): void {
     var self = this;
 
     const container = document.getElementById('example');
-    const hot = new Handsontable(container, {
+    // Si ya existe una instancia de Handsontable, simplemente actualiza los datos
+    if (this.hot) {
+      this.hot.loadData(hojas); // Actualiza los datos
+      return; // Salir de la función
+    }
+    // Si no existe, inicializa Handsontable
+    this.hot = new Handsontable(container, {
       data: hojas,
       manualRowResize: false,
       manualColumnResize: false,
       dropdownMenu: true,
       contextMenu: false,
-      filters: true,
+      filters: false,
       licenseKey: 'non-commercial-and-evaluation',
       rowHeaders: false,
       colHeaders: true,
       selectionMode: 'multiple',
       navigableHeaders: true, // New accessibility feature
       tabNavigation: true, // New accessibility feature
+      viewportRowRenderingOffset: 55, // Ajusta según sea necesario
+      viewportColumnRenderingOffset: 13, // Ajusta según sea necesario
       columns: [
-        {
-          data: 'a',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'b',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'c',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'd',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'e',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'f',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'g',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'h',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'i',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'j',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'k',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'l',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'm',
-          type: 'text',
-          readOnly: true,
-        },
+        { data: 'a', type: 'text', readOnly: true },
+        { data: 'b', type: 'text', readOnly: true },
+        { data: 'c', type: 'text', readOnly: true },
+        { data: 'd', type: 'text', readOnly: true },
+        { data: 'e', type: 'text', readOnly: true },
+        { data: 'f', type: 'text', readOnly: true },
+        { data: 'g', type: 'text', readOnly: true },
+        { data: 'h', type: 'text', readOnly: true },
+        { data: 'i', type: 'text', readOnly: true },
+        { data: 'j', type: 'text', readOnly: true },
+        { data: 'k', type: 'text', readOnly: true },
+        { data: 'l', type: 'text', readOnly: true },
+        { data: 'm', type: 'text', readOnly: true },
       ],
       className: 'my-custom-row-class',
 
@@ -694,7 +626,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
             }else{
               console.log("ENTER PARA ENVIAR ITEM A CARRITO B");
     
-              this.cant_empaque = 0;
+              // this.cant_empaque = 0;
               // const focusedElement = document.activeElement as HTMLElement;
               // focusedElement.id = nombre_input;
     
@@ -708,13 +640,56 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       }
     });
 
-    hot.addHook('afterSelectionEnd', () => {
-      const selectedCoords = hot.getSelected();
+    // Interceptar el evento Enter y mantener la selección
+    // hot.addHook('beforeKeyDown', (event: KeyboardEvent) => {
+    //   const selectedCoords = hot.getSelected();
+    //   const focusedElement = document.activeElement as HTMLElement;
+    //   let nombre_input = focusedElement.id;
+
+    //   if (event.key === 'Enter' && selectedCoords) {
+    //     event.preventDefault(); // Evitar el movimiento por defecto
+    //     const [startRow, startCol] = selectedCoords[0];
+    //     console.warn(`Elemento enfocado Matriz: ${nombre_input}`);
+    //     hot.selectCell(startRow, startCol); // Esto fuerza la selección en la misma celda
+    //     switch (nombre_input) {
+    //       case "":
+    //         console.log("HOLA LOLA");
+    //           this.focusEmpaque();
+    //           const focusElement = this.focusEmpaqueElement.nativeElement.focus();
+    //           focusElement.focus();
+
+    //         break;
+    //       case "focusEmpaque":
+    //         this.getEmpaqueItem();
+          
+    //         break;
+    //       case "focusPedido":
+    //         this.addItemArray();
+    //         this.cantidad = this.pedido;
+    //         console.log("🚀 ~ MatrizItemsComponent ~ hot.addHook ~ cantidad:", this.cantidad, this.pedido)
+            
+    //         break;
+    //       default:
+    //         break;
+    //     }
+        
+    //     // Vuelve a seleccionar la celda actual para evitar que se mueva
+    //     setTimeout(() => {
+    //       hot.selectCell(startRow, startCol); // Esto fuerza la selección en la misma celda
+    //     });
+
+    //     const cellData = hot.getDataAtCell(startRow, startCol);
+    //     this.onCellClick1(cellData); // Ejecuta la función
+    //   }
+    // });
+
+    this.hot.addHook('afterSelectionEnd', () => {
+      const selectedCoords = this.hot.getSelected();
       if (selectedCoords) {
         const [startRow, startCol] = selectedCoords[0];
         // console.log('Coordenada de la celda seleccionada:', startRow, startCol);
         // Obtener la data de la celda seleccionada
-        const cellData = hot.getDataAtCell(startRow, startCol);
+        const cellData = this.hot.getDataAtCell(startRow, startCol);
         this.valorCelda = cellData;
         // console.log('Data de la celda seleccionada:', cellData);
 
@@ -722,8 +697,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       }
     });
 
-    hot.addHook('afterSelectionEndByProp', () => {
-      const selectedRanges = hot.getSelectedRange();
+    this.hot.addHook('afterSelectionEndByProp', () => {
+      const selectedRanges = this.hot.getSelectedRange();
       // Verificar si se ha seleccionado algún rango
       if (selectedRanges && selectedRanges.length > 0) {
         const data = [];
@@ -738,7 +713,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           // Iterar sobre las celdas dentro del rango y agregar sus valores al array
           for (let row = startRow; row <= endRow; row++) {
             for (let col = startCol; col <= endCol; col++) {
-              const cellValue = hot.getDataAtCell(row, col);
+              const cellValue = this.hot.getDataAtCell(row, col);
               data.push(cellValue.replace(/\s+/g, " ").trim());
             }
           }
@@ -775,6 +750,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   }
 
   addItemArray() {
+    // console.log( this.item_set, this.valorCelda);
     // this.array_items_proforma_matriz.length = this.array_items_completo.length;
     let i = this.array_items_completo.length + 1;
     let j = this.array_items_completo.length + this.array_items_proforma_matriz.length;
@@ -784,7 +760,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     //aca es cuando el focus esta en pedido y se le da enter para que agregue al carrito
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
     //LONGITUD DEL CARRITO DE COMPRAS
-    // console.log(this.tamanio_carrito);
+    console.log(cleanText);
 
     let array = {
       coditem: cleanText,
@@ -894,7 +870,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.spinner.show();
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
-    // console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
+    // console.log(this.array_items_completo);
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
@@ -910,15 +886,13 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
         // empaque: this.cant_empaque,
-        empaque: this.cant_empaque === undefined || this.cant_empaque === 0 ?
-          parseInt(elemento.cantidad_empaque || 0) :
-          parseInt(this.cant_empaque || 0),
+        empaque: elemento.cantidad_empaque === undefined ? parseInt(elemento.cantidad_empaque || 0) : parseInt(elemento.cantidad_empaque || 0),
         orden_pedido: elemento.nroitem,
         nroitem: elemento.nroitem,
       }
     });
 
-    // console.log(a);
+    //  console.log(a);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
     return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, a)
@@ -950,7 +924,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           }
 
           this.dialogRef.close();
-          this.num_hoja = 0;
+          //this.num_hoja = 0;
           setTimeout(() => {
             this.spinner.hide();
           }, 50);
@@ -1113,6 +1087,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
 
   getEmpaqueItem() {
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
+    console.log("🚀 ~ MatrizItemsClasicaComponent ~ getEmpaqueItem ~ cleanText:", cleanText, this.item_set)
     var d_tipo_precio_desct: string;
     let nombre_input: string = "focusPedido"
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
@@ -1128,16 +1103,12 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       focusedElement.id = nombre_input;
 
       const focusElement = this.focusPedido1.nativeElement;
-      this.renderer.selectRootElement(focusElement).focus();
       focusElement.click();
     } else {
 
     if(!this.item_valido){
-      console.log("ITEM VALIDO: ", this.item_valido);
-
+      console.log("ITEM NO ESTA A LA VENTA: ", this.item_valido);
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
-
-      this.cant_empaque = "";
       this.valorCelda = 0;
       this.item_set = "";
       this.descripcion_item = "";
@@ -1145,46 +1116,49 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       this.porcen_item = "";
 
       this.item_valido = undefined;
-      this.pedido = null;
-      this.cantidad = null;
-      this.num_hoja = null;
+      // this.pedido = null;
+      // this.cantidad = null;
+      // this.num_hoja = null;
       
       this.loseFocus();
       return;
     }
 
-    if (this.cant_empaque === undefined) {
-      this.cant_empaque = '';
+    console.log(this.cant_empaque);
+
+    if (this.cant_empaque === undefined || this.cant_empaque === 0 || this.cant_empaque === null) {
+      // this.cant_empaque = 0;
+
+      const focusElement = this.focusEmpaqueElement.nativeElement.focus();
+      focusElement.focus();
     }
-    
+
     if(this.cant_empaque !== ''){
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
       .subscribe({
         next: (datav) => {
-          console.log('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
           this.pedido = datav.total;
+          this.cant_empaque = this.cant_empaque;
           console.log("El total del empaque: ", this.pedido);
+          console.log( this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
         },
 
         error: (err: any) => {
-          //this.pedido = null;
-          this.pedido = 0;
+          this.pedido = null;
           this.cantidad = this.pedido;
           console.log(err, errorMessage);
         },
         complete: () => {
-          console.clear();
+          // console.clear();
           const focusedElement = document.activeElement as HTMLElement;
           focusedElement.id = nombre_input;
 
           const focusElement = this.focusPedido1.nativeElement;
-          this.renderer.selectRootElement(focusElement).focus();
-          // this.focusPedido();
+
           focusElement.click();
         }
       })
-    }
-    };
+    }};
   }
 
   getAlmacenesSaldos() {

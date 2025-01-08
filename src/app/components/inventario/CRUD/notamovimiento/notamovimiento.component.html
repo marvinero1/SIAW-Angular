@@ -20,7 +20,7 @@
               </button> | &nbsp;
 
               <ng-container>
-                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="guardarNotaMovimiento();">
                   <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
                 </button>
               </ng-container>
@@ -29,7 +29,7 @@
             <!-- BTN GRABAR Y APROBAR -->
             <div>
               <ng-container>
-                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="limpiar();" type="button">
                   <span><i class="fa fa-eraser"  style="color: #ffc107;"></i> Limpiar</span>
                 </button>
               </ng-container>
@@ -51,9 +51,10 @@
 
             <!-- BTN VALIDAR -->
             <div>
-              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                type="button" (click)="codigoAduanaItems();"
                 matTooltip="Validar" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-                <span>   <mat-icon
+                <span><mat-icon
                   style="color: #05970c;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
                   description</mat-icon>
                   Copiar Cod. Aduana
@@ -61,14 +62,15 @@
               </button>
             </div>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="ponerDui();" type="button">
               <span>
                 <mat-icon
                   style="color: #05970c;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
                   description</mat-icon> Poner DUI
               </span>
             </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="getValidaCantDecimal();"
+             type="button">
               <span>
                 <mat-icon
                   style="color: #567284;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
@@ -90,9 +92,11 @@
           </button>
         
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" >
-            <i class="fa fa-cogs blue" aria-hidden="true"></i>
+            matTooltip="Importar ZIP" (click)="fileInput.click()">
+            <i class="fa fa-file-archive blue"></i>
           </button>
+
+          <input type="file" #fileInput (change)="onFileChangeZIP($event)" accept=".zip" style="display: none;" />
         </div>
       </div>
     </div>
@@ -113,7 +117,7 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
               </ng-container>
               
               <div class="input-group-append">
@@ -135,8 +139,7 @@
                 </span>
               </div>
               <ng-container>
-                <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor"
-                  [(ngModel)]="codvendedor">
+                <input type="text" class="form-control form-control-sm" id="inputCatalogoVendedor" [(ngModel)]="codvendedor">
               </ng-container>
 
               <div class="input-group-append">
@@ -163,8 +166,7 @@
           <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
             <div class="input-group">
               <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 42px 0px 0px;border: 0 !important;">
+                <span class="input-group-text form-control-sm" style="padding: 10px 42px 0px 0px;border: 0 !important;">
                   <u>Almacen</u>
                 </span>
               </div>
@@ -174,8 +176,8 @@
 
               <div class="input-group-append">
                 <button class="btn btn-outline-primary form-control-sm" type="button" 
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
-                  [disabled]="true"><i class="fa fa-search"></i>
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen" disabled>
+                  <i class="fa fa-search"></i>
                 </button>
               </div>
             </div>
@@ -189,16 +191,17 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="id"
-                  id="inputCatalogoIdTipo" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_concepto"
+                  id="inputCatalogoIdTipo" readonly>
               </ng-container>
               
               <div class="input-group-append">
                 <button class="btn btn-outline-primary form-control-sm" type="button"
-                 style="border-color: #093070;" (click)="modalCatalogoConceptos();"
+                  style="border-color: #093070;" (click)="modalCatalogoConceptos();"
                   matTooltipClass="custom-tooltip" matTooltip="Buscar Concepto"><i class="fa fa-search"></i>
                 </button>
-                <input type="text" class="form-control form-control-sm" style="width: 109px;">
+                <input type="text" class="form-control form-control-sm" 
+                  [(ngModel)]="id_concepto_descripcion" style="width: 175px !important;">
               </div>
             </div>
           </div>
@@ -209,12 +212,10 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Origen</u></span>
-              <input id="fecha_actual" type="text" class="form-control form-control-sm" 
-                formControlName="fecha" [readOnly]="true">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="codalmorigenText" [readOnly]="codalmorigenReadOnly">
 
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Origen"><i
+                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen('Origen');" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Origen"><i
                     class="fa fa-search"></i>
                 </button>
               </div>
@@ -232,13 +233,13 @@
                 </span>
               </div>
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="codalmacen" id="inputCatalogoAlmacen" readonly>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="cod_almacen" [readonly]="codpersonadesdeReadOnly">
               </ng-container>
 
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" 
+                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen('Almacen');"
                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen"
-                  [disabled]="true"><i class="fa fa-search"></i>
+                  disabled><i class="fa fa-search"></i>
                 </button>
               </div>
             </div>
@@ -249,10 +250,10 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Destino</u></span>
-              <input id="fecha_actual" type="text" class="form-control form-control-sm" [readOnly]="true">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="codalmdestinoText" [readOnly]="codalmdestinoReadOnly">
 
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
+                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen('Destino');"
                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Destino"><i
                     class="fa fa-search"></i>
                 </button>
@@ -265,19 +266,18 @@
           <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
             <div class="input-group">
               <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 51px 0px 0px;border: 0 !important;">
+                <span class="input-group-text form-control-sm" style="padding: 10px 51px 0px 0px;border: 0 !important;">
                   <u>Cliente</u>
                 </span>
               </div>
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="codalmacen" id="inputCatalogoAlmacen" readonly>
+                <input type="text" class="form-control form-control-sm" id="inputCatalogoAlmacen" [(ngModel)]="cod_cliente" [readonly]="codclienteReadOnly">
               </ng-container>
 
               <div class="input-group-append">
                 <button class="btn btn-outline-primary form-control-sm" type="button" 
                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Cliente"
-                  [disabled]="true"><i class="fa fa-search"></i>
+                  disabled><i class="fa fa-search"></i>
                 </button>
               </div>
             </div>
@@ -292,7 +292,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 22px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
-              <input id="fecha_actual" type="text" class="form-control form-control-sm" >
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones">
             </div>
           </div>
         </div>
@@ -306,16 +306,14 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="id"
-                  id="inputCatalogoIdTipo" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" id="inputCatalogoIdTipo" [(ngModel)]="id_origen" [readonly]="fidEnable">
               </ng-container>
               
               <div class="input-group-append">
-                <input type="text" class="form-control form-control-sm" formControlName="id"
-                id="inputCatalogoIdTipo" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" [readonly]="fnumeroidEnable" [(ngModel)]="nroid_origen">
 
-                <button class="btn btn-outline-primary form-control-sm" type="button" 
-                  [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"> Habilitar
+                <button class="btn btn-outline-primary form-control-sm" type="button" disabled
+                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"> Habilitar
                 </button>
               </div>
             </div>
@@ -330,15 +328,16 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="id"
-                  id="inputCatalogoIdTipo" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" readonly>
               </ng-container>
               
               <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" 
-                  [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"><i class="fa fa-search"></i>
+                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="cvenumeracion1Enabled" (click)="catalogoProformas()"
+                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Proforma">
+                   <i class="fa fa-search"></i>
                 </button>
-                <input type="text" class="form-control form-control-sm" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" 
+                [(ngModel)]="descripcion_id_catalogo_proforma" readonly>
               </div>
             </div>
           </div>
@@ -353,25 +352,27 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm" formControlName="id"
-                  id="inputCatalogoIdTipo" [readonly]="true">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" [readonly]="id_proforma_solReadOnly">
               </ng-container>
-              
             </div>
           </div>
 
-          <div class="col-md-9">
+          <div class="col-md-9" style="padding-left: 0px !important;">
             <div class="input-group-append">
-              <button class="btn btn-outline-primary form-control-sm" type="button" 
-                [disabled]="true" style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID">
-                Cargar PF Sol. Urgente
-              </button>
+              <button class="btn btn-outline-primary form-control-sm" type="button"
+                (click)="catalogoProformas()" [disabled]="cvenumeracion1" style="border-color: #093070;" 
+                matTooltipClass="custom-tooltip" matTooltip="Buscador Proformas">
+                <i class="fa fa-search"></i> 
+              </button> 
 
-              <input type="text" class="form-control form-control-sm" formControlName="id"
-              id="inputCatalogoIdTipo" [readonly]="true" style="width: 19%;">
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="numero_id_catalogo_proforma" [readonly]="numeroidproforma_solReadOnly" style="width: 19%;">
 
-              <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
-               matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente">
+
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="cargar_proformaEnabled"
+                matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente" (click)="cargarProformaSolicitudUrgente();">
+                <mat-icon
+                  style="color: #05970c;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  description</mat-icon>PF Sol. Urgente
               </button>
 
               <div class="input-group">
@@ -381,7 +382,7 @@
                 </div>
                 <div class="input-group-prepend">
                   <div class="input-group-text" style="border: 0 !important;">
-                    <input type="checkbox" formControlName="contra_entrega" >
+                    <input type="checkbox" [(ngModel)]="chkdesglozar_cjtos">
                   </div>
                 </div>
               </div>
@@ -464,12 +465,17 @@
           </p-table>
           </mat-tab>
 
-          <mat-tab label="Resultado Validacion Saldos">
+          <mat-tab label="Resultado Validación Saldos">
             
           </mat-tab>
 
           <mat-tab label="Obs. Validar Cantidades Con Decimales">
-            
+            <div style="background-color: black;color: yellow;">
+              <span>RESULTADO DE ENVIO DE FACTURA</span>
+            </div>
+            <p-listbox [options]="eventosLogs" [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
+            </p-listbox>
+            <br><br>
           </mat-tab>
 
           <mat-tab label="Obs. Validar Saldos">
@@ -633,34 +639,34 @@
           <div class="row pl-2">
             <input type="text" class="inputsSaldos inputsSaldos2"
               value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem }}"
-              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" [readOnly]="true"
+              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" readOnly
               placeholder="0.00">
 
             <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
               <span style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5"
                 style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
-                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" [readOnly]="true" placeholder="0.00">
+                (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" readOnly placeholder="0.00">
             </ng-container>
           </div>
           <!-- finSaldos -->
@@ -675,7 +681,7 @@
   
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
               <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
-              <input type="text" [(ngModel)]="total" formControlName="total" [hidden]="true">
+              <input type="text" [(ngModel)]="total" hidden>
             </div>
   
             <div class="col text-left">

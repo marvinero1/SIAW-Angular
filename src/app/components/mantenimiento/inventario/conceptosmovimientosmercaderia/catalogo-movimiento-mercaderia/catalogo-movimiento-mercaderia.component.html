@@ -8,7 +8,7 @@
       <div class="col-md pt-2">
         <mat-form-field class="example-full-width" appearance="outline">
           <mat-label>Código</mat-label>
-          <input type="text" matInput [formControl]="myControlCodigo" placeholder="Codigo" (keyup)="applyFilter($event)"
+          <input type="text" matInput [formControl]="myControlCodigo" (keyup)="applyFilter($event)"
             #input>
         </mat-form-field>
       </div>
@@ -20,13 +20,16 @@
         </mat-form-field>
       </div>
     </div>
+    
     <div class="row">
       <div class="col-md-8" style="padding: 15px 20px 2px;">
         <p><strong>Concepto:</strong> &nbsp; {{ concepto_view.codigo }} - {{ concepto_view.descripcion }}</p>
       </div>
+
       <div class="col-md-4 text-center p-2">
         <button mat-stroked-button color="primary" (click)="mandarConcepto();">
-          <i class="fa fa-check"></i></button>
+          <i class="fa fa-check"></i>
+        </button>
         <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></button>
       </div>
     </div>

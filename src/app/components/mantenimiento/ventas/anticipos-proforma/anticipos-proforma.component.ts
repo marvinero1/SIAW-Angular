@@ -302,7 +302,7 @@ export class AnticiposProformaComponent implements OnInit {
     console.log(this.anticipos_asignados_table);
 
     this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
-      this.moneda + "/" + this.monto_a_asignar + "/" + this.monto_restante + "/" + this.totalProf + "/" + this.BD_storage, this.anticipos_asignados_table)
+      this.moneda + "/" + this.monto_a_asignar + "/" + this.monto_restante + "/" + this.totalProf + "/" + this.BD_storage, this.array_tabla_anticipos_get)
       .subscribe({
         next: (datav) => {
           console.log(datav);

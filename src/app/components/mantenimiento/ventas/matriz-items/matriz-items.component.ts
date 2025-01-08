@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, Renderer2, Inject, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, Inject, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '@services/api.service';
@@ -32,7 +32,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener("document:keydown.enter", []) unloadHandler1(event: Event) {
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
-    console.log(`Elemento enfocado Matriz: ${nombre_input}`);
+    console.log(`Elemento enfocado DEL COMPONENTE NO DE LA MATRIZ: ${nombre_input}`);
       switch (nombre_input) {
         case '':
           this.onCellClick1(this.valorCelda);
@@ -52,7 +52,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           }else{
             this.cant_empaque === 0;
             const focusElement = this.focusPedido1.nativeElement;
-            this.renderer.selectRootElement(focusElement).focus();
             focusElement.click();
 
             if(this.pedido != 0){
@@ -61,6 +60,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           break;
         case 'focusEmpaque':
+          console.log(this.valorCelda);
           if(this.valorCelda){
             this.onCellClick1(this.valorCelda);
             this.getEmpaqueItem();
@@ -184,6 +184,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   tamanio_carro: any;
   permiso_para_vista: boolean;
   saldoLocal: any;
+  saldoItem_number:number;
 
   id_proforma_get:any;
   num_id_proforma_get:any;
@@ -198,9 +199,9 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('example') focusTabla: ElementRef;
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<MatrizItemsComponent>,
-    public itemservice: ItemServiceService, public renderer: Renderer2, private spinner: NgxSpinnerService,
+    public itemservice: ItemServiceService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
     private messageService: MessageService, public saldoItemServices: SaldoItemMatrizService,
-    public serviciof9: ServicioF9Service, private datePipe: DatePipe, private servicioPrecioVenta: ServicioprecioventaService,
+    public serviciof9: ServicioF9Service, private servicioPrecioVenta: ServicioprecioventaService,
 
     @Inject(MAT_DIALOG_DATA) public descuento: any, @Inject(MAT_DIALOG_DATA) public codcliente_real: any,
     @Inject(MAT_DIALOG_DATA) public codcliente: any, @Inject(MAT_DIALOG_DATA) public codalmacen: any,
@@ -212,9 +213,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
    ){
 
     this.array_items_proforma_matriz = items?.items;
-    // array_items_completo
-    // si ya existen items en el detalle de la proforma todo se concatena a este array this.array_items_proforma_matriz
-
     this.pedidoInicial = 0;
     this.cantidad = this.pedido;
 
@@ -246,6 +244,13 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
     this.id_proforma_get = id_proforma?.id_proforma;
     this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
+    this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
+    // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
+    // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
+    console.log("🚀 ~ MatrizItemsComponent ~ @Inject ~ cod_precio_venta_modal_codigo1:", this.cod_precio_venta_modal_codigo1)
+    //console.log(this.num_hoja);
+    
+    this.num_id_proforma_get = num_id_proforma?.num_id_proforma;    
     // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
     // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
     console.log("🚀 ~ MatrizItemsComponent ~ @Inject ~ cod_precio_venta_modal_codigo1:", this.cod_precio_venta_modal_codigo1)
@@ -352,34 +357,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.focusEmpaqueElement.nativeElement.focus();
   }
 
-  handleKeyDown(event: KeyboardEvent) {
-    // para borrar los inputs
-    if (event.key === 'Backspace') {
-
-      const focusedElement = document.activeElement as HTMLElement;
-      let nombre_input = focusedElement.id;
-      console.log(`Elemento enfocado Matriz: ${nombre_input}`);
-
-      console.log("Hola Lola en el input", nombre_input);
-
-      if (nombre_input === 'focusEmpaque') {
-        this.cant_empaque = null;
-      }
-
-      if (nombre_input === '') {
-        this.cant_empaque = null;
-      }
-
-      if (nombre_input === 'focusPedido') {
-        this.pedido = null;
-      }
-
-      if (nombre_input === 'focusCantidad') {
-        this.cantidad = null;
-      }
-    }
-  }
-
   togglePrecio() {
     if (this.precio) {
       this.precio = false;
@@ -407,7 +384,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     switch (nombre_input) {
       case 'focusEmpaque':
-        this.getEmpaqueItem();
+      // this.getEmpaqueItem();
         break;
     }
   }
@@ -485,12 +462,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(err, errorMessage);
           this.data_almacen_local.saldo = 0;
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 
-  saldoItem_number:number;
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia;
 
@@ -579,89 +554,46 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
+  private hot: Handsontable | null = null; // Mantener una referencia a la instancia de Handsontable
   initHandsontable(hojas, permiso): void {
     var self = this;
 
     const container = document.getElementById('example');
-    const hot = new Handsontable(container, {
+    // Si ya existe una instancia de Handsontable, simplemente actualiza los datos
+    if (this.hot) {
+      this.hot.loadData(hojas); // Actualiza los datos
+      return; // Salir de la función
+    }
+    // Si no existe, inicializa Handsontable
+    this.hot = new Handsontable(container, {
       data: hojas,
       manualRowResize: false,
       manualColumnResize: false,
       dropdownMenu: true,
       contextMenu: false,
-      filters: true,
+      filters: false,
       licenseKey: 'non-commercial-and-evaluation',
       rowHeaders: false,
       colHeaders: true,
       selectionMode: 'multiple',
       navigableHeaders: true, // New accessibility feature
       tabNavigation: true, // New accessibility feature
+      viewportRowRenderingOffset: 55, // Ajusta según sea necesario
+      viewportColumnRenderingOffset: 13, // Ajusta según sea necesario
       columns: [
-        {
-          data: 'a',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'b',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'c',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'd',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'e',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'f',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'g',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'h',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'i',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'j',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'k',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'l',
-          type: 'text',
-          readOnly: true,
-        },
-        {
-          data: 'm',
-          type: 'text',
-          readOnly: true,
-        },
+        { data: 'a', type: 'text', readOnly: true },
+        { data: 'b', type: 'text', readOnly: true },
+        { data: 'c', type: 'text', readOnly: true },
+        { data: 'd', type: 'text', readOnly: true },
+        { data: 'e', type: 'text', readOnly: true },
+        { data: 'f', type: 'text', readOnly: true },
+        { data: 'g', type: 'text', readOnly: true },
+        { data: 'h', type: 'text', readOnly: true },
+        { data: 'i', type: 'text', readOnly: true },
+        { data: 'j', type: 'text', readOnly: true },
+        { data: 'k', type: 'text', readOnly: true },
+        { data: 'l', type: 'text', readOnly: true },
+        { data: 'm', type: 'text', readOnly: true },
       ],
       className: 'my-custom-row-class',
 
@@ -682,18 +614,19 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
               // const focusedElement = document.activeElement as HTMLElement;
               // let nombre_input = focusedElement.id;
               // console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
-
+          
               self.focusEmpaque();
               const focusElement = this.focusEmpaqueElement.nativeElement;
               focusElement.focus();
               break;
             }else{
               console.log("ENTER PARA ENVIAR ITEM A CARRITO B");
-              this.cant_empaque = 0;
+    
+              // this.cant_empaque = 0;
               // const focusedElement = document.activeElement as HTMLElement;
               // focusedElement.id = nombre_input;
     
-              const focusElement = this.focusPedido1.nativeElement;
+              const focusElement = this.focusPedido1.nativeElement === undefined ? "":this.focusPedido1.nativeElement;
               this.renderer.selectRootElement(focusElement).focus();
               // this.focusPedido();
               focusElement.click();
@@ -746,25 +679,22 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     //   }
     // });
 
-    hot.addHook('afterSelectionEnd', () => {
-      const selectedCoords = hot.getSelected();
+    this.hot.addHook('afterSelectionEnd', () => {
+      const selectedCoords = this.hot.getSelected();
       if (selectedCoords) {
         const [startRow, startCol] = selectedCoords[0];
         // console.log('Coordenada de la celda seleccionada:', startRow, startCol);
         // Obtener la data de la celda seleccionada
-        const cellData = hot.getDataAtCell(startRow, startCol);
+        const cellData = this.hot.getDataAtCell(startRow, startCol);
         this.valorCelda = cellData;
         // console.log('Data de la celda seleccionada:', cellData);
-
-        // if(cellData){
-        // }
 
         //this.onCellClick1(cellData);
       }
     });
 
-    hot.addHook('afterSelectionEndByProp', () => {
-      const selectedRanges = hot.getSelectedRange();
+    this.hot.addHook('afterSelectionEndByProp', () => {
+      const selectedRanges = this.hot.getSelectedRange();
       // Verificar si se ha seleccionado algún rango
       if (selectedRanges && selectedRanges.length > 0) {
         const data = [];
@@ -779,7 +709,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           // Iterar sobre las celdas dentro del rango y agregar sus valores al array
           for (let row = startRow; row <= endRow; row++) {
             for (let col = startCol; col <= endCol; col++) {
-              const cellValue = hot.getDataAtCell(row, col);
+              const cellValue = this.hot.getDataAtCell(row, col);
               data.push(cellValue.replace(/\s+/g, " ").trim());
             }
           }
@@ -794,13 +724,10 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   focusPedido() {
-    this.renderer.selectRootElement('#focusPedido').focus();
     // this.pedido = 0;
   }
 
   focusEmpaque() {
-
-    // this.renderer.selectRootElement('#focusEmpaque').focus();
     const focusElement = this.focusEmpaqueElement.nativeElement;
     focusElement.focus();
   }
@@ -808,7 +735,6 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
   focusCantidad() {
     const focusElement = this.focusPedido1.nativeElement;
     focusElement.focus();
-    // this.renderer.selectRootElement('#focusCantidad').focus();
     // this.addItemArray();
   }
 
@@ -937,7 +863,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.show();
     //ESTE FUNCION ES DEL BOTON CONFIRMAR DEL CARRITO
     //aca se tiene q mapear los items que me llegan en la funcion
-    // console.log(this.array_items_completo, this.desc_linea_seg_solicitud_get);
+    console.log(this.cant_empaque);
     let a = this.array_items_completo.map((elemento) => {
       return {
         coditem: elemento.coditem,
@@ -953,9 +879,8 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
         codmoneda: this.codmoneda_get,
         fecha: this.fecha_get,
         // empaque: this.cant_empaque,
-        empaque: this.cant_empaque === undefined || this.cant_empaque === 0 ?
-          parseInt(elemento.cantidad_empaque || 0) :
-          parseInt(this.cant_empaque || 0),
+        empaque: elemento.cant_empaque === undefined || this.cant_empaque === 0 ?
+          parseInt(elemento.cantidad_empaque || 0) : parseInt(this.cant_empaque || 0),
         orden_pedido: elemento.nroitem,
         nroitem: elemento.nroitem,
       }
@@ -967,7 +892,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.items_post = datav;
-          // console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
+          console.log("BOTON CONFIRMAR DEL CARRITO INFO, DATA DEVUELTA DEL BACKEND: ", datav);
 
           setTimeout(() => {
             this.spinner.hide();
@@ -1155,6 +1080,7 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getEmpaqueItem() {
     const cleanText = this.valorCelda.replace(/\s+/g, " ").trim();
+    console.log("🚀 ~ MatrizItemsClasicaComponent ~ getEmpaqueItem ~ cleanText:", cleanText, this.item_set)
     var d_tipo_precio_desct: string;
     let nombre_input: string = "focusPedido"
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
@@ -1170,15 +1096,12 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       focusedElement.id = nombre_input;
 
       const focusElement = this.focusPedido1.nativeElement;
-      this.renderer.selectRootElement(focusElement).focus();
       focusElement.click();
     } else {
 
     if(!this.item_valido){
-      console.log("ITEM VALIDO: ", this.item_valido);
-
+      console.log("ITEM NO ESTA A LA VENTA: ", this.item_valido);
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
-
       this.valorCelda = 0;
       this.item_set = "";
       this.descripcion_item = "";
@@ -1186,23 +1109,31 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.porcen_item = "";
 
       this.item_valido = undefined;
-      this.pedido = null;
-      this.cantidad = null;
-      this.num_hoja = null;
+      // this.pedido = null;
+      // this.cantidad = null;
+      // this.num_hoja = null;
       
       this.loseFocus();
       return;
     }
 
-    if (this.cant_empaque === undefined) {
-      this.cant_empaque = '';
+    console.log(this.cant_empaque);
+
+    if (this.cant_empaque === undefined || this.cant_empaque === 0 || this.cant_empaque === null) {
+      // this.cant_empaque = 0;
+
+      const focusElement = this.focusEmpaqueElement.nativeElement.focus();
+      focusElement.focus();
     }
+
     if(this.cant_empaque !== ''){
       return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
       .subscribe({
         next: (datav) => {
           this.pedido = datav.total;
+          this.cant_empaque = this.cant_empaque;
           console.log("El total del empaque: ", this.pedido);
+          console.log( this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
         },
 
         error: (err: any) => {
@@ -1216,13 +1147,11 @@ export class MatrizItemsComponent implements OnInit, AfterViewInit, OnDestroy {
           focusedElement.id = nombre_input;
 
           const focusElement = this.focusPedido1.nativeElement;
-          this.renderer.selectRootElement(focusElement).focus();
-          // this.focusPedido();
+
           focusElement.click();
         }
       })
-    }
-    };
+    }};
   }
 
   getAlmacenesSaldos() {

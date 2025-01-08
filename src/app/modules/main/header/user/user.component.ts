@@ -31,6 +31,7 @@ export class UserComponent implements OnInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.token = sessionStorage.getItem("token") !== undefined ? JSON.parse(sessionStorage.getItem("token")) : null;
     this.password = sessionStorage.getItem("contrasenia") !== undefined ? JSON.parse(sessionStorage.getItem("contrasenia")) : null;
+  
   }
 
   ngOnInit(): void {

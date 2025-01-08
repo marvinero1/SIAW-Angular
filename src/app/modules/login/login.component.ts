@@ -439,7 +439,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   guardarToken(token) {
     // localStorage.setItem('token', JSON.stringify(token));
     sessionStorage.setItem('token', JSON.stringify(token));
-   // sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
+    sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
   }
 
   guardarStorageUsuario(usuario) {

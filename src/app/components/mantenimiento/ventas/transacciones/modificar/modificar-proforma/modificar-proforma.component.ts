@@ -135,7 +135,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
       const elementTagName = focusedElement.id;
-      console.log(`Elemento enfocado: ${elementTagName}`);
+      // console.log(`Elemento enfocado: ${elementTagName}`);
 
       switch (elementTagName) {
         case "inputCatalogoCliente":
@@ -683,21 +683,15 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     //Item Sin Procesar DEL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsSeleccionadosSinProcesar.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-      //console.log("Recibiendo Item Sin Procesar: ", data);
+      console.log("Recibiendo Item Sin Procesar: ", data);
       this.item_seleccionados_catalogo_matriz_sin_procesar = data;
       this.totabilizar();
-
-      this.total = 0.00;
-      this.subtotal = 0.00;
-      this.recargos = 0.00;
-      this.des_extra = 0.00;
-      this.iva = 0.00;
     });
     //
 
     //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
-      // console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
+      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
       // console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
 
       if (this.array_items_carrito_y_f4_catalogo.length === 0) {
@@ -707,6 +701,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(data_carrito);
       }
+      console.log("🚀 ~ this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe ~ this.array_items_carrito_y_f4_catalogo:", this.array_items_carrito_y_f4_catalogo)
 
       this.spinner.show();
       setTimeout(() => {
@@ -3731,6 +3726,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       if (this.habilitar_desct_sgn_solicitud === undefined) {
         this.habilitar_desct_sgn_solicitud = false;
       }
+
       this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
         empaque: element.empaque === null ? 0 : element.empaque,
       }));
@@ -4515,6 +4511,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       // montorest: 0
     }));
 
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
+    }));
+
     let a = {
       getTarifaPrincipal: {
         tabladetalle: this.array_items_carrito_y_f4_catalogo,
@@ -4841,14 +4842,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     return this.array_items_carrito_y_f4_catalogo;
   }
 
-  onInputChangeMatrix(products: any, value: any) {
-    console.log(value);
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = setTimeout(() => {
-      this.empaqueChangeMatrix(products, value);
-    }, 1250); // 300 ms de retardo
-  }
-
   //btn
   aplicarDesctPorDepositoHTML() {
     this.spinner.show();
@@ -4871,6 +4864,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       // total_dist: 0,
       // total_desc: 0,
       // montorest: 0
+    }));
+
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
     }));
 
     let a = {
@@ -4935,95 +4933,99 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getPrecioInicial() {
-    //this.spinner.show();
-    this.valor_formulario.map((element: any) => {
-      this.valor_formulario_copied_map_all = {
-        coddocumento: 0,
-        id: element.id.toString() || '',
-        numeroid: element.numeroid?.toString(),
-        codcliente: element.codcliente?.toString() || '',
-        nombcliente: this.razon_social?.toString() || '',
-        nitfactura: element.nit?.toString() || '',
-        tipo_doc_id: element.tipo_docid?.toString() || '',
-        codcliente_real: element.codcliente_real?.toString() || '',
-        nomcliente_real: this.nombre_cliente_catalogo_real,
-        codmoneda: element.codmoneda?.toString() || '',
-        subtotaldoc: element.subtotal,
-        totaldoc: this.total,
-        tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
-        codalmacen: element.codalmacen?.toString() || '',
-        codvendedor: element.codvendedor?.toString() || '',
-        preciovta: element.preciovta?.toString() || '',
-        preparacion: element.preparacion,
-        contra_entrega: element.contra_entrega,
-        vta_cliente_en_oficina: element.venta_cliente_oficina,
-        estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
-        desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-        pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
-        niveles_descuento: element.niveles_descuento,
-        transporte: element.transporte,
-        nombre_transporte: element.nombre_transporte,
-        fletepor: element.fletepor === undefined ? "" : element.fletepor,
-        tipoentrega: element.tipoentrega,
-        direccion: element.direccion,
-        ubicacion: element.ubicacion,
-        latitud: element.latitud_entrega,
-        longitud: element.longitud_entrega,
-        nroitems: this.array_items_carrito_y_f4_catalogo.length,
-        fechadoc: element.fecha,
-        idanticipo: element.idanticipo === null ? "" : element.idanticipo,
-        noridanticipo: element.numeroidanticipo?.toString() || '',
-        cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-        totdesctos_extras: this.des_extra,
-        tipo_cliente: this.tipo_cliente,
-        codtarifadefecto: this.codTarifa_get?.toString(),
-        idpf_complemento: this.idpf_complemento_view,
-        nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
-        tipo_complemento: this.tipo_complementopf_input,
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+    // this.valor_formulario.map((element: any) => {
+    //   this.valor_formulario_copied_map_all = {
+    //     coddocumento: 0,
+    //     id: element.id.toString() || '',
+    //     numeroid: element.numeroid?.toString(),
+    //     codcliente: element.codcliente?.toString() || '',
+    //     nombcliente: this.razon_social?.toString() || '',
+    //     nitfactura: element.nit?.toString() || '',
+    //     tipo_doc_id: element.tipo_docid?.toString() || '',
+    //     codcliente_real: element.codcliente_real?.toString() || '',
+    //     nomcliente_real: this.nombre_cliente_catalogo_real,
+    //     codmoneda: element.codmoneda?.toString() || '',
+    //     subtotaldoc: element.subtotal,
+    //     totaldoc: this.total,
+    //     tipo_vta: element.tipopago === 0 ? "CONTADO" : "CREDITO",
+    //     codalmacen: element.codalmacen?.toString() || '',
+    //     codvendedor: element.codvendedor?.toString() || '',
+    //     preciovta: element.preciovta?.toString() || '',
+    //     preparacion: element.preparacion,
+    //     contra_entrega: element.contra_entrega,
+    //     vta_cliente_en_oficina: element.venta_cliente_oficina,
+    //     estado_contra_entrega: element.estado_contra_entrega === undefined ? "" : element.estado_contra_entrega,
+    //     desclinea_segun_solicitud: element.desclinea_segun_solicitud,
+    //     pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
+    //     niveles_descuento: element.niveles_descuento,
+    //     transporte: element.transporte,
+    //     nombre_transporte: element.nombre_transporte,
+    //     fletepor: element.fletepor === undefined ? "" : element.fletepor,
+    //     tipoentrega: element.tipoentrega,
+    //     direccion: element.direccion,
+    //     ubicacion: element.ubicacion,
+    //     latitud: element.latitud_entrega,
+    //     longitud: element.longitud_entrega,
+    //     nroitems: this.array_items_carrito_y_f4_catalogo.length,
+    //     fechadoc: element.fecha,
+    //     idanticipo: element.idanticipo === null ? "" : element.idanticipo,
+    //     noridanticipo: element.numeroidanticipo?.toString() || '',
+    //     monto_anticipo: 0,
+    //     nrofactura: "0",
+    //     nroticket: "",
+    //     tipo_caja: "",
+    //     tipo_cliente: this.tipo_cliente,
+    //     nroautorizacion: "",
+    //     nrocaja: "",
+    //     idsol_nivel: "",
+    //     nroidsol_nivel: "0",
+    //     version_codcontrol: "",
+    //     estado_doc_vta: "EDITAR",
+    //     codtarifadefecto: this.codTarifa_get?.toString(),
+    //     desctoespecial: "0",
+    //     cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
+    //     totdesctos_extras: this.des_extra,
+    //     totrecargos: 0,
 
+    //     idpf_complemento: this.idpf_complemento_view,
+    //     nroidpf_complemento: this.nroidpf_complemento_view?.toString(),
+    //     tipo_complemento: this.tipo_complementopf_input,
 
-        // esto siempre vacio y ceo porq ya no se usa 13-12-2024
-        idsol_nivel: "",
-        nroidsol_nivel: "0",
-        // esto siempre tiene valor del inpur de descuentos Especiales 13-12-2024
-        desctoespecial: this.cod_descuento_modal?.toString(),
-        totrecargos: this.recargos,
-        
-        monto_anticipo: 0,
-        nrofactura: "0",
-        nroticket: "",
-        tipo_caja: "",
-        nroautorizacion: "",
-        nrocaja: "",
-        version_codcontrol: "",
-        estado_doc_vta: "EDITAR",
-        idFC_complementaria: "",
-        nroidFC_complementaria: "",
-        idpf_solurgente: "0",
-        noridpf_solurgente: "0",
-      }
-    });
-
+    //     idFC_complementaria: "",
+    //     nroidFC_complementaria: "",
+    //     fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+    //     idpf_solurgente: "0",
+    //     noridpf_solurgente: "0",
+    //   }
+    // });
+   // this.spinner.show();
     let array_cumple:any=[];
 
     array_cumple = [this.FormularioData.value].map((element)=>({
       ...element,
       cumple: element.cumple === 1 ? true:false
     }));
+    
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      cumple: element.cumple === 1 ? true : false,
+    }));
+
+    console.log("🚀 ~ this.array_items_carrito_y_f4_catalogo=this.array_items_carrito_y_f4_catalogo.map ~ array_items_carrito_y_f4_catalogo:", this.array_items_carrito_y_f4_catalogo)
+    console.log("🚀 ~ ProformaComponent ~ array_cumple=[this.FormularioData.value].map ~ array_cumple:", array_cumple)
 
     let array_post = {
       tabladetalle: this.array_items_carrito_y_f4_catalogo,
       dvta: array_cumple[0],
     };
-    // console.log("🚀 ~ ModificarProformaComponent ~ getPrecioInicial ~ array_post:", array_post)
+    console.log("🚀 ~ ProformaComponent ~ getPrecioInicial ~ array_post:", array_post)
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
     return this.api.create('/venta/transac/veproforma/getTarifaPrincipal/' + this.userConn, array_post)
       .subscribe({
         next: (datav) => {
-       console.log("🚀 ~ ModificarProformaComponent ~ getPrecioInicial ~ datav:", datav);
-        this.codTarifa_get = datav.codTarifa;
+          console.log("🚀 ~ ModificarProformaComponent ~ getPrecioInicial ~ datav:", datav);
+          this.codTarifa_get = datav.codTarifa;
         },
 
         error: (err: any) => {
