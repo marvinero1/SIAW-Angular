@@ -17,10 +17,9 @@ import { Observable, map, startWith } from 'rxjs';
   styleUrls: ['./catalogo-persona.component.scss']
 })
 export class CatalogoPersonaComponent implements OnInit {
-
+  
   persona_get: any = [];
   public persona_view: any = [];
-  userConn: any;
   add_person: any = [];
   array_new: any = [];
   cod_grupo: any = [];
@@ -33,8 +32,11 @@ export class CatalogoPersonaComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
+  userConn: any;
+
   options: pePersona[] = [];
   filteredOptions: Observable<pePersona[]>;
+
   myControlCodigo = new FormControl<string | pePersona>('');
   myControlDescrip = new FormControl<string | pePersona>('');
 
@@ -44,11 +46,14 @@ export class CatalogoPersonaComponent implements OnInit {
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent>,
     public log_module: LogService, private spinner: NgxSpinnerService, @Inject(MAT_DIALOG_DATA) public codigo_grupo: any,
-    private toastr: ToastrService,) {
+    private toastr: ToastrService) {
 
-    this.cod_grupo = this.codigo_grupo.codigo_grupo;
+      if (this.codigo_grupo === undefined || this.codigo_grupo === null) {
+        this.codigo_grupo = {};
+      }
+
+    this.cod_grupo = this.codigo_grupo.codigo_grupo === undefined ? []:this.codigo_grupo.codigo_grupo;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
   }
 
   ngOnInit() {

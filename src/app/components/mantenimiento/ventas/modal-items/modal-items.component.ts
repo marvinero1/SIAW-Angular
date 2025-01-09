@@ -130,7 +130,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
       this.validacion = true;
       this.messages.push("SELECCIONE MONEDA");
     }
-    if (this.codcliente_get === undefined || this.codcliente_get === 0) {
+    if (this.codcliente_get === undefined) {
       this.validacion = true;
       this.messages.push("SELECCIONE CLIENTE EN PROFORMA");
     }

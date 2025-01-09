@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ServicioclienteService } from '@components/mantenimiento/ventas/serviciocliente/serviciocliente.service';
@@ -12,7 +12,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { LogService } from '@services/log-service.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
@@ -30,6 +29,11 @@ import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/tra
 import { ServicioCatalogoProformasService } from '@components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
+import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { PersonaCatalogoComponent } from '@components/mantenimiento/persona-catalogo/persona-catalogo.component';
+import { ServicePersonaService } from '@components/mantenimiento/persona-catalogo/service-persona/service-persona.service';
+import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
 
 @Component({
   selector: 'app-notamovimiento',
@@ -60,12 +64,52 @@ export class NotamovimientoComponent implements OnInit {
     }
   };
 
+  catalogo_proforma_seleccionado:any;
+
+  //array
+  array_vendedores:any=[];
+  array_almacenes:any=[];
+  array_proformas:any=[];
+  array_concepto:any=[];
+  array_persona:any=[];
+
+  public validacion_post_negativos: any = [];
+  // fin array
+
+  // parametros Iniciales
+  almacen_seleccionado:any;
+  cod_almacen:any;
+  cargar_proforma:boolean;
+  cvenumeracion1:boolean;
+  chkdesglozar_cjtos:boolean;
+
+  codalmdestinoReadOnly:boolean;
+  codalmorigenReadOnly:boolean;
+  fidEnable:boolean;
+  fnumeroidEnable:boolean;
+  codpersonadesdeReadOnly:boolean;
+  codclienteReadOnly:boolean;
+  cargar_proformaEnabled:boolean;
+  cvenumeracion1Enabled:boolean;
+  id_proforma_solReadOnly:boolean;
+  numeroidproforma_solReadOnly:boolean;
+
+  codalmdestinoText:any;
+  codalmorigenText:any;
+  cumple:any;
+
+  factor:any;
+  traspaso:boolean;
+  es_tienda:boolean;
+  es_ag_local:boolean;
+  ver_ch_es_para_invntario:boolean;
+  obtener_cantidades_aprobadas_de_proformas:boolean;
+  //Fin parametros iniciales
 
   //Formulario
   id:any;
   numeroid:any;
   codvendedor:any;
-
 
   id_concepto:any;
   id_concepto_descripcion:any;
@@ -75,6 +119,7 @@ export class NotamovimientoComponent implements OnInit {
   fecha_actual: any;
   hora_actual: any;
 
+  codpersonadesde: any;
   id_proforma_catalogo:any;
   numero_id_catalogo_proforma:any;
   observaciones:any;
@@ -82,8 +127,11 @@ export class NotamovimientoComponent implements OnInit {
   codalmacen:any;
   hora_fecha_server:any;
   cod_cliente:any;
+  cod_cliente_descripcion:any;
   id_origen:any;
   nroid_origen:any;
+  id_proforma_sol_urgente:any;
+  numero_id_proforma_sol_urgente:any;
   // fin formulario
 
   // TAB OBSERVACIONES
@@ -100,10 +148,6 @@ export class NotamovimientoComponent implements OnInit {
   togglePositivos: boolean = false;
   // Fin Validacion Negativos
 
-
-
-
-
   private unsubscribe$ = new Subject<void>();
 
   //detalleItem
@@ -111,17 +155,14 @@ export class NotamovimientoComponent implements OnInit {
   selectedProducts: ItemDetalle[] = [];
   item: any;
   item_obj_seleccionado:any;
+  descripcion_usuario_final:any;
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
     'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
     'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
-
-
-  public validacion_post_negativos: any = [];
   
   dataSource_negativos = new MatTableDataSource();
   dataSourceWithPageSize_negativos = new MatTableDataSource();
-
   
   item_seleccionados_catalogo_matriz_codigo:any;
   total:any;
@@ -142,17 +183,18 @@ export class NotamovimientoComponent implements OnInit {
   saldo_modal_total_5: any;
   // fin saldos
   
-  
   userConn:any;
   usuarioLogueado:any;
   agencia_logueado:any;
   BD_storage:any;
 
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
       private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
       private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
       private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
-      private _snackBar: MatSnackBar,  public nombre_ventana_service: NombreVentanaService, private router: Router, 
+      public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
       public servicioCatalogoProformas: ServicioCatalogoProformasService,
       private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
 
@@ -160,9 +202,6 @@ export class NotamovimientoComponent implements OnInit {
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
       this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
       this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-  
-
-
   }
 
   ngOnInit() {
@@ -186,7 +225,7 @@ export class NotamovimientoComponent implements OnInit {
       }
       this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
         ...element,
-        codaduana: ""
+        codaduana: "0"
       }));
     });
     //
@@ -248,8 +287,15 @@ export class NotamovimientoComponent implements OnInit {
     // Catalogo Proformas
     this.servicioCatalogoProformas.disparadorDeIDProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo ID de Proforma: ", data);
-      this.id_proforma_catalogo = data.proforma.id;
-      this.descripcion_id_catalogo_proforma = data.proforma.descripcion;
+      // this.id_proforma_catalogo = data.proforma.id.toUpperCase();
+      // this.descripcion_id_catalogo_proforma = data.proforma.descripcion;
+
+      if(this.catalogo_proforma_seleccionado === "proforma_almacen"){
+        this.id_proforma_catalogo = data.proforma.id.toUpperCase();
+      }
+      if(this.catalogo_proforma_seleccionado === "solicitud_urgente"){
+        this.id_proforma_sol_urgente = data.proforma.id.toUpperCase();
+      }
     });
     //
 
@@ -267,38 +313,33 @@ export class NotamovimientoComponent implements OnInit {
       if(this.almacen_seleccionado === "Almacen"){
         this.cod_almacen = data.almacen.codigo
       }
-      
     });
     //
+
+    //Persona
+    this.servicioPersona.disparadorDePersonas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Persona: ", data);
+      this.codpersonadesde = data.persona.codigo;
+      this.descripcion_usuario_final= data.persona.descrip
+    });
+    //
+
+    //Clientes
+    this.servicioCliente.disparadorDeClientes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Cliente: ", data);
+      this.cod_cliente = data.cliente.codigo;
+      this.cod_cliente_descripcion = data.cliente.nombre
+      //si se cambia de cliente, los totales tambien se cambian
+      this.total = 0.00;
+    });
+    //
+
+    this.getVendedorCatalogo();
+    this.getAlmacen();
+    this.getProforma();
+    this.getAllConceptoCatalogo();
+    this.getPersona();
   }
-
-  almacen_seleccionado:any;
-  cod_almacen:any;
-  cargar_proforma:boolean;
-  cvenumeracion1:boolean;
-  chkdesglozar_cjtos:boolean;
-
-  codalmdestinoReadOnly:boolean;
-  codalmorigenReadOnly:boolean;
-  fidEnable:boolean;
-  fnumeroidEnable:boolean;
-  codpersonadesdeReadOnly:boolean;
-  codclienteReadOnly:boolean;
-  cargar_proformaEnabled:boolean;
-  cvenumeracion1Enabled:boolean;
-  id_proforma_solReadOnly:boolean;
-  numeroidproforma_solReadOnly:boolean;
-
-  codalmdestinoText:any;
-  codalmorigenText:any;
-  cumple:any;
-
-  factor:any;
-  traspaso:boolean;
-  es_tienda:boolean;
-  es_ag_local:boolean;
-  ver_ch_es_para_invntario:boolean;
-  obtener_cantidades_aprobadas_de_proformas:boolean;
 
   getParametrosIniciales(){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getParametrosInicialesNM/";
@@ -465,7 +506,182 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  validarSaldos(){
+  getVendedorCatalogo() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/vevendedor/catalogo/";
+    return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          // console.log("🚀 ~ .pipe ~ datav:", datav)
+          this.array_vendedores = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveVendedor(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_vendedores.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  getAlmacen() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.array_almacenes = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveAlmacen(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_almacenes.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  getProforma() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
+      .subscribe({
+        next: (datav) => {
+          this.array_proformas = datav;
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveCatalogoProforma(event: any) {
+    const inputValue = event.target.value.toUpperCase();
+    // console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", inputValue )
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_proformas.some(objeto => objeto.id === inputValue.toString());
+    if(!encontrado){
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      this.id_proforma_catalogo = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    }else{
+      event.target.value = inputValue;
+    }
+  }
+
+  getAllConceptoCatalogo() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inconcepto/";
+    return this.api.getAll('/inventario/mant/inconcepto/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.array_concepto = datav;
+          console.log("🚀 ~ NotamovimientoComponent ~ getAllConceptoCatalogo ~ this.array_concepto:", this.array_concepto)
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveConceptoCatalogo(event: any) {
+    const inputValue = event.target.value.toString();
+    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", this.array_concepto )
+
+    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", inputValue )
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_concepto.some(objeto => objeto.codigo.toString() === inputValue);
+    if(!encontrado){
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    }else{
+      
+      event.target.value = inputValue;
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === inputValue);
+      this.id_concepto_descripcion = encontrado_objeto.descripcion
+      this.validarPorConcepto(inputValue);
+
+    }
+  }
+
+  getPersona(){
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
+    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.array_persona = datav;
+          console.log(this.array_persona);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  async validarSaldos(){
+    if (this.id_concepto === undefined) {
+      const resultid_concepto = await this.openConfirmacionDialog(`FALTA CODIGO CONCEPTO`);
+      if (resultid_concepto) {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+        return;
+      }
+    }
+
+    if (this.codalmorigenText === undefined || this.codalmorigenText === 0 ) {
+      const resultcodalmorigenText = await this.openConfirmacionDialog(`FALTA ORIGEN Y/O EL ORIGEN NO PUEDE SER 0`);
+      if (resultcodalmorigenText) {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+        return;
+      }
+    }
+
+    if (this.codalmdestinoText === undefined || this.codalmdestinoText === 0 ) {
+      const resultcodalmdestinoText = await this.openConfirmacionDialog(`FALTA DESTINO Y/O EL DESTINO NO PUEDE SER 0`);
+      if (resultcodalmdestinoText) {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+        return;
+      }
+    }
+
     let array = {
       codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
@@ -711,8 +927,8 @@ export class NotamovimientoComponent implements OnInit {
     let array_PF = {
       codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
-      id_proforma_sol: this.id_proforma_catalogo,
-      numeroidproforma_sol: this.numero_id_catalogo_proforma,
+      id_proforma_sol: this.id_proforma_sol_urgente,
+      numeroidproforma_sol: this.numero_id_proforma_sol_urgente,
       codconcepto: this.id_concepto,
       desglozar_cjtos: this.chkdesglozar_cjtos
     }
@@ -728,7 +944,6 @@ export class NotamovimientoComponent implements OnInit {
             this.codalmacen = datav.codalmorigen;
             this.observaciones = datav.obs;
           }
-          
         },
 
         error: (err: any) => {
@@ -752,36 +967,63 @@ export class NotamovimientoComponent implements OnInit {
     this.chkdesglozar_cjtos = false;
     this.codalmorigenText = "";
     this.codalmdestinoText = "";
-
+    this.codpersonadesde = 0;
+    this.cod_cliente = "";
 
     this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "Nota de Movimiento Limpia ✅" });
-
     this.getParametrosIniciales();
+  }
+
+  solicitarPermisoDatoADatoB(){
+    const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
+      width: '450px',
+      height: 'auto',
+      data: {
+        dataA: this.id,
+        dataB: this.numeroid,
+        dataPermiso: "",
+        dataCodigoPermiso: "13",
+      },
+    });
+
+    dialogRefParams.afterClosed().subscribe((result: Boolean) => {
+      if (result) {
+        this.fidEnable = false;
+        this.fnumeroidEnable = false;
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'HABILITADO ✅'});
+      }
+    });
   }
 
 
 
+  async guardarNotaMovimiento(){
+    console.log(this.total);
+
+    if (this.total === 0 || this.total === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL TOTAL NO PUEDE SER 0' })
+      return;
+    }
 
 
-  guardarNotaMovimiento(){
     let array_PF = {
       cabecera:{
         id: this.id,
         numeroid: this.numeroid,
         fecha: this.fecha_actual,
-        codalmacen: this.cod_almacen,
+        codalmacen: this.codalmacen,
         codalmorigen: this.codalmorigenText,
         codalmdestino: this.codalmdestinoText,
         obs: this.observaciones,
         codvendedor: this.codvendedor,
-        codcliente: this.cod_cliente === undefined ? "0":this.cod_cliente,
+        codcliente: this.cod_cliente === undefined ? "":this.cod_cliente,
         usuarioreg: this.usuarioLogueado,
         factor: this.factor,
-        fid: this.id_origen,
-        fnumeroid: this.nroid_origen,
+        fid: this.id_origen === undefined || null ? "":this.id_origen,
+        fnumeroid: this.nroid_origen === undefined || null ? 0:this.nroid_origen,
         
-        idproforma: this.id_proforma_catalogo === undefined ? "0":this.id_proforma_catalogo,
-        numeroidproforma: this.descripcion_id_catalogo_proforma === undefined ? 0:this.descripcion_id_catalogo_proforma,
+        idproforma: this.id_proforma_catalogo === undefined ? "":this.id_proforma_catalogo,
+        numeroidproforma: this.numero_id_catalogo_proforma === undefined || null ? 0:this.numero_id_catalogo_proforma,
 
         horareg: this.hora_fecha_server,
         fechareg: this.fecha_actual,
@@ -791,16 +1033,13 @@ export class NotamovimientoComponent implements OnInit {
         anulada: false,
         peso: 0,
 
-        codpersona: 0,
-        idproforma_sol: this.id_proforma_catalogo,
-        numeroidproforma_sol: this.numero_id_catalogo_proforma,
+        codpersona: this.codpersonadesde === undefined || null ? 0:this.codpersonadesde,
+        idproforma_sol: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente.toUpperCase(),
+        numeroidproforma_sol: this.numero_id_proforma_sol_urgente === undefined ? 0:this.numero_id_proforma_sol_urgente,
         codconcepto: this.id_concepto,
-
-
         //este datos nay ni en parametroIniciales
         comprobante: null,
       },
-
 
       tablaDetalle:this.array_items_carrito_y_f4_catalogo
     }
@@ -809,10 +1048,25 @@ export class NotamovimientoComponent implements OnInit {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
     return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/'+this.userConn+"/"+this.BD_storage+"/"+this.traspaso, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
+        next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
-
-          
+          if(datav.valido){
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
+            
+            const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
+            if (resultcodalmdestinoText) {
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 500);
+              return;
+            }
+          }else{
+            if(datav.negativos){
+              //hay negativos
+              this.dataSource_negativos = new MatTableDataSource(datav.negativos);
+              this.abrirTabPorLabel("Saldos Negativos");
+            }
+          }         
         },
 
         error: (err: any) => {
@@ -822,6 +1076,15 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    // console.log(tabs);
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
 
 
 
@@ -836,156 +1099,9 @@ export class NotamovimientoComponent implements OnInit {
 
 
   // NEGATIVOS
-  // validarProformaSoloNegativos() {
-  //   console.clear();
-  //   // 00060 - VALIDAR SALDOS NEGATIVOS
-  //   // VACIO - TODOS LOS CONTROLES
-  //   this.valor_formulario = [this.FormularioData.value];
-  //   console.log("Valor Formulario Original: ", this.valor_formulario);
+  validarNegativos(){
 
-  //   let tipo_complemento
-  //   console.log(this.complementopf);
-  //   switch (this.complementopf) {
-  //     case 3:
-  //       tipo_complemento = "";
-  //       break;
-  //     case 0:
-  //       tipo_complemento = "complemento_mayorista_dimediado";
-  //       break;
-  //     case 1:
-  //       tipo_complemento = "complemento_para_descto_monto_min_desextra";
-  //       break;
-  //   }
-
-  //   this.valor_formulario.map((element: any) => {
-  //     return this.valor_formulario_negativos = {
-  //       coddocumento: 0,
-  //       id: element.id.toString() || '',
-  //       numeroid: element.numeroid?.toString() || '',
-  //       codcliente: element.codcliente?.toString() || '',
-  //       nombcliente: element.nombcliente?.toString() || '',
-  //       nitfactura: element.nit?.toString() || '',
-  //       tipo_doc_id: element.tipo_docid?.toString() || '',
-  //       codcliente_real: element.codcliente_real?.toString() || '',
-  //       nomcliente_real: element.nomcliente_real?.toString() || '',
-  //       codmoneda: element.codmoneda?.toString() || '',
-  //       subtotaldoc: element.subtotal,
-  //       totaldoc: element.total,
-  //       tipo_vta: element.tipopago?.toString() || '',
-  //       codalmacen: element.codalmacen?.toString() || '',
-  //       codvendedor: element.codvendedor?.toString() || '',
-  //       preciovta: element.preciovta?.toString() || '',
-  //       preparacion: element.preparacion,
-  //       contra_entrega: element.contra_entrega?.toString() === true ? "SI" : "NO",
-  //       vta_cliente_en_oficina: element.venta_cliente_oficina,
-  //       estado_contra_entrega: element.estado_contra_entrega === undefined ? "SI" : "NO",
-  //       desclinea_segun_solicitud: element.desclinea_segun_solicitud,
-  //       pago_con_anticipo: element.pago_contado_anticipado === null ? false : element.pago_contado_anticipado,
-  //       niveles_descuento: element.niveles_descuento,
-  //       transporte: element.transporte,
-  //       nombre_transporte: element.nombre_transporte,
-  //       fletepor: element.fletepor === undefined ? "" : element.fletepor,
-  //       tipoentrega: element.tipoentrega === undefined ? "": element.tipoentrega,
-  //       direccion: element.direccion,
-  //       ubicacion: element.ubicacion,
-  //       latitud: element.latitud_entrega,
-  //       longitud: element.longitud_entrega,
-  //       nroitems: this.array_items_carrito_y_f4_catalogo.length,
-  //       fechadoc: element.fecha,
-  //       idanticipo: element.idanticipo,
-  //       noridanticipo: element.numeroidanticipo?.toString() || '',
-  //       monto_anticipo: 0,
-  //       nrofactura: "0",
-  //       nroticket: "",
-  //       tipo_caja: "",
-  //       tipo_cliente: this.tipo_cliente,
-  //       nroautorizacion: "",
-  //       nrocaja: "",
-  //       idsol_nivel: "",
-  //       nroidsol_nivel: "0",
-  //       version_codcontrol: "",
-  //       estado_doc_vta: "NUEVO",
-  //       codtarifadefecto: this.codTarifa_get?.toString(),
-  //       desctoespecial: this.cod_descuento_modal?.toString(),
-
-  //       cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
-  //       totdesctos_extras: this.des_extra,
-  //       totrecargos: 0,
-  //       idpf_complemento: this.idpf_complemento_view,
-  //       nroidpf_complemento: this.input_complemento_view?.toString(),
-  //       tipo_complementopf: this.tipo_complementopf_input,
-
-  //       idFC_complementaria: "",
-  //       nroidFC_complementaria: "",
-  //       fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-  //       idpf_solurgente: "0",
-  //       noridpf_solurgente: "0",
-  //     }
-  //   });
-
-  //   this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element)=>({
-  //     ...element,
-  //     descripcion: element.descrip,
-  //   }))
-
-  //   // boolean que verifica que el formulario este con sus data llenada
-  //   this.submitted = true;
-  //   if (this.FormularioData.valid) {
-  //     this.spinner.show();
-  //     console.log("DATOS VALIDADOS");
-  //     console.log("Valor Formulario Mapeado: ", this.valor_formulario_negativos);
-
-  //     let proforma_validar = {
-  //       datosDocVta: this.valor_formulario_negativos,
-  //       detalleAnticipos: [],
-  //       detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
-  //       //detalleEtiqueta: [this.etiqueta_get_modal_etiqueta],
-  //       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
-  //       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-  //       detalleRecargos: [],
-  //     }
-
-  //     console.log(proforma_validar);
-  //     const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
-  //     const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-  //     this.api.create(url, proforma_validar).subscribe({
-  //       next: (datav) => {
-  //         this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
-  //         if (datav.jsonResult[0].dtnegativos) {
-  //           this.validacion_post_negativos = datav.jsonResult[0].dtnegativos;
-  //         }
-
-  //         this.abrirTabPorLabel("Negativos");
-  //         console.log(this.validacion_post_negativos);
-
-  //         this.toggleTodosNegativos = true;
-  //         this.toggleNegativos = false;
-  //         this.togglePositivos = false;
-
-  //         this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-  //         this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
-  //         setTimeout(() => {
-  //           this.spinner.hide();
-  //         }, 500);
-  //       },
-  //       error: (err) => {
-  //         console.log(err, errorMessage);
-  //         setTimeout(() => {
-  //           this.spinner.hide();
-  //         }, 500);
-  //       },
-  //       complete: () => {
-  //         setTimeout(() => {
-  //           this.spinner.hide();
-  //         }, 500);
-  //       }
-  //     });
-  //   } else {
-  //     this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION ACTIVA' });
-  //     console.log("HAY QUE VALIDAR DATOS");
-  //   }
-  // }
+  }
 
   negativosTodosFilterToggle() {
     this.toggleTodosNegativos = true;
@@ -1139,14 +1255,24 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
+  modalClientes(): void {
+    this.dialog.open(ModalClienteComponent, {
+      width: '700px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        ventana: "ventana_catalogo"
+      }
+    });
+  }
 
-
-
-
-
-
-
-
+  modalPepersona(): void {
+    this.dialog.open(PersonaCatalogoComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
+  }
 
   modalAlmacen(almacen): void {
     this.dialog.open(ModalAlmacenComponent, {
@@ -1159,13 +1285,16 @@ export class NotamovimientoComponent implements OnInit {
     this.almacen_seleccionado = almacen;
     console.log("🚀 ~ NotamovimientoComponent ~ modalAlmacen ~ this.almacen_seleccionado:", this.almacen_seleccionado)
   }
-
-  catalogoProformas(){
+  
+  catalogoProformas(origen){
     this.dialog.open(CatalogoProformasComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
     });
+    
+    this.catalogo_proforma_seleccionado = origen;
+    console.log("🚀 ~ NotamovimientoComponent ~ catalogoProformas ~ this.catalogo_proforma_seleccionado:", this.catalogo_proforma_seleccionado)
   }
 
   modalTipoID(): void {
@@ -1208,15 +1337,14 @@ export class NotamovimientoComponent implements OnInit {
       height: 'auto',
       disableClose: true,
       data: {
-        // tarifa: this.cod_precio_venta_modal_codigo,
-        // descuento: this.cod_descuento_modal,
-        // codcliente: this.codigo_cliente,
-        // codalmacen: this.agencia_logueado,
-        // desc_linea_seg_solicitud: "",
-        // codmoneda: this.moneda_get_catalogo,
-        // fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        // //itemss: this.item_seleccionados_catalogo_matriz_sin_procesar,
-        // descuento_nivel: this.desct_nivel_actual,
+        tarifa: this.cod_precio_venta_modal_codigo,
+        descuento: this.cod_descuento_modal,
+        codcliente: 0,
+        codalmacen: this.agencia_logueado,
+        desc_linea_seg_solicitud: "",
+        codmoneda: "0",
+        fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        descuento_nivel: "",
       },
     });
   }

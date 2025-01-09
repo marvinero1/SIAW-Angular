@@ -1184,6 +1184,22 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
+  onLeaveAlmacen(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.almacen_get.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
   getAlmacenParamUsuario() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -1203,21 +1219,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
-  onLeaveAlmacen(event: any) {
-    const inputValue = event.target.value;
-    let entero = Number(inputValue);
 
-    // Verificar si el valor ingresado está presente en los objetos del array
-    const encontrado = this.almacen_get.some(objeto => objeto.codigo === entero);
-
-    if (!encontrado) {
-      // Si el valor no está en el array, dejar el campo vacío
-      event.target.value = '';
-      console.log("NO ENCONTRADO VALOR DE INPUT");
-    } else {
-      event.target.value = entero;
-    }
-  }
 
   getVendedorCatalogo() {
     let a
