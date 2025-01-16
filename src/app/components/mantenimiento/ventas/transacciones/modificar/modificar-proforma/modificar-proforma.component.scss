@@ -171,10 +171,6 @@ mat-row, mat-header-row, mat-footer-row{
   border-top: none;
   border-bottom: none;
 }
-// .miTabGroupDetalle .mat-mdc-tab-body {
-//   /* Estilos específicos para el tab 1 */
-//   height: 215px;
-// }
 
 
 
@@ -191,37 +187,38 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
-/* Para pantallas más pequeñas (hasta tablets) */
-@media (max-width: 1024px) {
-  .miTabGroupDetalle {
-    height: 35vh;
-    max-height: 36vh;
+
+  /* Para pantallas más pequeñas (hasta tablets) */
+  @media (max-width: 1024px) {
+    .miTabGroupDetalle {
+      height: 35vh;
+      max-height: 36vh;
+    }
   }
-}
 
-/* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
-@media (min-width: 1025px) and (max-width: 1366px) {
-  .miTabGroupDetalle {
-    height: 24.3vh;
-    max-height: 25.3vh;
+  /* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
+  @media (min-width: 1025px) and (max-width: 1366px) {
+    .miTabGroupDetalle {
+      height: 24.3vh;
+      max-height: 25.3vh;
+    }
   }
-}
 
-/* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
-@media (min-width: 1367px) and (max-width: 1920px) {
-  .miTabGroupDetalle {
-    height: 45.5vh;
-    max-height: 47.5vh;
+  /* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
+  @media (min-width: 1367px) and (max-width: 1920px) {
+    .miTabGroupDetalle {
+      height: 45.5vh;
+      max-height: 47.5vh;
+    }
   }
-}
 
-/* Para pantallas ultra grandes (más de 1920px) */
-@media (min-width: 1921px) {
-  .miTabGroupDetalle {
-    height: 48.5vh;
-    max-height: 49vh;
+  /* Para pantallas ultra grandes (más de 1920px) */
+  @media (min-width: 1921px) {
+    .miTabGroupDetalle {
+      height: 48.5vh;
+      max-height: 49vh;
+    }
   }
-}
 
 
 
@@ -325,27 +322,28 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
-.p-inputtext{
-  text-align: center !important;
-  width: 50%;
-}
-::ng-deep {
-  label{
-    margin-bottom: 0px !important;
+  .p-inputtext{
+    text-align: center !important;
+    width: 50%;
   }
-  .p-icon {
-    width: 0.55rem !important;
-    height: 0.55rem !important;
+  ::ng-deep {
+    label{
+      margin-bottom: 0px !important;
+    }
+    .p-icon {
+      width: 0.55rem !important;
+      height: 0.55rem !important;
+    }
+    .tablitaDetalle{
+    .p-datatable-thead > tr > th {
+      padding: 0rem 0rem !important;
+      position: sticky;
+      top: 0;
+      background-color: #fbd800;
+      min-height: 25px !important;
+    }
   }
-  .tablitaDetalle{
-   .p-datatable-thead > tr > th {
-    padding: 0rem 0rem !important;
-    position: sticky;
-    top: 0;
-    background-color: #fbd800;
-    min-height: 25px !important;
-  }
-}
+
   .p-treetable .p-datatable-wrapper .p-datatable-tbody {
     height: 12px !important;
   }
@@ -373,13 +371,10 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
-
   .btn-outline-primary:hover{
     color: black;
   }
-  // .wrapper.content-wrapper{
-  //   background-color:#CEFFFF !important;
-  // }
+
   .mat-mdc-tab-labels{
     height: calc(1.3rem + 0px) !important;
   }
@@ -410,36 +405,23 @@ mat-row, mat-header-row, mat-footer-row{
     padding-left: 13px !important;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 3px !important;
   }
+
   .mdc-tab{
     min-width: 79px !important;  
   }
+
   .mat-mdc-tab-body-content{
     overflow: hidden;
   }
+
   .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell{
     z-index: 5;
   }
-  // label:not(.form-check-label):not(.custom-file-label) {
-  //   font-weight: 100;
-  // }
+
   .mat-mdc-tab .mdc-tab__text-label {
     padding: 0px 0px 0px 0px !important;
-    
   }
-  // .mdc-data-table__cell, .mdc-data-table__header-cell{
-  //   padding: 0px 0px 0px 0px !important;
-  // }
-  // .mat-mdc-tab-body-content{
-  //   height: 12rem !important;
-  // }
-  // .mat-mdc-tab .mdc-tab__content{
-  //   height: 105px !important;
-  // }
-  // .mat-tooltip {
-  //   font-size: 0.7rem !important;
-  //   background-color: #093070 !important;
-  //   color:#fbd800 !important
-  // }
+
   .mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target{
     top: 50% !important;
     height: 19px !important;

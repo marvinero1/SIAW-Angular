@@ -17,6 +17,7 @@ import { ServicioclienteService } from '@components/mantenimiento/ventas/servici
 import { CatalogoNotasRemisionComponent } from '@components/mantenimiento/ventas/transacciones/nota-remision/catalogo-notas-remision/catalogo-notas-remision.component';
 import { ServicioTransfeAProformaService } from '@components/mantenimiento/ventas/transacciones/proforma/modal-transfe-proforma/servicio-transfe-a-proforma/servicio-transfe-a-proforma.service';
 import { CatalogoNotasRemisionService } from '@components/mantenimiento/ventas/transacciones/nota-remision/servicio-catalogo-notas-remision/catalogo-notas-remision.service';
+import { MessageService } from 'primeng/api';
 interface buscadorGeneral {
   id: any,
   numeroid: any,
@@ -61,8 +62,9 @@ export class BuscadorAvanzadoComponent implements OnInit {
   todas: boolean = true;
   todas_id: boolean = false;
   todas_fecha: boolean = false;
-  todas_cliente: boolean = false;
   todas_almacen: boolean = false;
+
+  todas_cliente: boolean = false;
   todas_vendedor: boolean = false;
 
   id_bool: boolean = false;
@@ -96,7 +98,8 @@ export class BuscadorAvanzadoComponent implements OnInit {
     private almacenservice: ServicioalmacenService, private serviciovendedor: VendedorService,
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private dialog: MatDialog, private serviciotipoid: TipoidService, private servicioCliente: ServicioclienteService,
-    @Inject(MAT_DIALOG_DATA) public ventana: any, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService) {
+    private messageService: MessageService, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService,
+    @Inject(MAT_DIALOG_DATA) public ventana: any){
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -115,7 +118,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
     //ID TIPO
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
-
+      
       if (this.id_tipo_view_get_codigo1 === undefined) {
         this.id_tipo_view_get_codigo1 = data.id_tipo.id;
         this.id_tipo_view_get_codigo2 = data.id_tipo.id;
@@ -400,7 +403,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
     const encontrado = this.vendedor_get.some(objeto => objeto.codigo === entero);
 
     if (!encontrado) {
-      // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO VALOR DE INPUT");
     } else {
@@ -459,7 +461,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       error: (err) => {
         console.log(err, errorMessage);
@@ -467,20 +469,18 @@ export class BuscadorAvanzadoComponent implements OnInit {
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       complete: () => {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       }
     });
   }
 
   buscadorNotasRemision() {
-    console.log("FECHAS: ", this.fecha_desde, this.fecha_hasta);
-
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
@@ -526,24 +526,25 @@ export class BuscadorAvanzadoComponent implements OnInit {
       next: (datav) => {
         console.log(datav);
         this.buscadorObj = datav
-
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       error: (err) => {
         console.log(err, errorMessage);
         this.toastr.error('! OCURRIO UN PROBLEMA AL GRABAR !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL TRAER LA DATA !'});
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       complete: () => {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       }
     });
   }
@@ -566,7 +567,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.toastr.success("PROFORMA TRANSFERIDA CON EXITO !");
     setTimeout(() => {
       this.spinner.hide();
-    }, 1000);
+    }, 100);
 
     this.close();
   }
@@ -583,7 +584,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.toastr.success("PROFORMA TRANSFERIDA CON EXITO !");
     setTimeout(() => {
       this.spinner.hide();
-    }, 1000);
+    }, 100);
 
     this.close();
   }

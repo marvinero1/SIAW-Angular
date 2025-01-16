@@ -1,25 +1,32 @@
 <section class="all mat-elevation-z8 p-2">
   <div style="position: sticky;padding-top: 6px;">
     <div class="row">
-      <div class="col-sm-1" style="padding-left: 20px;">
+      <div class="col-sm-1 text-center" style="padding-left: 20px;">
         <button mat-raised-button class="btn btn-outline-secondary form-control-sm" (click)="mandarItemaProforma();"
           style="width: 10%;height: calc(1.8rem + 0px) !important;">
           <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i>
             <strong> OK </strong></span>
         </button>
+        <ng-container *ngIf="ventana_venta">
+          <span style="font-size: 0.60rem !important;"><strong>ORIGEN:VENTAS</strong></span>
+        </ng-container>
+
+        <ng-container *ngIf="ventana_inventario">
+          <span style="font-size: 0.60rem !important;"><strong>ORIGEN:INVENTARIO</strong></span>
+        </ng-container>
       </div>
 
       <p-toast></p-toast>
       <div class="col-md-9">
         <mat-form-field appearance="outline" class="example-full-width" style="width: 20%;">
           <mat-label># Hoja</mat-label>
-          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="3" id="idBuscadorHoja"
+          <input type="text" matInput [(ngModel)]="num_hoja" maxlength="4" id="idBuscadorHoja"
             name="enable-tab-navigation">
         </mat-form-field>
 
-        <button mat-raised-button color="secondary" (click)="getHoja();">
+        <a mat-raised-button color="secondary" (click)="getHoja();">
           <i class="fa fa-search"></i>
-        </button>
+        </a>
 
         <ng-container>
           <a (click)="pasarHoja(izquierda, num_hoja);">
@@ -124,18 +131,17 @@
           </button>
         </div> -->
 
+
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text form-control-sm"
-              style="padding: 10px 6px 0px 27px;border: 0 !important;"><u>Precio de Venta</u></span>
+              style="padding: 10px 6px 0px 8px;border: 0 !important;"><u>Precio de Venta</u></span>
           </div>
 
-          <ng-container>
-            <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo1"
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_precio_venta_modal_codigo1"
               (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta"
-              style="width: 14% !important;flex: none !important;">
-          </ng-container>
-
+              style="width: 5% !important;flex: none !important;">
+        
           <div class="input-group-append">
             <a class="btn btn-outline-primary form-control-sm" style="border-color: #093070;"
               (click)="modalPrecioVenta();"> <i class="fa fa-search"></i>
@@ -153,7 +159,9 @@
               <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
             </span>
           </ng-container>
-          <!-- <button (click)="applyFocusMatriz()"> FOCUS</button> -->
+
+
+          
         </div>
       </div>
 
@@ -165,11 +173,11 @@
     <div class="row">
       <div class="col-md-6" style="padding-left: 21px;">
         <input type="text" readonly="true" [value]="item" [(ngModel)]="item_set" class="input_data_item"
-          style="width: 16%;">
+          style="width: 13%;">
 
-        <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 22%;">
-        <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 16.5%;">
-        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 33%;">&nbsp;
+        <input type="text" readonly="true" [value]="descripcion_item" class="input_data_item" style="width: 28%;">
+        <input type="text" readonly="true" [value]="medida_item" class="input_data_item" style="width: 14%;">
+        <input type="text" readonly="true" [value]="porcen_item" class="input_data_item" style="width: 29%;">&nbsp;
 
         <ng-container *ngIf="item_valido === false">
           <span style="color: rgb(227, 0, 0);"><strong>NO VENTA</strong></span>
@@ -181,7 +189,7 @@
         <!-- <ng-container *ngIf="si_venta && no_venta">NO ES ITEM</ng-container> -->
       </div>
 
-      <div class="col-md-6">
+      <div class="col-md-5">
         <div class="row">
           <ng-container *ngIf="usuario_logueado !== 'opergps'; else oculto">
             <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">

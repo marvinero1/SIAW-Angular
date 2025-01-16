@@ -189,6 +189,8 @@ export class ItemSeleccionCantidadComponent implements OnInit {
 
     this.isCheckedCantidad = false;
     this.isCheckedEmpaque = false;
+
+    this.precio = true;
   }
 
   cantidadHabilitar() {
@@ -246,11 +248,11 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     const errorMessage1 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getCantfromEmpaque/";
     const errorMessage2 = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: /venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
 
-    // if (this.precio === true) {
-    //   d_tipo_precio_desct = "Precio";
-    // } else {
-    //   d_tipo_precio_desct = "Descuento"
-    // }
+    if (this.precio === true) {
+      d_tipo_precio_desct = "Precio";
+    } else {
+      d_tipo_precio_desct = "Descuento"
+    }
     console.warn("VALOR:", this.isCheckedEmpaque)
     if (this.isCheckedEmpaque === true) {
       //si el toggle de empaque minimo esta en true se envia la info de los inputs a los valores tarifa y descuento

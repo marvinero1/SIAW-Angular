@@ -102,7 +102,6 @@ export class MainComponent implements OnInit {
 		);
 	}
 
-
 	onToggleMenuSidebar() {
 		this.store.dispatch(new ToggleSidebarMenu());
 	}

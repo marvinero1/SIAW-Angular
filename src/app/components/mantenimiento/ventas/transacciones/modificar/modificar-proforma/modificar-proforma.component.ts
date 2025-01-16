@@ -5289,7 +5289,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             //siempre sera uno
             this.orden_creciente = 1;
             // Agregar el número de orden a los objetos de datos
-            this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            this.array_items_carrito_y_f4_catalogo?.forEach((element, index) => {
               element.orden = index + 1;
               element.nroitem = index + 1;
             });
@@ -5719,7 +5719,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     });
 
     // Actualizar el número de orden de los objetos de datos restantes
-    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+    this.array_items_carrito_y_f4_catalogo?.forEach((element, index) => {
       element.orden = index + 1;
       element.nroitem = index + 1;
     });

@@ -48,7 +48,6 @@ export class PersonaCatalogoComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.filteredOptions = this.myControlCodigo.valueChanges.pipe(
       startWith(''),
       map(value => {

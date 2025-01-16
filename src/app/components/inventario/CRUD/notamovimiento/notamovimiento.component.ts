@@ -227,6 +227,8 @@ export class NotamovimientoComponent implements OnInit {
         ...element,
         codaduana: "0"
       }));
+
+      this.totabilizar();
     });
     //
 
@@ -293,6 +295,7 @@ export class NotamovimientoComponent implements OnInit {
       if(this.catalogo_proforma_seleccionado === "proforma_almacen"){
         this.id_proforma_catalogo = data.proforma.id.toUpperCase();
       }
+
       if(this.catalogo_proforma_seleccionado === "solicitud_urgente"){
         this.id_proforma_sol_urgente = data.proforma.id.toUpperCase();
       }
@@ -756,7 +759,6 @@ export class NotamovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
         console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
-
           this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
           this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
           this.traspaso = datav.traspaso;
@@ -858,7 +860,7 @@ export class NotamovimientoComponent implements OnInit {
       element.nroitem = index + 1;
     });
 
-   //this.totabilizar();
+   this.totabilizar();
   }
 
   onEditComplete(event: any) {
@@ -924,6 +926,11 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   cargarProformaSolicitudUrgente(){
+    if (this.id_proforma_catalogo === undefined || this.numero_id_catalogo_proforma === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ID O NUM ID EN BLANCO, FAVOR COLOCAR PROFORMA DE ALMACEN'}) 
+      return;
+    }
+
     let array_PF = {
       codempresa: this.BD_storage,
       usuario: this.usuarioLogueado,
@@ -995,16 +1002,88 @@ export class NotamovimientoComponent implements OnInit {
     });
   }
 
-
-
   async guardarNotaMovimiento(){
-    console.log(this.total);
-
-    if (this.total === 0 || this.total === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL TOTAL NO PUEDE SER 0' })
+    if (this.id_concepto === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CONCEPTO NO PUEDE ESTAR EN BLANCO'});
       return;
     }
 
+    if (this.codvendedor === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO VENDEDOR NO PUEDE ESTAR EN BLANCO'});
+      return;
+    }
+
+    if (this.codalmorigenText === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE ORIGEN'});
+      return;
+    }
+
+    if (this.codalmorigenText === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ORIGEN NO PUEDE SER 0'});
+      return;
+    }
+
+    if (this.codalmdestinoText === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO'});
+      return;
+    }
+
+    if (this.codalmdestinoText === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO DE DESTINO NO PUEDE SER 0'});
+      return;
+    }
+    
+
+    if (this.codalmdestinoText === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO'});
+      return;
+    }
+
+    if (this.observaciones === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION NO PUEDE ESTAR EN BLANCO'});
+      return;
+    }
+
+    if (this.observaciones.length > 60) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION ES DEMASIADA LARGA'});
+      return;
+    }
+
+    if (this.id === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL ID NO PUEDE ESTAR EN BLANCO'});
+      return;
+    }
+
+    if (this.numeroid === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL NUMERO ID NO PUEDE ESTAR EN BLANCO'});
+      return;
+    }
+
+    if (this.codalmacen === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ALMACEN NO PUEDE ESTAR EN BLANCO'});
+      return;
+    }
+
+    if (this.fecha_actual === undefined) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA FECHA NO PUEDE ESTAR EN BLANCO, SELECCIONE UNA FECHA'});
+      return;
+    }
+
+    if (this.total === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL TOTAL NO PUEDE SER 0, TOTALICE'});
+      return;
+    }
+
+    if (this.id_concepto === 10 && this.id_proforma_catalogo === undefined && this.numero_id_catalogo_proforma === undefined || 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SI EL CONCEPTO ES EL 10 NO PUEDE DEJAR EL ID Y NUM ID DE PROFORMA EN BLANCO'})
+      return;
+    }
+
+    if (this.fidEnable === false && this.fnumeroidEnable === false) {
+      if(this.id_origen === undefined && this.nroid_origen === undefined){
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE HABILITO EL ORIGEN, FAVOR COLOCAR ID Y NUM ID DE PROFORMA'})
+      }
+    }
 
     let array_PF = {
       cabecera:{
@@ -1014,7 +1093,7 @@ export class NotamovimientoComponent implements OnInit {
         codalmacen: this.codalmacen,
         codalmorigen: this.codalmorigenText,
         codalmdestino: this.codalmdestinoText,
-        obs: this.observaciones,
+        obs: this.observaciones === undefined ? "":this.observaciones,
         codvendedor: this.codvendedor,
         codcliente: this.cod_cliente === undefined ? "":this.cod_cliente,
         usuarioreg: this.usuarioLogueado,
@@ -1034,6 +1113,7 @@ export class NotamovimientoComponent implements OnInit {
         peso: 0,
 
         codpersona: this.codpersonadesde === undefined || null ? 0:this.codpersonadesde,
+
         idproforma_sol: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente.toUpperCase(),
         numeroidproforma_sol: this.numero_id_proforma_sol_urgente === undefined ? 0:this.numero_id_proforma_sol_urgente,
         codconcepto: this.id_concepto,
@@ -1050,6 +1130,19 @@ export class NotamovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
+          if(datav.resp === "Los items del documento resaltados de color azul generaran negativos."){
+            await this.openConfirmacionDialog(datav.resp);
+   
+            // window.location.reload();
+          }
+
+          if(datav.resp === "Nota de Movimiento creada exitosamente."){
+            await this.openConfirmacionDialog(datav.resp);
+   
+            window.location.reload();
+          }
+
+
           if(datav.valido){
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
             
@@ -1136,13 +1229,6 @@ export class NotamovimientoComponent implements OnInit {
   }
   //FIN NEGATIVOS
 
-
-
-
-
-
-
-
   //Importar to ZIP
   async onFileChangeZIP(event: any) {
     const file = event.target.files[0];
@@ -1156,7 +1242,7 @@ export class NotamovimientoComponent implements OnInit {
       this.api.cargarArchivo('/venta/transac/veproforma/importProfinJson/', formData)
         .subscribe({
           next: (datav) => {
-            //console.log(datav);
+            console.log("Data ZIP:", datav);
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
             this.imprimir_zip_importado(datav);
 
@@ -1201,42 +1287,6 @@ export class NotamovimientoComponent implements OnInit {
     console.log(zip_json);
   }
   //FIN Importar ZIP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1401,7 +1451,7 @@ export class NotamovimientoComponent implements OnInit {
         items: [ ],
         descuento_nivel: 0,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
-        
+        tipo_ventana:"inventario"
         // id_proforma: this.id_tipo_view_get_codigo,
         // num_id_proforma:this.id_proforma_numero_id,
       }

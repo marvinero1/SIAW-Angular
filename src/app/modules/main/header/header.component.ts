@@ -6,7 +6,7 @@ import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ApiService } from '@services/api.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location } from '@angular/common';
 import { LogService } from '@services/log-service.service';
 const BASE_CLASSES = 'main-header navbar navbar-expand navbar-warning';
@@ -18,14 +18,15 @@ const BASE_CLASSES = 'main-header navbar navbar-expand navbar-warning';
 
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  private log: any = [];
-
   @HostBinding('class') classes: string = BASE_CLASSES;
   public ui: Observable<UiState>;
   public searchForm: UntypedFormGroup;
+
   public tipo_cambio_dolar: any;
   public fecha_actual = new Date();
   public log_ruta = [];
+  private log: any = [];
+
   isNavbarVisible = true;
 
   userConn: any;
@@ -39,28 +40,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Input() usuario: string;
   @Input() servidor: string;
   @Input() agencia: string;
+
   location: any;
   log_rutax: any;
 
+  private unsubscribe$ = new Subject<void>();
+
   constructor(private store: Store<AppState>, private api: ApiService, public router: Router, public log_module: LogService,
     private _location: Location, private datePipe: DatePipe) {
+
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.onToggleMenuSidebar();
-
-    // if (this.userConn === null) {
-    //   console.log("NO USUARIO")
-    // } else {
-    //   // Ejecutar inmediatamente al cargar el componente
-    //   this.getHoraFechaServidorBckEnd(this.userConn);
-    //   // console.log(this.userConn);
-    // }
-
   }
 
   ngOnInit() {
     this.getHoraFechaServidorBckEnd(this.userConn)
+    this.onToggleMenuSidebar();
 
     // IMPRIMIR DATOS DE CABECERA
     this.api.obtenerUsuarioLogueado();
@@ -79,10 +76,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.intervalId = setInterval(() => {
       if (this.userConn != null) {
         this.getHoraFechaServidorBckEnd(this.userConn);
-      } else {
-        console.log("NO USUARIO INTERVAL")
-      }
-    }, 240000); // 300000 ms = 5 minutos 240000ms = 4 minutos
+      } 
+    }, 60000); // 600000 ms = 1 - minutos 120000 = 2 min
   }
 
   ngOnDestroy(): void {
@@ -91,6 +86,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       clearInterval(this.intervalId);
       console.log('Intervalo limpiado al destruir el componente.');
     }
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   goBack(): void {
@@ -117,20 +115,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getHoraFechaServidorBckEnd(user_conn) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
     return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + user_conn)
-      .subscribe({
+       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          // console.log("Hora Fecha Servidor cada 2 min: ", datav);
+          console.log("Hora Fecha Servidor cada minuto: ", datav);
           // this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
           // this.hora_fecha_server = datav.horaServidor;
-
           // console.log(this.fecha_actual, this.hora_fecha_server);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-        }
+        complete: () => {  }
       })
   }
 
@@ -143,7 +139,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           this.log = datav;
-          // console.log(this.log);
           this.log_ruta = this.log.filter((person) => person.tipo == 'ruta');
         },
 

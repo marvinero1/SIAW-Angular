@@ -123,6 +123,7 @@ import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/
 import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transacciones/proforma-movil/proforma-movil.component';
 import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
+import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/modificar-nota-movimiento/modificar-nota-movimiento.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -355,8 +356,13 @@ const routes: Routes = [
                 component: RegistrarInventarioGrupoComponent,
                 canActivate: [AuthGuard]
             },
+            {
+                path: 'inventario/modificaciones/ModificarNotaMovimiento',
+                component: ModificarNotaMovimientoComponent,
+                canActivate: [AuthGuard]
+            },
 
-
+            
 
 
 

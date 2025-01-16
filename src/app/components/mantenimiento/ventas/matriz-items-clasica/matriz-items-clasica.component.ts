@@ -192,6 +192,13 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   id_proforma_get:any;
   num_id_proforma_get:any;
 
+  //tipo VENTANA
+  // SEGUN EL TIPO DE VENTANA LOS ITEM SE PUEDE ELEGIR, SI LA VENTANA DE DONDE SE ABRE ES PARA VENTA CONTROLA QUE LOS ITEMS Q SE SELECCIONEN ESTEN A LA VENTA
+  // SI LA VENTANA DESDE DONDE SE ABRE ES PARA INVENTARIO NO CONTROLA QUE EL ITEM ESTE HABILITADO PARA LA VENTA
+  tipo_ventana_origen:string;
+  ventana_inventario:boolean;
+  ventana_venta:boolean;
+
   private unsubscribe$ = new Subject<void>();
   
   @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
@@ -212,7 +219,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public precio_de_venta: any,
     @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
-    @Inject(MAT_DIALOG_DATA) public num_id_proforma: any) {
+    @Inject(MAT_DIALOG_DATA) public num_id_proforma: any, @Inject(MAT_DIALOG_DATA) public tipo_ventana: any ) {
 
     this.array_items_proforma_matriz = items?.items;
     //array_items_completo
@@ -249,7 +256,20 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
     this.id_proforma_get = id_proforma?.id_proforma;
     this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
-    
+    this.tipo_ventana_origen = tipo_ventana.tipo_ventana;
+
+    if(this.tipo_ventana_origen === undefined || this.tipo_ventana_origen === "ventas"){
+      this.tipo_ventana_origen = "ventas"
+      this.ventana_venta = true;
+      this.ventana_inventario = false;
+    }
+
+    if(this.tipo_ventana_origen === "inventario"){
+      this.tipo_ventana_origen = "ventas"
+      this.ventana_inventario = true;
+      this.ventana_venta = false;
+    }
+     
     console.log("🚀 ~ MatrizItemsClasicaComponent ~ @Inject ~ cod_precio_venta_modal_codigo1:", this.cod_precio_venta_modal_codigo1)
     // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
     // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
@@ -439,7 +459,12 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     // Controlamos si this.item está vacío o undefined
     if (this.item && a === false) {  // Verifica si no es "" ni undefined ni null
       this.getlineaProductoID(cleanText);
-      this.validarItemParaVenta(cleanText);
+      if(this.ventana_inventario === false && this.ventana_venta === true){
+        this.validarItemParaVenta(cleanText);
+      }else{
+        this.item_valido = true;
+      }
+
       this.getAlmacenesSaldos();
       this.getEmpaquePesoAlmacenLocal(cleanText);
       this.getSaldoItem(cleanText);
@@ -986,7 +1011,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.si_venta = "ITEM VENTA";
+          this.si_venta = "ITEM ERROR";
           this.no_venta = "";
           this.descripcion_item = '';
           this.medida_item = '';

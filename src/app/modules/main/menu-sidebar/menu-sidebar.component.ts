@@ -57,11 +57,8 @@ export class MenuSidebarComponent implements OnInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-    
 
-    // if (this.agencia_storage === 'Loc') {
-    //   this.agencia_storage = 'Maq. Rodri'
-    // }
+    this.cerrarMenu();
   }
 
   ngOnInit() {

@@ -242,7 +242,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   item_seleccionados_catalogo_matriz_false: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar_catalogo: any = [];
+
   array_items_carrito_y_f4_catalogo: any = [];
+  array_items_carrito_y_f4_catalogo_visualizar: any = [];
+
 
   id_tipo: any = [];
   usuarioLogueado: any = [];
@@ -491,6 +494,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   decimalPipe: any;
 
+  private numberFormatter_5decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
+  item: any;
+  hay_negativos_bool:boolean;
+
   private debounceTimer: any;
   private unsubscribe$ = new Subject<void>();
 
@@ -524,8 +533,21 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);
     //this.getParametrosIniciales();
-  }
 
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+  
   @HostListener('window:popstate', ['$event'])
   onPopState(event: any) {
     history.pushState(null, '', location.href); // Si se detecta navegación hacia atrás, vuelve al mismo lugar
@@ -536,7 +558,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tipo_complementopf_input = 3;
 
     this.mandarNombre();
-    // this.getDesctLineaIDTipo();
     this.getAllmoneda();
 
     this.tipopago = 1;
@@ -634,7 +655,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         // Si el array está vacío, simplemente agregamos los nuevos elementos
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       } else {
-        // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
@@ -649,7 +669,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           element.empaque = 0;
         }
       }
-      return this.array_items_carrito_y_f4_catalogo;
+
+      // Formatea sus numeros, ya no se hace en el frontend
+      this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+        ...product,
+        cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+        cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+        porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+        total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+      }));
+
+      console.log("🚀 ~ this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe ~ this.array_items_carrito_y_f4_catalogo_visualizar: ", 
+        this.array_items_carrito_y_f4_catalogo, this.array_items_carrito_y_f4_catalogo_visualizar)
+      
+        return this.array_items_carrito_y_f4_catalogo;
     });
     //
 
@@ -675,6 +708,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         element.nroitem = index + 1;
         element.orden = index + 1;
       });
+
+      // Formatea sus numeros, ya no se hace en el frontend
+      this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+        ...product,
+        cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+        cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+        porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+        total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+      }));
 
       return this.array_items_carrito_y_f4_catalogo;
     });
@@ -721,12 +763,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.itemservice.disparadorDeDetalleImportarExcel.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Detalle de la importacion de Excel: ", data.detalle);
       this.array_items_carrito_y_f4_catalogo = data.detalle;
-      this.array_items_carrito_y_f4_catalogo.map((element) => ({
-        ...element,
-        empaque: element.empaque === undefined ? 0 : element.empaque,
+
+      // Formatea sus numeros, ya no se hace en el frontend
+      this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+        ...product,
+        cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+        cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+        porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+        total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
       }));
-      // Actualizar la fuente de datos del MatTableDataSource después de modificar el array
-      //this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
 
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -866,6 +911,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     //finDisparador
 
+
+    
+    
     
     //RECARGOS
     this.servicio_recargo_proforma.disparadorDeRecargo_a_Proforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
@@ -887,9 +935,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log("Recibiendo Tabla de Anticipos Agregados: ", data);
       this.tabla_anticipos = data.anticipos;
       this.monto_anticipo = data.totalAnticipo;
-
       // console.log(this.tabla_anticipos);
-      this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
     });
     //fin ventana anticipos de proforma // mat-tab Anticipo Venta
 
@@ -1042,9 +1088,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.preparacion;
     }
 
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
-      ...element,
-      cumple: element.cumple === 1 ? true : false,
+    // Formatea sus numeros, ya no se hace en el frontend
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(product => ({
+      ...product,
+      cumple: product.cumple === 1 ? true : false,
     }));
 
     let proforma_validar = {
@@ -1207,6 +1254,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           this.almacn_parame_usuario = datav;
           // console.log('data', this.almacn_parame_usuario);
+        
 
           this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.cod_precio_venta_modal_codigo = this.almacn_parame_usuario.codtarifa;
@@ -1218,8 +1266,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         complete: () => { }
       })
   }
-
-
 
   getVendedorCatalogo() {
     let a
@@ -1292,25 +1338,42 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRefTOTALIZAR.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         // console.log("LE DIO AL SI hay QUE MAPEAR EL DETALLE CON EL DESCT Y DESPUES HAY Q TOTALIZAR");
-        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
-          ...item,
-          codtarifa:value
+        // Formatea sus numeros, ya no se hace en el frontend
+        this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          codtarifa:value,
+          cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+          cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+          porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+          total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+        }));
+
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          codtarifa:value,
         }));
     
         this.totabilizar();
       } else {
-        // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR, SOLO PINTAR EL NUEVO VALOR");
-        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
-          ...item,
-          codtarifa:value
+        this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          codtarifa:value,
+          cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+          cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+          porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+          total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+        }));
+
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          codtarifa:value,
         }));
       }
-      return this.array_items_carrito_y_f4_catalogo;
+      return this.array_items_carrito_y_f4_catalogo, this.array_items_carrito_y_f4_catalogo_visualizar;
     });
   }
 
   aplicarDesctEspc(value) {
-    //console.log(this.array_items_carrito_y_f4_catalogo);
     this.total_desct_precio = true;
     this.total = 0.00;
     this.subtotal = 0.00;
@@ -1324,19 +1387,38 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
     dialogRefITEM.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        // console.log("LE DIO AL SI HAY Q TOTALIZAR");
-        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
-          ...item,
-          coddescuento:value
+        // Formatea sus numeros, ya no se hace en el frontend
+        this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          coddescuento:value,
+          cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+          cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+          porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+          total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
         }));
+
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          coddescuento:value,
+        }));
+
         this.totabilizar();
       } else {
-        // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR");
-        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
-          ...item,
-          coddescuento:value
+        this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          coddescuento:value,
+          cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+          cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+          porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+          total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
         }));
       }
+
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map(product => ({
+        ...product,
+        coddescuento:value,
+      }));
+
       return this.array_items_carrito_y_f4_catalogo;
     });
   }
@@ -1602,7 +1684,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
-  item: any;
   getEmpaqueItem(item) {
     console.log("OBTIENE EL EMPAQUE FOOTER PROFORMA");
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
@@ -1646,14 +1727,28 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       })
   }
 
+  getDescuentos() {
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vedescuento/catalogo/";
+    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
+    .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.descuentos_get = datav;
+          //this.cod_descuento_modal = 0;
+        },
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
   limpiar() {
     const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
-      data: { mensaje_dialog: "Se Limpiara la Proforma. ¿ Esta Segur@ ?" },
+      data: { mensaje_dialog: "SE LIMPIARA LA PROFORMA. ¿ ESTA SEGUR@ ?" },
       disableClose: true,
     });
-
 
     dialogRefLimpiara.afterClosed().subscribe((result: Boolean) => {
       if (result) {
@@ -1820,8 +1915,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedRowIndex = index;
   }
 
-
-
   onEditComplete(event: any) {
     const updatedElement = event.data; // La fila editada
     const updatedField = event.field; // El campo editado (en este caso, "empaque")
@@ -1870,6 +1963,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               product.empaque = nuevoEmpaque
               product.cantidad = Number(datav.total);
               product.cantidad_pedida = Number(datav.total);
+
+
           },
           error: (err) => {
               console.error("Error al consultar la API:", err);
@@ -1904,7 +1999,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
-          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
+          elemento.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+          elemento.total = Number(datav.total);
         },
 
         error: (err: any) => {
@@ -1913,12 +2009,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         complete: () => { }
       });
   }
-
-
-  
-
-
-
 
 
 
@@ -1958,7 +2048,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           element.preciolista = Number(datav.preciolista);
           element.preciodesc = Number(datav.preciodesc);
           element.precioneto = Number(datav.precioneto);
-          element.porcen_mercaderia = Number(datav.porcen_mercaderia);
+          element.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+          element.total = Number(datav.total);
         },
 
         error: (err: any) => {
@@ -1982,10 +2073,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // }, 1000); // 300 ms de retardo
   }
 
-
-
-
-
   // PRECIO VENTA DETALLE
   TPChangeMatrix(element: any, newValue: number) {
     console.log(element);
@@ -1993,8 +2080,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
     element.codtarifa = Number(newValue);
     // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    console.log(this.dataSource.filteredData);
-    // this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
 
     this.total = 0;
     this.subtotal = 0;
@@ -2018,70 +2103,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onLeavePrecioVentaDetalle(event: any, elemento) {
-    //NO SE USA
-    // console.log('Elemento seleccionado:', elemento);
-    this.elementoSeleccionadoPrecioVenta = elemento;
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
-
-    const inputValue = event.target.value;
-    let entero = Number(this.elementoSeleccionadoPrecioVenta.codtarifa);
-    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
-    // Verificar si el valor ingresado está presente en los objetos del array
-    const encontrado = this.tarifa_get_unico.some(objeto => objeto.codigo === entero);
-
-    if (!encontrado) {
-      // Si el valor no está en el array, dejar el campo vacío
-      event.target.value = 0;
-      // console.log("NO ENCONTRADO VALOR DE INPUT");
-    } else {
-      event.target.value = entero;
-
-      // console.log('Elemento seleccionado:', elemento);
-      this.elementoSeleccionadoDescuento = elemento;
-
-      this.servicioPrecioVenta.disparadorDePrecioVentaDetalle.subscribe(data => {
-        console.log("Recibiendo Descuento: ", data);
-        this.elementoSeleccionadoPrecioVenta.codtarifa = data.precio_venta.codigo;
-
-        this.total = 0;
-        this.subtotal = 0;
-        this.iva = 0
-        this.des_extra = 0;
-        this.recargos = 0;
-      });
-
-      //"api/venta/transac/veproforma/getItemMatriz_Anadir/DPD2_Loc_PE/PE/DPD2/35CH1H14/1/301/100/100/300800/0/311/FALSE/BS/2024-04-23"
-      this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
-        + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
-        "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
-        .subscribe({
-          next: (datav) => {
-            //this.almacenes_saldos = datav;
-            // console.log("Total al cambio de DE en el detalle: ", datav);
-            // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
-
-            elemento.preciolista = Number(datav.preciolista);
-            elemento.preciodesc = Number(datav.preciodesc);
-            elemento.precioneto = Number(datav.precioneto);
-            // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-            // console.log(this.dataSource.filteredData);
-
-            //this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-          },
-
-          error: (err: any) => {
-            console.log(err, errorMessage);
-          },
-          complete: () => {
-            //this.simularTab();
-          }
-        });
-
-    }
-  }
-
   // Función que se llama cuando se hace clic en el input
   inputClickedPrecioVenta(elemento: any) {
     // Aquí puedes hacer lo que necesites con el elemento
@@ -2100,29 +2121,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
     element.coddescuento = Number(newValue);
     // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-    // console.log(this.dataSource.filteredData);
-    // this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-
     this.total = 0;
     this.subtotal = 0;
     this.iva = 0
     this.des_extra = 0;
     this.recargos = 0;
-  }
-
-  getDescuentos() {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vedescuento/catalogo/";
-    return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
-    .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          this.descuentos_get = datav;
-          //this.cod_descuento_modal = 0;
-        },
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
   }
 
   onLeaveDescuentoEspecial(event: any) {
@@ -2168,10 +2171,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.preciolista = Number(datav.preciolista);
             element.preciodesc = Number(datav.preciodesc);
             element.precioneto = Number(datav.precioneto);
-            // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-            // console.log(this.dataSource.filteredData);
-
-            //this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+            element.total = Number(datav.total);
           },
 
           error: (err: any) => {
@@ -2208,20 +2208,23 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.preciolista = Number(datav.preciolista);
             element.preciodesc = Number(datav.preciodesc);
             element.precioneto = Number(datav.precioneto);
-            // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-            console.log(this.dataSource.filteredData);
+            element.total = Number(datav.total);
 
             this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
-            //this.simularTab();
+            // Formatea sus numeros, ya no se hace en el frontend
+            this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+              ...product,
+              cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+              cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+              porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+              total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+            }));
           },
 
           error: (err: any) => {
             console.log(err, errorMessage);
-            //this.simularTab();
           },
-          complete: () => {
-            //this.simularTab();
-          }
+          complete: () => { }
         });
     }
   }
@@ -2237,14 +2240,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   //FIN DESCUENTO ESPECIAL DETALLE
-
-
-
-
-
-  recalcularPedidoXPU(cantidad, precioneto) {
-    console.log(cantidad, precioneto);
-  }
 
   calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, precioneto: number) {
     // todo despues del if ya que si no siempre esta escuchando los eventos
@@ -2403,12 +2398,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.veproforma = proforma.cabecera
     //el cuerpo del detalle asignado al carrito
     this.array_items_carrito_y_f4_catalogo = proforma.detalle;
+    
+    // Formatea sus numeros, ya no se hace en el frontend
+    this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+      ...product,
+      cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+      cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+      porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+      total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+    }));
 
     this.URL_maps = "https://www.google.com/maps/search/?api=1&query=" + this.latitud_cliente + "%2C" + this.longitud_cliente;
-
-    // this.dataSource = new MatTableDataSource(proforma.detalle);
-    // se dibuja los items al detalle de la proforma
-    // this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
   }
 
   imprimir_cotizacion_transferida(cotizacion) {
@@ -2438,11 +2438,16 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.medio_transporte = cotizacion.cabecera.nombre_transporte;
     this.fletepor = cotizacion.cabecera.fletepor;
     this.habilitar_desct_sgn_solicitud = cotizacion.cabecera.desclinea_segun_solicitud;
-
-    this.item_seleccionados_catalogo_matriz = cotizacion.detalle;
-
+    // this.item_seleccionados_catalogo_matriz = cotizacion.detalle;
     this.array_items_carrito_y_f4_catalogo = cotizacion.detalle;
-    this.dataSource = new MatTableDataSource(cotizacion.detalle);
+    // Formatea sus numeros, ya no se hace en el frontend
+    this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+      ...product,
+      cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+      cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+      porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+      total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+    }));
   }
 
   imprimir_zip_importado(zip_json) {
@@ -2528,9 +2533,17 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       element.orden = index + 1;
     });
 
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
-      ...element,
-      cumple: element.cumple === 1 ? true:false
+    // Formatea sus numeros, ya no se hace en el frontend
+    this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo?.map(product => ({
+      ...product,
+      cumple: product.cumple === 1 ? true:false,
+      cumpleEmp: product.cumple === 1 ? true:false,
+      cumpleMin: product.cumple === 1 ? true:false,
+      
+      cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+      cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+      porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+      total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
     }));
     
     this.etiqueta_get_modal_etiqueta = zip_json.etiquetaList;
@@ -2885,30 +2898,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  openConfirmationDialog(message: string): Promise<boolean> {
-    //btn si/no
-    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
-      width: '450px',
-      height: 'auto',
-      data: { mensaje_dialog: message },
-      disableClose: true,
-    });
-
-    return firstValueFrom(dialogRef.afterClosed());
-  }
-
-  openConfirmacionDialog(message: string): Promise<boolean> {
-    //btn aceptar
-    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
-      width: '450px',
-      height: 'auto',
-      data: { mensaje_dialog: message },
-      disableClose: true,
-    });
-
-    return firstValueFrom(dialogRef.afterClosed());
-  }
-
   getPrecioInicial() {
     // this.valor_formulario.map((element: any) => {
     //   this.valor_formulario_copied_map_all = {
@@ -2988,9 +2977,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       cumple: element.cumple === 1 ? true : false,
     }));
 
-    console.log("🚀 ~ this.array_items_carrito_y_f4_catalogo=this.array_items_carrito_y_f4_catalogo.map ~ array_items_carrito_y_f4_catalogo:", this.array_items_carrito_y_f4_catalogo)
-    console.log("🚀 ~ ProformaComponent ~ array_cumple=[this.FormularioData.value].map ~ array_cumple:", array_cumple)
-
     let array_post = {
       tabladetalle: this.array_items_carrito_y_f4_catalogo,
       dvta: array_cumple[0],
@@ -3018,10 +3004,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.disableSelectComplemetarProforma = true;
   }
 
-
-
-
-  hay_negativos_bool:boolean;
   //accion de btn grabar
   async submitData() {
     let data1 = this.FormularioData.value;
@@ -3144,23 +3126,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
     this.submitted = true;
-
     data1 = this.FormularioData.value;
-    // console.log("Valor Formulario Original: ", this.valor_formulario);
-    
-    
-    
-    // MAPEAR ACA PARA Q SE AUMENTE TIPO PAGO
-    // data1.map((element: any) => {
-    //   ...element;
-
-    //   if (this.tipopago === 1) {
-    //     element.contra_entrega = false;
-    //     element.estado_contra_entrega = "";
-    //   };
-      
-    // });
-
 
     data1 = {
       ...data1,
@@ -3613,14 +3579,14 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.complementopf = 1;
     }
 
-    let tamanio_array_descuentos = this.array_de_descuentos_ya_agregados?.length === undefined ? [] : this.array_de_descuentos_ya_agregados.length;
+    let tamanio_array_descuentos = this.array_de_descuentos_ya_agregados?.length === undefined ? [] : this.array_de_descuentos_ya_agregados?.length;
     console.warn("tamanio array descuentos", this.array_de_descuentos_ya_agregados?.length);
 
     if (tamanio_array_descuentos === 0 || tamanio_array_descuentos === undefined) {
       this.array_de_descuentos_ya_agregados = [];
     };
 
-    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+    if (this.array_items_carrito_y_f4_catalogo?.length === 0) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA'});
     };
 
@@ -3628,7 +3594,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
-    this.array_items_carrito_y_f4_catalogo?.map((element) => ({
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo?.map((element) => ({
       ...element,
       empaque: element.empaque === undefined ? 0 : element.empaque,
     }));
@@ -3681,11 +3647,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             this.peso = Number(this.totabilizar_post.totales?.peso);
             this.tablaIva = this.totabilizar_post.totales?.tablaIva;
 
-            this.getNombreDeDescuentos(this.totabilizar_post.totales?.tablaDescuentos);
+            this.getNombreDeDescuentos(this.totabilizar_post.totales?.tablaDescuentos);            
+            if(this.totabilizar_post.totales?.mensaje){
+              this.openConfirmationDialog(this.totabilizar_post.totales?.mensaje)
+            }
 
             //aca se pinta con la info q llega del backend
             this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
             
+            
+            if(this.totabilizar_post.totales?.mensaje){
+              this.openConfirmationDialog(this.totabilizar_post.totales?.mensaje)
+            }
+
+
             if(this.totabilizar_post.totales?.mensaje){
               this.openConfirmationDialog(this.totabilizar_post.totales?.mensaje)
             }
@@ -3696,7 +3671,19 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               element.orden = index + 1;
             });
 
-            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+            this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+              ...product,
+              cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+              cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+              porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+              total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+            }));
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 50);
+
+            return this.array_items_carrito_y_f4_catalogo;
           }
         })
     } else {
@@ -3711,47 +3698,63 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  formatNumber(number: number): any {
-    // Formatear el número con el separador de miles como coma y el separador decimal como punto
-    return new Intl.NumberFormat('en-US').format(number);
-  }
-
-  convertToNumber(value: any): number {
-    if (value === undefined) {
-      return 0; // O cualquier valor predeterminado que desees
-    }
-    return parseFloat(value.toString().replace(',', '.'));
-  }
-
-  formatNumberTotalSubTOTALES(numberString: number | string): string {
-    if (numberString === null || numberString === undefined || numberString === '') {
-      return '0.00'; // Valor predeterminado
-    }
-    
-    // Intentar convertir a número, considerando posibles entradas como cadenas
-    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    
-    if (isNaN(parsedNumber)){
-      return '0.00'; // Manejar entradas no válidas
-    }
+  // formatNumberTotalSubTOTALES(numberString: number | string): string {
+  //   // Verificar si el valor es nulo, indefinido o vacío
+  //   if (!numberString && numberString !== 0) {
+  //     return '0.00';
+  //   }
   
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(parsedNumber);
+  //   // Formatear el número con separadores de miles y dos decimales
+  //   return numberString.toLocaleString('en-US', { 
+  //     minimumFractionDigits: 2, 
+  //     maximumFractionDigits: 2 
+  //   });
+  // }
+
+  // formatNumberTotalSubTOTALES(numberString: number): string {
+  //   // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+  //   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numberString);
+  // }
+
+  // formatNumberTotalSubTOTALES(numberString: number): string {
+  //   const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+  //   return Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numberString);;
+  // }
+
+
+
+  
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
+
+
+
+
+
+
+
+
+  
 
   async validarProformaAll() {
     console.clear();
     this.getPrecioInicial();
     //SI EL USUARIO VALIDA PERO NO GRABO PRIMERAMENTE LA ETIQUETA QUE LE SALGA LA VENTANA DE LA ETIQUETA Y Q GRABRE XD XD
-    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
+    let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta?.length;
     if (this.total === 0.00) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0' });
       setTimeout(() => {
@@ -3799,11 +3802,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     // ESTO CON EL OBJETIVO DE QUE CUANDO VALIDEN EL SPINNER NO DESAPAREZCA
     // HASTA QUE TERMINE DE VALIDAR
 
-
     // CUALQUIERL CAMBIO EN TOTABILIZAR() TAMBIEN SE TIENE Q REPLICAR ACA
     let total_proforma_concat: any = [];
-
-    // console.log("Carrito con Items y nroitems", this.array_items_carrito_y_f4_catalogo);
 
     //valor del check en el mat-tab complementar proforma
     if (this.disableSelectComplemetarProforma === false) { //valor del check en el mat-tab complementar proforma this.disableSelectComplemetarProforma.value 
@@ -3812,7 +3812,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.complementopf = 1;
     }
 
-    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+    if (this.array_items_carrito_y_f4_catalogo?.length === 0) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE DE PROFORMA'});
     };
 
@@ -3820,9 +3820,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
-    this.array_items_carrito_y_f4_catalogo.map((element) => ({
+    this.array_items_carrito_y_f4_catalogo?.map((element) => ({
       ...element,
       empaque: element.empaque === undefined ? 0 : element.empaque,
+      total: element.total
     }));
 
     let tamanio_array_descuentos = this.array_de_descuentos_ya_agregados?.length === undefined ? [] : this.array_de_descuentos_ya_agregados.length;
@@ -3880,13 +3881,12 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tablaIva = this.totabilizar_post.totales?.tablaIva;
 
             this.getNombreDeDescuentos(this.totabilizar_post.totales?.tablaDescuentos);
-
-            //aca se pinta con la info q llega del backend
-            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
-
             if(this.totabilizar_post.totales?.mensaje){
               this.openConfirmationDialog(this.totabilizar_post.totales?.mensaje)
             }
+
+            //aca se pinta con la info q llega del backend
+            this.array_items_carrito_y_f4_catalogo = this.totabilizar_post?.detalleProf;
 
             // Agregar el número de orden a los objetos de datos
             this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -3894,11 +3894,24 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               element.orden = index + 1;
             });
 
-            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+            // Formatea sus numeros, ya no se hace en el frontend
+            this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo?.map(product => ({
+              ...product,
+              cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+              cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+              porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+              total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+            }));
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 10);
+
+            return this.array_items_carrito_y_f4_catalogo;
           }
         })
     } else {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'REVISE FORMULARIO' });
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'REVISE FORMULARIO'});
       console.log("HAY QUE VALIDAR DATOS");
     }
   }
@@ -3991,6 +4004,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.array_items_carrito_y_f4_catalogo.map((element) => ({
       ...element,
       empaque: element.empaque === undefined ? 0 : element.empaque,
+      total: parseInt(element.total)
     }));
 
     if (this.habilitar_desct_sgn_solicitud === undefined) {
@@ -4057,9 +4071,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             if(this.totabilizar_post.totales?.mensaje){
               this.openConfirmationDialog(this.totabilizar_post.totales?.mensaje)
             }
-
-            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-
             await this.validar();
           }
         })
@@ -4262,8 +4273,27 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.toggleNegativos = false;
           this.togglePositivos = false;
 
+          this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
+            ...element,
+            cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
+            cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
+            saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
+            cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
+            cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
+            saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
+          }));
+
           this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+
           this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4391,7 +4421,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         estado_doc_vta: "NUEVO",
 
-
         monto_anticipo: 0,
         nrofactura: "0",
         nroticket: "",
@@ -4448,11 +4477,27 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA MAX VENTAS ✅' })
           this.validacion_post_max_ventas = datav.jsonResult[0].dtnocumplen;
 
+          this.validacion_post_max_ventas = this.validacion_post_max_ventas.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            saldo: this.formatNumberTotalSubTOTALES(product.saldo),
+            porcen_maximo: this.formatNumberTotalSubTOTALES(product.porcen_maximo),
+            cantidad_permitida_seg_porcen: this.formatNumberTotalSubTOTALES(product.cantidad_permitida_seg_porcen),
+          }));
+
           this.toggleTodosMaximoVentas = true;
           this.toggleMaximoVentaSobrepasan = false;
           this.toggleMaximoVentasNoSobrepasan = false;
 
           this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           setTimeout(() => {
             this.spinner.hide();
@@ -4708,7 +4753,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.api.create('/venta/transac/veproforma/empaquesCerradosVerifica/' + this.userConn + "/" + this.codigo_cliente, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
-          console.log(datav);
+          console.log("🚀 ~ empaquesCerradosValidacion ~ datav:", datav)
 
           if (datav.cumple === true) {
             mesagge = "CUMPLE";
@@ -4727,21 +4772,30 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.orden = index + 1;
           });
 
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 5);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 5);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 5);
         }
       })
   }
@@ -4751,7 +4805,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.api.create('/venta/transac/veproforma/empaquesMinimosVerifica/' + this.userConn + "/" + this.codigo_cliente + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
       .subscribe({
         next: (datav) => {
-          console.log(datav);
+        console.log("🚀 ~ empaquesMinimosPrecioValidacion ~ datav:", datav)
 
           if (datav.cumple === true) {
             mesagge = "CUMPLE";
@@ -4769,21 +4823,30 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.orden = index + 1;
           });
 
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err);
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         }
       });
   }
@@ -5207,7 +5270,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         tipo_cliente: this.tipo_cliente,
         totdesctos_extras: this.des_extra,
 
-
         // esto siempre vacio y ceo porq ya no se usa 13-12-2024
         idsol_nivel: "",
         nroidsol_nivel: "0",
@@ -5289,16 +5351,40 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         datav.jsonResult.forEach(element => {
           if(element.codigo === 60){
             this.validacion_post_negativos = element.dtnegativos;
+            this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
+              ...element,
+              cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
+              cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
+              saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
+              cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
+              cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
+              saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
+            }));
             this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
           }
 
           if(element.codigo === 58){
             this.validacion_post_max_ventas = element.dtnocumplen;
+            this.validacion_post_max_ventas = this.validacion_post_max_ventas.map(product => ({
+              ...product,
+              cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+              saldo: this.formatNumberTotalSubTOTALES(product.saldo),
+              porcen_maximo: this.formatNumberTotalSubTOTALES(product.porcen_maximo),
+              cantidad_permitida_seg_porcen: this.formatNumberTotalSubTOTALES(product.cantidad_permitida_seg_porcen),
+              }));
             this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           }
         });
 
         this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+        // Formatea sus numeros, ya no se hace en el frontend
+        this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+          ...product,
+          cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+          cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+          porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+          total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+        }));
         this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION EXITOSA ✅' })
 
         setTimeout(() => {
@@ -5417,6 +5503,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           this.array_ultimas_proformas = datav;
           console.log(this.array_ultimas_proformas);
 
+          this.array_ultimas_proformas = this.array_ultimas_proformas.map(product => ({
+            ...product,
+            total: this.formatNumberTotalSubTOTALES(product.total),
+            }));
+
           this.dataSourceUltimasProformas = new MatTableDataSource(this.array_ultimas_proformas);
           setTimeout(() => {
             this.spinner.hide();
@@ -5508,9 +5599,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.nroitem = index + 1;
           });
 
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           if (datav.msgTitulo !== '' && datav.msgDetalle !== '') {
             this.modalDetalleObservaciones(datav.msgTitulo, datav.msgDetalle);
           }
+          
+          this.totabilizar();
 
           setTimeout(() => {
             this.spinner.hide();
@@ -5536,9 +5638,10 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.show();
     this.array_items_carrito_y_f4_catalogo.map((element) => {
       element.coddescuento = 0;
-      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BORRANDO DESCUENTOS ⚙️' })
     });
+
     setTimeout(() => {
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BORRANDO DESCUENTOS ⚙️' })
       this.spinner.hide();
     }, 500);
   }
@@ -5565,7 +5668,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       fecha: fecha,
       tabladetalle: this.array_items_carrito_y_f4_catalogo
     };
-    console.log(array);
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/valEmpDescEsp/";
     return this.api.create('/venta/transac/veproforma/valEmpDescEsp/' + this.userConn, array)
@@ -5583,7 +5685,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.orden = index + 1;
             element.nroitem = index + 1;
           });
-          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
 
           if (datav.cumple === true) {
             this.modalDetalleObservaciones("CUMPLE", datav.msg);
@@ -5593,20 +5703,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         }
       });
   }
@@ -5640,7 +5750,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
         next: (datav) => {
           console.log(datav);
 
-          if(datav.resp === "Los items ya cumplen con empaques, no se dividiran."){
+          if(datav.resp === "LOS ITEM."){
             this.modalDetalleObservaciones(datav.resp, " ");
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp })
 
@@ -5648,27 +5758,43 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
               this.spinner.hide();
             }, 500);
           }else{
-            this.modalDetalleObservaciones(datav.alertMsg, " ");
+            if(datav.alertMsg){
+              this.modalDetalleObservaciones(datav.alertMsg, " ");
+            }
 
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DIVIDIR ITEMS PARA CUMPLIR EMPAQUE CAJA CERRADA PROCESADO ⚙️' });
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav?.resp });
-  
-            this.array_items_carrito_y_f4_catalogo = datav?.tabladetalle;
-            console.log(this.array_items_carrito_y_f4_catalogo);
+            
+            if(datav.tabladetalle){
+              this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+            }
+            
+            // Formatea sus numeros, ya no se hace en el frontend
+            this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo?.map(product => ({
+              ...product,
+              cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+              cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+              porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+              total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+            }));
   
             //siempre sera uno
             this.orden_creciente = 1;
             // Agregar el número de orden a los objetos de datos
-            this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+            this.array_items_carrito_y_f4_catalogo?.forEach((element, index) => {
               element.orden = index + 1;
               element.nroitem = index + 1;
             });
   
+  
+            this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+  
+   
             this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
   
             setTimeout(() => {
               this.spinner.hide();
-            }, 500);
+            }, 50);
           }
         },
 
@@ -5676,19 +5802,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         },
         complete: () => {
           this.totabilizar();
           setTimeout(() => {
             this.spinner.hide();
-          }, 500);
+          }, 50);
         }
       });
   }
 
-  sugerirCantidadDescEspecial() {
-    console.log(this.array_items_carrito_y_f4_catalogo);
+  sugerirCantidadDescEspecial(){
     this.restablecerContadorClickSugerirCantidad();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/sugerirCantDescEsp/";
     return this.api.create('/venta/transac/veproforma/sugerirCantDescEsp/' + this.userConn + "/" + this.cod_descuento_modal + "/" + this.agencia_logueado
@@ -5713,8 +5838,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.nroitem = index + 1;
           });
 
-          console.log("Data Sugerida: ", datav.tabla_sugerencia)
-          //console.log("Data del Carrito: ", this.array_items_carrito_y_f4_catalogo);
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav.msgDetalle });
           this.dataSource_precios_desct = new MatTableDataSource(datav.tabla_sugerencia);
 
@@ -5758,6 +5890,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.nroitem = index + 1;
             element.orden = index + 1;
           });
+
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
         }
       }
       else {
@@ -5767,6 +5908,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
           console.log(this.dataSource.filteredData);
           this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+          
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
 
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
             element.nroitem = index + 1;
@@ -5802,6 +5952,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
             element.nroitem = index + 1;
             element.orden = index + 1;
           });
+
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
         }
       } else {
         if (item_select.cantidad !== item.cantidad) {
@@ -5810,6 +5969,15 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
           // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
           console.log(item_select.cantidad_pedida);
           this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+          
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = this.array_items_carrito_y_f4_catalogo.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
 
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
             element.nroitem = index + 1;
@@ -5901,9 +6069,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       cumple: element.cumple === 1 ? true : false,
     }));
 
-    console.log("🚀 ~ ProformaComponent ~ array_cumple=[this.FormularioData.value].map ~ array_cumple:", array_cumple)
-    console.log("🚀 ~ this.array_items_carrito_y_f4_catalogo=this.array_items_carrito_y_f4_catalogo.map ~ array_items_carrito_y_f4_catalogo:", this.array_items_carrito_y_f4_catalogo)
-
     let array_post = {
       tabladetalle: this.array_items_carrito_y_f4_catalogo,
       dvta:  array_cumple[0],
@@ -5914,7 +6079,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe({
         next: (datav) => {
           this.tarifaPrincipal_value = datav.codTarifa;
-
           console.log(this.tarifaPrincipal_value);
         },
 
@@ -6032,8 +6196,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   detalleProformaCarritoTOExcel() {
-    console.log(this.array_items_carrito_y_f4_catalogo);
-    // console.log([this.array_items_carrito_y_f4_catalogo].length);
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
     const nombre_archivo = this.id_tipo_view_get_codigo + "_" + this.id_proforma_numero_id;
 
@@ -6047,6 +6209,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     dialogRefExcel.afterClosed().subscribe((result: Boolean) => {
       if (result) {
         // Convertir los datos a una hoja de cálculo
+        
         const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.array_items_carrito_y_f4_catalogo);
         const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
 
@@ -6082,8 +6245,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onRowSelectForDelete() {
-    // console.log('Array de Items para eliminar: ', this.selectedProducts);
-
     // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
       return !this.selectedProducts.some(selectedItem =>
@@ -6096,15 +6257,11 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       element.nroitem = index + 1;
     });
 
-    // Actualizar el origen de datos del MatTableDataSource
-    this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-
     // Limpiar el array de productos seleccionados
     this.selectedProducts = [];
   }
 
   onRowUnselect(event: any) {
-    // console.log('Row Unselected:', event.data);
     this.updateSelectedProducts();
   }
 
@@ -6120,7 +6277,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   ordenarDetalleSegunOrdenPedido() {
     console.log("....ordenando");
     this.array_items_carrito_y_f4_catalogo = [...this.array_items_carrito_y_f4_catalogo.sort((a, b) => b.nroitem - a.nroitem)];
-    console.log(this.array_items_carrito_y_f4_catalogo);
 
     // Forzar la detección de cambios
     this.cdr.detectChanges();
@@ -6241,6 +6397,29 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  openConfirmationDialog(message: string): Promise<boolean> {
+    //btn si/no
+    const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+
+  openConfirmacionDialog(message: string): Promise<boolean> {
+    //btn aceptar
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
 
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem

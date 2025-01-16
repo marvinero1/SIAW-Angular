@@ -101,10 +101,8 @@
     </div>
   </div>
 
-
   <div class="content">
     <!-- cabecera -->
-    <!-- <form class="example-form" [formGroup]="FormularioData"> -->
       <div class="mat-elevation-z2">
         <!-- primeraColumna -->
         <div class="row">
@@ -150,8 +148,8 @@
               </div>
             </div>
           </div>
-          
-          <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;"></div>
+
+          <div class="col-md-1" style="padding-right: 6.5px;padding-left: 0px;"></div>          
 
           <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
             <div class="input-group-prepend">
@@ -207,7 +205,7 @@
             </div>
           </div>
 
-          <div class="col-md-5" style="padding-right: 6.5px;padding-left: 0px;"></div>
+          <div class="col-md-1" style="padding-right: 6.5px;padding-left: 0px;"></div>
 
           <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
             <div class="input-group-prepend">
@@ -252,8 +250,9 @@
               <span>{{ descripcion_usuario_final }}</span> 
             </div>
           </div>
+          
           <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;"></div>
-          <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;"></div>
+          
           <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;">
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
@@ -270,7 +269,7 @@
                 </button>
               </div>
             </div>
-          </div>
+          </div>        
         </div>
 
         <div class="row">
@@ -304,26 +303,27 @@
             <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 22px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones" maxlength="60">
             </div>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-5" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm"
                   style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>ID-NroID Origen</u></span>
               </div>
 
-              <ng-container>
-                <input type="text" class="form-control form-control-sm" id="inputCatalogoIdTipo"
-                 [(ngModel)]="id_origen" [readonly]="fidEnable">
-              </ng-container>
-              
+              <div style="width: 93x !important;">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_origen" [readonly]="fidEnable">
+              </div>
+               
               <div class="input-group-append">
-                <input type="text" class="form-control form-control-sm" [readonly]="fnumeroidEnable" [(ngModel)]="nroid_origen">
+                <div style="width: 80px !important;">
+                  <input type="text" class="form-control form-control-sm" [readonly]="fnumeroidEnable" [(ngModel)]="nroid_origen">
+                </div>
 
                 <button class="btn btn-outline-primary form-control-sm" type="button" (click)="solicitarPermisoDatoADatoB();"
                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID">
@@ -332,9 +332,10 @@
               </div>
             </div>
           </div>
-          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;"></div>
+    
           <div class="col-md-1" style="padding-right: 0px;padding-left: 6.5px;"></div>
-          <div class="col-md-4" style="padding-right: 6.5px;padding-left: 6.5px;">
+
+          <div class="col-md-3" style="padding-right: 6.5px;padding-left: 6.5px;">
             <div class="input-group">
               <div class="input-group-">
                 <span class="input-group-text form-control-sm"
@@ -342,9 +343,11 @@
               </div>
 
               <ng-container>
-                <input type="text" class="form-control form-control-sm"
-                [(ngModel)]="id_proforma_sol_urgente" (blur)="onLeaveCatalogoProforma($event)" readonly>
-                <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" (blur)="onLeaveCatalogoProforma($event)"  readonly> -->
+                <div style="width: 70px;">
+                  <input type="text" class="form-control form-control-sm"
+                  [(ngModel)]="id_proforma_catalogo" (blur)="onLeaveCatalogoProforma($event)" >
+                  <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" (blur)="onLeaveCatalogoProforma($event)"  readonly> -->  
+                </div>
               </ng-container>
               
               <div class="input-group-append">
@@ -353,8 +356,11 @@
                    style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Proforma">
                    <i class="fa fa-search"></i>
                 </button>
-                <input type="text" class="form-control form-control-sm" 
-                [(ngModel)]="numero_id_proforma_sol_urgente" readonly>
+                <div style="width: 85px;">
+                  <input type="text" class="form-control form-control-sm" 
+                  [(ngModel)]="numero_id_catalogo_proforma" >
+                </div>
+                
               </div>
             </div>
           </div>
@@ -370,46 +376,43 @@
 
               <ng-container>
                 <input type="text" class="form-control form-control-sm" (blur)="onLeaveCatalogoProforma($event)" 
-                [(ngModel)]="id_proforma_catalogo" [readonly]="id_proforma_solReadOnly">
+                [(ngModel)]="id_proforma_sol_urgente" [readonly]="id_proforma_solReadOnly">
               </ng-container>
             </div>
           </div>
 
-          <div class="col-md-9" style="padding-left: 0px !important;">
+          <div class="col-md-3" style="padding-left: 0px !important;">
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button"
-                (click)="catalogoProformas('proforma_almacen')" [disabled]="cvenumeracion1" style="border-color: #093070;" 
+                (click)="catalogoProformas('proforma_almacen')" [disabled]="id_proforma_solReadOnly" style="border-color: #093070;" 
                 matTooltipClass="custom-tooltip" matTooltip="Buscador Proformas">
                 <i class="fa fa-search"></i> 
               </button> 
 
-              <input type="number" class="form-control form-control-sm" [(ngModel)]="numero_id_catalogo_proforma" [readonly]="numeroidproforma_solReadOnly" style="width: 19%;">
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="numero_id_proforma_sol_urgente" [readonly]="numeroidproforma_solReadOnly" style="width: 19%;">
 
               <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="cargar_proformaEnabled"
                 matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente" (click)="cargarProformaSolicitudUrgente();">
-                <mat-icon
-                  style="color: #05970c;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  description</mat-icon>PF Sol. Urgente
+                <mat-icon style="color: #05970c;height: 13px !important;width: 16px !important;">description</mat-icon>PF Sol. Urgente
               </button>
+            </div>
+          </div>
 
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text form-control-sm"
-                    style="padding: 0px 0px 0px 7px;border: 0 !important;"><u>Desarmar Conjuntos</u></span>
-                </div>
-                <div class="input-group-prepend">
-                  <div class="input-group-text" style="border: 0 !important;">
-                    <input type="checkbox" [(ngModel)]="chkdesglozar_cjtos">
-                  </div>
+          <div class="col-md-3">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text form-control-sm" style="padding: 0px 0px 0px 0px;border: 0 !important;"><u>Desarmar Conjuntos</u></span>
+              </div>
+              <div class="input-group-prepend">
+                <div class="input-group-text" style="border: 0 !important;">
+                  <input type="checkbox" [(ngModel)]="chkdesglozar_cjtos">
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    <!-- </form> -->
     <!-- finCabezera -->
-
 
     <!-- InicioTabla -->
     <div class="row">
@@ -500,16 +503,20 @@
             <div style="background-color: black;color: yellow;">
               <span>RESULTADO OBSERVACIONES CANTIDADES CON DECIMALES</span>
             </div>
-            <p-listbox [options]="eventosLogs" [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
+            <p-listbox  style="padding: 0px !important;color: #ffff00 !important;" 
+             [options]="eventosLogs" [(ngModel)]="eventosLogs" 
+              optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
             </p-listbox>
             <br><br>
           </mat-tab>
 
           <mat-tab label="Obs. Validar Saldos">
-            <div style="background-color: black;color: yellow;">
+            <div style="background-color: black !important;color: yellow;">
               <span>RESULTADO OBSERVACIONES VALIDAR SALDOS</span>
             </div>
-            <p-listbox [options]="eventosLogs" [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false" scrollHeight="250px">
+            <p-listbox style="padding: 0px !important;color: #00ffff !important;" 
+              [options]="eventosLogs" scrollHeight="250px"
+              [(ngModel)]="eventosLogs" optionLabel="label" [metaKeySelection]="false">
             </p-listbox>
             <br><br>
           </mat-tab>

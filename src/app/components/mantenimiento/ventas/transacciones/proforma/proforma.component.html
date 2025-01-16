@@ -755,7 +755,7 @@
       <div class="col">
         <mat-tab-group  class="miTabGroupDetalle" #tabGroup>
           <mat-tab label="Detalle del Pedido">
-            <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
+            <p-table [value]="array_items_carrito_y_f4_catalogo_visualizar" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
               [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
               (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
@@ -788,18 +788,18 @@
                   <th pSortableColumn="iva" class="center1" style="width:2%">
                     %IVA
                   </th>
-                  <th pSortableColumn="empaque" class="center1">
+                  <th pSortableColumn="empaque" class="right1">
                     Empaque
                   </th>
-                  <th pSortableColumn="pedido" class="center1">
+                  <th pSortableColumn="pedido" class="right1">
                     Pedido
-                    <p-sortIcon field="pedido" />
+                    <!-- <p-sortIcon field="pedido" /> -->
                   </th>
-                  <th pSortableColumn="cantidad" class="center1">
+                  <th pSortableColumn="cantidad" class="right1">
                     Cantidad
-                    <p-sortIcon field="cantidad" />
+                    <!-- <p-sortIcon field="cantidad" /> -->
                   </th>
-                  <th pSortableColumn="sld" class="right">
+                  <th pSortableColumn="sld" class="right1">
                     % SLD
                   </th>
                   <th pSortableColumn="TP" class="center1">
@@ -850,10 +850,10 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <!-- COLUMNA EMPAQUE -->
-                  <td class="center1">
+                  <td class="right1">
                     <p-cellEditor [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
                         <ng-template pTemplate="input">
-                            <input
+                            <input 
                                 pInputText
                                 type="number"
                                 min="0"
@@ -861,13 +861,13 @@
                             />
                         </ng-template>
                         <ng-template pTemplate="output">
-                            {{ formatNumberTotalSubTOTALES(products.empaque === null ? 0 : products.empaque) }}
+                            {{ products.empaque === null ? 0 : products.empaque }}
                         </ng-template>
                     </p-cellEditor>
                   </td>
                 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="center1">
+                  <td class="right1">
                     <p-cellEditor [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0">
@@ -875,16 +875,16 @@
 
                       <ng-template pTemplate="output">
                         <ng-container
-                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1" >
-                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
+                          *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
+                          <span>{{ products.cantidad_pedida }}</span>
                           <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                             (change)="onInputChangecantidadChangeMatrix(products, $event.target.value);" > -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
-                          <span
-                            style="color: #1414B8 !important;background-color: #a6a5bb6b;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad_pedid) }}</span>
+                          <span style="color: #1414B8 !important;background-color: #a6a5bb6b;font-weight: 900;">
+                            {{ products.cantidad_pedida }}
+                          </span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                             (change)="onInputChange(products, $event.target.value)"
                             style="color: rgba(0, 0, 255, 0.824);"> -->
@@ -893,7 +893,7 @@
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <span
                             style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
+                            {{ products.cantidad_pedida }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                             (change)="onInputChange(products, $event.target.value)"
                             style="color: rgba(255, 0, 0, 0.824);"> -->
@@ -902,7 +902,7 @@
                         <ng-container *ngIf="products?.cumple === false">
                           <!-- NEGATIVOS -->
                           <span style="color: #5050e2 !important;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
+                            {{ products.cantidad_pedida }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                               (change)="onInputChange(products, $event.target.value)"
                               style="color: rgba(255, 0, 0, 0.824);"> -->
@@ -912,7 +912,7 @@
                   </td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="center1" >
+                  <td class="right1" >
                     <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
@@ -921,14 +921,14 @@
                       <ng-template pTemplate="output">
                         <ng-container
                           *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true && products?.cumple === true || products?.cumple === 1">
-                          <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
+                          <span>{{ products.cantidad }}</span>
                           <!-- C <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"-->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span
                             style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
+                            {{ products.cantidad }}</span>
                           <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                             style="color: rgba(0, 0, 255, 0.824) !important;"> -->
                         </ng-container>
@@ -936,7 +936,7 @@
                         <ng-container *ngIf="products?.cumpleMin === false">
                           <span
                             style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
+                            {{ products.cantidad }}</span>
                           <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                             id="input_cantidad"
                             style="color: rgba(255, 0, 0, 0.824) !important;"> -->
@@ -945,7 +945,7 @@
                         <ng-container *ngIf="products?.cumple === false" >
                           <!-- NEGATIVOS -->
                           <span style="color: #5050e2 !important;font-weight: 900;">
-                            {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span> 
+                            {{ products.cantidad }}</span> 
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
                              id="input_cantidad"
                              style="color: rgba(255, 0, 0, 0.824) !important;"> -->
@@ -955,7 +955,7 @@
                   </td>
                   <!-- FIN COLUMNA CANTIDAD -->
 
-                  <td class="right">{{ formatNumberTotalSubTOTALES(products.porcen_mercaderia) }}</td>
+                  <td class="right1">{{ products.porcen_mercaderia }}</td>
 
                   <td class="center1" >
                     <p-cellEditor [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
@@ -989,13 +989,11 @@
                   </td>
                   <td class="right1">{{ products.preciolista }}</td>
                   <td class="right1">{{ products.niveldesc }}</td>
-                  <td class="right1">{{ products.porcendesc  | json}}</td>
-                  <td class="right1">
-                    {{ products.preciodesc?.toString()?.replace(',', '.') }}</td>
-                  <td class="right1">
-                    {{ products.precioneto?.toString().replace(',', '.') }}</td>
-                  <td class="right1">
-                    {{  calcularTotalCantidadXPU(products?.cantidad_pedida, products?.cantidad, products?.precioneto) }}
+                  <td class="right1">{{ products.porcendesc | json}}</td>
+                  <td class="right1">{{ products.preciodesc?.toString()?.replace(',', '.') }} </td>
+                  <td class="right1">{{ products.precioneto?.toString().replace(',', '.') }}</td>
+                  <td class="right1">{{ products.total }}
+                    <!-- {{  calcularTotalCantidadXPU(products?.cantidad_pedida, products?.cantidad, products?.precioneto) }} -->    
                   </td>
                 </tr>
               </ng-template>
@@ -1058,7 +1056,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-negativos"
                   style="padding: 0 0px 0 0px !important"> Cant. </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad) }}</td>
+                  !important">{{ element.cantidad }}</td>
               </ng-container>
 
               <!-- Cantidad Pedida en Conjunto Column -->
@@ -1067,7 +1065,7 @@
                   style="padding: 0 0px 0 0px !important"> Cant. Pedida en
                   Conjunto </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad_conjunto) }}
+                  !important">{{ element.cantidad_conjunto }}
                 </td>
               </ng-container>
 
@@ -1077,7 +1075,7 @@
                   style="padding: 0 0px 0 0px !important"> Saldo Real </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: right !important;">
-                  {{ formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas) }}</td>
+                  {{ element.saldo_sin_descontar_reservas }}</td>
               </ng-container>
 
               <!-- Cantidad Pedida en Suelto Column -->
@@ -1087,7 +1085,7 @@
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: right !important; padding: 0px 2px 0px 9px !important;">
-                  {{ formatNumberTotalSubTOTALES(element.cantidad_suelta) }}
+                  {{ element.cantidad_suelta }}
                 </td>
               </ng-container>
 
@@ -1098,7 +1096,7 @@
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: right !important;">
-                  {{ formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos)}}</td>
+                  {{ element.cantidad_reservada_para_cjtos }}</td>
               </ng-container>
 
               <!-- Cantidad Reserva Conjunto Column -->
@@ -1108,7 +1106,7 @@
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-negativos"
                   style="text-align: right !important;">
-                  {{ formatNumberTotalSubTOTALES(element.saldo_descontando_reservas) }}</td>
+                  {{ element.saldo_descontando_reservas }}</td>
               </ng-container>
 
               <!-- Observacion Column -->
@@ -1180,7 +1178,7 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Actual
                 </th>
                 <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad) }}</td>
+                  !important">{{ element.cantidad }}</td>
               </ng-container>
 
               <!-- Cantidad Total Column -->
@@ -1194,8 +1192,8 @@
 
               <!-- % de Venta Column -->
               <ng-container matColumnDef="porcen_venta">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">% de Venta</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas right1">% de Venta</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas right1" style="padding: 0 0px 0 0px
                   !important">{{ element.porcen_venta }}</td>
               </ng-container>
 
@@ -1207,60 +1205,34 @@
                   style="text-align: center !important; padding: 0 0px 0 0px !important">{{ element.coddescuento }}</td>
               </ng-container>
 
-              <!-- Precio Column -->
-              <ng-container matColumnDef="precio">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Precio</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important"> </td>
-              </ng-container>
-
               <!-- Saldo Column -->
               <ng-container matColumnDef="saldo">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Saldo</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ formatNumberTotalSubTOTALES(element.saldo) }}</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas right1">Saldo</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas right1" style="padding: 0 0px 0 0px !important">{{ element.saldo }}</td>
               </ng-container>
 
               <!-- % Max. Ventas Column -->
               <ng-container matColumnDef="porcen_maximo">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">% Max. Ventas</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas"
-                  style="text-align: center !important; padding: 0 0px 0 0px !important">
-                  {{ formatNumberTotalSubTOTALES(element.porcen_maximo) }}
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas right1">% Max. Ventas</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas right1" style="padding: 0 0px 0 0px !important">
+                  {{ element.porcen_maximo }}
                 </td>
               </ng-container>
 
               <!-- Cantidad Max. Ventas Column -->
               <ng-container matColumnDef="cantidad_max_venta">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Cant. Max. Ventas</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: right !important; padding: 0 0px 0 0px
-                  !important">{{ formatNumberTotalSubTOTALES(element.cantidad_permitida_seg_porcen) }}</td>
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas right1">Cant. Max. Ventas</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas right1" style="padding: 0 0px 0 0px
+                  !important">{{ element.cantidad_permitida_seg_porcen }}</td>
               </ng-container>
 
               <!-- Empaque Column -->
               <ng-container matColumnDef="empaque_precio">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">Empaque Seg/Precio</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
+                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas right1">Empaque Seg/Precio</th>
+                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas right1" style="padding: 0 0px 0 0px
                   !important">{{ element.empaque_precio }}
                 </td>
               </ng-container>
-
-              <!-- <ng-container matColumnDef="pasa_limite">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-max-ventas">¿Pasa el % Venta?</th>
-                <td mat-cell *matCellDef="let element" class="mat-column-max-ventas" style="text-align: center !important; padding: 0 0px 0 0px
-                  !important">
-
-                  <ng-container
-                    *ngIf="formatNumberTotalSubTOTALES(element.cantidad) > formatNumberTotalSubTOTALES(element.cantidad_permitida_seg_porcen) ;else prctvt">
-                    <strong style="color: red;">SI</strong>
-                  </ng-container>
-                  <ng-template #prctvt>
-                    <strong style="color: green;">NO</strong>
-                  </ng-template>
-                  Lo que estas pidiendo: {{element.cantidad }} - Lo que puedes vender:
-                  {{element.cantidad_permitida_seg_porcen}}
-                </td>
-              </ng-container> -->
 
               <!-- Observaciones Column -->
               <ng-container matColumnDef="obs">
@@ -1590,7 +1562,7 @@
                           <span class="input-group-text form-control-sm"
                             style="padding: 10px 0px 0px 0px;border: 0 !important;">
                             <strong>Kgr.</strong>
-                            {{ formatNumberTotalSubTOTALES(peso) }}</span>
+                            {{ peso }}</span>
                         </div>
 
                         <input type="number" class="form-control form-control-sm" style="margin-left: 5px;"
@@ -1729,10 +1701,6 @@
                             <strong>{{ monto_anticipo }} - {{ moneda_get_catalogo }}</strong>
                           </span>
                         </div>
-                        <!-- <input type="text" class="form-control form-control-sm" style="margin-left: 5px;
-                          width: 15% !important;text-align: right;" formControlName="monto_anticipo"
-                          [ngModel]="formatNumberTotalSubTOTALES(monto_anticipo)" placeholder="0.00" min="0"
-                          disabled> -->
                       </div><br>
                       <div style="text-align: center;">
                         <button class="btn btn-outline-primary form-control-sm" type="button"
@@ -1966,7 +1934,7 @@
               <ng-container matColumnDef="total">
                 <th mat-header-cell *matHeaderCellDef class="center2"> Total </th>
                 <td mat-cell *matCellDef="let element" class="center2">
-                  {{ formatNumberTotalSubTOTALES(element.total) }} </td>
+                  {{ element.total }} </td>
               </ng-container>
 
               <!-- Aprobada Column -->
