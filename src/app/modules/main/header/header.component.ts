@@ -117,7 +117,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + user_conn)
        .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          console.log("Hora Fecha Servidor cada minuto: ", datav);
+          // console.log("Hora Fecha Servidor cada minuto: ", datav);
           // this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
           // this.hora_fecha_server = datav.horaServidor;
           // console.log(this.fecha_actual, this.hora_fecha_server);

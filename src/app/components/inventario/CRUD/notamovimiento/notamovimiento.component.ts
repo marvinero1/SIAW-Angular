@@ -138,7 +138,7 @@ export class NotamovimientoComponent implements OnInit {
   eventosLogs:any=[];
   // FIN TAB OBSERVACIONES
 
-
+  item_seleccionados_catalogo_matriz: any = [];
   // Validacion Negativos
   validacion_post_negativos_filtrados_solo_negativos: any = [];
   validacion_post_negativos_filtrados_solo_positivos: any = [];
@@ -203,7 +203,7 @@ export class NotamovimientoComponent implements OnInit {
       this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
       this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
   }
-
+  
   ngOnInit() {
     this.getParametrosIniciales();
     this.getHoraFechaServidorBckEnd();
@@ -223,6 +223,28 @@ export class NotamovimientoComponent implements OnInit {
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+        ...element,
+        codaduana: "0"
+      }));
+
+      this.totabilizar();
+    });
+    //
+
+    //CATALOGO F4 ITEMS
+    //ItemElejidoCatalogoF4Procesados
+    this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Item Procesados De Catalogo F4: ", [data]);
+      this.item_seleccionados_catalogo_matriz = [data];
+      console.log("🚀 ~ ProformaComponent ~ this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe ~ data:", [data]);
+
+      if (this.item_seleccionados_catalogo_matriz.length === 0) {
+        this.array_items_carrito_y_f4_catalogo.push(...[data]);
+      } else {
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data]);
+      }
+
       this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
         ...element,
         codaduana: "0"
@@ -293,11 +315,11 @@ export class NotamovimientoComponent implements OnInit {
       // this.descripcion_id_catalogo_proforma = data.proforma.descripcion;
 
       if(this.catalogo_proforma_seleccionado === "proforma_almacen"){
-        this.id_proforma_catalogo = data.proforma.id.toUpperCase();
+        this.id_proforma_sol_urgente = data.proforma.id.toUpperCase();
       }
 
       if(this.catalogo_proforma_seleccionado === "solicitud_urgente"){
-        this.id_proforma_sol_urgente = data.proforma.id.toUpperCase();
+        this.id_proforma_catalogo = data.proforma.id.toUpperCase();
       }
     });
     //
@@ -397,9 +419,8 @@ export class NotamovimientoComponent implements OnInit {
 
   getValidaCantDecimal(){
     let item_a_revisar;
-
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getValidaCantDecimal/";
-    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
+    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn+"/"+ true, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ getValidaCantDecimal ~ datav:", datav);
@@ -739,7 +760,7 @@ export class NotamovimientoComponent implements OnInit {
 
   totabilizar(){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
+    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn+"/"+ true, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
@@ -788,7 +809,10 @@ export class NotamovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
         console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
-        this.array_items_carrito_y_f4_catalogo = datav;
+        this.array_items_carrito_y_f4_catalogo = datav.map((element)=>({
+          ...element,
+          codaduana:"0"
+        }));
 
         this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "PONER DUI COMPLETADO ✅" });
         },
@@ -962,6 +986,7 @@ export class NotamovimientoComponent implements OnInit {
 
   limpiar(){
     this.array_items_carrito_y_f4_catalogo = [];
+    this.validacion_post_negativos = [];
     this.eventosLogs = [];
 
     this.total = 0;
@@ -1002,7 +1027,50 @@ export class NotamovimientoComponent implements OnInit {
     });
   }
 
+  validarGrabar(){
+    console.log(this.fecha_actual);
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
+    return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/'+this.userConn+"/"+this.codalmacen+"/"+this.fecha_actual+"/"+this.id+"/"+this.numeroid)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ datav:", datav)
+          if(datav.valido){
+            this.guardarNotaMovimiento();
+          }else{
+            const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
+              width: '450px',
+              height: 'auto',
+              data: {
+                dataA: datav.datoA,
+                dataB: datav.datoB,
+                dataPermiso: "",
+                dataCodigoPermiso: datav.servicio.toString(),
+              },
+            });
+        
+            dialogRefParams.afterClosed().subscribe((result: Boolean) => {
+              if (result) {
+                this.guardarNotaMovimiento();
+              }else{
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SERVICIO CANCELADO' });
+              }
+            });
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
   async guardarNotaMovimiento(){
+    if (this.array_items_carrito_y_f4_catalogo.length === 0 ) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DETALLE DE LOS ITEMS ESTA EN BLANCO'});
+      return;
+    }
+
     if (this.id_concepto === undefined) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CONCEPTO NO PUEDE ESTAR EN BLANCO'});
       return;
@@ -1033,7 +1101,6 @@ export class NotamovimientoComponent implements OnInit {
       return;
     }
     
-
     if (this.codalmdestinoText === undefined) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO'});
       return;
@@ -1130,36 +1197,55 @@ export class NotamovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
-          if(datav.resp === "Los items del documento resaltados de color azul generaran negativos."){
-            await this.openConfirmacionDialog(datav.resp);
-   
-            // window.location.reload();
+          if(datav.codigoNM){
+            let result = await this.openConfirmationDialog(`${datav.resp}\n\n${datav.alertas.join('\n\n')}`);
+              if (result) {
+                //exportar ZIP
+                await this.exportarZIPNMGrabar(datav.codigoNM);
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
+
+                //window.location.reload();
+              }else{
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR'});
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              }
           }
 
-          if(datav.resp === "Nota de Movimiento creada exitosamente."){
-            await this.openConfirmacionDialog(datav.resp);
-   
-            window.location.reload();
+          if(datav.negativos){
+            //hay negativos
+            await this.openConfirmacionDialog(datav.resp)
+            this.dataSource_negativos = new MatTableDataSource(datav.negativos);
+            this.abrirTabPorLabel("Saldos Negativos");
           }
 
+          // if(datav.resp === "Los items del documento resaltados de color azul generaran negativos."){
+          //   await this.openConfirmacionDialog(datav.resp);
+          // }
 
-          if(datav.valido){
-            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
+          // if(datav.resp === "Nota de Movimiento creada exitosamente."){
+          //   await this.openConfirmacionDialog(datav.resp);
+          //   window.location.reload();
+          // }
+
+          // if(datav.valido){
+          //   this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
             
-            const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
-            if (resultcodalmdestinoText) {
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 500);
-              return;
-            }
-          }else{
-            if(datav.negativos){
-              //hay negativos
-              this.dataSource_negativos = new MatTableDataSource(datav.negativos);
-              this.abrirTabPorLabel("Saldos Negativos");
-            }
-          }         
+          //   const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
+          //   if (resultcodalmdestinoText) {
+          //     setTimeout(() => {
+          //       this.spinner.hide();
+          //     }, 500);
+          //     return;
+          //   }
+          // }else{
+          //   if(datav.negativos){
+          //     //hay negativos
+          //     this.dataSource_negativos = new MatTableDataSource(datav.negativos);
+          //     this.abrirTabPorLabel("Saldos Negativos");
+          //   }
+          // }         
         },
 
         error: (err: any) => {
@@ -1167,6 +1253,48 @@ export class NotamovimientoComponent implements OnInit {
         },
         complete: () => { }
       })
+  }
+
+  exportarZIPNMGrabar(codigo_NM){
+    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" +codigo_NM, { responseType: 'arraybuffer' })
+      .subscribe({
+        next: (datav: ArrayBuffer) => {
+          console.log(datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
+
+          // Convertir ArrayBuffer a Blob
+          const blob = new Blob([datav], { type: 'application/zip' });
+          const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
+
+          // Crear el objeto URL para el Blob recibido
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = timestamp + "-" + this.id + "-" + this.numeroid + '.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+            window.location.reload()
+          }, 500);
+        }
+      });
   }
 
   abrirTabPorLabel(label: string) {
@@ -1193,7 +1321,129 @@ export class NotamovimientoComponent implements OnInit {
 
   // NEGATIVOS
   validarNegativos(){
+     let proforma_validar = {
+        datosDocVta: {
+          estado_doc_vta: "string",
+          coddocumento: 0,
+          id: "",
+          numeroid: "0",
+          fechadoc: this.fecha_actual,
+          codcliente: "",
+          nombcliente: "",
+          nitfactura: "",
+          tipo_doc_id: "",
+          codcliente_real: "",
+          nomcliente_real: "",
+          codtarifadefecto: 0,
+          codmoneda: "",
+          subtotaldoc: 0,
+          totaldoc: 0,
+          tipo_vta: "",
+          codalmacen: this.codalmacen.toString(),
+          codvendedor: "",
+          preciovta: "",
+          desctoespecial: "",
+          preparacion: "",
+          tipo_cliente: "",
+          cliente_habilitado: "",
+          contra_entrega: "",
+          vta_cliente_en_oficina: true,
+          estado_contra_entrega: "",
+          desclinea_segun_solicitud: true,
+          idsol_nivel: "",
+          nroidsol_nivel: "",
+          pago_con_anticipo: true,
+          niveles_descuento: "",
+          transporte: "",
+          nombre_transporte: "",
+          fletepor: "",
+          tipoentrega: "",
+          direccion: "",
+          ubicacion: "",
+          latitud: "",
+          longitud: "",
+          nroitems: 0,
+          totdesctos_extras: 0,
+          totrecargos: 0,
+          tipo_complemento: "",
+          idpf_complemento: "",
+          nroidpf_complemento: "",
+          idFC_complementaria: "",
+          nroidFC_complementaria: "",
+          nrocaja: "",
+          nroautorizacion: "",
+          fechalimite_dosificacion: this.fecha_actual,
+          tipo_caja: "",
+          version_codcontrol: "",
+          nrofactura: "",
+          nroticket: "",
+          idanticipo: "",
+          noridanticipo: "",
+          monto_anticipo: 0,
 
+          idpf_solurgente: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente,
+          noridpf_solurgente: this.numero_id_proforma_sol_urgente === undefined ? "0":this.numero_id_proforma_sol_urgente.toString(),
+
+        },
+        detalleAnticipos: [],
+        detalleDescuentos: [],
+        detalleEtiqueta: [],
+        detalleItemsProf: this.array_items_carrito_y_f4_catalogo.map((element)=>({
+          ...element,
+          niveldesc:"ACTUAL"
+        })),
+
+        detalleRecargos: [],
+      }
+    
+      console.log(proforma_validar);
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ this.api.create ~ datav:", datav)
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
+
+          if (datav.jsonResult[0]?.dtnegativos) {
+            this.validacion_post_negativos = datav.jsonResult[0]?.dtnegativos;
+          }
+
+          this.abrirTabPorLabel("Negativos");
+
+          this.toggleTodosNegativos = true;
+          this.toggleNegativos = false;
+          this.togglePositivos = false;
+
+          this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
+            ...element,
+            cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
+            cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
+            saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
+            cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
+            cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
+            saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
+          }));
+
+          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+    
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      });
   }
 
   negativosTodosFilterToggle() {
@@ -1229,6 +1479,7 @@ export class NotamovimientoComponent implements OnInit {
   }
   //FIN NEGATIVOS
 
+
   //Importar to ZIP
   async onFileChangeZIP(event: any) {
     const file = event.target.files[0];
@@ -1239,10 +1490,10 @@ export class NotamovimientoComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', file, file.name);
 
-      this.api.cargarArchivo('/venta/transac/veproforma/importProfinJson/', formData)
+      this.api.cargarArchivo('/inventario/transac/docinmovimiento/importNMinJson/', formData)
         .subscribe({
           next: (datav) => {
-            console.log("Data ZIP:", datav);
+            // console.log("Data ZIP:", datav);
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
             this.imprimir_zip_importado(datav);
 
@@ -1283,12 +1534,115 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   imprimir_zip_importado(zip_json) {
+    let documento:any;
+    const array_carrito:any=[];
     this.spinner.show();
     console.log(zip_json);
+    
+    // this.id = zip_json.cabeceraList[0]?.id;
+    // this.numeroid = zip_json.cabeceraList[0]?.numeroid;
+    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;  
+    this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto);
+    const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
+    console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
+    this.id_concepto_descripcion = encontrado_objeto.descripcion;
+
+
+    this.factor = zip_json.cabeceraList[0]?.factor;
+    this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
+    this.observaciones = zip_json.cabeceraList[0]?.obs;
+    this.id_origen = zip_json.cabeceraList[0]?.fid;
+    this.nroid_origen = zip_json.cabeceraList[0]?.fnumeroid;
+    this.cod_cliente = zip_json.cabeceraList[0]?.codcliente;
+    this.id_proforma_catalogo = zip_json.cabeceraList[0]?.idproforma;
+    this.numero_id_catalogo_proforma = zip_json.cabeceraList[0]?.numeroidproforma
+    this.id_proforma_sol_urgente = zip_json.cabeceraList[0]?.idproforma_sol;
+    this.numero_id_proforma_sol_urgente = zip_json.cabeceraList[0]?.numeroidproforma_sol;  
+    //this.anular = zip_json.cabeceraList[0]?.anulada;
+    //this.contabilizada = zip_json.cabeceraList[0]?.contabilizada;
+    
+    documento = zip_json.cabeceraList[0]?.documento
+    if(documento === "NOTA"){
+      this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
+      this.id_origen = zip_json.cabeceraList[0]?.id;
+      this.nroid_origen = zip_json.cabeceraList[0]?.numeroid;
+
+      this.codalmacen = zip_json.cabeceraList[0]?.codalmacen;
+      this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
+      // this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
+
+      this.observaciones = "NOTA: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmacen+" "+zip_json.cabeceraList[0]?.obs;
+      if(this.observaciones.length > 60){
+        this.observaciones = this.observaciones.slice(0, 59);
+      }
+    }
+
+    if(documento === "SOLURGENTE"){
+      this.observaciones = zip_json.cabeceraList[0]?.obs;
+      if(this.observaciones.length > 60){
+        this.observaciones = this.observaciones.slice(0, 59);
+      }
+    }
+
+    if(documento === "PEDIDO"){
+      this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
+      this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
+      this.observaciones = "PEDIDO: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmorigen+" "+zip_json.cabeceraList[0]?.obs;
+      if(this.observaciones.length > 60){
+        this.observaciones = this.observaciones.slice(0, 59);
+      }
+    }
+
+    if(documento === "RECEPCION"){
+      this.observaciones = zip_json.cabeceraList[0]?.obs;
+      if(this.observaciones.length > 60){
+        this.observaciones = this.observaciones.slice(0, 59)
+      }
+    }
+
+    if(this.array_items_carrito_y_f4_catalogo.length > 0){
+      console.log("🚀 ~ ModificarNotaMovimientoComponent ~ this.array_items_carrito_y_f4_catalogo.length:", this.array_items_carrito_y_f4_catalogo.length)
+      this.getDescripcMedidaItem(zip_json.detalleList);
+      this.array_items_carrito_y_f4_catalogo = array_carrito.concat(
+        zip_json.detalleList.map((element) => ({
+          ...element,
+          cantidad_revisada: element.cantidad,
+          cantidad: 0,
+          nuevo: "si"
+        }))
+      );
+    }else{
+      this.getDescripcMedidaItem(zip_json.detalleList);
+      this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
+    }
+
   }
   //FIN Importar ZIP
+  
 
+  getDescripcMedidaItem(array_item_zip){
+    let new_array:any = array_item_zip.map((element)=>({
+      ...element,
+      descripcion:"",
+      medida:""
+    }));
 
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/CargardeProforma/";
+    return this.api.create('/inventario/transac/docinmovimiento/getDescMedDetalle/'+this.userConn, new_array)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          // console.log("🚀 ~ NotamovimientoComponent ~ getDescripcMedidaItem ~ datav:", datav);
+          this.array_items_carrito_y_f4_catalogo = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          this.totabilizar();
+         }
+      })
+  }
 
 
 
@@ -1392,9 +1746,10 @@ export class NotamovimientoComponent implements OnInit {
         codcliente: 0,
         codalmacen: this.agencia_logueado,
         desc_linea_seg_solicitud: "",
-        codmoneda: "0",
+        codmoneda: "BS",
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        descuento_nivel: "",
+        descuento_nivel: "ACTUAL",
+        tipo_ventana:"inventario",
       },
     });
   }

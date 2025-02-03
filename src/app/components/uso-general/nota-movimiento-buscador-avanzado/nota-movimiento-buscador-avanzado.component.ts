@@ -196,7 +196,7 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
       codalmacen2: Number(this.almacn_parame_usuario_almacen2) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen2),
     };
 
-    const url = `/venta/busq/prgbusqprof/getProformasByParam/${this.userConn}`;
+    const url = `/inventario/busq/prgbusqinnota/getNotMovByParam/${this.userConn}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
     this.api.create(url, data).subscribe({

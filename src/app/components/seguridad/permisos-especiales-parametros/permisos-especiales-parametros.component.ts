@@ -10,6 +10,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { DatePipe } from '@angular/common';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-permisos-especiales-parametros',
@@ -238,9 +239,9 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog,
     public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
-    public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
+    public log_module: LogService, public _snackBar: MatSnackBar,private messageService: MessageService,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
-    public almacenservice: ServicioalmacenService,
+    public almacenservice: ServicioalmacenService, 
 
     @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any,
@@ -331,7 +332,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
           next: (datav) => {
             this.permiso_recibido = datav;
             console.log(this.permiso_recibido);
-            this.toastr.success(this.permiso_recibido.resp);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: this.permiso_recibido.resp });
 
             this._snackBar.open(this.permiso_recibido.resp, '✅', {
               duration: 2000,
@@ -347,7 +348,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
               duration: 2000,
              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
-            console.log(false);
             resolve(false);
           },
           complete: () => {

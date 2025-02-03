@@ -38,7 +38,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           if (this.permiso_para_vista) {
             if(this.valorCelda){
               if (!this.item_valido) {
-                console.log('¡ HOLA LOLA HAY ITEM    NO VALIDO !', this.item_valido, this.valorCelda);
+                console.log('¡ HAY ITEM NO VALIDO !', this.item_valido, this.valorCelda);
                 this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
                 this.loseFocus();
                 return;
@@ -118,6 +118,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
+  item_valido_inventario:boolean;
+  item_valido_inventario_false:boolean;
   validacion: boolean = false;
   empaque_item_codigo: string;
   empaque_item_descripcion: string;
@@ -265,7 +267,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     }
 
     if(this.tipo_ventana_origen === "inventario"){
-      this.tipo_ventana_origen = "ventas"
+      //this.tipo_ventana_origen = "ventas"
       this.ventana_inventario = true;
       this.ventana_venta = false;
     }
@@ -834,6 +836,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       return;
     }
 
+
+
     // if (this.pedido === 0 || this.pedido === undefined) {
     //return;
     //}
@@ -848,7 +852,16 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     // }
 
     if (this.pedido != 0 && this.pedido != undefined) {
-      this.array_items_seleccionado.push(array);
+      if(this.ventana_inventario === true && this.uso_inventario_item_boolean === true && this.ventana_venta === false){
+        this.array_items_seleccionado.push(array);
+      }else{
+        if(this.ventana_inventario === true){
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO VALIDO PARA SU USO EN INVENTARIO' });
+        }
+      }
+      if(this.ventana_venta === true && this.ventana_inventario === false){
+        this.array_items_seleccionado.push(array);
+      }
     } else {
       if(this.permiso_para_vista){
         this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL PEDIDO CANTIDAD NO PUEDE SER 0' });
@@ -1023,6 +1036,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       })
   }
 
+  uso_inventario_item_boolean:boolean;
+
   getlineaProductoID(value) {
     this.saldo_modal_total_1 = "";
     this.saldo_modal_total_2 = "";
@@ -1039,12 +1054,15 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
-          // console.log('item seleccionado: ', this.item_obtenido);
+          console.log('item seleccionado: ', this.item_obtenido);
 
           this.codigo_item = this.item_obtenido.codigo;
           this.descripcion_item = this.item_obtenido.descripcion;
           this.medida_item = this.item_obtenido.medida;
           this.porcen_item = this.item_obtenido.porcen_maximo;
+
+          // la propiedad usa en movimiento solo deja agregar items cuando sea true y desde la ventana inventario
+          this.uso_inventario_item_boolean = datav.usaMovimiento;
         },
 
         error: (err: any) => {
@@ -1052,8 +1070,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
           this.item_valido = false;
           // console.log(this.item_valido);
         },
-        complete: () => {
-        }
+        complete: () => { }
       })
   }
 

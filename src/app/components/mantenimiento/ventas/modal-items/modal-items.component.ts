@@ -32,7 +32,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   empaquesItem: any = [];
   item_view: any = [];
   BD_storage: any = [];
-  descuento_nivel_get: any = [];
+  descuento_nivel_get: any;
   itemParaTabla: any = [];
   messages: string[] = [];
   array_items_proforma_matriz: any = [];
@@ -57,6 +57,10 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   myControlMedida = new FormControl<string | Item>('');
   myControlMedidaEnLinea = new FormControl<string | Item>('');
 
+  ventana_origen:any;
+  ventana_inventario:boolean;
+  ventana_venta:boolean;
+  
   tarifa_get: any;
   descuento_get: any;
   codcliente_get: any;
@@ -82,13 +86,13 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     @Inject(MAT_DIALOG_DATA) public fecha: any,
     @Inject(MAT_DIALOG_DATA) public codmoneda: any,
     @Inject(MAT_DIALOG_DATA) public itemss: any,
-    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any) {
+    @Inject(MAT_DIALOG_DATA) public descuento_nivel: any,
+    @Inject(MAT_DIALOG_DATA) public tipo_ventana: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-
 
     this.tarifa_get = tarifa.tarifa;
     this.descuento_get = descuento.descuento;
@@ -97,8 +101,19 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
     this.fecha_get = fecha.fecha;
     this.codmoneda_get = codmoneda.codmoneda;
-    //this.array_items_proforma_matriz = itemss.itemss;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
+    this.ventana_origen = tipo_ventana.tipo_ventana;
+
+    if(this.ventana_origen === undefined || this.ventana_origen === "ventas"){
+      this.ventana_origen = "ventas"
+      this.ventana_venta = true;
+      this.ventana_inventario = false;
+    }
+
+    if(this.ventana_origen === "inventario"){
+      this.ventana_inventario = true;
+      this.ventana_venta = false;
+    }
 
     console.log(
       "COD CLIENTE: " + this.codcliente_get,
@@ -109,6 +124,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
       "FECHA: " + this.fecha_get,
       "CODMONEDA: " + this.codmoneda_get,
       "DESCT. NIVEL: " + this.descuento_nivel_get,
+      "VENTANA ORIGEN: " + this.ventana_origen
     );
   }
 
@@ -229,11 +245,15 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
           this.item_valido = datav;
           console.log('item valido: ', this.item_valido);
 
-          if (this.item_valido == true) {
+          if (this.item_valido == true){
             this.btn_confirmar = true;
           } else {
-            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! ITEM NO VALIDO PARA LA VENTA !' });
+            // this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! ITEM NO VALIDO PARA LA VENTA !' });
             this.btn_confirmar = false;
+
+            if(this.ventana_origen === "inventario"){
+              this.btn_confirmar = true;
+            }
           }
         },
 
@@ -285,7 +305,9 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getItemMatriz_Anadir";
     return this.api.getAll(
-      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado + "/" + item_codigo + "/" + this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
+      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado + "/" + item_codigo + "/" + 
+      this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + 
+      this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
       .subscribe({
         next: (datav) => {
           this.itemParaTabla = datav;

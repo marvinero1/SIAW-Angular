@@ -35,7 +35,8 @@ import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actual
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '../../../uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
-
+import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
+import { DialogTarifaImpresionComponent } from './dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 @Component({
   selector: 'app-modificar-nota-movimiento',
   templateUrl: './modificar-nota-movimiento.component.html',
@@ -67,7 +68,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
       switch (elementTagName) {
         case "input_search":
-          this.transferirProforma();
+          this.permisoParaTransferirNM();
           break;
       }
     }
@@ -102,6 +103,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   cvenumeracion1Enabled:boolean;
   id_proforma_solReadOnly:boolean;
   numeroidproforma_solReadOnly:boolean;
+  esAjuste:boolean;
 
   codalmdestinoText:any;
   codalmorigenText:any;
@@ -141,13 +143,22 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   nroid_origen:any;
   id_proforma_sol_urgente:any;
   numero_id_proforma_sol_urgente:any;
+
+
+  btnAnularReadOnly:any;
+  btnGrabarReadOnly:any;
+  btnHabilitarReadOnly:any;
+  fecha_origen:any;
+  fecha:any;
+  anular:any;
+  contabilizada:any;
   // fin formulario
 
   // TAB OBSERVACIONES
   eventosLogs:any=[];
   // FIN TAB OBSERVACIONES
 
-
+  item_seleccionados_catalogo_matriz: any = [];
   // Validacion Negativos
   validacion_post_negativos_filtrados_solo_negativos: any = [];
   validacion_post_negativos_filtrados_solo_positivos: any = [];
@@ -175,6 +186,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   
   item_seleccionados_catalogo_matriz_codigo:any;
   total:any;
+  total_revisado:any;
+  codigo_ultm_NM:any;
 
   //Saldos
   almacenes_saldos:any=[];
@@ -196,6 +209,10 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   array_notas_movimiento:any=[];
   id_ntmv_buscador:any;
   num_id_ntmv_buscador:any;
+  valido_en_validar_funcion:boolean;
+
+  private numberFormatter_5decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
   
   userConn:any;
   usuarioLogueado:any;
@@ -205,16 +222,28 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
-      private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
-      private serviciovendedor: VendedorService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
-      private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
-      public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
-      public servicioCatalogoProformas: ServicioCatalogoProformasService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
+    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
+    private serviciovendedor: VendedorService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
+    public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
+    public servicioCatalogoProformas: ServicioCatalogoProformasService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
 
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-      this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-      this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -231,18 +260,56 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
       if (this.array_items_carrito_y_f4_catalogo.length === 0) {
         // Si el array está vacío, simplemente agregamos los nuevos elementos
-        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito.map((element)=>({
+          ...element,
+          nuevo:"si",
+          codaduana: "0",
+          diferencia: 0,
+          cantidad_revisada: element.cantidad
+        })));
       } else {
         // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
-        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito.map((element)=>({
+          ...element,
+          nuevo:"si",
+          codaduana: "0",
+          diferencia: 0,
+          cantidad_revisada: element.cantidad
+        })));
       }
+
+      this.totabilizar();
+      this.totabilizarRevisado();
+    });
+    //
+
+    // CATALOGO F4 ITEMS
+    // ItemElejidoCatalogoF4Procesados
+    this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Item Procesados De Catalogo F4: ", [data]);
+      this.item_seleccionados_catalogo_matriz = [data];
+      console.log("🚀 ~ ProformaComponent ~ this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe ~ data:", [data]);
+
+      if (this.item_seleccionados_catalogo_matriz.length === 0) {
+        this.array_items_carrito_y_f4_catalogo.push(...[data]);
+      } else {
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data].map((element)=>({
+          ...element,
+          nuevo:"si",
+          codaduana: "0",
+          diferencia: 0,
+        })));
+      }
+
       this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
         ...element,
-        codaduana: "0"
+        codaduana: "0",
+        cantidad_revisada: element.cantidad
       }));
 
       this.totabilizar();
+      this.totabilizarRevisado();
     });
     //
 
@@ -357,6 +424,101 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     this.getProforma();
     this.getAllConceptoCatalogo();
     this.getPersona();
+    this.getUltimaNotaMovimientoID();
+  }
+
+  getUltimaNotaMovimientoID(){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/getUltiNMId/";
+    return this.api.getAll('/inventario/modif/docmodifinmovimiento/getUltiNMId/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getUltiNMId ~ datav:", datav);
+
+          this.getValidoNotaMovimiento(datav.id, datav.numeroid);
+
+          this.codigo_ultm_NM = datav.codigo;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
+  }
+
+  getValidoNotaMovimiento(id:string, numeroid:number){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/";
+    return this.api.getAll('/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/' + this.userConn +"/"+ id +"/"+ numeroid)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getValidoNotaMovimiento:", datav)
+          if(datav.valido){
+            this.getDataUltimNotaRemision(id, numeroid, datav.valido);
+          }else{
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO VALIDO PARA TRANSFERENCIA !' });
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
+  }
+
+  getDataUltimNotaRemision(id:string, numeroid:number, permiso:boolean){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/obtNMxModif/";
+    return this.api.getAll('/inventario/modif/docmodifinmovimiento/obtNMxModif/' + this.userConn +"/"+ id +"/"+ numeroid+"/"+permiso)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getDataUltimNotaRemision:", datav)
+
+          this.btnAnularReadOnly = datav.btnAnularReadOnly;
+          this.btnGrabarReadOnly = datav.btnGrabarReadOnly;
+          this.btnHabilitarReadOnly = datav.btnHabilitarReadOnly;
+          this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
+          this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
+          this.codclienteReadOnly = datav.codclienteReadOnly;
+          this.id_concepto_descripcion = datav.codconceptodescripcion;
+          this.codpersonadesde = datav.codpersonadesde;
+          this.descripcion_usuario_final = datav.codpersonadesdedesc;
+          this.es_tienda = datav.esTienda;
+      
+          this.id = datav.cabecera?.id;
+          this.numeroid = datav.cabecera?.numeroid;
+          
+          this.id_concepto = datav.cabecera?.codconcepto;
+          this.validarPorConcepto(datav.cabecera?.codconcepto);
+
+          this.factor = datav.cabecera?.factor;
+          this.codalmorigenText = datav.cabecera?.codalmdestino;
+          this.codalmdestinoText = datav.cabecera?.codalmorigen;
+          this.codvendedor = datav.cabecera?.codvendedor;
+          this.fecha_origen = this.datePipe.transform(datav.cabecera?.fecha_inicial, "yyyy-MM-dd");
+          this.fecha = this.datePipe.transform(datav.cabecera?.fecha, "yyyy-MM-dd");
+          this.observaciones = datav.cabecera?.obs;
+          this.id_origen = datav.cabecera?.fid;
+          this.nroid_origen = datav.cabecera?.fnumeroid;
+          this.cod_cliente = datav.cabecera?.cod_cliente;
+          this.id_proforma_catalogo = datav.cabecera?.idproforma;
+          this.numero_id_catalogo_proforma = datav.cabecera?.numeroidproforma
+          this.id_proforma_sol_urgente = datav.cabecera?.idproforma_sol;
+          this.numero_id_proforma_sol_urgente = datav.cabecera?.numeroidproforma_sol;  
+          this.anular = datav.cabecera?.anulada;
+          this.contabilizada = datav.cabecera?.contabilizada;
+
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          if(this.anular){
+            this.btnAnularReadOnly = true;
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
   }
 
   getParametrosIniciales(){
@@ -413,7 +575,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     let item_a_revisar;
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getValidaCantDecimal/";
-    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
+    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn +"/"+ false, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ getValidaCantDecimal ~ datav:", datav);
@@ -750,12 +912,13 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   totabilizar(){
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/Totalizar/";
+    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn+"/"+true, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
           this.total = datav.total;
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'TOTALIZADO EXITOSAMENTE' });
         },
 
         error: (err: any) => {
@@ -765,6 +928,23 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       })
   }
 
+  totabilizarRevisado(){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/Totalizar/";
+    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn+"/"+false, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
+          this.total_revisado = datav.total;
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'TOTALIZADO REVISADO EXITOSAMENTE' });
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+  
   validarPorConcepto(concepto){
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/eligeConcepto/";
     return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/'+this.userConn+"/"+concepto+"/"+this.agencia_logueado)
@@ -784,7 +964,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
           this.cargar_proformaEnabled = datav.cargar_proformaEnabled;
           this.cvenumeracion1Enabled = datav.cvenumeracion1Enabled;
           this.id_proforma_solReadOnly = datav.id_proforma_solReadOnly;
-          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly;      
+          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly; 
+          this.esAjuste = datav.conceptoEsAjuste;
         },
 
         error: (err: any) => {
@@ -795,6 +976,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   ponerDui(){
+    this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
     return this.api.create('/inventario/transac/docinmovimiento/ponerDui/' + this.userConn + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
@@ -803,13 +985,23 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         this.array_items_carrito_y_f4_catalogo = datav;
 
         this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "PONER DUI COMPLETADO ✅" });
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
         },
 
         error: (err: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "PONER DUI COMPLETADO" });
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 0);
         },
-        complete: () => {  }
+        complete: () => { 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 0);
+         }
       })
   }
 
@@ -873,6 +1065,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     });
 
    this.totabilizar();
+   this.totabilizarRevisado();
   }
 
   onEditComplete(event: any) {
@@ -904,37 +1097,19 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     }
   }
 
-  calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, precioneto: number) {
-    // todo despues del if ya que si no siempre esta escuchando los eventos
-    if (cantidad_pedida !== undefined && precioneto !== undefined && cantidad !== undefined) {
-      return this.formatNumberTotalSub(cantidad * precioneto);
-    } else {
-      return 0; // O algún otro valor predeterminado
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
-  }
-
-  formatNumberTotalSubTOTALES(numberString: number | string): string {
-    if (numberString === null || numberString === undefined || numberString === '') {
-      return '0.00'; // Valor predeterminado
-    }
-    
-    // Intentar convertir a número, considerando posibles entradas como cadenas
-    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    
-    if (isNaN(parsedNumber)){
-      return '0.00'; // Manejar entradas no válidas
-    }
-  
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(parsedNumber);
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
 
   cargarProformaSolicitudUrgente(){
@@ -1012,6 +1187,45 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'HABILITADO ✅'});
       }
     });
+  }
+
+  validarGrabar(){
+    console.log(this.fecha);
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
+    return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/'+this.userConn+"/"+this.codalmacen+"/"+this.fecha+"/"+this.id+"/"+this.numeroid)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ datav:", datav)
+          if(datav.valido){
+            this.guardarNotaMovimiento();
+          }else{
+            const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
+              width: '450px',
+              height: 'auto',
+              data: {
+                dataA: datav.datoA,
+                dataB: datav.datoB,
+                dataPermiso: "",
+                dataCodigoPermiso: datav.servicio.toString(),
+              },
+            });
+        
+            dialogRefParams.afterClosed().subscribe((result: Boolean) => {
+              if (result) {
+                console.log("LOLAAAAAA");
+                this.guardarNotaMovimiento();
+              }else{
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SERVICIO CANCELADO' });
+              }
+            });
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
   }
 
   async guardarNotaMovimiento(){
@@ -1125,10 +1339,10 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         peso: 0,
 
         codpersona: this.codpersonadesde === undefined || null ? 0:this.codpersonadesde,
-
         idproforma_sol: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente.toUpperCase(),
         numeroidproforma_sol: this.numero_id_proforma_sol_urgente === undefined ? 0:this.numero_id_proforma_sol_urgente,
         codconcepto: this.id_concepto,
+
         //este datos nay ni en parametroIniciales
         comprobante: null,
       },
@@ -1142,36 +1356,55 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
-          if(datav.resp === "Los items del documento resaltados de color azul generaran negativos."){
-            await this.openConfirmacionDialog(datav.resp);
-   
-            // window.location.reload();
+          if(datav.codigoNM){
+            let result = await this.openConfirmationDialog(`${datav.resp}\n\n${datav.alertas.join('\n\n')}`);
+              if (result) {
+                //exportar ZIP
+                await this.exportarZIPNMGrabar(datav.codigoNM);
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
+
+                //window.location.reload();
+              }else{
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR'});
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              }
           }
 
-          if(datav.resp === "Nota de Movimiento creada exitosamente."){
-            await this.openConfirmacionDialog(datav.resp);
-   
-            window.location.reload();
+          if(datav.negativos){
+            //hay negativos
+            await this.openConfirmacionDialog(datav.resp)
+            this.dataSource_negativos = new MatTableDataSource(datav.negativos);
+            this.abrirTabPorLabel("Saldos Negativos");
           }
-
 
           if(datav.valido){
-            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
-            
-            const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
-            if (resultcodalmdestinoText) {
-              setTimeout(() => {
-                this.spinner.hide();
-              }, 500);
-              return;
-            }
+            // if(datav.resp){
+            //   let result = await this.openConfirmacionDialogArray(datav.resp, datav.alertas);
+            //   if (result) {
+            //     //exportar ZIP
+            //     this.exportarZIPNM(datav.codigoNM);
+            //     this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
+            //     //window.location.reload();
+            //   }else{
+            //     //window.location.reload();
+            //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'OCURRIO UN PROBLEMA AL GUARDAR' });
+            //   }
+            // }
+               
+            // const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
+            // if (resultcodalmdestinoText) {
+            //   setTimeout(() => {
+            //     this.spinner.hide();
+            //   }, 500);
+            //   return;
+            // }
           }else{
-            if(datav.negativos){
-              //hay negativos
-              this.dataSource_negativos = new MatTableDataSource(datav.negativos);
-              this.abrirTabPorLabel("Saldos Negativos");
-            }
-          }         
+            // if(datav.resp){
+            //   let result = await this.openConfirmacionDialog(datav.resp)
+            // }
+          }
         },
 
         error: (err: any) => {
@@ -1179,6 +1412,89 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         },
         complete: () => { }
       })
+  }
+
+  exportarZIPNMGrabar(codigo_NM){
+    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" +codigo_NM, { responseType: 'arraybuffer' })
+      .subscribe({
+        next: (datav: ArrayBuffer) => {
+          console.log(datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
+
+          // Convertir ArrayBuffer a Blob
+          const blob = new Blob([datav], { type: 'application/zip' });
+          const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
+
+          // Crear el objeto URL para el Blob recibido
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = timestamp + "-" + this.id + "-" + this.numeroid + '.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+            window.location.reload()
+          }, 500);
+        }
+      });
+  }
+
+  exportarZIPNM(codigo_NM){
+    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" +codigo_NM, { responseType: 'arraybuffer' })
+      .subscribe({
+        next: (datav: ArrayBuffer) => {
+          console.log(datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
+
+          // Convertir ArrayBuffer a Blob
+          const blob = new Blob([datav], { type: 'application/zip' });
+          const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
+
+          // Crear el objeto URL para el Blob recibido
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = timestamp + "-" + this.id + "-" + this.numeroid + '.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      });
   }
 
   abrirTabPorLabel(label: string) {
@@ -1202,13 +1518,134 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
 
 
-
   // NEGATIVOS
   validarNegativos(){
+     let proforma_validar = {
+        datosDocVta: {
+          estado_doc_vta: "string",
+          coddocumento: 0,
+          id: "",
+          numeroid: "0",
+          fechadoc: this.fecha_actual,
+          codcliente: "",
+          nombcliente: "",
+          nitfactura: "",
+          tipo_doc_id: "",
+          codcliente_real: "",
+          nomcliente_real: "",
+          codtarifadefecto: 0,
+          codmoneda: "",
+          subtotaldoc: 0,
+          totaldoc: 0,
+          tipo_vta: "",
+          codalmacen: this.codalmacen.toString(),
+          codvendedor: "",
+          preciovta: "",
+          desctoespecial: "",
+          preparacion: "",
+          tipo_cliente: "",
+          cliente_habilitado: "",
+          contra_entrega: "",
+          vta_cliente_en_oficina: true,
+          estado_contra_entrega: "",
+          desclinea_segun_solicitud: true,
+          idsol_nivel: "",
+          nroidsol_nivel: "",
+          pago_con_anticipo: true,
+          niveles_descuento: "",
+          transporte: "",
+          nombre_transporte: "",
+          fletepor: "",
+          tipoentrega: "",
+          direccion: "",
+          ubicacion: "",
+          latitud: "",
+          longitud: "",
+          nroitems: 0,
+          totdesctos_extras: 0,
+          totrecargos: 0,
+          tipo_complemento: "",
+          idpf_complemento: "",
+          nroidpf_complemento: "",
+          idFC_complementaria: "",
+          nroidFC_complementaria: "",
+          nrocaja: "",
+          nroautorizacion: "",
+          fechalimite_dosificacion: this.fecha_actual,
+          tipo_caja: "",
+          version_codcontrol: "",
+          nrofactura: "",
+          nroticket: "",
+          idanticipo: "",
+          noridanticipo: "",
+          monto_anticipo: 0,
 
+          idpf_solurgente: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente,
+          noridpf_solurgente: this.numero_id_proforma_sol_urgente === undefined ? "0":this.numero_id_proforma_sol_urgente.toString(),
+
+        },
+        detalleAnticipos: [],
+        detalleDescuentos: [],
+        detalleEtiqueta: [],
+        detalleItemsProf: this.array_items_carrito_y_f4_catalogo.map((element)=>({
+          ...element,
+          niveldesc:"ACTUAL"
+        })),
+
+        detalleRecargos: [],
+      }
+    
+      console.log(proforma_validar);
+      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+      this.api.create(url, proforma_validar).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ NotamovimientoComponent ~ this.api.create ~ datav:", datav)
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
+
+          if (datav.jsonResult[0]?.dtnegativos) {
+            this.validacion_post_negativos = datav.jsonResult[0]?.dtnegativos;
+          }
+
+          this.abrirTabPorLabel("Negativos");
+
+          this.toggleTodosNegativos = true;
+          this.toggleNegativos = false;
+          this.togglePositivos = false;
+
+          this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
+            ...element,
+            cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
+            cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
+            saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
+            cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
+            cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
+            saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
+          }));
+
+          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+          this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+    
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        error: (err) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        }
+      });
   }
 
-  negativosTodosFilterToggle() {
+  negativosTodosFilterToggle(){
     this.toggleTodosNegativos = true;
     this.toggleNegativos = false;
     this.togglePositivos = false;
@@ -1216,7 +1653,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
   }
 
-  negativosNegativosFilterToggle() {
+  negativosNegativosFilterToggle(){
     this.toggleTodosNegativos = false;
     this.toggleNegativos = true;
     this.togglePositivos = false;
@@ -1228,7 +1665,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_negativos);
   }
 
-  negativosPositivosFilterToggle() {
+  negativosPositivosFilterToggle(){
     this.toggleTodosNegativos = false;
     this.toggleNegativos = false;
     this.togglePositivos = true;
@@ -1251,10 +1688,10 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', file, file.name);
 
-      this.api.cargarArchivo('/venta/transac/veproforma/importProfinJson/', formData)
+      this.api.cargarArchivo('/inventario/transac/docinmovimiento/importNMinJson/', formData)
         .subscribe({
           next: (datav) => {
-            console.log("Data ZIP:", datav);
+            // console.log("Data ZIP:", datav);
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
             this.imprimir_zip_importado(datav);
 
@@ -1295,25 +1732,190 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   imprimir_zip_importado(zip_json) {
+    const array_carrito:any=[];
     this.spinner.show();
     console.log(zip_json);
+
+    this.id = zip_json.cabeceraList[0]?.id;
+    this.numeroid = zip_json.cabeceraList[0]?.numeroid;
+    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
+    this.factor = zip_json.cabeceraList[0]?.factor;
+    this.codalmorigenText = zip_json.cabeceraList[0]?.codalmdestino;
+    this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmorigen;
+    this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
+    this.fecha_origen = this.datePipe.transform(zip_json.cabeceraList[0]?.fecha_inicial, "yyyy-MM-dd");
+    this.fecha = this.datePipe.transform(zip_json.cabeceraList[0]?.fecha, "yyyy-MM-dd");
+    this.observaciones = zip_json.cabeceraList[0]?.obs;
+    this.id_origen = zip_json.cabeceraList[0]?.fid;
+    this.nroid_origen = zip_json.cabeceraList[0]?.fnumeroid;
+    this.cod_cliente = zip_json.cabeceraList[0]?.codcliente;
+    this.id_proforma_catalogo = zip_json.cabeceraList[0]?.idproforma;
+    this.numero_id_catalogo_proforma = zip_json.cabeceraList[0]?.numeroidproforma
+    this.id_proforma_sol_urgente = zip_json.cabeceraList[0]?.idproforma_sol;
+    this.numero_id_proforma_sol_urgente = zip_json.cabeceraList[0]?.numeroidproforma_sol;  
+    this.anular = zip_json.cabeceraList[0]?.anulada;
+    this.contabilizada = zip_json.cabeceraList[0]?.contabilizada;
+
+
+    if(this.array_items_carrito_y_f4_catalogo.length > 0){
+      console.log("🚀 ~ ModificarNotaMovimientoComponent ~ this.array_items_carrito_y_f4_catalogo.length:", this.array_items_carrito_y_f4_catalogo.length)
+      
+      this.array_items_carrito_y_f4_catalogo = array_carrito.concat(
+        zip_json.detalleList.map((element) => ({
+          ...element,
+          cantidad_revisada: element.cantidad,
+          cantidad: 0,
+          nuevo: "si"
+        }))
+      );
+    }else{
+      this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
+    }
+
+
   }
   //FIN Importar ZIP
 
+  // BUSCADOR ID NUMID
+  async permisoParaTransferirNM(){
+    if(this.id_ntmv_buscador === undefined || this.num_id_ntmv_buscador === undefined){
+      this.id_ntmv_buscador = "";
+      this.num_id_ntmv_buscador = 0;
+    }
 
-  transferirProforma(){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/";
+    return this.api.getAll('/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/' + this.userConn +"/"+ this.id_ntmv_buscador +"/"+ this.num_id_ntmv_buscador)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: async (datav) => {
+        console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getValidoNotaMovimiento:", datav);
+          this.valido_en_validar_funcion = datav.valido;
+
+          this.getTransferirProforma(true);
+          
+          if(datav.valido){
+            this.getTransferirProforma(true);
+          }else{
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO VALIDO PARA TRANSFERENCIA !' });
+            this.btnGrabarReadOnly = true;
+            this.btnAnularReadOnly = true;
+
+            const dialogRefAnulacion = await this.dialog.open(DialogConfirmActualizarComponent, {
+              width: '450px',
+              height: 'auto',
+              data: { mensaje_dialog: "Esta Nota es anterior al ultimo inventario fisico, para poder modificarla necesita autorización ¿ Desea Continuar ?" },
+              disableClose: true,
+            });
+        
+            dialogRefAnulacion.afterClosed().subscribe((result: Boolean) => {
+              if(result){
+                const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: '450px',
+                  height: 'auto',
+                  data: {
+                    dataA: this.id_ntmv_buscador,
+                    dataB: this.num_id_ntmv_buscador,
+                    dataPermiso: "",
+                    dataCodigoPermiso: datav.servicio,
+                  },
+                });
+
+                dialogRefParams.afterClosed().subscribe((result: Boolean) => {
+                  console.log("🚀 ~ ModificarNotaMovimientoComponent ~ dialogRefParams.afterClosed ~ result:", result)
+                  if (result) {
+                    this.btnGrabarReadOnly = false;
+                    this.btnAnularReadOnly = false;
+                  }else{
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ NO TIENE PERMISO !' });
+                    this.btnGrabarReadOnly = true;
+                    this.btnAnularReadOnly = true;
+                  }
+                })}else{
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡ ACCION CANCELADA !' });
+                  this.btnGrabarReadOnly = true;
+                  this.btnAnularReadOnly = true;
+                };
+            });
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
+  }
+  
+  getTransferirProforma(permiso:boolean){
     if(this.id_ntmv_buscador === undefined || this.num_id_ntmv_buscador === undefined){
       this.id_ntmv_buscador = "";
       this.num_id_ntmv_buscador = 0;
     }
 
     console.log("🚀 ~ ModificarNotaMovimientoComponent ~ transferirProforma ~ transferirProforma:", this.id_ntmv_buscador, this.num_id_ntmv_buscador);
-  }
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/obtNMxModif/";
+    return this.api.getAll('/inventario/modif/docmodifinmovimiento/obtNMxModif/' + this.userConn +"/"+  this.id_ntmv_buscador +"/"+ this.num_id_ntmv_buscador+"/"+permiso)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ ModificarNotaMovimientoComponent ~ transferirProforma:", datav)
 
+          this.btnAnularReadOnly = datav.btnAnularReadOnly;
+          this.btnGrabarReadOnly = datav.btnGrabarReadOnly;
+          this.btnHabilitarReadOnly = datav.btnHabilitarReadOnly;
+          this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
+          this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
+          this.codclienteReadOnly = datav.codclienteReadOnly;
+          this.id_concepto_descripcion = datav.codconceptodescripcion;
+          this.codpersonadesde = datav.codpersonadesde;
+          this.descripcion_usuario_final = datav.codpersonadesdedesc;
+          this.es_tienda = datav.esTienda;
+      
+          this.id = datav.cabecera?.id;
+          this.numeroid = datav.cabecera?.numeroid;
+          
+          this.id_concepto = datav.cabecera?.codconcepto;
+          this.validarPorConcepto(datav.cabecera?.codconcepto);
+
+          this.factor = datav.cabecera?.factor;
+          this.codalmorigenText = datav.cabecera?.codalmdestino;
+          this.codalmdestinoText = datav.cabecera?.codalmorigen;
+          this.codvendedor = datav.cabecera?.codvendedor;
+          this.fecha_origen = this.datePipe.transform(datav.cabecera?.fecha_inicial, "yyyy-MM-dd");
+          this.fecha = this.datePipe.transform(datav.cabecera?.fecha, "yyyy-MM-dd");
+          this.observaciones = datav.cabecera?.obs;
+          this.id_origen = datav.cabecera?.fid;
+          this.nroid_origen = datav.cabecera?.fnumeroid;
+          this.cod_cliente = datav.cabecera?.cod_cliente;
+          this.id_proforma_catalogo = datav.cabecera?.idproforma;
+          this.numero_id_catalogo_proforma = datav.cabecera?.numeroidproforma
+          this.id_proforma_sol_urgente = datav.cabecera?.idproforma_sol;
+          this.numero_id_proforma_sol_urgente = datav.cabecera?.numeroidproforma_sol;  
+          this.anular = datav.cabecera?.anulada;
+          this.contabilizada = datav.cabecera?.contabilizada;
+
+          this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+
+          if(this.anular){
+            this.btnAnularReadOnly = true;
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {  }
+      })
+  
+  
+  
+  
+  
+  
+  }
+  //FIN BUSCADOR ID NUMID
+  
   //BUSCADOR GENERAL
   getIdNumeroIdNotasMovimiento() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.getAll('/inventario/mant/intipomovimiento/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -1328,37 +1930,203 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       })
   }
 
-  imprimir(){
+  anularNM(){
+    const dialogRefAnulacion = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ Desea Anular el Documento ?" },
+      disableClose: true,
+    });
 
+    dialogRefAnulacion.afterClosed().subscribe((result: Boolean) => {
+      if(result){
+        // Llamada a la API para obtener nuevos datos
+        this.api.update(`/inventario/modif/docmodifinmovimiento/anularNotaMovimiento/${this.userConn}/${this.codigo_ultm_NM}/${this.usuarioLogueado}/${this.BD_storage}`, [])
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (datav) => {
+            console.log("Respuesta API:", datav);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
+
+            // traerlo de nuevo
+            this.id_ntmv_buscador = this.id;
+            this.num_id_ntmv_buscador = this.numeroid;
+            this.permisoParaTransferirNM();
+          },
+          error: (err) => {
+            console.error("Error al consultar la API:", err);
+          },
+          complete:()=>{ }
+        });
+      }else{
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: "ACCION CANCELADA" });
+      }
+
+    });
   }
 
-  exportarZIP(){
+  habilitarNM(){
+    const dialogRefAnulacion = this.dialog.open(DialogConfirmActualizarComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: "¿ Desea Habilitar el Documento ?" },
+      disableClose: true,
+    });
 
+    dialogRefAnulacion.afterClosed().subscribe((result: Boolean) => {
+      if(result){
+        // Llamada a la API para obtener nuevos datos
+        this.api.update(`/inventario/modif/docmodifinmovimiento/habilitarNotaMovimiento/${this.userConn}/${this.codigo_ultm_NM}/${this.usuarioLogueado}/${this.BD_storage}`, [])
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: (datav) => {
+            console.log("Respuesta API:", datav);
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
+
+            // traerlo de nuevo
+            this.id_ntmv_buscador = this.id;
+            this.num_id_ntmv_buscador = this.numeroid;
+            this.permisoParaTransferirNM();
+          },
+          error: (err) => {
+              console.error("Error al consultar la API:", err);
+          },
+          complete:()=>{ }
+        });
+      }else{
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: "ACCION CANCELADA" });
+      }
+    });
+  }
+
+  async getValidacionSaldosModificar(){
+      if (this.id_concepto === undefined) {
+        const resultid_concepto = await this.openConfirmacionDialog(`FALTA CODIGO CONCEPTO`);
+        if (resultid_concepto) {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+          return;
+        }
+      }
+    
+      if (this.codalmorigenText === undefined || this.codalmorigenText === 0 ) {
+        const resultcodalmorigenText = await this.openConfirmacionDialog(`FALTA ORIGEN Y/O EL ORIGEN NO PUEDE SER 0`);
+        if (resultcodalmorigenText) {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+          return;
+        }
+      }
+    
+      if (this.codalmdestinoText === undefined || this.codalmdestinoText === 0 ) {
+        const resultcodalmdestinoText = await this.openConfirmacionDialog(`FALTA DESTINO Y/O EL DESTINO NO PUEDE SER 0`);
+        if (resultcodalmdestinoText) {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+          return;
+        }
+      }
+    
+      let array = {
+        codempresa: this.BD_storage,
+        usuario: this.usuarioLogueado,
+        codalmorigen: this.codalmorigenText,
+        codalmdestino: parseInt(this.codalmdestinoText),
+        codconcepto: this.id_concepto,
+        tabladetalle: this.array_items_carrito_y_f4_catalogo
+      };
+  
+      let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
+      return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn, array)
+        .pipe(takeUntil(this.unsubscribe$)).subscribe({
+          next: (datav) => {
+            console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
+            this.cumple = datav.cumple;
+            if(datav.cumple){
+              this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+              this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "SALDOS VALIDADOS ✅" });
+              //aca mensaje datav.alerta
+              if(datav.alerta){
+                this.openConfirmacionDialog(datav.alerta);
+              }
+            }
+          },
+  
+          error: (err: any) => {
+            console.log(err, errorMessage);
+            this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "OCURRIO UN ERROR" });
+          },
+          complete: () => {
+          }
+        })
+  }
+
+  verificarItemsRepetidos(){
+    // Llamada a la API para obtener nuevos datos
+    this.api.create(`/inventario/modif/docmodifinmovimiento/hayRepetidos/${this.userConn}`, {tablaDetalle:this.array_items_carrito_y_f4_catalogo})
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe({
+      next: (datav) => {
+      console.log("🚀 ~ ModificarNotaMovimientoComponent ~ verificarItemsRepetidos ~ datav:", datav)
+      this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
+      },
+
+      error: (err) => {
+        console.error("Error", err);
+      },
+      complete:()=>{ }
+    });
   }
 
   cargarDataExcel(){
-    
+
   }
 
-  getValidacionSaldosModificar(){
-    
+  imprimirNM(){
+    //colocar el cudrito con el dialogo de intarifa
+    this.modalBtnImpresiones();
+
+
+    // const dialogRefAnulacion = this.dialog.open(DialogConfirmActualizarComponent, {
+    //   width: '450px',
+    //   height: 'auto',
+    //   data: { mensaje_dialog: "¿ Desea Imprimir el Documento ?" },
+    //   disableClose: true,
+    // });
+
+    // dialogRefAnulacion.afterClosed().subscribe((result: Boolean) => {
+    //   if(result){
+    //     // Llamada a la API para obtener nuevos datos
+    //     this.api.update(`/inventario/modif/docmodifinmovimiento/habilitarNotaMovimiento/${this.userConn}/${this.codigo_ultm_NM}/${this.usuarioLogueado}/${this.BD_storage}`, [])
+    //     .pipe(takeUntil(this.unsubscribe$))
+    //     .subscribe({
+    //       next: (datav) => {
+    //         console.log("Respuesta API:", datav);
+
+    //       },
+    //       error: (err) => {
+    //           console.error("Error al consultar la API:", err);
+    //       },
+    //       complete:()=>{ }
+    //     });
+    //   }else{
+    //     this.messageService.add({ severity: 'error', summary: 'Error', detail: "ACCION CANCELADA" });
+    //   }
+    // });
   }
 
+  //ModalPrecioVentaComponent
+  modalBtnImpresiones() {
+    this.dialog.open(DialogTarifaImpresionComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }
 
 
 
@@ -1391,7 +2159,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   modalBuscadorAvanzado(){
     this.dialog.open(NotaMovimientoBuscadorAvanzadoComponent, {
       width: '794px',
-      height: '620px',
+      height: '600px',
       disableClose: true,
     });
   }
@@ -1486,7 +2254,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         desc_linea_seg_solicitud: "",
         codmoneda: "0",
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        descuento_nivel: "",
+        descuento_nivel: "ACTUAL",
+        tipo_ventana:"inventario",
       },
     });
   }
@@ -1505,6 +2274,18 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       width: '450px',
       height: 'auto',
       data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
+
+  openConfirmacionDialogArray(message: string, array): Promise<boolean> {
+    //btn aceptar
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message, msj_array: array },
       disableClose: true,
     });
 

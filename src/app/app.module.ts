@@ -464,6 +464,7 @@ import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimie
 import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/modificar-nota-movimiento/modificar-nota-movimiento.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '@components/uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
+import { DialogTarifaImpresionComponent } from '@components/inventario/CRUD/modificar-nota-movimiento/dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -555,7 +556,7 @@ registerPlugin(UndoRedo);
         EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
         ModalFormaPagoComponent, ModificarFacturacionMostradorTiendasComponent, ModalAnticiposComponent, ModalSubTotalMostradorTiendasComponent, FacturaTemplateComponent,
         FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
-        CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent,
+        CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
 
 
 

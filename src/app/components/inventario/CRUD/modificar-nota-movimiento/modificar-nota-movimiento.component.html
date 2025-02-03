@@ -20,14 +20,16 @@
             
             <!-- BTN GRABAR -->
             <ng-container>
-              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="guardarNotaMovimiento();">
+              <button mat-raised-button type="button" class="btn btn-outline-secondary form-control-sm mr-1"
+                [disabled]="btnGrabarReadOnly" (click)="guardarNotaMovimiento();">
                 <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
               </button>
             </ng-container>
 
             <!-- BTN ANULAR -->
             <ng-container>
-              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="limpiar();" type="button">
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="anularNM();"
+                [disabled]="btnAnularReadOnly" this.anular type="button">
                 <span><i class="fa fa-times red" style="color: #ffc107;"></i> Anular</span>
               </button>
             </ng-container>
@@ -35,8 +37,8 @@
 
             <!-- BTN HABILITAR -->
             <ng-container>
-              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                (click)="validarSaldos();">
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" 
+                [disabled]="btnHabilitarReadOnly" type="button" (click)="habilitarNM();">
                 <span>
                   <mat-icon style="color: #37c551;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
                     check</mat-icon>Habilitar
@@ -92,7 +94,7 @@
               </span>
             </button>
           </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
           <div class="pt-1">
             <h3><strong><u>MODIFICAR NOTA DE MOVIMIENTO</u></strong></h3>
@@ -101,27 +103,20 @@
         </div>
 
         <div class="input-group-append text-center" style="float: right;">
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="imprimir()"
-            matTooltip="Mandar Imprimir" matTooltipClass="custom-tooltip" matTooltipPosition="above">
-            <i class="fa fa-print gray" aria-hidden="true"></i>
-          </button>
-
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
             matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-th blue" aria-hidden="true"></i>
           </button>
 
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="imprimirNM()"
+            matTooltip="Mandar Imprimir" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-print gray" aria-hidden="true"></i>
+          </button>         
+
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Exportar ZIP" (click)="exportarZIP();">
+            matTooltip="Exportar ZIP" (click)="exportarZIPNM(codigo_ultm_NM );">
             <i class="fa fa-file-archive red"></i>
           </button>
-           
-          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-            matTooltip="Importar ZIP" (click)="fileInput.click()">
-            <i class="fa fa-file-archive green"></i>
-          </button>
-
-          <input type="file" #fileInput (change)="onFileChangeZIP($event)" accept=".zip" style="display: none;" />
         </div>
       </div>
     </div>
@@ -129,326 +124,329 @@
 
   <div class="content">
     <!-- cabecera -->
-      <div class="mat-elevation-z2">
-        <!-- primeraColumna -->
-        <div class="row">
-          <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID N. Movimiento</u></span>
-              </div>
-
-              <ng-container>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
-              </ng-container>
-              
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" 
-                  matTooltip="Buscar ID"><i class="fa fa-search"></i>
-                </button>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="numeroid" style="width: 113px;" readonly>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                  <u>Vendedor</u>
-                </span>
-              </div>
-              <ng-container>
-                <input type="text" class="form-control form-control-sm"
-                (blur)="onLeaveVendedor($event)" id="inputCatalogoVendedor" [(ngModel)]="codvendedor">
-              </ng-container>
-
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
-                  class="fa fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;"></div>          
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
-            <div class="input-group-prepend">
+    <div class="mat-elevation-z2">
+      <div class="row">
+        <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
               <span class="input-group-text form-control-sm"
-                style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
-              <input type="date" id="fecha_actual" class="form-control form-control-sm" [(ngModel)]="fecha_actual">
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID N. Movimiento</u></span>
             </div>
-          </div>
 
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha Inicial</u></span>
-              <input type="date" id="fecha_actual" class="form-control form-control-sm" readonly>
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
+            </ng-container>
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" 
+                matTooltip="Buscar ID"><i class="fa fa-search"></i>
+              </button>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="numeroid" style="width: 113px;" readonly>
             </div>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm" style="padding: 10px 42px 0px 0px;border: 0 !important;">
-                  <u>Almacen</u>
-                </span>
-              </div>
-              <ng-container>
-                <input type="text" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
-                 [(ngModel)]="codalmacen" id="inputCatalogoAlmacen" readonly>
-              </ng-container>
-
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" 
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen" disabled>
-                  <i class="fa fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-3" style="padding-right: 6.5px;padding-left: 0px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Concepto</u></span>
-              </div>
-
-              <ng-container>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_concepto" 
-                id="inputCatalogoIdTipo" (blur)="onLeaveConceptoCatalogo($event)">
-              </ng-container>
-              
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
-                  style="border-color: #093070;" (click)="modalCatalogoConceptos();"
-                  matTooltipClass="custom-tooltip" matTooltip="Buscar Concepto"><i class="fa fa-search"></i>
-                </button>
-                <input type="text" class="form-control form-control-sm" readonly
-                  [(ngModel)]="id_concepto_descripcion" style="width: 175px !important;">
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;"></div>
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
-            <div class="input-group-prepend">
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group">
+            <div class="input-group-">
               <span class="input-group-text form-control-sm"
-                style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Origen</u></span>
-              <input type="number" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
-              [(ngModel)]="codalmorigenText" [readOnly]="codalmorigenReadOnly">
-
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="codalmorigenReadOnly"
-                (click)="modalAlmacen('Origen');" style="border-color: #093070;" 
-                matTooltipClass="custom-tooltip" matTooltip="Origen"><i
-                class="fa fa-search" ></i>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm" matTooltipClass="custom-tooltip" 
-              matTooltip="Verificar Items Repetidos" (click)="cargarProformaSolicitudUrgente();">
-              <mat-icon style="color: #05970c;height: 17px !important;width: 19px !important;">info</mat-icon>
-              Verificar Items Repetidos
-            </button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
-            <div class="input-group">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 39px 0px 0px;border: 0 !important;">
-                <u>Usr. Final</u>
+                style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                <u>Vendedor</u>
               </span>
+            </div>
+            <ng-container>
+              <input type="text" class="form-control form-control-sm"
+              (blur)="onLeaveVendedor($event)" id="inputCatalogoVendedor" [(ngModel)]="codvendedor">
+            </ng-container>
 
-              <div style="width: 97px !important;">
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="codpersonadesde"
-                [readonly]="codpersonadesdeReadOnly">
-              </div>
-
-
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalPepersona();"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Persona" 
-                  [disabled]="codpersonadesdeReadOnly"
-                  ><i class="fa fa-search"></i>
-                </button>
-                
-              </div>
-              <span>{{ descripcion_usuario_final }}</span> 
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalVendedor();"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Vendedor"><i
+                class="fa fa-search"></i>
+              </button>
             </div>
           </div>
-          
-          <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;"></div>
-          
-          <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Destino</u></span>
-              <input type="number" class="form-control form-control-sm" 
-              (blur)="onLeaveAlmacen($event)"
-              [(ngModel)]="codalmdestinoText" [readOnly]="codalmdestinoReadOnly">
-
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" 
-                  (click)="modalAlmacen('Destino');" [disabled]="codalmdestinoReadOnly"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Destino">
-                  <i class="fa fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </div>        
         </div>
 
-        <div class="row">
-          <div class="col-md-6" style="padding-right: 0px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm" style="padding: 10px 51px 0px 0px;border: 0 !important;">
-                  <u>Cliente</u>
-                </span>
-              </div>
-              <div style="width: 97px !important;">
-                <input type="text" class="form-control form-control-sm" id="inputCatalogoAlmacen" 
-                [(ngModel)]="cod_cliente" [readonly]="codclienteReadOnly">
-              </div>
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;"></div>          
 
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalClientes();"
-                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Cliente"
-                  [disabled]="codclienteReadOnly"><i class="fa fa-search"></i>
-                </button>
-              </div>
-              <span>{{ cod_cliente_descripcion }}</span>
-            </div>
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
+            <input type="date" class="form-control form-control-sm" [(ngModel)]="fecha" >
           </div>
-          <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;"></div>
-          <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;"></div>
         </div>
 
-        <div class="row">
-          <div class="col-md-5" style="padding-right:  6.5px;padding-left: 6.5px;">
-            <div class="input-group-prepend">
-              <span class="input-group-text form-control-sm"
-                style="padding: 10px 22px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones" maxlength="60">
+
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha Inicial</u></span>
+            <input type="date" id="fecha_actual" class="form-control form-control-sm" [(ngModel)]="fecha_origen" readonly>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm" style="padding: 10px 42px 0px 0px;border: 0 !important;">
+                <u>Almacen</u>
+              </span>
+            </div>
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
+                [(ngModel)]="codalmacen" id="inputCatalogoAlmacen" readonly>
+            </ng-container>
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" 
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Almacen" disabled>
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </div>
-          
-          <div class="col-md-1" style="padding-left: 0px !important;"></div>
+        </div>
 
-          <div class="col-md-3" style="padding-right: 6.5px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Proforma Solicitud Urgente</u></span>
-              </div>
+        <div class="col-md-3" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Concepto</u></span>
+            </div>
 
-              <ng-container>
-                <div style="width: 70px;">
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" (blur)="onLeaveCatalogoProforma($event)" >
-                </div>
-              </ng-container>
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_concepto" 
+              id="inputCatalogoIdTipo" (blur)="onLeaveConceptoCatalogo($event)">
+            </ng-container>
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button"
+                style="border-color: #093070;" (click)="modalCatalogoConceptos();"
+                matTooltipClass="custom-tooltip" matTooltip="Buscar Concepto"><i class="fa fa-search"></i>
+              </button>
+              <input type="text" class="form-control form-control-sm" readonly
+                [(ngModel)]="id_concepto_descripcion" style="width: 175px !important;">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;"></div>
+
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Origen</u></span>
+            <input type="number" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
+            [(ngModel)]="codalmorigenText" [readOnly]="codalmorigenReadOnly">
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="codalmorigenReadOnly"
+              (click)="modalAlmacen('Origen');" style="border-color: #093070;" 
+              matTooltipClass="custom-tooltip" matTooltip="Origen"><i
+              class="fa fa-search" ></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <button mat-raised-button class="btn btn-outline-secondary form-control-sm" matTooltipClass="custom-tooltip" 
+            matTooltip="Verificar Items Repetidos" (click)="verificarItemsRepetidos();">
+            <mat-icon style="color: #05970c;height: 17px !important;width: 19px !important;">info</mat-icon>
+            Verificar Items Repetidos
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 39px 0px 0px;border: 0 !important;">
+              <u>Usr. Final</u>
+            </span>
+
+            <div style="width: 97px !important;">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="codpersonadesde"
+              [readonly]="codpersonadesdeReadOnly">
+            </div>
+
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalPepersona();"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Persona" 
+                [disabled]="codpersonadesdeReadOnly"
+                ><i class="fa fa-search"></i>
+              </button>
               
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="cvenumeracion1Enabled" 
-                  (click)="catalogoProformas('solicitud_urgente')"
-                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Proforma">
-                   <i class="fa fa-search"></i>
-                </button>
-                <div style="width: 85px;">
-                  <input type="text" class="form-control form-control-sm" 
-                  [(ngModel)]="numero_id_catalogo_proforma" >
-                </div>
-                
-              </div>
             </div>
+            <span>{{ descripcion_usuario_final }}</span> 
           </div>
         </div>
+        
+        <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;"></div>
+        
+        <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Destino</u></span>
+            <input type="number" class="form-control form-control-sm" 
+            (blur)="onLeaveAlmacen($event)"
+            [(ngModel)]="codalmdestinoText" [readOnly]="codalmdestinoReadOnly">
 
-        <div class="row">
-          <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm"
-                  style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>ID-NroID Origen</u></span>
-              </div>
-
-              <div style="width: 93x !important;">
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_origen" [readonly]="fidEnable">
-              </div>
-               
-              <div class="input-group-append">
-                <div style="width: 80px !important;">
-                  <input type="text" class="form-control form-control-sm" [readonly]="fnumeroidEnable" [(ngModel)]="nroid_origen">
-                </div>
-
-                <button class="btn btn-outline-primary form-control-sm" type="button" (click)="solicitarPermisoDatoADatoB();"
-                   style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID">
-                   Habilitar
-                </button>
-              </div>
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" 
+                (click)="modalAlmacen('Destino');" [disabled]="codalmdestinoReadOnly"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Destino">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </div>
-    
-          <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;"></div>
+        </div>        
+      </div>
 
-          <div class="col-md-6" style="padding-right: 6.5px;padding-left: 6.5px;">
-            <div class="input-group">
-              <div class="input-group-">
-                <span class="input-group-text form-control-sm" style="padding: 10px 28px 0px 0px;border: 0 !important;">
-                  <u>Proforma de Almacen</u>
-                </span>
-              </div>
+      <div class="row">
+        <div class="col-md-6" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm" style="padding: 10px 51px 0px 0px;border: 0 !important;">
+                <u>Cliente</u>
+              </span>
+            </div>
+            <div style="width: 97px !important;">
+              <input type="text" class="form-control form-control-sm" id="inputCatalogoAlmacen" 
+              [(ngModel)]="cod_cliente" [readonly]="codclienteReadOnly">
+            </div>
 
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalClientes();"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Cliente"
+                [disabled]="codclienteReadOnly"><i class="fa fa-search"></i>
+              </button>
+            </div>
+            <span>{{ cod_cliente_descripcion }}</span>
+          </div>
+        </div>
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;"></div>
+        <div class="col-md-2" style="padding-right: 6.5x;padding-left: 0px;"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-5" style="padding-right:  6.5px;padding-left: 6.5px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 22px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones" maxlength="60">
+          </div>
+        </div>
+        
+        <div class="col-md-1" style="padding-left: 0px !important;"></div>
+
+        <div class="col-md-3" style="padding-right: 6.5px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 5px 0px 56px;border: 0 !important;"><u>Para Proforma</u></span>
+            </div>
+
+            <ng-container>
               <div style="width: 70px;">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_proforma_catalogo" (blur)="onLeaveCatalogoProforma($event)" >
+              </div>
+            </ng-container>
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="catalogoProformas('solicitud_urgente')"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar Proforma">
+                  <i class="fa fa-search"></i>
+              </button>
+              <div style="width: 85px;">
                 <input type="text" class="form-control form-control-sm" 
-                (blur)="onLeaveCatalogoProforma($event)" 
-                [(ngModel)]="id_proforma_sol_urgente"
-                [readonly]="id_proforma_solReadOnly">
+                [(ngModel)]="numero_id_catalogo_proforma" >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2">
+          <ng-container *ngIf="anular === true">
+            <span><strong>Estado: </strong></span>
+            <span style="color: rgb(227, 0, 0);"><strong>ANULADO</strong></span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>ID-NroID Origen</u></span>
+            </div>
+
+            <div style="width: 93x !important;">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_origen" [readonly]="fidEnable">
+            </div>
+              
+            <div class="input-group-append">
+              <div style="width: 80px !important;">
+                <input type="text" class="form-control form-control-sm" [readonly]="fnumeroidEnable" [(ngModel)]="nroid_origen">
+              </div>
+
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="solicitarPermisoDatoADatoB();"
+                  style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID">
+                  Habilitar
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;"></div>
+
+        <div class="col-md-6" style="padding-right: 6.5px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm" style="padding: 10px 3px 0px 23px;border: 0 !important;">
+                <u>Proforma de Almacen</u>
+              </span>
+            </div>
+
+            <div style="width: 70px;">
+              <input type="text" class="form-control form-control-sm" 
+              (blur)="onLeaveCatalogoProforma($event)" 
+              [(ngModel)]="id_proforma_sol_urgente"
+              [readonly]="id_proforma_solReadOnly">
+            </div>
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button"
+                [disabled]="cvenumeracion1Enabled" 
+                [disabled]="id_proforma_solReadOnly"
+                (click)="catalogoProformas('proforma_almacen')" 
+                style="border-color: #093070;" 
+                matTooltipClass="custom-tooltip" 
+                matTooltip="Buscador Proformas">
+                <i class="fa fa-search"></i>
+              </button>
+              
+              <div style="width: 85px;">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="numero_id_proforma_sol_urgente" [readonly]="numeroidproforma_solReadOnly">
               </div>
               
-              <div class="input-group-append">
-                <button class="btn btn-outline-primary form-control-sm" type="button"
-                  [disabled]="cvenumeracion1Enabled" 
-                  [disabled]="id_proforma_solReadOnly"
-                  (click)="catalogoProformas('proforma_almacen')" 
-                  style="border-color: #093070;" 
-                  matTooltipClass="custom-tooltip" 
-                  matTooltip="Buscador Proformas">
-                  <i class="fa fa-search"></i>
-                </button>
-                
-                <div style="width: 85px;">
-                  <input type="text" class="form-control form-control-sm" [(ngModel)]="numero_id_proforma_sol_urgente" [readonly]="numeroidproforma_solReadOnly">
-                </div>
-                
-                <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="cargar_proformaEnabled"
-                  matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente" (click)="cargarProformaSolicitudUrgente();">
-                  <mat-icon style="color: #05970c;height: 17px !important;width: 19px !important;">description</mat-icon>PF Sol. Urgente
-                </button>
-              </div>
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="cargar_proformaEnabled"
+                matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente" (click)="cargarProformaSolicitudUrgente();">
+                <mat-icon style="color: #05970c;height: 17px !important;width: 19px !important;">description</mat-icon>PF Sol. Urgente
+              </button>
             </div>
           </div>
         </div>
       </div>
+    </div>
     <!-- finCabezera -->
-
 
     <!-- InicioTabla -->
     <div class="row">
@@ -520,28 +518,20 @@
                     </ng-template>
 
                     <ng-template pTemplate="output">
-                      <span>{{ products.codaduana }}</span>
+                      <span>{{ products.codaduana === "" ? "0":products.codaduana }}</span>
                     </ng-template>
                   </p-cellEditor>
                 </td>
 
                 <!-- COLUMNA CANTIDAD -->
                 <td class="right1" >
-                  <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
-                    <ng-template pTemplate="input">
-                      <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
-                    </ng-template>
-
-                    <ng-template pTemplate="output">
-                      <span>{{ products.cantidad }}</span>
-                    </ng-template>
-                  </p-cellEditor>
+                  <span>{{ products.cantidad }}</span>
                 </td>
                 <!-- FIN COLUMNA CANTIDAD -->
 
                 <!-- COLUMNA CANTIDAD REVISADA-->
                 <td class="right1" >
-                  <p-cellEditor [pEditableColumn]="products.cantidad_revisada" pEditableColumnField="cantidad">
+                  <p-cellEditor [pEditableColumn]="products.cantidad_revisada" pEditableColumnField="cantidad_revisada">
                     <ng-template pTemplate="input">
                       <input pInputText type="number" [(ngModel)]="products.cantidad_revisada" min="0">
                     </ng-template>
@@ -752,40 +742,40 @@
       </div>
     </div>
 
-    <div mat-dialog-footer class="footersito">
+    <div class="">
       <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-8">
           <!-- Saldos -->
           <div class="row pl-2">
             <input type="text" class="inputsSaldos inputsSaldos2"
               value="{{ almacn_parame_usuario_almacen }}: {{ saldoItem }}"
-              style="font-size: 0.8rem;width:9%;background-color: black;color: rgb(230, 230, 0);" readOnly
+              style="font-size: 0.8rem;width:11%;background-color: black;color: rgb(230, 230, 0);" readOnly
               placeholder="0.00">
 
             <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
               <span style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                style="font-size: 0.8rem;width:10%;background-color: black;color: #00c600;cursor: pointer;"
                 (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                style="font-size: 0.8rem;width:10%;background-color: black;color: #00c600;cursor: pointer;"
                 (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                style="font-size: 0.8rem;width:10%;background-color: black;color: #00c600;cursor: pointer;"
                 (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                style="font-size: 0.8rem;width:10%;background-color: black;color: #00c600;cursor: pointer;"
                 (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" readOnly placeholder="0.00">
 
               <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
               <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5"
-                style="font-size: 0.8rem;width:7%;background-color: black;color: #00c600;cursor: pointer;"
+                style="font-size: 0.8rem;width:10%;background-color: black;color: #00c600;cursor: pointer;"
                 (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" readOnly placeholder="0.00">
             </ng-container>
           </div>
@@ -796,7 +786,26 @@
           <div class="row">
             <div class="col">
               <span class="input-group-text form-control-sm"
-                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total</u></span>
+                style="padding: 5px 0px 0px 0px;border: 0 !important;"><u>Total Revisado</u></span>
+            </div>
+            <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
+              <span>{{ formatNumberTotalSubTOTALES(total_revisado) }}</span>
+              <input type="text"  formControlName="total_revisado" [hidden]="true">
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="totabilizarRevisado()"
+              style="border-color: #093070;">
+                <mat-icon>monetization_on</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2" style="height: calc(1.4rem + 2px) !important;margin-block-end: 5px;float:right;">
+          <div class="row">
+            <div class="col">
+              <span class="input-group-text form-control-sm"
+                style="padding: 5px 0px 0px 0px;border: 0 !important;float: right;"><u>Total</u></span>
             </div>
   
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
@@ -810,45 +819,46 @@
                 <mat-icon>monetization_on</mat-icon>
               </button>
             </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- BUSCADOR GENERAL AVANZADO -->
-      <div class="row pb-2">
-        <div class="input-group" style="padding-left: 7px;">
-          <span class="input-group-text form-control-sm">ID</span>
-          <mat-form-field class="mat-mdc-form-field"
-            style="width: 280px !important; background-color: white !important;">
-            <mat-select [(ngModel)]="id_ntmv_buscador">
-              <mat-option *ngFor="let array_notas_movimientos of array_notas_movimiento" [value]="array_notas_movimientos.codigo">
-                {{ array_notas_movimientos.codigo }} - {{ array_notas_movimientos.descrip }}
-                <hr>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <div style="width: 15% !important; padding-right: 5px;">
-            <input type="number" class="form-control form-control-sm" [(ngModel)]="num_id_ntmv_buscador"
-            style="margin-left: 5px;" id="input_search">
-          </div>
-
-          <div class="input-group-append">
-            <button type="button" class="btn btn-outline-primary form-control-sm" (click)="transferirProforma()"
-              style="border-color: #ffc107;">
-              <i class="fa fa-search"></i>
-            </button>
-            <button style="height: 20px !important; font-size: 0.8rem; background-color: #fbd800;"
-              (click)="modalBuscadorAvanzado()" class="mdc-button mdc-button--raised">
-              <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
-              <span class="mdc-button__label">
-                <i class="fa fa-search"></i> Busqueda Avanzada</span>
-            </button>
+            
           </div>
         </div>
       </div>
-      <!-- FIN BUSCADOR GENERAL AVANZADO -->
     </div>
+
+
+    <!-- BUSCADOR GENERAL AVANZADO -->
+    <div class="row pb-2">
+      <div class="input-group" style="padding-left: 7px;">
+        <span class="input-group-text form-control-sm">ID</span>
+        <mat-form-field class="mat-mdc-form-field"
+          style="width: 280px !important; background-color: white !important;">
+          <mat-select [(ngModel)]="id_ntmv_buscador">
+            <mat-option *ngFor="let array_notas_movimientos of array_notas_movimiento" [value]="array_notas_movimientos.codigo">
+              {{ array_notas_movimientos.codigo }} - {{ array_notas_movimientos.descrip }}
+              <hr>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div style="width: 15% !important; padding-right: 5px;">
+          <input type="number" class="form-control form-control-sm" [(ngModel)]="num_id_ntmv_buscador"
+          style="margin-left: 5px;" id="input_search">
+        </div>
+
+        <div class="input-group-append">
+          <button type="button" class="btn btn-outline-primary form-control-sm" (click)="permisoParaTransferirNM()"
+            style="border-color: #ffc107;">
+            <i class="fa fa-search"></i>
+          </button>
+          <button style="height: 20px !important; font-size: 0.8rem; background-color: #fbd800;"
+            (click)="modalBuscadorAvanzado()" class="mdc-button mdc-button--raised">
+            <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
+            <span class="mdc-button__label">
+              <i class="fa fa-search"></i> Busqueda Avanzada</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- FIN BUSCADOR GENERAL AVANZADO -->
   </div>
 </section>
