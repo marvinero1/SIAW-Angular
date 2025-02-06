@@ -35,7 +35,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       switch (nombre_input) {
         case '':
         this.onCellClick1(this.valorCelda);
-          if (this.permiso_para_vista) {
+          if (this.permiso_para_vista && this.tipo_ventana_origen === 'venta') {
             if(this.valorCelda){
               if (!this.item_valido) {
                 console.log('¡ HAY ITEM NO VALIDO !', this.item_valido, this.valorCelda);
@@ -258,7 +258,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
     this.id_proforma_get = id_proforma?.id_proforma;
     this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
-    this.tipo_ventana_origen = tipo_ventana.tipo_ventana;
+    this.tipo_ventana_origen = tipo_ventana.tipo_ventana === undefined ? "ventas":"inventario";
+    console.log("🚀 ~ MatrizItemsClasicaComponent ~ @Inject ~ this.tipo_ventana_origen:", this.tipo_ventana_origen)
 
     if(this.tipo_ventana_origen === undefined || this.tipo_ventana_origen === "ventas"){
       this.tipo_ventana_origen = "ventas"
@@ -863,7 +864,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         this.array_items_seleccionado.push(array);
       }
     } else {
-      if(this.permiso_para_vista){
+      if(this.permiso_para_vista && this.tipo_ventana_origen === 'ventas'){
         this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL PEDIDO CANTIDAD NO PUEDE SER 0' });
       }
     }

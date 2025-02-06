@@ -37,6 +37,8 @@ import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/ma
 import { NotaMovimientoBuscadorAvanzadoComponent } from '../../../uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { DialogTarifaImpresionComponent } from './dialog-tarifa-impresion/dialog-tarifa-impresion.component';
+import * as XLSX from 'xlsx';
+
 @Component({
   selector: 'app-modificar-nota-movimiento',
   templateUrl: './modificar-nota-movimiento.component.html',
@@ -488,11 +490,11 @@ export class ModificarNotaMovimientoComponent implements OnInit {
           this.numeroid = datav.cabecera?.numeroid;
           
           this.id_concepto = datav.cabecera?.codconcepto;
-          this.validarPorConcepto(datav.cabecera?.codconcepto);
+          this.validarPorConceptoDescripcion(datav.cabecera?.codconcepto);
 
           this.factor = datav.cabecera?.factor;
-          this.codalmorigenText = datav.cabecera?.codalmdestino;
-          this.codalmdestinoText = datav.cabecera?.codalmorigen;
+          this.codalmorigenText = datav.cabecera?.codalmorigen;
+          this.codalmdestinoText = datav.cabecera?.codalmdestino;
           this.codvendedor = datav.cabecera?.codvendedor;
           this.fecha_origen = this.datePipe.transform(datav.cabecera?.fecha_inicial, "yyyy-MM-dd");
           this.fecha = this.datePipe.transform(datav.cabecera?.fecha, "yyyy-MM-dd");
@@ -869,7 +871,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     };
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn, array)
+    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn+"/"+false, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
@@ -975,6 +977,33 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       })
   }
 
+  validarPorConceptoDescripcion(concepto){
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/eligeConcepto/";
+    return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/'+this.userConn+"/"+concepto+"/"+this.agencia_logueado)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
+          this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
+          this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
+          this.fidEnable = datav.fidEnable;
+          this.fnumeroidEnable = datav.fnumeroidEnable;
+          this.codpersonadesdeReadOnly = datav.codpersonadesdeReadOnly;
+          this.factor = datav.factor;
+          this.codclienteReadOnly = datav.codclienteReadOnly;
+          this.cargar_proformaEnabled = datav.cargar_proformaEnabled;
+          this.cvenumeracion1Enabled = datav.cvenumeracion1Enabled;
+          this.id_proforma_solReadOnly = datav.id_proforma_solReadOnly;
+          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly; 
+          this.esAjuste = datav.conceptoEsAjuste;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
   ponerDui(){
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
@@ -1021,11 +1050,12 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    this.item = event.data.coditem;
-    this.item_obj_seleccionado = event.data;
+    // this.item = event.data.coditem;
+    // this.item_obj_seleccionado = event.data;
 
-    console.log('Row Selected:', event.data);
-    this.updateSelectedProducts();
+    // // this.getSaldoItem(this.item);
+    // console.log('Row Selected:', event.data);
+    // this.updateSelectedProducts();
   }
 
   onRowSelectForDelete() {
@@ -2040,7 +2070,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       };
   
       let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-      return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn, array)
+      return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn+"/"+false, array)
         .pipe(takeUntil(this.unsubscribe$)).subscribe({
           next: (datav) => {
             console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
@@ -2059,8 +2089,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
             console.log(err, errorMessage);
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "OCURRIO UN ERROR" });
           },
-          complete: () => {
-          }
+          complete: () => { }
         })
   }
 
@@ -2081,9 +2110,13 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     });
   }
 
-  cargarDataExcel(){
 
-  }
+
+
+
+
+
+
 
   imprimirNM(){
     //colocar el cudrito con el dialogo de intarifa

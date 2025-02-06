@@ -33,7 +33,7 @@
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="limpiar();">
-              <span><i class="fa fa-eraser"  style="color: #ffc107;"></i> Limpiar</span>
+              <span><i class="fa fa-eraser" style="color: #ffc107;"></i> Limpiar</span>
             </button>
             <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="ventanaPermisoEspecialPassword();" [disabled]="!codigo_cliente && id_proforma_numero_id !== 0">
@@ -41,19 +41,34 @@
             </button> -->
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="ventanaPermisoEspecialPassword();">
-              <span><i class="fa fa-clone"  style="color: #7d99c7;"></i> Transferir</span>
+              <span><i class="fa fa-clone" style="color: #7d99c7;"></i> Transferir</span>
             </button>
 
             <!-- <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="exportProformaExcel();">
               <span>Exportar Proforma</span>
             </button> -->
-            
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="cargarDataExcel();">
-              <span><i class="fa fa-file-excel green"  style="color: #05970c;"></i>
-                Cargar</span>
+
+            <!-- EXCELS -->
+            <button mat-button [matMenuTriggerFor]="beforeMenuEXCEL">
+              <span><i class="fa fa-file-excel green" style="color: #05970c;"></i></span>
+                <mat-icon>expand_more</mat-icon>
             </button>
+            <mat-menu #beforeMenuEXCEL="matMenu" xPosition="after">
+              <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                matTooltip="Cargar Excel SIAW" matTooltipPosition="right"
+                (click)="cargarDataExcel()">
+                <i class="fa fa-file-excel green" ></i>&nbsp; Cargar Excel SIAW
+              </button>
+
+              <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                matTooltip="Cargar Excel To Excel" matTooltipPosition="right"
+                (click)="modalExcelToExcel()">
+                <i class="fa fa-file-excel green" ></i>&nbsp; Cargar Excel To Excel
+              </button>
+            </mat-menu>
+            <!-- FIN EXCELS -->
+
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
               (click)="validarProformaAll();">
               <span> <i class="fa fa-eye"  style="color: #ffc107;"></i> Validar</span>
@@ -97,7 +112,6 @@
             </button>
           </ng-container>
 
-
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="empaquesCerradosValidacion()"
             matTooltip="Empaques Multiplos Cerrados" matTooltipClass="custom-tooltip" matTooltipPosition="above">
             <i class="fa fa-inbox gray" ></i>
@@ -136,15 +150,15 @@
             <i class="fa fa-user black" ></i>
           </button> -->
           <!-- [disabled]="[array_items_carrito_y_f4_catalogo].length !== 1" {{ [array_items_carrito_y_f4_catalogo].length  }} -->
+          
           <button mat-button [matMenuTriggerFor]="beforeMenu">
             <mat-icon>expand_more</mat-icon>
           </button>
           <mat-menu #beforeMenu="matMenu" xPosition="before">
             <mat-list role="list">
-              
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
+                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="right"
                   (click)="refreshLogin()">
                   <i class="fa fa-key" ></i>&nbsp; Re-Ingresar
                 </button>
@@ -156,7 +170,7 @@
               <!-- </mat-list-item> -->
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
-                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="above"
+                  matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente" matTooltipPosition="right"
                   [disabled]="!codigo_cliente && id_proforma_numero_id !== 0"
                   (click)="verificarDepositoPendientesDescuentoCliente()">
                   <i class="fa fa-calculator blue" ></i> Verificar Depositos Pendientes de Descuentos
@@ -183,7 +197,8 @@
               </mat-list-item>
 
               <mat-list-item role="listitem" class="list-button">
-                <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+                <button class="btn btn-outline-secondary form-control-sm" type="button" 
+                  matTooltipClass="custom-tooltip" matTooltipPosition="right"
                   matTooltip="Orden Pedido" (click)="ordenarDetalleSegunOrdenPedido();">
                   <i class="fa fa-bars" ></i> Orden Pedido
                 </button>

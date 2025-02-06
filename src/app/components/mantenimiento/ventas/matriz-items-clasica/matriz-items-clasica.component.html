@@ -158,10 +158,7 @@
               <u>Calcular Empa. por Descuento</u>
               <input type="checkbox" [checked]="desct" (change)="toggleDescuento()">
             </span>
-          </ng-container>
-
-
-          
+          </ng-container>          
         </div>
       </div>
 
@@ -184,13 +181,13 @@
         </ng-container>
 
         <ng-container *ngIf="item_valido === true">
-          <span style="color: rgb(rgb(0, 171, 0));"><strong>SI VENTA</strong></span>
+          <span style="color: rgb(0, 171, 0);"><strong>SI VENTA</strong></span>
         </ng-container>        
       </div>
 
       <div class="col-md-5">
         <div class="row">
-          <ng-container *ngIf="usuario_logueado !== 'opergps'; else oculto">
+          <ng-container *ngIf="usuario_logueado !== 'opergps' && this.tipo_ventana_origen !== 'inventario'; else oculto">
             <mat-form-field appearance="outline" class="example-full-width" style="width: 15%;">
               <mat-label>Empaque</mat-label>
               <input 

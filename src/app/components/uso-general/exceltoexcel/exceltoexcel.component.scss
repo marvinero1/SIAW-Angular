@@ -1,0 +1,52 @@
+td, th{
+    padding: 7px !important;
+}
+
+.example-form-field {
+    //width: 140px;
+}
+
+.table{
+    vertical-align: middle !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper{
+    display: none;
+}
+
+
+
+.green {color: green;}
+.yellow {color:#fbd800;}
+.red {color: red;}
+.blue {color: blue;}
+.gray{color: rgba(111, 111, 157, 0.824)}
+.brown {color: brown;}
+.black {color: black;}.black:hover {color: #fff;}
+
+
+
+
+
+
+
+.mat-mdc-table .mdc-data-table__row{
+    height: calc(0rem + 0px) !important;
+}
+.mat-mdc-header-row{
+    height: calc(0rem + 0px) !important;
+}
+.mat-mdc-form-field{
+    flex-direction: inherit !important;
+}
+.mat-mdc-table .mdc-data-table__header-row {
+    height: 21px;
+}
+
+
+
+
+
+
+
+  

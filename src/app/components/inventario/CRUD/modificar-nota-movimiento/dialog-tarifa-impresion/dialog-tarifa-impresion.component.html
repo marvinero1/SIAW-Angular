@@ -1,3 +1,38 @@
-<p>
-  dialog-tarifa-impresion works!
-</p>
+<section class="p-3" style="background-color:#ffffc0 !important">
+  <p>Impresion de Documento</p>
+
+  <div class="row">
+    <div class="col">
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="proformaYetiqueta();">
+        <mat-icon style="color: #093070;">print</mat-icon>
+        <span>
+          Imprimir
+        </span>
+      </button>
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+        (click)="proformaImpresion();">
+        <mat-icon style="color: #093070;">launch</mat-icon>
+        <span>
+           Vista Previa
+        </span>
+      </button>
+
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button" (click)="close();">
+        <mat-icon color="primary">close</mat-icon>
+        <span>Cerrar</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+

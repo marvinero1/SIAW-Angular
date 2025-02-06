@@ -66,6 +66,8 @@ import { element } from 'protractor';
 import { environment } from 'environments/environment';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
+import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
 
 @Component({
   selector: 'app-proforma',
@@ -512,7 +514,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     private spinner: NgxSpinnerService, private log_module: LogService, private router:Router, public nombre_ventana_service: NombreVentanaService,
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, private servicioEtiqueta: EtiquetaService,
-    private anticipo_servicio: AnticipoProformaService) {
+    private anticipo_servicio: AnticipoProformaService, private excelService:ExceltoexcelService) {
       
     if (!environment.production) {
       console.log('Componente inicializado en desarrollo');
@@ -942,6 +944,31 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.communicationService.triggerFunction$.subscribe(() => {
       this.aplicarDesctPorDepositoHTML();
     });
+
+    //Servicio ExcelToExcel
+    this.excelService.disparadorDeProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      let array_para_mapear = data.PFDetalle.map((elemento) => {
+        return {
+          coditem: elemento.coditem,
+          // tarifa: this.tarifa_get,
+          tarifa: this.cod_precio_venta_modal_codigo === undefined ? 0:this.cod_precio_venta_modal_codigo,
+          descuento: this.cod_descuento_modal=== undefined ? 0 :this.cod_descuento_modal,
+          cantidad_pedida: parseInt(elemento.cantidad) === null ? 0:parseInt(elemento.cantidad),
+          cantidad: parseInt(elemento.cantidad) === null ? 0:parseInt(elemento.cantidad),
+          codcliente: this.codigo_cliente === undefined ? "0":this.codigo_cliente,
+          opcion_nivel: this.desct_nivel_actual?.toString() === undefined ? "ACTUAL":this.desct_nivel_actual?.toString(),
+          codalmacen: this.almacn_parame_usuario_almacen,
+          desc_linea_seg_solicitud: this.habilitar_desct_sgn_solicitud?.toString() === undefined ? "false":this.habilitar_desct_sgn_solicitud?.toString(),
+          codmoneda: this.moneda_get_catalogo,
+          fecha: this.fecha_actual,
+          empaque: 0,
+        }
+      });
+      console.log("🚀 ~ this.excelService.disparadorDeProforma.pipe ~ data:", data)
+
+      this.infoItemArray(array_para_mapear);
+    });
+    //
   }
 
   ngAfterViewInit() {
@@ -1007,6 +1034,55 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.iva = 0.00;
     this.des_extra = 0.00;
     this.recargos = 0.00;
+  }
+
+  infoItemArray(array_items){
+    this.spinner.show();
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/";
+    return this.api.create("/venta/transac/veproforma/getItemMatriz_AnadirbyGroup/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado, array_items)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ .pipe ~ datav:", datav)
+          // siempre sera uno
+          this.orden_creciente = 1;
+          this.array_items_carrito_y_f4_catalogo = datav;
+          
+          // Formatea sus numeros, ya no se hace en el frontend
+          this.array_items_carrito_y_f4_catalogo_visualizar = datav.map(product => ({
+            ...product,
+            cantidad: this.formatNumberTotalSubTOTALES(product.cantidad),
+            cantidad_pedida: this.formatNumberTotalSubTOTALES(product.cantidad_pedida),
+            porcen_mercaderia: this.formatNumberTotalSubTOTALES(product.porcen_mercaderia),
+            total: this.calcularTotalCantidadXPU(product.cantidad_pedida, product.cantidad, product.precioneto)
+          }));
+          
+          // Agregar el número de orden a los objetos de datos
+          this.array_items_carrito_y_f4_catalogo_visualizar.forEach((element, index) => {
+            element.nroitem = index + 1;
+            element.orden = index + 1;
+          });      
+
+          this.totabilizar();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        error: (err) => {
+          console.log(err, errorMessage);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+        complete: () => {
+          
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      })
   }
 
   mandarEntregar() {
@@ -6344,12 +6420,18 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-
-
-
-
-
-
+  modalExcelToExcel(){
+    //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
+    // LA DATA XDXD
+    this.dialog.open(ExceltoexcelComponent, {
+      width: '800px',
+      height: 'auto',
+      disableClose: true,
+      data:{
+        ventana_origen:'proforma'
+      }
+    });
+  }
   
   async quitarDescDeposito23() {
     console.log(this.array_de_descuentos_ya_agregados);
@@ -6754,8 +6836,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
   // FIN CATALOGOS ITEMS
-
-
 
 
   modalClientes(): void {

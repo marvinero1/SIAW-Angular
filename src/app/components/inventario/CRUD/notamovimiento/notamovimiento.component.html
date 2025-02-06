@@ -35,6 +35,14 @@
               </ng-container>
             </div>
 
+            <!-- BTN CARGAR EXCEL -->
+            <ng-container>
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" 
+                type="button" (click)="modalExcelToExcel()">
+                <span><i class="fa fa-file-excel green"></i> Excel</span>
+              </button>
+            </ng-container>
+            
             <!-- BTN ANULAR -->
             <div>
               <ng-container>
@@ -213,7 +221,6 @@
                 style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Origen</u></span>
               <input type="number" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
               [(ngModel)]="codalmorigenText" [readOnly]="codalmorigenReadOnly">
-
               <div class="input-group-append">
                 <button class="btn btn-outline-primary form-control-sm" type="button" [disabled]="codalmorigenReadOnly"
                 (click)="modalAlmacen('Origen');" style="border-color: #093070;" 
@@ -472,7 +479,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="output">
-                      <span>{{ products.codaduana }}</span>
+                      <span>{{ products.codaduana === "" ? "0":products.codaduana }}</span>
                     </ng-template>
                   </p-cellEditor>
                 </td>
@@ -485,7 +492,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="output">
-                      <span>{{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
+                      <span>{{ formatNumberTotalSubTOTALES(products.cantidad === "" ? "0":products.cantidad) }}</span>
                     </ng-template>
                   </p-cellEditor>
                 </td>

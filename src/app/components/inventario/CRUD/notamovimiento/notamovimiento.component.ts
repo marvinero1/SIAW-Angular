@@ -34,7 +34,12 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { PersonaCatalogoComponent } from '@components/mantenimiento/persona-catalogo/persona-catalogo.component';
 import { ServicePersonaService } from '@components/mantenimiento/persona-catalogo/service-persona/service-persona.service';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
+import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
+import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
 
+
+import * as XLSX from 'xlsx';
+import { DialogTarifaImpresionComponent } from '../modificar-nota-movimiento/dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 @Component({
   selector: 'app-notamovimiento',
   templateUrl: './notamovimiento.component.html',
@@ -60,6 +65,20 @@ export class NotamovimientoComponent implements OnInit {
         // case "":
         //   this.modalCatalogoProductos();
         //   break;
+      }
+    }
+  };
+  
+  @HostListener("document:keydown.enter", []) unloadHandler1(event: KeyboardEvent) {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`+ this.item_obj_seleccionado.coditem);
+
+      switch (elementTagName) {
+        case "":
+          this.itemDataAll(this.item_obj_seleccionado.coditem);
+          break;
       }
     }
   };
@@ -195,13 +214,16 @@ export class NotamovimientoComponent implements OnInit {
       private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
       private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
       public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
-      public servicioCatalogoProformas: ServicioCatalogoProformasService,
-      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
-
+      public servicioCatalogoProformas: ServicioCatalogoProformasService, private excelService:ExceltoexcelService,
+      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService,
+    ) { 
+      
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
       this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
       this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+      
+      this.modalImpresion();
   }
   
   ngOnInit() {
@@ -356,6 +378,12 @@ export class NotamovimientoComponent implements OnInit {
       this.cod_cliente_descripcion = data.cliente.nombre
       //si se cambia de cliente, los totales tambien se cambian
       this.total = 0.00;
+    });
+    //
+
+    //Servicio ExcelToExcel
+    this.excelService.disparadorDeNotaMovimiento.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      this.array_items_carrito_y_f4_catalogo = data.NMDetalle;
     });
     //
 
@@ -716,7 +744,7 @@ export class NotamovimientoComponent implements OnInit {
     };
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn, array)
+    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn+"/"+true, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
@@ -841,16 +869,15 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    this.item = event.data.coditem;
-    this.item_obj_seleccionado = event.data;
+     console.log('Row Selected:', event);
 
-    console.log('Row Selected:', event.data);
+    this.item = event.coditem;
+    this.item_obj_seleccionado = event.data;
+   
     this.updateSelectedProducts();
   }
 
   onRowSelectForDelete() {
-    // console.log('Array de Items para eliminar: ', this.selectedProducts);
-
     // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
       return !this.selectedProducts.some(selectedItem =>
@@ -1028,7 +1055,6 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   validarGrabar(){
-    console.log(this.fecha_actual);
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
     return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/'+this.userConn+"/"+this.codalmacen+"/"+this.fecha_actual+"/"+this.id+"/"+this.numeroid)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
@@ -1191,23 +1217,28 @@ export class NotamovimientoComponent implements OnInit {
       tablaDetalle:this.array_items_carrito_y_f4_catalogo
     }
     console.log("🚀 ~ NotamovimientoComponent ~ guardarNotaMovimiento ~ array_PF:", array_PF)
-
+    this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
     return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/'+this.userConn+"/"+this.BD_storage+"/"+this.traspaso, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
           if(datav.codigoNM){
-            let result = await this.openConfirmationDialog(`${datav.resp}\n\n${datav.alertas.join('\n\n')}`);
+            let result = await this.openConfirmationDialog(`${datav.alertas.join('\n\n')}\n\n${datav.resp}`);
               if (result) {
                 //exportar ZIP
                 await this.exportarZIPNMGrabar(datav.codigoNM);
-                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
 
+                await this.imprimirNM(datav.codigoNM);
+
+                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
                 //window.location.reload();
               }else{
+                await this.imprimirNM(datav.codigoNM);
+
                 this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR'});
                 setTimeout(() => {
+                  this.spinner.hide();
                   window.location.reload();
                 }, 1000);
               }
@@ -1246,6 +1277,35 @@ export class NotamovimientoComponent implements OnInit {
           //     this.abrirTabPorLabel("Saldos Negativos");
           //   }
           // }         
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          this.spinner.hide();
+        },
+        complete: () => { 
+          this.spinner.hide();
+        }
+      })
+  }
+
+  imprimirNM(codigo){
+    let array_send:any = {
+      codEmpresa: this.BD_storage ,
+      codclientedescripcion: "",
+      codtarifa: 0,
+      usuario: this.usuarioLogueado,
+      codconceptodescripcion: this.id_concepto.toString(),
+      total: this.total,
+      codigoNM: codigo
+    };
+
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
+    return this.api.create('/inventario/transac/docinmovimiento/impresionNotaMovimiento/'+this.userConn, array_send)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+        console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ imprimirNM:", datav)
+
         },
 
         error: (err: any) => {
@@ -1396,6 +1456,7 @@ export class NotamovimientoComponent implements OnInit {
         detalleRecargos: [],
       }
     
+      this.spinner.show();
       console.log(proforma_validar);
       const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
       const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
@@ -1463,6 +1524,8 @@ export class NotamovimientoComponent implements OnInit {
       return element.obs === "Genera Negativo";
     });
 
+    console.log("🚀 ~ NotamovimientoComponent ~ this.validacion_post_negativos ~ validacion_post_negativos:", this.validacion_post_negativos)
+
     this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_negativos);
   }
 
@@ -1471,9 +1534,9 @@ export class NotamovimientoComponent implements OnInit {
     this.toggleNegativos = false;
     this.togglePositivos = true;
 
-    // this.validacion_post_negativos_filtrados_solo_positivos = this.validacion_post_negativos.filter((element) => {
-    //   return element.obs === "Positivo";
-    // });
+    this.validacion_post_negativos_filtrados_solo_positivos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Positivo";
+    });
 
     this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_positivos);
   }
@@ -1541,15 +1604,9 @@ export class NotamovimientoComponent implements OnInit {
     
     // this.id = zip_json.cabeceraList[0]?.id;
     // this.numeroid = zip_json.cabeceraList[0]?.numeroid;
-    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;  
-    this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto);
-    const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
-    console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
-    this.id_concepto_descripcion = encontrado_objeto.descripcion;
-
-
+    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto; 
     this.factor = zip_json.cabeceraList[0]?.factor;
-    this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
+    //this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
     this.observaciones = zip_json.cabeceraList[0]?.obs;
     this.id_origen = zip_json.cabeceraList[0]?.fid;
     this.nroid_origen = zip_json.cabeceraList[0]?.fnumeroid;
@@ -1563,6 +1620,12 @@ export class NotamovimientoComponent implements OnInit {
     
     documento = zip_json.cabeceraList[0]?.documento
     if(documento === "NOTA"){
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+      console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
+      this.id_concepto_descripcion = encontrado_objeto.descripcion;
+
+      this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
       this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
       this.id_origen = zip_json.cabeceraList[0]?.id;
       this.nroid_origen = zip_json.cabeceraList[0]?.numeroid;
@@ -1571,6 +1634,11 @@ export class NotamovimientoComponent implements OnInit {
       this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
       // this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
 
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+        ...element,
+        codaduana:"0"
+      })));
+
       this.observaciones = "NOTA: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmacen+" "+zip_json.cabeceraList[0]?.obs;
       if(this.observaciones.length > 60){
         this.observaciones = this.observaciones.slice(0, 59);
@@ -1578,6 +1646,16 @@ export class NotamovimientoComponent implements OnInit {
     }
 
     if(documento === "SOLURGENTE"){
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+      console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
+      this.id_concepto_descripcion = encontrado_objeto.descripcion;
+
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+        ...element,
+        codaduana:"0"
+      })));
+
       this.observaciones = zip_json.cabeceraList[0]?.obs;
       if(this.observaciones.length > 60){
         this.observaciones = this.observaciones.slice(0, 59);
@@ -1585,15 +1663,30 @@ export class NotamovimientoComponent implements OnInit {
     }
 
     if(documento === "PEDIDO"){
-      this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
+      this.codalmorigenText = zip_json.cabeceraList[0]?.codalmacen;
+      console.log("🚀 ~ NotamovimientoComponent ~ this.codalmorigenText:", this.codalmorigenText)
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+        ...element,
+        codaduana:"0"
+      })));
       this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
-      this.observaciones = "PEDIDO: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmorigen+" "+zip_json.cabeceraList[0]?.obs;
+      this.observaciones = "PEDIDO: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmacen+" "+zip_json.cabeceraList[0]?.obs;
       if(this.observaciones.length > 60){
         this.observaciones = this.observaciones.slice(0, 59);
       }
     }
 
     if(documento === "RECEPCION"){
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+      console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
+      this.id_concepto_descripcion = encontrado_objeto.descripcion;
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+        ...element,
+        codaduana:"0"
+      })));
+
+      this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
       this.observaciones = zip_json.cabeceraList[0]?.obs;
       if(this.observaciones.length > 60){
         this.observaciones = this.observaciones.slice(0, 59)
@@ -1615,7 +1708,6 @@ export class NotamovimientoComponent implements OnInit {
       this.getDescripcMedidaItem(zip_json.detalleList);
       this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
     }
-
   }
   //FIN Importar ZIP
   
@@ -1645,6 +1737,67 @@ export class NotamovimientoComponent implements OnInit {
   }
 
 
+  // cargarDataExcel(event: any) {
+  //   const archivo = event.target.files[0];
+  //   if (!archivo) return;
+  
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     const data = new Uint8Array(e.target.result);
+  //     const workbook = XLSX.read(data, { type: 'array' });
+  
+  //     const nombreHoja = workbook.SheetNames[0]; // Tomamos la primera hoja
+  //     const hoja = workbook.Sheets[nombreHoja];
+  
+  //     // 🔥 Definir las coordenadas del rango
+  //     const inicio = { col: 'A', row: 2 };
+  //     const fin = { col: 'A', row: 48 };
+
+  //     const valores_items_inicio = { col: 'H', row: 2 };
+  //     const valores_items_fin = { col: 'H', row: 48 };
+
+  //     // Extraer el rango de celdas
+  //     const dataExtraida = this.extraerRangoItems(hoja, inicio, fin);
+  //     const dataExtraidaValoresItems = this.extraerRangoItems(hoja, valores_items_inicio, valores_items_fin);
+
+  //     const array_completo = dataExtraida.map((element, index) => ({
+  //       udm:"",
+  //       codaduana:"",
+  //       coditem: element,
+  //       cantidad: dataExtraidaValoresItems[index] || 0,
+  //     }));
+      
+  //     console.log("🚀 ~ NotamovimientoComponent ~ cargarDataExcel ~ array_completo:", array_completo);
+  //     this.getDescripcMedidaItem(array_completo);
+  //   };
+  
+  //   reader.readAsArrayBuffer(archivo);
+  // }
+  
+  // // 📌 Función para extraer un rango de celdas
+  // extraerRangoItems(hoja: XLSX.WorkSheet, inicio: { col: string; row: number }, fin: { col: string; row: number }): any[] {
+  //   const data = [];
+  //   const columnas = this.generarColumnas(inicio.col, fin.col); // Genera ['A'] si es un solo col
+  
+  //   for (let fila = inicio.row; fila <= fin.row; fila++) {
+  //     for (const col of columnas) {
+  //       const celda = hoja[`${col}${fila}`];
+  //       data.push(celda ? celda.v : ''); // 🔥 Mete todo en un solo array
+  //     }
+  //   }
+  
+  //   return data;
+  // }
+  
+  // // 📌 Generar un array de columnas (de 'A' a 'Y')
+  // generarColumnas(inicio: string, fin: string): string[] {
+  //   const cols = [];
+  //   for (let i = XLSX.utils.decode_col(inicio); i <= XLSX.utils.decode_col(fin); i++) {
+  //     cols.push(XLSX.utils.encode_col(i));
+  //   }
+  //   return cols;
+  // }
+  
 
 
 
@@ -1655,9 +1808,28 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
+  modalImpresion(){
+    this.dialog.open(DialogTarifaImpresionComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+
+    });
+  }
 
 
-
+  modalExcelToExcel(){
+    //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
+    // LA DATA XDXD
+    this.dialog.open(ExceltoexcelComponent, {
+      width: '800px',
+      height: 'auto',
+      disableClose: true,
+      data:{
+        ventana_origen:'nota_movimiento'
+      }
+    });
+  }
 
   modalClientes(): void {
     this.dialog.open(ModalClienteComponent, {

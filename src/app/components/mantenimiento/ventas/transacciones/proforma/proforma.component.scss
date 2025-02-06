@@ -230,6 +230,12 @@ mat-row, mat-header-row, mat-footer-row{
 
 
 
+
+
+
+
+
+
   .miTabGroupProformaFooter .mat-mdc-tab-body {
     /* Estilos específicos para el tab 1 */
     height: 195px !important;
@@ -319,7 +325,9 @@ mat-row, mat-header-row, mat-footer-row{
     }
   }
 
-
+  .mat-mdc-menu-panel .mat-mdc-menu-content, .mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text{
+    background: #CEFFFF;
+  }
   .p-treetable .p-datatable-wrapper .p-datatable-tbody {
     height: 12px !important;
   }

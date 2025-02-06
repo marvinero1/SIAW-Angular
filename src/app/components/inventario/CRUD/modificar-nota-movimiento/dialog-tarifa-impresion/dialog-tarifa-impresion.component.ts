@@ -12,4 +12,15 @@ export class DialogTarifaImpresionComponent implements OnInit {
   ngOnInit() {
   }
 
+  proformaImpresion(){
+
+  }
+
+  proformaYetiqueta(){
+
+  }
+
+  close(){
+    
+  }
 }
