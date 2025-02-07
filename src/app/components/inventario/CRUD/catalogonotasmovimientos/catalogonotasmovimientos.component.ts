@@ -4,7 +4,7 @@ import { TipoidService } from '@components/mantenimiento/ventas/serviciotipoid/t
 import { ApiService } from '@services/api.service';
 import { veNumeracion } from '@services/modelos/objetos';
 import { Table } from 'primeng/table';
-import { CatalogoNotasMovimientoService } from './servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
+import { CatalogoNotasMovimientoService } from '../servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 
 @Component({
   selector: 'app-catalogonotasmovimientos',

@@ -19,7 +19,7 @@ import { LogService } from '@services/log-service.service';
 import { ItemDetalle } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { CatalogoNotasMovimientoService } from '../catalogonotasmovimientos/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
+import { CatalogoNotasMovimientoService } from '../servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
@@ -36,7 +36,7 @@ import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '../../../uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
-import { DialogTarifaImpresionComponent } from './dialog-tarifa-impresion/dialog-tarifa-impresion.component';
+import { DialogTarifaImpresionComponent } from '../dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 import * as XLSX from 'xlsx';
 
 @Component({

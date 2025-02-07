@@ -22,7 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
 import { CatalogonotasmovimientosComponent } from '../catalogonotasmovimientos/catalogonotasmovimientos.component';
-import { CatalogoNotasMovimientoService } from '../catalogonotasmovimientos/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
+import { CatalogoNotasMovimientoService } from '../servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { CatalogoMovimientoMercaderiaComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/catalogo-movimiento-mercaderia/catalogo-movimiento-mercaderia.component';
 import { MovimientomercaderiaService } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/serviciomovimientomercaderia/movimientomercaderia.service';
 import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component';
@@ -39,7 +39,8 @@ import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servic
 
 
 import * as XLSX from 'xlsx';
-import { DialogTarifaImpresionComponent } from '../modificar-nota-movimiento/dialog-tarifa-impresion/dialog-tarifa-impresion.component';
+import { DialogTarifaImpresionComponent } from '../dialog-tarifa-impresion/dialog-tarifa-impresion.component';
+import { VistaPreviaNmComponent } from '../dialog-tarifa-impresion/vista-previa-nm/vista-previa-nm.component';
 @Component({
   selector: 'app-notamovimiento',
   templateUrl: './notamovimiento.component.html',
@@ -222,8 +223,8 @@ export class NotamovimientoComponent implements OnInit {
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
       this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
       this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-      
-      this.modalImpresion();
+
+      this.getData();
   }
   
   ngOnInit() {
@@ -1229,17 +1230,16 @@ export class NotamovimientoComponent implements OnInit {
                 //exportar ZIP
                 await this.exportarZIPNMGrabar(datav.codigoNM);
 
-                await this.imprimirNM(datav.codigoNM);
+                await this.modalImpresion(datav.codigoNM);
 
                 this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
                 //window.location.reload();
               }else{
-                await this.imprimirNM(datav.codigoNM);
+                await this.modalImpresion(datav.codigoNM);
 
                 this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR'});
                 setTimeout(() => {
                   this.spinner.hide();
-                  window.location.reload();
                 }, 1000);
               }
           }
@@ -1286,32 +1286,6 @@ export class NotamovimientoComponent implements OnInit {
         complete: () => { 
           this.spinner.hide();
         }
-      })
-  }
-
-  imprimirNM(codigo){
-    let array_send:any = {
-      codEmpresa: this.BD_storage ,
-      codclientedescripcion: "",
-      codtarifa: 0,
-      usuario: this.usuarioLogueado,
-      codconceptodescripcion: this.id_concepto.toString(),
-      total: this.total,
-      codigoNM: codigo
-    };
-
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
-    return this.api.create('/inventario/transac/docinmovimiento/impresionNotaMovimiento/'+this.userConn, array_send)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ imprimirNM:", datav)
-
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
       })
   }
 
@@ -1808,15 +1782,19 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
-  modalImpresion(){
+  modalImpresion(codigo){
     this.dialog.open(DialogTarifaImpresionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
-
+      data:{
+        codigo_concepto:this.id_concepto,
+        cod_concepto_descrip:this.id_concepto_descripcion,
+        total: this.total,
+        codigoNM: codigo
+      }
     });
   }
-
 
   modalExcelToExcel(){
     //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
@@ -1999,4 +1977,53 @@ export class NotamovimientoComponent implements OnInit {
       }
     });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //VISTA PREVIA
+  getData(){
+    this.dialog.open(VistaPreviaNmComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

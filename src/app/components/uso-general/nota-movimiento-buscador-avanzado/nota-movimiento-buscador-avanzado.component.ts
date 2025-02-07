@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
-import { CatalogoNotasMovimientoService } from '@components/inventario/CRUD/catalogonotasmovimientos/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
+import { CatalogoNotasMovimientoService } from '@components/inventario/CRUD/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ModalIdtipoComponent } from '@components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component';
