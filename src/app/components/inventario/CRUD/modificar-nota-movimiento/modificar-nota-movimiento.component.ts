@@ -38,6 +38,7 @@ import { NotaMovimientoBuscadorAvanzadoComponent } from '../../../uso-general/no
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { DialogTarifaImpresionComponent } from '../dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 import * as XLSX from 'xlsx';
+import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 
 @Component({
   selector: 'app-modificar-nota-movimiento',
@@ -228,7 +229,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     private serviciovendedor: VendedorService, private datePipe: DatePipe, private saldoItemServices: SaldoItemMatrizService,
     private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
     public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
-    public servicioCatalogoProformas: ServicioCatalogoProformasService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
+    public servicioCatalogoProformas: ServicioCatalogoProformasService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService,
+    public servicioBuscadorAvanzado: BuscadorAvanzadoService) { 
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -420,6 +422,17 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       this.total = 0.00;
     });
     //
+
+    //ventana modal BuscadorGeneral
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotasMovimiento.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo ID y numeroID Buscador: ", data);
+
+      this.id_ntmv_buscador = data.buscador_id;
+      this.num_id_ntmv_buscador = data.buscador_num_id;
+      
+      this.permisoParaTransferirNM()
+    });
+    //fin ventana modal BuscadorGeneral
 
     this.getVendedorCatalogo();
     this.getAlmacen();
@@ -2118,37 +2131,19 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
 
 
+
+
+
+
+
+
+
+
+
+
   imprimirNM(){
     //colocar el cudrito con el dialogo de intarifa
     this.modalBtnImpresiones();
-
-
-    // const dialogRefAnulacion = this.dialog.open(DialogConfirmActualizarComponent, {
-    //   width: '450px',
-    //   height: 'auto',
-    //   data: { mensaje_dialog: "¿ Desea Imprimir el Documento ?" },
-    //   disableClose: true,
-    // });
-
-    // dialogRefAnulacion.afterClosed().subscribe((result: Boolean) => {
-    //   if(result){
-    //     // Llamada a la API para obtener nuevos datos
-    //     this.api.update(`/inventario/modif/docmodifinmovimiento/habilitarNotaMovimiento/${this.userConn}/${this.codigo_ultm_NM}/${this.usuarioLogueado}/${this.BD_storage}`, [])
-    //     .pipe(takeUntil(this.unsubscribe$))
-    //     .subscribe({
-    //       next: (datav) => {
-    //         console.log("Respuesta API:", datav);
-
-    //       },
-    //       error: (err) => {
-    //           console.error("Error al consultar la API:", err);
-    //       },
-    //       complete:()=>{ }
-    //     });
-    //   }else{
-    //     this.messageService.add({ severity: 'error', summary: 'Error', detail: "ACCION CANCELADA" });
-    //   }
-    // });
   }
 
   //ModalPrecioVentaComponent
@@ -2161,42 +2156,13 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   modalBuscadorAvanzado(){
     this.dialog.open(NotaMovimientoBuscadorAvanzadoComponent, {
-      width: '794px',
-      height: '600px',
+      width: '1133px',
+      height: '560px',
       disableClose: true,
     });
   }
-
 
   modalClientes(): void {
     this.dialog.open(ModalClienteComponent, {

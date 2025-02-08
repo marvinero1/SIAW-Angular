@@ -54,8 +54,6 @@ export class VistaPreviaNmComponent implements OnInit {
   //     .pipe(takeUntil(this.unsubscribe$)).subscribe({
   //       next: (datav) => {
   //       console.log("🚀 ~ VistaPreviaNmComponent ~ .pipe ~ getData:", datav);
-
-
   //       },
 
   //       error: (err: any) => {

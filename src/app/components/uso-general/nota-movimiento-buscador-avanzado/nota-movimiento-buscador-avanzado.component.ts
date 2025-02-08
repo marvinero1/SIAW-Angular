@@ -13,6 +13,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
+import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
 
 interface buscadorGeneral {
   id: any,
@@ -65,7 +66,8 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
   constructor(private api: ApiService, public dialogRef: MatDialogRef<NotaMovimientoBuscadorAvanzadoComponent>, 
     private toastr: ToastrService, private dialog: MatDialog,private almacenservice: ServicioalmacenService,
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService, private messageService: MessageService,
-    private serviciotipoid: TipoidService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) {
+    private serviciotipoid: TipoidService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService,
+   public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
 
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -157,10 +159,14 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
     }
   }
 
+  id_buscador:any;
+  num_id_buscador:any;
+  codigo_documento:any;
+
   getProformaById(element) {
-    // this.id_buscador = element.data.id;
-    // this.num_id_buscador = element.data.numeroid;
-    // this.codigo_documento = element.data.codigo;
+    this.id_buscador = element.data.id;
+    this.num_id_buscador = element.data.numeroid;
+    this.codigo_documento = element.data.codigo;
 
     console.log(element);
   }
@@ -225,6 +231,20 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
   }
 
 
+  mandarAModificarNM() {
+    this.spinner.show();
+
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotasMovimiento .emit({
+      buscador_id: this.id_buscador,
+      buscador_num_id: this.num_id_buscador
+    })
+    this.toastr.success("NOTA DE MOVIMIENTO SELECCIONADA CON EXITO !");
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 100);
+
+    this.close();
+  }
 
 
 

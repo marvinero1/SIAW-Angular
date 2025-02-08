@@ -216,15 +216,12 @@ export class NotamovimientoComponent implements OnInit {
       private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
       public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
       public servicioCatalogoProformas: ServicioCatalogoProformasService, private excelService:ExceltoexcelService,
-      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService,
-    ) { 
+      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
       
       this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
       this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
       this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
       this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-
-      this.getData();
   }
   
   ngOnInit() {
@@ -903,8 +900,13 @@ export class NotamovimientoComponent implements OnInit {
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+    
       return item.orden !== orden || item.coditem !== coditem;
     });
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+      ...element,
+      codaduana: element.codaduana === undefined ? "0":element.codaduana
+    }));
 
     // Agregar el número de orden a los objetos de datos
     this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -1977,53 +1979,4 @@ export class NotamovimientoComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //VISTA PREVIA
-  getData(){
-    this.dialog.open(VistaPreviaNmComponent, {
-      width: 'auto',
-      height: 'auto',
-      disableClose: true,
-    });
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

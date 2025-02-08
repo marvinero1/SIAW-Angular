@@ -22,7 +22,7 @@
               <i class="fa fa-search " aria-hidden="true"></i> Buscar
             </button>
             
-            <button class="btn btn-outline-secondary form-control-sm" type="button" >
+            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="mandarAModificarNM();">
               <i class="fa fa-check" aria-hidden="true"></i> OK Nota de Movimiento
             </button>
           </ng-container>
@@ -143,7 +143,7 @@
   
                   <ng-template pTemplate="header">
                     <tr style="background-color: #093070 !important;">
-                      <th pSortableColumn="id" class="text-center" style="width:10%;">
+                      <th pSortableColumn="id" class="text-center" style="width:9%;">
                         ID
                       </th>
                       <th pSortableColumn="numeroid" class="text-center" style="width:9%;">
@@ -161,13 +161,13 @@
                       <th pSortableColumn="cliente" class="text-center" style="width:7%;">
                         Almacen
                       </th>
-                      <th pSortableColumn="vendedoor" class="text-center" style="width:9%;">
+                      <th pSortableColumn="vendedoor" class="text-center" style="width:8%;">
                         Origen
                       </th>
-                      <th pSortableColumn="almacen" class="text-center" style="width:9%;">
+                      <th pSortableColumn="almacen" class="text-center" style="width:8%;">
                         Destino
                       </th>
-                      <th pSortableColumn="monto" class="text-center" style="width:40%;">
+                      <th pSortableColumn="monto" class="text-center" style="width:50%;">
                         Observación
                       </th>
                     </tr>
