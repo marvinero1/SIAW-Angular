@@ -1327,7 +1327,7 @@ export class NotamovimientoComponent implements OnInit {
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-            window.location.reload()
+            // window.location.reload()
           }, 500);
         }
       });

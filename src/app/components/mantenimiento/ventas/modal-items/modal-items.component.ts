@@ -44,6 +44,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   agencia: any;
   btn_confirmar: boolean = false;
   validacion: boolean = false;
+  uso_inventario_item_boolean:boolean;
 
   displayedColumns = ['codigo', 'descripcion', 'medida'];
 
@@ -94,8 +95,8 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    this.tarifa_get = tarifa.tarifa;
-    this.descuento_get = descuento.descuento;
+    this.tarifa_get = tarifa.tarifa === undefined ? 0:tarifa.tarifa;
+    this.descuento_get = descuento.descuento === undefined ? 0:descuento.descuento;;
     this.codcliente_get = codcliente.codcliente;
     this.codalmacen_get = codalmacen.codalmacen;
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
@@ -229,7 +230,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.value = cleanText.toUpperCase();
     console.log(this.value);
 
-    // this.getlineaProductoID(value);
+    this.getlineaProductoID(cleanText);
     this.validarItemParaVenta(cleanText);
     // this.getSaldoItem(userConn, this.value)
   }
@@ -271,10 +272,13 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     console.log('item seleccionado:', cleanText);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + "311" + "/" + cleanText)
+    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + cleanText+"/"+this.descuento_get+"/"+this.tarifa_get+"/"+ this.codcliente_get)
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
+            // la propiedad usa en movimiento solo deja agregar items cuando sea true y desde la ventana inventario
+            this.uso_inventario_item_boolean = datav.usaMovimiento;
+            console.log("🚀 ~ ModalItemsComponent ~ getlineaProductoID ~ this.uso_inventario_item_boolean:", this.uso_inventario_item_boolean)
         },
 
         error: (err: any) => {
@@ -326,8 +330,20 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-    this.servicioItem.enviarItemCompletoAProformaF4(items);
-    this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
+
+    if(this.ventana_inventario === true && this.uso_inventario_item_boolean === true){
+      this.servicioItem.enviarItemCompletoAProformaF4(items);
+      this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
+    }
+
+    if(this.ventana_inventario === true && this.uso_inventario_item_boolean === false){
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO VALIDO PARA SU USO EN INVENTARIO' });
+    }
+
+    if(this.ventana_venta === true && this.ventana_inventario === false && this.uso_inventario_item_boolean === false){
+      this.servicioItem.enviarItemCompletoAProformaF4(items);
+      this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
+    }
   }
 
   close() {

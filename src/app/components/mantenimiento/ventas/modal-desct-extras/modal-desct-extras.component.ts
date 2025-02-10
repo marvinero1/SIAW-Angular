@@ -112,6 +112,8 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.decimalPipe = new DecimalPipe('en-US');
     this.getPrecioInicial();
   }
+  
+  precio_input:any;
 
   getPrecioInicial() {
     // this.items_de_proforma = this.items_de_proforma.map((element) => ({
@@ -123,14 +125,15 @@ export class ModalDesctExtrasComponent implements OnInit {
       tabladetalle: this.items_de_proforma,
       dvta: this.cabecera_proforma,
     };
-    console.log("🚀 ~ ModalDesctExtrasComponent ~ getPrecioInicial ~ array_post:", array_post)
 
+    console.log("🚀 ~ ModalDesctExtrasComponent ~ getPrecioInicial ~ array_post:", array_post)
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
     return this.api.create('/venta/transac/veproforma/getTarifaPrincipal/' + this.userConn, array_post)
       .subscribe({
         next: (datav) => {
           console.log("🚀 ~ ModalDesctExtrasComponent ~ getPrecioInicial ~ datav:", datav)
           this.tarifaPrincipal = datav;
+          this.precio_input = datav.codTarifa;
 
           this.descuentoExtraSegunTarifa(this.tarifaPrincipal.codTarifa);
         },
@@ -248,12 +251,12 @@ export class ModalDesctExtrasComponent implements OnInit {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddDescExtraProf/"
     return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + 
       "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real +
-       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get, this.array_de_descuentos)
+       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get+"/"+this.precio_input , this.array_de_descuentos)
       .subscribe({
         next: (datav) => {
           this.validacion_bool_descuento = datav;
           console.log(this.validacion_bool_descuento);
-          console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ this.array_de_descuentos:", this.array_de_descuentos)
+          console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ this.array_de_descuentos:", this.array_de_descuentos);
 
           // si sale false no se puede agregar tonces solo sale el mensaje de error
           if (datav.status === false) {

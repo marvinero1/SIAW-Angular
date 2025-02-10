@@ -200,6 +200,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   tipo_ventana_origen:string;
   ventana_inventario:boolean;
   ventana_venta:boolean;
+  uso_inventario_item_boolean:boolean;
 
   private unsubscribe$ = new Subject<void>();
   
@@ -1036,8 +1037,6 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         complete: () => { }
       })
   }
-
-  uso_inventario_item_boolean:boolean;
 
   getlineaProductoID(value) {
     this.saldo_modal_total_1 = "";

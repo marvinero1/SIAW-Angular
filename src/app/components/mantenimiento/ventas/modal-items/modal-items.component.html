@@ -51,10 +51,14 @@
         </div>
 
         <div class="col-md-4 text-center p-2">
-          <button mat-stroked-button color="primary" [disabled]="btn_confirmar === false"
+          <!-- <button mat-stroked-button color="primary" [disabled]="btn_confirmar === false"
             (click)="mandarItem(item_view);">
             <i class="fa fa-check"></i>
-          </button>
+          </button> -->
+
+          <button mat-stroked-button color="primary" (click)="mandarItem(item_view);">
+          <i class="fa fa-check"></i>
+        </button>
           <button mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></button>
         </div>
       </div>
