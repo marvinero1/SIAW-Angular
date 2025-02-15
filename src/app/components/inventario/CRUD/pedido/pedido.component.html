@@ -1,0 +1,271 @@
+<section
+  style="background-color:#f0f0f0 !important;margin-left: 1px;margin-right: 7.5px;flex: 1;box-sizing: border-box">
+
+
+  <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
+    <br>
+    <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
+  </ngx-spinner>
+  <p-toast></p-toast>
+
+
+  <div class="row mb-1">
+    <div class="col">
+      <div class="divTable">
+        <div class="input-group-append text-center" style="float: left;">
+          <!-- BOTONES -->
+          <div class="input-group-append">
+            <!-- BTN GRABAR -->
+            <div>
+              <ng-container>
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+                  (click)="validarGrabar();">
+                  <span><i class="fa fa-save" aria-hidden="true" style="color: #7d99c7;"></i> Grabar</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <!-- BTN LIMPIAR -->
+            <div>
+              <ng-container>
+                <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" (click)="limpiar();"
+                  type="button">
+                  <span><i class="fa fa-eraser" style="color: #ffc107;"></i> Limpiar</span>
+                </button>
+              </ng-container>
+            </div>
+
+            <!-- BTN CARGAR EXCEL -->
+            <ng-container>
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+                (click)="modalExcelToExcel()">
+                <span><i class="fa fa-file-excel green"></i> Excel</span>
+              </button>
+            </ng-container>
+          </div>
+          &nbsp;&nbsp;
+          <div class="pt-1" style="padding-left: 26rem !important;">
+            <h3><strong><u>PEDIDO</u></strong></h3>
+          </div>
+          <!-- BOTONES FIN -->
+        </div>
+
+        <div class="input-group-append text-center" style="float: right;">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
+            matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
+            <i class="fa fa-th blue" aria-hidden="true"></i>
+          </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+            matTooltip="Importar ZIP" (click)="fileInput.click()">
+            <i class="fa fa-file-archive green"></i>
+          </button>
+
+          <input type="file" #fileInput (change)="onFileChangeZIP($event)" accept=".zip" style="display: none;" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content">
+    <!-- cabecera -->
+    <div class="mat-elevation-z2">
+      <div class="row">
+        <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group">
+            <div class="input-group-">
+              <span class="input-group-text form-control-sm"
+                style="padding: 10px 2px 0px 0px;border: 0 !important;"><u>ID de Tipo</u></span>
+            </div>
+
+            <ng-container>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
+            </ng-container>
+
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"><i
+                  class="fa fa-search"></i>
+              </button>
+
+              <span>{{ numeroid }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 9px 0px 0px;border: 0 !important;"><u>Almacen</u></span>
+            <input type="number" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
+              [(ngModel)]="codalmorigenText" disabled>
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen('Origen');"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Origen"><i
+                  class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 4px 0px 0px;border: 0 !important;"><u>Destino</u></span>
+            <input type="number" class="form-control form-control-sm" (blur)="onLeaveAlmacen($event)"
+              [(ngModel)]="codalmdestidoText" disabled>
+            <div class="input-group-append">
+              <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalAlmacen('Origen');"
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Origen"><i
+                  class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-1" style="padding-right: 6.5px;padding-left: 0px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 10px 7px 0px 0px;border: 0 !important;"><u>Fecha</u></span>
+            <input type="date" id="fecha_actual" class="form-control form-control-sm" [(ngModel)]="fecha_actual">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3" style="padding-right: 6.5px;padding-left: 6.5px;">
+          <div class="input-group-prepend">
+            <span class="input-group-text form-control-sm"
+              style="padding: 9px 6px 0px 0px;border: 0 !important;"><u>Observacion</u></span>
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="observaciones" maxlength="60">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- InicioTabla -->
+    <div class="row">
+      <div class="col">
+        <mat-tab-group class="miTabGroupDetalle" #tabGroup>
+          <mat-tab label="Items">
+            <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
+              styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
+              [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
+              (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="item" class="center1" (click)="modalCatalogoProductos()"
+                    style="text-align: left !important; cursor: pointer;width:7%;">
+                    <i class="fa fa-plus" style="text-align: center !important; cursor: pointer;"></i>&nbsp;
+                    <u>Item</u>
+                    <p-sortIcon field="item" />
+                  </th>
+                  <th pSortableColumn="descripcion" style="width:40%;text-align: left;">
+                    Descripción
+                    <p-sortIcon field="descripcion" />
+                  </th>
+                  <th pSortableColumn="medida" class="center1" style="width:8%">
+                    Medida
+                  </th>
+                  <th pSortableColumn="ud" class="center1" style="width:4%">
+                    Unidad
+                  </th>
+                  <th pSortableColumn="pedido" class="center1" style="width:7%">
+                    Cod Aduana
+                    <p-sortIcon field="pedido" />
+                  </th>
+                  <th pSortableColumn="cantidad" class="right1" style="width:8%">
+                    Cantidad
+                    <p-sortIcon field="cantidad" />
+                  </th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
+                  [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
+                  (click)="getAlmacenesSaldos(products?.coditem)">
+                  <td class="left">
+                    <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
+                    padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
+                    </i>&nbsp;&nbsp;&nbsp;
+                    {{ products?.coditem }}
+                  </td>
+                  <td class="left">{{ products.descripcion }}</td>
+                  <td class="center1">{{ products.medida }}</td>
+                  <td class="center1">{{ products.udm }}</td>
+                  <td class="center1">
+                    <p-cellEditor [pEditableColumn]="products.codaduana" pEditableColumnField="codaduana">
+                      <ng-template pTemplate="input">
+                        <input pInputText type="text" [(ngModel)]="products.codaduana" min="0">
+                      </ng-template>
+
+                      <ng-template pTemplate="output">
+                        <span>{{ products.codaduana === "" ? "0":products.codaduana }}</span>
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
+
+                  <!-- COLUMNA CANTIDAD -->
+                  <td class="right1">
+                    <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                      <ng-template pTemplate="input">
+                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
+                      </ng-template>
+
+                      <ng-template pTemplate="output">
+                        <span>{{ formatNumberTotalSubTOTALES(products.cantidad === "" ? "0":products.cantidad) }}</span>
+                      </ng-template>
+                    </p-cellEditor>
+                  </td>
+                  <!-- FIN COLUMNA CANTIDAD -->
+                </tr>
+              </ng-template>
+            </p-table>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+    <!-- finTabla -->
+
+
+    <div mat-dialog-footer class="row footersito">
+      <!-- Saldos -->
+      <div class="col-6 pl-2" style="text-align: left;">
+        <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo1"
+            style="font-size: 0.8rem;width:14%;background-color: black;color: #00c600;cursor: pointer;" readOnly
+            placeholder="0.00">
+
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]=""
+            style="font-size: 0.8rem;width:14%;background-color: black;color: #00c600;cursor: pointer;" readOnly
+            placeholder="0.00">
+
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo2"
+            style="font-size: 0.8rem;width:14%;background-color: black;color: #00c600;cursor: pointer;" readOnly
+            placeholder="0.00">
+
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo4"
+            style="font-size: 0.8rem;width:14%;background-color: black;color: #00c600;cursor: pointer;" readOnly
+            placeholder="0.00">
+        </ng-container>
+      </div>
+
+      <div class="col-6" style="text-align:right;">
+        <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+          <span>Min</span>
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smin" placeholder="0.00"
+            style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;" readOnly>
+
+          <span>Max</span>
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smax" placeholder="0.00"
+            style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;" readOnly>
+        </ng-container>
+      </div>
+      <!-- finSaldos -->
+    </div>
+  </div>
+</section>

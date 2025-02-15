@@ -62,7 +62,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public recargos_array: any, @Inject(MAT_DIALOG_DATA) public array_de_descuentos_ya_agregados_a_modal: any,
     @Inject(MAT_DIALOG_DATA) public cmtipo_complementopf: any, @Inject(MAT_DIALOG_DATA) public cliente_real: any,
     @Inject(MAT_DIALOG_DATA) public detalleAnticipos: any) {
-      
+
     this.items_de_proforma = items.items;
     this.cabecera_proforma = cabecera.cabecera;
     this.recargos_del_total_get = recargos_del_total.recargos_del_total;
@@ -84,7 +84,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     //   descripcion: element.descripcion === undefined ? element.descrip : element.descripcion,
     //   porcentaje: element.porcen,
     // }))
-    this.array_de_descuentos === undefined ? []:this.array_de_descuentos;
+    this.array_de_descuentos === undefined ? [] : this.array_de_descuentos;
     this.array_de_descuentos = this.array_de_descuentos?.map((element) => ({
       aplicacion: element.aplicacion,
       codanticipo: element.codanticipo,
@@ -100,7 +100,7 @@ export class ModalDesctExtrasComponent implements OnInit {
       descripcion: element.descrip,
       porcentaje: element.porcen,
     }));
-   
+
     this.dataSource = new MatTableDataSource(this.array_de_descuentos);
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -112,8 +112,8 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.decimalPipe = new DecimalPipe('en-US');
     this.getPrecioInicial();
   }
-  
-  precio_input:any;
+
+  precio_input: any;
 
   getPrecioInicial() {
     // this.items_de_proforma = this.items_de_proforma.map((element) => ({
@@ -217,7 +217,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     // console.log(this.array_valida_detalle);
 
     let a = [{
-      codigo:this.info_descuento.codigo,
+      codigo: this.info_descuento.codigo,
       codproforma: 0,
       coddesextra: this.info_descuento.codigo,
       porcen: this.info_descuento.porcentaje,
@@ -229,10 +229,10 @@ export class ModalDesctExtrasComponent implements OnInit {
       id: 0,
       descripcion: this.info_descuento.descripcion,
       descrip: this.info_descuento.descripcion,
-      codmoneda:this.cabecera_proforma.codmoneda,
+      codmoneda: this.cabecera_proforma.codmoneda,
     }];
     console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ arrayQueSeAgrega:", a)
-    
+
 
     let ucr;
     if (this.cabecera_proforma.tipopago === 0) {
@@ -242,16 +242,16 @@ export class ModalDesctExtrasComponent implements OnInit {
       ucr = "CREDITO";
     }
 
-    if(this.array_de_descuentos === undefined){
+    if (this.array_de_descuentos === undefined) {
       this.array_de_descuentos = [];
     }
 
     // si es true anadir a tabla temporal
     // ESTO EN EL BOTON DE ANADIR
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/validaAddDescExtraProf/"
-    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo + 
+    return this.api.create('/venta/transac/veproforma/validaAddDescExtraProf/' + this.userConn + "/" + this.info_descuento.codigo +
       "/" + this.info_descuento.descorta + "/" + this.cabecera_proforma.codcliente + "/" + this.cabecera_proforma.codcliente_real +
-       "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get+"/"+this.precio_input , this.array_de_descuentos)
+      "/" + this.BD_storage + "/" + ucr + "/" + this.contra_entrega_get + "/" + this.precio_input, this.array_de_descuentos)
       .subscribe({
         next: (datav) => {
           this.validacion_bool_descuento = datav;
@@ -270,12 +270,12 @@ export class ModalDesctExtrasComponent implements OnInit {
             const existe_en_array = this.array_de_descuentos?.some(item => item.codigo === this.info_descuento.codigo);
 
             console.log("entro acaaaaa don cangrejo! 🦐");
-            console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ existe_en_array:", existe_en_array)            
-            console.log("arrayValida:",this.array_valida_detalle, "arrayDEESCT: ",this.array_de_descuentos, tamanio);
+            console.log("🚀 ~ ModalDesctExtrasComponent ~ validarDescuento ~ existe_en_array:", existe_en_array)
+            console.log("arrayValida:", this.array_valida_detalle, "arrayDEESCT: ", this.array_de_descuentos, tamanio);
 
-            if(existe_en_array){
+            if (existe_en_array) {
               this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
-            }else{
+            } else {
               if (tamanio === 0) {
                 // Si el array está vacío, simplemente agregamos los nuevos elementos
                 this.array_de_descuentos.push(...a);
@@ -283,8 +283,8 @@ export class ModalDesctExtrasComponent implements OnInit {
                 // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
                 this.array_de_descuentos = this.array_de_descuentos.concat(a);
               }
-  
-              this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "Descuento Agregado"+this.validacion_bool_descuento.resp });
+
+              this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "Descuento Agregado" + this.validacion_bool_descuento.resp });
               return this.dataSource = new MatTableDataSource(this.array_de_descuentos);
             }
           }
@@ -293,7 +293,7 @@ export class ModalDesctExtrasComponent implements OnInit {
           console.log(err, errorMessage);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'ERROR AGREGAR EL DESCUENTO' });
         },
-        complete: () => {  }
+        complete: () => { }
       })
   }
 
@@ -333,7 +333,7 @@ export class ModalDesctExtrasComponent implements OnInit {
   //     if (existe_en_array) {
   //       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DESCUENTO YA ESTA AGREGADO' });
   //     } else {
-        
+
   //       this.validarDescuento();
   //       // if (tamanio > 0) {
   //       //   console.log("HAY DESCUENTO EN EL ARRAY LA CARGA SE CONCATENA");
@@ -341,13 +341,13 @@ export class ModalDesctExtrasComponent implements OnInit {
   //       //   if (this.validacion_bool_descuento.status === true) {
   //       //     // Concatenar el nuevo descuento con los descuentos existentes
   //       //     this.array_de_descuentos = this.array_de_descuentos.concat([this.info_descuento]);
-           
+
   //       //   } else {
   //       //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO VALIDO PARA SER AGREGADO' });
   //       //   }
   //       // } else {
   //       //   console.log("NO HAY DESCUENTO EN EL ARRAY LA CARGA NO SE CONCATENA");
-          
+
   //       //   // Inicializa el array si es undefined
   //       //   this.array_de_descuentos = this.array_de_descuentos || [];
   //       //   this.info_descuento = [this.info_descuento].map((element)=>({

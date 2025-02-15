@@ -23,6 +23,8 @@ export class AnticiposProformaComponent implements OnInit {
   public fecha_hasta = new Date();
   public hora_actual = new Date();
 
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   anticipos_asignados_table: any = [];
   data_tabla_anticipos: any = [];
   array_anticipos: any = [];
@@ -47,6 +49,7 @@ export class AnticiposProformaComponent implements OnInit {
   BD_storage: any;
   total_get: any;
   tdc_get: any;
+  codanticipo_elegido: any;
 
   monto_a_asignar: any;
   anticipo: any;
@@ -55,7 +58,7 @@ export class AnticiposProformaComponent implements OnInit {
   id_anticipo: any;
   codigo_ultima_proforma: any;
 
-  cod_anticipo: any;
+  num_anticipo: any;
   cod_proforma: any;
   monto: any;
   moneda: any;
@@ -76,7 +79,7 @@ export class AnticiposProformaComponent implements OnInit {
   displayedColumns = ['doc', 'monto', 'usuario', 'fecha', 'hora', 'vendedor', 'cod_moneda', 'accion'];
 
   displayedColumnsAnticipado = ['doc', 'cliente', 'vendedor', 'anulado', 'cliente_real', 'nit',
-    'fecha', 'doc_aplicados','pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg', 'accion'];
+    'fecha', 'doc_aplicados', 'pvc', 'moneda', 'monto', 'monto_rest', 'usuario_reg', 'hora_reg', 'accion'];
 
   dataSource = new MatTableDataSource();
   dataSourceWithPageSize = new MatTableDataSource();
@@ -125,6 +128,12 @@ export class AnticiposProformaComponent implements OnInit {
       this.nombre_cliente_get, this.nit_get, this.vendedor_get, this.array_tabla_anticipos_get, this.ventana_nom);
 
     this.dataSource = new MatTableDataSource(this.array_tabla_anticipos_get);
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -243,12 +252,15 @@ export class AnticiposProformaComponent implements OnInit {
   }
 
   asignarMontoAlArray(monto_del_input: number) {
+    let longitud_array_anticipos = this.array_tabla_anticipos_get.length
+
     if (!this.array_tabla_anticipos_get) {
       this.array_tabla_anticipos_get = [];
     }
-    let longitud_array_anticipos = this.array_tabla_anticipos_get.length
 
-    console.warn("Inicio:", this.array_tabla_anticipos_get, this.anticipos_asignados_table, "Nombre Ventana:", this.ventana_nom,
+    console.warn("Inicio:", this.array_tabla_anticipos_get,
+      this.anticipos_asignados_table,
+      "Nombre Ventana:", this.ventana_nom,
       "tamanio array anticipos:", longitud_array_anticipos);
 
     this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
@@ -302,7 +314,8 @@ export class AnticiposProformaComponent implements OnInit {
     console.log(this.anticipos_asignados_table);
 
     this.api.create("/venta/transac/prgveproforma_anticipo/validaAsignarAnticipo/" + this.userConn + "/" + this.cod_moneda_proforma + "/" +
-      this.moneda + "/" + this.monto_a_asignar + "/" + this.monto_restante + "/" + this.totalProf + "/" + this.BD_storage, this.array_tabla_anticipos_get)
+      this.moneda + "/" + this.monto_a_asignar + "/" + this.monto_restante + "/" + this.totalProf + "/" + this.BD_storage +
+      "/" + this.id_anticipo + "/" + this.num_anticipo, this.array_tabla_anticipos_get)
       .subscribe({
         next: (datav) => {
           console.log(datav);
@@ -312,7 +325,7 @@ export class AnticiposProformaComponent implements OnInit {
 
             const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.codanticipo_elegido);
             //const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.nroid_anticipo === this.anticipo);
-            
+
             if (!encontrado) {
               // Si el valor no está en el array, dejar el campo vacío
               this.preparaParaAgregar();
@@ -352,17 +365,14 @@ export class AnticiposProformaComponent implements OnInit {
   preparaParaAgregar() {
     // aca se arma el array con los datos de la proforma
     let arrayTRUE: any = [];
+    let b;
 
     this.fecha_formateada1 = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
 
-    let longitud_array_anticipos = this.array_tabla_anticipos_get.length
-    let b
-
     if (this.ventana_nom === "docveproforma.vb") {
-
       b = {
         codproforma: this.cod_proforma,
         codanticipo: this.anticipo,
@@ -381,7 +391,6 @@ export class AnticiposProformaComponent implements OnInit {
     }
 
     if (this.ventana_nom === "docmodifveproforma.vb") {
-
       b = {
         codproforma: this.cod_proforma,
         codanticipo: this.anticipo,
@@ -398,14 +407,12 @@ export class AnticiposProformaComponent implements OnInit {
         codvendedor: this.vendedor_get.toString(),
       };
     }
-
-    console.warn(b);
+    // console.warn(b);
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/prgveproforma_anticipo/preparaParaAdd_monto/";
     return this.api.create('/venta/transac/prgveproforma_anticipo/preparaParaAdd_monto/' + this.userConn + "/" + this.id_get + "/" + this.numero_id_get + "/" + this.cod_moneda_proforma + "/" + this.moneda, b)
       .subscribe({
         next: (datav) => {
           console.warn("PreparaParaAdd: ", datav);
-
           //this.array_tabla_anticipos_get = datav
           arrayTRUE = {
             codproforma: this.ventana_nom === "docveproforma.vb" ? 0 : datav.codproforma,
@@ -422,12 +429,21 @@ export class AnticiposProformaComponent implements OnInit {
             codvendedor: datav.codvendedor,
           };
 
-          console.log(this.anticipos_asignados_table, arrayTRUE);
+          console.log(this.anticipos_asignados_table, arrayTRUE.codanticipo);
           if (!this.array_tabla_anticipos_get) {
             this.array_tabla_anticipos_get = [];
           }
 
-          this.array_tabla_anticipos_get.push(arrayTRUE);
+          const encontrado = this.array_tabla_anticipos_get.some(objeto => objeto.codanticipo === arrayTRUE.codanticipo);
+          console.log("🚀 ~ AnticiposProformaComponent ~ preparaParaAgregar ~ encontrado:", encontrado)
+
+          if (!encontrado) {
+            this.array_tabla_anticipos_get.push(arrayTRUE);
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! ANTICIPO YA ELEGIDO EN EL DETALLE, NO PUEDE VOLVER A ASIGNAR UN ANTICIPO YA ASIGNADO !' });
+            this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem?.monto, 0);
+            //this.preparaParaAgregar();
+          }
 
           this.total_anticipos = this.array_tabla_anticipos_get.reduce((total, currentItem) => total + currentItem?.monto, 0);
 
@@ -452,20 +468,15 @@ export class AnticiposProformaComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           console.warn("getTotabilizarAsignacion: ", datav);
-
           this.total_anticipos = datav;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-
-        }
+        complete: () => { }
       })
   }
-  codanticipo_elegido:any;
-
 
   elegirAnticipo(element) {
     console.log(element, this.vendedor_get);
@@ -480,15 +491,16 @@ export class AnticiposProformaComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: "EL ANTICIPO ELEGIDO " + " " + element.docanticipo + " " + "TIENE UN VENDEDOR DISTINTO A LA DE LA PROFORMA" });
     } else {
       this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: "ANTICIPO SELECCIONADO Y AGREGADO" + " " + element.docanticipo })
-
-      this.cod_anticipo = element.numeroid;
       this.monto = element.monto;
       this.moneda = element.codmoneda;
       this.cod_vendedor = element.codvendedor;
       this.monto_restante = element.montorest;
       this.monto_a_asignar = element.montorest;
       this.anticipo = element.numeroid;
+
       this.id_anticipo = element.id;
+      this.num_anticipo = element.numeroid;
+
       this.cod_proforma = element.codanticipo;
       this.codanticipo_elegido = element.codanticipo;
       this.fecha_anticipo = element.fechareg;
@@ -524,51 +536,6 @@ export class AnticiposProformaComponent implements OnInit {
     return Number(number?.toFixed(2));
   }
 
-  formatNumber2DecimalesBCK(numero: number) {
-    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getRedondeo2decimales/";
-    return this.api.getAll('/venta/transac/veproforma/getRedondeo2decimales/' + this.userConn + "/" + numero)
-      .subscribe({
-        next: (datav) => {
-          return this.monto_a_asignar = datav;
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   abrirTabPorLabel(label: string) {
     //abre tab por el id de su etiqueta, muy buena funcion xD
     const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
@@ -588,9 +555,13 @@ export class AnticiposProformaComponent implements OnInit {
   }
 
   formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString?.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   mandarProforma() {
@@ -604,7 +575,21 @@ export class AnticiposProformaComponent implements OnInit {
 
   close() {
     this.array_tabla_anticipos_get = [];
-
     this.dialogRef.close();
   }
+
+  // formatNumber2DecimalesBCK(numero: number) {
+  //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getRedondeo2decimales/";
+  //   return this.api.getAll('/venta/transac/veproforma/getRedondeo2decimales/' + this.userConn + "/" + numero)
+  //     .subscribe({
+  //       next: (datav) => {
+  //         return this.monto_a_asignar = datav;
+  //       },
+
+  //       error: (err: any) => {
+  //         console.log(err, errorMessage);
+  //       },
+  //       complete: () => { }
+  //     })
+  // }
 }

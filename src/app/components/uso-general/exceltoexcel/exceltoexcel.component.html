@@ -16,10 +16,8 @@
     <div class="row text-center">
       <div class="col">
         <ng-container>
-          <button 
-            mat-raised-button extended
-            class="btn btn-outline-secondary form-control-sm" 
-            type="button" (click)="fileInput.click()">
+          <button mat-raised-button extended class="btn btn-outline-secondary form-control-sm" type="button"
+            (click)="fileInput.click()">
             <span><i class="fa fa-file-excel green"></i>&nbsp; Cargar Excel</span>
           </button>
           <span>{{ nombre_archivo }}</span>
@@ -31,10 +29,10 @@
         <ng-container *ngIf="!archivo">
           <span style="color: rgb(227, 0, 0);"><strong>NO ARCHIVO</strong></span>
         </ng-container>
-  
+
         <ng-container *ngIf="archivo">
           <span style="color: rgb(0, 171, 0);"><strong>EXCEL CARGADO EXITOSAMENTE</strong></span>
-        </ng-container>  
+        </ng-container>
       </div>
     </div><br>
 
@@ -57,17 +55,18 @@
               <td>
                 <mat-form-field class="example-form-field" floatLabel="always" appearance="outline">
                   <!-- <mat-label>Items</mat-label> -->
-                  <input matInput type="text" [(ngModel)]="columnaItems" (input)="columnaItems=columnaItems.toUpperCase()">
+                  <input matInput type="text" [(ngModel)]="columnaItems"
+                    (input)="columnaItems=columnaItems.toUpperCase()">
                 </mat-form-field>
               </td>
-  
+
               <td>
                 <mat-form-field class="example-form-field" appearance="outline">
                   <!-- <mat-label>Desde:</mat-label> -->
                   <input matInput type="number" [(ngModel)]="desdeItems">
                 </mat-form-field>
               </td>
-  
+
               <td>
                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 <mat-form-field class="example-form-field" appearance="outline">
@@ -76,41 +75,39 @@
                 </mat-form-field>
               </td>
             </tr>
-  
+
             <tr>
               <td style="width: 5% !important;"><span>Valores: </span></td>
               <td>
                 <mat-form-field class="example-form-field" appearance="outline">
                   <!-- <mat-label>Valores</mat-label> -->
-                  <input matInput type="text" [(ngModel)]="columnaValorCantidadItems" 
-                        (input)="columnaValorCantidadItems=columnaValorCantidadItems.toUpperCase()">
+                  <input matInput type="text" [(ngModel)]="columnaValorCantidadItems"
+                    (input)="columnaValorCantidadItems=columnaValorCantidadItems.toUpperCase()">
                 </mat-form-field>
               </td>
-              <td>
+              <!-- <td>
                 <mat-form-field class="example-form-field" appearance="outline">
-                  <!-- <mat-label>Valores</mat-label> -->
                   <input matInput type="number" [(ngModel)]="columnaDesdeValorCantidadItems">
                 </mat-form-field>
-              </td>
-              <td>
+              </td> -->
+              <!-- <td>
                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                 <mat-form-field class="example-form-field" appearance="outline">
-                  <!-- <mat-label></mat-label> -->
                   <input matInput type="number" [(ngModel)]="columnaHastaValorCantidadItems">
                 </mat-form-field>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-  
+
     <!-- BTN -->
     <div class="row">
       <div class="col"></div>
       <div class="col" style="text-align: right;">
-        <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="!archivo"
-          type="button" (click)="leerExcel();">
+        <button mat-raised-button class="btn btn-outline-secondary form-control-sm" [disabled]="!archivo" type="button"
+          (click)="leerExcel();">
           <mat-icon style="color: #093070;">send</mat-icon>
           <span> Enviar Data </span>
         </button>
@@ -118,10 +115,3 @@
     </div>
   </section>
 </div>
-
-
-
-
-
-
-

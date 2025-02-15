@@ -462,11 +462,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
 import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
-import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/modificar-nota-movimiento/modificar-nota-movimiento.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '@components/uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
 import { DialogTarifaImpresionComponent } from '@components/inventario/CRUD/dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
 import { VistaPreviaNmComponent } from '@components/inventario/CRUD/dialog-tarifa-impresion/vista-previa-nm/vista-previa-nm.component';
+import { PedidoComponent } from '@components/inventario/CRUD/pedido/pedido.component';
+import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-nota-movimiento/modificar-nota-movimiento.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -554,12 +555,12 @@ registerPlugin(UndoRedo);
         ModalEtiquetaComponent, ModalIvaComponent, ModalDetalleObserValidacionComponent, ModalGenerarAutorizacionComponent, EtiquetasItemProformaComponent,
         ModalDesctDepositoClienteComponent, ModalTransfeNotaRemisionComponent, CargarExcelComponent, ProformaPdfComponent, EtiquetaImpresionProformaComponent,
         ModalClienteDireccionComponent, BuscadorAvanzadoComponent, ProformaPdfEmailComponent, CatalogoNotasRemisionComponent, ModalTransfeProformaComponent,
-        DialogConfirmacionComponent, BuscadorAvanzadoFacturasComponent, ModalDescuentosTiendaComponent,TranferirMostradorTiendasComponent, 
+        DialogConfirmacionComponent, BuscadorAvanzadoFacturasComponent, ModalDescuentosTiendaComponent, TranferirMostradorTiendasComponent,
         EtiquetaTuercasProformaComponent, ModificarNotaRemisionComponent, CatalogoFacturasComponent, MatrizItemsClasicaComponent, MatrizItemsListaComponent,
         ModalFormaPagoComponent, ModificarFacturacionMostradorTiendasComponent, ModalAnticiposComponent, ModalSubTotalMostradorTiendasComponent, FacturaTemplateComponent,
         FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
         CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
-        ExceltoexcelComponent, VistaPreviaNmComponent,
+        ExceltoexcelComponent, VistaPreviaNmComponent, PedidoComponent,
 
 
 
@@ -568,10 +569,12 @@ registerPlugin(UndoRedo);
 
 
 
-        
+
+
+
 
         ProformaMovilComponent,
-        
+
 
     ],
     bootstrap: [AppComponent],
@@ -646,18 +649,18 @@ registerPlugin(UndoRedo);
             tapToDismiss: true, // No se oculta al hacer clic
         }),
 
-        
-],
+
+    ],
 
     providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
         MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
         TomaInventarioConsolidadoComponent, ProductService, MessageService,
-        { provide: ServiceRefreshItemsService },
-        { provide: LOCALE_ID, useValue: 'es-BO' },
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
-        { provide: APP_INITIALIZER, useFactory: initializeCustomElements, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
-        { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
+    { provide: ServiceRefreshItemsService },
+    { provide: LOCALE_ID, useValue: 'es-BO' },
+    { provide: LocationStrategy, useClass: PathLocationStrategy },
+    { provide: APP_INITIALIZER, useFactory: initializeCustomElements, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: Interceptor, multi: true },
+    { provide: MatDialogRef, useValue: {} }, provideHttpClient(withInterceptorsFromDi())]
 })
 
 export class AppModule { }

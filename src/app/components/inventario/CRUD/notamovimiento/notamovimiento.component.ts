@@ -37,7 +37,6 @@ import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cl
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
 import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
 
-
 import * as XLSX from 'xlsx';
 import { DialogTarifaImpresionComponent } from '../dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 import { VistaPreviaNmComponent } from '../dialog-tarifa-impresion/vista-previa-nm/vista-previa-nm.component';
@@ -69,12 +68,12 @@ export class NotamovimientoComponent implements OnInit {
       }
     }
   };
-  
+
   @HostListener("document:keydown.enter", []) unloadHandler1(event: KeyboardEvent) {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
       const elementTagName = focusedElement.id;
-      console.log(`Elemento enfocado: ${elementTagName}`+ this.item_obj_seleccionado.coditem);
+      console.log(`Elemento enfocado: ${elementTagName}` + this.item_obj_seleccionado.coditem);
 
       switch (elementTagName) {
         case "":
@@ -84,55 +83,60 @@ export class NotamovimientoComponent implements OnInit {
     }
   };
 
-  catalogo_proforma_seleccionado:any;
+  public nombre_ventana: string = "docinmovimiento.vb";
+  public ventana: string = "Nota Movimiento";
+  public detalle = "Nota Movimiento";
+  public tipo = "transaccion-docinmovimiento-POST";
+
+  catalogo_proforma_seleccionado: any;
 
   //array
-  array_vendedores:any=[];
-  array_almacenes:any=[];
-  array_proformas:any=[];
-  array_concepto:any=[];
-  array_persona:any=[];
+  array_vendedores: any = [];
+  array_almacenes: any = [];
+  array_proformas: any = [];
+  array_concepto: any = [];
+  array_persona: any = [];
 
   public validacion_post_negativos: any = [];
   // fin array
 
   // parametros Iniciales
-  almacen_seleccionado:any;
-  cod_almacen:any;
-  cargar_proforma:boolean;
-  cvenumeracion1:boolean;
-  chkdesglozar_cjtos:boolean;
+  almacen_seleccionado: any;
+  cod_almacen: any;
+  cargar_proforma: boolean;
+  cvenumeracion1: boolean;
+  chkdesglozar_cjtos: boolean;
 
-  codalmdestinoReadOnly:boolean;
-  codalmorigenReadOnly:boolean;
-  fidEnable:boolean;
-  fnumeroidEnable:boolean;
-  codpersonadesdeReadOnly:boolean;
-  codclienteReadOnly:boolean;
-  cargar_proformaEnabled:boolean;
-  cvenumeracion1Enabled:boolean;
-  id_proforma_solReadOnly:boolean;
-  numeroidproforma_solReadOnly:boolean;
+  codalmdestinoReadOnly: boolean;
+  codalmorigenReadOnly: boolean;
+  fidEnable: boolean;
+  fnumeroidEnable: boolean;
+  codpersonadesdeReadOnly: boolean;
+  codclienteReadOnly: boolean;
+  cargar_proformaEnabled: boolean;
+  cvenumeracion1Enabled: boolean;
+  id_proforma_solReadOnly: boolean;
+  numeroidproforma_solReadOnly: boolean;
 
-  codalmdestinoText:any;
-  codalmorigenText:any;
-  cumple:any;
+  codalmdestinoText: any;
+  codalmorigenText: any;
+  cumple: any;
 
-  factor:any;
-  traspaso:boolean;
-  es_tienda:boolean;
-  es_ag_local:boolean;
-  ver_ch_es_para_invntario:boolean;
-  obtener_cantidades_aprobadas_de_proformas:boolean;
+  factor: any;
+  traspaso: boolean;
+  es_tienda: boolean;
+  es_ag_local: boolean;
+  ver_ch_es_para_invntario: boolean;
+  obtener_cantidades_aprobadas_de_proformas: boolean;
   //Fin parametros iniciales
 
   //Formulario
-  id:any;
-  numeroid:any;
-  codvendedor:any;
+  id: any;
+  numeroid: any;
+  codvendedor: any;
 
-  id_concepto:any;
-  id_concepto_descripcion:any;
+  id_concepto: any;
+  id_concepto_descripcion: any;
 
   FormularioData: FormGroup;
   dataform: any = '';
@@ -140,22 +144,22 @@ export class NotamovimientoComponent implements OnInit {
   hora_actual: any;
 
   codpersonadesde: any;
-  id_proforma_catalogo:any;
-  numero_id_catalogo_proforma:any;
-  observaciones:any;
-  descripcion_id_catalogo_proforma:any;
-  codalmacen:any;
-  hora_fecha_server:any;
-  cod_cliente:any;
-  cod_cliente_descripcion:any;
-  id_origen:any;
-  nroid_origen:any;
-  id_proforma_sol_urgente:any;
-  numero_id_proforma_sol_urgente:any;
+  id_proforma_catalogo: any;
+  numero_id_catalogo_proforma: any;
+  observaciones: any;
+  descripcion_id_catalogo_proforma: any;
+  codalmacen: any;
+  hora_fecha_server: any;
+  cod_cliente: any;
+  cod_cliente_descripcion: any;
+  id_origen: any;
+  nroid_origen: any;
+  id_proforma_sol_urgente: any;
+  numero_id_proforma_sol_urgente: any;
   // fin formulario
 
   // TAB OBSERVACIONES
-  eventosLogs:any=[];
+  eventosLogs: any = [];
   // FIN TAB OBSERVACIONES
 
   item_seleccionados_catalogo_matriz: any = [];
@@ -171,29 +175,29 @@ export class NotamovimientoComponent implements OnInit {
   private unsubscribe$ = new Subject<void>();
 
   //detalleItem
-  public array_items_carrito_y_f4_catalogo:any=[];
+  public array_items_carrito_y_f4_catalogo: any = [];
   selectedProducts: ItemDetalle[] = [];
   item: any;
-  item_obj_seleccionado:any;
-  descripcion_usuario_final:any;
+  item_obj_seleccionado: any;
+  descripcion_usuario_final: any;
 
   displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
     'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
     'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
-  
+
   dataSource_negativos = new MatTableDataSource();
   dataSourceWithPageSize_negativos = new MatTableDataSource();
-  
-  item_seleccionados_catalogo_matriz_codigo:any;
-  total:any;
+
+  item_seleccionados_catalogo_matriz_codigo: any;
+  total: any;
 
   //Saldos
-  almacenes_saldos:any=[];
+  almacenes_saldos: any = [];
 
-  almacn_parame_usuario:any;
-  almacn_parame_usuario_almacen:any;
-  cod_precio_venta_modal_codigo:any;
-  cod_descuento_modal:any;
+  almacn_parame_usuario: any;
+  almacn_parame_usuario_almacen: any;
+  cod_precio_venta_modal_codigo: any;
+  cod_descuento_modal: any;
 
   public saldoItem: number;
   saldo_modal_total_1: any;
@@ -202,33 +206,49 @@ export class NotamovimientoComponent implements OnInit {
   saldo_modal_total_4: any;
   saldo_modal_total_5: any;
   // fin saldos
-  
-  userConn:any;
-  usuarioLogueado:any;
-  agencia_logueado:any;
-  BD_storage:any;
+
+  userConn: any;
+  usuarioLogueado: any;
+  agencia_logueado: any;
+  BD_storage: any;
+
+  private numberFormatter_2decimales: Intl.NumberFormat;
 
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
-      private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
-      private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
-      private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
-      public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
-      public servicioCatalogoProformas: ServicioCatalogoProformasService, private excelService:ExceltoexcelService,
-      private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService) { 
-      
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-      this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-      this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
+    private serviciovendedor: VendedorService, private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
+    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, public movimientoMercaderia: MovimientomercaderiaService,
+    public nombre_ventana_service: NombreVentanaService, private router: Router, private servicioPersona: ServicePersonaService,
+    public servicioCatalogoProformas: ServicioCatalogoProformasService, private excelService: ExceltoexcelService,
+    private servicioNotasMovimientoCatalogo: CatalogoNotasMovimientoService) {
+
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
   }
-  
+
   ngOnInit() {
     this.getParametrosIniciales();
     this.getHoraFechaServidorBckEnd();
     this.getAlmacenParamUsuario();
     this.getAlmacenesSaldos();
+    this.mandarNombre();
+
+    this.getVendedorCatalogo();
+    this.getAlmacen();
+    this.getProforma();
+    this.getAllConceptoCatalogo();
+    this.getPersona();
 
     //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
@@ -243,7 +263,7 @@ export class NotamovimientoComponent implements OnInit {
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
-      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
         ...element,
         codaduana: "0"
       }));
@@ -265,7 +285,7 @@ export class NotamovimientoComponent implements OnInit {
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data]);
       }
 
-      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
         ...element,
         codaduana: "0"
       }));
@@ -309,12 +329,12 @@ export class NotamovimientoComponent implements OnInit {
       this.total = 0.00;
     });
     //finVendedor
-    
+
     // Catalogo Notas de Movimiento
     this.servicioNotasMovimientoCatalogo.disparadorDeCatalogoNotasMovimiento.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-       console.log("Recibiendo ID Catalogo Notas Movimiento: ", data);
-       this.id = data.id_nota_movimiento.codigo;
-       this.numeroid = data.id_nota_movimiento.nroactual;
+      console.log("Recibiendo ID Catalogo Notas Movimiento: ", data);
+      this.id = data.id_nota_movimiento.codigo;
+      this.numeroid = data.id_nota_movimiento.nroactual;
     });
     //
 
@@ -334,11 +354,11 @@ export class NotamovimientoComponent implements OnInit {
       // this.id_proforma_catalogo = data.proforma.id.toUpperCase();
       // this.descripcion_id_catalogo_proforma = data.proforma.descripcion;
 
-      if(this.catalogo_proforma_seleccionado === "proforma_almacen"){
+      if (this.catalogo_proforma_seleccionado === "proforma_almacen") {
         this.id_proforma_sol_urgente = data.proforma.id.toUpperCase();
       }
 
-      if(this.catalogo_proforma_seleccionado === "solicitud_urgente"){
+      if (this.catalogo_proforma_seleccionado === "solicitud_urgente") {
         this.id_proforma_catalogo = data.proforma.id.toUpperCase();
       }
     });
@@ -346,16 +366,16 @@ export class NotamovimientoComponent implements OnInit {
 
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-      console.log("Recibiendo Almacen: ", data,  this.almacen_seleccionado);
-      if(this.almacen_seleccionado === "Origen"){
+      console.log("Recibiendo Almacen: ", data, this.almacen_seleccionado);
+      if (this.almacen_seleccionado === "Origen") {
         this.codalmorigenText = data.almacen.codigo
       }
 
-      if(this.almacen_seleccionado === "Destino"){
+      if (this.almacen_seleccionado === "Destino") {
         this.codalmdestinoText = data.almacen.codigo
       }
 
-      if(this.almacen_seleccionado === "Almacen"){
+      if (this.almacen_seleccionado === "Almacen") {
         this.cod_almacen = data.almacen.codigo
       }
     });
@@ -365,7 +385,7 @@ export class NotamovimientoComponent implements OnInit {
     this.servicioPersona.disparadorDePersonas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Persona: ", data);
       this.codpersonadesde = data.persona.codigo;
-      this.descripcion_usuario_final= data.persona.descrip
+      this.descripcion_usuario_final = data.persona.descrip
     });
     //
 
@@ -385,19 +405,15 @@ export class NotamovimientoComponent implements OnInit {
     });
     //
 
-    this.getVendedorCatalogo();
-    this.getAlmacen();
-    this.getProforma();
-    this.getAllConceptoCatalogo();
-    this.getPersona();
+
   }
 
-  getParametrosIniciales(){
+  getParametrosIniciales() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getParametrosInicialesNM/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/getParametrosInicialesNM/'+this.userConn+"/"+this.usuarioLogueado+"/"+this.BD_storage)
+    return this.api.getAll('/inventario/transac/docinmovimiento/getParametrosInicialesNM/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ .getParametrosIniciales ~ getParametrosIniciales:", datav);
+          console.log("🚀 ~ NotamovimientoComponent ~ .getParametrosIniciales ~ getParametrosIniciales:", datav);
 
           this.id = datav.id;
           this.numeroid = datav.numeroid;
@@ -443,24 +459,24 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  getValidaCantDecimal(){
+  getValidaCantDecimal() {
     let item_a_revisar;
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getValidaCantDecimal/";
-    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn+"/"+ true, this.array_items_carrito_y_f4_catalogo)
+    return this.api.create('/inventario/transac/docinmovimiento/getValidaCantDecimal/' + this.userConn + "/" + true, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ getValidaCantDecimal ~ datav:", datav);
           this.cumple = datav.cumple;
-          
+
           datav.detalleObs.forEach(element => {
             item_a_revisar = element;
           });
 
-          if(item_a_revisar === undefined){
+          if (item_a_revisar === undefined) {
             // si no hay observaciones entra aca
             this.openConfirmacionDialog("EL DETALLE CUMPLE");
-          }else{
-            this.openConfirmacionDialog(datav.cabecera+"\n"+datav.resp+"\n"+"Item a Revisar: "+item_a_revisar);
+          } else {
+            this.openConfirmacionDialog(datav.cabecera + "\n" + datav.resp + "\n" + "Item a Revisar: " + item_a_revisar);
             this.eventosLogs = datav.detalleObs;
             this.eventosLogs = this.eventosLogs.map(log => ({ label: log }));
           }
@@ -469,7 +485,7 @@ export class NotamovimientoComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {  }
+        complete: () => { }
       })
   }
 
@@ -530,29 +546,29 @@ export class NotamovimientoComponent implements OnInit {
 
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.almacn_parame_usuario_almacen;
-    let array_send={
-    agencia:agencia_concat,
-    codalmacen: this.almacn_parame_usuario_almacen,
-    coditem: item,
-    codempresa: this.BD_storage,
-    usuario: this.usuarioLogueado,
-    
-    idProforma: "0",
-    nroIdProforma: 0
+    let array_send = {
+      agencia: agencia_concat,
+      codalmacen: this.almacn_parame_usuario_almacen,
+      coditem: item,
+      codempresa: this.BD_storage,
+      usuario: this.usuarioLogueado,
+
+      idProforma: "0",
+      nroIdProforma: 0
     };
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
-        // console.log('data', datav);
-        this.saldoItem = datav.totalSaldo;
+          // console.log('data', datav);
+          this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {}
+        complete: () => { }
       })
   }
 
@@ -638,12 +654,12 @@ export class NotamovimientoComponent implements OnInit {
     // console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", inputValue )
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.array_proformas.some(objeto => objeto.id === inputValue.toString());
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       this.id_proforma_catalogo = '';
       console.log("NO ENCONTRADO VALOR DE INPUT");
-    }else{
+    } else {
       event.target.value = inputValue;
     }
   }
@@ -666,17 +682,17 @@ export class NotamovimientoComponent implements OnInit {
 
   onLeaveConceptoCatalogo(event: any) {
     const inputValue = event.target.value.toString();
-    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", this.array_concepto )
+    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", this.array_concepto)
 
-    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", inputValue )
+    console.log("🚀 ~ NotamovimientoComponent ~ onLeaveCatalogoProforma ~ inputValue :", inputValue)
     // Verificar si el valor ingresado está presente en los objetos del array
     const encontrado = this.array_concepto.some(objeto => objeto.codigo.toString() === inputValue);
-    if(!encontrado){
+    if (!encontrado) {
       // Si el valor no está en el array, dejar el campo vacío
       event.target.value = '';
       console.log("NO ENCONTRADO VALOR DE INPUT");
-    }else{
-      
+    } else {
+
       event.target.value = inputValue;
       const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === inputValue);
       this.id_concepto_descripcion = encontrado_objeto.descripcion
@@ -685,7 +701,7 @@ export class NotamovimientoComponent implements OnInit {
     }
   }
 
-  getPersona(){
+  getPersona() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
     return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
       .subscribe({
@@ -701,7 +717,7 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  async validarSaldos(){
+  async validarSaldos() {
     if (this.id_concepto === undefined) {
       const resultid_concepto = await this.openConfirmacionDialog(`FALTA CODIGO CONCEPTO`);
       if (resultid_concepto) {
@@ -712,7 +728,7 @@ export class NotamovimientoComponent implements OnInit {
       }
     }
 
-    if (this.codalmorigenText === undefined || this.codalmorigenText === 0 ) {
+    if (this.codalmorigenText === undefined || this.codalmorigenText === 0) {
       const resultcodalmorigenText = await this.openConfirmacionDialog(`FALTA ORIGEN Y/O EL ORIGEN NO PUEDE SER 0`);
       if (resultcodalmorigenText) {
         setTimeout(() => {
@@ -722,7 +738,7 @@ export class NotamovimientoComponent implements OnInit {
       }
     }
 
-    if (this.codalmdestinoText === undefined || this.codalmdestinoText === 0 ) {
+    if (this.codalmdestinoText === undefined || this.codalmdestinoText === 0) {
       const resultcodalmdestinoText = await this.openConfirmacionDialog(`FALTA DESTINO Y/O EL DESTINO NO PUEDE SER 0`);
       if (resultcodalmdestinoText) {
         setTimeout(() => {
@@ -742,16 +758,16 @@ export class NotamovimientoComponent implements OnInit {
     };
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn+"/"+true, array)
+    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn + "/" + true, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
           this.cumple = datav.cumple;
-          if(datav.cumple){
+          if (datav.cumple) {
             this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "SALDOS VALIDADOS ✅" });
             //aca mensaje datav.alerta
-            if(datav.alerta){
+            if (datav.alerta) {
               this.openConfirmacionDialog(datav.alerta);
             }
           }
@@ -766,14 +782,14 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  codigoAduanaItems(){
+  codigoAduanaItems() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
     return this.api.create('/inventario/transac/docinmovimiento/copiarAduana/' + this.userConn, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav);
-        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "CODIGO ADUANA CON EXITO ✅" });
-        this.array_items_carrito_y_f4_catalogo = datav;
+          console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav);
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "CODIGO ADUANA CON EXITO ✅" });
+          this.array_items_carrito_y_f4_catalogo = datav;
         },
 
         error: (err: any) => {
@@ -784,9 +800,9 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  totabilizar(){
+  totabilizar() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn+"/"+ true, {tabladetalle:this.array_items_carrito_y_f4_catalogo})
+    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn + "/" + true, { tabladetalle: this.array_items_carrito_y_f4_catalogo })
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
@@ -800,12 +816,12 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  validarPorConcepto(concepto){
+  validarPorConcepto(concepto) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/eligeConcepto/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/'+this.userConn+"/"+concepto+"/"+this.agencia_logueado)
+    return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/' + this.userConn + "/" + concepto + "/" + this.agencia_logueado)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
           this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
           this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
           this.traspaso = datav.traspaso;
@@ -819,7 +835,7 @@ export class NotamovimientoComponent implements OnInit {
           this.cargar_proformaEnabled = datav.cargar_proformaEnabled;
           this.cvenumeracion1Enabled = datav.cvenumeracion1Enabled;
           this.id_proforma_solReadOnly = datav.id_proforma_solReadOnly;
-          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly;      
+          this.numeroidproforma_solReadOnly = datav.numeroidproforma_solReadOnly;
         },
 
         error: (err: any) => {
@@ -829,25 +845,25 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  ponerDui(){
+  ponerDui() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
     return this.api.create('/inventario/transac/docinmovimiento/ponerDui/' + this.userConn + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
-        this.array_items_carrito_y_f4_catalogo = datav.map((element)=>({
-          ...element,
-          codaduana:"0"
-        }));
+          console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
+          this.array_items_carrito_y_f4_catalogo = datav.map((element) => ({
+            ...element,
+            codaduana: "0"
+          }));
 
-        this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "PONER DUI COMPLETADO ✅" });
+          this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "PONER DUI COMPLETADO ✅" });
         },
 
         error: (err: any) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: "PONER DUI COMPLETADO" });
           console.log(err, errorMessage);
         },
-        complete: () => {  }
+        complete: () => { }
       })
   }
 
@@ -867,11 +883,11 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-     console.log('Row Selected:', event);
+    console.log('Row Selected:', event);
 
     this.item = event.coditem;
     this.item_obj_seleccionado = event.data;
-   
+
     this.updateSelectedProducts();
   }
 
@@ -887,7 +903,7 @@ export class NotamovimientoComponent implements OnInit {
       element.orden = index + 1;
       element.nroitem = index + 1;
     });
-  
+
     // Limpiar el array de productos seleccionados
     this.selectedProducts = [];
   }
@@ -900,12 +916,12 @@ export class NotamovimientoComponent implements OnInit {
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
-    
+
       return item.orden !== orden || item.coditem !== coditem;
     });
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
       ...element,
-      codaduana: element.codaduana === undefined ? "0":element.codaduana
+      codaduana: element.codaduana === undefined ? "0" : element.codaduana
     }));
 
     // Agregar el número de orden a los objetos de datos
@@ -914,7 +930,7 @@ export class NotamovimientoComponent implements OnInit {
       element.nroitem = index + 1;
     });
 
-   this.totabilizar();
+    this.totabilizar();
   }
 
   onEditComplete(event: any) {
@@ -924,16 +940,16 @@ export class NotamovimientoComponent implements OnInit {
 
     console.log("🚀 ~ onEditComplete ~ Item a editar empaque:", this.item_obj_seleccionado)
     console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, updatedElement, newValue);
-  
+
     if (updatedField === 'empaque') {
       // this.empaqueChangeMatrix(this.item_obj_seleccionado, newValue);
     }
 
-    if(updatedField === 'cantidad_pedida'){
+    if (updatedField === 'cantidad_pedida') {
       // this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, newValue);
     }
 
-    if(updatedField === 'cantidad'){
+    if (updatedField === 'cantidad') {
       // this.cantidadChangeMatrix(this.item_obj_seleccionado, newValue)
     }
   }
@@ -955,23 +971,16 @@ export class NotamovimientoComponent implements OnInit {
     }
   }
 
-  formatNumberTotalSubTOTALES(numberString: number | string): string {
-    if (numberString === null || numberString === undefined || numberString === '') {
-      return '0.00'; // Valor predeterminado
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
-    
-    // Intentar convertir a número, considerando posibles entradas como cadenas
-    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    
-    if (isNaN(parsedNumber)){
-      return '0.00'; // Manejar entradas no válidas
-    }
-  
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(parsedNumber);
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
+
 
   formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
@@ -979,9 +988,9 @@ export class NotamovimientoComponent implements OnInit {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
   }
 
-  cargarProformaSolicitudUrgente(){
+  cargarProformaSolicitudUrgente() {
     if (this.id_proforma_catalogo === undefined || this.numero_id_catalogo_proforma === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ID O NUM ID EN BLANCO, FAVOR COLOCAR PROFORMA DE ALMACEN'}) 
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ID O NUM ID EN BLANCO, FAVOR COLOCAR PROFORMA DE ALMACEN' })
       return;
     }
 
@@ -996,11 +1005,11 @@ export class NotamovimientoComponent implements OnInit {
     console.log("🚀 ~ NotamovimientoComponent ~ cargarProformaSolicitudUrgente ~ array_PF:", array_PF)
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/CargardeProforma/";
-    return this.api.create('/inventario/transac/docinmovimiento/CargardeProforma/'+this.userConn, array_PF)
+    return this.api.create('/inventario/transac/docinmovimiento/CargardeProforma/' + this.userConn, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ cargarProformaSolicitudUrgente:", datav);
-          if(datav.resultado){
+          if (datav.resultado) {
             this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
             this.codalmacen = datav.codalmorigen;
             this.observaciones = datav.obs;
@@ -1014,7 +1023,7 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  limpiar(){
+  limpiar() {
     this.array_items_carrito_y_f4_catalogo = [];
     this.validacion_post_negativos = [];
     this.eventosLogs = [];
@@ -1023,7 +1032,7 @@ export class NotamovimientoComponent implements OnInit {
     this.id_concepto = "";
     this.id_concepto_descripcion = "";
     this.observaciones = "";
-    this.id_proforma_catalogo= "";
+    this.id_proforma_catalogo = "";
     this.descripcion_id_catalogo_proforma = "";
     this.numero_id_catalogo_proforma = 0;
     this.chkdesglozar_cjtos = false;
@@ -1036,7 +1045,7 @@ export class NotamovimientoComponent implements OnInit {
     this.getParametrosIniciales();
   }
 
-  solicitarPermisoDatoADatoB(){
+  solicitarPermisoDatoADatoB() {
     const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: '450px',
       height: 'auto',
@@ -1052,20 +1061,20 @@ export class NotamovimientoComponent implements OnInit {
       if (result) {
         this.fidEnable = false;
         this.fnumeroidEnable = false;
-        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'HABILITADO ✅'});
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'HABILITADO ✅' });
       }
     });
   }
 
-  validarGrabar(){
+  validarGrabar() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/'+this.userConn+"/"+this.codalmacen+"/"+this.fecha_actual+"/"+this.id+"/"+this.numeroid)
+    return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/' + this.userConn + "/" + this.codalmacen + "/" + this.fecha_actual + "/" + this.id + "/" + this.numeroid)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ datav:", datav)
-          if(datav.valido){
+          if (datav.valido) {
             this.guardarNotaMovimiento();
-          }else{
+          } else {
             const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
               width: '450px',
               height: 'auto',
@@ -1076,11 +1085,11 @@ export class NotamovimientoComponent implements OnInit {
                 dataCodigoPermiso: datav.servicio.toString(),
               },
             });
-        
+
             dialogRefParams.afterClosed().subscribe((result: Boolean) => {
               if (result) {
                 this.guardarNotaMovimiento();
-              }else{
+              } else {
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'SERVICIO CANCELADO' });
               }
             });
@@ -1094,111 +1103,111 @@ export class NotamovimientoComponent implements OnInit {
       })
   }
 
-  async guardarNotaMovimiento(){
-    if (this.array_items_carrito_y_f4_catalogo.length === 0 ) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DETALLE DE LOS ITEMS ESTA EN BLANCO'});
+  async guardarNotaMovimiento() {
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL DETALLE DE LOS ITEMS ESTA EN BLANCO' });
       return;
     }
 
     if (this.id_concepto === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CONCEPTO NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CONCEPTO NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.codvendedor === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO VENDEDOR NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO VENDEDOR NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.codalmorigenText === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE ORIGEN'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE ORIGEN' });
       return;
     }
 
     if (this.codalmorigenText === 0) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ORIGEN NO PUEDE SER 0'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ORIGEN NO PUEDE SER 0' });
       return;
     }
 
     if (this.codalmdestinoText === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO' });
       return;
     }
 
     if (this.codalmdestinoText === 0) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO DE DESTINO NO PUEDE SER 0'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO DE DESTINO NO PUEDE SER 0' });
       return;
     }
-    
+
     if (this.codalmdestinoText === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO' });
       return;
     }
 
     if (this.observaciones === undefined || null) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.observaciones.length > 60) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION ES DEMASIADA LARGA'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA OBSERVACION ES DEMASIADA LARGA' });
       return;
     }
 
     if (this.id === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL ID NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL ID NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.numeroid === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL NUMERO ID NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL NUMERO ID NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.codalmacen === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ALMACEN NO PUEDE ESTAR EN BLANCO'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO ALMACEN NO PUEDE ESTAR EN BLANCO' });
       return;
     }
 
     if (this.fecha_actual === undefined) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA FECHA NO PUEDE ESTAR EN BLANCO, SELECCIONE UNA FECHA'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'LA FECHA NO PUEDE ESTAR EN BLANCO, SELECCIONE UNA FECHA' });
       return;
     }
 
     if (this.total === 0) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL TOTAL NO PUEDE SER 0, TOTALICE'});
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL TOTAL NO PUEDE SER 0, TOTALICE' });
       return;
     }
 
     if (this.id_concepto === 10 && this.id_proforma_catalogo === undefined && this.numero_id_catalogo_proforma === undefined || 0) {
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SI EL CONCEPTO ES EL 10 NO PUEDE DEJAR EL ID Y NUM ID DE PROFORMA EN BLANCO'})
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SI EL CONCEPTO ES EL 10 NO PUEDE DEJAR EL ID Y NUM ID DE PROFORMA EN BLANCO' })
       return;
     }
 
     if (this.fidEnable === false && this.fnumeroidEnable === false) {
-      if(this.id_origen === undefined && this.nroid_origen === undefined){
-        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE HABILITO EL ORIGEN, FAVOR COLOCAR ID Y NUM ID DE PROFORMA'})
+      if (this.id_origen === undefined && this.nroid_origen === undefined) {
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE HABILITO EL ORIGEN, FAVOR COLOCAR ID Y NUM ID DE PROFORMA' })
       }
     }
 
     let array_PF = {
-      cabecera:{
+      cabecera: {
         id: this.id,
         numeroid: this.numeroid,
         fecha: this.fecha_actual,
         codalmacen: this.codalmacen,
         codalmorigen: this.codalmorigenText,
         codalmdestino: this.codalmdestinoText,
-        obs: this.observaciones === undefined ? "":this.observaciones,
+        obs: this.observaciones === undefined ? "" : this.observaciones,
         codvendedor: this.codvendedor,
-        codcliente: this.cod_cliente === undefined ? "":this.cod_cliente,
+        codcliente: this.cod_cliente === undefined ? "" : this.cod_cliente,
         usuarioreg: this.usuarioLogueado,
         factor: this.factor,
-        fid: this.id_origen === undefined || null ? "":this.id_origen,
-        fnumeroid: this.nroid_origen === undefined || null ? 0:this.nroid_origen,
-        
-        idproforma: this.id_proforma_catalogo === undefined ? "":this.id_proforma_catalogo,
-        numeroidproforma: this.numero_id_catalogo_proforma === undefined || null ? 0:this.numero_id_catalogo_proforma,
+        fid: this.id_origen === undefined || null ? "" : this.id_origen,
+        fnumeroid: this.nroid_origen === undefined || null ? 0 : this.nroid_origen,
+
+        idproforma: this.id_proforma_catalogo === undefined ? "" : this.id_proforma_catalogo,
+        numeroidproforma: this.numero_id_catalogo_proforma === undefined || null ? 0 : this.numero_id_catalogo_proforma,
 
         horareg: this.hora_fecha_server,
         fechareg: this.fecha_actual,
@@ -1208,45 +1217,45 @@ export class NotamovimientoComponent implements OnInit {
         anulada: false,
         peso: 0,
 
-        codpersona: this.codpersonadesde === undefined || null ? 0:this.codpersonadesde,
+        codpersona: this.codpersonadesde === undefined || null ? 0 : this.codpersonadesde,
 
-        idproforma_sol: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente.toUpperCase(),
-        numeroidproforma_sol: this.numero_id_proforma_sol_urgente === undefined ? 0:this.numero_id_proforma_sol_urgente,
+        idproforma_sol: this.id_proforma_sol_urgente === undefined ? "" : this.id_proforma_sol_urgente.toUpperCase(),
+        numeroidproforma_sol: this.numero_id_proforma_sol_urgente === undefined ? 0 : this.numero_id_proforma_sol_urgente,
         codconcepto: this.id_concepto,
         //este datos nay ni en parametroIniciales
         comprobante: null,
       },
 
-      tablaDetalle:this.array_items_carrito_y_f4_catalogo
+      tablaDetalle: this.array_items_carrito_y_f4_catalogo
     }
     console.log("🚀 ~ NotamovimientoComponent ~ guardarNotaMovimiento ~ array_PF:", array_PF)
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
-    return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/'+this.userConn+"/"+this.BD_storage+"/"+this.traspaso, array_PF)
+    return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/' + this.userConn + "/" + this.BD_storage + "/" + this.traspaso, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
-          if(datav.codigoNM){
+          if (datav.codigoNM) {
             let result = await this.openConfirmationDialog(`${datav.alertas.join('\n\n')}\n\n${datav.resp}`);
-              if (result) {
-                //exportar ZIP
-                await this.exportarZIPNMGrabar(datav.codigoNM);
+            if (result) {
+              //exportar ZIP
+              await this.exportarZIPNMGrabar(datav.codigoNM);
 
-                await this.modalImpresion(datav.codigoNM);
+              await this.modalImpresion(datav.codigoNM);
 
-                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
-                //window.location.reload();
-              }else{
-                await this.modalImpresion(datav.codigoNM);
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
+              //window.location.reload();
+            } else {
+              await this.modalImpresion(datav.codigoNM);
 
-                this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR'});
-                setTimeout(() => {
-                  this.spinner.hide();
-                }, 1000);
-              }
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR' });
+              setTimeout(() => {
+                this.spinner.hide();
+              }, 1000);
+            }
           }
 
-          if(datav.negativos){
+          if (datav.negativos) {
             //hay negativos
             await this.openConfirmacionDialog(datav.resp)
             this.dataSource_negativos = new MatTableDataSource(datav.negativos);
@@ -1264,7 +1273,7 @@ export class NotamovimientoComponent implements OnInit {
 
           // if(datav.valido){
           //   this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
-            
+
           //   const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
           //   if (resultcodalmdestinoText) {
           //     setTimeout(() => {
@@ -1285,14 +1294,14 @@ export class NotamovimientoComponent implements OnInit {
           console.log(err, errorMessage);
           this.spinner.hide();
         },
-        complete: () => { 
+        complete: () => {
           this.spinner.hide();
         }
       })
   }
 
-  exportarZIPNMGrabar(codigo_NM){
-    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" +codigo_NM, { responseType: 'arraybuffer' })
+  exportarZIPNMGrabar(codigo_NM) {
+    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" + codigo_NM, { responseType: 'arraybuffer' })
       .subscribe({
         next: (datav: ArrayBuffer) => {
           console.log(datav);
@@ -1356,131 +1365,131 @@ export class NotamovimientoComponent implements OnInit {
 
 
   // NEGATIVOS
-  validarNegativos(){
-     let proforma_validar = {
-        datosDocVta: {
-          estado_doc_vta: "string",
-          coddocumento: 0,
-          id: "",
-          numeroid: "0",
-          fechadoc: this.fecha_actual,
-          codcliente: "",
-          nombcliente: "",
-          nitfactura: "",
-          tipo_doc_id: "",
-          codcliente_real: "",
-          nomcliente_real: "",
-          codtarifadefecto: 0,
-          codmoneda: "",
-          subtotaldoc: 0,
-          totaldoc: 0,
-          tipo_vta: "",
-          codalmacen: this.codalmacen.toString(),
-          codvendedor: "",
-          preciovta: "",
-          desctoespecial: "",
-          preparacion: "",
-          tipo_cliente: "",
-          cliente_habilitado: "",
-          contra_entrega: "",
-          vta_cliente_en_oficina: true,
-          estado_contra_entrega: "",
-          desclinea_segun_solicitud: true,
-          idsol_nivel: "",
-          nroidsol_nivel: "",
-          pago_con_anticipo: true,
-          niveles_descuento: "",
-          transporte: "",
-          nombre_transporte: "",
-          fletepor: "",
-          tipoentrega: "",
-          direccion: "",
-          ubicacion: "",
-          latitud: "",
-          longitud: "",
-          nroitems: 0,
-          totdesctos_extras: 0,
-          totrecargos: 0,
-          tipo_complemento: "",
-          idpf_complemento: "",
-          nroidpf_complemento: "",
-          idFC_complementaria: "",
-          nroidFC_complementaria: "",
-          nrocaja: "",
-          nroautorizacion: "",
-          fechalimite_dosificacion: this.fecha_actual,
-          tipo_caja: "",
-          version_codcontrol: "",
-          nrofactura: "",
-          nroticket: "",
-          idanticipo: "",
-          noridanticipo: "",
-          monto_anticipo: 0,
+  validarNegativos() {
+    let proforma_validar = {
+      datosDocVta: {
+        estado_doc_vta: "string",
+        coddocumento: 0,
+        id: "",
+        numeroid: "0",
+        fechadoc: this.fecha_actual,
+        codcliente: "",
+        nombcliente: "",
+        nitfactura: "",
+        tipo_doc_id: "",
+        codcliente_real: "",
+        nomcliente_real: "",
+        codtarifadefecto: 0,
+        codmoneda: "",
+        subtotaldoc: 0,
+        totaldoc: 0,
+        tipo_vta: "",
+        codalmacen: this.codalmacen.toString(),
+        codvendedor: "",
+        preciovta: "",
+        desctoespecial: "",
+        preparacion: "",
+        tipo_cliente: "",
+        cliente_habilitado: "",
+        contra_entrega: "",
+        vta_cliente_en_oficina: true,
+        estado_contra_entrega: "",
+        desclinea_segun_solicitud: true,
+        idsol_nivel: "",
+        nroidsol_nivel: "",
+        pago_con_anticipo: true,
+        niveles_descuento: "",
+        transporte: "",
+        nombre_transporte: "",
+        fletepor: "",
+        tipoentrega: "",
+        direccion: "",
+        ubicacion: "",
+        latitud: "",
+        longitud: "",
+        nroitems: 0,
+        totdesctos_extras: 0,
+        totrecargos: 0,
+        tipo_complemento: "",
+        idpf_complemento: "",
+        nroidpf_complemento: "",
+        idFC_complementaria: "",
+        nroidFC_complementaria: "",
+        nrocaja: "",
+        nroautorizacion: "",
+        fechalimite_dosificacion: this.fecha_actual,
+        tipo_caja: "",
+        version_codcontrol: "",
+        nrofactura: "",
+        nroticket: "",
+        idanticipo: "",
+        noridanticipo: "",
+        monto_anticipo: 0,
 
-          idpf_solurgente: this.id_proforma_sol_urgente === undefined ? "":this.id_proforma_sol_urgente,
-          noridpf_solurgente: this.numero_id_proforma_sol_urgente === undefined ? "0":this.numero_id_proforma_sol_urgente.toString(),
+        idpf_solurgente: this.id_proforma_sol_urgente === undefined ? "" : this.id_proforma_sol_urgente,
+        noridpf_solurgente: this.numero_id_proforma_sol_urgente === undefined ? "0" : this.numero_id_proforma_sol_urgente.toString(),
 
-        },
-        detalleAnticipos: [],
-        detalleDescuentos: [],
-        detalleEtiqueta: [],
-        detalleItemsProf: this.array_items_carrito_y_f4_catalogo.map((element)=>({
-          ...element,
-          niveldesc:"ACTUAL"
-        })),
+      },
+      detalleAnticipos: [],
+      detalleDescuentos: [],
+      detalleEtiqueta: [],
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo.map((element) => ({
+        ...element,
+        niveldesc: "ACTUAL"
+      })),
 
-        detalleRecargos: [],
-      }
-    
-      this.spinner.show();
-      console.log(proforma_validar);
-      const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
-      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+      detalleRecargos: [],
+    }
 
-      this.api.create(url, proforma_validar).subscribe({
-        next: (datav) => {
-          console.log("🚀 ~ NotamovimientoComponent ~ this.api.create ~ datav:", datav)
-          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
+    this.spinner.show();
+    console.log(proforma_validar);
+    const url = `/venta/transac/veproforma/validarProforma/${this.userConn}/00060/proforma/grabar_aprobar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
 
-          if (datav.jsonResult[0]?.dtnegativos) {
-            this.validacion_post_negativos = datav.jsonResult[0]?.dtnegativos;
-          }
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ NotamovimientoComponent ~ this.api.create ~ datav:", datav)
+        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'VALIDACION CORRECTA NEGATIVOS ✅' })
 
-          this.abrirTabPorLabel("Negativos");
-
-          this.toggleTodosNegativos = true;
-          this.toggleNegativos = false;
-          this.togglePositivos = false;
-
-          this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
-            ...element,
-            cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
-            cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
-            saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
-            cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
-            cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
-            saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
-          }));
-
-          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-          this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
-    
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
+        if (datav.jsonResult[0]?.dtnegativos) {
+          this.validacion_post_negativos = datav.jsonResult[0]?.dtnegativos;
         }
-      });
+
+        this.abrirTabPorLabel("Negativos");
+
+        this.toggleTodosNegativos = true;
+        this.toggleNegativos = false;
+        this.togglePositivos = false;
+
+        this.validacion_post_negativos = this.validacion_post_negativos.map(element => ({
+          ...element,
+          cantidad: this.formatNumberTotalSubTOTALES(element.cantidad),
+          cantidad_conjunto: this.formatNumberTotalSubTOTALES(element.cantidad_conjunto),
+          saldo_sin_descontar_reservas: this.formatNumberTotalSubTOTALES(element.saldo_sin_descontar_reservas),
+          cantidad_suelta: this.formatNumberTotalSubTOTALES(element.cantidad_suelta),
+          cantidad_reservada_para_cjtos: this.formatNumberTotalSubTOTALES(element.cantidad_reservada_para_cjtos),
+          saldo_descontando_reservas: this.formatNumberTotalSubTOTALES(element.saldo_descontando_reservas),
+        }));
+
+        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+        this.array_items_carrito_y_f4_catalogo = datav.itemDataMatriz;
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      }
+    });
   }
 
   negativosTodosFilterToggle() {
@@ -1573,14 +1582,14 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   imprimir_zip_importado(zip_json) {
-    let documento:any;
-    const array_carrito:any=[];
+    let documento: any;
+    const array_carrito: any = [];
     this.spinner.show();
     console.log(zip_json);
-    
+
     // this.id = zip_json.cabeceraList[0]?.id;
     // this.numeroid = zip_json.cabeceraList[0]?.numeroid;
-    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto; 
+    this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
     this.factor = zip_json.cabeceraList[0]?.factor;
     //this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
     this.observaciones = zip_json.cabeceraList[0]?.obs;
@@ -1590,14 +1599,14 @@ export class NotamovimientoComponent implements OnInit {
     this.id_proforma_catalogo = zip_json.cabeceraList[0]?.idproforma;
     this.numero_id_catalogo_proforma = zip_json.cabeceraList[0]?.numeroidproforma
     this.id_proforma_sol_urgente = zip_json.cabeceraList[0]?.idproforma_sol;
-    this.numero_id_proforma_sol_urgente = zip_json.cabeceraList[0]?.numeroidproforma_sol;  
+    this.numero_id_proforma_sol_urgente = zip_json.cabeceraList[0]?.numeroidproforma_sol;
     //this.anular = zip_json.cabeceraList[0]?.anulada;
     //this.contabilizada = zip_json.cabeceraList[0]?.contabilizada;
-    
+
     documento = zip_json.cabeceraList[0]?.documento
-    if(documento === "NOTA"){
-      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
-      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+    if (documento === "NOTA") {
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
       console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
       this.id_concepto_descripcion = encontrado_objeto.descripcion;
 
@@ -1610,66 +1619,66 @@ export class NotamovimientoComponent implements OnInit {
       this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
       // this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
 
-      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
         ...element,
-        codaduana:"0"
+        codaduana: "0"
       })));
 
-      this.observaciones = "NOTA: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmacen+" "+zip_json.cabeceraList[0]?.obs;
-      if(this.observaciones.length > 60){
+      this.observaciones = "NOTA: " + zip_json.cabeceraList[0]?.id + " " + zip_json.cabeceraList[0]?.numeroid + " DE: " + zip_json.cabeceraList[0]?.codalmacen + " " + zip_json.cabeceraList[0]?.obs;
+      if (this.observaciones.length > 60) {
         this.observaciones = this.observaciones.slice(0, 59);
       }
     }
 
-    if(documento === "SOLURGENTE"){
-      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
-      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+    if (documento === "SOLURGENTE") {
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
       console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
       this.id_concepto_descripcion = encontrado_objeto.descripcion;
 
-      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
         ...element,
-        codaduana:"0"
+        codaduana: "0"
       })));
 
       this.observaciones = zip_json.cabeceraList[0]?.obs;
-      if(this.observaciones.length > 60){
+      if (this.observaciones.length > 60) {
         this.observaciones = this.observaciones.slice(0, 59);
       }
     }
 
-    if(documento === "PEDIDO"){
+    if (documento === "PEDIDO") {
       this.codalmorigenText = zip_json.cabeceraList[0]?.codalmacen;
       console.log("🚀 ~ NotamovimientoComponent ~ this.codalmorigenText:", this.codalmorigenText)
-      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
         ...element,
-        codaduana:"0"
+        codaduana: "0"
       })));
       this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
-      this.observaciones = "PEDIDO: "+zip_json.cabeceraList[0]?.id+" "+zip_json.cabeceraList[0]?.numeroid+" DE: "+ zip_json.cabeceraList[0]?.codalmacen+" "+zip_json.cabeceraList[0]?.obs;
-      if(this.observaciones.length > 60){
+      this.observaciones = "PEDIDO: " + zip_json.cabeceraList[0]?.id + " " + zip_json.cabeceraList[0]?.numeroid + " DE: " + zip_json.cabeceraList[0]?.codalmacen + " " + zip_json.cabeceraList[0]?.obs;
+      if (this.observaciones.length > 60) {
         this.observaciones = this.observaciones.slice(0, 59);
       }
     }
 
-    if(documento === "RECEPCION"){
-      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0":zip_json.cabeceraList[0]?.codconcepto);
-      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString() );
+    if (documento === "RECEPCION") {
+      this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
+      const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
       console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
       this.id_concepto_descripcion = encontrado_objeto.descripcion;
-      this.getDescripcMedidaItem(zip_json.detalleList.map((element)=>({
+      this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
         ...element,
-        codaduana:"0"
+        codaduana: "0"
       })));
 
       this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
       this.observaciones = zip_json.cabeceraList[0]?.obs;
-      if(this.observaciones.length > 60){
+      if (this.observaciones.length > 60) {
         this.observaciones = this.observaciones.slice(0, 59)
       }
     }
 
-    if(this.array_items_carrito_y_f4_catalogo.length > 0){
+    if (this.array_items_carrito_y_f4_catalogo.length > 0) {
       console.log("🚀 ~ ModificarNotaMovimientoComponent ~ this.array_items_carrito_y_f4_catalogo.length:", this.array_items_carrito_y_f4_catalogo.length)
       this.getDescripcMedidaItem(zip_json.detalleList);
       this.array_items_carrito_y_f4_catalogo = array_carrito.concat(
@@ -1680,23 +1689,23 @@ export class NotamovimientoComponent implements OnInit {
           nuevo: "si"
         }))
       );
-    }else{
+    } else {
       this.getDescripcMedidaItem(zip_json.detalleList);
       this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
     }
   }
   //FIN Importar ZIP
-  
 
-  getDescripcMedidaItem(array_item_zip){
-    let new_array:any = array_item_zip.map((element)=>({
+
+  getDescripcMedidaItem(array_item_zip) {
+    let new_array: any = array_item_zip.map((element) => ({
       ...element,
-      descripcion:"",
-      medida:""
+      descripcion: "",
+      medida: ""
     }));
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/CargardeProforma/";
-    return this.api.create('/inventario/transac/docinmovimiento/getDescMedDetalle/'+this.userConn, new_array)
+    return this.api.create('/inventario/transac/docinmovimiento/getDescMedDetalle/' + this.userConn, new_array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           // console.log("🚀 ~ NotamovimientoComponent ~ getDescripcMedidaItem ~ datav:", datav);
@@ -1708,7 +1717,7 @@ export class NotamovimientoComponent implements OnInit {
         },
         complete: () => {
           this.totabilizar();
-         }
+        }
       })
   }
 
@@ -1716,15 +1725,15 @@ export class NotamovimientoComponent implements OnInit {
   // cargarDataExcel(event: any) {
   //   const archivo = event.target.files[0];
   //   if (!archivo) return;
-  
+
   //   const reader = new FileReader();
   //   reader.onload = (e: any) => {
   //     const data = new Uint8Array(e.target.result);
   //     const workbook = XLSX.read(data, { type: 'array' });
-  
+
   //     const nombreHoja = workbook.SheetNames[0]; // Tomamos la primera hoja
   //     const hoja = workbook.Sheets[nombreHoja];
-  
+
   //     // 🔥 Definir las coordenadas del rango
   //     const inicio = { col: 'A', row: 2 };
   //     const fin = { col: 'A', row: 48 };
@@ -1742,29 +1751,29 @@ export class NotamovimientoComponent implements OnInit {
   //       coditem: element,
   //       cantidad: dataExtraidaValoresItems[index] || 0,
   //     }));
-      
+
   //     console.log("🚀 ~ NotamovimientoComponent ~ cargarDataExcel ~ array_completo:", array_completo);
   //     this.getDescripcMedidaItem(array_completo);
   //   };
-  
+
   //   reader.readAsArrayBuffer(archivo);
   // }
-  
+
   // // 📌 Función para extraer un rango de celdas
   // extraerRangoItems(hoja: XLSX.WorkSheet, inicio: { col: string; row: number }, fin: { col: string; row: number }): any[] {
   //   const data = [];
   //   const columnas = this.generarColumnas(inicio.col, fin.col); // Genera ['A'] si es un solo col
-  
+
   //   for (let fila = inicio.row; fila <= fin.row; fila++) {
   //     for (const col of columnas) {
   //       const celda = hoja[`${col}${fila}`];
   //       data.push(celda ? celda.v : ''); // 🔥 Mete todo en un solo array
   //     }
   //   }
-  
+
   //   return data;
   // }
-  
+
   // // 📌 Generar un array de columnas (de 'A' a 'Y')
   // generarColumnas(inicio: string, fin: string): string[] {
   //   const cols = [];
@@ -1773,7 +1782,6 @@ export class NotamovimientoComponent implements OnInit {
   //   }
   //   return cols;
   // }
-  
 
 
 
@@ -1784,29 +1792,30 @@ export class NotamovimientoComponent implements OnInit {
 
 
 
-  modalImpresion(codigo){
+
+  modalImpresion(codigo) {
     this.dialog.open(DialogTarifaImpresionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
-      data:{
-        codigo_concepto:this.id_concepto,
-        cod_concepto_descrip:this.id_concepto_descripcion,
+      data: {
+        codigo_concepto: this.id_concepto,
+        cod_concepto_descrip: this.id_concepto_descripcion,
         total: this.total,
         codigoNM: codigo
       }
     });
   }
 
-  modalExcelToExcel(){
+  modalExcelToExcel() {
     //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
     // LA DATA XDXD
     this.dialog.open(ExceltoexcelComponent, {
       width: '800px',
       height: 'auto',
       disableClose: true,
-      data:{
-        ventana_origen:'nota_movimiento'
+      data: {
+        ventana_origen: 'nota_movimiento'
       }
     });
   }
@@ -1841,14 +1850,14 @@ export class NotamovimientoComponent implements OnInit {
     this.almacen_seleccionado = almacen;
     console.log("🚀 ~ NotamovimientoComponent ~ modalAlmacen ~ this.almacen_seleccionado:", this.almacen_seleccionado)
   }
-  
-  catalogoProformas(origen){
+
+  catalogoProformas(origen) {
     this.dialog.open(CatalogoProformasComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
     });
-    
+
     this.catalogo_proforma_seleccionado = origen;
     console.log("🚀 ~ NotamovimientoComponent ~ catalogoProformas ~ this.catalogo_proforma_seleccionado:", this.catalogo_proforma_seleccionado)
   }
@@ -1901,12 +1910,12 @@ export class NotamovimientoComponent implements OnInit {
         codmoneda: "BS",
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         descuento_nivel: "ACTUAL",
-        tipo_ventana:"inventario",
+        tipo_ventana: "inventario",
       },
     });
   }
 
-  modalCatalogoConceptos(){
+  modalCatalogoConceptos() {
     this.dialog.open(CatalogoMovimientoMercaderiaComponent, {
       width: 'auto',
       height: 'auto',
@@ -1952,20 +1961,26 @@ export class NotamovimientoComponent implements OnInit {
         codcliente: "0",
         codcliente_real: "0",
         codalmacen: this.agencia_logueado,
-        desc_linea_seg_solicitud:"false",
+        desc_linea_seg_solicitud: "false",
         codmoneda: "BS",
         fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
-        items: [ ],
+        items: [],
         descuento_nivel: 0,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_ventana:"inventario"
+        tipo_ventana: "inventario"
         // id_proforma: this.id_tipo_view_get_codigo,
         // num_id_proforma:this.id_proforma_numero_id,
       }
     });
   }
-  
-  alMenu(){
+
+  mandarNombre() {
+    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
+      nombre_vent: this.ventana,
+    });
+  }
+
+  alMenu() {
     const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',

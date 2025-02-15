@@ -123,7 +123,9 @@ import { FacturacionMostradorTiendasComponent } from '@components/mantenimiento/
 import { ModificarFacturacionMostradorTiendasComponent } from '@components/mantenimiento/ventas/transacciones/modificar/modificar-facturacion-mostrador-tiendas/modificar-facturacion-mostrador-tiendas.component';
 import { ProformaMovilComponent } from '@components/mantenimiento/ventas/transacciones/proforma-movil/proforma-movil.component';
 import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
-import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/modificar-nota-movimiento/modificar-nota-movimiento.component';
+import { PedidoComponent } from '@components/inventario/CRUD/pedido/pedido.component';
+import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-nota-movimiento/modificar-nota-movimiento.component';
+import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-pedido/modificar-pedido.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -326,6 +328,10 @@ const routes: Routes = [
                 component: PermisosEspecialesParametrosComponent,
                 canActivate: [AuthGuard]
             },
+
+
+
+            //INVENTARIO
             {
                 path: 'inventario/inventarioFisico/inventario',
                 component: CrearTomaInventarioComponent,
@@ -356,13 +362,9 @@ const routes: Routes = [
                 component: RegistrarInventarioGrupoComponent,
                 canActivate: [AuthGuard]
             },
-            {
-                path: 'inventario/modificaciones/ModificarNotaMovimiento',
-                component: ModificarNotaMovimientoComponent,
-                canActivate: [AuthGuard]
-            },
 
-            
+
+
 
 
 
@@ -373,11 +375,29 @@ const routes: Routes = [
                 component: NotamovimientoComponent,
                 canActivate: [AuthGuard]
             },
+            {
+                path: 'inventario/modificaciones/ModificarNotaMovimiento',
+                component: ModificarNotaMovimientoComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'inventario/cruds/pedido',
+                component: PedidoComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'inventario/modificaciones/modificarPedido',
+                component: ModificarPedidoComponent,
+                canActivate: [AuthGuard]
+            },
 
 
 
 
-            
+
+
+
+
 
 
 
@@ -452,7 +472,7 @@ const routes: Routes = [
 
 
 
-            
+
 
 
 
@@ -715,7 +735,7 @@ const routes: Routes = [
 
 
 
-            
+
             {
                 path: 'admin/system/log',
                 component: LogComponent,

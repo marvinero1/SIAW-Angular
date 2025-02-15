@@ -44,12 +44,12 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   agencia: any;
   btn_confirmar: boolean = false;
   validacion: boolean = false;
-  uso_inventario_item_boolean:boolean;
+  uso_inventario_item_boolean: boolean;
 
   displayedColumns = ['codigo', 'descripcion', 'medida'];
 
   dataSource = new MatTableDataSource<Item>();
-  dataSourceWithPageSize = new MatTableDataSource();  
+  dataSourceWithPageSize = new MatTableDataSource();
 
   options: Item[] = [];
   filteredOptions: Observable<Item[]>;
@@ -58,10 +58,10 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   myControlMedida = new FormControl<string | Item>('');
   myControlMedidaEnLinea = new FormControl<string | Item>('');
 
-  ventana_origen:any;
-  ventana_inventario:boolean;
-  ventana_venta:boolean;
-  
+  ventana_origen: any;
+  ventana_inventario: boolean;
+  ventana_venta: boolean;
+
   tarifa_get: any;
   descuento_get: any;
   codcliente_get: any;
@@ -69,14 +69,14 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   desc_linea_seg_solicitud_get: any;
   fecha_get: any;
   codmoneda_get: any;
-  
+
   private selectedIndexSubject = new BehaviorSubject<number>(0);
   selectedIndex$ = this.selectedIndexSubject.asObservable();
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
   @ViewChildren('rowElement') rowElements: QueryList<ElementRef>;
-  
+
   constructor(private api: ApiService, public dialogRef: MatDialogRef<ModalItemsComponent>, private messageService: MessageService,
     private servicioItem: ItemServiceService, private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public tarifa: any,
@@ -95,8 +95,8 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    this.tarifa_get = tarifa.tarifa === undefined ? 0:tarifa.tarifa;
-    this.descuento_get = descuento.descuento === undefined ? 0:descuento.descuento;;
+    this.tarifa_get = tarifa.tarifa === undefined ? 0 : tarifa.tarifa;
+    this.descuento_get = descuento.descuento === undefined ? 0 : descuento.descuento;;
     this.codcliente_get = codcliente.codcliente;
     this.codalmacen_get = codalmacen.codalmacen;
     this.desc_linea_seg_solicitud_get = desc_linea_seg_solicitud.desc_linea_seg_solicitud;
@@ -105,13 +105,13 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
     this.ventana_origen = tipo_ventana.tipo_ventana;
 
-    if(this.ventana_origen === undefined || this.ventana_origen === "ventas"){
+    if (this.ventana_origen === undefined || this.ventana_origen === "ventas") {
       this.ventana_origen = "ventas"
       this.ventana_venta = true;
       this.ventana_inventario = false;
     }
 
-    if(this.ventana_origen === "inventario"){
+    if (this.ventana_origen === "inventario") {
       this.ventana_inventario = true;
       this.ventana_venta = false;
     }
@@ -244,15 +244,15 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (datav) => {
           this.item_valido = datav;
-          console.log('item valido: ', this.item_valido);
+          console.log('item valido para venta: ', this.item_valido);
 
-          if (this.item_valido == true){
+          if (this.item_valido == true) {
             this.btn_confirmar = true;
           } else {
             // this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! ITEM NO VALIDO PARA LA VENTA !' });
             this.btn_confirmar = false;
 
-            if(this.ventana_origen === "inventario"){
+            if (this.ventana_origen === "inventario") {
               this.btn_confirmar = true;
             }
           }
@@ -272,13 +272,13 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
     console.log('item seleccionado:', cleanText);
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + cleanText+"/"+this.descuento_get+"/"+this.tarifa_get+"/"+ this.codcliente_get)
+    return this.api.getAll('/inventario/mant/inmatriz/infoItemRes/' + this.userConn + "/" + this.agencia + "/" + cleanText + "/" + this.descuento_get + "/" + this.tarifa_get + "/" + this.codcliente_get)
       .subscribe({
         next: (datav) => {
           this.item_obtenido = datav;
-            // la propiedad usa en movimiento solo deja agregar items cuando sea true y desde la ventana inventario
-            this.uso_inventario_item_boolean = datav.usaMovimiento;
-            console.log("🚀 ~ ModalItemsComponent ~ getlineaProductoID ~ this.uso_inventario_item_boolean:", this.uso_inventario_item_boolean)
+          // la propiedad usa en movimiento solo deja agregar items cuando sea true y desde la ventana inventario
+          this.uso_inventario_item_boolean = datav.usaMovimiento;
+          console.log("🚀 ~ ModalItemsComponent ~ getlineaProductoID ~ this.uso_inventario_item_boolean:", this.uso_inventario_item_boolean)
         },
 
         error: (err: any) => {
@@ -309,8 +309,8 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getItemMatriz_Anadir";
     return this.api.getAll(
-      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado + "/" + item_codigo + "/" + 
-      this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" + 
+      '/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado + "/" + item_codigo + "/" +
+      this.tarifa_get + "/" + this.descuento_get + "/" + 0 + "/" + 0 + "/" + this.codcliente_get + "/" + "NO" + "/" + this.agencia + "/" +
       this.descuento_nivel_get + "/" + this.codmoneda_get + "/" + this.fecha_get)
       .subscribe({
         next: (datav) => {
@@ -330,17 +330,16 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
   }
 
   enviarItemsAlServicio(items: any[], items_sin_proceso: any[]) {
-
-    if(this.ventana_inventario === true && this.uso_inventario_item_boolean === true){
+    if (this.ventana_inventario === true && this.uso_inventario_item_boolean === true) {
       this.servicioItem.enviarItemCompletoAProformaF4(items);
       this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
     }
 
-    if(this.ventana_inventario === true && this.uso_inventario_item_boolean === false){
+    if (this.ventana_inventario === true && this.uso_inventario_item_boolean === false) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO VALIDO PARA SU USO EN INVENTARIO' });
     }
 
-    if(this.ventana_venta === true && this.ventana_inventario === false && this.uso_inventario_item_boolean === false){
+    if (this.ventana_venta === true && this.item_valido === true) {
       this.servicioItem.enviarItemCompletoAProformaF4(items);
       this.servicioItem.enviarItemsSinProcesarCatalogo(items_sin_proceso);
     }
