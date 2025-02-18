@@ -404,8 +404,6 @@ export class NotamovimientoComponent implements OnInit {
       this.array_items_carrito_y_f4_catalogo = data.NMDetalle;
     });
     //
-
-
   }
 
   getParametrosIniciales() {

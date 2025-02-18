@@ -62,6 +62,16 @@ export class ExceltoexcelComponent implements OnInit {
       return;
     }
 
+    if (this.columnaValorCantidadItems === undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'INGRESE DATOS EN COLUMNA VALOR CANTIDADES' });
+      return;
+    }
+
+    if (this.columnaItems === undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'INGRESE DATOS EN COLUMNA DE ITEMS' });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const data = new Uint8Array(e.target.result);
@@ -148,6 +158,13 @@ export class ExceltoexcelComponent implements OnInit {
               PFDetalle: this.array_items_carrito_y_f4_catalogo,
             });
           }
+
+          if (this.ventana_origen_get === "pedido") {
+            //ACA EL SERVICIO QUE LO ENVIE
+            this.excelService.disparadorDePedido.emit({
+              PedidoDetalle: this.array_items_carrito_y_f4_catalogo,
+            });
+          }
         },
 
         error: (err: any) => {
@@ -162,5 +179,4 @@ export class ExceltoexcelComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
-
 }

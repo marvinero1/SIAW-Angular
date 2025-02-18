@@ -1,0 +1,68 @@
+<div class="p-1">
+  <div class="tittle">
+    <span> Catálogo Proveedores</span>
+  </div>
+  <div class="mat-elevation-z8">
+    <div class="row">
+      <div class="col-md" style="padding: 15px 20px 2px;">
+        <p><strong>ID Proveedor:</strong> &nbsp; {{ tipo_view.codigo }} - {{ tipo_view.razonsocial }} </p>
+      </div>
+
+      <div class="text-right" style="padding: 15px 20px 2px;">
+        <a mat-stroked-button color="primary" (click)="mandarTipoId();">
+          <i class="fa fa-check"></i>
+        </a>
+        <a mat-stroked-button color="warn" (click)="close();"><i class="fa fa-times"></i></a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="team bg-white scrollmenu">
+        <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
+          <p-table #dt1 [value]="id_tipo" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
+            selectionMode="single" styleClass="p-datatable-striped" [paginator]="true" [(selectedRow)]="seletedid_tipo"
+            [rows]="15" [rowsPerPageOptions]="[15, 25, 35]" [(selection)]="seletedid_tipo"
+            (onRowSelect)="getIdTipoView($event)" styleClass="p-datatable-striped tablita"
+            [globalFilterFields]="['id', 'razonsocial']">
+
+            <ng-template pTemplate="caption" styleClass="p-datatable-striped">
+              <div class="flex">
+                <span class="p-input-icon-left ml-auto">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" [(ngModel)]="searchValue" (ngModelChange)="onSearchChange($event)"
+                    pAutoFocus [autofocus]="true" />
+                </span>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+              <tr style="background-color: #093070 !important;">
+                <th pSortableColumn="id" class="text-center">
+                  Código
+                  <p-sortIcon field="id"></p-sortIcon>
+                </th>
+                <th pSortableColumn="razonsocial" class="text-left">
+                  Razon Social
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-id_tipo let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="id_tipo" [pSelectableRowIndex]="rowIndex" #para tabindex="-1">
+                <td class="text-center">
+                  {{ id_tipo.codigo }}
+                </td>
+                <td class="text-left">
+                  {{ id_tipo.razonsocial }}
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

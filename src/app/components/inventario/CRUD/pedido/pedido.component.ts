@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
-import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
@@ -19,7 +18,10 @@ import { LogService } from '@services/log-service.service';
 import { ItemDetalle } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { CatalogoPedidoComponent } from './catalogo-pedido/catalogo-pedido.component';
+import { CatalogoPedidoService } from './catalogo-pedido/servicio-catalogo-pedido/catalogo-pedido.service';
+import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 
 @Component({
   selector: 'app-pedido',
@@ -77,15 +79,11 @@ export class PedidoComponent implements OnInit {
   FormularioData: FormGroup;
   dataform: any = '';
   fecha_actual: any;
+  fecha_servidor: any;
   hora_actual: any;
   almacen_seleccionado: any;
 
   public saldoItem: number;
-  saldo_modal_total_1: any;
-  saldo_modal_total_2: any;
-  saldo_modal_total_3: any;
-  saldo_modal_total_4: any;
-  saldo_modal_total_5: any;
 
   userConn: any;
   usuarioLogueado: any;
@@ -94,9 +92,9 @@ export class PedidoComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef, private excelService: ExceltoexcelService,
-    private datePipe: DatePipe, private _formBuilder: FormBuilder, private saldoItemServices: SaldoItemMatrizService,
-    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService,
-    public nombre_ventana_service: NombreVentanaService, private router: Router) {
+    private datePipe: DatePipe, private _formBuilder: FormBuilder, private router: Router,
+    private messageService: MessageService, private spinner: NgxSpinnerService,
+    public nombre_ventana_service: NombreVentanaService, private servicioCatalogoPedido: CatalogoPedidoService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -133,8 +131,6 @@ export class PedidoComponent implements OnInit {
         ...element,
         codaduana: "0"
       }));
-
-      this.totabilizar();
     });
     //
 
@@ -155,8 +151,29 @@ export class PedidoComponent implements OnInit {
         ...element,
         codaduana: "0"
       }));
+    });
+    //
 
-      this.totabilizar();
+    // Catalogo Pedido
+    this.servicioCatalogoPedido.disparadorDeCatalogoDePedidos.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Pedido de Catalogo: ", data);
+      this.id = data.pedido.id;
+      this.numeroid = data.pedido.nroactual + 1;
+    });
+    //
+
+    //Servicio ExcelToExcel
+    this.excelService.disparadorDePedido.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      this.array_items_carrito_y_f4_catalogo = data.PedidoDetalle;
+    });
+    //
+
+    //Almacen
+    this.almacenservice.disparadorDeAlmacenes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Almacen: ", data, this.almacen_seleccionado);
+      if (this.almacen_seleccionado === "Destino") {
+        this.codalmdestidoText = data.almacen.codigo
+      }
     });
     //
   }
@@ -178,30 +195,146 @@ export class PedidoComponent implements OnInit {
       })
   }
 
-  validarGrabar() {
+  grabar() {
+    this.spinner.show();
+    //VALIDACIONES
+    if (this.id === undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'INGRESE ID DE TIPO' });
+      this.spinner.hide();
+      return;
+    }
 
-  }
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE' });
+      this.spinner.hide();
+      return;
+    }
 
-  limpiar() {
+    if (this.observaciones === undefined) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'FALTA OBSERVACIONES NO SEA GIL XDXD' });
+      this.spinner.hide();
+      return;
+    }
 
-  }
+    let carrito_modif = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      codpedido: 0,
+      coditem: element.coditem,
+      cantidad: element.cantidad,
+      udm: element.udm,
+      codproveedor: 0,
+      codigo: 0
+    }));
 
-  totabilizar() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/Totalizar/' + this.userConn + "/" + true, { tabladetalle: this.array_items_carrito_y_f4_catalogo })
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinpedido/grabarDocumento/";
+    return this.api.create('/inventario/transac/docinpedido/grabarDocumento/' + this.userConn + "/" + this.BD_storage, {
+      cabecera: {
+        codigo: 0,
+        id: this.id,
+        numeroid: this.numeroid + 1,
+        codalmacen: this.codalmorigenText,
+        codalmdestino: this.codalmdestidoText,
+        fecha: this.fecha_actual,
+        obs: this.observaciones,
+        horareg: this.hora_actual,
+        fechareg: this.fecha_servidor,
+        usuarioreg: this.usuarioLogueado,
+        anulado: false
+      },
+
+      tablaDetalle: carrito_modif
+    })
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          console.log("🚀 ~ NotamovimientoComponent ~ codigoAduanaItems ~ datav:", datav)
-          this.total = datav.total;
+        next: async (datav) => {
+          console.log("🚀 ~ PedidoComponent ~ .grabar ~ datav:", datav)
+          if (datav.valido) {
+            const resultConfirm = await this.openConfirmacionDialog(datav.resp + "Codigo Pedido: " + datav.codigoPedido);
+            if (resultConfirm) {
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! GRABADO EXITOSAMENTE !' })
+              this.spinner.hide();
+            }
+
+            const result = await this.openConfirmacionDialog("¿ DESEA DESCARGAR EL ZIP ?");
+            if (result) {
+              //ACA NO LLEGA LOS DESCT, SOLO LA RESP OCULTA
+              this.descargarZIP(datav.codigoPedido,);
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGANDO' });
+              this.spinner.hide();
+            }
+
+            setTimeout(() => {
+              this.spinner.hide();
+            }, 10);
+          }
+
+          if (!datav.valido) {
+            this.openConfirmacionDialog(datav.resp);
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA !' });
+          }
+          this.spinner.hide();
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          this.spinner.hide();
         },
-        complete: () => { }
+        complete: () => {
+          this.spinner.hide();
+        }
       })
   }
 
+  descargarZIP(codigo) {
+    this.api.descargarArchivo('/inventario/transac/docinpedido/exportPedido/' + this.userConn + "/" + codigo, { responseType: 'arraybuffer' })
+      .subscribe({
+        next: (datav: ArrayBuffer) => {
+          console.log(datav);
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'DESCARGA EN PROCESO' })
+
+          // Convertir ArrayBuffer a Blob
+          const blob = new Blob([datav], { type: 'application/zip' });
+          const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');  // Formato: YYYYMMDDTHHMMSS
+
+          // Crear el objeto URL para el Blob recibido
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = timestamp + "-" + this.id + "-" + this.numeroid + '.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        error: (err: any) => {
+          console.log(err);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 500);
+        },
+
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+            window.location.reload()
+          }, 500);
+        }
+      });
+  }
+
+  limpiar() {
+    this.id = "";
+    this.numeroid = "";
+    this.codalmdestidoText = "";
+    this.observaciones = "";
+
+    this.array_items_carrito_y_f4_catalogo = [];
+  }
+
+  //ALMACEN
   getAlmacen() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
     return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
@@ -223,9 +356,9 @@ export class PedidoComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           // console.log(datav);
-          this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
-          // this.hora_fecha_server = datav.horaServidor;
-          // console.log(this.fecha_actual, this.hora_fecha_server);
+          this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");
+          this.hora_actual = datav.horaServidor;
+          this.fecha_servidor = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");
         },
 
         error: (err: any) => {
@@ -252,6 +385,7 @@ export class PedidoComponent implements OnInit {
       event.target.value = entero;
     }
   }
+  //FIN ALMACEN
 
   //Importar to ZIP
   async onFileChangeZIP(event: any) {
@@ -263,10 +397,10 @@ export class PedidoComponent implements OnInit {
       const formData = new FormData();
       formData.append('file', file, file.name);
 
-      this.api.cargarArchivo('/inventario/transac/docinmovimiento/importNMinJson/', formData)
+      this.api.cargarArchivo('/inventario/transac/docinpedido/importPedidoinJson/', formData)
         .subscribe({
           next: (datav) => {
-            // console.log("Data ZIP:", datav);
+            console.log("Data ZIP:", datav);
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'ARCHIVO ZIP CARGADO EXITOSAMENTE ✅' })
             this.imprimir_zip_importado(datav);
 
@@ -308,140 +442,30 @@ export class PedidoComponent implements OnInit {
 
   imprimir_zip_importado(zip_json) {
     let documento: any;
-    const array_carrito: any = [];
     this.spinner.show();
+
     console.log(zip_json);
 
-    // this.id = zip_json.cabeceraList[0]?.id;
-    // this.numeroid = zip_json.cabeceraList[0]?.numeroid;
-    // this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
-    // this.factor = zip_json.cabeceraList[0]?.factor;
-    // //this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
-    // this.observaciones = zip_json.cabeceraList[0]?.obs;
-    // this.id_origen = zip_json.cabeceraList[0]?.fid;
-    // this.nroid_origen = zip_json.cabeceraList[0]?.fnumeroid;
-    // this.cod_cliente = zip_json.cabeceraList[0]?.codcliente;
-    // this.id_proforma_catalogo = zip_json.cabeceraList[0]?.idproforma;
-    // this.numero_id_catalogo_proforma = zip_json.cabeceraList[0]?.numeroidproforma
-    // this.id_proforma_sol_urgente = zip_json.cabeceraList[0]?.idproforma_sol;
-    // this.numero_id_proforma_sol_urgente = zip_json.cabeceraList[0]?.numeroidproforma_sol;
-    //this.anular = zip_json.cabeceraList[0]?.anulada;
-    //this.contabilizada = zip_json.cabeceraList[0]?.contabilizada;
+    this.id = zip_json.cabeceraList[0]?.id;
+    this.numeroid = zip_json.cabeceraList[0]?.numeroid;
+    this.observaciones = zip_json.cabeceraList[0]?.obs;
 
-    // documento = zip_json.cabeceraList[0]?.documento
-    // if (documento === "NOTA") {
-    //   this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
-    //   const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
-    //   console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
-    //   this.id_concepto_descripcion = encontrado_objeto.descripcion;
+    documento = zip_json.cabeceraList[0]?.documento
 
-    //   this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
-    //   this.id_concepto = zip_json.cabeceraList[0]?.codconcepto;
-    //   this.id_origen = zip_json.cabeceraList[0]?.id;
-    //   this.nroid_origen = zip_json.cabeceraList[0]?.numeroid;
+    if (documento === "PEDIDO") {
+      this.fecha_actual = this.datePipe.transform(zip_json.cabeceraList[0]?.fechareg, "yyyy-MM-dd");
+      this.codalmdestidoText = zip_json.cabeceraList[0]?.codalmdestino;
+      this.observaciones = zip_json.cabeceraList[0]?.obs;
 
-    //   this.codalmacen = zip_json.cabeceraList[0]?.codalmacen;
-    //   this.codalmorigenText = zip_json.cabeceraList[0]?.codalmorigen;
-    //   // this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
+      this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
+    }
 
-    //   this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
-    //     ...element,
-    //     codaduana: "0"
-    //   })));
-
-    //   this.observaciones = "NOTA: " + zip_json.cabeceraList[0]?.id + " " + zip_json.cabeceraList[0]?.numeroid + " DE: " + zip_json.cabeceraList[0]?.codalmacen + " " + zip_json.cabeceraList[0]?.obs;
-    //   if (this.observaciones.length > 60) {
-    //     this.observaciones = this.observaciones.slice(0, 59);
-    //   }
-    // }
-
-    // if (documento === "SOLURGENTE") {
-    //   this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
-    //   const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
-    //   console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
-    //   this.id_concepto_descripcion = encontrado_objeto.descripcion;
-
-    //   this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
-    //     ...element,
-    //     codaduana: "0"
-    //   })));
-
-    //   this.observaciones = zip_json.cabeceraList[0]?.obs;
-    //   if (this.observaciones.length > 60) {
-    //     this.observaciones = this.observaciones.slice(0, 59);
-    //   }
-    // }
-
-    // if (documento === "PEDIDO") {
-    //   this.codalmorigenText = zip_json.cabeceraList[0]?.codalmacen;
-    //   console.log("🚀 ~ NotamovimientoComponent ~ this.codalmorigenText:", this.codalmorigenText)
-    //   this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
-    //     ...element,
-    //     codaduana: "0"
-    //   })));
-    //   this.codalmdestinoText = zip_json.cabeceraList[0]?.codalmdestino;
-    //   this.observaciones = "PEDIDO: " + zip_json.cabeceraList[0]?.id + " " + zip_json.cabeceraList[0]?.numeroid + " DE: " + zip_json.cabeceraList[0]?.codalmacen + " " + zip_json.cabeceraList[0]?.obs;
-    //   if (this.observaciones.length > 60) {
-    //     this.observaciones = this.observaciones.slice(0, 59);
-    //   }
-    // }
-
-    // if (documento === "RECEPCION") {
-    //   this.validarPorConcepto(zip_json.cabeceraList[0]?.codconcepto === undefined ? "0" : zip_json.cabeceraList[0]?.codconcepto);
-    //   const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === zip_json.cabeceraList[0]?.codconcepto.toString());
-    //   console.log("🚀 ~ NotamovimientoComponent ~ encontrado_objeto:", encontrado_objeto)
-    //   this.id_concepto_descripcion = encontrado_objeto.descripcion;
-    //   this.getDescripcMedidaItem(zip_json.detalleList.map((element) => ({
-    //     ...element,
-    //     codaduana: "0"
-    //   })));
-
-    //   this.codvendedor = zip_json.cabeceraList[0]?.codvendedor;
-    //   this.observaciones = zip_json.cabeceraList[0]?.obs;
-    //   if (this.observaciones.length > 60) {
-    //     this.observaciones = this.observaciones.slice(0, 59)
-    //   }
-    // }
-
-    // if (this.array_items_carrito_y_f4_catalogo.length > 0) {
-    //   console.log("🚀 ~ ModificarNotaMovimientoComponent ~ this.array_items_carrito_y_f4_catalogo.length:", this.array_items_carrito_y_f4_catalogo.length)
-    //   this.getDescripcMedidaItem(zip_json.detalleList);
-    //   this.array_items_carrito_y_f4_catalogo = array_carrito.concat(
-    //     zip_json.detalleList.map((element) => ({
-    //       ...element,
-    //       cantidad_revisada: element.cantidad,
-    //       cantidad: 0,
-    //       nuevo: "si"
-    //     }))
-    //   );
-    // } else {
-    //   this.getDescripcMedidaItem(zip_json.detalleList);
-    //   this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
-    // }
+    this.array_items_carrito_y_f4_catalogo = zip_json.detalleList;
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 110);
   }
   //FIN Importar ZIP
-
-
-  onEditComplete(event: any) {
-    const updatedElement = event.data; // La fila editada
-    const updatedField = event.field; // El campo editado (en este caso, "empaque")
-    const newValue = event.newValue;  // El nuevo valor ingresado
-
-    console.log("🚀 ~ onEditComplete ~ Item a editar empaque:", this.item_obj_seleccionado)
-    console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, updatedElement, newValue);
-
-    if (updatedField === 'empaque') {
-      // this.empaqueChangeMatrix(this.item_obj_seleccionado, newValue);
-    }
-
-    if (updatedField === 'cantidad_pedida') {
-      // this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, newValue);
-    }
-
-    if (updatedField === 'cantidad') {
-      // this.cantidadChangeMatrix(this.item_obj_seleccionado, newValue)
-    }
-  }
 
   onRowSelect(event: any) {
     console.log('Row Selected:', event);
@@ -476,7 +500,6 @@ export class PedidoComponent implements OnInit {
     this.updateSelectedProducts();
   }
 
-
   updateSelectedProducts() {
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement) {
@@ -484,7 +507,6 @@ export class PedidoComponent implements OnInit {
       console.log(`Elemento enfocado: ${elementTagName}`);
     }
   }
-
 
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
@@ -502,8 +524,6 @@ export class PedidoComponent implements OnInit {
       element.orden = index + 1;
       element.nroitem = index + 1;
     });
-
-    this.totabilizar();
   }
 
   formatNumberTotalSubTOTALES(numberString: number): string {
@@ -544,44 +564,6 @@ export class PedidoComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   modalExcelToExcel() {
     //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
     // LA DATA XDXD
@@ -590,17 +572,17 @@ export class PedidoComponent implements OnInit {
       height: 'auto',
       disableClose: true,
       data: {
-        ventana_origen: 'nota_movimiento'
+        ventana_origen: 'pedido'
       }
     });
   }
 
   modalTipoID(): void {
-    // this.dialog.open(CatalogonotasmovimientosComponent, {
-    //   width: 'auto',
-    //   height: 'auto',
-    //   disableClose: true,
-    // });
+    this.dialog.open(CatalogoPedidoComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
   }
 
   modalAlmacen(almacen): void {
@@ -665,6 +647,18 @@ export class PedidoComponent implements OnInit {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
       nombre_vent: this.ventana,
     });
+  }
+
+  openConfirmacionDialog(message: string): Promise<boolean> {
+    //btn aceptar
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
   }
 
   alMenu() {

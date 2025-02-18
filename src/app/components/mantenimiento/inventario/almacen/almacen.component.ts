@@ -152,8 +152,6 @@ export class AlmacenComponent implements OnInit {
 
   submitDataEdit() {
     const data = this.FormularioData.value;
-    console.log(data);
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:- /inventario/mant/inalmacen/";
     return this.api.update("/inventario/mant/inalmacen/" + this.userConn + "/" + this.almacen_catalogo_id, data)
       .subscribe({
