@@ -471,6 +471,7 @@ import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/MO
 import { CatalogoPedidoComponent } from '@components/inventario/CRUD/pedido/catalogo-pedido/catalogo-pedido.component';
 import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-pedido/modificar-pedido.component';
 import { CatalogoProvedoresComponent } from '@components/mantenimiento/compras/proveedores/catalogo-provedores/catalogo-provedores.component';
+import { BuscadorAvanzadoPedidosComponent } from '@components/uso-general/buscador-avanzado-pedidos/buscador-avanzado-pedidos.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -564,6 +565,7 @@ registerPlugin(UndoRedo);
         FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
         CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
         ExceltoexcelComponent, VistaPreviaNmComponent, PedidoComponent, CatalogoPedidoComponent, ModificarPedidoComponent, CatalogoProvedoresComponent,
+        BuscadorAvanzadoPedidosComponent,
 
 
 

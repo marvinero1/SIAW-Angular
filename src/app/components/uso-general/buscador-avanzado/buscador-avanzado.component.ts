@@ -99,13 +99,13 @@ export class BuscadorAvanzadoComponent implements OnInit {
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService,
     private dialog: MatDialog, private serviciotipoid: TipoidService, private servicioCliente: ServicioclienteService,
     private messageService: MessageService, public servicioCatalogoNotasRemision: CatalogoNotasRemisionService,
-    @Inject(MAT_DIALOG_DATA) public ventana: any){
+    @Inject(MAT_DIALOG_DATA) public ventana: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-   
+
     this.nombre_ventana = ventana.ventana;
   }
 
@@ -118,7 +118,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
     //ID TIPO
     this.serviciotipoid.disparadorDeIDTipo.subscribe(data => {
       console.log("Recibiendo ID Tipo: ", data);
-      
+
       if (this.id_tipo_view_get_codigo1 === undefined) {
         this.id_tipo_view_get_codigo1 = data.id_tipo.id;
         this.id_tipo_view_get_codigo2 = data.id_tipo.id;
@@ -525,16 +525,21 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.api.create(url, data).subscribe({
       next: (datav) => {
         console.log(datav);
-        this.buscadorObj = datav
-        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
+        this.buscadorObj = datav;
+        if (this.buscadorObj.length === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY DATA' });
+        } else {
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
+        }
+
         setTimeout(() => {
           this.spinner.hide();
-        }, 100);
+        }, 1000);
       },
       error: (err) => {
         console.log(err, errorMessage);
         this.toastr.error('! OCURRIO UN PROBLEMA AL GRABAR !');
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL TRAER LA DATA !'});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL TRAER LA DATA !' });
         //this.detalleProformaCarritoTOExcel();
         setTimeout(() => {
           this.spinner.hide();

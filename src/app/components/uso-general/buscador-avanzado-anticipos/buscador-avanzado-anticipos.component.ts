@@ -11,6 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
+import { MessageService } from 'primeng/api';
 interface buscadorGeneral {
   id: any,
   numeroid: any,
@@ -31,7 +32,7 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
   buscadorObj!: buscadorGeneral[];
   selectebuscadorObj: buscadorGeneral[];
 
-  id_anticipo:any;
+  id_anticipo: any;
 
   public almacn_parame_usuario_almacen1: any;
   public almacn_parame_usuario_almacen2: any;
@@ -46,8 +47,8 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
   fecha_bool: boolean = false;
   almacen_bool: boolean = false;
 
-  id_buscador:any;
-  num_id_buscador:any;
+  id_buscador: any;
+  num_id_buscador: any;
 
   todas: boolean = true;
   todas_id: boolean = false;
@@ -56,24 +57,23 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
 
   userConn: any;
   BD_storage: any;
-
   usuarioLogueado: any;
   agencia_logueado: any;
   codigo_documento: any;
 
-  monto_rest_anticipo:number;
-  
+  monto_rest_anticipo: number;
+
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private api: ApiService, private datePipe: DatePipe, private dialog: MatDialog,
+  constructor(private api: ApiService, private datePipe: DatePipe, private dialog: MatDialog, private messageService: MessageService,
     public dialogRef: MatDialogRef<BuscadorAvanzadoAnticiposComponent>, private toastr: ToastrService,
-    private almacenservice: ServicioalmacenService, private spinner: NgxSpinnerService,public servicioBuscadorAvanzado: BuscadorAvanzadoService,
-    private _snackBar: MatSnackBar, public servicioAnticipos: AnticiposService){
+    private almacenservice: ServicioalmacenService, private spinner: NgxSpinnerService, public servicioBuscadorAvanzado: BuscadorAvanzadoService,
+    private _snackBar: MatSnackBar, public servicioAnticipos: AnticiposService) {
 
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-      this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-      this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
   }
 
   ngOnInit() {
@@ -90,7 +90,7 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
     this.almacenservice.disparadorDeAlmacenesBuscadorAvanzadoAnticipos.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
       this.almacn_parame_usuario_almacen1 = data.almacen.codigo;
-      this.almacn_parame_usuario_almacen2 =  this.almacn_parame_usuario_almacen1;
+      this.almacn_parame_usuario_almacen2 = this.almacn_parame_usuario_almacen1;
     });
     //
   }
@@ -114,65 +114,70 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
       })
   }
 
-  buscadorAnticipos(){
-      console.log("FECHAS: ", this.fecha_desde, this.fecha_hasta);
-  
-      let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
-      let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
-  
-      if (this.almacn_parame_usuario_almacen1 === undefined) {
-        this.almacn_parame_usuario_almacen1 = 0
-      }
-  
-      if (this.almacn_parame_usuario_almacen2 === undefined) {
-        this.almacn_parame_usuario_almacen2 = 0
-      }
-  
-      if (this.fecha_desde === undefined && this.fecha_hasta === undefined) {
-        fecha_desde = "1900-01-01";
-        fecha_hasta = "1900-01-01";
-      }
-  
-      let data = {
-        itodos1: this.id_bool,
-        id1: this.id_anticipo,
-        id2: this.id_anticipo,
-  
-        ftodos1: this.fecha_bool,
-        fechade: fecha_desde,
-        fechaa: fecha_hasta,
-  
-        atodos1: this.almacen_bool,
-        codalmacen1: Number(this.almacn_parame_usuario_almacen1) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen1),
-        codalmacen2: Number(this.almacn_parame_usuario_almacen2) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen2),
-      };
-  
-      const url = `/venta/busq/prgbusqanticipo/getAnticiposByParam/${this.userConn}`;
-      const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
-  
-      this.api.create(url, data).subscribe({
-        next: (datav) => {
-          console.log(datav);
-          this.buscadorObj = datav
-  
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.toastr.error('! OCURRIO UN PROBLEMA AL GRABAR !');
-          //this.detalleProformaCarritoTOExcel();
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
+  buscadorAnticipos() {
+    console.log("FECHAS: ", this.fecha_desde, this.fecha_hasta);
+
+    let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
+    let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
+
+    if (this.almacn_parame_usuario_almacen1 === undefined) {
+      this.almacn_parame_usuario_almacen1 = 0
+    }
+
+    if (this.almacn_parame_usuario_almacen2 === undefined) {
+      this.almacn_parame_usuario_almacen2 = 0
+    }
+
+    if (this.fecha_desde === undefined && this.fecha_hasta === undefined) {
+      fecha_desde = "1900-01-01";
+      fecha_hasta = "1900-01-01";
+    }
+
+    let data = {
+      itodos1: this.id_bool,
+      id1: this.id_anticipo,
+      id2: this.id_anticipo,
+
+      ftodos1: this.fecha_bool,
+      fechade: fecha_desde,
+      fechaa: fecha_hasta,
+
+      atodos1: this.almacen_bool,
+      codalmacen1: Number(this.almacn_parame_usuario_almacen1) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen1),
+      codalmacen2: Number(this.almacn_parame_usuario_almacen2) === undefined ? 0 : Number(this.almacn_parame_usuario_almacen2),
+    };
+
+    const url = `/venta/busq/prgbusqanticipo/getAnticiposByParam/${this.userConn}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
+
+    this.api.create(url, data).subscribe({
+      next: (datav) => {
+        console.log(datav);
+        this.buscadorObj = datav;
+        if (this.buscadorObj.length === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY DATA' });
+        } else {
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
         }
-      });
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.toastr.error('! OCURRIO UN PROBLEMA AL GRABAR !');
+        //this.detalleProformaCarritoTOExcel();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1000);
+      }
+    });
   }
 
   getProformaById(element) {
@@ -182,7 +187,7 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
     this.monto_rest_anticipo = element.data.montorest;
   }
 
-  mandarAFacturacionMostradorAnticipoElegido(){
+  mandarAFacturacionMostradorAnticipoElegido() {
     this.spinner.show();
 
     this.servicioBuscadorAvanzado.disparadorDeAnticipoSeleccionado.emit({
@@ -199,7 +204,7 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
     this.close();
   }
 
-  habilitarTodoID(){
+  habilitarTodoID() {
     if (!this.todas_id) {
       this.todas_id = true;
     } else {
@@ -207,7 +212,7 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
     }
   }
 
-  habilitarID(){
+  habilitarID() {
     if (this.todas) {
       this.todas_id = false;
     } else {
@@ -246,6 +251,23 @@ export class BuscadorAvanzadoAnticiposComponent implements OnInit {
       this.fecha_bool = false;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

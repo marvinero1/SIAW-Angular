@@ -1,0 +1,53 @@
+::ng-deep {
+    .mat-mdc-dialog-container .mdc-dialog__surface{
+        background-color: #f9f9f9 !important;
+    }
+    .mat-mdc-tab-header{
+        border: 1px #fbd800 solid;
+    }
+    .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper{
+        width: 192px !important;
+    }
+
+    .tablita {
+        .p-datatable-thead > tr > th {
+        padding: 0rem 0rem !important;
+        position: sticky;
+        top: 0;
+        background-color: #093070;
+        min-height: 25px !important;
+        color: white;
+        }
+
+        .p-icon{
+        color: black !important;
+        }
+    }
+    .mdc-text-field__input{
+        padding-top: 6px;
+    }
+
+    .tablita .p-datatable-tbody > tr.p-highlight{
+        color: white !important;
+        background-color: #093070 !important;
+    }
+}
+
+.mat-mdc-form-field-input-control.mat-mdc-form-field-input-control{
+padding-top: 8px !important;
+}
+
+.input-group-text{
+background: none;
+}
+
+span{
+border: none;
+}
+
+.p-inputtext{
+// padding: 0rem 0rem !important;
+color: black;
+height: calc(2.8rem + 0px) !important;
+padding: 0.50rem 0.50rem 0.50rem 0.50rem !important;
+}

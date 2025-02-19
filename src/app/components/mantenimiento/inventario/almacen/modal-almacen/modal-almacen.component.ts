@@ -24,7 +24,7 @@ export class ModalAlmacenComponent implements OnInit {
   public agencia_view: any = [];
   private debounceTimer: any;
 
-  public nombre_ventana_origen:string;
+  public nombre_ventana_origen: string;
 
   agencia_get: any = [];
   origen_get: string;
@@ -88,8 +88,12 @@ export class ModalAlmacenComponent implements OnInit {
       this.servicioAlmacen.disparadorDeAlmacenes.emit({
         almacen: this.agencia_view,
       });
-    }if(this.nombre_ventana_origen === "ventana_buscador_general_anticipos"){
+    } if (this.nombre_ventana_origen === "ventana_buscador_general_anticipos") {
       this.servicioAlmacen.disparadorDeAlmacenesBuscadorAvanzadoAnticipos.emit({
+        almacen: this.agencia_view,
+      });
+    } if (this.nombre_ventana_origen === "ventana_buscador_general_pedidos") {
+      this.servicioAlmacen.disparadorDeAlmacenesBuscadorAvanzadoPedidos.emit({
         almacen: this.agencia_view,
       });
     }

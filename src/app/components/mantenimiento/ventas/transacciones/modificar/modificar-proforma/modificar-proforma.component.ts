@@ -2329,7 +2329,44 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   copiarValorCantidadPedidaACantidad(product: any, newValue: number) {
-    return product.cantidad = product.cantidad_pedida;
+    product.cantidad = Number(product.cantidad_pedida);
+
+    console.log("🚀 ~ copiarValorCantidadPedidaACantidad ~ elemento:", product, newValue)
+    this.total = 0.00;
+    this.subtotal = 0.00;
+    this.iva = 0.00;
+    this.des_extra = 0.00;
+    this.recargos = 0.00;
+
+    let fecha = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getItemMatriz_Anadir/";
+
+    this.total_desct_precio = false;
+    this.total_X_PU = true;
+
+    this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
+      + this.usuarioLogueado + "/" + product.coditem + "/" + product.codtarifa + "/" + product.coddescuento + "/" + newValue +
+      "/" + product.cantidad_pedida + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          //this.almacenes_saldos = datav;
+          console.log("Total al cambio de DE en el detalle: ", datav);
+          // Actualizar la coddescuento en el elemento correspondiente en tu array de datos
+          product.coddescuento = Number(datav.coddescuento);
+          product.preciolista = Number(datav.preciolista);
+          product.preciodesc = Number(datav.preciodesc);
+          product.precioneto = Number(datav.precioneto);
+          product.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+          product.total = Number(datav.total);
+
+          product.cantidad = Number(product.cantidad_pedida);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      });
   }
 
   empaqueChangeMatrix(product: any, newValue: number) {
@@ -2355,6 +2392,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             product.empaque = nuevoEmpaque
             product.cantidad = Number(datav.total);
             product.cantidad_pedida = Number(datav.total);
+            product.coddescuento = Number(datav.coddescuento);
+            product.preciolista = Number(datav.preciolista);
+            product.preciodesc = Number(datav.preciodesc);
+            product.precioneto = Number(datav.precioneto);
+            product.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+            product.total = Number(datav.total);
           },
           error: (err) => {
             console.error("Error al consultar la API:", err);
@@ -3059,6 +3102,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   // MODAL DE CONFIRMACION, PARA Q NO APAREZCAN TODOS DE GOLPE SI NO UNO POR UNO
   openConfirmationDialog(message: string): Promise<boolean> {
+    //btn si/no
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
       width: '450px',
       height: 'auto',
@@ -3070,6 +3114,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   openConfirmationOKDialog(message: string): Promise<boolean> {
+    //btn ok
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
       width: '450px',
       height: 'auto',
@@ -3326,6 +3371,62 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   // grabarYAprobar
+  validarAntesDeGrabarAprobar() {
+    console.log(this.contra_entrega);
+
+    let dataValidar = {
+      id: this.cod_id_tipo_modal_id,
+      numeroid: this.id_proforma_numero_id,
+      tipopago: this.tipopago === 0 ? "CONTADO" : "CREDITO",
+      contra_entrega: this.contra_entrega,
+      codmoneda: this.moneda_get_catalogo,
+      fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+      total: this.total,
+      cantidad_anticipos: this.tabla_anticipos.length,
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/anularProforma/";
+    return this.api.create(`/venta/transac/veproforma/ValidarParaAprobarMayor50000/${this.userConn}/${this.BD_storage}/${this.usuarioLogueado}`, dataValidar)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: async (datav) => {
+          console.log(datav);
+          if (datav.pedir_clave) {
+            const result = await this.openConfirmationOKDialog(datav.respuesta);
+            if (result) {
+              const blnModalClave = await this.modalClaveDatoADatoB(datav.datoA, datav.datoB, "", datav.cod_servicio);
+              if (blnModalClave) {
+                // se guarda
+                this.submitDataModificarProformaAprobar();
+              } else {
+                // no se guarda
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'CONTRASEÑA ERRONEA NO SE GRABO Y APROBO' });
+              }
+            }
+          } else {
+            this.submitDataModificarProformaAprobar();
+          }
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        complete: () => {
+          // window.location.reload();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+
+  }
   async submitDataModificarProformaAprobar() {
     this.totabilizar();
 
@@ -3617,6 +3718,34 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   totabilizar() {
     let total_proforma_concat: any = [];
 
@@ -3665,8 +3794,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       console.log("DATOS VALIDADOS");
       this.spinner.show();
       let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/totabilizarProf/";
-      return this.api.create("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" +
-        this.habilitar_desct_sgn_solicitud + "/" + this.tipo_complementopf_input + "/" + this.desct_nivel_actual + "/" + this.codigo_cliente_catalogo_real, total_proforma_concat)
+      return this.api.create(`/venta/transac/veproforma/totabilizarProf/${this.userConn}/${this.usuarioLogueado}/${this.BD_storage}/
+        ${this.habilitar_desct_sgn_solicitud}/${this.tipo_complementopf_input}/${this.desct_nivel_actual}/${this.codigo_cliente_catalogo_real}`, total_proforma_concat)
         .subscribe({
           next: (datav) => {
             this.totabilizar_post = datav;
@@ -6847,7 +6976,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
 
 
+  modalClaveDatoADatoB(dataA, dataB, permiso, codpermiso) {
+    const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
+      width: '450px',
+      height: 'auto',
+      data: {
+        dataA: dataA,
+        dataB: dataB,
+        dataPermiso: permiso,
+        dataCodigoPermiso: codpermiso,
+      },
+    });
 
+    return firstValueFrom(dialogRef.afterClosed());
+  }
 
 
 

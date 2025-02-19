@@ -119,7 +119,7 @@ export class AnticiposProformaComponent implements OnInit {
     this.nit_get = nit.nit;
     this.vendedor_get = vendedor.vendedor;
     this.cod_cliente_real_get = cod_cliente_real.cod_cliente_real;
-    this.total_get = this.formatNumberTotalSubTOTALES(total.total);
+    this.total_get = total?.total;
     this.tdc_get = tdc.tdc;
     this.array_tabla_anticipos_get = array_tabla_anticipos.array_tabla_anticipos;
     this.ventana_nom = nombre_ventana.nombre_ventana;
@@ -567,7 +567,7 @@ export class AnticiposProformaComponent implements OnInit {
   mandarProforma() {
     this.anticipo_servicio.disparadorDeTablaDeAnticipos.emit({
       anticipos: this.array_tabla_anticipos_get,
-      totalAnticipo: this.formatNumberTotalSubTOTALES(this.total_anticipos),
+      totalAnticipo: this.total_anticipos,
     });
 
     this.dialogRef.close();

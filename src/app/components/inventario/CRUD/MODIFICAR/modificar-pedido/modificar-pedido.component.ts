@@ -8,7 +8,10 @@ import { ServicioalmacenService } from '@components/mantenimiento/inventario/alm
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
+import { BuscadorAvanzadoPedidosComponent } from '@components/uso-general/buscador-avanzado-pedidos/buscador-avanzado-pedidos.component';
+import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
+import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
 import { ApiService } from '@services/api.service';
 import { ItemDetalle } from '@services/modelos/objetos';
@@ -93,7 +96,7 @@ export class ModificarPedidoComponent implements OnInit {
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef, private datePipe: DatePipe,
     public nombre_ventana_service: NombreVentanaService, private spinner: NgxSpinnerService, private messageService: MessageService,
-    private servicioProvedores: ProvedoresService) {
+    private servicioProvedores: ProvedoresService, public servicioBuscadorAvanzado: BuscadorAvanzadoService,) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -184,6 +187,15 @@ export class ModificarPedidoComponent implements OnInit {
       this.razonsocial_proveedor = data.proveedor.razonsocial
     });
     //
+
+    //Buscador Avanzado Servicio
+    this.servicioBuscadorAvanzado.disparadorDePedidoSeleccionado.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Pedido De Buscador Avanzado: ", data);
+      this.id_ntpedido_buscador = data.buscador_id;
+      this.num_ntpedido_buscador = data.buscador_num_id;
+      this.transferirPedidoIdNumID();
+    });
+    //
   }
 
   getIdPedido() {
@@ -192,7 +204,6 @@ export class ModificarPedidoComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.array_pedido_ids = datav;
-          // console.log('getIdPedido data', datav);
         },
 
         error: (err: any) => {
@@ -212,8 +223,6 @@ export class ModificarPedidoComponent implements OnInit {
         this.numeroid = datav.numeroid;
         this.codigo_pedido = datav.codigo
         this.getDataCodigoPedido(datav.id, datav.numeroid, datav.codigo);
-
-
       },
 
       error: (err: any) => {
@@ -237,7 +246,7 @@ export class ModificarPedidoComponent implements OnInit {
         this.codalmorigenText = datav.cabecera.codalmacen;
         this.codalmdestidoText = datav.cabecera.codalmdestino;
         this.fecha_ULPedido = this.datePipe.transform(datav.cabecera.fechareg, "yyyy-MM-dd");
-
+        this.observaciones = datav.cabecera.obs
 
         this.grabarReadOnly = datav.grabarReadOnly;
         this.array_items_carrito_y_f4_catalogo = datav.detalle;
@@ -550,7 +559,6 @@ export class ModificarPedidoComponent implements OnInit {
     }
   }
 
-
   async habilitarPedido() {
     const result = await this.openConfirmationDialog(`¿ DESEA HABILITAR ESTE PEDIDO ?`);
     if (!result) {
@@ -584,37 +592,69 @@ export class ModificarPedidoComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   grabar() {
+    let array_doc = {
+      cabecera: {
+        codigo: this.codigo_pedido,
+        id: this.id,
+        numeroid: this.numeroid,
+        codalmacen: this.codalmorigenText,
+        codalmdestino: this.codalmdestidoText,
+        fecha: this.fecha_actual,
+        obs: this.observaciones,
+        horareg: this.hora_actual,
+        fechareg: this.fecha_ULPedido,
+        usuarioreg: this.usuarioLogueado,
+        anulado: this.anulado
+      },
+      tablaDetalle: this.array_items_carrito_y_f4_catalogo
+    }
 
+    this.spinner.show();
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET /inventario/modif/docmodifinpedido/grabarDocumento/"
+    return this.api.create(`/inventario/modif/docmodifinpedido/grabarDocumento/${this.userConn}/${this.BD_storage}`, array_doc)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: async (datav) => {
+          console.log("🚀 ~ ModificarPedidoComponent ~ .pipe ~ grabar:", datav);
+          if (datav.valido) {
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
+            const result = await this.openConfirmationOKDialog(datav.resp);
+            if (result) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.resp });
+          }
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 10);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 10);
+        }
+      })
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -642,11 +682,11 @@ export class ModificarPedidoComponent implements OnInit {
   }
 
   modalBuscadorAvanzado() {
-    // this.dialog.open(NotaMovimientoBuscadorAvanzadoComponent, {
-    //   width: '1133px',
-    //   height: '560px',
-    //   disableClose: true,
-    // });
+    this.dialog.open(BuscadorAvanzadoPedidosComponent, {
+      width: '900px',
+      height: 'auto',
+      disableClose: true,
+    });
   }
 
   modalMatrizClasica(): void {
@@ -715,6 +755,17 @@ export class ModificarPedidoComponent implements OnInit {
     return firstValueFrom(dialogRef.afterClosed());
   }
 
+  openConfirmationOKDialog(message: string): Promise<boolean> {
+    //btn ok
+    const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
+      width: '450px',
+      height: 'auto',
+      data: { mensaje_dialog: message },
+      disableClose: true,
+    });
+
+    return firstValueFrom(dialogRef.afterClosed());
+  }
 
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({

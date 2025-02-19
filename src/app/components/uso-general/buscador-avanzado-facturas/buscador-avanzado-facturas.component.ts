@@ -34,13 +34,15 @@ interface buscadorGeneral {
 })
 
 export class BuscadorAvanzadoFacturasComponent implements OnInit {
-  
+
   @HostListener("dblclick", []) unloadHandler(event: KeyboardEvent) {
-    this.mandarAModificarFactura();
+    // this.mandarAModificarFactura();
   };
 
+
+
   private unsubscribe$ = new Subject<void>();
-  
+
   todas_id: boolean = false;
   todas_fecha: boolean = false;
   todas_almacen: boolean = false;
@@ -68,7 +70,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
   public almacn_parame_usuario_almacen1: any;
   public almacn_parame_usuario_almacen2: any;
-  
+
   public fecha_hasta: any;
   public fecha_desde: any;
 
@@ -82,19 +84,19 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
   public codigo_cliente2: string;
 
   public numero_dosificacion: any;
-  public nit:any;
+  public nit: any;
 
   public nombre_cliente: any;
 
   //GETS
-  public clientes: any=[];
-  public almacen_get: any=[];
-  public vendedor_get: any=[];
-  public id_tipo_view_get_array: any=[];
+  public clientes: any = [];
+  public almacen_get: any = [];
+  public vendedor_get: any = [];
+  public id_tipo_view_get_array: any = [];
 
-  id_buscador:any;
-  num_id_buscador:any;
-  codigo_documento:any;
+  id_buscador: any;
+  num_id_buscador: any;
+  codigo_documento: any;
 
   userConn: any;
   usuarioLogueado: any;
@@ -106,9 +108,9 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
     private dialog: MatDialog, private serviciotipoid: TipoidService, private servicioCliente: ServicioclienteService,
     @Inject(MAT_DIALOG_DATA) public ventana: any) {
 
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    }
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+  }
 
   ngOnInit() {
     this.getIdTipo();
@@ -160,7 +162,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
     //
   }
 
-  buscadorFacturas(){
+  buscadorFacturas() {
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
@@ -216,13 +218,15 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
         console.log(datav);
         this.buscadorObj = datav
 
-        if(datav.length === 0){
-          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY INFORMACION' });
+        if (this.buscadorObj.length === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY DATA' });
+        } else {
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
         }
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       error: (err) => {
         console.log(err, errorMessage);
@@ -233,30 +237,11 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
         }, 1000);
       },
       complete: () => {
-
         setTimeout(() => {
           this.spinner.hide();
         }, 1000);
       }
     });
-  }
- 
-  habilitarTodo() {
-    this.todas = true;
-
-    this.id_bool = false;
-    this.fecha_bool = false;
-    this.almacen_bool = false;
-    this.vendedor_bool = false;
-    this.cliente_bool = false;
-  }
-
-  habilitarTodoID() {
-    if (this.todas_id) {
-      this.id_bool = false;
-    } else {
-      this.id_bool = true;
-    }
   }
 
   habilitarID() {
@@ -269,63 +254,31 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
   habilitarFecha() {
     if (this.todas_fecha) {
-      this.todas_fecha = false;
-    } else {
-      this.fecha_bool = true;
-    }
-  }
-
-  habilitarFechaTodo() {
-    if (!this.todas_fecha) {
-      this.todas_fecha = false;
+      this.todas_fecha = true;
     } else {
       this.fecha_bool = false;
     }
   }
 
   habilitarAlmacen() {
-    if (this.todas_almacen) {
-      this.almacen_bool = false;
-    } else {
+    if (this.almacen_bool) {
       this.almacen_bool = true;
-    }
-  }
-
-  habilitarAlmacenTodo() {
-    if (!this.todas_almacen) {
-      this.todas_almacen = false;
     } else {
       this.almacen_bool = false;
     }
   }
 
   habilitarVendedor() {
-    if (this.todas_vendedor) {
-      this.todas_vendedor = false;
-    } else {
+    if (this.vendedor_bool) {
       this.vendedor_bool = true;
-    }
-  }
-
-  habilitarVendedorTodo() {
-    if (!this.todas_vendedor) {
-      this.todas_vendedor = false;
     } else {
       this.vendedor_bool = false;
     }
   }
 
   habilitarCliente() {
-    if (this.todas_cliente) {
-      this.todas_cliente = false;
-    } else {
+    if (this.cliente_bool) {
       this.cliente_bool = true;
-    }
-  }
-
-  habilitarClienteTodo() {
-    if (this.todas_cliente) {
-      this.todas_cliente = false;
     } else {
       this.cliente_bool = false;
     }
@@ -360,7 +313,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
     this.num_id_buscador = element.data.numeroid;
     this.codigo_documento = element.data.codigo;
 
-    console.log(element,  this.id_buscador, this.num_id_buscador, this.codigo_documento);
+    console.log(element, this.id_buscador, this.num_id_buscador, this.codigo_documento);
   }
 
   mandarAModificarFactura() {
@@ -379,8 +332,6 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
     this.close();
   }
-
-  
 
   //GETS
   getClienteCatalogo() {

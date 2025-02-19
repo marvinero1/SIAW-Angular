@@ -17,9 +17,10 @@
       <div>
         <ng-container>
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="buscadorFacturas();">
-            <i class="fa fa-search"></i> Buscar Facturas
+            <i class="fa fa-search" style="color: #3a7ce7;"></i> Buscar Facturas
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="mandarAModificarFactura();">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="mandarAModificarFactura();"
+            style="float: right;color: #27760a;">
             <i class="fa fa-check" aria-hidden="true"></i> OK Factura
           </button>
         </ng-container>
@@ -27,30 +28,24 @@
 
       <table style="width: 100%;">
         <tr>
-          <td width="12%">
-            <span>ID:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();"
-            style="margin-left: 38px;">
-              Todas
+          <td>
+            <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();"
+              labelPosition="before">
+              ID:
             </mat-slide-toggle>
           </td>
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();">
-              Desde:
-            </mat-slide-toggle>
-          </td>
-          <td width="70%">
+          <td>
             <div class="input-group">
               <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
-               (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool" style="margin-left: 14px;">
+                (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool" style="margin-left: 14px;">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo2"
-               (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool">
+                (blur)="onLeaveIDTipo($event)" [disabled]="!id_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDProformas();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
@@ -60,16 +55,10 @@
         </tr>
 
         <tr>
-          <td width="18%">
-            <span>Almacén:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();"
-            style="margin-left: 5px;">
-              Todas
-            </mat-slide-toggle>
-          </td>
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="almacen_bool" (click)="habilitarAlmacen();">
-              Desde:
+          <td width="8%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="almacen_bool" (click)="habilitarAlmacen();"
+              labelPosition="before">
+              Almacén:
             </mat-slide-toggle>
           </td>
           <td width="70%">
@@ -93,29 +82,24 @@
         </tr>
 
         <tr>
-          <td width="18%">
-            <span>Vendedor:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_vendedor" (click)="habilitarTodo();">
-              Todas
-            </mat-slide-toggle>
-          </td>
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="vendedor_bool" (click)="habilitarVendedor();">
-              Desde:
+          <td width="8%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="vendedor_bool" (click)="habilitarVendedor();"
+              labelPosition="before">
+              Vendedor:
             </mat-slide-toggle>
           </td>
           <td width="70%">
             <div class="input-group">
               <span class="input-group-text"><u>Vendedor:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente1"
-               (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
+                (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
                 [disabled]="!vendedor_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="cod_vendedor_cliente2"
-               (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
+                (blur)="onLeaveVendedor($event)" [disabled]="!vendedor_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalVendedor();"
                 [disabled]="!vendedor_bool">
                 <i class="fa fa-search"></i>
@@ -125,16 +109,10 @@
         </tr>
 
         <tr>
-          <td width="18%">
-            <span>Cliente:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_cliente" (click)="habilitarTodo();"
-            style="margin-left: 14px;">
-              Todas
-            </mat-slide-toggle>
-          </td>
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="cliente_bool" (click)="habilitarCliente();">
-              Desde:
+          <td width="8%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="cliente_bool" (click)="habilitarCliente();"
+              labelPosition="before">
+              Cliente:
             </mat-slide-toggle>
           </td>
           <td width="70%">
@@ -159,18 +137,14 @@
 
         <tr>
           <td width="32%">
-            <span>Factura:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="numero_dosificacion_bool" (click)="habilitarDosificacion();"
-            style="margin-left: 9px;">
-              
+            <mat-slide-toggle class="example-margin" [(ngModel)]="numero_dosificacion_bool"
+              (click)="habilitarDosificacion();" style="margin-left: 9px;" labelPosition="before">
+              Factura:
             </mat-slide-toggle>
           </td>
-          <td width="1%">
-            <label>Número Dosificación:</label>
-          </td>
-          <td width="60%">
+          <td>
             <div class="input-group">
-
+              <label>Número Dosificación:</label>
               <input type="number" class="form-control form-control-sm" [(ngModel)]="numero_dosificacion"
                 [disabled]="!numero_dosificacion_bool" style="margin-left: 12px;">
             </div>
@@ -180,15 +154,13 @@
         <tr>
           <td width="18%">
             <span>Nombre:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="nombre_cliente_bool" (click)="habilitarNombreCliente();"
-              style="margin-left: 6px;">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="nombre_cliente_bool"
+              (click)="habilitarNombreCliente();" style="margin-left: 6px;" labelPosition="before">
             </mat-slide-toggle>
           </td>
-          <td width="8%">
-            <label>Nombre Cliente:</label>
-          </td>
-          <td width="70%">
+          <td>
             <div class="input-group">
+              <label>Nombre Cliente:</label>
               <input type="text" class="form-control form-control-sm" [(ngModel)]="nombre_cliente"
                 [disabled]="!nombre_cliente_bool" style="margin-left: 12px;">
             </div>
@@ -196,35 +168,28 @@
         </tr>
 
         <tr>
-          <td width="18%">
+          <td>
             <span>N.I.T:</span>
             <mat-slide-toggle class="example-margin" [(ngModel)]="nit_bool" (click)="habilitarNIT();"
               style="margin-left: 23px;"> </mat-slide-toggle>
           </td>
-          <td width="8%">
-            <label>N.I.T:</label>
-          </td>
-          <td width="70%">
+          <td>
             <div class="input-group">
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="nit"
-                [disabled]="!nit_bool" style="margin-left: 12px;">
+              <label>N.I.T:</label>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="nit" [disabled]="!nit_bool"
+                style="margin-left: 12px;">
             </div>
           </td>
         </tr>
 
         <tr>
-          <td width="18%">
-            <span>Fecha:</span>
-            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();"
-              style="margin-left: 13px;">  Todas
+          <td width="8%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();"
+              labelPosition="before">
+              Fecha:
             </mat-slide-toggle>
           </td>
-          <td width="12%">
-            <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();">
-              Desde:
-            </mat-slide-toggle>
-          </td>
-          <td width="70%">
+          <td>
             <div class="input-group">
               <mat-form-field>
                 <mat-label>Fecha Desde:</mat-label>
@@ -257,7 +222,6 @@
                 [(selectedRow)]="selectebuscadorObj" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]"
                 [(selection)]="selectebuscadorObj" (onRowSelect)="getProformaById($event)" styleClass="p-datatable-striped
                 tablita" [globalFilterFields]="['codigo', 'descripcion']">
-
                 <ng-template pTemplate="header">
                   <tr style="background-color: #093070 !important;">
                     <th pSortableColumn="id" class="text-center" style="width:8%;">

@@ -1,216 +1,217 @@
 <section style="background-color: #f9f9f9;">
-    <div class="container-fluid">
-      <ng-container>
-        <mat-card-header class="mb-1">
-          <div class="col-md-9">
-            <mat-card-title style="font-size: 0.75rem;"><strong>Busqueda Avanzada Notas de Movimiento</strong></mat-card-title>
-          </div>
-          <div class="col-md-3 float-right">
-            <div class="text-right">
-              <mat-icon color="primary" (click)="close();">close</mat-icon>
-            </div>
-          </div>
-        </mat-card-header>
-      </ng-container>
-
-      <p-toast></p-toast>
-  
-      <div class="p-1">
-        <div>
-          <ng-container>
-            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="buscadorNotasMovimiento();">
-              <i class="fa fa-search " aria-hidden="true"></i> Buscar
-            </button>
-            
-            <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="mandarAModificarNM();">
-              <i class="fa fa-check" aria-hidden="true"></i> OK Nota de Movimiento
-            </button>
-          </ng-container>
+  <div class="container-fluid">
+    <ng-container>
+      <mat-card-header class="mb-1">
+        <div class="col-md-9">
+          <mat-card-title style="font-size: 0.75rem;"><strong>Busqueda Avanzada Notas de Movimiento</strong>
+          </mat-card-title>
         </div>
-  
-        <table style="width: 100%;">
-          <tr>
-            <td width="18%">
-              <span>ID:</span>
-              <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();"
-                style="margin-left: 38px;"> Todas
-              </mat-slide-toggle>
-            </td>
-            <td width="12%">
-              <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();">
-                Desde:
-              </mat-slide-toggle>
-            </td>
-            <td width="70%">
-              <div class="input-group">
-                <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
-                  [disabled]="!id_bool" style="margin-left: 14px;">
-                <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDNotasMovimiento();"
-                  [disabled]="!id_bool">
-                  <i class="fa fa-search"></i>
-                </button>
-                <span class="input-group-text"><u>Hasta:</u></span>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo2"
-                  [disabled]="!id_bool">
-                <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDNotasMovimiento();"
-                  [disabled]="!id_bool">
-                  <i class="fa fa-search"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
+        <div class="col-md-3 float-right">
+          <div class="text-right">
+            <mat-icon color="primary" (click)="close();">close</mat-icon>
+          </div>
+        </div>
+      </mat-card-header>
+    </ng-container>
 
-          <tr>
-            <td width="18%">
-              <span>Fecha:</span>
-              <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();"
+    <p-toast></p-toast>
+
+    <div class="p-1">
+      <div>
+        <ng-container>
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="buscadorNotasMovimiento();">
+            <i class="fa fa-search " aria-hidden="true" style="color: #3a7ce7;"></i> Buscar
+          </button>
+
+          <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="mandarAModificarNM();"
+            style="float: right;color: #27760a;">
+            <i class="fa fa-check" aria-hidden="true" style="color: #27760a;"></i> Seleccionar NM
+          </button>
+        </ng-container>
+      </div>
+
+      <table style="width: 100%;">
+        <tr>
+          <td width="18%">
+            <span>ID:</span>
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_id" (click)="habilitarTodoID();"
+              style="margin-left: 38px;"> Todas
+            </mat-slide-toggle>
+          </td>
+          <td width="12%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="id_bool" (click)="habilitarID();">
+              Desde:
+            </mat-slide-toggle>
+          </td>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo1"
+                [disabled]="!id_bool" style="margin-left: 14px;">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDNotasMovimiento();"
+                [disabled]="!id_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_tipo_view_get_codigo2"
+                [disabled]="!id_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDNotasMovimiento();"
+                [disabled]="!id_bool">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td width="18%">
+            <span>Fecha:</span>
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_fecha" (click)="habilitarFechaTodo();"
               style="margin-left: 17px;">
-                Todas
-              </mat-slide-toggle>
-            </td>
-            <td width="12%">
-              <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();">
-                Desde:
-              </mat-slide-toggle>
-            </td>
-            <td width="70%">
-              <div class="input-group">
-                <mat-form-field>
-                  <mat-label>Fecha Desde:</mat-label>
-                  <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_desde" [matDatepicker]="picker1">
-                  <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1></mat-datepicker>
-                </mat-form-field>
-                <span class="input-group-text"><u>Hasta:</u></span>
-                <mat-form-field>
-                  <mat-label>Fecha Hasta:</mat-label>
-                  <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_hasta" [matDatepicker]="picker2">
-                  <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-                  <mat-datepicker #picker2></mat-datepicker>
-                </mat-form-field>
-              </div>
-            </td>
-          </tr>
+              Todas
+            </mat-slide-toggle>
+          </td>
+          <td width="12%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="fecha_bool" (click)="habilitarFecha();">
+              Desde:
+            </mat-slide-toggle>
+          </td>
+          <td width="70%">
+            <div class="input-group">
+              <mat-form-field>
+                <mat-label>Fecha Desde:</mat-label>
+                <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_desde" [matDatepicker]="picker1">
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <mat-form-field>
+                <mat-label>Fecha Hasta:</mat-label>
+                <input matInput [disabled]="!fecha_bool" [(ngModel)]="fecha_hasta" [matDatepicker]="picker2">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </td>
+        </tr>
 
-          <tr>
-            <td width="18%">
-              <span>Almacén:</span>
-              <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();"
+        <tr>
+          <td width="18%">
+            <span>Almacén:</span>
+            <mat-slide-toggle class="example-margin" [(ngModel)]="todas_almacen" (click)="habilitarTodo();"
               style="margin-left: 4px;">
-                Todas
-              </mat-slide-toggle>
-            </td>
-            <td width="12%">
-              <mat-slide-toggle class="example-margin" [(ngModel)]="almacen_bool" (click)="habilitarAlmacen();">
-                Desde:
-              </mat-slide-toggle>
-            </td>
-            <td width="70%">
-              <div class="input-group">
-                <span class="input-group-text"><u>Almacén:</u></span>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
-                  [disabled]="!almacen_bool" style="margin-left: 4px;">
-                <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
-                  [disabled]="!almacen_bool">
-                  <i class="fa fa-search"></i>
-                </button>
-                <span class="input-group-text"><u>Hasta:</u></span>
-                <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen2"
-                  [disabled]="!almacen_bool">
-                <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
-                  [disabled]="!almacen_bool">
-                  <i class="fa fa-search"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        </table>
-        <!-- fin buscadores -->
-  
-        <hr>
-  
-        <!-- Inicio Tabla -->
-        <div class="row">
-          <div class="col-lg">
-            <div >
-              <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
-                <p-table #dt1 [value]="buscadorObj" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
-                  selectionMode="single" styleClass="p-datatable-striped" [paginator]="true"
-                  [(selectedRow)]="selectebuscadorObj" [rows]="14" [rowsPerPageOptions]="[10, 20, 30]"
-                  [(selection)]="selectebuscadorObj" (onRowSelect)="getProformaById($event)" styleClass="p-datatable-striped
+              Todas
+            </mat-slide-toggle>
+          </td>
+          <td width="12%">
+            <mat-slide-toggle class="example-margin" [(ngModel)]="almacen_bool" (click)="habilitarAlmacen();">
+              Desde:
+            </mat-slide-toggle>
+          </td>
+          <td width="70%">
+            <div class="input-group">
+              <span class="input-group-text"><u>Almacén:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen1"
+                [disabled]="!almacen_bool" style="margin-left: 4px;">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
+                [disabled]="!almacen_bool">
+                <i class="fa fa-search"></i>
+              </button>
+              <span class="input-group-text"><u>Hasta:</u></span>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="almacn_parame_usuario_almacen2"
+                [disabled]="!almacen_bool">
+              <button class="btn btn-outline-primary form-control-sm" (click)="modalAlmacen();"
+                [disabled]="!almacen_bool">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <!-- fin buscadores -->
+
+      <hr>
+
+      <!-- Inicio Tabla -->
+      <div class="row">
+        <div class="col-lg">
+          <div>
+            <div class="col-lg-12" style="width: 100%;overflow-x: auto;">
+              <p-table #dt1 [value]="buscadorObj" [scrollable]="true" scrollHeight="400px" sortMode="multiple"
+                selectionMode="single" styleClass="p-datatable-striped" [paginator]="true"
+                [(selectedRow)]="selectebuscadorObj" [rows]="14" [rowsPerPageOptions]="[10, 20, 30]"
+                [(selection)]="selectebuscadorObj" (onRowSelect)="getProformaById($event)" styleClass="p-datatable-striped
                   tablita" [globalFilterFields]="['codigo', 'descripcion']">
-  
-                  <ng-template pTemplate="header">
-                    <tr style="background-color: #093070 !important;">
-                      <th pSortableColumn="id" class="text-center" style="width:9%;">
-                        ID
-                      </th>
-                      <th pSortableColumn="numeroid" class="text-center" style="width:9%;">
-                        NumeroID
-                      </th>
-                      <th pSortableColumn="codigo" class="text-center" style="width:6%;">
-                        Anulado
-                      </th>
-                      <th pSortableColumn="codigo" class="text-center" style="width:7%;">
-                        Concepto
-                      </th>
-                      <th pSortableColumn="fecha" class="text-center" style="width:12%;">
-                        Fecha
-                      </th>
-                      <th pSortableColumn="cliente" class="text-center" style="width:7%;">
-                        Almacen
-                      </th>
-                      <th pSortableColumn="vendedoor" class="text-center" style="width:8%;">
-                        Origen
-                      </th>
-                      <th pSortableColumn="almacen" class="text-center" style="width:8%;">
-                        Destino
-                      </th>
-                      <th pSortableColumn="monto" class="text-center" style="width:50%;">
-                        Observación
-                      </th>
-                    </tr>
-                  </ng-template>
-                  <ng-template pTemplate="body" let-buscador let-rowIndex="rowIndex">
-                    <tr [autofocus]="true" [pSelectableRow]="buscador" [pSelectableRowIndex]="rowIndex">
-                      <td class="text-center">
-                        {{ buscador.id }}
-                      </td>
-                      <td class="text-center">
-                        {{ buscador.numeroid }}
-                      </td>
-                      <td class="text-center">
-                        <input type="checkbox" [value]="buscador.anulada" disabled>
-                      </td>
-                      
-                      <td class="text-center">
-                        {{ buscador.codconcepto }}
-                      </td>
-                      <td class="text-center">
-                        {{ buscador.fecha | date:'yyyy-MM-dd'}}
-                      </td>
-                      <td class="text-center">
-                        {{ buscador.codalmacen }}
-                      </td>
-                      <td class="text-center">
-                        {{ buscador.codalmorigen }}
-                      </td>
-                      <td class="text-center">
-                        {{ buscador.codalmdestino }}
-                      </td>
-                      <td style="text-align: left;">
-                        {{ buscador.obs }}
-                      </td>
-                      <td></td>
-                    </tr>
-                  </ng-template>
-                </p-table>
-              </div>
+
+                <ng-template pTemplate="header">
+                  <tr style="background-color: #093070 !important;">
+                    <th pSortableColumn="id" class="text-center" style="width:9%;">
+                      ID
+                    </th>
+                    <th pSortableColumn="numeroid" class="text-center" style="width:9%;">
+                      NumeroID
+                    </th>
+                    <th pSortableColumn="codigo" class="text-center" style="width:6%;">
+                      Anulado
+                    </th>
+                    <th pSortableColumn="codigo" class="text-center" style="width:7%;">
+                      Concepto
+                    </th>
+                    <th pSortableColumn="fecha" class="text-center" style="width:12%;">
+                      Fecha
+                    </th>
+                    <th pSortableColumn="cliente" class="text-center" style="width:7%;">
+                      Almacen
+                    </th>
+                    <th pSortableColumn="vendedoor" class="text-center" style="width:8%;">
+                      Origen
+                    </th>
+                    <th pSortableColumn="almacen" class="text-center" style="width:8%;">
+                      Destino
+                    </th>
+                    <th pSortableColumn="monto" class="text-center" style="width:50%;">
+                      Observación
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-buscador let-rowIndex="rowIndex">
+                  <tr [autofocus]="true" [pSelectableRow]="buscador" [pSelectableRowIndex]="rowIndex">
+                    <td class="text-center">
+                      {{ buscador.id }}
+                    </td>
+                    <td class="text-center">
+                      {{ buscador.numeroid }}
+                    </td>
+                    <td class="text-center">
+                      <input type="checkbox" [value]="buscador.anulada" disabled>
+                    </td>
+
+                    <td class="text-center">
+                      {{ buscador.codconcepto }}
+                    </td>
+                    <td class="text-center">
+                      {{ buscador.fecha | date:'yyyy-MM-dd'}}
+                    </td>
+                    <td class="text-center">
+                      {{ buscador.codalmacen }}
+                    </td>
+                    <td class="text-center">
+                      {{ buscador.codalmorigen }}
+                    </td>
+                    <td class="text-center">
+                      {{ buscador.codalmdestino }}
+                    </td>
+                    <td style="text-align: left;">
+                      {{ buscador.obs }}
+                    </td>
+                    <td></td>
+                  </tr>
+                </ng-template>
+              </p-table>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

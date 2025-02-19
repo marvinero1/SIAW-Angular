@@ -13,14 +13,16 @@
       </mat-card-header>
     </ng-container>
 
+    <p-toast></p-toast>
+
     <div class="p-2">
       <div>
         <ng-container>
           <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="buscadorAnticipos();">
             <i class="fa fa-search"></i> Buscar
           </button>
-          <button class="btn btn-outline-secondary form-control-sm" type="button" 
-          (click)="mandarAFacturacionMostradorAnticipoElegido();">
+          <button class="btn btn-outline-secondary form-control-sm" type="button"
+            (click)="mandarAFacturacionMostradorAnticipoElegido();">
             <i class="fa fa-check"></i> Seleccionar
           </button>
         </ng-container>
@@ -42,15 +44,13 @@
           <td width="70%">
             <div class="input-group">
               <span class="input-group-text" style="padding-right: 36px;"><u>ID:</u></span>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_anticipo"
-                [disabled]="!id_bool">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_anticipo" [disabled]="!id_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDAnticipos();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
               </button>
               <span class="input-group-text"><u>Hasta:</u></span>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_anticipo"
-                [disabled]="!id_bool">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="id_anticipo" [disabled]="!id_bool">
               <button class="btn btn-outline-primary form-control-sm" (click)="modalTipoIDAnticipos();"
                 [disabled]="!id_bool">
                 <i class="fa fa-search"></i>
@@ -203,7 +203,7 @@
                     <td style="text-align: right;">
                       {{ buscador.montorest }}
                     </td>
-                    
+
                     <td style="text-align: right;">
                       {{ buscador.codmoneda }}
                     </td>

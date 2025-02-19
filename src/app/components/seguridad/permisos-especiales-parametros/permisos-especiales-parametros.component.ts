@@ -175,14 +175,14 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     { codigo: "149", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET", codigo_descripcion: "149 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA INTERNET" },
     { codigo: "150", descripcion: "PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN", codigo_descripcion: "150 - PERMITIR CAMBIAR ESTADO EN LINEA O FUERA DE LINEA SERVICIOS SIN" },
     { codigo: "151", descripcion: "PERMITIR CAMBIAR CODIGO FACTURA WEB DE FACTURA", codigo_descripcion: "151 - PERMITIR CAMBIAR codigo_descripcion FACTURA WEB DE FACTURA" },
-    { codigo: "152", descripcion: "PERMITIR MODIFICAR VACACION REGISTRADA", codigo_descripcion: "152 - PERMITIR MODIFICAR VACACION REGISTRADA"},
-    { codigo: "153", descripcion: "CAMBIAR NOMBRE COMERCIAL" , codigo_descripcion:"153 - CAMBIAR NOMBRE COMERCIAL"},
-    { codigo: "154", descripcion: "PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO", codigo_descripcion:"154 - PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO"  },
-    { codigo: "155", descripcion: "DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO", codigo_descripcion:"155 - DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO"},
-    { codigo: "156", descripcion: "PERMITIR PROMOCION PARA PROFORMAS ANTERIORES", codigo_descripcion:"156 - PERMITIR PROMOCION PARA PROFORMAS ANTERIORES"},
-    
-    // { codigo: "157", descripcion: "1" },
-    // { codigo: "158", descripcion: "1" },
+    { codigo: "152", descripcion: "PERMITIR MODIFICAR VACACION REGISTRADA", codigo_descripcion: "152 - PERMITIR MODIFICAR VACACION REGISTRADA" },
+    { codigo: "153", descripcion: "CAMBIAR NOMBRE COMERCIAL", codigo_descripcion: "153 - CAMBIAR NOMBRE COMERCIAL" },
+    { codigo: "154", descripcion: "PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO", codigo_descripcion: "154 - PERMITIR PROFORMA AL CONTADO CON DESCUENTO POR DEPOSITO SIN TICKET POR DEPOSITO" },
+    { codigo: "155", descripcion: "DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO", codigo_descripcion: "155 - DEVOLUCION DE ANTICIPO POR ROTACION DE CARTERA/DESCUENTO POR DEPOSITO" },
+    { codigo: "156", descripcion: "PERMITIR PROMOCION PARA PROFORMAS ANTERIORES", codigo_descripcion: "156 - PERMITIR PROMOCION PARA PROFORMAS ANTERIORES" },
+    { codigo: "157", descripcion: "PERMITIR AUTORIZACION CON DEPOSITO ANTERIOR A LA FECHA DE APROBACION DE PROFORMA", codigo_descripcion: "157 - PERMITIR AUTORIZACION CON DEPOSITO ANTERIOR A LA FECHA DE APROBACION DE PROFORMA" },
+    { codigo: "158", descripcion: "PERMITIR PAGOS PARCIALES A VENTAS MAYORES O IGUALES A 50000", codigo_descripcion: "158 - PERMITIR PAGOS PARCIALES A VENTAS MAYORES O IGUALES A 50000" },
+
     // { codigo: "159", descripcion: "1" },
     // { codigo: "160", descripcion: "1" },
     // { codigo: "161", descripcion: "1" },
@@ -232,16 +232,16 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   motivo: string;
 
   cod_y_descripcion: any;
-  codigo_mas_descricpion:string;
-  descripcion_servicio:string;
+  codigo_mas_descricpion: string;
+  descripcion_servicio: string;
 
-  codigo_servicio:any;
+  codigo_servicio: any;
 
   constructor(private api: ApiService, public dialog: MatDialog,
     public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
-    public log_module: LogService, public _snackBar: MatSnackBar,private messageService: MessageService,
+    public log_module: LogService, public _snackBar: MatSnackBar, private messageService: MessageService,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
-    public almacenservice: ServicioalmacenService, 
+    public almacenservice: ServicioalmacenService,
 
     @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any,
@@ -250,7 +250,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public abrir: any) {
     this.data_inventario_code = dataCodigoPermiso.dataCodigoPermiso;
 
-    let inventario_codigo:string;
+    let inventario_codigo: string;
     inventario_codigo = this.data_inventario_code.toString();
     console.log("🚀 ~ PermisosEspecialesParametrosComponent ~ @Inject ~ inventario_codigo en entero:", inventario_codigo)
 
@@ -336,7 +336,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
             this._snackBar.open(this.permiso_recibido.resp, '✅', {
               duration: 2000,
-             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
 
             // console.log(true);
@@ -346,7 +346,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
             console.log(err, errorMessage);
             this._snackBar.open('Contraseña Incorrecta', '❌', {
               duration: 2000,
-             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+              panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
             resolve(false);
           },
@@ -358,12 +358,12 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   }
 
   copyToClipboard(): void {
-    let copiaCodigoServicio = "Codigo Servicio: " + this.codigo_servicio +"  - "+ this.descripcion_servicio + "\n" +
+    let copiaCodigoServicio = "Codigo Servicio: " + this.codigo_servicio + "  - " + this.descripcion_servicio + "\n" +
       "Dato A: " + this.dataA_get + "\n" +
       "Dato B: " + this.dataB_get;
     // Se copia el texto del input al portapapeles
     this.clipboard.copy(copiaCodigoServicio);
-    
+
     // Se muestra un snackbar durante 2 segundos en la parte inferior
     this._snackBar.open('¡ Texto Copiado !', '📑', {
       duration: 2500,

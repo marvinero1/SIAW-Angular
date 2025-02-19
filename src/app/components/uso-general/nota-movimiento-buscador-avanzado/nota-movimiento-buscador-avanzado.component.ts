@@ -6,7 +6,6 @@ import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/c
 import { CatalogoNotasMovimientoService } from '@components/inventario/CRUD/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
-import { ModalIdtipoComponent } from '@components/mantenimiento/ventas/modal-idtipo/modal-idtipo.component';
 import { TipoidService } from '@components/mantenimiento/ventas/serviciotipoid/tipoid.service';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -14,12 +13,11 @@ import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
-
 interface buscadorGeneral {
   id: any,
   numeroid: any,
-  a:any,
-  concepto:any,
+  a: any,
+  concepto: any,
   fecha: any,
   cod_almacen: any,
   origen: any,
@@ -53,6 +51,9 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
   todas_fecha: boolean = false;
   todas_almacen: boolean = false;
 
+  id_buscador: any;
+  num_id_buscador: any;
+  codigo_documento: any;
 
   id_bool: boolean = false;
   fecha_bool: boolean = false;
@@ -63,36 +64,34 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
   usuarioLogueado: any;
   agencia_logueado: any;
 
-  constructor(private api: ApiService, public dialogRef: MatDialogRef<NotaMovimientoBuscadorAvanzadoComponent>, 
-    private toastr: ToastrService, private dialog: MatDialog,private almacenservice: ServicioalmacenService,
+  constructor(private api: ApiService, public dialogRef: MatDialogRef<NotaMovimientoBuscadorAvanzadoComponent>,
+    private toastr: ToastrService, private dialog: MatDialog, private almacenservice: ServicioalmacenService,
     private _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService, private messageService: MessageService,
-    private serviciotipoid: TipoidService, private servicioNotasMovimientoCatalogo:CatalogoNotasMovimientoService,
-   public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
+    private serviciotipoid: TipoidService, private servicioNotasMovimientoCatalogo: CatalogoNotasMovimientoService,
+    public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
 
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-      this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-      this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-     
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
   }
 
   ngOnInit() {
     // Catalogo Notas de Movimiento
     this.servicioNotasMovimientoCatalogo.disparadorDeCatalogoNotasMovimiento.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-        console.log("Recibiendo ID Catalogo Notas Movimiento: ", data);
-        if (this.id_tipo_view_get_codigo1 === undefined) {
-          this.id_tipo_view_get_codigo1 = data.id_nota_movimiento.codigo;
-          this.id_tipo_view_get_codigo2 = data.id_nota_movimiento.codigo;
-        } else {
-          this.id_tipo_view_get_codigo2 = data.id_nota_movimiento.codigo;
-        }
+      console.log("Recibiendo ID Catalogo Notas Movimiento: ", data);
+      if (this.id_tipo_view_get_codigo1 === undefined) {
+        this.id_tipo_view_get_codigo1 = data.id_nota_movimiento.codigo;
+        this.id_tipo_view_get_codigo2 = data.id_nota_movimiento.codigo;
+      } else {
+        this.id_tipo_view_get_codigo2 = data.id_nota_movimiento.codigo;
+      }
     });
     //
 
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
-      console.log("Recibiendo Almacen: ", data);
-
       if (this.almacn_parame_usuario_almacen1 === undefined) {
         this.almacn_parame_usuario_almacen1 = data.almacen.codigo;
         this.almacn_parame_usuario_almacen2 = data.almacen.codigo;
@@ -159,16 +158,10 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
     }
   }
 
-  id_buscador:any;
-  num_id_buscador:any;
-  codigo_documento:any;
-
   getProformaById(element) {
     this.id_buscador = element.data.id;
     this.num_id_buscador = element.data.numeroid;
     this.codigo_documento = element.data.codigo;
-
-    console.log(element);
   }
 
   buscadorNotasMovimiento() {
@@ -209,14 +202,19 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
       next: (datav) => {
         console.log(datav);
         this.buscadorObj = datav;
-        this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
+        if (this.buscadorObj.length === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'NO HAY DATA' });
+        } else {
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'BUSQUEDA CORRECTA' });
+        }
+
         setTimeout(() => {
           this.spinner.hide();
-        }, 100);
+        }, 1000);
       },
       error: (err) => {
         console.log(err, errorMessage);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL TRAER LA DATA !'});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! OCURRIO UN PROBLEMA AL TRAER LA DATA !' });
         setTimeout(() => {
           this.spinner.hide();
         }, 100);
@@ -230,11 +228,10 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
     });
   }
 
-
   mandarAModificarNM() {
     this.spinner.show();
 
-    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotasMovimiento .emit({
+    this.servicioBuscadorAvanzado.disparadorDeID_NumeroIDNotasMovimiento.emit({
       buscador_id: this.id_buscador,
       buscador_num_id: this.num_id_buscador
     })
@@ -245,27 +242,6 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
 
     this.close();
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
