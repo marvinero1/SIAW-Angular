@@ -454,7 +454,7 @@
           <mat-tab label="Items">
             <p-table [value]="array_items_carrito_y_f4_catalogo" [tableStyle]="{'min-width': '60rem'}"
               styleClass="p-datatable-striped tablitaDetalle" [metaKeySelection]="true" selectionMode="multiple"
-              [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple" (onRowSelect)="onRowSelect($event)"
+              [(selection)]="selectedProducts" dataKey="coditem" sortMode="multiple"
               (onRowUnselect)="onRowUnselect($event)" (onEditComplete)="onEditComplete($event)">
               <ng-template pTemplate="header">
                 <tr>

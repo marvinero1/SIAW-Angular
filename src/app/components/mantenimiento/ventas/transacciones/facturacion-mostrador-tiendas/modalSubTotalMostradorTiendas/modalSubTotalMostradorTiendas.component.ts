@@ -29,9 +29,11 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
   descuento_nivel_get: any;
   fecha_actual = new Date();
 
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(public dialogRef: MatDialogRef<ModalSubTotalMostradorTiendasComponent>, private toastr: ToastrService,
     private api: ApiService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
-    public itemservice: ItemServiceService, 
+    public itemservice: ItemServiceService,
     @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any,
     @Inject(MAT_DIALOG_DATA) public cod_cliente: any,
@@ -53,6 +55,11 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
     this.fecha_proforma = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
 
     // console.log(this.items_carrito, this.cliente, this.almacen, this.moneda, this.desclinea, this.fecha_proforma);
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -65,27 +72,6 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
       ...item,
       coditem: item.coditem,
       cantidad: item.cantidad,
-      // codfactura: 0,
-      // descripcion: "",
-      // medida: "",
-      // udm: "",
-      // porceniva: 0,
-      // niveldesc: "",
-      // codtarifa: 0,
-      // coddescuento: 0,
-      // precioneto: 0,
-      // preciodesc: 0,
-      // preciolista: 0,
-      // total: 0,
-      // cumple: true,
-      // distdescuento: 0,
-      // distrecargo: 0,
-      // preciodist: 0,
-      // totaldist: 0,
-      // codaduana: "",
-      // codgrupomer: 0,
-      // peso: 0,
-      // codproducto_sin: ""
     }));
 
     console.log(arrayTransformado);
@@ -125,13 +111,16 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
   }
 
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString?.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   close() {
     this.dialogRef.close();
   }
-
 }

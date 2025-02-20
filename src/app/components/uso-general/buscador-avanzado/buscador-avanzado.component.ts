@@ -38,10 +38,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
     this.mandarAModificarProforma();
   };
 
-  // @HostListener('dblclick') onDoubleClicked2() {
-  //   this.mandarAModificarProforma();
-  // };
-
   public id_tipo_view_get_codigo1: string;
   public id_tipo_view_get_codigo2: string;
 
@@ -270,13 +266,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
-
   //id tipo
   getIdTipo() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogoNumProfxUsuario/";
@@ -295,7 +284,6 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
   getNotaRemision() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
-
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "4")
       .subscribe({
         next: (datav) => {
@@ -481,6 +469,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
   }
 
   buscadorNotasRemision() {
+    this.spinner.show();
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
@@ -534,7 +523,7 @@ export class BuscadorAvanzadoComponent implements OnInit {
 
         setTimeout(() => {
           this.spinner.hide();
-        }, 1000);
+        }, 100);
       },
       error: (err) => {
         console.log(err, errorMessage);

@@ -23,7 +23,7 @@
             </button>
 
             <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" disabled
-              (click)="submitDataGrabarAprobar();">
+              (click)="validarAntesDeGrabarAprobar();">
               <span>
                 <mat-icon
                   style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
@@ -49,6 +49,18 @@
               <span>Exportar Proforma</span>
             </button> -->
 
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="validarProformaAll();">
+              <span> <i class="fa fa-eye" style="color: #ffc107;"></i> Validar</span>
+            </button>
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
+              (click)="modalVerificarCreditoDisponible();">
+              <span>
+                <mat-icon
+                  style="color: #664f09d7;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
+                  account_balance_wallet</mat-icon> Verificar Crédito Disponible
+              </span>
+            </button>
             <!-- EXCELS -->
             <button mat-button [matMenuTriggerFor]="beforeMenuEXCEL">
               <span><i class="fa fa-file-excel green" style="color: #05970c;"></i></span>
@@ -66,19 +78,6 @@
               </button>
             </mat-menu>
             <!-- FIN EXCELS -->
-
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="validarProformaAll();">
-              <span> <i class="fa fa-eye" style="color: #ffc107;"></i> Validar</span>
-            </button>
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="button"
-              (click)="modalVerificarCreditoDisponible();">
-              <span>
-                <mat-icon
-                  style="color: #664f09d7;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
-                  account_balance_wallet</mat-icon> Verificar Crédito Disponible
-              </span>
-            </button>
           </div>
 
           <div class="pt-1" style="padding-left: 40px !important;">
@@ -797,7 +796,7 @@
                     Descripción
                     <p-sortIcon field="descripcion" />
                   </th>
-                  <th pSortableColumn="medida" class="center1" style="width:8%">
+                  <th pSortableColumn="medida" class="left" style="width:8%">
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
@@ -864,7 +863,7 @@
                   </td>
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}</td>
-                  <td class="center1">{{ products.medida }}</td>
+                  <td class="left">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
                   <td class="center1">{{ products.porceniva }}</td>
 

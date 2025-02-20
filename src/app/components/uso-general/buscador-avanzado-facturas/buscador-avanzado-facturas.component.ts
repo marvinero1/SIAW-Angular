@@ -13,11 +13,9 @@ import { CatalogoFacturasComponent } from '@components/mantenimiento/ventas/tran
 import { CatalogoFacturasService } from '@components/mantenimiento/ventas/transacciones/facturas/catalogo-facturas/servicio-catalogo-facturas/catalogo-facturas.service';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
 import { MessageService } from 'primeng/api';
-
 interface buscadorGeneral {
   id: any,
   numeroid: any,
@@ -35,11 +33,9 @@ interface buscadorGeneral {
 
 export class BuscadorAvanzadoFacturasComponent implements OnInit {
 
-  @HostListener("dblclick", []) unloadHandler(event: KeyboardEvent) {
-    // this.mandarAModificarFactura();
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+    this.mandarAModificarFactura();
   };
-
-
 
   private unsubscribe$ = new Subject<void>();
 
@@ -163,6 +159,7 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
   }
 
   buscadorFacturas() {
+    this.spinner.show();
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 
@@ -457,11 +454,6 @@ export class BuscadorAvanzadoFacturasComponent implements OnInit {
       event.target.value = cadena;
     }
   }
-
-
-
-
-
 
 
 

@@ -108,7 +108,7 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   fecha_confirmada: any;
   fechaaut: any;
   fecha_reg: any;
-  fecha_inicial: any; 
+  fecha_inicial: any;
   fecha_anulacion: any;
   fecha_anulacion_input: any;
 
@@ -169,6 +169,9 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
   autNResReversion: boolean = false;
   codigo_control: any;
 
+  private numberFormatter_5decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService,
     private serviciotipoid: TipoidService, private messageService: MessageService, private spinner: NgxSpinnerService,
@@ -183,7 +186,17 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
     this.FormularioData = this.createForm();
 
     this.api.getRolUserParaVentana(this.nombre_ventana);
-   // this.getParametrosIniciales();
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -604,13 +617,17 @@ export class ModificarNotaRemisionComponent implements OnInit, AfterViewInit {
 
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
 
   itemDataAll(codigo) {

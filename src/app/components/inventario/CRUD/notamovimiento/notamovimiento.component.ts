@@ -213,6 +213,7 @@ export class NotamovimientoComponent implements OnInit {
   BD_storage: any;
 
   private numberFormatter_2decimales: Intl.NumberFormat;
+  private numberFormatter_5decimales: Intl.NumberFormat;
 
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
@@ -230,11 +231,16 @@ export class NotamovimientoComponent implements OnInit {
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
     // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
     this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-
   }
 
   ngOnInit() {
@@ -973,17 +979,18 @@ export class NotamovimientoComponent implements OnInit {
     if (numberString === null || numberString === undefined) {
       return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
-
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
     return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
-
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
 
   cargarProformaSolicitudUrgente() {
@@ -1259,33 +1266,6 @@ export class NotamovimientoComponent implements OnInit {
             this.dataSource_negativos = new MatTableDataSource(datav.negativos);
             this.abrirTabPorLabel("Saldos Negativos");
           }
-
-          // if(datav.resp === "Los items del documento resaltados de color azul generaran negativos."){
-          //   await this.openConfirmacionDialog(datav.resp);
-          // }
-
-          // if(datav.resp === "Nota de Movimiento creada exitosamente."){
-          //   await this.openConfirmacionDialog(datav.resp);
-          //   window.location.reload();
-          // }
-
-          // if(datav.valido){
-          //   this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' })
-
-          //   const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
-          //   if (resultcodalmdestinoText) {
-          //     setTimeout(() => {
-          //       this.spinner.hide();
-          //     }, 500);
-          //     return;
-          //   }
-          // }else{
-          //   if(datav.negativos){
-          //     //hay negativos
-          //     this.dataSource_negativos = new MatTableDataSource(datav.negativos);
-          //     this.abrirTabPorLabel("Saldos Negativos");
-          //   }
-          // }         
         },
 
         error: (err: any) => {
@@ -1349,18 +1329,6 @@ export class NotamovimientoComponent implements OnInit {
       this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
   // NEGATIVOS
   validarNegativos() {
@@ -1524,7 +1492,6 @@ export class NotamovimientoComponent implements OnInit {
     this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_positivos);
   }
   //FIN NEGATIVOS
-
 
   //Importar to ZIP
   async onFileChangeZIP(event: any) {
@@ -1718,7 +1685,6 @@ export class NotamovimientoComponent implements OnInit {
         }
       })
   }
-
 
   // cargarDataExcel(event: any) {
   //   const archivo = event.target.files[0];

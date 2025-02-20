@@ -8,6 +8,7 @@ import { ServicioCatalogoProformasService } from '../sevicio-catalogo-proformas/
 import { CatalogoProformasComponent } from '../catalogo-proformas/catalogo-proformas.component';
 import { CatalogoCotizacionComponent } from '../../cotizacion/catalogo-cotizacion/catalogo-cotizacion.component';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-modal-transfe-proforma',
   templateUrl: './modal-transfe-proforma.component.html',
@@ -52,7 +53,7 @@ export class ModalTransfeProformaComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private api: ApiService,
     public dialogRef: MatDialogRef<ModalTransfeProformaComponent>,
-    private spinner: NgxSpinnerService, private toastr: ToastrService,
+    private spinner: NgxSpinnerService, private messageService: MessageService,
     public servicioCatalogoProformas: ServicioCatalogoProformasService,
     public servicioTransfeProformaCotizacion: ServicioTransfeAProformaService) {
 
@@ -84,7 +85,7 @@ export class ModalTransfeProformaComponent implements OnInit {
   transferirProforma() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosProforma/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosProforma/' + this.userConn + "/" + this.id_proformas + "/" + this.numero_id_proformas + "/" + this.BD_storage)
+    return this.api.getAll(`/venta/transac/veproforma/transfDatosProforma/${this.userConn}/${this.id_proformas}/${this.numero_id_proformas}/${this.BD_storage}`)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
@@ -98,7 +99,7 @@ export class ModalTransfeProformaComponent implements OnInit {
 
           dialogRef.afterClosed().subscribe((result: Boolean) => {
             if (result) {
-              this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EN PROGESO ! ✅ ' });
               this.transferirProformaAProforma(this.transferir_get);
               this.spinner.show();
               setTimeout(() => {
@@ -106,13 +107,13 @@ export class ModalTransfeProformaComponent implements OnInit {
               }, 500);
               this.close();
             } else {
-              this.toastr.error('! TCANCELADO ! ❌');
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO ! ❌' });
             }
           });
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌' });
         },
         complete: () => {
           this.close();
@@ -123,13 +124,11 @@ export class ModalTransfeProformaComponent implements OnInit {
   transferirCotizaciones() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/transfDatosCotizacion/";
 
-    return this.api.getAll('/venta/transac/veproforma/transfDatosCotizacion/' + this.userConn + "/" + this.id_cotizaciones + "/" + this.numero_id_cotizaciones + "/" + this.BD_storage)
+    return this.api.getAll(`/venta/transac/veproforma/transfDatosCotizacion/${this.userConn}/${this.id_cotizaciones}/${this.numero_id_cotizaciones}/${this.BD_storage}`)
       .subscribe({
         next: (datav) => {
           this.transferir_get = datav;
-          console.log(this.transferir_get);
-          this.toastr.success('! TRANSFERENCIA EN PROGESO ! ✅');
-
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! TRANSFERENCIA EN PROGESO ! ✅' });
           this.transferirACotizacion(this.transferir_get);
           this.spinner.show();
           setTimeout(() => {
@@ -139,7 +138,7 @@ export class ModalTransfeProformaComponent implements OnInit {
         },
         error: (err: any) => {
           console.log(err, errorMessage);
-          this.toastr.error('! TRANSFERENCIA FALLO ! ❌');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! TRANSFERENCIA FALLO ! ❌ ' });
         },
         complete: () => { }
       })
@@ -198,12 +197,11 @@ export class ModalTransfeProformaComponent implements OnInit {
   }
 
   getProforma() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET - /venta/mant/venumeracion/catalogo/ 2";
-    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET - /venta/mant/venumeracion/catalogo/2";
+    return this.api.getAll(`/venta/mant/venumeracion/catalogo/${this.userConn}/2`)
       .subscribe({
         next: (datav) => {
           this.proforma_get = datav;
-          console.log(this.proforma_get);
         },
 
         error: (err: any) => {
@@ -214,13 +212,12 @@ export class ModalTransfeProformaComponent implements OnInit {
   }
 
   getCotizaciones() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogo/  6";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/venumeracion/catalogo/6";
 
-    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "6")
+    return this.api.getAll(`/venta/mant/venumeracion/catalogo/${this.userConn}/6`)
       .subscribe({
         next: (datav) => {
           this.cotizaciones_get = datav;
-          console.log(this.cotizaciones_get);
         },
 
         error: (err: any) => {

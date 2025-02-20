@@ -501,7 +501,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
           this.id = datav.cabecera?.id;
           this.numeroid = datav.cabecera?.numeroid;
-
           this.id_concepto = datav.cabecera?.codconcepto;
           this.validarPorConceptoDescripcion(datav.cabecera?.codconcepto);
 
@@ -822,9 +821,9 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
       event.target.value = inputValue;
       const encontrado_objeto = this.array_concepto.find(objeto => objeto.codigo.toString() === inputValue);
-      this.id_concepto_descripcion = encontrado_objeto.descripcion
-      this.validarPorConcepto(inputValue);
+      this.id_concepto_descripcion = encontrado_objeto.descripcion;
 
+      this.validarPorConcepto(inputValue);
     }
   }
 
@@ -965,15 +964,16 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/' + this.userConn + "/" + concepto + "/" + this.agencia_logueado)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
+          console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav);
+          //this.codalmdestinoText = datav.codalmdestinoText;
+          //this.codalmorigenText = datav.codalmorigenText;
+
           this.codalmorigenReadOnly = datav.codalmorigenReadOnly;
           this.codalmdestinoReadOnly = datav.codalmdestinoReadOnly;
           this.traspaso = datav.traspaso;
           this.fidEnable = datav.fidEnable;
           this.fnumeroidEnable = datav.fnumeroidEnable;
           this.codpersonadesdeReadOnly = datav.codpersonadesdeReadOnly;
-          this.codalmdestinoText = datav.codalmdestinoText;
-          this.codalmorigenText = datav.codalmorigenText;
           this.factor = datav.factor;
           this.codclienteReadOnly = datav.codclienteReadOnly;
           this.cargar_proformaEnabled = datav.cargar_proformaEnabled;
@@ -1060,15 +1060,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     this.saldo_modal_total_5 = "";
 
     this.total = 0.00;
-  }
-
-  onRowSelect(event: any) {
-    // this.item = event.data.coditem;
-    // this.item_obj_seleccionado = event.data;
-
-    // // this.getSaldoItem(this.item);
-    // console.log('Row Selected:', event.data);
-    // this.updateSelectedProducts();
   }
 
   onRowSelectForDelete() {
@@ -1190,27 +1181,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       })
   }
 
-  limpiar() {
-    this.array_items_carrito_y_f4_catalogo = [];
-    this.eventosLogs = [];
-
-    this.total = 0;
-    this.id_concepto = "";
-    this.id_concepto_descripcion = "";
-    this.observaciones = "";
-    this.id_proforma_catalogo = "";
-    this.descripcion_id_catalogo_proforma = "";
-    this.numero_id_catalogo_proforma = 0;
-    this.chkdesglozar_cjtos = false;
-    this.codalmorigenText = "";
-    this.codalmdestinoText = "";
-    this.codpersonadesde = 0;
-    this.cod_cliente = "";
-
-    this.messageService.add({ severity: 'success', summary: 'Informacion', detail: "Nota de Movimiento Limpia ✅" });
-    this.getParametrosIniciales();
-  }
-
   solicitarPermisoDatoADatoB() {
     const dialogRefParams = this.dialog.open(PermisosEspecialesParametrosComponent, {
       width: '450px',
@@ -1272,6 +1242,9 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   async guardarNotaMovimiento() {
+    //primero valida saldos
+    await this.getValidacionSaldosModificar();
+
     if (this.id_concepto === undefined) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CONCEPTO NO PUEDE ESTAR EN BLANCO' });
       return;
@@ -1301,7 +1274,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL CODIGO DE DESTINO NO PUEDE SER 0' });
       return;
     }
-
 
     if (this.codalmdestinoText === undefined) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY CODIGO DE DESTINO' });
@@ -1400,18 +1372,16 @@ export class ModificarNotaMovimientoComponent implements OnInit {
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
           if (datav.codigoNM) {
-            let result = await this.openConfirmationDialog(`${datav.resp}\n\n${datav.alertas.join('\n\n')}`);
+            let result = await this.openConfirmationDialog(`${datav.alertas.join('\n\n')}\n\n${datav.resp}`);
             if (result) {
               //exportar ZIP
               await this.exportarZIPNMGrabar(datav.codigoNM);
-              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
+              await this.modalImpresion(datav.codigoNM);
 
-              //window.location.reload();
+              this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
             } else {
+              await this.modalImpresion(datav.codigoNM);
               this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅ SIN EXPORTAR' });
-              setTimeout(() => {
-                window.location.reload();
-              }, 1000);
             }
           }
 
@@ -1420,33 +1390,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
             await this.openConfirmacionDialog(datav.resp)
             this.dataSource_negativos = new MatTableDataSource(datav.negativos);
             this.abrirTabPorLabel("Saldos Negativos");
-          }
-
-          if (datav.valido) {
-            // if(datav.resp){
-            //   let result = await this.openConfirmacionDialogArray(datav.resp, datav.alertas);
-            //   if (result) {
-            //     //exportar ZIP
-            //     this.exportarZIPNM(datav.codigoNM);
-            //     this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'GUARDADO EXITOSAMENTE ✅' });
-            //     //window.location.reload();
-            //   }else{
-            //     //window.location.reload();
-            //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'OCURRIO UN PROBLEMA AL GUARDAR' });
-            //   }
-            // }
-
-            // const resultcodalmdestinoText = await this.openConfirmacionDialog(datav.resp);
-            // if (resultcodalmdestinoText) {
-            //   setTimeout(() => {
-            //     this.spinner.hide();
-            //   }, 500);
-            //   return;
-            // }
-          } else {
-            // if(datav.resp){
-            //   let result = await this.openConfirmacionDialog(datav.resp)
-            // }
           }
         },
 
@@ -1549,17 +1492,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
     }
   }
-
-
-
-
-
-
-
-
-
-
-
 
   // NEGATIVOS
   validarNegativos() {
@@ -1920,8 +1852,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
           this.validarPorConcepto(datav.cabecera?.codconcepto);
 
           this.factor = datav.cabecera?.factor;
-          this.codalmorigenText = datav.cabecera?.codalmdestino;
-          this.codalmdestinoText = datav.cabecera?.codalmorigen;
+          this.codalmorigenText = datav.cabecera?.codalmorigen;
+          this.codalmdestinoText = datav.cabecera?.codalmdestino;
           this.codvendedor = datav.cabecera?.codvendedor;
           this.fecha_origen = this.datePipe.transform(datav.cabecera?.fecha_inicial, "yyyy-MM-dd");
           this.fecha = this.datePipe.transform(datav.cabecera?.fecha, "yyyy-MM-dd");
@@ -2091,6 +2023,11 @@ export class ModificarNotaMovimientoComponent implements OnInit {
           this.cumple = datav.cumple;
           if (datav.cumple) {
             this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
+            // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+            //   ...element,
+            //   diferencia: element.cantidad_revisada - element.cantidad,
+            // }));
+
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "SALDOS VALIDADOS ✅" });
             //aca mensaje datav.alerta
             if (datav.alerta) {
@@ -2138,18 +2075,33 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
 
   imprimirNM() {
-    //colocar el cudrito con el dialogo de intarifa
-    this.modalBtnImpresiones();
-  }
-
-  //ModalPrecioVentaComponent
-  modalBtnImpresiones() {
+    //funcion imprimir del BTN
     this.dialog.open(DialogTarifaImpresionComponent, {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+      data: {
+        codigo_concepto: this.id_concepto,
+        cod_concepto_descrip: this.id_concepto_descripcion,
+        total: this.total,
+        codigoNM: this.id_concepto
+      }
     });
+  }
 
+  //ModalPrecioVentaComponent
+  modalImpresion(codigo) {
+    this.dialog.open(DialogTarifaImpresionComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        codigo_concepto: this.id_concepto,
+        cod_concepto_descrip: this.id_concepto_descripcion,
+        total: this.total,
+        codigoNM: codigo
+      }
+    });
   }
 
   modalBuscadorAvanzado() {

@@ -334,12 +334,6 @@ export class ModificarPedidoComponent implements OnInit {
         selectedItem.orden === item.orden && selectedItem.coditem === item.coditem);
     });
 
-    // Actualizar el número de orden de los objetos de datos restantes
-    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
-      element.orden = index + 1;
-      element.nroitem = index + 1;
-    });
-
     // Limpiar el array de productos seleccionados
     this.selectedProducts = [];
   }
@@ -384,12 +378,6 @@ export class ModificarPedidoComponent implements OnInit {
       ...element,
       codaduana: element.codaduana === undefined ? "0" : element.codaduana
     }));
-
-    // Agregar el número de orden a los objetos de datos
-    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
-      element.orden = index + 1;
-      element.nroitem = index + 1;
-    });
   }
 
   formatNumberTotalSubTOTALES(numberString: number): string {

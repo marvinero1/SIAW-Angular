@@ -106,7 +106,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         case "id_factura_input":
           this.modalTipoID();
           break;
-          
+
         case "":
           this.modalCatalogoProductos();
           break;
@@ -154,7 +154,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   public submitted = false;
   public codigo_cliente: string;
 
-  cliente:any=[];
+  cliente: any = [];
   documento_identidad: any = [];
   ids_complementar_proforma: any = [];
   array_items_carrito_y_f4_catalogo: any = [];
@@ -165,13 +165,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   // primera barra de arriba
   CUFD: any;
-  nrocaja:any;
+  nrocaja: any;
   cod_control: string;
-  codigo_control_get:any;
-  codtipo_comprobante_get:any;
-  dtpfecha_limite_get:any;
-  nrolugar_get:any;
-  tipo_get:any;
+  codigo_control_get: any;
+  codtipo_comprobante_get: any;
+  dtpfecha_limite_get: any;
+  nrolugar_get: any;
+  tipo_get: any;
 
   // parametros del constructor
   userConn: any;
@@ -202,7 +202,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   public cod_id_tipo_modal: any = [];
   public venta_cliente_oficina: boolean = false;
   public cliente_habilitado_get: any;
-  public condicicion_cliente:any="";
+  public condicicion_cliente: any = "";
 
   // Datos TOTALES de footer
   public subtotal: number = 0.00;
@@ -232,7 +232,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   public cantidad_item_matriz: number;
   public saldoItem: number;
   public empaque_view = false;
-  public item:any;
+  public item: any;
   public empaque_item_codigo: string;
   public empaque_item_descripcion: string;
   public cantidad: string;
@@ -241,9 +241,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   valor_nit: any;
   fletepor: any;
-  transporte:any;
-  direccion:any;
-  tipo_cambio_moneda_catalogo:any;
+  transporte: any;
+  direccion: any;
+  tipo_cambio_moneda_catalogo: any;
 
   products!: ItemDetalle[];
   selectedProducts: ItemDetalle[] = [];
@@ -254,14 +254,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   almacn_parame_usuario: any = [];
   id_facturas: any = [];
   usuario_creado_save: any = [];
-  codigo_secreto_vendedor:number;
-  codigo_vendedor:any;
-  id_factura:any;
-  cta_ingreso:any;
-  forma_pago:any;
-  forma_pago_descripcion:any;
-  documento_nro:any;
-  nroticket:string;
+  codigo_secreto_vendedor: number;
+  codigo_vendedor: any;
+  id_factura: any;
+  cta_ingreso: any;
+  forma_pago: any;
+  forma_pago_descripcion: any;
+  documento_nro: any;
+  nroticket: string;
 
   public moneda_get_catalogo: any;
   public contra_entrega = false;
@@ -281,13 +281,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   private unsubscribe$ = new Subject<void>();
 
   //cuartaColumna
-  email_save:any=[];
+  email_save: any = [];
 
   //totabilizar
-  array_de_descuentos_ya_agregados:any=[];
-  recargo_de_recargos:any=[];
-  totabilizar_post:any=[];
-  item_seleccionados_catalogo_matriz_codigo:any;
+  array_de_descuentos_ya_agregados: any = [];
+  recargo_de_recargos: any = [];
+  totabilizar_post: any = [];
+  item_seleccionados_catalogo_matriz_codigo: any;
 
   //VALIDACIONES
   validacion_solo_validos: any = [];
@@ -322,7 +322,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   public validacion_post_negativos: any = [];
   validacion_post_negativos_filtrados_solo_negativos: any = [];
   validacion_post_negativos_filtrados_solo_positivos: any = [];
-  
+
   toggleTodosNegativos: boolean = false;
   toggleNegativos: boolean = false;
   togglePositivos: boolean = false;
@@ -340,63 +340,65 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   // FIN MAX VENTAS
 
   // TAB OBSERVACIONES
-  eventosLogs:any=[];
+  eventosLogs: any = [];
   // FIN TAB OBSERVACIONES
 
   // TAB COMPLEMENTARIAS
-  id_tipo_para_complementar:any;
+  id_tipo_para_complementar: any;
 
   // Desct. Promociones
   public desct_nivel_actual: any = "ACTUAL";
-  public tarifaPrincipal_value:any;
-  public tipo_desct_nivel:any;
-  public valor_desct_nivel:any=[];
+  public tarifaPrincipal_value: any;
+  public tipo_desct_nivel: any;
+  public valor_desct_nivel: any = [];
 
+  private numberFormatter_2decimales: Intl.NumberFormat;
+  private numberFormatter_5decimales: Intl.NumberFormat;
 
   // TABS DEL DETALLE PROFORMA
-    displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
-      'cantidad', 'sld', 'tp', 'de', 'pul', 'niv', 'porcentaje', 'pd', 'pu', 'total'];
-  
-    displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
-      'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
-      'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
-  
-    displayedColumnsLimiteMaximoVentas = ['codigo', 'descripcion', 'cantidad_pf_anterior', 'cantidad', 'saldo',
-      'porcen_venta', 'cod_desct_esp', 'saldo', 'porcen_maximo', 'cantidad_max_venta', 'empaque_precio', 'obs']
-  
-    displayedColumns_validacion = ['codControl', 'descripcion', 'valido', 'cod_servicio', 'desct_servicio', 'datoA',
-      'datoB', 'clave_servicio', 'resolver', 'detalle_observacion', 'validar'];
-    //FIN TABS DEL DETALLE PROFORMA
+  displayedColumns = ['orden', 'item', 'descripcion', 'medida', 'unidad', 'iva', 'empaque', 'pedido',
+    'cantidad', 'sld', 'tp', 'de', 'pul', 'niv', 'porcentaje', 'pd', 'pu', 'total'];
+
+  displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
+    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
+    'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
+
+  displayedColumnsLimiteMaximoVentas = ['codigo', 'descripcion', 'cantidad_pf_anterior', 'cantidad', 'saldo',
+    'porcen_venta', 'cod_desct_esp', 'saldo', 'porcen_maximo', 'cantidad_max_venta', 'empaque_precio', 'obs']
+
+  displayedColumns_validacion = ['codControl', 'descripcion', 'valido', 'cod_servicio', 'desct_servicio', 'datoA',
+    'datoB', 'clave_servicio', 'resolver', 'detalle_observacion', 'validar'];
+  //FIN TABS DEL DETALLE PROFORMA
   //FIN VALIDACIONES
 
   // Anticipos Contado
-  catalogo_anticipos:any=[];
-  id_catalogo_anticipos:any;
-  numero_id_anticipo:any;
-  descrip_id_anticipo:string;
-  num_id_anticipo_get_buscador:any;
-  monto_anticipo:any;
+  catalogo_anticipos: any = [];
+  id_catalogo_anticipos: any;
+  numero_id_anticipo: any;
+  descrip_id_anticipo: string;
+  num_id_anticipo_get_buscador: any;
+  monto_anticipo: any;
   // Fin Anticipos Contado
 
   //varios
   public habilitar_desct_sgn_solicitud: boolean = false;
-  tipopago:number;
-  proforma_transferida:any=[];
+  tipopago: number;
+  proforma_transferida: any = [];
   item_seleccionados_catalogo_matriz_sin_procesar: any = [];
   // valor_string_QR:string;
-  nombre_XML:any;
-  codigo_factura:any;
+  nombre_XML: any;
+  codigo_factura: any;
 
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-  constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder, 
+  constructor(private api: ApiService, private dialog: MatDialog, private _formBuilder: FormBuilder,
     private datePipe: DatePipe, private spinner: NgxSpinnerService, private log_module: LogService,
     private saldoItemServices: SaldoItemMatrizService, private serviciMoneda: MonedaServicioService,
-    private servicioPrecioVenta: ServicioprecioventaService,private servicioDesctEspecial: DescuentoService,
-    private servicioCliente: ServicioclienteService, private itemservice: ItemServiceService,private router:Router,
+    private servicioPrecioVenta: ServicioprecioventaService, private servicioDesctEspecial: DescuentoService,
+    private servicioCliente: ServicioclienteService, private itemservice: ItemServiceService, private router: Router,
     private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService, private _snackBar: MatSnackBar,
     public nombre_ventana_service: NombreVentanaService, public servicioCatalogoFacturas: CatalogoFacturasService,
-    private messageService: MessageService, private almacenservice: ServicioalmacenService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {    
+    private messageService: MessageService, private almacenservice: ServicioalmacenService, public servicioBuscadorAvanzado: BuscadorAvanzadoService) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -411,6 +413,18 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
     this.FormularioData = this.createForm();
     this.tipopago = 0;
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -432,7 +446,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       this.id_tipo_para_complementar = data.factura.id;
       this.id_factura = data.factura.id;
-     
+
       //si se cambia de cliente, los totales tambien se cambian
       this.total = 0.00;
       this.subtotal = 0.00;
@@ -470,7 +484,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       this.iva = 0.00;
     });
     //
-      
+
     //Monedas
     this.serviciMoneda.disparadorDeMonedas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Moneda: ", data);
@@ -524,7 +538,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       console.log("Recibiendo Item: ", data);
       this.codigo_item_catalogo = data.item;
       this.cantidad_item_matriz = data.cantidad;
-      
+
       this.getEmpaqueItem(this.codigo_item_catalogo);
     });
     //
@@ -553,7 +567,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       } else {
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
-         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
 
       // Agregar el número de orden a los objetos de datos
@@ -565,7 +579,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         if (element.empaque === null) {
           element.empaque = 0;
         }
-      }      
+      }
 
       return this.array_items_carrito_y_f4_catalogo;
     });
@@ -677,7 +691,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         ...element,
         empaque: element.empaque === undefined ? 0 : element.empaque,
       }));
-      
+
       this.total = 0.00;
       this.subtotal = 0.00;
       this.recargos = 0.00;
@@ -724,7 +738,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         complete: () => { }
       })
   }
-  
+
   getIDFacturas() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
     return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "1")
@@ -871,7 +885,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.nrocaja = datav.nrocaja;
           this.codigo_control_get = datav.codigo_control;
           //datav.tipo;
-          this.codtipo_comprobante_get= datav.codtipo_comprobante;
+          this.codtipo_comprobante_get = datav.codtipo_comprobante;
           //codtipo_comprobantedescripcion
           this.dtpfecha_limite_get = datav.dtpfecha_limite;
           //nrocaja
@@ -970,7 +984,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         complete: () => { }
       })
   }
-  codigo_proforma_tranferencia:any;
+  codigo_proforma_tranferencia: any;
   imprimir_proforma_tranferida(proforma) {
     console.log(proforma);
     // this.id_tipo_view_get_codigo = this.id_tipo_view_get_codigo;
@@ -1003,7 +1017,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     // this.longitud_cliente = proforma.cabecera.longitud_entrega;
     // this.whatsapp_cliente = "0";
 
-    
+
     this.almacn_parame_usuario_almacen = proforma.cabecera.codalmacen;
 
     this.codigo_cliente = proforma.cabecera.codcliente;
@@ -1029,10 +1043,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.iva = proforma.cabecera.iva;
     this.total = proforma.cabecera.total;
 
- 
+
     this.array_de_descuentos_ya_agregados = proforma.descuentos;
     this.array_items_carrito_y_f4_catalogo = proforma.detalle;
-  } 
+  }
 
   getClientByID(codigo) {
     console.log(codigo);
@@ -1050,13 +1064,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.razon_social = this.cliente.cliente.razonsocial;
           this.complemento_ci = this.cliente.cliente.complemento_ci
           this.nombre_comercial_razon_social = this.nombre_comercial_cliente;
-          
-          if(this.cliente.cliente.codigo.startsWith('SN')){
+
+          if (this.cliente.cliente.codigo.startsWith('SN')) {
             this.tipo_doc_cliente = undefined;
-          }else{
+          } else {
             this.tipo_doc_cliente = this.cliente.cliente.tipo_docid;
           }
-          
+
           this.nit_cliente = this.cliente.cliente.nit_fact;
           this.email_cliente = this.cliente.vivienda.email === "" ? "facturasventas@pertec.com.bo" : this.cliente.vivienda.email;
           this.cliente_casual = this.cliente.cliente.casual;
@@ -1121,9 +1135,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         complete: () => { }
       })
   }
-  
+
   getNombreDeDescuentos(array_descuentos) {
-    let arry = array_descuentos === undefined ? []:array_descuentos;
+    let arry = array_descuentos === undefined ? [] : array_descuentos;
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion POST -/venta/transac/veproforma/getDescripDescExtra/";
     return this.api.create('/venta/transac/veproforma/getDescripDescExtra/' + this.userConn, arry)
       .subscribe({
@@ -1229,7 +1243,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   }
   //FIN Exportar a EXCEL
 
-  limpiar(){
+  limpiar() {
     const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
@@ -1241,52 +1255,52 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       if (result) {
         this.codigo_secreto_vendedor = undefined;
         this.nroticket = undefined;
-    
+
         this.codigo_cliente = "";
         this.codigo_cliente_catalogo_real = "";
         this.nombre_comercial_cliente = "";
         this.nombre_factura = "";
         this.razon_social = "";
-        this.complemento_ci = ""; 
+        this.complemento_ci = "";
         this.nombre_comercial_razon_social = "";
-        
+
         this.nit_cliente = "facturasventas@pertec.com.bo";
         this.email_cliente = "";
         this.cliente_casual = false;
         this.cliente_habilitado_get = "";
         this.transporte = "";
         // this.nombre_cliente_catalogo_real = this.cliente.cliente.razonsocial;
-    
+
         this.cod_vendedor_cliente = "";
         this.moneda = "";
         this.venta_cliente_oficina = false;
         this.tipo_cliente = "";
-    
+
         this.direccion = "";
         this.whatsapp_cliente = "0";
         this.latitud_cliente = "";
         this.longitud_cliente = "";
         this.condicicion_cliente = "";
         this.transporte = "";
-        this.fletepor= "";
+        this.fletepor = "";
         this.direccion = "";
-    
+
         this.num_idd = "";
         this.num_id = "";
-    
+
         this.peso = 0.00;
         this.total = 0.00;
         this.subtotal = 0.00;
         this.des_extra = 0.00;
         this.recargos = 0.00;
-    
+
         this.recargo_de_recargos = [];
         this.array_de_descuentos_ya_agregados = [];
         this.array_items_carrito_y_f4_catalogo = [];
         this.validacion_post = [];
         this.validacion_post_negativos = [];
         this.validacion_post_max_ventas = [];
-        
+
         this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'FACTURACION TIENDAS LIMPIO' });
       }
     });
@@ -1349,7 +1363,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
           this.modalDetalleObservaciones(datav.reg, mesagge);
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EMPAQUES MINIMO PROCESANDO ⚙️' });
-          
+
           this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
 
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
@@ -1420,9 +1434,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       nrocaja: [this.dataform.nrocaja, Validators.compose([Validators.required])],
       CUFD: this.dataform.CUFD,
       nroautorizacion: "0",
-      codigo_control:this.dataform.codigo_control_get,
-      dtpfecha_limite:this.dataform.dtpfecha_limite_get,
-      nrolugar:this.dataform.nrolugar_get,
+      codigo_control: this.dataform.codigo_control_get,
+      dtpfecha_limite: this.dataform.dtpfecha_limite_get,
+      nrolugar: this.dataform.nrolugar_get,
 
       id: [this.dataform.id, Validators.compose([Validators.required])],
       numeroid: this.dataform.numeroid,
@@ -1432,8 +1446,8 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       usuarioreg: this.usuarioLogueado,
       horaaut: this.dataform.horaaut,
       hora_inicial: this.dataform.hora_inicial,
-      
-      nroticket:this.dataform.nroticket,
+
+      nroticket: this.dataform.nroticket,
 
       codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
       codcliente: [this.dataform.codcliente, Validators.compose([Validators.required])],
@@ -1450,12 +1464,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       preciovta: [this.dataform.preciovta, Validators.compose([Validators.required])],
       descuentos: this.dataform.descuentos,
       tipopago: [this.dataform.tipopago === 1 ? 1 : 0, Validators.required],
-      transporte: [this.dataform.transporte === "" ? "":this.dataform.transporte, Validators.compose([Validators.required])],
+      transporte: [this.dataform.transporte === "" ? "" : this.dataform.transporte, Validators.compose([Validators.required])],
       nombre_transporte: "",
       tipo_docid: [this.dataform.tipo_docid, Validators.compose([Validators.required])],
       preparacion: [""],
       tipoentrega: [""],
-      fletepor: [this.dataform.fletepor == "" ? "":this.dataform.fletepor, Validators.compose([Validators.required])],
+      fletepor: [this.dataform.fletepor == "" ? "" : this.dataform.fletepor, Validators.compose([Validators.required])],
 
       obs: [""],
       obs2: [""],
@@ -1468,10 +1482,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       codbanco: "",
       idcuenta: this.cta_ingreso,
-      idfc: this.dataform.idfc === undefined ? "":this.dataform.idfc,
-      nroidfc: this.dataform.numeroidfc === undefined ? "":this.dataform.numeroidfc,
-      fechalimite: this.datePipe.transform(this.dataform.fechalimite, "yyyy-MM-dd"),   
-     
+      idfc: this.dataform.idfc === undefined ? "" : this.dataform.idfc,
+      nroidfc: this.dataform.numeroidfc === undefined ? "" : this.dataform.numeroidfc,
+      fechalimite: this.datePipe.transform(this.dataform.fechalimite, "yyyy-MM-dd"),
+
       tdc: [this.dataform.tdc],
       anulada: [false],
       aprobada: [false],
@@ -1500,7 +1514,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       idFC_complementaria: this.dataform.idfc === undefined ? " " : this.dataform.idfc, //aca es para complemento de proforma
       nroidFC_complementaria: this.dataform.numeroidfc === undefined ? 0 : this.dataform.numeroidfc,
 
-  
+
       idsoldesctos: "0", // Descuentos de Linea de Solicitud, esto ya no se utiliza enviar valor 0
       nroidsoldesctos: [0], // Descuentos de Linea de Solicitud, ya no se usa a fecha mayo/2024
       tipo_complementopf: [this.dataform.tipo_complementopf], //aca es para complemento de proforma
@@ -1522,19 +1536,19 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
       // nueva data
       codigo_secreto_vendedor: this.dataform.codigo_secreto_vendedor,
-      forma_pago:this.dataform.forma_pago,
-      cta_ingreso:this.dataform.cta_ingreso,
-      documento_nro:this.dataform.documento_nro,
+      forma_pago: this.dataform.forma_pago,
+      cta_ingreso: this.dataform.cta_ingreso,
+      documento_nro: this.dataform.documento_nro,
 
       //anticipos
-      idanticipo:this.dataform.idanticipo === undefined ? "" : this.dataform.idanticipo,
+      idanticipo: this.dataform.idanticipo === undefined ? "" : this.dataform.idanticipo,
       numeroidanticipo: this.dataform.numeroidanticipo === undefined ? "" : this.dataform.numeroidanticipo,
       monto_anticipo: this.dataform.monto_anticipo === undefined ? "" : this.dataform.monto_anticipo,
 
 
       // solicitudUrgente
       idpf_solurgente: this.dataform.idpf_solurgente === undefined ? "0" : this.dataform.idpf_solurgente,
-      noridpf_solurgente: this. dataform.noridpf_solurgente === undefined ? "0" : this.dataform.noridpf_solurgente,
+      noridpf_solurgente: this.dataform.noridpf_solurgente === undefined ? "0" : this.dataform.noridpf_solurgente,
 
     });
   }
@@ -1594,30 +1608,30 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     }));
 
     this.submitted = true;
-    let data = [this.FormularioData.value].map((element)=>({
+    let data = [this.FormularioData.value].map((element) => ({
       ...element,
       codcliente_real: this.codigo_cliente,
       numeroid: this.documento_nro,
-      documento_nro:this.documento_nro,
+      documento_nro: this.documento_nro,
       // codcliente_real: this.codigo_cliente_catalogo_real,
       descuentos: this.des_extra,
-      transporte:this.transporte === undefined ? "":this.transporte,
-      fletepor:this.fletepor === undefined ? "":this.fletepor,
+      transporte: this.transporte === undefined ? "" : this.transporte,
+      fletepor: this.fletepor === undefined ? "" : this.fletepor,
       // idpf_complemento: this.idpf_complemento_view === undefined ? " " : this.idpf_complemento_view, // complemento de complementar proforma
       // nroidpf_complemento: this.input_complemento_view === undefined ? 0 : this.input_complemento_view, // complemento de complementar proforma
       // tipo_complementopf: this.tipo_complementopf_input === undefined ? 3 : this.tipo_complementopf_input,
       // tipo_complementopf: this.tipo_complementopf_input,
       idsoldesctos: "0",
-      nrolugar:this.nrolugar_get,
+      nrolugar: this.nrolugar_get,
       idcuenta: this.cta_ingreso,
-      idfc: this.id_tipo_para_complementar === undefined ? "":this.id_tipo_para_complementar,
+      idfc: this.id_tipo_para_complementar === undefined ? "" : this.id_tipo_para_complementar,
 
       //anticipos
-      idanticipo:this.id_catalogo_anticipos === undefined ? "" : this.id_catalogo_anticipos,
+      idanticipo: this.id_catalogo_anticipos === undefined ? "" : this.id_catalogo_anticipos,
       numeroidanticipo: this.num_id_anticipo_get_buscador === undefined ? 0 : this.num_id_anticipo_get_buscador,
       monto_anticipo: this.monto_anticipo === undefined ? 0 : this.monto_anticipo,
 
-      codproforma: this.codigo_proforma_tranferencia === undefined ? 0:this.codigo_proforma_tranferencia,
+      codproforma: this.codigo_proforma_tranferencia === undefined ? 0 : this.codigo_proforma_tranferencia,
     }));
 
     this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
@@ -1639,7 +1653,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       codempresa: this.BD_storage,
       codtipopago: this.forma_pago,
       codtipo_comprobante: this.codtipo_comprobante_get,
-      
+
       codbanco: "",
       nrocheque: "",
       codcuentab: "",
@@ -1651,20 +1665,20 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       complemento_ci: this.complemento_ci,
       factnomb: this.razon_social,
 
-      ids_proforma: this.num_idd === undefined ? "":this.num_idd,
-      nro_id_proforma: this.num_id === undefined ? 0:this.num_id,
+      ids_proforma: this.num_idd === undefined ? "" : this.num_idd,
+      nro_id_proforma: this.num_id === undefined ? 0 : this.num_id,
 
       niveles_descuento: this.desct_nivel_actual,
-      
+
       cabecera: data[0],
-      detalle:this.array_items_carrito_y_f4_catalogo,
-      dgvfacturas:[],
+      detalle: this.array_items_carrito_y_f4_catalogo,
+      dgvfacturas: [],
       detalleDescuentos_fact: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados, // array de desct extra del totalizador
       detalleItemsProf_fact: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos_fact: this.recargo_de_recargos === undefined ? [] : this.recargo_de_recargos, //array de recargos,
-      detalleControles_fact:this.validacion_post
+      detalleControles_fact: this.validacion_post
     };
-    
+
     this.spinner.show();
     console.log("🚀ESTE ARRAY SE ENVIA AL GRABAR: submitData total_proforma_concat:", total_proforma_concat);
     const url = `/venta/transac/docvefacturamos_cufd/grabarFacturaTienda/${this.userConn}`;
@@ -1676,13 +1690,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.totabilizar_post = datav;
         this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp + "✅" });
         //aca los mensajes
-        this.openConfirmacionDialog(datav?.cadena[0] === undefined ? "":datav?.cadena[0] +
-                                    datav?.cadena[1] === undefined ? "":datav?.cadena[1] + 
-                                    datav?.cadena[2] === undefined ? "":datav?.cadena[2] +
-                                    datav?.cadena[3] === undefined ? "":datav?.cadena[3] +
-                                    datav?.cadena[4] === undefined ? "":datav?.cadena[4]);
+        this.openConfirmacionDialog(datav?.cadena[0] === undefined ? "" : datav?.cadena[0] +
+          datav?.cadena[1] === undefined ? "" : datav?.cadena[1] +
+            datav?.cadena[2] === undefined ? "" : datav?.cadena[2] +
+              datav?.cadena[3] === undefined ? "" : datav?.cadena[3] +
+                datav?.cadena[4] === undefined ? "" : datav?.cadena[4]);
 
-        if(datav.msgAlertas.length > 0){
+        if (datav.msgAlertas.length > 0) {
           await this.openConfirmacionDialog(datav.msgAlertas);
           window.location.reload();
         }
@@ -1692,15 +1706,15 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.nombre_XML = datav.nomArchivoXML;
         this.codigo_factura = datav.codFactura;
 
-        if(datav.imprime === true){
+        if (datav.imprime === true) {
           // Mandar a Imprimir
           this.mandarAImprimir(datav.codFactura);
 
           // Mandar Correo
-          this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" +"Codigo Factura: " + datav.codFactura, datav.codFactura);
+          this.getDataFacturaParaArmar(datav.resp + "\n" + datav.cadena + "\n" + "Codigo Factura: " + datav.codFactura, datav.codFactura);
 
           this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'IMPRESION EXITOSA' });
-        }else{
+        } else {
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO SE IMPRIMIO, SALIO FALSE EN IMPRIMIR XD' });
         }
 
@@ -1724,7 +1738,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  mandarAImprimir(cod_factura){
+  mandarAImprimir(cod_factura) {
     const url = `/venta/transac/docvefacturamos_cufd/imprimirFactura/${this.userConn}/${cod_factura}/${this.BD_storage}`;
     const errorMessage = `La Ruta presenta fallos al hacer la creación Ruta:- ${url}`;
 
@@ -1742,14 +1756,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         }, 50);
       },
 
-      complete: () => {}
+      complete: () => { }
     });
   }
 
   async validar() {
     this.totabilizar();
 
-    if (this.nrocaja === undefined){
+    if (this.nrocaja === undefined) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'LA CAJA NO PUEDE SER 0' });
       setTimeout(() => {
         this.spinner.hide();
@@ -1765,7 +1779,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       return;
     };
 
-    if(this.codigo_vendedor === undefined){
+    if (this.codigo_vendedor === undefined) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'FALTA CODIGO VENDEDOR' });
       setTimeout(() => {
         this.spinner.hide();
@@ -1797,9 +1811,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja?.toString(),
-        fecha_actual:this.fecha_actual,
-        nroticket:this.nroticket,
+        nrocaja: this.nrocaja?.toString(),
+        fecha_actual: this.fecha_actual,
+        nroticket: this.nroticket,
 
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
@@ -1824,7 +1838,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
+
         tipo_complemento: '0',
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
@@ -1843,10 +1857,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         totrecargos: 0,
 
         // solicitudesUrgentes
-        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        idpf_solurgente: element.idpf_solurgente === undefined ? "" : element.idpf_solurgente,
         noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
 
-        fechalimite_dosificacion: this.datePipe.transform(this.dtpfecha_limite_get, "yyyy-MM-dd"),       
+        fechalimite_dosificacion: this.datePipe.transform(this.dtpfecha_limite_get, "yyyy-MM-dd"),
         niveles_descuento: element.niveles_descuento,
         preparacion: "",
 
@@ -1856,7 +1870,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         version_codcontrol: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-  
+
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
       }
@@ -1874,7 +1888,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
-      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
@@ -1904,12 +1918,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.toggleNoValidos = false;
 
         datav.forEach(element => {
-          if(element.Codigo === 60){
+          if (element.Codigo === 60) {
             this.validacion_post_negativos = element.Dtnegativos;
             this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
           }
 
-          if(element.Codigo === 58){
+          if (element.Codigo === 58) {
             this.validacion_post_max_ventas = element.Dtnocumplen;
             this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           }
@@ -1929,15 +1943,15 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           return element.obs != "Cumple";
         });
 
-        console.warn("Validaciones NO VALIDAS",validaciones_valido_NO.length, "Validaciones Negativas", validaciones_negativos.length, "Validaciones Maximas:", validacion_max_venta_sobrepasan.length)
-        
-        if(validaciones_valido_NO.length === 0 ){
-          if(validaciones_negativos.length === 0 ){
-              this.submitData();
-          }else{
+        console.warn("Validaciones NO VALIDAS", validaciones_valido_NO.length, "Validaciones Negativas", validaciones_negativos.length, "Validaciones Maximas:", validacion_max_venta_sobrepasan.length)
+
+        if (validaciones_valido_NO.length === 0) {
+          if (validaciones_negativos.length === 0) {
+            this.submitData();
+          } else {
             this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'GENERA NEGATIVOS FAVOR REVISAR' });
           }
-        }else{
+        } else {
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'AUN HAY VALIDACIONES QUE REVISAR' });
         }
 
@@ -1963,7 +1977,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  soloValidar(){
+  soloValidar() {
     this.totabilizar();
     if (this.nrocaja === undefined) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'LA CAJA NO PUEDE SER 0' });
@@ -1981,7 +1995,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       return;
     };
 
-    if(this.codigo_vendedor === undefined){
+    if (this.codigo_vendedor === undefined) {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'FALTA CODIGO VENDEDOR' });
       setTimeout(() => {
         this.spinner.hide();
@@ -2013,9 +2027,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja?.toString(),
-        fecha_actual:this.fecha_actual,
-        nroticket:this.nroticket,
+        nrocaja: this.nrocaja?.toString(),
+        fecha_actual: this.fecha_actual,
+        nroticket: this.nroticket,
 
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
@@ -2040,7 +2054,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
+
         tipo_complemento: '0',
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
@@ -2059,10 +2073,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         totrecargos: 0,
 
         // solicitudesUrgentes
-        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        idpf_solurgente: element.idpf_solurgente === undefined ? "" : element.idpf_solurgente,
         noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
 
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),       
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         niveles_descuento: element.niveles_descuento,
         preparacion: "",
 
@@ -2072,7 +2086,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         version_codcontrol: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-  
+
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
       }
@@ -2090,7 +2104,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
-      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
@@ -2121,12 +2135,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         this.toggleNoValidos = false;
 
         datav.forEach(element => {
-          if(element.Codigo === 60){
+          if (element.Codigo === 60) {
             this.validacion_post_negativos = element.Dtnegativos;
             this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
           }
 
-          if(element.Codigo === 58){
+          if (element.Codigo === 58) {
             this.validacion_post_max_ventas = element.Dtnocumplen;
             this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
           }
@@ -2156,7 +2170,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   }
 
   //SECCION DONDE SE OBTIENE PDF Y SE DIBUJA
-  getDataFacturaParaArmar(cadena, codigo_factura:any){
+  getDataFacturaParaArmar(cadena, codigo_factura: any) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgfacturarNR_cufd/getDataFactura/";
     this.api.getAll('/venta/transac/prgfacturarNR_cufd/getDataFactura/' + this.userConn + "/" + codigo_factura + "/" + this.BD_storage)
       .subscribe({
@@ -2165,18 +2179,18 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           // this.valor_string_QR = datav.cadena_QR;
           // armamos el PDF, se crea, descarga el archivo y se lo envia por email
 
-          if(datav){
+          if (datav) {
             try {
               // ACA SE GENERA EL PDF CON SU ARCHIVO BLOB PARA QUE SE ENVIE POR CORREO ELECTRONICO
               this.descargarPDF(datav);
-              
+
               //await this.openConfirmacionDialog(cadena);
               //await this.modalPDFFactura(datav);
             } catch (error) {
               console.error("Ocurrió un error:", error);
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema en el proceso' });
             }
-          }else{
+          } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO PASO LA DATA O NO LLEGO' });
           }
         },
@@ -2193,31 +2207,31 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     return new Promise((resolve, reject) => {
       var img = new Image();
       img.setAttribute("crossOrigin", "anonymous");
-  
+
       img.onload = () => {
         var canvas = document.createElement("canvas");
         canvas.width = img.width;
         canvas.height = img.height;
-  
+
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
-  
+
         var dataURL = canvas.toDataURL("image/png");
         resolve(dataURL);
       };
-  
+
       img.onerror = error => {
         reject(error);
       };
-  
+
       img.src = url;
     });
   }
-  
+
   // Función para generar el código QR en base64
   async generateQRCodeBase64(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      QRCode.toDataURL(data, { errorCorrectionLevel: 'M', scale:5, width:85}, (err, url) => {
+      QRCode.toDataURL(data, { errorCorrectionLevel: 'M', scale: 5, width: 85 }, (err, url) => {
         if (err) {
           reject(err);
         } else {
@@ -2227,7 +2241,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  async descargarPDF(data_pdf){
+  async descargarPDF(data_pdf) {
     console.log("🚀 ~ FacturaNotaRemisionComponent ~ descargarPDF ~ data:", data_pdf, data_pdf.cabecera);
 
     // Agregar el número de orden a los objetos de datos
@@ -2254,7 +2268,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
             // Columna 1 (Imagen)
             {
               stack: [
-                { image: base64Image,  width: 76, height: 76, margin: [13, 12, 9, 5]},
+                { image: base64Image, width: 76, height: 76, margin: [13, 12, 9, 5] },
                 { text: "Lugar y Fecha:", alignment: 'left', fontSize: 8, margin: [10, 2, 10, 0], bold: true, font: 'Tahoma' },
                 { text: "Nom/Razon Social: ", alignment: 'left', fontSize: 8, margin: [10, 0, 0, 0], bold: true, font: 'Tahoma' },
               ],
@@ -2264,16 +2278,16 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
             // Columna 2 (Texto)
             {
               stack: [
-                { text: "PERTEC S.R.L", alignment: 'center', fontSize: 9, bold: true, font: 'BookMan', margin:[0, 0, 4, 0]},
-                { text: "CASA MATRIZ", alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin:[0, 2, 2, 0] },
-                { text: "Gral. Achá N° 330", alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
-                { text: "Tels: 4259660 - 4250800 - Fax: "+ data_pdf.paramEmp.fax, alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
-                { text: "Cochabamba - Bolivia", alignment: 'center', fontSize: 6, font: 'Arial', margin:[0, 2, 2, 0] },
-                { text: data_pdf.paramEmp.sucursal, alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin:[0, 2, 2, 0] },
+                { text: "PERTEC S.R.L", alignment: 'center', fontSize: 9, bold: true, font: 'BookMan', margin: [0, 0, 4, 0] },
+                { text: "CASA MATRIZ", alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin: [0, 2, 2, 0] },
+                { text: "Gral. Achá N° 330", alignment: 'center', fontSize: 6, font: 'Arial', margin: [0, 2, 2, 0] },
+                { text: "Tels: 4259660 - 4250800 - Fax: " + data_pdf.paramEmp.fax, alignment: 'center', fontSize: 6, font: 'Arial', margin: [0, 2, 2, 0] },
+                { text: "Cochabamba - Bolivia", alignment: 'center', fontSize: 6, font: 'Arial', margin: [0, 2, 2, 0] },
+                { text: data_pdf.paramEmp.sucursal, alignment: 'center', fontSize: 6, bold: true, font: 'Arial', margin: [0, 2, 2, 0] },
                 { text: data_pdf.paramEmp.codptovta, alignment: 'center', fontSize: 6, bold: true, font: 'Arial' },
                 { text: data_pdf.paramEmp.direccion, alignment: 'center', fontSize: 6, font: 'Arial' },
                 { text: data_pdf.paramEmp.telefono, alignment: 'center', fontSize: 6, font: 'Arial' },
-                { text: data_pdf.paramEmp.lugarEmision, alignment: 'center', fontSize: 6, margin:[0, 0, 0, 8], font: 'Arial' },
+                { text: data_pdf.paramEmp.lugarEmision, alignment: 'center', fontSize: 6, margin: [0, 0, 0, 8], font: 'Arial' },
 
                 { text: " " + data_pdf.paramEmp.lugarFechaHora, alignment: 'left', fontSize: 8, font: 'Tahoma' },
                 { text: " " + data_pdf.cabecera.nomcliente, alignment: 'left', fontSize: 8, colSpan: 6, font: 'Tahoma' },
@@ -2289,7 +2303,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                 margin: [2, 40, 5, 0], // Ajuste de margen superior
                 fontSize: 11,
                 font: 'BookMan',
-                bold: true 
+                bold: true
               },
               {
                 text: "CON DERECHO A CREDITO FISCAL",
@@ -2297,79 +2311,88 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                 margin: [0, 0, 0, 0],
                 fontSize: 8,
                 font: 'BookMan',
-                bold: true 
+                bold: true
               },
-            ]
+              ]
             },
             // Columna 4 (Texto)
             {
               stack: [
-                { text: [ { text: 'NIT: ', bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma'},  // 'NIT:' en negrita
-                          { text: '1023109029', bold: true, alignment: 'left', font: 'Tahoma' }  // Número sin negrita
-                        ], fontSize: 7, margin:[0, 12, 52, 0]},
-
-                { text: [{text:"Factura Nro: ", bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma'},
-                          {text:"00000"+ data_pdf.cabecera.nrofactura, bold: true, alignment: 'left', font: 'Tahoma'}], fontSize: 7, 
-                          margin:[0, 0, 63, 0]},
-
-                { table: {
-                  widths: [65, 70], // Ajusta las columnas
-                  body: [
-                    [
-                      {
-                        text: "Cód. Autorización:",
-                        bold: true,
-                        alignment: 'right',
-                        fontSize: 7,
-                        font: 'Tahoma',
-                        margin: [0, 0, 0, 0]
-                      },
-                      {
-                        text: this.insertarSaltosDeLinea(data_pdf.cabecera.cuf), 
-                        bold: true,
-                        alignment: 'left',
-                        characterSpacing: 0,
-                        fontSize: 7,
-                        font: 'Tahoma',
-                        margin: [0, 0, 0, 25]
-                      }
-                    ]
-                  ]
+                {
+                  text: [{ text: 'NIT: ', bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma' },  // 'NIT:' en negrita
+                  { text: '1023109029', bold: true, alignment: 'left', font: 'Tahoma' }  // Número sin negrita
+                  ], fontSize: 7, margin: [0, 12, 52, 0]
                 },
-                layout: 'noBorders', // Elimina los bordes si no los necesitas
-                
-              },
 
-                { text: [{text:"Nit/Ci/Cex: ", bold: true, alignment: 'right'},
-                   { text:data_pdf.cabecera.nit + this.complemento_ci, bold: false}], fontSize: 8, font: 'Tahoma',
-                    margin:[0, 0, 56, 0]},
-                { text: [{text:"Código Cliente: ", bold: true, alignment: 'right', font: 'Tahoma'}, 
-                  { text: data_pdf.cabecera.nit, bold: false, font: 'Tahoma'}], fontSize: 8, margin:[0, 0, 48, 0]},
+                {
+                  text: [{ text: "Factura Nro: ", bold: true, alignment: 'right', fontSize: 7, font: 'Tahoma' },
+                  { text: "00000" + data_pdf.cabecera.nrofactura, bold: true, alignment: 'left', font: 'Tahoma' }], fontSize: 7,
+                  margin: [0, 0, 63, 0]
+                },
+
+                {
+                  table: {
+                    widths: [65, 70], // Ajusta las columnas
+                    body: [
+                      [
+                        {
+                          text: "Cód. Autorización:",
+                          bold: true,
+                          alignment: 'right',
+                          fontSize: 7,
+                          font: 'Tahoma',
+                          margin: [0, 0, 0, 0]
+                        },
+                        {
+                          text: this.insertarSaltosDeLinea(data_pdf.cabecera.cuf),
+                          bold: true,
+                          alignment: 'left',
+                          characterSpacing: 0,
+                          fontSize: 7,
+                          font: 'Tahoma',
+                          margin: [0, 0, 0, 25]
+                        }
+                      ]
+                    ]
+                  },
+                  layout: 'noBorders', // Elimina los bordes si no los necesitas
+
+                },
+
+                {
+                  text: [{ text: "Nit/Ci/Cex: ", bold: true, alignment: 'right' },
+                  { text: data_pdf.cabecera.nit + this.complemento_ci, bold: false }], fontSize: 8, font: 'Tahoma',
+                  margin: [0, 0, 56, 0]
+                },
+                {
+                  text: [{ text: "Código Cliente: ", bold: true, alignment: 'right', font: 'Tahoma' },
+                  { text: data_pdf.cabecera.nit, bold: false, font: 'Tahoma' }], fontSize: 8, margin: [0, 0, 48, 0]
+                },
               ],
               margin: [10, 10, 10, 0], // Margen ajustado
             },
           ],
           margin: [0, 4, 2, 0], // Margen del header
         },
-  
-      content: [    
-       // Línea encima de la cabecera
-        {
-          canvas: [{
-            type: 'line', x1: 12, y1: 0, x2: 575, y2: 0, lineWidth: 1 
-          }],
-          margin: [0, 0, 0, 0], // Espacio entre la línea superior y la tabla
-        },
 
-        // Tabla con cabecera y contenido
-        {
-          table: {
-            headerRows: 1,
-            widths: [18, 56, 140, 56, 48, 48, 48, 58, 64],
-            
-            body: [
+        content: [
+          // Línea encima de la cabecera
+          {
+            canvas: [{
+              type: 'line', x1: 12, y1: 0, x2: 575, y2: 0, lineWidth: 1
+            }],
+            margin: [0, 0, 0, 0], // Espacio entre la línea superior y la tabla
+          },
+
+          // Tabla con cabecera y contenido
+          {
+            table: {
+              headerRows: 1,
+              widths: [18, 56, 140, 56, 48, 48, 48, 58, 64],
+
+              body: [
                 [
-                  { text: '#', style: 'tableHeader', alignment: 'left', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma'},
+                  { text: '#', style: 'tableHeader', alignment: 'left', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
                   { text: 'CODIGO PRODUCTO', style: 'tableHeader', alignment: 'center', fontSize: 8, bold: true, font: 'Tahoma' },
                   { text: 'DESCRIPCION', colSpan: 2, style: 'tableHeader', alignment: 'center', fontSize: 8, noWrap: false, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
                   {}, // Columna vacía para ajustar con el colSpan
@@ -2377,7 +2400,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                   { text: 'CANTIDAD', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
                   { text: 'PRECIO UNITARIO', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, font: 'Tahoma' },
                   { text: 'DESCUENTO', style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
-                  { text: 'SUBTOTAL'+ "("+data_pdf.cabecera.codmoneda+")", style: 'tableHeader', alignment: 'right', fontSize: 8,  bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
+                  { text: 'SUBTOTAL' + "(" + data_pdf.cabecera.codmoneda + ")", style: 'tableHeader', alignment: 'right', fontSize: 8, bold: true, margin: [0, 8, 0, 0], font: 'Tahoma' },
                 ],
 
                 ...data_pdf.detalle.map(items => [
@@ -2388,21 +2411,21 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                   { text: items.udm, alignment: 'center', fontSize: 8, font: 'Tahoma' },
                   { text: this.formatNumberTotalSubTOTALES(items.cantidad), alignment: 'right', fontSize: 8, font: 'Tahoma' },
                   { text: items.precioneto, alignment: 'right', fontSize: 8, font: 'Tahoma' },
-                  { text: items.preciodesc, alignment: 'right', fontSize: 8, font: 'Tahoma'},
+                  { text: items.preciodesc, alignment: 'right', fontSize: 8, font: 'Tahoma' },
                   { text: this.formatNumberTotalSub(items.total), alignment: 'right', fontSize: 8, font: 'Tahoma' }
                 ]),
 
                 [{ text: '___________________________________________________________________________________', colSpan: 9, margin: [0, 0, 0, 0] }, {}, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: data_pdf.imp_totalliteral, characterSpacing: 0, margin: [10, 0, 0, 0], bold:true, fontSize: 8, colSpan: 6, font: 'Tahoma' },
+                [{ text: data_pdf.imp_totalliteral, characterSpacing: 0, margin: [10, 0, 0, 0], bold: true, fontSize: 8, colSpan: 6, font: 'Tahoma' },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                { text: 'Sub Total'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: this.subtotal, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+                { text: 'Sub Total' + "(BS): ", bold: true, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma' },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: this.subtotal, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
 
                 [{ text: '________________________________________________________', margin: [0, 0, 0, 0], colSpan: 6, },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -2410,37 +2433,43 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Descuentos'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma'},
+                { text: 'Descuentos' + "(BS): ", bold: true, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 2, font: 'Tahoma' },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: data_pdf.cabecera.descuentos, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+                { text: data_pdf.cabecera.descuentos, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
 
-                [{ text: '', characterSpacing: 0, margin: [10, 0, 0, 0], bold:true, colSpan: 6 },
+                [{ text: '', characterSpacing: 0, margin: [10, 0, 0, 0], bold: true, colSpan: 6 },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },              
-                { text: 'Total'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], 
-                  colSpan: 2, font: 'Tahoma'},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                { text: data_pdf.cabecera.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                {
+                  text: 'Total' + "(BS): ", bold: true, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0],
+                  colSpan: 2, font: 'Tahoma'
+                },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: data_pdf.cabecera.total, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
 
-                [{ text: [{text:"ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS, EL USO ILICITO DE ESTA SERA SANCIONADO PENALMENTE DE ACUERDO A LA LEY \n", 
-                  bold:true, fontSize:8, alignment: 'center', font: 'Tahoma' },
-                  { text: data_pdf.leyendaSIN + "\n", bold:false, fontSize:6, alignment: 'center', font: 'Tahoma' },
-                  {text: data_pdf.cabecera.leyenda + "\n", bold:false, fontSize:6, alignment: 'center', font: 'Tahoma' },
-                  {text:"Esta factura se encuentra tambien disponible en el siguiente enlace", bold:false, fontSize:6, font: 'Tahoma' }], characterSpacing: 0, margin: [10, 0, 0, 0], colSpan: 5, alignment: 'center'},
-                
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Importe Base Credito Fiscal'+"(BS): ", bold: true, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma'}, 
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                { text: data_pdf.cabecera.total, characterSpacing: 0, fontSize:8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+                [{
+                  text: [{
+                    text: "ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAIS, EL USO ILICITO DE ESTA SERA SANCIONADO PENALMENTE DE ACUERDO A LA LEY \n",
+                    bold: true, fontSize: 8, alignment: 'center', font: 'Tahoma'
+                  },
+                  { text: data_pdf.leyendaSIN + "\n", bold: false, fontSize: 6, alignment: 'center', font: 'Tahoma' },
+                  { text: data_pdf.cabecera.leyenda + "\n", bold: false, fontSize: 6, alignment: 'center', font: 'Tahoma' },
+                  { text: "Esta factura se encuentra tambien disponible en el siguiente enlace", bold: false, fontSize: 6, font: 'Tahoma' }], characterSpacing: 0, margin: [10, 0, 0, 0], colSpan: 5, alignment: 'center'
+                },
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: 'Importe Base Credito Fiscal' + "(BS): ", bold: true, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma' },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: data_pdf.cabecera.total, characterSpacing: 0, fontSize: 8.5, alignment: 'right', margin: [0, 0, 0, 0], font: 'Tahoma' }],
+
+                [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
@@ -2451,46 +2480,46 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
                 { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }],
 
                 [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0], },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: 'Código WEB: ' + data_pdf.cabecera.codfactura_web, alignment: 'center', fontSize:7, margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma' },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                  { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }],
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: 'Código WEB: ' + data_pdf.cabecera.codfactura_web, alignment: 'center', fontSize: 7, margin: [0, 0, 0, 0], colSpan: 3, font: 'Tahoma' },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }],
               ],
-          },
-          margin: [12, 0, 10, 0], // Ajusta el espacio alrededor de la tabla
-          layout: {
-            // 'headerLineOnly',
-            headerLineOnly: true,
-            hLineWidth: function (i, node) {
-              // Dibuja una línea solo debajo del encabezado
-              return (i === 1) ? 1 : 0;
             },
-            vLineWidth: function (i, node) {
-              // Sin líneas verticales
-              return 0;
-            },
-            hLineColor: function (i, node) {
-              // Color de la línea horizontal
-              return (i === 1) ? 'black' : 'white';
-            },
+            margin: [12, 0, 10, 0], // Ajusta el espacio alrededor de la tabla
+            layout: {
+              // 'headerLineOnly',
+              headerLineOnly: true,
+              hLineWidth: function (i, node) {
+                // Dibuja una línea solo debajo del encabezado
+                return (i === 1) ? 1 : 0;
+              },
+              vLineWidth: function (i, node) {
+                // Sin líneas verticales
+                return 0;
+              },
+              hLineColor: function (i, node) {
+                // Color de la línea horizontal
+                return (i === 1) ? 'black' : 'white';
+              },
 
-            paddingLeft: function(i, node) { return 1.5; },
-            paddingRight: function(i, node) { return 1.5; },
-            paddingTop: function(i, node) { return 2.5; },
-            paddingBottom: function(i, node) { return 1.5; }
+              paddingLeft: function (i, node) { return 1.5; },
+              paddingRight: function (i, node) { return 1.5; },
+              paddingTop: function (i, node) { return 2.5; },
+              paddingBottom: function (i, node) { return 1.5; }
+            },
           },
-        },       
         ],
 
         footer: function (currentPage, pageCount) {
           return {
-            columns: [             
+            columns: [
               {
-                text: 'Pagina ' + currentPage + ' de ' + pageCount +" - "+ id + "-" + numeroid,
+                text: 'Pagina ' + currentPage + ' de ' + pageCount + " - " + id + "-" + numeroid,
                 alignment: 'center',
                 margin: [4, 0, 10, 4],
                 fontSize: 7,
@@ -2499,14 +2528,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
             ]
           };
         },
- 
+
         styles: {
           header: {
             fontSize: 15,
           },
           content: {
             //font: 'Courier',
-            margin:[0, 0, 0, 0],
+            margin: [0, 0, 0, 0],
           }
         },
         defaultStyle: {
@@ -2514,14 +2543,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           font: 'Arial',
         },
       };
-  
+
       const archivo_pdf = pdfMake.createPdf(docDefinition);
-      
+
       // Llama a la función de envío de email con el Blob del PDF
       archivo_pdf.getBlob((pdfBlob: Blob) => {
         this.enviarFacturaEmail(pdfBlob);  // Llamada a la función con el Blob
       });
-      
+
     } catch (error) {
       console.error("Error al cargar la imagen: ", error);
     }
@@ -2540,7 +2569,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     console.log(formData);
 
     let errorMessage = "Error al enviar la factura por email.";
-    
+
     // Realizar la petición POST usando formData
     this.api.create(
       `/venta/transac/prgfacturarNR_cufd/enviarFacturaEmail/${this.userConn}/${this.BD_storage}/${this.usuarioLogueado}/${this.codigo_factura}/${this.nombre_XML}`,
@@ -2624,11 +2653,11 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   verificarNit() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/transac/prgfacturarNR_cufd/getVerifComunicacionSIN/";
-    return this.api.getAll('/venta/transac/veproforma/validarNITenSIN/' + this.userConn +"/"+ this.BD_storage+"/"+this.usuarioLogueado+"/"+this.agencia_logueado+"/"+this.nit_cliente+"/"+this.tipo_doc_cliente)
+    return this.api.getAll('/venta/transac/veproforma/validarNITenSIN/' + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.agencia_logueado + "/" + this.nit_cliente + "/" + this.tipo_doc_cliente)
       .subscribe({
         next: (datav) => {
           // console.log(datav);
-          if(datav.nit_es_valido === "VALIDO"){
+          if (datav.nit_es_valido === "VALIDO") {
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
@@ -2636,7 +2665,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
               data: { mensaje_dialog: datav.nit_es_valido },
               disableClose: true,
             });
-          }else{
+          } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
@@ -2696,7 +2725,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.mandarCodCliente(datav.codcliente);
           this._snackBar.open('!CLIENTE GUARDADO!', '🙍‍♂️', {
             duration: 2000,
-           panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
           });
 
           setTimeout(() => {
@@ -2863,7 +2892,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       })
   }
 
-  getEmpaqueItem(item){
+  getEmpaqueItem(item) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getempaques/' + this.userConn + "/" + item)
       .subscribe({
@@ -2941,29 +2970,29 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia_logueado;
-    let array_send={
-    agencia:agencia_concat,
-    codalmacen: this.agencia_logueado,
-    coditem: item,
-    codempresa: this.BD_storage,
-    usuario: this.usuarioLogueado,
-    
-    idProforma: this.id_factura?.toString() === undefined ? " ":this.id_factura?.toString(),
-    nroIdProforma: this.documento_nro
+    let array_send = {
+      agencia: agencia_concat,
+      codalmacen: this.agencia_logueado,
+      coditem: item,
+      codempresa: this.BD_storage,
+      usuario: this.usuarioLogueado,
+
+      idProforma: this.id_factura?.toString() === undefined ? " " : this.id_factura?.toString(),
+      nroIdProforma: this.documento_nro
     };
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
       .subscribe({
         next: (datav) => {
-        console.log('data', datav);
-        this.id_tipo = datav;
-        this.saldoItem = datav.totalSaldo;
+          console.log('data', datav);
+          this.id_tipo = datav;
+          this.saldoItem = datav.totalSaldo;
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
-          
+
         },
         complete: () => { console.log(this.saldoItem); }
       })
@@ -2985,15 +3014,15 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         // console.log("LE DIO AL SI hay QUE MAPEAR EL DETALLE CON EL DESCT Y DESPUES HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          codtarifa:value
+          codtarifa: value
         }));
-    
+
         this.totabilizar();
       } else {
         // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR, SOLO PINTAR EL NUEVO VALOR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          codtarifa:value
+          codtarifa: value
         }));
       }
       return this.array_items_carrito_y_f4_catalogo;
@@ -3016,14 +3045,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         // console.log("LE DIO AL SI HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          coddescuento:value
+          coddescuento: value
         }));
         this.totabilizar();
       } else {
         // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          coddescuento:value
+          coddescuento: value
         }));
       }
       return this.array_items_carrito_y_f4_catalogo;
@@ -3049,10 +3078,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     };
 
     console.log("🚀 ~ ProformaComponent ~ totabilizar ~ total_proforma_concat:", total_proforma_concat)
-  
+
     this.spinner.show();
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/docvefacturamos_cufd/totabilizarFact/";
-    return this.api.create("/venta/transac/docvefacturamos_cufd/totabilizarFact/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.moneda_get_catalogo+"/"+this.codigo_cliente+"/"+this.almacn_parame_usuario_almacen+"/"+ this.nit_cliente, total_proforma_concat)
+    return this.api.create("/venta/transac/docvefacturamos_cufd/totabilizarFact/" + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.moneda_get_catalogo + "/" + this.codigo_cliente + "/" + this.almacn_parame_usuario_almacen + "/" + this.nit_cliente, total_proforma_concat)
       .subscribe({
         next: (datav) => {
           this.totabilizar_post = datav;
@@ -3084,9 +3113,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
           this.iva = this.totabilizar_post.totales?.iva;
           this.peso = Number(this.totabilizar_post.totales?.peso);
 
-          
+
           this.tablaIva = this.totabilizar_post.tabla_iva;
-          
+
           // Agregar el número de orden a los objetos de datos
           this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
             element.nroitem = index + 1;
@@ -3121,9 +3150,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja?.toString(),
-        fecha_actual:this.fecha_actual,
-        nroticket:this.nroticket,
+        nrocaja: this.nrocaja?.toString(),
+        fecha_actual: this.fecha_actual,
+        nroticket: this.nroticket,
 
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
@@ -3148,7 +3177,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
+
         tipo_complemento: '0',
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
@@ -3167,10 +3196,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         totrecargos: 0,
 
         // solicitudesUrgentes
-        idpf_solurgente: element.idpf_solurgente === undefined ? "":element.idpf_solurgente,
+        idpf_solurgente: element.idpf_solurgente === undefined ? "" : element.idpf_solurgente,
         noridpf_solurgente: element.noridpf_solurgente?.toString() === undefined ? "0" : element.noridpf_solurgente?.toString(),
 
-        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),       
+        fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         niveles_descuento: "",
         preparacion: "",
 
@@ -3180,7 +3209,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         version_codcontrol: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-  
+
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
       }
@@ -3189,58 +3218,58 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     // boolean que verifica que el formulario este con sus data llenada
     this.submitted = true;
 
-    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element)=>({
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
       ...element,
-      empaque: element.empaque === null ? 0:element.empaque,
+      empaque: element.empaque === null ? 0 : element.empaque,
     }))
 
     // if (this.FormularioData.valid) {
-      console.log("DATOS VALIDADOS");
-      this.spinner.show();
-      // console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
-      let proforma_validar = {
-        datosDocVta: validacion_post_max_ventas,
-        detalleAnticipos: [],
-        detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
-        detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
-        detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [],
-        detalleControles: this.validacion_post.length > 1 ? this.validacion_post : []
+    console.log("DATOS VALIDADOS");
+    this.spinner.show();
+    // console.log("Valor Formulario Mapeado: ", this.validacion_post_max_ventas);
+    let proforma_validar = {
+      datosDocVta: validacion_post_max_ventas,
+      detalleAnticipos: [],
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: [],
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : []
+    }
+
+    // console.log(proforma_validar);
+    const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/00058/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA MAX. VENTAS ✅' });
+        this.validacion_post_max_ventas = datav[0].Dtnocumplen;
+        // console.log(this.validacion_post_max_ventas);
+
+        this.toggleTodosMaximoVentas = true;
+        this.toggleMaximoVentaSobrepasan = false;
+        this.toggleMaximoVentasNoSobrepasan = false;
+
+        this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      complete: () => {
+        this.abrirTabPorLabel("Limites Venta Maxima");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
       }
-
-      // console.log(proforma_validar);
-      const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/00058/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
-      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-
-      this.api.create(url, proforma_validar).subscribe({
-        next: (datav) => {
-          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA MAX. VENTAS ✅' });
-          this.validacion_post_max_ventas = datav[0].Dtnocumplen;
-          // console.log(this.validacion_post_max_ventas);
-
-          this.toggleTodosMaximoVentas = true;
-          this.toggleMaximoVentaSobrepasan = false;
-          this.toggleMaximoVentasNoSobrepasan = false;
-
-          this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        complete: () => {
-          this.abrirTabPorLabel("Limites Venta Maxima");
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        }
-      });
+    });
   }
 
   validarProformaSoloNegativos() {
@@ -3270,9 +3299,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja?.toString(),
-        fecha_actual:this.fecha_actual,
-        nroticket:this.nroticket,
+        nrocaja: this.nrocaja?.toString(),
+        fecha_actual: this.fecha_actual,
+        nroticket: this.nroticket,
 
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
@@ -3297,7 +3326,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
+
         tipo_complemento: '0',
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
@@ -3314,27 +3343,27 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        
+
         // solicitudesUrgentes
         idpf_solurgente: element.idpf_solurgente === undefined ? 0 : element.idpf_solurgente,
         noridpf_solurgente: element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         niveles_descuento: element.niveles_descuento,
-        preparacion: "",        
+        preparacion: "",
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
         idsol_nivel: "",
         version_codcontrol: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-  
+
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
       }
     });
 
-    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element)=>({
+    this.array_de_descuentos_ya_agregados = this.array_de_descuentos_ya_agregados?.map((element) => ({
       ...element,
       descripcion: element.descrip,
     }))
@@ -3342,54 +3371,54 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     // boolean que verifica que el formulario este con sus data llenada
     this.submitted = true;
     // if (this.FormularioData.valid) {
-      this.spinner.show();
-      // console.log("DATOS VALIDADOS");
-      // console.log("Valor Formulario Mapeado: ", valor_formulario_negativos);
+    this.spinner.show();
+    // console.log("DATOS VALIDADOS");
+    // console.log("Valor Formulario Mapeado: ", valor_formulario_negativos);
 
-      let proforma_validar = {
-        datosDocVta: valor_formulario_negativos,
-        detalleAnticipos: [],
-        detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
-        detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
-        detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
-        detalleRecargos: [],
-        detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [], // ACA SE ENVIAN LAS VALIDACIONES LA PRIMERA VEZ VACIO LUEGO YA CON LA DATA
+    let proforma_validar = {
+      datosDocVta: valor_formulario_negativos,
+      detalleAnticipos: [],
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
+      detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
+      detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
+      detalleRecargos: [],
+      detalleControles: this.validacion_post.length > 1 ? this.validacion_post : [], // ACA SE ENVIAN LAS VALIDACIONES LA PRIMERA VEZ VACIO LUEGO YA CON LA DATA
+    }
+
+    console.log(proforma_validar);
+    const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/00060/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+    this.api.create(url, proforma_validar).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
+        this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA DE NEGATIVOS ✅' });
+
+        this.toggleTodosNegativos = true;
+        this.toggleNegativos = false;
+        this.togglePositivos = false;
+
+        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !' });
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      complete: () => {
+        this.abrirTabPorLabel("Saldos Negativos");
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
       }
-
-      console.log(proforma_validar);
-      const url = `/venta/transac/docvefacturamos_cufd/validarFacturaTienda/${this.userConn}/00060/factura/validar/${this.BD_storage}/${this.usuarioLogueado}`;
-      const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
-      this.api.create(url, proforma_validar).subscribe({
-        next: (datav) => {
-          console.log("🚀 ~ FacturacionMostradorTiendasComponent ~ this.api.create ~ datav:", datav);
-          this.messageService.add({ severity: 'info', summary: 'Informacion', detail: 'VALIDACION CORRECTA DE NEGATIVOS ✅' });
-
-          this.toggleTodosNegativos = true;
-          this.toggleNegativos = false;
-          this.togglePositivos = false;
-
-          this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        error: (err) => {
-          console.log(err, errorMessage);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO NEGATIVOS, OCURRIO UN PROBLEMA !' });
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        },
-        complete: () => {
-          this.abrirTabPorLabel("Saldos Negativos");
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 500);
-        }
-      });
+    });
   }
 
-  validarDeUno(validacion_seleccionada){
+  validarDeUno(validacion_seleccionada) {
     console.warn("Hola lola", validacion_seleccionada);
 
     let valor_formulario = [this.FormularioData.value];
@@ -3414,9 +3443,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         codvendedor: element.codvendedor?.toString() || '',
         preciovta: element.preciovta?.toString() || '',
         noridanticipo: element.numeroidanticipo?.toString() || '',
-        nrocaja:this.nrocaja?.toString(),
-        fecha_actual:this.fecha_actual,
-        nroticket:this.nroticket,
+        nrocaja: this.nrocaja?.toString(),
+        fecha_actual: this.fecha_actual,
+        nroticket: this.nroticket,
 
         desclinea_segun_solicitud: false,
         pago_con_anticipo: false,
@@ -3441,7 +3470,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         idpf_complemento: element.idpf_complemento,
         nroidpf_complemento: element.nroidpf_complemento?.toString(),
         // fin datos del complemento mayotista - dimediado
-        
+
         tipo_complemento: '0',
         fechadoc: element.fecha,
         idanticipo: element.idanticipo,
@@ -3458,21 +3487,21 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         cliente_habilitado: this.cliente_habilitado_get === true ? "HABILITADO" : "DES-HABILITADO",
         totdesctos_extras: this.des_extra,
         totrecargos: 0,
-        
+
         // solicitudesUrgentes
         idpf_solurgente: element.idpf_solurgente,
         noridpf_solurgente: element.noridpf_solurgente?.toString(),
 
         fechalimite_dosificacion: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
         niveles_descuento: element.niveles_descuento,
-        preparacion: "",        
+        preparacion: "",
         tipo_caja: this.tipo_get,
         nroautorizacion: "",
         idsol_nivel: "",
         version_codcontrol: "",
         idFC_complementaria: "",
         nroidFC_complementaria: "",
-  
+
         codempresa: this.BD_storage,
         codtipopago: this.tipopago,
       }
@@ -3490,7 +3519,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     let proforma_validar = {
       datosDocVta: this.valor_formulario_copied_map_all,
       detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
-      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? []:this.array_de_descuentos_ya_agregados,
+      detalleDescuentos: this.array_de_descuentos_ya_agregados === undefined ? [] : this.array_de_descuentos_ya_agregados,
       detalleEtiqueta: this.etiqueta_get_modal_etiqueta,
       detalleItemsProf: this.array_items_carrito_y_f4_catalogo,
       detalleRecargos: this.recargo_de_recargos,
@@ -3758,12 +3787,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         console.log("Elemento Resuelto ya eliminado: ", elementosDiferentes);
         console.log("Array de donde se ah tenido que eliminar: ", this.validacion_no_validos);
         console.log("Array de donde se imprime solo las RESUELTAS: ", this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS);
-       
+
         // al array de validacionesOriginal asignarle el array de validaciones q ya esta resueltas array_original_de_validaciones_NO_VALIDAS_RESUELTAS
         this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.forEach(validacionResuelta => {
           // Busca el elemento en el array original por el campo 'Codigo'
           const validacionOriginal = this.validacion_post.find(validacion => validacion.Codigo === validacionResuelta.Codigo);
-        
+
           // Si encuentra una coincidencia, actualiza los datos
           if (validacionOriginal) {
             Object.assign(validacionOriginal, validacionResuelta);  // Mapea los campos del resuelto al original
@@ -3841,12 +3870,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         console.log("Elemento Resuelto ya eliminado: ", elementosDiferentes);
         console.log("Array de donde se ah tenido que eliminar: ", this.validacion_no_validos);
         console.log("Array de donde se imprime solo las RESUELTAS: ", this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS);
-        
+
         // al array de validacionesOriginal asignarle el array de validaciones q ya esta resueltas array_original_de_validaciones_NO_VALIDAS_RESUELTAS
         this.array_original_de_validaciones_NO_VALIDAS_RESUELTAS.forEach(validacionResuelta => {
           // Busca el elemento en el array original por el campo 'Codigo'
           const validacionOriginal = this.validacion_post.find(validacion => validacion.Codigo === validacionResuelta.Codigo);
-        
+
           // Si encuentra una coincidencia, actualiza los datos
           if (validacionOriginal) {
             Object.assign(validacionOriginal, validacionResuelta);  // Mapea los campos del resuelto al original
@@ -3874,9 +3903,10 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     if (numberString === null || numberString === undefined) {
       return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   eliminarItemTabla(orden, coditem) {
@@ -4180,7 +4210,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         // Realizar cálculos solo si los valores no son undefined
         return this.formatNumberTotalSub(cantidad_pedida * precioneto);
       }
-        
+
     } else {
       return 0; // O algún otro valor predeterminado
     }
@@ -4200,23 +4230,27 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   }
 
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
 
   // MAT-TAB Desct.Promocion
   getPrecioMayorEnDetalle() {
-    let array_cumple:any=[];
-    array_cumple = [this.FormularioData.value].map((element)=>({
+    let array_cumple: any = [];
+    array_cumple = [this.FormularioData.value].map((element) => ({
       ...element,
-      cumple: element.cumple === 1 ? true:false
+      cumple: element.cumple === 1 ? true : false
     }));
     console.log("🚀 ~ ProformaComponent ~ array_cumple=[this.FormularioData.value].map ~ array_cumple:", array_cumple)
 
     let array_post = {
       tabladetalle: this.array_items_carrito_y_f4_catalogo,
-      dvta:  array_cumple[0],
+      dvta: array_cumple[0],
     };
 
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTarifaPrincipal/"
@@ -4236,13 +4270,13 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       })
   }
 
-  getTipoDescNivel(){
+  getTipoDescNivel() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getTipoDescNivel/";
     return this.api.getAll('/venta/transac/veproforma/getTipoDescNivel/' + this.userConn)
       .subscribe({
         next: (datav) => {
-        this.valor_desct_nivel = datav;
-        console.log("🚀 ~ ProformaComponent ~ getTipoDescNivel ~ datav:", this.valor_desct_nivel)
+          this.valor_desct_nivel = datav;
+          console.log("🚀 ~ ProformaComponent ~ getTipoDescNivel ~ datav:", this.valor_desct_nivel)
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4262,28 +4296,28 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       })
   }
 
-  aplicarDescuentoNivel(){
+  aplicarDescuentoNivel() {
     // en tiendas no hay cliente real ni su descripcion que tendria q ser la razonsocial pero dicen que nop
     // 11-12-2024
     let array_descuentos_nivel = {
-      cmbtipo_desc_nivel: this.tipo_desct_nivel === undefined ? "":this.tipo_desct_nivel,
+      cmbtipo_desc_nivel: this.tipo_desct_nivel === undefined ? "" : this.tipo_desct_nivel,
       fechaProf: this.fecha_actual?.toString(),
       codtarifa_main: this.tarifaPrincipal_value,
       codcliente: this.codigo_cliente?.toString(),
       codcliente_real: this.codigo_cliente_catalogo_real?.toString(),
       codclientedescripcion: ""
     };
-    console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)   
+    console.log("🚀 ~ ProformaComponent ~ aplicarDescuentoNivel ~ array_descuentos_nivel:", array_descuentos_nivel)
 
     let mesagge: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/aplicarDescuentoCliente/";
     return this.api.create('/venta/transac/veproforma/aplicarDescuentoCliente/' + this.userConn, array_descuentos_nivel)
       .subscribe({
         next: (datav) => {
           // console.log("Descuento de Nivel: ", datav);
-          if(datav.resp){
+          if (datav.resp) {
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: datav.resp });
           }
-          
+
           setTimeout(() => {
             this.spinner.hide();
           }, 500);
@@ -4375,14 +4409,14 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       nombre_vent: this.ventana,
     });
   }
-  
+
   async modalPDFFactura(data: any): Promise<any> {
     const dialogRef = this.dialog.open(FacturaTemplateComponent, {
       width: 'auto',
       height: 'auto',
       data: { valor_PDF: data },
     });
-  
+
     // Espera hasta que el modal se cierre y devuelve el resultado
     return firstValueFrom(dialogRef.afterClosed());
   }
@@ -4412,7 +4446,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       });
       return;
     }
-    
+
     // Si todas las validaciones pasan, abrimos el MatrizItemsComponent
     this.dialog.open(MatrizItemsComponent, {
       width: '100vw',
@@ -4439,11 +4473,11 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         precio_de_venta: this.cod_precio_venta_modal_codigo,
 
         id_proforma: this.id_factura,
-        num_id_proforma:this.documento_nro,
+        num_id_proforma: this.documento_nro,
       }
     });
   }
-  
+
   modalMatrizClasica(): void {
     // Realizamos todas las validaciones
     if (this.moneda_get_catalogo === '') {
@@ -4510,7 +4544,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         precio_de_venta: this.cod_precio_venta_modal_codigo,
 
         id_proforma: this.id_factura,
-        num_id_proforma:this.documento_nro,
+        num_id_proforma: this.documento_nro,
       }
     });
   }
@@ -4573,9 +4607,9 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
-      data: { 
+      data: {
         tablaIva: this.tablaIva
-        },
+      },
     });
   }
 
@@ -4616,7 +4650,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
         recargos_array: this.recargo_de_recargos,
         array_de_descuentos_ya_agregados_a_modal: this.array_de_descuentos_ya_agregados,
         codigo_cliente: this.codigo_cliente,
-        nit:this.nit_cliente
+        nit: this.nit_cliente
       }
     });
   }
@@ -4688,7 +4722,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       disableClose: true,
       data: {
         ventana: "ventana_catalogo",
-        codcliente:codcliente
+        codcliente: codcliente
       }
     });
   }
@@ -4737,7 +4771,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       },
     });
   }
-  
+
   modalClientesDireccion(cod_cliente): void {
     this.dialog.open(ModalClienteDireccionComponent, {
       width: 'auto',
@@ -4753,7 +4787,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
       height: 'auto',
     });
   }
-  
+
   tranferirModal(): void {
     this.dialog.open(TranferirMostradorTiendasComponent, {
       width: 'auto',
@@ -4761,7 +4795,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  modalBuscadorAnticipos(){
+  modalBuscadorAnticipos() {
     this.dialog.open(BuscadorAvanzadoAnticiposComponent, {
       width: 'auto',
       height: 'auto',
@@ -4780,7 +4814,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
 
     return firstValueFrom(dialogRef.afterClosed());
   }
-  
+
   openConfirmacionDialog(message: string): Promise<boolean> {
     //btn aceptar
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
@@ -4793,7 +4827,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     return firstValueFrom(dialogRef.afterClosed());
   }
 
-  alMenu(){
+  alMenu() {
     const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',
@@ -4809,7 +4843,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     });
   }
 
-  eventoBackspaceLimpiarCliente(){
+  eventoBackspaceLimpiarCliente() {
     this.codigo_cliente = "";
     this.codigo_cliente_catalogo_real = "";
     this.nombre_comercial_cliente = "";
@@ -4824,12 +4858,12 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
     this.cliente_habilitado_get = "";
 
     this.cod_vendedor_cliente = "31101";
-    
+
     this.whatsapp_cliente = "0";
     this.latitud_cliente = "0";
     this.longitud_cliente = "0";
   }
-  
+
   // getAlmacenParamUsuario() {
   //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adusparametros/getInfoUserAdus/";
   //   return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
@@ -4850,7 +4884,7 @@ export class FacturacionMostradorTiendasComponent implements OnInit {
   //       }
   //     })
   // }
-  
+
   // getAllmoneda() {
   //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/admoneda/";
   //   return this.api.getAll('/seg_adm/mant/admoneda/' + this.userConn)

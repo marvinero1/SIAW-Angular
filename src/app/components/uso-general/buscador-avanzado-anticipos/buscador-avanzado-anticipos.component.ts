@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
@@ -28,7 +28,9 @@ interface buscadorGeneral {
 })
 export class BuscadorAvanzadoAnticiposComponent implements OnInit {
 
-
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+    this.mandarAFacturacionMostradorAnticipoElegido();
+  };
   buscadorObj!: buscadorGeneral[];
   selectebuscadorObj: buscadorGeneral[];
 

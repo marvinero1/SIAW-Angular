@@ -25,6 +25,9 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   data_cabecera_footer_proforma: any = [];
   data_detalle_proforma: any = [];
 
+  private numberFormatter_4decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(public nombre_ventana_service: NombreVentanaService, private api: ApiService, private toastr: ToastrService) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -36,6 +39,19 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
 
     //primero carga la info del PDF, y el PDF se tiene q pintar de data
     this.getDataPDF();
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_4decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
   }
 
   ngOnInit() {
@@ -53,9 +69,9 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   }
 
   getDataPDF() {
-    let array_send={
+    let array_send = {
       codProforma: this.data_impresion[0].codigo_proforma,
-      codcliente: this.data_impresion[0].cod_cliente ,
+      codcliente: this.data_impresion[0].cod_cliente,
       codcliente_real: this.data_impresion[0].cod_cliente_real,
       codempresa: this.BD_storage,
       cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
@@ -181,15 +197,23 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
   }
 
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(formattedNumber);
+    return this.numberFormatter_4decimales.format(formattedNumber);
   }
 
   formatNumberTotalSub2Decimals(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   refrsh() {

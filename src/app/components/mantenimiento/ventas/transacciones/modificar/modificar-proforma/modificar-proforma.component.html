@@ -50,7 +50,7 @@
               </ng-container>
               <ng-template #grbapr>
                 <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
-                  (click)="validarAntesDeGrabarAprobar();">
+                  (click)="validarAntesDeGrabarAprobar();" disabled>
                   <span>
                     <mat-icon
                       style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
@@ -807,7 +807,7 @@
                   <th pSortableColumn="descripcion" style="width:21%;" class="center">
                     Descripción
                   </th>
-                  <th pSortableColumn="medida" class="center1" style="width:7%">
+                  <th pSortableColumn="medida" class="left" style="width:7%">
                     Medida
                     <!-- <p-sortIcon field="medida"/> -->
                   </th>
@@ -873,7 +873,7 @@
                   </td>
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}</td>
-                  <td class="center1">{{ products.medida }}</td>
+                  <td class="left">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
                   <td class="center1">{{ products.porceniva }}</td>
 

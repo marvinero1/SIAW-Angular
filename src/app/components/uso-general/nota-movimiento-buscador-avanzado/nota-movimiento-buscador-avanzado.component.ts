@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
@@ -24,13 +24,16 @@ interface buscadorGeneral {
   destino: any,
   observacion: any,
 }
-
 @Component({
   selector: 'app-nota-movimiento-buscador-avanzado',
   templateUrl: './nota-movimiento-buscador-avanzado.component.html',
   styleUrls: ['./nota-movimiento-buscador-avanzado.component.scss']
 })
 export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
+
+  @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
+    this.mandarAModificarNM();
+  };
 
   public id_tipo_view_get_codigo1: string;
   public id_tipo_view_get_codigo2: string;
@@ -165,6 +168,7 @@ export class NotaMovimientoBuscadorAvanzadoComponent implements OnInit {
   }
 
   buscadorNotasMovimiento() {
+    this.spinner.show();
     let fecha_desde = this.datePipe.transform(this.fecha_desde, "yyyy-MM-dd");
     let fecha_hasta = this.datePipe.transform(this.fecha_hasta, "yyyy-MM-dd");
 

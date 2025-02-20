@@ -30,6 +30,8 @@ export class ModalSubTotalComponent implements OnInit {
   descuento_nivel_get: any;
   fecha_actual = new Date();
 
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(public dialogRef: MatDialogRef<ModalSubTotalComponent>, private messageService: MessageService,
     private api: ApiService, private spinner: NgxSpinnerService, private datePipe: DatePipe,
     public itemservice: ItemServiceService, public subtotal_service: SubTotalService,
@@ -52,8 +54,13 @@ export class ModalSubTotalComponent implements OnInit {
     this.desclinea = desc_linea.desc_linea;
     this.descuento_nivel_get = descuento_nivel.descuento_nivel;
     this.fecha_proforma = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
+    // console.log(this.items_carrito, this.cliente, this.almacen, this.moneda, this.desclinea, this.fecha_proforma);
 
-    console.log(this.items_carrito, this.cliente, this.almacen, this.moneda, this.desclinea, this.fecha_proforma);
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -78,7 +85,7 @@ export class ModalSubTotalComponent implements OnInit {
 
     console.log(arrayTransformado);
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/transac/veproforma/versubTotal/";
-    return this.api.create("/venta/transac/veproforma/versubTotal/" + this.userConn + "/" + this.BD_storage + "/" + this.usuario_logueado, arrayTransformado)
+    return this.api.create(`/venta/transac/veproforma/versubTotal/${this.userConn}/${this.BD_storage}/${this.usuario_logueado}`, arrayTransformado)
       .subscribe({
         next: (datav) => {
           this.sub_totabilizar_post = datav;
@@ -113,9 +120,13 @@ export class ModalSubTotalComponent implements OnInit {
   }
 
   formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString?.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   close() {

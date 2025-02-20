@@ -54,19 +54,19 @@ export class ProformaMovilComponent implements OnInit {
 
 
   //Parametros Iniciales
-  id_tipo:any
-  id_tipo_descripcion:any
-  id_factura_numero_id:any;
+  id_tipo: any
+  id_tipo_descripcion: any
+  id_factura_numero_id: any;
   fecha_actual: any;
   hora_actual: any;
   hora_fecha_server: any = [];
-  almacn_parame_usuario_almacen:any;
-  cod_descuento:any;
-  cod_tarifa:any;
+  almacn_parame_usuario_almacen: any;
+  cod_descuento: any;
+  cod_tarifa: any;
 
 
   //primeroPaso
-  codigo_cliente:any;
+  codigo_cliente: any;
 
 
   //datosCliente
@@ -105,7 +105,7 @@ export class ProformaMovilComponent implements OnInit {
 
   FormularioData: FormGroup;
   dataform: any = '';
- selectedProducts: ItemDetalle[] = [];
+  selectedProducts: ItemDetalle[] = [];
 
 
 
@@ -116,16 +116,16 @@ export class ProformaMovilComponent implements OnInit {
   public preparacion: any;
   public anticipo_button: boolean;
   public monto_anticipo: number = 0;
-  public tabla_anticipos:any = [];
+  public tabla_anticipos: any = [];
   public pago_contado_anticipado: boolean = false;
 
 
   //tercerPaso items precios, desct
   public cod_precio_venta_modal_codigo: number;
-  public array_items_carrito_y_f4_catalogo:any=[];
-  public tarifa_get_unico:any = [];
+  public array_items_carrito_y_f4_catalogo: any = [];
+  public tarifa_get_unico: any = [];
   public cod_descuento_modal: any = 0;
-  public descuentos_get:any=[];
+  public descuentos_get: any = [];
   public habilitar_desct_sgn_solicitud: boolean = false;
 
 
@@ -138,9 +138,9 @@ export class ProformaMovilComponent implements OnInit {
   public total: number = 0.00;
   public peso: number = 0.00;
 
+  precio: any = true;
+  desct: any = false;
 
-
-  
   usuarioLogueado: any;
   agencia_logueado: any;
   userConn: any;
@@ -149,24 +149,38 @@ export class ProformaMovilComponent implements OnInit {
 
   private debounceTimer: any;
   private unsubscribe$ = new Subject<void>();
-  
+
+  private numberFormatter_5decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService,
     private servicioCliente: ServicioclienteService, private almacenservice: ServicioalmacenService, private cdr: ChangeDetectorRef,
     private serviciovendedor: VendedorService, private servicioPrecioVenta: ServicioprecioventaService,
     private datePipe: DatePipe, private serviciMoneda: MonedaServicioService, private subtotal_service: SubTotalService,
     private _formBuilder: FormBuilder, private servicioDesctEspecial: DescuentoService, private serviciotipoid: TipoidService,
-    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService, 
-    private saldoItemServices: SaldoItemMatrizService, private router:Router, private servicioEtiqueta: EtiquetaService,
+    private messageService: MessageService, private spinner: NgxSpinnerService, private log_module: LogService,
+    private saldoItemServices: SaldoItemMatrizService, private router: Router, private servicioEtiqueta: EtiquetaService,
     private _snackBar: MatSnackBar, private servicioTransfeProformaCotizacion: ServicioTransfeAProformaService,
     private servicio_recargo_proforma: RecargoToProformaService, public nombre_ventana_service: NombreVentanaService,
     private anticipo_servicio: AnticipoProformaService, private communicationService: ComunicacionproformaService) {
 
-      this.FormularioData = this.createForm();
-      this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-      this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-      this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-      this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+    this.FormularioData = this.createForm();
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+    this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_5decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -176,7 +190,7 @@ export class ProformaMovilComponent implements OnInit {
     this.getAlmacenParamUsuario();
     this.getTipoDocumentoIdentidadProforma();
     this.getAllmoneda();
-    this.getDescuentos();   
+    this.getDescuentos();
 
     //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
@@ -241,7 +255,7 @@ export class ProformaMovilComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ ProformaMovilComponent ~ .pipe ~ datav:", datav)
-          this.id_tipo= datav[0].id;
+          this.id_tipo = datav[0].id;
           this.id_tipo_descripcion = datav[0].descripcion;
           this.getIdTipoNumeracion(this.id_tipo);
         },
@@ -266,7 +280,7 @@ export class ProformaMovilComponent implements OnInit {
         complete: () => { }
       })
   }
- 
+
   getHoraFechaServidorBckEnd() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
     return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
@@ -290,7 +304,7 @@ export class ProformaMovilComponent implements OnInit {
     return this.api.getAll('/seg_adm/mant/adusparametros/getInfoUserAdus/' + this.userConn + "/" + this.usuarioLogueado)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ ProformaMovilComponent ~ .pipe ~ datav:", datav)
+          console.log("🚀 ~ ProformaMovilComponent ~ .pipe ~ datav:", datav)
 
           this.almacn_parame_usuario_almacen = datav.codalmacen;
           this.cod_descuento = datav.coddescuento;
@@ -322,7 +336,7 @@ export class ProformaMovilComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => { 
+        complete: () => {
         }
       })
   }
@@ -358,8 +372,8 @@ export class ProformaMovilComponent implements OnInit {
           // if(this.cliente.cliente.codigo?.startsWith('SN')){
           //   this.razon_social = this.cliente.cliente.razonsocial;
           // };
-          
-         
+
+
 
           this.codigo_cliente = this.cliente.cliente.codigo;
           this.codigo_cliente_catalogo_real = this.cliente.cliente.codigo;
@@ -381,7 +395,7 @@ export class ProformaMovilComponent implements OnInit {
           // this.tipo_cliente = this.cliente.cliente.tipo;
 
           // this.getDireccionCentral(codigo);
-          
+
           this.whatsapp_cliente = this.cliente.vivienda.celular;
           // this.latitud_cliente = this.cliente.vivienda.latitud;
           // this.longitud_cliente = this.cliente.vivienda.longitud;
@@ -446,11 +460,11 @@ export class ProformaMovilComponent implements OnInit {
 
   verificarNit() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/transac/prgfacturarNR_cufd/getVerifComunicacionSIN/";
-    return this.api.getAll('/venta/transac/veproforma/validarNITenSIN/' + this.userConn +"/"+ this.BD_storage+"/"+this.usuarioLogueado+"/"+this.agencia_logueado+"/"+this.nit_cliente+"/"+this.tipo_doc_cliente)
+    return this.api.getAll('/venta/transac/veproforma/validarNITenSIN/' + this.userConn + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.agencia_logueado + "/" + this.nit_cliente + "/" + this.tipo_doc_cliente)
       .subscribe({
         next: (datav) => {
           // console.log(datav);
-          if(datav.nit_es_valido === "VALIDO"){
+          if (datav.nit_es_valido === "VALIDO") {
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
@@ -458,7 +472,7 @@ export class ProformaMovilComponent implements OnInit {
               data: { mensaje_dialog: datav.nit_es_valido },
               disableClose: true,
             });
-          }else{
+          } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.nit_es_valido });
             this.dialog.open(DialogConfirmacionComponent, {
               width: '450px',
@@ -483,7 +497,7 @@ export class ProformaMovilComponent implements OnInit {
 
 
 
-  email_save:any=[];
+  email_save: any = [];
   guardarCorreo() {
     let ventana = "proforma"
     let detalle = "proforma-actualizoEmail";
@@ -499,7 +513,7 @@ export class ProformaMovilComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta: -/venta/transac/veproforma/actualizarCorreoCliente/ --Update";
     return this.api.update('/venta/transac/veproforma/actualizarCorreoCliente/' + this.userConn, data)
-    .pipe(takeUntil(this.unsubscribe$)).subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.email_save = datav;
 
@@ -614,21 +628,21 @@ export class ProformaMovilComponent implements OnInit {
         // console.log("LE DIO AL SI hay QUE MAPEAR EL DETALLE CON EL DESCT Y DESPUES HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          codtarifa:value
+          codtarifa: value
         }));
-    
+
         //this.totabilizar();
       } else {
         // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR, SOLO PINTAR EL NUEVO VALOR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          codtarifa:value
+          codtarifa: value
         }));
       }
       return this.array_items_carrito_y_f4_catalogo;
     });
   }
-  
+
   aplicarDesctEspc(value) {
     this.total = 0.00;
     this.subtotal = 0.00;
@@ -645,14 +659,14 @@ export class ProformaMovilComponent implements OnInit {
         // console.log("LE DIO AL SI HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          coddescuento:value
+          coddescuento: value
         }));
         //this.totabilizar();
       } else {
         // console.log("LE DIO AL NO, NO HAY Q TOTALIZAR");
         this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((item) => ({
           ...item,
-          coddescuento:value
+          coddescuento: value
         }));
       }
       return this.array_items_carrito_y_f4_catalogo;
@@ -661,21 +675,23 @@ export class ProformaMovilComponent implements OnInit {
 
 
   formatNumberTotalSubTOTALES(numberString: number | string): string {
-    if (numberString === null || numberString === undefined || numberString === '') {
-      return '0.00'; // Valor predeterminado
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
-    
-    // Intentar convertir a número, considerando posibles entradas como cadenas
-    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    
-    if (isNaN(parsedNumber)){
-      return '0.00'; // Manejar entradas no válidas
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
     }
-  
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(parsedNumber);
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_5decimales.format(formattedNumber);
   }
 
 
@@ -686,8 +702,6 @@ export class ProformaMovilComponent implements OnInit {
       this.pedidoChangeMatrix(products, value);
     }, 2000); // 300 ms de retardo
   }
-
-
 
   pedidoChangeMatrix(element: any, newValue: number) {
     // console.log("🚀 ~ ProformaComponent ~ pedidoChangeMatrix ~ element:", element)
@@ -707,9 +721,6 @@ export class ProformaMovilComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           // console.log("🚀 ~ ProformaComponent ~ .pipe ~ datav:", datav)
-          //this.almacenes_saldos = datav;
-          // console.log("Total al cambio de DE en el detalle: ", datav);
-          // Actualizar la coddescuento en el element correspondiente en tu array de datos
           element.coddescuento = Number(datav.coddescuento);
           element.preciolista = Number(datav.preciolista);
           element.preciodesc = Number(datav.preciodesc);
@@ -731,9 +742,6 @@ export class ProformaMovilComponent implements OnInit {
     }, 1500); // 300 ms de retardo
   }
 
-
-  precio: any = true;
-  desct: any = false;
   empaqueChangeMatrix(element: any, newValue: number) {
     this.total = 0;
     this.subtotal = 0;
@@ -756,9 +764,9 @@ export class ProformaMovilComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCantItemsbyEmp/";
     this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo + "/" + element.coditem + "/" + element.empaque)
-    .pipe(takeUntil(this.unsubscribe$)).subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-        console.log("🚀 ~ .empaqueChangeMatrix ~ datav:", datav)
+          console.log("🚀 ~ .empaqueChangeMatrix ~ datav:", datav)
 
           // Actualizar la cantidad en el elemento correspondiente en tu array de datos
           element.empaque = Number(newValue);
@@ -836,12 +844,12 @@ export class ProformaMovilComponent implements OnInit {
 
   onInputChangecantidadChangeMatrix(products: any, value: any) {
     let valor_input = value;
-    if(value === '' || value === undefined){
-      valor_input=0;
+    if (value === '' || value === undefined) {
+      valor_input = 0;
       products.cantidad = 0;
     };
 
-    console.log("Valor Entrada:"+ value, valor_input);
+    console.log("Valor Entrada:" + value, valor_input);
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this.cantidadChangeMatrix(products, valor_input);
@@ -888,11 +896,7 @@ export class ProformaMovilComponent implements OnInit {
     console.log(cantidad, precioneto);
   }
 
-  formatNumberTotalSub(numberString: number): string {
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
-  }
+
 
   calcularTotalCantidadXPU(cantidad_pedida: number, cantidad: number, precioneto: number) {
     // todo despues del if ya que si no siempre esta escuchando los eventos
@@ -977,7 +981,7 @@ export class ProformaMovilComponent implements OnInit {
   getDescuentos() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET --/venta/mant/vedescuento/catalogo/";
     return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
-    .pipe(takeUntil(this.unsubscribe$)).subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.descuentos_get = datav;
           //this.cod_descuento_modal = 0;
@@ -1180,7 +1184,7 @@ export class ProformaMovilComponent implements OnInit {
     // if (this.input_complemento_view === null) {
     //   this.input_complemento_view = valor_cero;
     // }
-    
+
     return this._formBuilder.group({
       fechareg: [fecha_actual],
       horareg: this.dataform.horareg,
@@ -1479,14 +1483,14 @@ export class ProformaMovilComponent implements OnInit {
       data: { detalle: false }
     });
   }
-  
+
   mandarNombre() {
     this.nombre_ventana_service.disparadorDeNombreVentana.emit({
       nombre_vent: this.ventana,
     });
   }
 
-  atrasMenu(){
+  atrasMenu() {
     const dialogRefLimpiara = this.dialog.open(DialogConfirmActualizarComponent, {
       width: 'auto',
       height: 'auto',

@@ -23,7 +23,7 @@ import Handsontable from 'handsontable';
   styleUrls: ['./matriz-items-clasica.component.scss']
 })
 export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDestroy {
-    // @HostListener("document:keydown.F9", []) unloadHandler(event: Event) {
+  // @HostListener("document:keydown.F9", []) unloadHandler(event: Event) {
   //   // Verificar si la tecla F9 ya ha sido presionada
   //   this.modalStockActualF9();
   // };
@@ -32,59 +32,59 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     const focusedElement = document.activeElement as HTMLElement;
     let nombre_input = focusedElement.id;
     console.log(`Elemento enfocado Matriz: ${nombre_input}`);
-      switch (nombre_input) {
-        case '':
+    switch (nombre_input) {
+      case '':
         this.onCellClick1(this.valorCelda);
-          if (this.permiso_para_vista && this.tipo_ventana_origen === 'venta') {
-            if(this.valorCelda){
-              if (!this.item_valido) {
-                console.log('¡ HAY ITEM NO VALIDO !', this.item_valido, this.valorCelda);
-                this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
-                this.loseFocus();
-                return;
-              }else{
-                console.log("HOLA LOLA HAY ITEM VALIDO");
-                this.onCellClick1(this.valorCelda);
-                this.getEmpaqueItem();          
-              }
-            }
-          }else{
-            this.cant_empaque === 0;
-            const focusElement = this.focusPedido1.nativeElement;
-            this.renderer.selectRootElement(focusElement).focus();
-            focusElement.click();
-
-            if(this.pedido != 0){
-              this.addItemArray();
+        if (this.permiso_para_vista && this.tipo_ventana_origen === 'venta') {
+          if (this.valorCelda) {
+            if (!this.item_valido) {
+              console.log('¡ HAY ITEM NO VALIDO !', this.item_valido, this.valorCelda);
+              this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '¡ EL ITEM NO ESTA EN VENTA !' });
+              this.loseFocus();
+              return;
+            } else {
+              console.log("HOLA LOLA HAY ITEM VALIDO");
+              this.onCellClick1(this.valorCelda);
+              this.getEmpaqueItem();
             }
           }
-          break;
+        } else {
+          this.cant_empaque === 0;
+          const focusElement = this.focusPedido1.nativeElement;
+          this.renderer.selectRootElement(focusElement).focus();
+          focusElement.click();
 
-        case 'focusEmpaque':
-          if(this.valorCelda){
-            this.onCellClick1(this.valorCelda);
+          if (this.pedido != 0) {
+            this.addItemArray();
           }
- 
-          this.getEmpaqueItem();
-          break;
+        }
+        break;
 
-        case 'focusPedido':
-          this.addItemArray();
-          //this.cant_empaque = undefined;
-          this.cantidad = this.pedido;
-          break;
-        case 'focusCantidad':
-          // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
-          // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
-          this.addItemArray();
-          // this.cant_empaque = undefined;
-          // this.pedido = null;
-          // this.cantidad = undefined;
-          break;
-        case 'idBuscadorHoja':
-          this.getHoja();
-          break;
-    } 
+      case 'focusEmpaque':
+        if (this.valorCelda) {
+          this.onCellClick1(this.valorCelda);
+        }
+
+        this.getEmpaqueItem();
+        break;
+
+      case 'focusPedido':
+        this.addItemArray();
+        //this.cant_empaque = undefined;
+        this.cantidad = this.pedido;
+        break;
+      case 'focusCantidad':
+        // ACA SE COLOCA AL ARRAY DE ITEMS SELECCIONADOS PARA LA VENTA
+        // UNA VEZ YA EN EN ARRAY, VUELVE A LA ULTIMA POSICION DE LA MATRIZ
+        this.addItemArray();
+        // this.cant_empaque = undefined;
+        // this.pedido = null;
+        // this.cantidad = undefined;
+        break;
+      case 'idBuscadorHoja':
+        this.getHoja();
+        break;
+    }
   }
 
   @HostListener("document:keydown.tab", []) unloadHandler2(event: Event) {
@@ -100,10 +100,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   }
 
   @HostListener("click", []) unloadHandler(event: KeyboardEvent) {
-    if(this.valorCelda){
+    if (this.valorCelda) {
       console.log("🚀 ~ MatrizItemsClasicaComponent ~ @HostListener ~ this.valorCelda:", this.valorCelda)
       this.onCellClick1(this.valorCelda);
-    }else{
+    } else {
       console.log("🚀 evento vacio", this.valorCelda)
     }
   };
@@ -118,8 +118,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   saldoItem: number;
   empaque_view = false;
   item_valido: boolean;
-  item_valido_inventario:boolean;
-  item_valido_inventario_false:boolean;
+  item_valido_inventario: boolean;
+  item_valido_inventario_false: boolean;
   validacion: boolean = false;
   empaque_item_codigo: string;
   empaque_item_descripcion: string;
@@ -191,19 +191,20 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
   tamanio_carro: any;
   permiso_para_vista: boolean;
 
-  id_proforma_get:any;
-  num_id_proforma_get:any;
+  id_proforma_get: any;
+  num_id_proforma_get: any;
 
+  saldoItem_number: number;
   //tipo VENTANA
   // SEGUN EL TIPO DE VENTANA LOS ITEM SE PUEDE ELEGIR, SI LA VENTANA DE DONDE SE ABRE ES PARA VENTA CONTROLA QUE LOS ITEMS Q SE SELECCIONEN ESTEN A LA VENTA
   // SI LA VENTANA DESDE DONDE SE ABRE ES PARA INVENTARIO NO CONTROLA QUE EL ITEM ESTE HABILITADO PARA LA VENTA
-  tipo_ventana_origen:string;
-  ventana_inventario:boolean;
-  ventana_venta:boolean;
-  uso_inventario_item_boolean:boolean;
+  tipo_ventana_origen: string;
+  ventana_inventario: boolean;
+  ventana_venta: boolean;
+  uso_inventario_item_boolean: boolean;
 
   private unsubscribe$ = new Subject<void>();
-  
+
   @ViewChild("focusCantidad", { static: false }) focusCantidad1: ElementRef;
   @ViewChild("focusPedido", { static: false }) focusPedido1: ElementRef;
   @ViewChild('focusEmpaque', { static: false }) focusEmpaqueElement: ElementRef;
@@ -222,7 +223,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     @Inject(MAT_DIALOG_DATA) public codmoneda: any, @Inject(MAT_DIALOG_DATA) public items: any,
     @Inject(MAT_DIALOG_DATA) public descuento_nivel: any, @Inject(MAT_DIALOG_DATA) public precio_de_venta: any,
     @Inject(MAT_DIALOG_DATA) public tamanio_carrito_compras: any, @Inject(MAT_DIALOG_DATA) public id_proforma: any,
-    @Inject(MAT_DIALOG_DATA) public num_id_proforma: any, @Inject(MAT_DIALOG_DATA) public tipo_ventana: any ) {
+    @Inject(MAT_DIALOG_DATA) public num_id_proforma: any, @Inject(MAT_DIALOG_DATA) public tipo_ventana: any) {
 
     this.array_items_proforma_matriz = items?.items;
     //array_items_completo
@@ -236,15 +237,15 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.agencia = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 
-    if(this.usuario_logueado === 'opergps'){
+    if (this.usuario_logueado === 'opergps') {
       this.permiso_para_vista = false;
-    }else{
+    } else {
       this.permiso_para_vista = true;
     }
 
-    if(precio_de_venta?.precio_de_venta){
+    if (precio_de_venta?.precio_de_venta) {
       this.cod_precio_venta_modal_codigo1 = precio_de_venta?.precio_de_venta;
-    }else{
+    } else {
       this.getTarifa();
     }
 
@@ -259,21 +260,21 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.tamanio_carro = tamanio_carrito_compras?.tamanio_carrito_compras;
     this.id_proforma_get = id_proforma?.id_proforma;
     this.num_id_proforma_get = num_id_proforma?.num_id_proforma;
-    this.tipo_ventana_origen = tipo_ventana.tipo_ventana === undefined ? "ventas":"inventario";
+    this.tipo_ventana_origen = tipo_ventana.tipo_ventana === undefined ? "ventas" : "inventario";
     console.log("🚀 ~ MatrizItemsClasicaComponent ~ @Inject ~ this.tipo_ventana_origen:", this.tipo_ventana_origen)
 
-    if(this.tipo_ventana_origen === undefined || this.tipo_ventana_origen === "ventas"){
+    if (this.tipo_ventana_origen === undefined || this.tipo_ventana_origen === "ventas") {
       this.tipo_ventana_origen = "ventas"
       this.ventana_venta = true;
       this.ventana_inventario = false;
     }
 
-    if(this.tipo_ventana_origen === "inventario"){
+    if (this.tipo_ventana_origen === "inventario") {
       //this.tipo_ventana_origen = "ventas"
       this.ventana_inventario = true;
       this.ventana_venta = false;
     }
-     
+
     console.log("🚀 ~ MatrizItemsClasicaComponent ~ @Inject ~ cod_precio_venta_modal_codigo1:", this.cod_precio_venta_modal_codigo1)
     // console.log("Aca los item de la proforma: ", this.array_items_proforma_matriz, "tamanio:", this.array_items_proforma_matriz?.length);
     // console.log("array completo:", this.array_items_proforma_matriz, "tamanio carrito:", this.tamanio_carro)
@@ -359,7 +360,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     //Add 'implements AfterViewInit' to the class.
     // Mostramos los mensajes de validación concatenados
     if (this.validacion) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡' + this.messages.join(', ') + '!'});
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: '¡' + this.messages.join(', ') + '!' });
     }
 
     console.log("item de seleccion:", this.array_items_completo);
@@ -368,14 +369,14 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     let nombre_input = focusedElement.id;
     console.log(`Elemento Enfocado: ${nombre_input}`);
     //this.myInputField.nativeElement.focus();
-   // this.focusMyInput();
+    // this.focusMyInput();
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-  
+
   focusInput() {
     this.focusEmpaqueElement.nativeElement.id = 'focusEmpaque';
     this.focusEmpaqueElement.nativeElement.focus();
@@ -457,15 +458,15 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     this.codigo_item_celda = cleanText;
     this.item = cleanText.toUpperCase();
     let a = regex.test(this.item);
-  
+
     // console.warn(this.item, a); // Verificamos qué llega
-  
+
     // Controlamos si this.item está vacío o undefined
     if (this.item && a === false) {  // Verifica si no es "" ni undefined ni null
       this.getlineaProductoID(cleanText);
-      if(this.ventana_inventario === false && this.ventana_venta === true){
+      if (this.ventana_inventario === false && this.ventana_venta === true) {
         this.validarItemParaVenta(cleanText);
-      }else{
+      } else {
         this.item_valido = true;
       }
 
@@ -497,21 +498,21 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       })
   }
 
-  saldoItem_number:number;
+
   getSaldoItem(item) {
     let agencia_concat = "AG" + this.agencia;
 
-    let array_send={
-      agencia:agencia_concat,
+    let array_send = {
+      agencia: agencia_concat,
       codalmacen: this.agencia,
       coditem: this.item,
       codempresa: this.BD_storage,
       usuario: this.usuario_logueado,
-      
-      idProforma: this.id_proforma_get?.toString() === undefined ? " ":this.id_proforma_get?.toString(),
+
+      idProforma: this.id_proforma_get?.toString() === undefined ? " " : this.id_proforma_get?.toString(),
       nroIdProforma: this.num_id_proforma_get
     };
-    
+
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     return this.api.create
       ('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
@@ -636,7 +637,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         console.log(permiso);
         switch (e.key) {
           case 'Enter':
-            if(permiso){
+            if (permiso) {
               console.log("ENTER PARA ENVIAR ITEM A CARRITO A");
               // this.focusPedido();
               // this.focusPedido.nativeElement.focus();
@@ -647,24 +648,24 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
               // const focusedElement = document.activeElement as HTMLElement;
               // let nombre_input = focusedElement.id;
               // console.log(`Elemento enfocado VER TABLA: ${nombre_input}`);
-          
+
               self.focusEmpaque();
               const focusElement = this.focusEmpaqueElement.nativeElement;
               focusElement.focus();
               break;
-            }else{
+            } else {
               console.log("ENTER PARA ENVIAR ITEM A CARRITO B");
-    
+
               // this.cant_empaque = 0;
               // const focusedElement = document.activeElement as HTMLElement;
               // focusedElement.id = nombre_input;
-    
-              const focusElement = this.focusPedido1.nativeElement === undefined ? "":this.focusPedido1.nativeElement;
+
+              const focusElement = this.focusPedido1.nativeElement === undefined ? "" : this.focusPedido1.nativeElement;
               this.renderer.selectRootElement(focusElement).focus();
               // this.focusPedido();
               focusElement.click();
               break;
-        }
+            }
         }
       }
     });
@@ -690,18 +691,18 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     //         break;
     //       case "focusEmpaque":
     //         this.getEmpaqueItem();
-          
+
     //         break;
     //       case "focusPedido":
     //         this.addItemArray();
     //         this.cantidad = this.pedido;
     //         console.log("🚀 ~ MatrizItemsComponent ~ hot.addHook ~ cantidad:", this.cantidad, this.pedido)
-            
+
     //         break;
     //       default:
     //         break;
     //     }
-        
+
     //     // Vuelve a seleccionar la celda actual para evitar que se mueva
     //     setTimeout(() => {
     //       hot.selectCell(startRow, startCol); // Esto fuerza la selección en la misma celda
@@ -854,18 +855,18 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     // }
 
     if (this.pedido != 0 && this.pedido != undefined) {
-      if(this.ventana_inventario === true && this.uso_inventario_item_boolean === true && this.ventana_venta === false){
+      if (this.ventana_inventario === true && this.uso_inventario_item_boolean === true && this.ventana_venta === false) {
         this.array_items_seleccionado.push(array);
-      }else{
-        if(this.ventana_inventario === true){
+      } else {
+        if (this.ventana_inventario === true) {
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO VALIDO PARA SU USO EN INVENTARIO' });
         }
       }
-      if(this.ventana_venta === true && this.ventana_inventario === false){
+      if (this.ventana_venta === true && this.ventana_inventario === false) {
         this.array_items_seleccionado.push(array);
       }
     } else {
-      if(this.permiso_para_vista && this.tipo_ventana_origen === 'ventas'){
+      if (this.permiso_para_vista && this.tipo_ventana_origen === 'ventas') {
         this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'EL PEDIDO CANTIDAD NO PUEDE SER 0' });
       }
     }
@@ -917,8 +918,8 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
         // tarifa: this.tarifa_get,
         tarifa: elemento.tarifa === undefined ? this.cod_precio_venta_modal_codigo1 : elemento.tarifa,
         descuento: elemento.descuento === undefined ? this.descuento_get : elemento.descuento,
-        cantidad_pedida: elemento.cantidad_pedida === null ? 0:elemento.cantidad_pedida,
-        cantidad: elemento.cantidad === null ? 0:elemento.cantidad,
+        cantidad_pedida: elemento.cantidad_pedida === null ? 0 : elemento.cantidad_pedida,
+        cantidad: elemento.cantidad === null ? 0 : elemento.cantidad,
         codcliente: this.codcliente_get,
         opcion_nivel: this.descuento_nivel_get?.toString(),
         codalmacen: this.codalmacen_get,
@@ -1148,59 +1149,60 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       focusElement.click();
     } else {
 
-    if(!this.item_valido){
-      console.log("ITEM NO ESTA A LA VENTA: ", this.item_valido);
-      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
-      this.valorCelda = 0;
-      this.item_set = "";
-      this.descripcion_item = "";
-      this.medida_item = "";
-      this.porcen_item = "";
+      if (!this.item_valido) {
+        console.log("ITEM NO ESTA A LA VENTA: ", this.item_valido);
+        this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ITEM NO ESTA A LA VENTA' });
+        this.valorCelda = 0;
+        this.item_set = "";
+        this.descripcion_item = "";
+        this.medida_item = "";
+        this.porcen_item = "";
 
-      this.item_valido = undefined;
-      // this.pedido = null;
-      // this.cantidad = null;
-      // this.num_hoja = null;
-      
-      this.loseFocus();
-      return;
-    }
+        this.item_valido = undefined;
+        // this.pedido = null;
+        // this.cantidad = null;
+        // this.num_hoja = null;
 
-    console.log(this.cant_empaque);
+        this.loseFocus();
+        return;
+      }
 
-    if (this.cant_empaque === undefined || this.cant_empaque === 0 || this.cant_empaque === null) {
-      // this.cant_empaque = 0;
+      console.log(this.cant_empaque);
 
-      const focusElement = this.focusEmpaqueElement.nativeElement.focus();
-      focusElement.focus();
-    }
+      if (this.cant_empaque === undefined || this.cant_empaque === 0 || this.cant_empaque === null) {
+        // this.cant_empaque = 0;
 
-    if(this.cant_empaque !== ''){
-      return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
-      .subscribe({
-        next: (datav) => {
-          this.pedido = datav.total;
-          this.cant_empaque = this.cant_empaque;
-          console.log("El total del empaque: ", this.pedido);
-          console.log( this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
-        },
+        const focusElement = this.focusEmpaqueElement.nativeElement.focus();
+        focusElement.focus();
+      }
 
-        error: (err: any) => {
-          this.pedido = null;
-          this.cantidad = this.pedido;
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          // console.clear();
-          const focusedElement = document.activeElement as HTMLElement;
-          focusedElement.id = nombre_input;
+      if (this.cant_empaque !== '') {
+        return this.api.getAll('/venta/transac/veproforma/getCantItemsbyEmp/' + this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque)
+          .subscribe({
+            next: (datav) => {
+              this.pedido = datav.total;
+              this.cant_empaque = this.cant_empaque;
+              console.log("El total del empaque: ", this.pedido);
+              console.log(this.userConn + "/" + d_tipo_precio_desct + "/" + this.cod_precio_venta_modal_codigo1 + "/" + cleanText + "/" + this.cant_empaque);
+            },
 
-          const focusElement = this.focusPedido1.nativeElement;
+            error: (err: any) => {
+              this.pedido = null;
+              this.cantidad = this.pedido;
+              console.log(err, errorMessage);
+            },
+            complete: () => {
+              // console.clear();
+              const focusedElement = document.activeElement as HTMLElement;
+              focusedElement.id = nombre_input;
 
-          focusElement.click();
-        }
-      })
-    }};
+              const focusElement = this.focusPedido1.nativeElement;
+
+              focusElement.click();
+            }
+          })
+      }
+    };
   }
 
   getAlmacenesSaldos() {
@@ -1246,10 +1248,10 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
     // esta funcion mas que todo es para Don Percy ya que la matriz se personaliza para su uso exclusivo de el.
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/verColEmpbyUser/";
     return this.api.getAll('/venta/transac/veproforma/verColEmpbyUser/' + this.userConn + "/" + this.usuario_logueado)
-    .pipe(takeUntil(this.unsubscribe$)).subscribe({
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           this.permiso_para_vista = datav.veEmpaques;
-          console.log("Rol: ",this.permiso_para_vista);
+          console.log("Rol: ", this.permiso_para_vista);
         },
 
         error: (err: any) => {
@@ -1277,25 +1279,7 @@ export class MatrizItemsClasicaComponent implements OnInit, AfterViewInit, OnDes
       })
   }
 
-  formatNumberTotalSubTOTALES(numberString: number | string): string {
-    if (numberString === null || numberString === undefined || numberString === '') {
-      return '0.00'; // Valor predeterminado
-    }
-    
-    // Intentar convertir a número, considerando posibles entradas como cadenas
-    const parsedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    
-    if (isNaN(parsedNumber)) {
-      return '0.00'; // Manejar entradas no válidas
-    }
-  
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(parsedNumber);
-  }
 
-  
 
 
 

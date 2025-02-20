@@ -28,6 +28,10 @@ export class ProformaPdfComponent implements OnInit {
   data_detalle_proforma: any = [];
   data_detalle_etiqueta: any = [];
 
+
+  private numberFormatter_4decimales: Intl.NumberFormat;
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   constructor(private api: ApiService) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -36,6 +40,17 @@ export class ProformaPdfComponent implements OnInit {
     this.data_impresion = sessionStorage.getItem("data_impresion") !== undefined ? JSON.parse(sessionStorage.getItem("data_impresion")) : null;
 
     console.log("data impresion: ", this.data_impresion);
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_4decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 5,
+      maximumFractionDigits: 5,
+    });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -43,9 +58,9 @@ export class ProformaPdfComponent implements OnInit {
   }
 
   getDataPDF() {
-    let array_send={
+    let array_send = {
       codProforma: this.data_impresion[0].codigo_proforma,
-      codcliente: this.data_impresion[0].cod_cliente ,
+      codcliente: this.data_impresion[0].cod_cliente,
       codcliente_real: this.data_impresion[0].cod_cliente_real,
       codempresa: this.BD_storage,
       cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
@@ -244,7 +259,7 @@ export class ProformaPdfComponent implements OnInit {
                 characterSpacing: 0
               },
               {
-                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, {text:data_cabecera.rfecha,  characterSpacing: 0 }],
+                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, { text: data_cabecera.rfecha, characterSpacing: 0 }],
                 alignment: 'left',
                 margin: [10, 0, 15, 2], // Margen ajustado
                 fontSize: 9,
@@ -255,7 +270,7 @@ export class ProformaPdfComponent implements OnInit {
           {
             columns: [
               {
-                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0  }],
+                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
@@ -263,7 +278,7 @@ export class ProformaPdfComponent implements OnInit {
                 width: 350,
               },
               {
-                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0  }, {text:etiqueta.telefono || '', characterSpacing: 0 }],
+                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0 }, { text: etiqueta.telefono || '', characterSpacing: 0 }],
                 alignment: 'center',
                 fontSize: 9,
                 font: 'Courier',
@@ -273,14 +288,14 @@ export class ProformaPdfComponent implements OnInit {
           {
             columns: [
               {
-                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0  }, {text:data_cabecera.rptoventa || '', characterSpacing: 0 }],
+                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rptoventa || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
                 alignment: 'left',
               },
               {
-                text: [{ text: 'Preparación: ', bold: true,characterSpacing: 0  }, {text:data_cabecera.rpreparacion || '', characterSpacing: 0 }],
+                text: [{ text: 'Preparación: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rpreparacion || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 alignment: 'center',
                 fontSize: 9,
@@ -291,162 +306,163 @@ export class ProformaPdfComponent implements OnInit {
           { canvas: [{ type: 'line', x1: 20, y1: 2, x2: 580, y2: 2, lineWidth: 1 }] }, // Ajustado y1 y y2 para reducir espacio
         ];
       }.bind(this),
-    
+
       content: [{
-          table: {
-            headerRows: 1,
-            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
-            border:[false, true,false,false],
-            body: [
-              [
-                { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0]},
-                { text: ''},
-                { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text:'', style: 'tableHeader'},
-                { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 }
-              ],
-  
-              ...items_get.map(items => [
-                { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 ,margin: [0,0,0,0]},
-                { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0,margin: [0,0,0,0] },
-                { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0,margin: [0,0,0,0] },
-                { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
-                // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
-                { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
-                { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
-                { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
-                { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
-              ]),
+        table: {
+          headerRows: 1,
+          widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
+          border: [false, true, false, false],
+          body: [
+            [
+              { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '' },
+              { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: '', style: 'tableHeader' },
+              { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 }
+            ],
 
-              [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-            
-              [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2},
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-              //{ text: data_cabecera.rpesototal, bold: true},
-              { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            ...items_get.map(items => [
+              { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.medida, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 },
+              // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
+              { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
+            ]),
 
-              [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-              { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-              [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-              { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2 },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            //{ text: data_cabecera.rpesototal, bold: true},
+            { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left' },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
-              [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
-              [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0]},
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-              { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-              { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-              { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-              { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2, bold: true, border: [false, false, false, false], margin: [false, false, false, false] }, {}],
 
 
-              [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-              [{text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
-              [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier'}, {},
-                  {text:data_cabecera.rtransporte,  characterSpacing: 0, colSpan: 8, fontSize:9, alignment: 'left', font: 'Courier'},  {}, {}, {}, {}, {}, {},{}],
+            [{ text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-              [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{},{text:data_cabecera.rfletepor,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {},  {}, {}, {},{},  {}, {}],
-              
-              [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                {text:data_cabecera.rdireccion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-              
-              [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                {text:data_cabecera.robs,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
 
-              [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                {text:data_cabecera.rfacturacion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rtransporte, characterSpacing: 0, colSpan: 8, fontSize: 9, alignment: 'left', font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-              [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_inicial,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.rfletepor, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-              [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_autoriza,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-            ]},
-            
-          layout: {
-            // 'headerLineOnly',
-            headerLineOnly: true,
-            //defaultBorder: false, // Sin bordes para las celdas,
-            hLineWidth: function (i, node) {
-              // Dibuja una línea solo debajo del encabezado
-              return (i === 1) ? 1 : 0;
-            },
-            vLineWidth: function (i, node) {
-              // Sin líneas verticales
-              return 0;
-            },
-            hLineColor: function (i, node) {
-              // Color de la línea horizontal
-              return (i === 1) ? 'black' : 'white';
-            },
-            paddingLeft: function(i, node) { return 0; },
-            paddingRight: function(i, node) { return 0; },
-            paddingTop: function(i, node) { return 0; },
-            paddingBottom: function(i, node) { return 0; }
+            [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rdireccion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.robs, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rfacturacion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_inicial, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_autoriza, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+          ]
+        },
+
+        layout: {
+          // 'headerLineOnly',
+          headerLineOnly: true,
+          //defaultBorder: false, // Sin bordes para las celdas,
+          hLineWidth: function (i, node) {
+            // Dibuja una línea solo debajo del encabezado
+            return (i === 1) ? 1 : 0;
           },
-            
-          // columns: [
-          //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
-          //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
-          // ],
-          margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
-        },    
+          vLineWidth: function (i, node) {
+            // Sin líneas verticales
+            return 0;
+          },
+          hLineColor: function (i, node) {
+            // Color de la línea horizontal
+            return (i === 1) ? 'black' : 'white';
+          },
+          paddingLeft: function (i, node) { return 0; },
+          paddingRight: function (i, node) { return 0; },
+          paddingTop: function (i, node) { return 0; },
+          paddingBottom: function (i, node) { return 0; }
+        },
+
+        // columns: [
+        //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
+        //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
+        // ],
+        margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
+      },
       ],
 
       footer: function (currentPage, pageCount) {
         return {
           columns: [
-        //     { text: [
-        //       { text:  data_cabecera.rtotalliteral }
-        //     ],
-        //     margin: [0, 0, 0, 0],
-        //     fontSize: 9,
-        //     font: 'Courier',
-        //    },
-        //    { text: [
-        //     { text:  data_cabecera.rdsctosdescrip }
-        //   ],
-        //   margin: [0, 0, 0, 0],
-        //   fontSize: 9,
-        //   font: 'Courier',
-        //  },
-           
+            //     { text: [
+            //       { text:  data_cabecera.rtotalliteral }
+            //     ],
+            //     margin: [0, 0, 0, 0],
+            //     fontSize: 9,
+            //     font: 'Courier',
+            //    },
+            //    { text: [
+            //     { text:  data_cabecera.rdsctosdescrip }
+            //   ],
+            //   margin: [0, 0, 0, 0],
+            //   fontSize: 9,
+            //   font: 'Courier',
+            //  },
+
             {
               text: 'Pagina ' + currentPage + ' de ' + pageCount,
               alignment: 'right',
@@ -609,19 +625,19 @@ export class ProformaPdfComponent implements OnInit {
                 characterSpacing: 0
               },
               {
-                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, {text:data_cabecera.rfecha,  characterSpacing: 0 }],
+                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, { text: data_cabecera.rfecha, characterSpacing: 0 }],
                 alignment: 'left',
                 margin: [10, 0, 15, 2], // Margen ajustado
                 fontSize: 9,
                 font: 'Courier',
-                
+
               }
             ]
           },
           {
             columns: [
               {
-                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0  }],
+                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
@@ -629,7 +645,7 @@ export class ProformaPdfComponent implements OnInit {
                 width: 350,
               },
               {
-                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0  }, {text:etiqueta.telefono || '', characterSpacing: 0 }],
+                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0 }, { text: etiqueta.telefono || '', characterSpacing: 0 }],
                 alignment: 'center',
                 fontSize: 9,
                 font: 'Courier',
@@ -639,14 +655,14 @@ export class ProformaPdfComponent implements OnInit {
           {
             columns: [
               {
-                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0  }, {text:data_cabecera.rptoventa || '', characterSpacing: 0 }],
+                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rptoventa || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
                 alignment: 'left',
               },
               {
-                text: [{ text: 'Preparación: ', bold: true,characterSpacing: 0  }, {text:data_cabecera.rpreparacion || '', characterSpacing: 0 }],
+                text: [{ text: 'Preparación: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rpreparacion || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 alignment: 'center',
                 fontSize: 9,
@@ -657,162 +673,163 @@ export class ProformaPdfComponent implements OnInit {
           { canvas: [{ type: 'line', x1: 20, y1: 2, x2: 580, y2: 2, lineWidth: 1 }] }, // Ajustado y1 y y2 para reducir espacio
         ];
       }.bind(this),
-      
+
       content: [{
-          table: {
-            headerRows: 1,
-            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
-            border:[false, true,false,false],
-            body: [
-              [
-                { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0]},
-                { text: ''},
-                { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text:'', style: 'tableHeader'},
-                { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 }],
-  
-                ...items_get.map(items => [
-                  { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 ,margin: [0,0,0,0]},
-                  { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0,margin: [0,0,0,0] },
-                  { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0,margin: [0,0,0,0] },
-                  { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
-                 // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
-                  { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
-                ]),
+        table: {
+          headerRows: 1,
+          widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
+          border: [false, true, false, false],
+          body: [
+            [
+              { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '' },
+              { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: '', style: 'tableHeader' },
+              { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 }],
 
-                [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-              
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                //{ text: data_cabecera.rpesototal, bold: true},
-                { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            ...items_get.map(items => [
+              { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.medida, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 },
+              // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
+              { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
+            ]),
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2 },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            //{ text: data_cabecera.rpesototal, bold: true},
+            { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left' },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
-                [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0]},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
+            [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2, bold: true, border: [false, false, false, false], margin: [false, false, false, false] }, {}],
 
-                [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-                [{text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
-                [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier'}, {},
-                   {text:data_cabecera.rtransporte,  characterSpacing: 0, colSpan: 8, fontSize:9, alignment: 'left', font: 'Courier'},  {}, {}, {}, {}, {}, {},{}],
+            [{ text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{},{text:data_cabecera.rfletepor,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {},  {}, {}, {},{},  {}, {}],
-                
-                [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.rdireccion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-                
-                [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.robs,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
 
-                [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.rfacturacion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rtransporte, characterSpacing: 0, colSpan: 8, fontSize: 9, alignment: 'left', font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_inicial,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.rfletepor, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_autoriza,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-            ]},
-            
-            layout: {
-              // 'headerLineOnly',
-              headerLineOnly: true,
-              //defaultBorder: false, // Sin bordes para las celdas,
-              hLineWidth: function (i, node) {
-                // Dibuja una línea solo debajo del encabezado
-                return (i === 1) ? 1 : 0;
-              },
-              vLineWidth: function (i, node) {
-                // Sin líneas verticales
-                return 0;
-              },
-              hLineColor: function (i, node) {
-                // Color de la línea horizontal
-                return (i === 1) ? 'black' : 'white';
-              },
-              paddingLeft: function(i, node) { return 0; },
-              paddingRight: function(i, node) { return 0; },
-              paddingTop: function(i, node) { return 0; },
-              paddingBottom: function(i, node) { return 0; }
-             },
-             
-            // columns: [
-            //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
-            //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
-            // ],
-            margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
+            [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rdireccion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-            
+            [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.robs, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rfacturacion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_inicial, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_autoriza, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+          ]
+        },
+
+        layout: {
+          // 'headerLineOnly',
+          headerLineOnly: true,
+          //defaultBorder: false, // Sin bordes para las celdas,
+          hLineWidth: function (i, node) {
+            // Dibuja una línea solo debajo del encabezado
+            return (i === 1) ? 1 : 0;
           },
+          vLineWidth: function (i, node) {
+            // Sin líneas verticales
+            return 0;
+          },
+          hLineColor: function (i, node) {
+            // Color de la línea horizontal
+            return (i === 1) ? 'black' : 'white';
+          },
+          paddingLeft: function (i, node) { return 0; },
+          paddingRight: function (i, node) { return 0; },
+          paddingTop: function (i, node) { return 0; },
+          paddingBottom: function (i, node) { return 0; }
+        },
+
+        // columns: [
+        //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
+        //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
+        // ],
+        margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
+
+
+      },
       ],
 
       footer: function (currentPage, pageCount) {
         return {
           columns: [
-        //     { text: [
-        //       { text:  data_cabecera.rtotalliteral }
-        //     ],
-        //     margin: [0, 0, 0, 0],
-        //     fontSize: 9,
-        //     font: 'Courier',
-        //    },
-        //    { text: [
-        //     { text:  data_cabecera.rdsctosdescrip }
-        //   ],
-        //   margin: [0, 0, 0, 0],
-        //   fontSize: 9,
-        //   font: 'Courier',
-        //  },
-           
+            //     { text: [
+            //       { text:  data_cabecera.rtotalliteral }
+            //     ],
+            //     margin: [0, 0, 0, 0],
+            //     fontSize: 9,
+            //     font: 'Courier',
+            //    },
+            //    { text: [
+            //     { text:  data_cabecera.rdsctosdescrip }
+            //   ],
+            //   margin: [0, 0, 0, 0],
+            //   fontSize: 9,
+            //   font: 'Courier',
+            //  },
+
             {
               text: 'Pagina ' + currentPage + ' de ' + pageCount,
               alignment: 'right',
@@ -846,8 +863,8 @@ export class ProformaPdfComponent implements OnInit {
       pageMargins: [20, 100, 72, 50] // Márgenes estándar de 1 pulgada (72 puntos)
     };
     console.log(groupedData);
-    pdfMake.createPdf(docDefinition).download(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial +'.pdf');
-  
+    pdfMake.createPdf(docDefinition).download(this.data_cabecera_footer_proforma.titulo + "-" + this.data_cabecera_footer_proforma.rnombre_comercial + '.pdf');
+
   }
 
   vistaPreviaPDF(data_cabecera, items_get, etiqueta) {
@@ -975,19 +992,19 @@ export class ProformaPdfComponent implements OnInit {
                 characterSpacing: 0
               },
               {
-                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, {text:data_cabecera.rfecha,  characterSpacing: 0 }],
+                text: [{ text: 'Fecha:', bold: true, characterSpacing: 0 }, { text: data_cabecera.rfecha, characterSpacing: 0 }],
                 alignment: 'left',
                 margin: [10, 0, 15, 2], // Margen ajustado
                 fontSize: 9,
                 font: 'Courier',
-                
+
               }
             ]
           },
           {
             columns: [
               {
-                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0  }],
+                text: [{ text: data_cabecera.rdireccion, characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
@@ -995,7 +1012,7 @@ export class ProformaPdfComponent implements OnInit {
                 width: 350,
               },
               {
-                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0  }, {text:etiqueta.telefono || '', characterSpacing: 0 }],
+                text: [{ text: 'Telefono: ', bold: true, characterSpacing: 0 }, { text: etiqueta.telefono || '', characterSpacing: 0 }],
                 alignment: 'center',
                 fontSize: 9,
                 font: 'Courier',
@@ -1005,14 +1022,14 @@ export class ProformaPdfComponent implements OnInit {
           {
             columns: [
               {
-                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0  }, {text:data_cabecera.rptoventa || '', characterSpacing: 0 }],
+                text: [{ text: 'Punto: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rptoventa || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 fontSize: 9,
                 font: 'Courier',
                 alignment: 'left',
               },
               {
-                text: [{ text: 'Preparación: ', bold: true,characterSpacing: 0  }, {text:data_cabecera.rpreparacion || '', characterSpacing: 0 }],
+                text: [{ text: 'Preparación: ', bold: true, characterSpacing: 0 }, { text: data_cabecera.rpreparacion || '', characterSpacing: 0 }],
                 margin: [20, 0, 0, 0],
                 alignment: 'center',
                 fontSize: 9,
@@ -1023,148 +1040,149 @@ export class ProformaPdfComponent implements OnInit {
           { canvas: [{ type: 'line', x1: 20, y1: 2, x2: 580, y2: 2, lineWidth: 1 }] }, // Ajustado y1 y y2 para reducir espacio
         ];
       }.bind(this),
-      
+
 
       content: [{
-          table: {
-            headerRows: 1,
-            widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
-            border:[false, true,false,false],
-            body: [
-              [
-                { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9,characterSpacing: 0,margin: [0,0,0,0] },
-                { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0,margin: [0,0,0,0]},
-                { text: ''},
-                { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text:'', style: 'tableHeader'},
-                { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 },
-                { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8,characterSpacing: 0 }],
-  
-                ...items_get.map(items => [
-                  { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 ,margin: [0,0,0,0]},
-                  { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0,margin: [0,0,0,0] },
-                  { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0,margin: [0,0,0,0] },
-                  { text: items.medida, alignment: 'right', font: 'Arial', fontSize: 8, characterSpacing: 0 },
-                 // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
-                  { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
-                  { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
-                  { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
-                ]),
+        table: {
+          headerRows: 1,
+          widths: [17, 55, 162, 70, 30, 40, 70, 15, 50, 50],
+          border: [false, true, false, false],
+          body: [
+            [
+              { text: '#', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: 'CODIGO', style: 'tableHeader', alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '<------ DESCRIPCION ------>', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: '' },
+              { text: 'UD.', style: 'tableHeader', alignment: 'center', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'CANT PE', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: '', style: 'tableHeader' },
+              { text: 'TP', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'PRE UNIT', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 },
+              { text: 'TOTAL', style: 'tableHeader', alignment: 'right', font: 'Courier', fontSize: 8, characterSpacing: 0 }],
 
-                [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-              
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },             
-                //{ text: data_cabecera.rpesototal, bold: true},
-                { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left'},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            ...items_get.map(items => [
+              { text: items.nroitem, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.coditem, alignment: 'left', font: 'Courier', fontSize: 9, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.descripcion, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0, margin: [0, 0, 0, 0] },
+              { text: items.medida, alignment: 'left', font: 'Arial', fontSize: 8, characterSpacing: 0 },
+              // { text: , alignment: 'center', font: 'Arial', fontSize: 9 },
+              { text: items.udm, alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.cantidad), alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: '___________', alignment: 'center', font: 'Arial', fontSize: 8 },
+              { text: items.codtarifa, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: items.precioneto, alignment: 'right', font: 'Arial', fontSize: 8 },
+              { text: this.formatNumberTotalSub2Decimals(items.total), alignment: 'right', font: 'Arial', fontSize: 8 },
+            ]),
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] } ],
+            [{ text: '____________________________________________________________________________________________________', colSpan: 10, border: [true, true, true, true] }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Peso Total: ', bold: true, characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'right', colSpan: 2 },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            //{ text: data_cabecera.rpesototal, bold: true},
+            { text: ' ' + this.formatNumberTotalSub2Decimals(data_cabecera.rpesototal) + ' Kg.', characterSpacing: 0, margin: [0, 0, 0, 0], fontSize: 9, alignment: 'left' },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Sub Total:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rsubtotal), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Recargos:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rrecargos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
-                [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2,bold: true, border: [false, false, false, false], margin: [false, false, false, false]},{}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: 'Descuento:', bold: true, characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rdescuentos), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
-                [ { text: '', characterSpacing: 0, margin: [0, 0, 0, 0]},
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] }, 
-                { text: '', characterSpacing: 0, fontSize:9, margin: [0, 0, 0, 0] },
-                { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
-                { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
-                { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize:9, alignment: 'right', margin: [0, 0, 0, 0] }],
+            [{}, {}, {}, {}, {}, {}, {}, {}, { text: '_________________', colSpan: 2, bold: true, border: [false, false, false, false], margin: [false, false, false, false] }, {}],
 
 
-                [{text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-                [{text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left'}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, fontSize: 9, margin: [0, 0, 0, 0] },
+            { text: '', characterSpacing: 0, margin: [0, 0, 0, 0] },
+            { text: '', bold: true, characterSpacing: 0, alignment: 'right', margin: [0, 0, 0, 0] },
+            { text: this.formatNumberTotalSub2Decimals(data_cabecera.rtotalimp), characterSpacing: 0, fontSize: 9, alignment: 'right', margin: [0, 0, 0, 0] }],
 
 
-                [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier'}, {},
-                   {text:data_cabecera.rtransporte,  characterSpacing: 0, colSpan: 8, fontSize:9, alignment: 'left', font: 'Courier'},  {}, {}, {}, {}, {}, {},{}],
+            [{ text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+            [{ text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier', colSpan: 10, alignment: 'left' }, {}, {}, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{},{text:data_cabecera.rfletepor,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {},  {}, {}, {},{},  {}, {}],
-                
-                [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.rdireccion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-                
-                [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.robs,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
 
-                [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize:9, font: 'Courier' },{}, 
-                  {text:data_cabecera.rfacturacion,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Medio de Transporte: ', bold: true, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rtransporte, characterSpacing: 0, colSpan: 8, fontSize: 9, alignment: 'left', font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_inicial,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
+            [{ text: 'Flete Pagado Por: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.rfletepor, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
 
-                [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize:9, font: 'Courier' },{}, {text:data_cabecera.crfecha_hr_autoriza,  characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize:9, font: 'Courier' },  {}, {},{}, {}, {}, {}, {}],
-            ]},
-            
-            layout: {
-              // 'headerLineOnly',
-              headerLineOnly: true,
-              //defaultBorder: false, // Sin bordes para las celdas,
-              hLineWidth: function (i, node) {
-                // Dibuja una línea solo debajo del encabezado
-                return (i === 1) ? 1 : 0;
-              },
-              vLineWidth: function (i, node) {
-                // Sin líneas verticales
-                return 0;
-              },
-              hLineColor: function (i, node) {
-                // Color de la línea horizontal
-                return (i === 1) ? 'black' : 'white';
-              },
-              paddingLeft: function(i, node) { return 0; },
-              paddingRight: function(i, node) { return 0; },
-              paddingTop: function(i, node) { return 0; },
-              paddingBottom: function(i, node) { return 0; }
-             },
-             
-            // columns: [
-            //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
-            //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
-            // ],
-            margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
-          },    
+            [{ text: 'Dirección: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rdireccion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Observación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.robs, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Facturación: ', bold: true, characterSpacing: 0, colSpan: 2, alignment: 'left', fontSize: 9, font: 'Courier' }, {},
+            { text: data_cabecera.rfacturacion, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Inicial: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_inicial, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+
+            [{ text: 'Fecha Autorizado: ', bold: true, characterSpacing: 0, colSpan: 2, decoration: 'underline', alignment: 'left', fontSize: 9, font: 'Courier' }, {}, { text: data_cabecera.crfecha_hr_autoriza, characterSpacing: 0, colSpan: 8, alignment: 'left', fontSize: 9, font: 'Courier' }, {}, {}, {}, {}, {}, {}, {}],
+          ]
+        },
+
+        layout: {
+          // 'headerLineOnly',
+          headerLineOnly: true,
+          //defaultBorder: false, // Sin bordes para las celdas,
+          hLineWidth: function (i, node) {
+            // Dibuja una línea solo debajo del encabezado
+            return (i === 1) ? 1 : 0;
+          },
+          vLineWidth: function (i, node) {
+            // Sin líneas verticales
+            return 0;
+          },
+          hLineColor: function (i, node) {
+            // Color de la línea horizontal
+            return (i === 1) ? 'black' : 'white';
+          },
+          paddingLeft: function (i, node) { return 0; },
+          paddingRight: function (i, node) { return 0; },
+          paddingTop: function (i, node) { return 0; },
+          paddingBottom: function (i, node) { return 0; }
+        },
+
+        // columns: [
+        //   { text: data_cabecera.rtotalliteral, fontSize: 9, font: 'Courier' },
+        //   { text: data_cabecera.rdsctosdescrip, fontSize: 9, font: 'Courier' }
+        // ],
+        margin: [0, 10, 0, 0] // Espacio entre la tabla y las columnas
+      },
       ],
 
       footer: function (currentPage, pageCount) {
         return {
-          columns: [           
+          columns: [
             {
               text: 'Pagina ' + currentPage + ' de ' + pageCount,
               alignment: 'right',
@@ -1201,233 +1219,28 @@ export class ProformaPdfComponent implements OnInit {
     pdfMake.createPdf(docDefinition).open();
   }
 
-  
-
   formatNumberTotalSub(numberString: number): string {
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(formattedNumber);
+    return this.numberFormatter_4decimales.format(formattedNumber);
   }
 
   formatNumberTotalSub2Decimals(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
     // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
     const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
   refrsh() {
     window.location.reload();
   }
-
-  // printFunction() {
-  //   window.print();
-  // }
-
-  // getDataPDFHarcode() {
-  //   let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
-  //   return this.api.getAll('/venta/transac/veproforma/getDataPDF/' + this.userConn + "/120028/801406/801406/PE/PORCANCELAR")
-  //     .subscribe({
-  //       next: (datav) => {
-  //         console.log("DATA DEL PDF: ", datav);
-  //         //datav.docveprofCab CABECERA Y FOOTER
-  //         // Agregar el número de orden a los objetos de datos
-  //         datav.dtveproforma1.forEach((element, index) => {
-  //           element.nroitem = index + 1;
-  //           element.orden = index + 1;
-  //         });
-
-  //         this.data_cabecera_footer_proforma = datav.docveprofCab
-
-  //         //datav.dtveproforma1 DETALLE
-  //         this.data_detalle_proforma = datav.dtveproforma1;
-  //         console.log("tamanio data: ", [datav].length);
-  //       },
-
-  //       error: (err: any) => {
-  //         console.log(err, errorMessage);
-  //       },
-  //       complete: () => {
-  //         //this.printFunction();
-  //       }
-  //     })
-  // }
-
-  // printFunction(data_cabecera) {
-  //manera antigua ya no usar
-  //   console.warn(data_cabecera);
-  //   const data_detalle_proforma = this.data_detalle_proforma;
-
-  //   // Agrupar los elementos en filas de 5
-  //   const groupedData = [];
-  //   for (let i = 0; i < data_detalle_proforma.length; i += 4) {
-  //     groupedData.push(data_detalle_proforma.slice(i, i + 4));
-  //   }
-
-  //   const docDefinition = {
-  //     info: { title: data_cabecera.titulo + "-" + data_cabecera.rnombre_comercial + "- ETIQUETAS" },
-  //     header: function (currentPage, pageCount) {
-  //       return [
-  //         {
-  //           columns: [
-  //             {
-  //               text: data_cabecera.empresa || 'PERTEC S.R.L.',
-  //               margin: [20, 10, 0, 14],
-  //               fontSize: 11,
-  //               font: 'Courier',
-  //               bold: true
-  //             },
-  //             {
-  //               text: (data_cabecera.hora_impresion || ''),
-  //               alignment: 'center',
-  //               margin: [10, 10, 0, 14],
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             },
-  //             {
-  //               text: (data_cabecera.fecha_impresion || ''),
-  //               alignment: 'right',
-  //               margin: [10, 10, 20, 14],
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             }
-  //           ]
-  //         },
-  //         {
-  //           columns: [
-  //             {
-  //               text: [{ text: 'N.I.T: ', bold: true }, data_cabecera.rnit || ''],
-  //               margin: [20, 0, 0, 3],
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             },
-  //             {
-  //               text: (data_cabecera.titulo || ''),
-  //               margin: [0, 0, 0, 3],
-  //               alignment: 'center',
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //               bold: true
-  //             },
-  //             {
-  //               text: "",
-  //               // margin: [10, 0, 0, 10],
-  //               alignment: 'right'
-  //             },
-  //           ]
-  //         },
-  //         {
-  //           columns: [
-  //             {
-  //               text: [
-  //                 { text: 'Tipo de Pago: ', bold: true },
-  //                 data_cabecera.tipopago || ''
-  //               ],
-  //               margin: [20, 0, 10, 0],
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             },
-  //             {
-  //               text: [{ text: 'Almacen: ', bold: true }, + (data_cabecera.codalmacen || '')],
-  //               // margin: [10, 10],
-  //               alignment: 'center',
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             },
-  //             {
-  //               text: 'Pagina ' + currentPage + ' de ' + pageCount,
-  //               alignment: 'right',
-  //               margin: [10, 0, 10, 0],
-  //               fontSize: 9,
-  //               font: 'Courier',
-  //             }
-  //           ]
-  //         },
-  //         { canvas: [{ type: 'line', x1: 10, y1: 10, x2: 645 - 2 * 30, y2: 10, lineWidth: 1 }] },
-  //       ];
-  //     }.bind(this),
-
-  //     content: [
-  //       {
-  //         text: this.data_cabecera_footer_proforma?.docveprofCab?.titulo || '',
-  //         //alignment: 'center',
-  //         bold: true,
-  //         fontSize: 14,
-  //         margin: [0, 0, 0, 0],
-  //       },
-  //       {
-  //         layout: {
-  //           hLineWidth: function (i, node) { return (i === 0 || i === node.table.body.length) ? 2 : 1; },
-  //           vLineWidth: function (i, node) { return (i === 0 || i === node.table.widths.length) ? 2 : 1; },
-  //           hLineColor: function (i, node) { return i === 1 ? 'black' : 'gray'; },
-  //           vLineColor: function (i, node) { return i === 1 ? 'black' : 'gray'; },
-
-  //           paddingLeft: (i, node) => 10,
-  //           paddingRight: (i, node) => 10,
-  //           paddingTop: (i, node) => 10,
-  //           paddingBottom: (i, node) => 10
-  //         },
-  //         // table: {
-  //         //   widths: [100, 100, 100, 100, 100],
-  //         //   body: groupedData.map((row, index) => {
-  //         //     // Agregar pageBreak: 'before' antes de una fila en particular, como cuando comienza una nueva página.
-  //         //     const pageBreakRow = (index % 7 === 0 && index > 0) ? { pageBreak: 'before' } : {};
-
-
-  //         //     return row.map(item => ({
-  //         //       ...pageBreakRow,
-  //         //       columns: row.map(item => ({
-  //         //         text: `${item.descripcion || ''}\n${item.medida || ''}\n${this.formatNumberTotalSub(item.cantidad)}\n${item.udm || ''}\n(__)`,
-  //         //         alignment: 'center',
-  //         //         margin: [5, 5, 5, 5],
-  //         //       })).concat(new Array(5 - row.length).fill({ text: '', alignment: 'center' }))
-  //         //     }));
-  //         //   })
-  //         // }
-  //         style: 'tableExample',
-  //         color: '#444',
-  //         table: {
-  //           widths: [20, 50, 300, 20, 30, 30, 30, 30],
-  //           body: [
-  //             ['#', 'CODIGO', 'DESCRIPCION', 'UD.', 'CANT. PEDIDA', 'TP', 'PRECIO UNIT.', 'TOTAL'],
-  //             // ['fixed-width cells have exactly the specified width', { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }, { text: 'nothing interesting here', italics: true, color: 'gray' }]
-  //           ]
-  //         },
-  //       }
-  //     ],
-
-  //     footer: function (currentPage, pageCount) {
-  //       return {
-  //         columns: [
-  //           {
-  //             text: 'Pagina ' + currentPage + ' de ' + pageCount,
-  //             alignment: 'right',
-  //             margin: [4, 0, 10, 4],
-  //           }
-  //         ]
-  //       };
-  //     },
-
-  //     styles: {
-  //       header: {
-  //         fontSize: 14,
-  //         margin: [0, 0, 0, 0],
-  //         font: 'Courier',
-  //       },
-
-  //       tableExample: {
-  //         fontSize: 12,
-  //         border: [30, 50, 30, 50],
-  //         margin: [20, 0, 20, 0],
-  //         font: 'Courier',
-  //       }
-  //     },
-  //     defaultStyle: {
-  //       fontSize: 10,
-  //       font: 'Arial'
-  //     },
-  //     pageMargins: [20, 100, 0, 20]
-  //   };
-  //   console.log(groupedData);
-  //   pdfMake.createPdf(docDefinition).open();
-  // }
 }

@@ -3381,6 +3381,63 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // accion de brn grabarAprobar
+  validarAntesDeGrabarAprobar() {
+    console.log(this.contra_entrega);
+
+    let dataValidar = {
+      id: this.id_tipo_view_get_codigo,
+      numeroid: this.id_proforma_numero_id,
+      tipopago: this.tipopago === 0 ? "CONTADO" : "CREDITO",
+      contra_entrega: this.contra_entrega,
+      codmoneda: this.moneda_get_catalogo,
+      fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+      total: this.total,
+      cantidad_anticipos: this.tabla_anticipos.length,
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/modif/docmodifveproforma/anularProforma/";
+    return this.api.create(`/venta/transac/veproforma/ValidarParaAprobarMayor50000/${this.userConn}/${this.BD_storage}/${this.usuarioLogueado}`, dataValidar)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: async (datav) => {
+          console.log(datav);
+          if (datav.pedir_clave) {
+            const result = await this.openConfirmacionDialog(datav.respuesta);
+            if (result) {
+              const blnModalClave = await this.modalClaveDatoADatoB(datav.datoA, datav.datoB, "", datav.cod_servicio);
+              if (blnModalClave) {
+                // se guarda
+                this.submitDataGrabarAprobar();
+              } else {
+                // no se guarda
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'CONTRASEÑA ERRONEA NO SE GRABO Y APROBO' });
+              }
+            }
+          } else {
+            this.submitDataGrabarAprobar();
+          }
+
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        },
+
+        complete: () => {
+          // window.location.reload();
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 50);
+        }
+      });
+
+  }
+
   async submitDataGrabarAprobar() {
     let tamanio_array_etiqueta = this.etiqueta_get_modal_etiqueta.length;
     let total_proforma_concat: any = [];
@@ -3719,6 +3776,9 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+
+
+
   totabilizar() {
     console.log("original: ", this.array_items_carrito_y_f4_catalogo)
     console.log("visualizar: ", this.array_items_carrito_y_f4_catalogo_visualizar)
@@ -3845,31 +3905,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       }, 0);
     }
   }
-
-  // formatNumberTotalSubTOTALES(numberString: number | string): string {
-  //   // Verificar si el valor es nulo, indefinido o vacío
-  //   if (!numberString && numberString !== 0) {
-  //     return '0.00';
-  //   }
-
-  //   // Formatear el número con separadores de miles y dos decimales
-  //   return numberString.toLocaleString('en-US', { 
-  //     minimumFractionDigits: 2, 
-  //     maximumFractionDigits: 2 
-  //   });
-  // }
-
-  // formatNumberTotalSubTOTALES(numberString: number): string {
-  //   // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-  //   return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numberString);
-  // }
-
-  // formatNumberTotalSubTOTALES(numberString: number): string {
-  //   const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-  //   return Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numberString);;
-  // }
-
-
 
 
   formatNumberTotalSubTOTALES(numberString: number): string {
@@ -6564,7 +6599,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openConfirmacionDialog(message: string): Promise<boolean> {
-    //btn aceptar
+    //btn ok
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
       width: '450px',
       height: 'auto',
@@ -7396,9 +7431,20 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  modalClaveDatoADatoB(dataA, dataB, permiso, codpermiso) {
+    const dialogRef = this.dialog.open(PermisosEspecialesParametrosComponent, {
+      width: '450px',
+      height: 'auto',
+      data: {
+        dataA: dataA,
+        dataB: dataB,
+        dataPermiso: permiso,
+        dataCodigoPermiso: codpermiso,
+      },
+    });
 
-
-
+    return firstValueFrom(dialogRef.afterClosed());
+  }
 
 
 

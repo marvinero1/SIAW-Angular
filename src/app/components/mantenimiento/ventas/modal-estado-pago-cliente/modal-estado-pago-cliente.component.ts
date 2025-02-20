@@ -45,6 +45,8 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
   total_adeudado: any;
   credito: any;
 
+  private numberFormatter_2decimales: Intl.NumberFormat;
+
   displayedColumns = ['calculo', 'id', 'numero', 'fecha', 'para_venta_contado', 'monto',
     'monto_pagado', 'C', 'vencimiento', 'saldo_deudor', 'acumulado', 'moneda', 'monto', 'dias'];
 
@@ -54,14 +56,21 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
   displayedColumnsAnticipos = ['id', 'numero', 'recibo', 'fecha', 'monto', 'restante'];
 
   constructor(public dialogRef: MatDialogRef<ModalEstadoPagoClienteComponent>, private messageService: MessageService,
-    private api: ApiService, public _snackBar: MatSnackBar, private datePipe: DatePipe,
-    @Inject(MAT_DIALOG_DATA) public cod_cliente: any, private spinner: NgxSpinnerService) {
+    private api: ApiService, public _snackBar: MatSnackBar, private datePipe: DatePipe, private spinner: NgxSpinnerService,
+    @Inject(MAT_DIALOG_DATA) public cod_cliente: any) {
+
     this.cod_cliente_get = cod_cliente.cod_cliente;
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   ngOnInit() {
@@ -78,7 +87,7 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
     this.spinner.show();
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/prgestadocliente/getEstadoPagosCliente/";
-    return this.api.getAll('/venta/transac/prgestadocliente/getEstadoPagosCliente/' + this.userConn + "/" + this.cod_cliente_get + "/" + this.fecha_actual1 + "/" + this.agencia_logueado + "/" + this.BD_storage)
+    return this.api.getAll(`/venta/transac/prgestadocliente/getEstadoPagosCliente/${this.userConn}/${this.cod_cliente_get}/${this.fecha_actual1}/${this.agencia_logueado}/${this.BD_storage}`)
       .subscribe({
         next: (datav) => {
           this.estado_pagos_all = datav;
@@ -112,32 +121,37 @@ export class ModalEstadoPagoClienteComponent implements OnInit, AfterContentInit
 
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 150);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 150);
         },
         complete: () => {
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 150);
         }
       })
   }
 
-  formatNumber(number: number): any {
-    // Formatear el número con el separador de miles como coma y el separador decimal como punto
-    return new Intl.NumberFormat('en-US').format(number);
+  formatNumber(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales.format(formattedNumber);
   }
 
 
   calcularSeleccion(element) {
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta: -/venta/transac/prgestadocliente/calcularSeleccion/";
-    return this.api.create("/venta/transac/prgestadocliente/calcularSeleccion/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage, element)
+    return this.api.create(`/venta/transac/prgestadocliente/calcularSeleccion/${this.userConn}/${this.usuarioLogueado}/${this.BD_storage}`, element)
       .subscribe({
         next: (datav) => {
           this.calculo_sesion = datav;
