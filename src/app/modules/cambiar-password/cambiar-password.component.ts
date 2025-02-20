@@ -5,8 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoginComponent } from '@modules/login/login.component';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
-import { ToastrService } from 'ngx-toastr';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-cambiar-password',
   templateUrl: './cambiar-password.component.html',
@@ -28,10 +27,9 @@ export class CambiarPasswordComponent implements OnInit {
   public detalle = "refresh-pasword-update";
   public tipo = "transaccion-refresh-pasword-UPDATE";
 
-  constructor(private _formBuilder: FormBuilder, private api: ApiService, public _snackBar: MatSnackBar, private toastr: ToastrService,
-    public dialogRef: MatDialogRef<CambiarPasswordComponent>,
-    public login: LoginComponent, public log_module: LogService, @Inject(MAT_DIALOG_DATA) public login_modal_password: any) {
-
+  constructor(private _formBuilder: FormBuilder, private api: ApiService, public _snackBar: MatSnackBar, private messageService: MessageService,
+    public dialogRef: MatDialogRef<CambiarPasswordComponent>, public login: LoginComponent, public log_module: LogService,
+    @Inject(MAT_DIALOG_DATA) public login_modal_password: any) {
     this.FormularioDataRefrescarPassword = this.createForm();
   }
 
@@ -40,8 +38,6 @@ export class CambiarPasswordComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.login_modal_password_get = this.login_modal_password.login_modal_password;
-    console.log(this.login_modal_password_get);
-    this.toastr.error('Actualizar Contraseña');
   }
 
   createForm(): FormGroup {
@@ -60,11 +56,9 @@ export class CambiarPasswordComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.password = datav;
-          console.log(this.password);
-
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.onNoClick();
-          this.toastr.success('! Se Actualizo Correctamente !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! Se Actualizo Correctamente !' });
           this._snackBar.open('Se Actualizo Correctamente la Contraseña!', '🙂', {
             duration: 3000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -73,7 +67,7 @@ export class CambiarPasswordComponent implements OnInit {
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE ACTUALIZO LA CONTRASEÑA !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE ACTUALIZO LA CONTRASEÑA !' });
         },
         complete: () => { }
       })

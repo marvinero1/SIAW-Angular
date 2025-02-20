@@ -15,9 +15,8 @@ export class AppService {
     //         localStorage.setItem('token', token);
     //         await this.getProfile();
     //         this.router.navigate(['/']);
-    //         this.toastr.success('Login success');
     //     } catch (error) {
-    //         this.toastr.error(error.message);
+    //         
     //     }
     // }
 
@@ -27,9 +26,9 @@ export class AppService {
         //     localStorage.setItem('token', token);
         //     await this.getProfile();
         //     this.router.navigate(['/']);
-        //     this.toastr.success('Register success');
+        //    
         // } catch (error) {
-        //     this.toastr.error(error.message);
+        //     
         // }
     }
 
@@ -39,9 +38,9 @@ export class AppService {
         //     localStorage.setItem('token', token);
         //     await this.getProfile();
         //     this.router.navigate(['/']);
-        //     this.toastr.success('Login success');
+        //   
         // } catch (error) {
-        //     this.toastr.error(error.message);
+        //     
         // }
     }
 
@@ -51,9 +50,9 @@ export class AppService {
         //     localStorage.setItem('token', token);
         //     await this.getProfile();
         //     this.router.navigate(['/']);
-        //     this.toastr.success('Register success');
+        //     
         // } catch (error) {
-        //     this.toastr.error(error.message);
+        //     
         // }
     }
 
@@ -63,9 +62,9 @@ export class AppService {
         //     localStorage.setItem('token', token);
         //     await this.getProfile();
         //     this.router.navigate(['/']);
-        //     this.toastr.success('Login success');
+        //    
         // } catch (error) {
-        //     this.toastr.error(error.message);
+        //    
         // }
     }
 
@@ -75,9 +74,9 @@ export class AppService {
         //     localStorage.setItem('token', token);
         //     await this.getProfile();
         //     this.router.navigate(['/']);
-        //     this.toastr.success('Register success');
+        //    
         // } catch (error) {
-        //     this.toastr.error(error.message);
+        //     
         // }
     }
 

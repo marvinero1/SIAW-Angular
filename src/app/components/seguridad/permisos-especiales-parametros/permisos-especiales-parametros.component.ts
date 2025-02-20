@@ -211,15 +211,12 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   fecha_actual = new Date();
   hora_actual = new Date();
 
-  userConn: string;
-  user_logueado: string;
   dataA_get: any = [];
   dataB_get: any = [];
   data_inventario: any;
   data_inventario_code: any;
   abrir_get: any;
   data_text_area: any = [];
-  BD_storage: any = [];
   estado: any = [];
   contrasenia: string;
   data_autorizacionA: any = [];
@@ -237,17 +234,20 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
 
   codigo_servicio: any;
 
-  constructor(private api: ApiService, public dialog: MatDialog,
+  BD_storage: any;
+  userConn: string;
+  user_logueado: string;
+
+  constructor(private api: ApiService, public dialog: MatDialog, public almacenservice: ServicioalmacenService,
     public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
     public log_module: LogService, public _snackBar: MatSnackBar, private messageService: MessageService,
     public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
-    public almacenservice: ServicioalmacenService,
-
     @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
     @Inject(MAT_DIALOG_DATA) public dataCodigoPermiso: any,
     @Inject(MAT_DIALOG_DATA) public abrir: any) {
+
     this.data_inventario_code = dataCodigoPermiso.dataCodigoPermiso;
 
     let inventario_codigo: string;
@@ -255,13 +255,9 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     console.log("🚀 ~ PermisosEspecialesParametrosComponent ~ @Inject ~ inventario_codigo en entero:", inventario_codigo)
 
     let a = this.autorizacion.find((element) => element.codigo === inventario_codigo);
-
     if (a) {
-      // console.log("🚀 ~ Código descripción encontrado:", this.codigo_mas_descricpion = a.codigo_descripcion);
       this.descripcion_servicio = a.descripcion;
       this.codigo_servicio = a.codigo;
-    } else {
-      // console.log("No se encontró ninguna coincidencia para el código:", this.data_inventario_code);
     }
 
     this.dataA_get = this.dataA.dataA;
@@ -270,8 +266,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     this.cod_y_descripcion = this.data_inventario_code + "-" + this.data_inventario
 
     this.abrir_get = abrir.abrir;
-
-    // console.log(this.dataA_get, this.dataB_get, this.data_inventario, this.descripcion_servicio, this.abrir_get);
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
@@ -293,7 +287,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       .subscribe({
         next: (datav) => {
           this.persona_code = datav.persona;
-          //console.log(datav);
         },
 
         error: (err: any) => {
@@ -322,7 +315,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
       obs: this.motivo,
       datos_documento: " "
     };
-    // console.log(a);
 
     return new Promise<boolean>((resolve, reject) => {
       // Verifica si la contrasenia ingresada es la correcta

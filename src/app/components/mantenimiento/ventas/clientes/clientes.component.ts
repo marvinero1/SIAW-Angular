@@ -5,7 +5,6 @@ import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.comp
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { ModalClienteComponent } from '../modal-cliente/modal-cliente.component';
 import { ServicioclienteService } from '../serviciocliente/serviciocliente.service';
 import { DatePipe } from '@angular/common';

@@ -28,7 +28,7 @@ export class ModalClienteComponent implements OnInit, OnChanges {
   cliente: any = [];
   cliente_send: any = [];
   cliente_referencia_proforma_get: boolean = false;
-  codcliente_creado:any;
+  codcliente_creado: any;
   userConn: string;
   origen: string;
 
@@ -40,12 +40,10 @@ export class ModalClienteComponent implements OnInit, OnChanges {
   @ViewChildren('para') paras: QueryList<ElementRef>;
   @Input() searchValue: string = '';  // Valor del filtro
 
-
-
   constructor(public dialogRef: MatDialogRef<ModalClienteComponent>, private dialog: MatDialog, private api: ApiService,
     public servicioCliente: ServicioclienteService, private spinner: NgxSpinnerService,
     @Inject(MAT_DIALOG_DATA) public cliente_referencia_proforma: any,
-    @Inject(MAT_DIALOG_DATA) public ventana: any, @Inject(MAT_DIALOG_DATA) public codcliente: any ) {
+    @Inject(MAT_DIALOG_DATA) public ventana: any, @Inject(MAT_DIALOG_DATA) public codcliente: any) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.origen = ventana.ventana;
@@ -59,8 +57,8 @@ export class ModalClienteComponent implements OnInit, OnChanges {
       this.cliente_referencia_proforma_get = false;
     }
 
-    if(codcliente?.codcliente){
-      this.searchValue =  this.codcliente_creado;  
+    if (codcliente?.codcliente) {
+      this.searchValue = this.codcliente_creado;
 
       setTimeout(() => {
         this.onSearchChange(this.codcliente_creado.toString());
@@ -71,7 +69,7 @@ export class ModalClienteComponent implements OnInit, OnChanges {
     this.getClienteCatalogo();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['searchValue'] && this.dt1) {

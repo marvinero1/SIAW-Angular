@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { AnticipoProformaService } from './servicio-anticipo-proforma/anticipo-proforma.service';
 import { subMonths } from 'date-fns';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -91,7 +90,7 @@ export class AnticiposProformaComponent implements OnInit {
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
-  constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private toastr: ToastrService,
+  constructor(public dialogRef: MatDialogRef<AnticiposProformaComponent>, private datePipe: DatePipe,
     private api: ApiService, public _snackBar: MatSnackBar, private spinner: NgxSpinnerService,
     private anticipo_servicio: AnticipoProformaService, private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) public id: any, @Inject(MAT_DIALOG_DATA) public numero_id: any,
@@ -101,8 +100,7 @@ export class AnticiposProformaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public vendedor: any, @Inject(MAT_DIALOG_DATA) public cod_cliente_real: any,
     @Inject(MAT_DIALOG_DATA) public total: any, @Inject(MAT_DIALOG_DATA) public tdc: any,
     @Inject(MAT_DIALOG_DATA) public array_tabla_anticipos: any,
-    @Inject(MAT_DIALOG_DATA) public nombre_ventana: any,
-    private datePipe: DatePipe) {
+    @Inject(MAT_DIALOG_DATA) public nombre_ventana: any) {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;

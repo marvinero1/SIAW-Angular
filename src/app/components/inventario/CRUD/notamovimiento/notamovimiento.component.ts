@@ -21,7 +21,7 @@ import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/ma
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
-import { CatalogonotasmovimientosComponent } from '../catalogonotasmovimientos/catalogonotasmovimientos.component';
+import { CatalogonotasmovimientosComponent } from './catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { CatalogoNotasMovimientoService } from '../servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { CatalogoMovimientoMercaderiaComponent } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/catalogo-movimiento-mercaderia/catalogo-movimiento-mercaderia.component';
 import { MovimientomercaderiaService } from '@components/mantenimiento/inventario/conceptosmovimientosmercaderia/serviciomovimientomercaderia/movimientomercaderia.service';
@@ -1100,7 +1100,6 @@ export class NotamovimientoComponent implements OnInit {
             });
           }
         },
-
         error: (err: any) => {
           console.log(err, errorMessage);
         },

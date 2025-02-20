@@ -41,7 +41,7 @@ export class ModificarPedidoComponent implements OnInit {
   };
 
 
-  public nombre_ventana: string = "docinpedido.vb";
+  public nombre_ventana: string = "docmodifinpedido.vb";
   public ventana: string = "Modificar Pedido";
   public detalle = "Modif Pedido";
   public tipo = "transaccion-docinpedido-POST";
@@ -630,24 +630,6 @@ export class ModificarPedidoComponent implements OnInit {
         }
       })
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

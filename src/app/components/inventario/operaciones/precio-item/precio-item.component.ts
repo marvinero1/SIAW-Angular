@@ -6,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { ValidarPrecioItemComponent } from './validar-precio-item/validar-precio-item.component';
 import { ValidarPermisoItemComponent } from './validar-permiso-item/validar-permiso-item.component';
 import { PermisoEspecialPasswordComponent } from '@components/seguridad/permiso-especial-password/permiso-especial-password.component';
@@ -15,6 +14,7 @@ import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosIt
 import { ServicioprecioventaService } from '@components/mantenimiento/ventas/servicioprecioventa/servicioprecioventa.service';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-precio-item',
   templateUrl: './precio-item.component.html',
@@ -52,7 +52,7 @@ export class PrecioItemComponent implements OnInit {
   public detalle = "PrecioItem-UPDATE";
   public tipo = "PrecioItem-UPDATE";
 
-  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
+  constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private messageService: MessageService,
     public log_module: LogService, private _formBuilder: FormBuilder, public itemservice: ItemServiceService,
     public servicioPrecioVenta: ServicioprecioventaService, public nombre_ventana_service: NombreVentanaService) {
 
@@ -170,7 +170,7 @@ export class PrecioItemComponent implements OnInit {
           complete: () => { }
         })
     } else {
-      this.toastr.warning('INGRESE TODOS LOS CAMPOS');
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'INGRESE TODOS LOS CAMPOS' });
     }
   }
 
@@ -198,10 +198,10 @@ export class PrecioItemComponent implements OnInit {
         if (result) {
           this.validarPrecioItemPassword(data);
         } else {
-          this.toastr.error('! NO SE CONFIRMADO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE CONFIRMADO ! ' });
         }
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO ! ' });
       }
     });
   }
@@ -217,7 +217,7 @@ export class PrecioItemComponent implements OnInit {
       if (result) {
         this.modalPassword(data);
       } else {
-        this.toastr.error('! CANCELADO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO !' });
       }
     });
   }
@@ -242,7 +242,7 @@ export class PrecioItemComponent implements OnInit {
       if (result) {
         this.submitData();
       } else {
-        this.toastr.error('! CANCELADO NO SE GUARDO !');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! CANCELADO NO SE GUARDO !' });
       }
     });
   }
@@ -259,15 +259,15 @@ export class PrecioItemComponent implements OnInit {
             this.tarifa_save = datav;
             this.getPrecio();
             this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-            this.toastr.success('Guardado con Exito! 🎉');
+            this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: 'Guardado con Exito! 🎉' });
           } else {
-            this.toastr.error('! ERROR AL GUARDAR !');
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: '! ERROR AL GUARDAR !' });
           }
         },
 
         error: (err) => {
           console.log(err, errorMessage);
-          this.toastr.error('! NO SE GUARDO !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GUARDO ! ' });
         },
         complete: () => { }
       })

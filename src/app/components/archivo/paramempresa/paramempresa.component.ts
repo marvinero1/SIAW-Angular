@@ -7,8 +7,8 @@ import { ModalPreciosFacturacionComponent } from './modales/modalPreciosFacturac
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LogService } from '@services/log-service.service';
-import { ToastrService } from 'ngx-toastr';
 import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-ventana/nombre-ventana.service';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-paramempresa',
   templateUrl: './paramempresa.component.html',
@@ -38,8 +38,8 @@ export class ParamempresaComponent implements OnInit {
   public detalle = "paramempresa-edit";
   public tipo = "transaccion-paramempresa-PUT";
 
-  constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService,
-    public _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private toastr: ToastrService, public nombre_ventana_service: NombreVentanaService) {
+  constructor(private api: ApiService, public dialog: MatDialog, public log_module: LogService, private messageService: MessageService,
+    public _snackBar: MatSnackBar, private _formBuilder: FormBuilder, public nombre_ventana_service: NombreVentanaService) {
 
     this.mandarNombre();
 
@@ -159,38 +159,37 @@ export class ParamempresaComponent implements OnInit {
     const target = fileInput.target as HTMLInputElement; // Asegúrate de que el target es un HTMLInputElement
 
     if (target.files && target.files.length > 0) {
-        this.myfilename = '';
+      this.myfilename = '';
 
-        // Convierte a un array de File y itera sobre los archivos
-        Array.from(target.files).forEach((file: File) => {
-            console.log(file); // Muestra el archivo en la consola
-            this.myfilename += file.name + ', '; // Agrega el nombre del archivo
-        });
+      // Convierte a un array de File y itera sobre los archivos
+      Array.from(target.files).forEach((file: File) => {
+        console.log(file); // Muestra el archivo en la consola
+        this.myfilename += file.name + ', '; // Agrega el nombre del archivo
+      });
 
-        // Utiliza el primer archivo para leerlo como Data URL
-        const reader = new FileReader();
-        reader.onload = (e: ProgressEvent<FileReader>) => {
-            const imgBase64Path = e.target?.result; // Asegúrate de que target no sea nulo
-            if (imgBase64Path) {
-                const image = new Image();
-                image.src = imgBase64Path as string; // Asegúrate de que sea un string
+      // Utiliza el primer archivo para leerlo como Data URL
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        const imgBase64Path = e.target?.result; // Asegúrate de que target no sea nulo
+        if (imgBase64Path) {
+          const image = new Image();
+          image.src = imgBase64Path as string; // Asegúrate de que sea un string
 
-                image.onload = () => {
-                    // Aquí puedes usar la imagen una vez que se haya cargado
-                };
-            }
-        };
+          image.onload = () => {
+            // Aquí puedes usar la imagen una vez que se haya cargado
+          };
+        }
+      };
 
-        // Lee el primer archivo como Data URL
-        reader.readAsDataURL(target.files[0]);
+      // Lee el primer archivo como Data URL
+      reader.readAsDataURL(target.files[0]);
 
-        // Reinicia el input de archivo para permitir seleccionar el mismo archivo nuevamente
-        this.uploadFileInput.nativeElement.value = '';
+      // Reinicia el input de archivo para permitir seleccionar el mismo archivo nuevamente
+      this.uploadFileInput.nativeElement.value = '';
     } else {
-        this.myfilename = 'Select File';
+      this.myfilename = 'Select File';
     }
-}
-
+  }
 
   detectFiles(event) {
     console.log(event.currentTarget.files[0].webkitRelativePath);
@@ -375,7 +374,7 @@ export class ParamempresaComponent implements OnInit {
 
         error: (err: any) => {
           console.log(err, this.errorMessage);
-          this.toastr.error('! NO SE ACTUALIZO EXITOSAMENTE !');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE ACTUALIZO EXITOSAMENTE !' });
         },
         complete: () => { }
       })

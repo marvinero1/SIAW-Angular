@@ -36,9 +36,9 @@ import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/moda
 import * as XLSX from 'xlsx';
 import { BuscadorAvanzadoService } from '@components/uso-general/servicio-buscador-general/buscador-avanzado.service';
 import { CatalogoNotasMovimientoService } from '../../servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
-import { CatalogonotasmovimientosComponent } from '../../catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '@components/uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
 import { DialogTarifaImpresionComponent } from '../../dialog-tarifa-impresion/dialog-tarifa-impresion.component';
+import { CatalogonotasmovimientosComponent } from '../../notamovimiento/catalogonotasmovimientos/catalogonotasmovimientos.component';
 
 @Component({
   selector: 'app-modificar-nota-movimiento',
@@ -77,8 +77,13 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     }
   };
 
-  catalogo_proforma_seleccionado: any;
+  public nombre_ventana: string = "docmodifinmovimiento.vb";
+  public ventana: string = "Modificar Nota Movimiento";
+  public detalle = "Modificar Nota Movimiento";
+  public tipo = "modificar-docinmovimiento-POST";
 
+
+  catalogo_proforma_seleccionado: any;
   //array
   array_vendedores: any = [];
   array_almacenes: any = [];
@@ -2015,8 +2020,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       tabladetalle: this.array_items_carrito_y_f4_catalogo
     };
 
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/copiarAduana/";
-    return this.api.create('/inventario/transac/docinmovimiento/validarSaldos/' + this.userConn + "/" + false, array)
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/validarSaldos/";
+    return this.api.create('/inventario/modif/docmodifinmovimiento/validarSaldos/' + this.userConn + "/" + false, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)

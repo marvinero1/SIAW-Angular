@@ -61,8 +61,6 @@ export class ModalClienteDireccionComponent implements OnInit {
       })
   }
 
-
-
   getDireccionView(element) {
     this.cliente_real_array = element.data;
     this.latitud = element.data.latitud;
@@ -71,8 +69,6 @@ export class ModalClienteDireccionComponent implements OnInit {
   }
 
   onSearchChange(searchValue: string) {
-    console.log(searchValue);
-
     // Debounce logic
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
@@ -88,7 +84,6 @@ export class ModalClienteDireccionComponent implements OnInit {
           break;
         }
       }
-
       if (!focused) {
         console.warn('No se encontró ningún elemento para hacer focus');
       }

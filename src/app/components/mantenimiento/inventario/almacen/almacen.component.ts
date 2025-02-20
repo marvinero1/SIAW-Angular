@@ -15,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalAlmacenComponent } from './modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from './servicioalmacen/servicioalmacen.service';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-almacen',
   templateUrl: './almacen.component.html',
@@ -48,7 +49,7 @@ export class AlmacenComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private datePipe: DatePipe,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService, public _snackBar: MatSnackBar,
-    private _formBuilder: FormBuilder, public almacenservice: ServicioalmacenService, private toastr: ToastrService) {
+    private _formBuilder: FormBuilder, public almacenservice: ServicioalmacenService, private messageService: MessageService) {
 
     this.FormularioData = this.createForm();
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -132,9 +133,8 @@ export class AlmacenComponent implements OnInit {
         next: (datav) => {
           this.almacen = datav;
           console.log('data', datav);
-
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-          this.toastr.success('! SE GUARDO EXITOSAMENTE !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! SE GUARDO EXITOSAMENTE !' });
           this._snackBar.open('! SE GUARDO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
@@ -160,7 +160,7 @@ export class AlmacenComponent implements OnInit {
           console.log('data', datav);
 
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
-          this.toastr.success('! SE EDITO EXITOSAMENTE !');
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! SE EDITO EXITOSAMENTE !' });
           this._snackBar.open('! SE EDITO EXITOSAMENTE !', 'Ok', {
             duration: 3000,
             panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],

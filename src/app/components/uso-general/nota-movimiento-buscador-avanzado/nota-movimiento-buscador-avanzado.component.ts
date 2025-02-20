@@ -2,7 +2,6 @@ import { DatePipe } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { CatalogoNotasMovimientoService } from '@components/inventario/CRUD/servicio-catalogo-notas-movimiento/catalogo-notas-movimiento.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
@@ -13,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 import { BuscadorAvanzadoService } from '../servicio-buscador-general/buscador-avanzado.service';
+import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/notamovimiento/catalogonotasmovimientos/catalogonotasmovimientos.component';
 interface buscadorGeneral {
   id: any,
   numeroid: any,

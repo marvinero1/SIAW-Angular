@@ -4,7 +4,6 @@ import { ApiService } from '@services/api.service';
 import { veNumeracion } from '@services/modelos/objetos';
 import { Table } from 'primeng/table';
 import { AnticiposService } from './servicio-mandar-anticipos/anticipos.service';
-
 @Component({
   selector: 'app-modal-anticipos',
   templateUrl: './modal-anticipos.component.html',
@@ -27,7 +26,6 @@ export class ModalAnticiposComponent implements OnInit {
   public codigo: string = '';
   public tipo_view: any = [];
   public numero_id: string;
-  
 
   userConn: any;
   user: any;
@@ -103,7 +101,7 @@ export class ModalAnticiposComponent implements OnInit {
     this.close();
   }
 
-  close(){
+  close() {
     this.dialogRef.close();
   }
 }

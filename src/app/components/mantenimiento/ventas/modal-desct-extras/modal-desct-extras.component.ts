@@ -4,7 +4,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { DescuentoService } from '../serviciodescuento/descuento.service';
 import { DecimalPipe } from '@angular/common';
 import { MessageService } from 'primeng/api';
@@ -18,15 +17,18 @@ export class ModalDesctExtrasComponent implements OnInit {
 
   tarifaPrincipal: any = [];
   descuento_segun_tarifa: any = [];
-  BD_storage: any = [];
 
   validacion_bool_descuento: any = [];
   info_descuento_peso_minimo: any;
   info_descuento_porcentaje: any;
   validarBtnAnadir: any = false;
-  agenciaLogueado: any;
+
   cod_moneda_get: any;
   recargos_del_total_get: any;
+  precio_input: any;
+
+  agenciaLogueado: any;
+  BD_storage: any;
   userConn: any;
 
   items_de_proforma: any = [];
@@ -113,14 +115,7 @@ export class ModalDesctExtrasComponent implements OnInit {
     this.getPrecioInicial();
   }
 
-  precio_input: any;
-
   getPrecioInicial() {
-    // this.items_de_proforma = this.items_de_proforma.map((element) => ({
-    //   ...element,
-    //   cumple: element.cumple === 1 ? true : false,
-    // }));
-
     let array_post = {
       tabladetalle: this.items_de_proforma,
       dvta: this.cabecera_proforma,
@@ -137,11 +132,9 @@ export class ModalDesctExtrasComponent implements OnInit {
 
           this.descuentoExtraSegunTarifa(this.tarifaPrincipal.codTarifa);
         },
-
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-
         complete: () => { }
       })
   }
@@ -208,14 +201,6 @@ export class ModalDesctExtrasComponent implements OnInit {
 
   // 1ro VALIDAR DESCUENTOS
   validarDescuento() {
-    // this.array_de_descuentos?.map(element => ({
-    //   codigo: element.codigo,
-    //   descripcion: element.descripcion,
-    //   porcentaje: this.info_descuento_porcentaje,
-    // }));
-
-    // console.log(this.array_valida_detalle);
-
     let a = [{
       codigo: this.info_descuento.codigo,
       codproforma: 0,

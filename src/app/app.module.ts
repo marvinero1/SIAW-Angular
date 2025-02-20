@@ -461,7 +461,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ListboxModule } from 'primeng/listbox';
 import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimiento/notamovimiento.component';
-import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { NotaMovimientoBuscadorAvanzadoComponent } from '@components/uso-general/nota-movimiento-buscador-avanzado/nota-movimiento-buscador-avanzado.component';
 import { DialogTarifaImpresionComponent } from '@components/inventario/CRUD/dialog-tarifa-impresion/dialog-tarifa-impresion.component';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
@@ -472,6 +471,7 @@ import { CatalogoPedidoComponent } from '@components/inventario/CRUD/pedido/cata
 import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-pedido/modificar-pedido.component';
 import { CatalogoProvedoresComponent } from '@components/mantenimiento/compras/proveedores/catalogo-provedores/catalogo-provedores.component';
 import { BuscadorAvanzadoPedidosComponent } from '@components/uso-general/buscador-avanzado-pedidos/buscador-avanzado-pedidos.component';
+import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/notamovimiento/catalogonotasmovimientos/catalogonotasmovimientos.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
