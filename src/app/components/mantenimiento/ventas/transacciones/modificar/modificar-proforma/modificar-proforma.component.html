@@ -1,5 +1,5 @@
 <section
-  style="background-color:#ffffc0 !important;margin-left: 1px;margin-right: 7.5px;flex: 1;box-sizing: border-box">
+  style="background-color:#ffffc0;margin-left: 1px;margin-right: 7.5px;flex: 1;box-sizing: border-box">
 
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
@@ -182,7 +182,7 @@
           </button>
           <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
             matTooltip="Verificar Depositos Pendientes de Descuentos del Cliente"
-            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
+            [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || id_tipo_view_get_codigo === ''"
             (click)="verificarDepositoPendientesDescuentoCliente()">
             <i class="fa fa-calculator blue" aria-hidden="true"></i>
           </button>
@@ -204,7 +204,7 @@
             <mat-list role="list">
               <mat-list-item role="listitem" class="list-button">
                 <button class="btn btn-outline-secondary form-control-sm" type="button"
-                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || cod_id_tipo_modal_id === ''"
+                  [disabled]="!codigo_cliente && id_proforma_numero_id !== 0 || id_tipo_view_get_codigo === ''"
                   (click)="ultimasProformas()">
                   <i class="fa fa-clone green" aria-hidden="true"></i> Ultimas Proformas
                 </button>
@@ -253,9 +253,8 @@
                 <ng-container>
                   <!-- (blur)="onLeaveIDTipo($event)" -->
                   <input type="text" class="form-control form-control-sm" formControlName="id"
-                    [(ngModel)]="cod_id_tipo_modal_id" [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo"
-                    style="margin-left: 17px;" [readonly]="true"
-                    [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
+                  [(ngModel)]="id_tipo_view_get_codigo" id="inputCatalogoIdTipo" style="margin-left: 17px;" [readonly]="true"
+                  [class.is-invalid]="f.id.invalid && (f.id.dirty || f.id.touched)">
                 </ng-container>
 
                 <div class="input-group-append">
@@ -506,7 +505,7 @@
             <ng-container *ngIf="tipopago === 0">
               <select class="custom-select1 form-control-sm" formControlName="estado_contra_entrega"
                 [(ngModel)]="estado_contra_entrega_input">
-                <option value='YA CANCELO'>YA CANCELO</option>
+                <option value="YA CANCELO">YA CANCELO</option>
                 <option value="POR CANCELAR">POR CANCELAR</option>
               </select>
             </ng-container>
@@ -817,22 +816,22 @@
                   <th pSortableColumn="iva" class="center1" style="width:2%">
                     %IVA
                   </th>
-                  <th pSortableColumn="empaque" class="center1">
+                  <th pSortableColumn="empaque" class="right1">
                     Empaque
                     <!-- <p-sortIcon field="empaque" /> -->
                   </th>
-                  <th pSortableColumn="pedido" class="center1">
+                  <th pSortableColumn="pedido" class="right1">
                     Pedido
                     <p-sortIcon field="pedido" />
                   </th>
-                  <th pSortableColumn="cantidad" class="center1">
+                  <th pSortableColumn="cantidad" class="right1">
                     Cantidad
                     <p-sortIcon field="cantidad" />
                   </th>
                   <th pSortableColumn="sld" class="center1">
                     % SLD
                   </th>
-                  <th pSortableColumn="TP" class="center1">
+                  <th pSortableColumn="TP" class="center1" style="width:2%">
                     TP
                     <!-- <p-sortIcon field="TP" /> -->
                   </th>
@@ -868,8 +867,7 @@
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
                       padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
-                    </i>
-                    {{ products.orden }}
+                    </i> {{ products.orden }}
                   </td>
                   <td class="center1">{{ products.coditem }}</td>
                   <td class="left">{{ products.descripcion }}</td>
@@ -877,7 +875,7 @@
                   <td class="center1">{{ products.udm }}</td>
                   <td class="center1">{{ products.porceniva }}</td>
 
-                  <td class="center1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
+                  <td class="right1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.empaque" />
@@ -889,8 +887,7 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1" [pEditableColumn]="products.cantidad_pedida"
-                    pEditableColumnField="cantidad_pedida">
+                  <td class="right1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="text" [(ngModel)]="products.cantidad_pedida" min="0">
@@ -904,7 +901,7 @@
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span
-                            style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
+                            style="color: #0000ffaf !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}</span>
                         </ng-container>
 
@@ -922,7 +919,7 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                  <td class="right1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="text" [(ngModel)]="products.cantidad" min="0" id="input_cantidad">
@@ -936,7 +933,7 @@
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span
-                            style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
+                            style="color: #0000ffaf !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                         </ng-container>
 

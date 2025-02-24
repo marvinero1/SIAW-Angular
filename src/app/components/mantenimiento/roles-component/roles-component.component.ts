@@ -120,7 +120,7 @@ export class RolesComponent implements OnInit {
   getAllRoles() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/serol/' + this.userConn)
+    return this.api.getAll(`/seg_adm/mant/serol/${this.userConn}`)
       .subscribe({
         next: (datav) => {
           this.roles = datav;

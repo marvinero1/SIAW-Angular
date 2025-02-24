@@ -126,6 +126,7 @@ import { NotamovimientoComponent } from '@components/inventario/CRUD/notamovimie
 import { PedidoComponent } from '@components/inventario/CRUD/pedido/pedido.component';
 import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-nota-movimiento/modificar-nota-movimiento.component';
 import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-pedido/modificar-pedido.component';
+import { SolicitudMercaderiaUrgenteComponent } from '@components/inventario/CRUD/solicitud-mercaderia-urgente/solicitud-mercaderia-urgente.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -386,6 +387,11 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'inventario/cruds/solicitudMercaderiaUrgente',
+                component: SolicitudMercaderiaUrgenteComponent,
+                canActivate: [AuthGuard]
+            },
+            {
                 path: 'inventario/modificaciones/modificarPedido',
                 component: ModificarPedidoComponent,
                 canActivate: [AuthGuard]
@@ -393,6 +399,8 @@ const routes: Routes = [
 
 
 
+
+            
 
 
 

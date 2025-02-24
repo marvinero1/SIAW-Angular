@@ -510,8 +510,8 @@
                   <td class="left">{{ products.descripcion }}</td>
                   <td class="left">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
-                  <td class="center1">
-                    <p-cellEditor [pEditableColumn]="products.codaduana" pEditableColumnField="codaduana">
+                  <td class="center1" [pEditableColumn]="products.codaduana" pEditableColumnField="codaduana">
+                    <p-cellEditor >
                       <ng-template pTemplate="input">
                         <input pInputText type="text" [(ngModel)]="products.codaduana" min="0">
                       </ng-template>
@@ -529,9 +529,9 @@
                   <!-- FIN COLUMNA CANTIDAD -->
 
                   <!-- COLUMNA CANTIDAD REVISADA-->
-                  <td class="right1">
-                    <p-cellEditor [pEditableColumn]="products.cantidad_revisada"
+                  <td class="right1" [pEditableColumn]="products.cantidad_revisada"
                       pEditableColumnField="cantidad_revisada">
+                    <p-cellEditor  >
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad_revisada" min="0">
                       </ng-template>
@@ -807,8 +807,8 @@
             </div>
 
             <div class="col text-right" style="border: 1px #6c757d solid;border-radius: 6px;">
-              <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
-              <input type="text" [(ngModel)]="total" hidden>
+              <!-- <span>{{ formatNumberTotalSubTOTALES(total) }}</span>
+              <input type="text" [(ngModel)]="total" hidden> -->
             </div>
 
             <div class="col text-left">
@@ -828,7 +828,7 @@
       <div class="input-group" style="padding-left: 7px;">
         <span class="input-group-text form-control-sm">ID</span>
         <mat-form-field class="mat-mdc-form-field" style="width: 280px !important; background-color: white !important;">
-          <mat-select [(ngModel)]="id_ntmv_buscador">
+          <mat-select [(ngModel)]="id_ntmv_buscador" ngDefaultControl>
             <mat-option *ngFor="let array_notas_movimientos of array_notas_movimiento"
               [value]="array_notas_movimientos.codigo">
               {{ array_notas_movimientos.codigo }} - {{ array_notas_movimientos.descrip }}

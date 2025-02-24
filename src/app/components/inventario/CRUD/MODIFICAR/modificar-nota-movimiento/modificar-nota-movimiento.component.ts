@@ -216,7 +216,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   //BUSCADOR GENERAL
   array_notas_movimiento: any = [];
   id_ntmv_buscador: any;
-  num_id_ntmv_buscador: any;
+  num_id_ntmv_buscador: any = '';
   valido_en_validar_funcion: boolean;
 
   private numberFormatter_5decimales: Intl.NumberFormat;
@@ -449,7 +449,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
   getUltimaNotaMovimientoID() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/getUltiNMId/";
-    return this.api.getAll('/inventario/modif/docmodifinmovimiento/getUltiNMId/' + this.userConn)
+    return this.api.getAll(`/inventario/modif/docmodifinmovimiento/getUltiNMId/${this.userConn}`)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getUltiNMId ~ datav:", datav);
@@ -542,7 +542,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
   getParametrosIniciales() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/getParametrosInicialesNM/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/getParametrosInicialesNM/' + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage)
+    return this.api.getAll(`/inventario/transac/docinmovimiento/getParametrosInicialesNM/${this.userConn}/${this.usuarioLogueado}/${this.BD_storage}`)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           // console.log("🚀 ~ NotamovimientoComponent ~ .getParametrosIniciales ~ getParametrosIniciales:", datav);
@@ -997,7 +997,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
   validarPorConceptoDescripcion(concepto) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/eligeConcepto/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/eligeConcepto/' + this.userConn + "/" + concepto + "/" + this.agencia_logueado)
+    return this.api.getAll(`/inventario/transac/docinmovimiento/eligeConcepto/${this.userConn}/${concepto}/${this.agencia_logueado}`)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarPorConcepto:", datav)
@@ -1025,7 +1025,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   ponerDui() {
     this.spinner.show();
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/ponerDui/";
-    return this.api.create('/inventario/transac/docinmovimiento/ponerDui/' + this.userConn + "/" + this.agencia_logueado, this.array_items_carrito_y_f4_catalogo)
+    return this.api.create(`/inventario/transac/docinmovimiento/ponerDui/${this.userConn}/${this.agencia_logueado}`, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ ponerDui ~ datav:", datav)
@@ -1068,8 +1068,6 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   onRowSelectForDelete() {
-    // console.log('Array de Items para eliminar: ', this.selectedProducts);
-
     // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
       return !this.selectedProducts.some(selectedItem =>
@@ -1165,10 +1163,9 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       codconcepto: this.id_concepto,
       desglozar_cjtos: this.chkdesglozar_cjtos
     }
-    console.log("🚀 ~ NotamovimientoComponent ~ cargarProformaSolicitudUrgente ~ array_PF:", array_PF)
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/CargardeProforma/";
-    return this.api.create('/inventario/transac/docinmovimiento/CargardeProforma/' + this.userConn, array_PF)
+    return this.api.create(`/inventario/transac/docinmovimiento/CargardeProforma/${this.userConn}`, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ cargarProformaSolicitudUrgente:", datav);
@@ -1210,7 +1207,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   validarGrabar() {
     console.log(this.fecha);
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
-    return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/' + this.userConn + "/" + this.codalmacen + "/" + this.fecha + "/" + this.id + "/" + this.numeroid)
+    return this.api.getAll(`/inventario/transac/docinmovimiento/permGrabarAntInventario/${this.userConn}/${this.codalmacen}/${this.fecha}/${this.id}/${this.numeroid}`)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ datav:", datav)
@@ -1372,7 +1369,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     console.log("🚀 ~ NotamovimientoComponent ~ guardarNotaMovimiento ~ array_PF:", array_PF)
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
-    return this.api.create('/inventario/transac/docinmovimiento/grabarDocumento/' + this.userConn + "/" + this.BD_storage + "/" + this.traspaso, array_PF)
+    return this.api.create(`/inventario/transac/docinmovimiento/grabarDocumento/${this.userConn}/${this.BD_storage}/${this.traspaso}`, array_PF)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ guardarNotaMovimiento:", datav);
@@ -1406,7 +1403,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   exportarZIPNMGrabar(codigo_NM) {
-    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" + codigo_NM, { responseType: 'arraybuffer' })
+    this.api.descargarArchivo(`/inventario/transac/docinmovimiento/exportNM/${this.userConn}/${codigo_NM}`, { responseType: 'arraybuffer' })
       .subscribe({
         next: (datav: ArrayBuffer) => {
           console.log(datav);
@@ -1448,7 +1445,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
   }
 
   exportarZIPNM(codigo_NM) {
-    this.api.descargarArchivo('/inventario/transac/docinmovimiento/exportNM/' + this.userConn + "/" + codigo_NM, { responseType: 'arraybuffer' })
+    this.api.descargarArchivo(`/inventario/transac/docinmovimiento/exportNM/${this.userConn}/${codigo_NM}`, { responseType: 'arraybuffer' })
       .subscribe({
         next: (datav: ArrayBuffer) => {
           console.log(datav);
@@ -1736,10 +1733,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     this.anular = zip_json.cabeceraList[0]?.anulada;
     this.contabilizada = zip_json.cabeceraList[0]?.contabilizada;
 
-
     if (this.array_items_carrito_y_f4_catalogo.length > 0) {
-      console.log("🚀 ~ ModificarNotaMovimientoComponent ~ this.array_items_carrito_y_f4_catalogo.length:", this.array_items_carrito_y_f4_catalogo.length)
-
       this.array_items_carrito_y_f4_catalogo = array_carrito.concat(
         zip_json.detalleList.map((element) => ({
           ...element,
@@ -1764,7 +1758,7 @@ export class ModificarNotaMovimientoComponent implements OnInit {
     }
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/";
-    return this.api.getAll('/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/' + this.userConn + "/" + this.id_ntmv_buscador + "/" + this.num_id_ntmv_buscador)
+    return this.api.getAll(`/inventario/modif/docmodifinmovimiento/permModifNMAntInventario/${this.userConn}/${this.id_ntmv_buscador}/${this.num_id_ntmv_buscador}`)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: async (datav) => {
           console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getValidoNotaMovimiento:", datav);
@@ -1896,8 +1890,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
 
   //BUSCADOR GENERAL
   getIdNumeroIdNotasMovimiento() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/intipomovimiento/catalogo/' + this.userConn)
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/inventario/mant/intipomovimiento/catalogo";
+    return this.api.getAll(`/inventario/mant/intipomovimiento/catalogo/${this.userConn}`)
       .subscribe({
         next: (datav) => {
           // console.log("🚀 ~ ModificarNotaMovimientoComponent ~ getIdNumeroIdNotasMovimiento ~ datav:", datav)
@@ -2017,21 +2011,17 @@ export class ModificarNotaMovimientoComponent implements OnInit {
       codalmorigen: this.codalmorigenText,
       codalmdestino: parseInt(this.codalmdestinoText),
       codconcepto: this.id_concepto,
-      tabladetalle: this.array_items_carrito_y_f4_catalogo
+      tabladetalle: this.array_items_carrito_y_f4_catalogo,
     };
 
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/validarSaldos/";
-    return this.api.create('/inventario/modif/docmodifinmovimiento/validarSaldos/' + this.userConn + "/" + false, array)
+    return this.api.create(`/inventario/modif/docmodifinmovimiento/validarSaldos/${this.userConn}/false`, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ NotamovimientoComponent ~ .pipe ~ validarSaldos:", datav)
           this.cumple = datav.cumple;
           if (datav.cumple) {
             this.array_items_carrito_y_f4_catalogo = datav.tabladetalle;
-            // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
-            //   ...element,
-            //   diferencia: element.cantidad_revisada - element.cantidad,
-            // }));
 
             this.messageService.add({ severity: 'info', summary: 'Informacion', detail: "SALDOS VALIDADOS ✅" });
             //aca mensaje datav.alerta

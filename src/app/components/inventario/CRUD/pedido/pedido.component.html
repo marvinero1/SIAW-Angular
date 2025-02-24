@@ -190,14 +190,14 @@
                     {{ products?.coditem }}
                   </td>
                   <td class="left">{{ products.descripcion }}</td>
-                  <td class="center1">{{ products.medida }}</td>
+                  <td class="left">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="right1">
-                    <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                  <td class="right1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
-                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
+                        <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" style="width: 100%;" />
                       </ng-template>
 
                       <ng-template pTemplate="output">
@@ -223,11 +223,11 @@
             style="font-size: 0.8rem;width:17%;background-color: black;color: #00c600;cursor: pointer;" readOnly
             placeholder="0.00">
 
-          <input type="text" class="inputsSaldos inputsSaldos2" [value]=""
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo2"
             style="font-size: 0.8rem;width:17%;background-color: black;color: #00c600;cursor: pointer;" readOnly
             placeholder="0.00">
 
-          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo2"
+          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo3"
             style="font-size: 0.8rem;width:17%;background-color: black;color: #00c600;cursor: pointer;" readOnly
             placeholder="0.00">
 

@@ -5,6 +5,7 @@ style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;
     <p style="font-size: 25px; color: rgb(9,48,112,)">🔩 Cargando... 🔩</p>
   </ngx-spinner>
   <p-toast></p-toast>
+  
   <div class="row">
     <div class="col">
       <div class="divTable">
@@ -501,7 +502,7 @@ style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;
                   <td class="center1"> {{ products.orden }} </td>
                   <td class="left1"> {{ products.coditem }} </td>
                   <td class="left1"> {{ products.descripcion }} </td>
-                  <td class="center1"> {{ products.medida }} </td>
+                  <td class="left1"> {{ products.medida }} </td>
                   <td class="center1"> {{ products.udm }} </td>
                   <td class="center1"> {{ products.porceniva }} </td>
 
@@ -511,28 +512,6 @@ style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                           (change)="cantidadChangeMatrix(products, $event.target.value);">
-                        <!-- <ng-container *ngIf="products?.cumpleEmp === true && products?.cumpleMin === true">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="cantidadChangeMatrix(products, $event.target.value);"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleEmp === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                            (change)="cantidadChangeMatrix(products, $event.target.value)"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(0, 0, 255, 0.824);">
-                        </ng-container>
-
-                        <ng-container *ngIf="products?.cumpleMin === false">
-                          <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                            id="input_cantidad" (change)="cantidadChangeMatrix(products, $event.target.value)"
-                            (blur)="cantidadChangeMatrix(products, $event.target.value);"
-                            (input)="cantidadChangeMatrix(products, $event.target.value);"
-                            style="color: rgba(255, 0, 0, 0.824);">
-                        </ng-container> -->
                       </ng-template>
 
                       <ng-template pTemplate="output">
@@ -542,7 +521,7 @@ style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;
                         </ng-container>
                         <ng-container *ngIf="products?.cumple === true">
                           <!-- NEGATIVOS -->
-                          {{ products.cantidad }}
+                          {{ formatNumberTotalSubTOTALES(products.cantidad) }}
                         </ng-container>
                       </ng-template>
                     </p-cellEditor>

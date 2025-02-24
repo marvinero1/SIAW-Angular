@@ -1,5 +1,5 @@
 <section
-  style="background-color:#CEFFFF !important;margin-left: 1px;margin-right: 7.5px;flex: 1;box-sizing: border-box;">
+  style="background-color:#CEFFFF;margin-left: 1px;margin-right: 7.5px;flex: 1;box-sizing: border-box;">
 
   <ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="square-loader" [fullScreen]="true">
     <br>
@@ -22,8 +22,8 @@
               <span><i class="fa fa-save" style="color: #7d99c7;"></i> Grabar</span>
             </button>
 
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" disabled
-              (click)="validarAntesDeGrabarAprobar();">
+            <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1"
+              (click)="validarAntesDeGrabarAprobar();" disabled>
               <span>
                 <mat-icon
                   style="color: #ffc107;font-size: 0.9rem !important;height: 13px !important;width: 16px !important;">
@@ -64,7 +64,7 @@
             <!-- EXCELS -->
             <button mat-button [matMenuTriggerFor]="beforeMenuEXCEL">
               <span><i class="fa fa-file-excel green" style="color: #05970c;"></i></span>
-              <mat-icon>expand_more</mat-icon>
+              <!-- <mat-icon>expand_more</mat-icon> -->
             </button>
             <mat-menu #beforeMenuEXCEL="matMenu" xPosition="after">
               <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
@@ -868,8 +868,8 @@
                   <td class="center1">{{ products.porceniva }}</td>
 
                   <!-- COLUMNA EMPAQUE -->
-                  <td class="right1">
-                    <p-cellEditor [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
+                  <td class="right1" [pEditableColumn]="products.empaque" pEditableColumnField="empaque">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.empaque" />
                       </ng-template>
@@ -880,8 +880,8 @@
                   </td>
 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="right1">
-                    <p-cellEditor [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
+                  <td class="right1" [pEditableColumn]="products.cantidad_pedida" pEditableColumnField="cantidad_pedida">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0">
                       </ng-template>
@@ -895,7 +895,7 @@
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
-                          <span style="color: #1414B8 !important;background-color: #a6a5bb6b;font-weight: 900;">
+                          <span style="color: #0000ffaf !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad_pedida) }}
                           </span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
@@ -924,8 +924,8 @@
                   </td>
 
                   <!-- COLUMNA CANTIDAD -->
-                  <td class="right1">
-                    <p-cellEditor [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                  <td class="right1" [pEditableColumn]="products.cantidad" pEditableColumnField="cantidad">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" [(ngModel)]="products.cantidad" min="0">
                       </ng-template>
@@ -939,7 +939,7 @@
 
                         <ng-container *ngIf="products?.cumpleEmp === false && products?.cumple === true">
                           <span
-                            style="color: rgba(0, 0, 255, 0.824) !important;background-color: #a6a5bb6b;font-weight: 900;">
+                            style="color: #0000ffaf !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
                             style="color: rgba(0, 0, 255, 0.824) !important;"> -->
@@ -968,8 +968,8 @@
 
                   <td class="right1">{{ formatNumberTotalSubTOTALES(products.porcen_mercaderia) }}</td>
 
-                  <td class="center1">
-                    <p-cellEditor [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
+                  <td class="center1" [pEditableColumn]="products.codtarifa" pEditableColumnField="codtarifa">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" [(ngModel)]="products.codtarifa"
                           id="inputCatalogoPrecioVentaDetalle" [value]="products?.codtarifa"
@@ -983,8 +983,8 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="center1">
-                    <p-cellEditor [pEditableColumn]="products.coddescuento" pEditableColumnField="coddescuento">
+                  <td class="center1" [pEditableColumn]="products.coddescuento" pEditableColumnField="coddescuento">
+                    <p-cellEditor>
                       <ng-template pTemplate="input">
                         <input pInputText type="number" min="0" id="inputCatalogoDescuentoEspecialDetalle"
                           [(ngModel)]="products.coddescuento" [value]="products?.coddescuento"

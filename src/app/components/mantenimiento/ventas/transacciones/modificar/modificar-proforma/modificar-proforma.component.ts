@@ -284,7 +284,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   public latitud_cliente: string;
   public complemento_ci: string
   public cod_vendedor_cliente: string;
-  public cod_id_tipo_modal_id: string;
   public codigo_cliente_catalogo_real: string;
   public cod_id_tipo_modal: any = [];
   public venta_cliente_oficina: boolean = false;
@@ -581,7 +580,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.serviciotipoid.disparadorDeIDTipo.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo ID Tipo: ", data);
       this.cod_id_tipo_modal = data.id_tipo;
-      this.cod_id_tipo_modal_id = this.cod_id_tipo_modal.id;
+      this.id_tipo_view_get_codigo = this.cod_id_tipo_modal.id;
 
       //si se cambia el tipoID, los totales tambien se cambian
       this.total = 0.00;
@@ -991,12 +990,14 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   onCheckboxChange(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const isChecked = inputElement.checked;
-    // console.log("Checkbox value: ", isChecked, "EstadoContraEntrega:", this.estado_contra_entrega_input);
-    if (isChecked === true) {
-      this.estado_contra_entrega_input = 'POR CANCELAR';
+    console.log("Checkbox value: ", isChecked, "EstadoContraEntrega:", this.estado_contra_entrega_input);
 
+    if (isChecked === true) {
+      this.estado_contra_entrega_input = "POR CANCELAR";
+      this.contra_entrega = true;
     } else {
       this.estado_contra_entrega_input = '';
+      this.contra_entrega = false;
     }
   }
 
@@ -1007,6 +1008,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.estado_contra_entrega_input = "";
       console.warn("Es contra Entrega", this.contra_entrega, "EstadoContraEntrega", this.estado_contra_entrega_input);
     } else {
+      this.contra_entrega = true;
+      this.estado_contra_entrega_input = "POR CANCELAR";
       console.warn("Es contra Entrega", this.contra_entrega, "EstadoContraEntrega", this.estado_contra_entrega_input);
     }
   }
@@ -1086,7 +1089,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       paraaprobar: [false],
       transferida: [false],
 
-
       usuarioaut: [this.usuarioaut],
       confirmada: [false],
       impresa: [false],
@@ -1131,7 +1133,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       monto_anticipo: [0], //anticipo Ventas
       niveles_descuento: [this.dataform.niveles_descuento === undefined ? 'ACTUAL' : this.dataform.niveles_descuento], //niveles de descuento
 
-
       // no hay mas en esta seccion xD
       subtotal: [this.dataform.subtotal], //TOTALES
       recargos: [this.dataform.recargos], //TOTALES
@@ -1139,7 +1140,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       iva: [this.dataform.iva], //TOTALES
       total: [this.dataform.total], //TOTALES
       porceniva: [0],
-
 
       //estas fechas se quedan tal como llegan al traer la proforma
       fecha: this.dataform.fecha,
@@ -1155,11 +1155,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       //estas fechas se cambian por la hora del server mas el usuario actual
       usuarioreg: this.usuarioLogueado,
       fechareg: this.dataform.fecha_actual_server,
-
-      // fechaaut_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
-      // subtotal_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
-      // total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
-      // moneda_total_pfcomplemento //este dato va en complementar Proforma, pero no entra en el formulario
     });
   }
 
@@ -1170,7 +1165,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.getAlmacenesSaldos();
     this.getSaldoItem(codigo);
     this.getPorcentajeVentaItem(codigo);
-
 
     this.saldo_modal_total_1 = "";
     this.saldo_modal_total_2 = "";
@@ -1452,7 +1446,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.estado_proforma = proforma.estadodoc;
     this.cliente_habilitado_get = proforma.habilitado;
 
-    this.cod_id_tipo_modal_id = proforma.cabecera.id;
+    this.id_tipo_view_get_codigo = proforma.cabecera.id;
     this.id_proforma_numero_id = proforma.cabecera.numeroid.toString();
 
     //fechas
@@ -2020,8 +2014,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getTipoDocumentoIdentidadProforma() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTipoDocIdent/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/veproforma/getTipoDocIdent/";
     return this.api.getAll('/venta/transac/veproforma/getTipoDocIdent/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -2037,8 +2030,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getPrecio() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/intarifa/catalogo/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/intarifa/catalogo/";
     return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuarioLogueado)
       .subscribe({
         next: (datav) => {
@@ -2054,8 +2046,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getDescuento() {
-    let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vedescuento/catalogo/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vedescuento/catalogo/";
     return this.api.getAll('/venta/mant/vedescuento/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -2103,7 +2094,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getSaldoEmpaquePesoAlmacenLocal(item) {
-    console.log(this.agencia_logueado);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inmatriz/pesoEmpaqueSaldo/";
     return this.api.getAll('/inventario/mant/inmatriz/pesoEmpaqueSaldo/' + this.userConn + "/" + this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + item + "/" + this.agencia_logueado + "/" + this.BD_storage)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
@@ -2149,14 +2139,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   }
 
   getEmpaqueItem(item) {
-    console.log("EMPAQUE");
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getempaques/";
     return this.api.getAll('/venta/transac/veproforma/getempaques/' + this.userConn + "/" + item)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
+        //console.log(this.empaquesItem);
           this.empaquesItem = datav;
-          // console.log(this.empaquesItem);
           this.empaque_view = true;
 
           this.empaque_item_codigo = this.empaquesItem.codigo;
@@ -2179,8 +2167,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       this.cod_precio_venta_modal_codigo + "/" + this.cod_descuento_modal_codigo + "/" + this.codigo_cliente_catalogo_real)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          this.item_obtenido = datav;
           // console.log('item seleccionado: ', this.item_obtenido);
+          this.item_obtenido = datav;
           this.porcen_item = this.item_obtenido.porcen_maximo;
         },
 
@@ -2211,9 +2199,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     let detalle = "proforma-actualizoEmail";
     let tipo_transaccion = "transacc-proforma-PUT";
 
-    // console.log(this.email_cliente);
-    // console.log(this.codigo_cliente);
-
     let data = {
       codcliente: this.codigo_cliente,
       email: this.email_cliente
@@ -2239,69 +2224,6 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
       })
   }
 
-  guardarNombreCliente() {
-    let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    let tipo_doc_cliente_parse_string = this.tipo_doc_cliente.toString();
-    let nit_string;
-    let cliente_nuevo: any = [];
-
-    if (this.valor_nit !== undefined) {
-      nit_string = this.valor_nit.toString();
-    }
-
-    cliente_nuevo = {
-      codSN: this.codigo_cliente,
-      nomcliente_casual: this.nombre_comercial_razon_social,
-      nit_cliente_casual: nit_string,
-      tipo_doc_cliente_casual: tipo_doc_cliente_parse_string,
-      email_cliente_casual: this.email_cliente === undefined ? this.email : this.email_cliente,
-      celular_cliente_casual: this.whatsapp_cliente === undefined ? " " : this.whatsapp_cliente,
-      codalmacen: this.agencia_logueado,
-      codvendedor: this.cod_vendedor_cliente,
-      usuarioreg: usuario_logueado,
-    };
-    console.log(cliente_nuevo);
-
-    this.spinner.show();
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/crearCliente/";
-    return this.api.create('/venta/transac/veproforma/crearCliente/' + this.userConn, cliente_nuevo)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          this.usuario_creado_save = datav;
-          // console.log(this.usuario_creado_save);
-          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: '! CLIENTE GUARDADO !' })
-          this._snackBar.open('!CLIENTE GUARDADO!', 'Ok', {
-            duration: 2000,
-            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
-          });
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 50);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 50);
-        },
-        complete: () => {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 50);
-        }
-      })
-  }
-
-  onPaste(event: any) {
-    event.preventDefault();
-    // También puedes mostrar un mensaje al usuario indicando que el pegado está bloqueado
-    alert("EVENTO BLOQUEADO, NO PEGAR");
-  }
-
-
 
   selectRow(index: number) {
     this.selectedRowIndex = index;
@@ -2310,21 +2232,20 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   onEditComplete(event: any) {
     const updatedElement = event.data; // La fila editada
     const updatedField = event.field; // El campo editado (en este caso, "empaque")
-    const newValue = event.newValue;  // El nuevo valor ingresado
 
-    console.log("🚀 ~ onEditComplete ~ Item a editar empaque:", this.item_obj_seleccionado)
-    console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, updatedElement, newValue);
+    console.log("🚀 ~ onEditComplete ~ Item a editar:", this.item_obj_seleccionado)
+    console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, "valor:", updatedElement);
 
     if (updatedField === 'empaque') {
-      this.empaqueChangeMatrix(this.item_obj_seleccionado, newValue);
+      this.empaqueChangeMatrix(this.item_obj_seleccionado, updatedElement);
     }
 
     if (updatedField === 'cantidad_pedida') {
-      this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, newValue);
+      this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, updatedElement);
     }
 
     if (updatedField === 'cantidad') {
-      this.cantidadChangeMatrix(this.item_obj_seleccionado, newValue)
+      this.cantidadChangeMatrix(this.item_obj_seleccionado, updatedElement)
     }
   }
 
@@ -2345,8 +2266,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.total_X_PU = true;
 
     this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
-      + this.usuarioLogueado + "/" + product.coditem + "/" + product.codtarifa + "/" + product.coddescuento + "/" + newValue +
-      "/" + product.cantidad_pedida + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      + this.usuarioLogueado + "/" + product.coditem + "/" + product.codtarifa + "/" + product.coddescuento + "/" + product.cantidad +
+      "/" + newValue + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           //this.almacenes_saldos = datav;
@@ -2396,7 +2317,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             product.preciolista = Number(datav.preciolista);
             product.preciodesc = Number(datav.preciodesc);
             product.precioneto = Number(datav.precioneto);
-            product.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+            //product.porcen_mercaderia = Number(datav.porcen_mercaderia).toFixed(2);
+            product.porcen_mercaderia = Number(datav.porcen_mercaderia);
             product.total = Number(datav.total);
           },
           error: (err) => {
@@ -2421,8 +2343,8 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     this.total_X_PU = true;
 
     this.api.getAll('/venta/transac/veproforma/getItemMatriz_Anadir/' + this.userConn + "/" + this.BD_storage + "/"
-      + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad_pedida +
-      "/" + elemento.cantidad + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
+      + this.usuarioLogueado + "/" + elemento.coditem + "/" + elemento.codtarifa + "/" + elemento.coddescuento + "/" + elemento.cantidad +
+      "/" + newValue + "/" + this.codigo_cliente + "/" + "0/" + this.agencia_logueado + "/FALSE/" + this.moneda_get_catalogo + "/" + fecha)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           //this.almacenes_saldos = datav;
@@ -2433,6 +2355,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
           elemento.porcen_mercaderia = Number(datav.porcen_mercaderia);
+          elemento.total = Number(datav.total);
         },
 
         error: (err: any) => {
@@ -2813,7 +2736,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
   imprimir_cotizacion_transferida(cotizacion) {
     console.log(cotizacion);
-    this.cod_id_tipo_modal_id = cotizacion.cabecera.id;
+    this.id_tipo_view_get_codigo = cotizacion.cabecera.id;
     this.id_proforma_numero_id = cotizacion.cabecera.numeroid.toString();
     this.fecha_actual = cotizacion.cabecera.fecha;
     this.almacn_parame_usuario = cotizacion.cabecera.codalmacen;
@@ -2848,7 +2771,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
   imprimir_zip_importado(zip_json) {
     console.log(zip_json);
 
-    this.cod_id_tipo_modal_id = zip_json.cabeceraList[0].id;
+    this.id_tipo_view_get_codigo = zip_json.cabeceraList[0].id;
     this.id_proforma_numero_id = zip_json.cabeceraList[0].numeroid.toString();
     this.fecha_actual = this.fecha_actual;
     this.almacn_parame_usuario = zip_json.cabeceraList[0].codalmacen;
@@ -3375,7 +3298,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     console.log(this.contra_entrega);
 
     let dataValidar = {
-      id: this.cod_id_tipo_modal_id,
+      id: this.id_tipo_view_get_codigo,
       numeroid: this.id_proforma_numero_id,
       tipopago: this.tipopago === 0 ? "CONTADO" : "CREDITO",
       contra_entrega: this.contra_entrega,
@@ -3966,7 +3889,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
             next: (datav) => {
               console.log(datav);
               // se guarda LOG al anular
-              this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "PUT", this.cod_id_tipo_modal_id, this.id_proforma_numero_id);
+              this.log_module.guardarLog(this.ventana, "Anulacion" + this.totabilizar_post.codProf, "PUT", this.id_tipo_view_get_codigo, this.id_proforma_numero_id);
 
               this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp })
               setTimeout(() => {
@@ -5513,20 +5436,18 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     // console.log("Detalle Carrito: ", detalle.filteredData, item);
     let item_select = detalle.filteredData.find((element1) => element1.coditem === item.coditem);
 
-    console.log("Item seleccionado sacando del carrito: ", item_select);
+    //console.log("Item seleccionado sacando del carrito: ", item_select);
     // Actualizar la codtarifa en el elemento correspondiente en tu array de datos
     // Esto se ejecutará inmediatamente, pero se sobrescribirá cuando se reciba el nuevo valor del servicio
     if (item_select) {
-      if (item_select.cantidad === item.cantidad) {
-        if (item.cantidad_sugerida_aplicable >= 0) {
-          item_select.cantidad += item.cantidad_sugerida_aplicable;
-          //item_select.cantidad_pedida = (item_select.cantidad_pedida + item.cantidad_sugerida_aplicable);
-          // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
-          console.log(item_select.cantidad_pedida);
-          this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
+      if (item_select.cantidad === item.cantidad && item.cantidad_sugerida_aplicable >= 0) {
+        item_select.cantidad += item.cantidad_sugerida_aplicable;
+        //item_select.cantidad_pedida = (item_select.cantidad_pedida + item.cantidad_sugerida_aplicable);
+        // Luego de actualizar la cantidad, puedes acceder al array completo con las modificaciones
+        console.log(item_select.cantidad_pedida);
+        this.array_items_carrito_y_f4_catalogo = this.dataSource.filteredData;
 
-          this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
-        }
+        this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
       }
       else {
         if (item_select.cantidad === item.cantidad) {
@@ -5759,7 +5680,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = timestamp + "-" + this.cod_id_tipo_modal_id + "-" + this.id_proforma_numero_id + '.zip';
+              a.download = timestamp + "-" + this.id_tipo_view_get_codigo + "-" + this.id_proforma_numero_id + '.zip';
               document.body.appendChild(a);
               a.click();
               document.body.removeChild(a);
@@ -5793,7 +5714,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
     console.log(this.array_items_carrito_y_f4_catalogo);
 
     //aca mapear el array del carrito para que solo esten con las columnas necesarias
-    const nombre_archivo = this.cod_id_tipo_modal_id + "_" + this.id_proforma_numero_id;
+    const nombre_archivo = this.id_tipo_view_get_codigo + "_" + this.id_proforma_numero_id;
     const dialogRef = this.dialog.open(DialogConfirmActualizarComponent, {
       width: '450px',
       height: 'auto',
@@ -6089,13 +6010,11 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
           }
         })
     } else {
-      console.log("SE CANCELO LA ACCION");
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE CANCELO LA ACCION' });
     }
   }
 
   eliminarItemTabla(orden, coditem) {
-    console.log(orden, coditem, this.array_items_carrito_y_f4_catalogo);
-
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
       return item.orden !== orden || item.coditem !== coditem;
@@ -6111,6 +6030,12 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
 
     // Actualizar el origen de datos del MatTableDataSource
     this.dataSource = new MatTableDataSource(this.array_items_carrito_y_f4_catalogo);
+  }
+
+  onPaste(event: any) {
+    event.preventDefault();
+    // También puedes mostrar un mensaje al usuario indicando que el pegado está bloqueado
+    alert("EVENTO BLOQUEADO, NO PEGAR");
   }
 
   modalTipoID(): void {
@@ -6400,7 +6325,7 @@ export class ModificarProformaComponent implements OnInit, AfterViewInit {
         cliente_real: this.codigo_cliente_catalogo_real,
         codmoneda: this.moneda_get_catalogo,
         moneda: this.moneda_get,
-        id_prof: this.cod_id_tipo_modal_id,
+        id_prof: this.id_tipo_view_get_codigo,
         numero_id_prof: this.id_proforma_numero_id,
       }
     });

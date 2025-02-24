@@ -299,6 +299,13 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   public valor_formulario_copied_map_all_complementar: any = {};
   public nroidpf_complemento_view: any;
 
+  // COLOCAR VARIABLES BOOLEANAS PARA LOS PARAMETROS DE LAS RUTAS
+  sin_validar_empaques: boolean = false;
+  sin_validar_negativos: boolean = false;
+  sin_validar_monto_min_desc: boolean = false;
+  sin_validar_monto_total: boolean = false;
+  sin_validar_doc_ant_inv: boolean = false;
+
   private numberFormatter_5decimales: Intl.NumberFormat;
   private numberFormatter_2decimales: Intl.NumberFormat;
 
@@ -1055,7 +1062,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
   createForm(): FormGroup {
     let valor_cero: number = 0;
 
-
     if (this.input_complemento_view === null) {
       this.input_complemento_view = valor_cero;
     }
@@ -1169,17 +1175,41 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  // COLOCAR VARIABLES BOOLEANAS PARA LOS PARAMETROS DE LAS RUTAS
-  sin_validar_empaques: boolean = false;
-  sin_validar_negativos: boolean = false;
-  sin_validar_monto_min_desc: boolean = false;
-  sin_validar_monto_total: boolean = false;
-  sin_validar_doc_ant_inv: boolean = false;
-
   // BTN GRABAR NT RMS
   async submitDataNotaRemision(codigo_control) {
     this.spinner.show();
+    // validaciones
+    if (this.array_items_carrito_y_f4_catalogo.length === 0 ) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ITEMS EN EL DETALLE' });
+      this.spinner.hide();
+      return;
+    }
 
+    if (this.total === 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'EL TOTAL NO PUEDE SER 0' });
+      this.spinner.hide();
+      return;
+    }
+
+    if (this.cod_id_tipo_modal === undefined || null) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY ID DE NR REVISE PORFAVOR' });
+      this.spinner.hide();
+      return;
+    }
+
+    if (this.moneda_get_catalogo === undefined || null) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY MONEDA REVISE PORFAVOR' });
+      this.spinner.hide();
+      return;
+    }
+    
+    if (this.codigo_cliente === undefined || null) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'NO HAY CODIGO CLIENTE REVISE PORFAVOR' });
+      this.spinner.hide();
+      return;
+    }
+
+    //si hay negativos no tiene q dejar grabar y pide clave
     let a = [this.FormularioData.value].map((element) => ({
       ...element,
       descuentos: this.des_extra,
@@ -1206,11 +1236,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.txtid_solurgente = "0";
     }
 
-    //si hay negativos no tiene q dejar grabar
-    // if (this.validacion_post_negativos.length > 0) {
-    //   this.toastr.warning("HAY ITEM'S NEGATIVOS VERIFIQUE, NO SE GRABO");
-    // };
-
     console.log(submit_nota_remision);
     console.log("Valor Bool antes de la funcion:", this.sin_validar_empaques, this.sin_validar_negativos);
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/grabarNotaRemision/ " + "/ false /" + this.sin_validar_empaques + " / " + this.sin_validar_negativos + " / " + this.sin_validar_monto_min_desc + " / " + this.sin_validar_monto_total + " /" + this.sin_validar_doc_ant_inv
@@ -1223,7 +1248,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dataSource_negativos = new MatTableDataSource(datav.dtnegativos_result);
           this.validacion_post_negativos = datav.dtnegativos_result
           console.log("Info data guardada NOTA REMISION: ", datav, "ruta:", errorMessage);
-
           // aca sale el mensaje de la primera validacion
           try {
             if (datav.resp === false) {
@@ -1291,7 +1315,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   dataA: this.cod_id_tipo_modal,
                   dataB: this.id_proforma_numero_id,
                   dataPermiso: "NOTA DE REMISION QUE NO CUMPLA",
-                  dataCodigoPermiso: '03',
+                  dataCodigoPermiso: "03",
                 },
               });
 
@@ -1346,7 +1370,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   dataA: this.cod_id_tipo_modal,
                   dataB: this.id_proforma_numero_id,
                   dataPermiso: "ACEPTAR VENTA SIN EMPAQUES CERRADOS",
-                  dataCodigoPermiso: 25,
+                  dataCodigoPermiso: "25",
                 },
               });
 
@@ -1401,7 +1425,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   dataA: this.cod_id_tipo_modal,
                   dataB: this.id_proforma_numero_id,
                   dataPermiso: "VENTA SIN CUMPLIR EL MONTO MINIMO DE LOS DESCUENTOS ESPECIALES",
-                  dataCodigoPermiso: 65,
+                  dataCodigoPermiso: "65",
                 },
               });
 
@@ -1458,7 +1482,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   dataA: this.cod_id_tipo_modal,
                   dataB: this.id_proforma_numero_id,
                   dataPermiso: "GENERAR REMISION CON MONTO TOTAL QUE NO IGUALA CON PROFORMA",
-                  dataCodigoPermiso: 147,
+                  dataCodigoPermiso: "147",
                 },
               });
 
@@ -1516,7 +1540,7 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
                   dataA: this.cod_id_tipo_modal,
                   dataB: this.id_proforma_numero_id,
                   dataPermiso: "MODIFICACION ANTERIOR A INVENTARIO",
-                  dataCodigoPermiso: 48,
+                  dataCodigoPermiso: "48",
                 },
               });
 
@@ -1742,7 +1766,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       veremision_chequerechazado: {}
     };
 
-
     if (this.txtid_solurgente === "" || this.txtid_solurgente === undefined) {
       this.txtid_solurgente = "0";
     }
@@ -1836,12 +1859,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
   }
-  // sin_validar: true
-  // sin_validar_empaques: false
-  // sin_validar_negativos: false
-  // sin_validar_monto_min_desc: false
-  // sin_validar_monto_total: false
-  // sin_validar_doc_ant_inv: false
 
   mandarAImprimir(cod_nota_remision) {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veremision/impresionNotaRemision/"
@@ -1913,7 +1930,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.habilitar_desct_sgn_solicitud = false;
     };
 
-
     total_proforma_concat = {
       veproforma: this.FormularioData.value, //este es el valor de todo el formulario de proforma
       veproforma1_2: this.array_items_carrito_y_f4_catalogo, //este es el carrito con las items
@@ -1924,10 +1940,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
       veproforma_iva: [], //array de iva
       detalleAnticipos: this.tabla_anticipos === undefined ? [] : this.tabla_anticipos,
     };
-
-    // console.log(total_proforma_concat);
-    // console.log(this.veproforma, this.array_items_carrito_y_f4_catalogo, this.veproforma_valida,
-    //   this.veproforma_anticipo, this.vedesextraprof, this.verecargoprof, this.veproforma_iva);
 
     console.log("Array de Carrito a Totaliza:", total_proforma_concat, "URL: " + ("/venta/transac/veproforma/totabilizarProf/" + this.userConn + "/" + this.usuarioLogueado + "/" + this.BD_storage + "/" + this.habilitar_desct_sgn_solicitud + "/" + this.complementopf + "/" + this.desct_nivel_actual));
     if (this.habilitar_desct_sgn_solicitud != undefined && this.complementopf != undefined) {
@@ -2474,7 +2486,6 @@ export class NotaRemisionComponent implements OnInit, AfterViewInit, OnDestroy {
           elemento.preciolista = Number(datav.preciolista);
           elemento.preciodesc = Number(datav.preciodesc);
           elemento.precioneto = Number(datav.precioneto);
-
         },
 
         error: (err: any) => {

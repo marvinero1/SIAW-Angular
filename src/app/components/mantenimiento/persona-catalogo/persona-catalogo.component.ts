@@ -7,7 +7,6 @@ import { ApiService } from '@services/api.service';
 import { pePersona } from '@services/modelos/objetos';
 import { Observable, map, startWith } from 'rxjs';
 import { ServicePersonaService } from './service-persona/service-persona.service';
-
 @Component({
   selector: 'app-persona-catalogo',
   templateUrl: './persona-catalogo.component.html',
@@ -19,16 +18,15 @@ export class PersonaCatalogoComponent implements OnInit {
     this.mandarAlmacen();
   };
 
-  @HostListener('dblclick') onDoubleClicked2() {
-    this.mandarAlmacen();
-  };
+  // @HostListener('dblclick') onDoubleClicked2() {
+  //   this.mandarAlmacen();
+  // };
 
   persona_get: any = [];
   public persona_view: any = [];
   userConn: any;
 
   displayedColumns = ['codigo', 'descripcion'];
-
   dataSource = new MatTableDataSource<pePersona>();
   dataSourceWithPageSize = new MatTableDataSource();
 
@@ -42,6 +40,7 @@ export class PersonaCatalogoComponent implements OnInit {
 
   constructor(private api: ApiService, public dialogRef: MatDialogRef<PersonaCatalogoComponent>,
     private servicioPersona: ServicePersonaService) {
+
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.getPersona();
@@ -83,7 +82,7 @@ export class PersonaCatalogoComponent implements OnInit {
 
   getPersona() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/pers_plan/mant/pepersona/catalogo/"
-    return this.api.getAll('/pers_plan/mant/pepersona/catalogo/' + this.userConn)
+    return this.api.getAll(`/pers_plan/mant/pepersona/catalogo/${this.userConn}`)
       .subscribe({
         next: (datav) => {
           this.persona_get = datav;

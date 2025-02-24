@@ -1072,7 +1072,7 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   validarGrabar() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinmovimiento/grabarDocumento/";
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /inventario/transac/docinmovimiento/permGrabarAntInventario/";
     return this.api.getAll('/inventario/transac/docinmovimiento/permGrabarAntInventario/' + this.userConn + "/" + this.codalmacen + "/" + this.fecha_actual + "/" + this.id + "/" + this.numeroid)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {

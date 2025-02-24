@@ -2027,7 +2027,6 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
   onEditComplete(event: any) {
     const updatedElement = event.data; // La fila editada
     const updatedField = event.field; // El campo editado (en este caso, "empaque")
-    const newValue = event.newValue;  // El nuevo valor ingresado
 
     console.log("🚀 ~ onEditComplete ~ Item a editar:", this.item_obj_seleccionado)
     console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, "valor:", updatedElement);
@@ -4269,7 +4268,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("Checkbox value: ", isChecked, "EstadoContraEntrega:", this.estado_contra_entrega_input);
 
     if (isChecked === true) {
-      this.estado_contra_entrega_input = 'POR CANCELAR';
+      this.estado_contra_entrega_input = "POR CANCELAR";
       this.contra_entrega = true;
     } else {
       this.estado_contra_entrega_input = '';
@@ -4284,6 +4283,8 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
       this.estado_contra_entrega_input = "";
       console.warn("Es contra Entrega", this.contra_entrega, "EstadoContraEntrega", this.estado_contra_entrega_input);
     } else {
+      this.contra_entrega = true;
+      this.estado_contra_entrega_input = "POR CANCELAR";
       console.warn("Es contra Entrega", this.contra_entrega, "EstadoContraEntrega", this.estado_contra_entrega_input);
     }
   }
