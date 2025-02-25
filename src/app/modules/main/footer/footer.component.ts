@@ -59,12 +59,9 @@ export class FooterComponent implements OnInit {
         next: (datav) => {
           this.tipo_cambio_hoy_dia = datav;
           // console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
-
           this.tipo_cambio_dolar = this.tipo_cambio_hoy_dia.filter((element) => element.moneda === 'US');
           this.tipo_cambio_dolar_dolar = this.tipo_cambio_dolar[0].factor;
           this.tipo_cambio_dolar_moneda_base = this.tipo_cambio_dolar[0].monedabase;
-
-          // console.log(this.tipo_cambio_dolar);
         },
         error: (err: any) => {
           console.log(err, errorMessage);

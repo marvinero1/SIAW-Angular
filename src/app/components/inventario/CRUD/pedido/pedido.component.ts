@@ -19,9 +19,9 @@ import { ItemDetalle } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { CatalogoPedidoComponent } from './catalogo-pedido/catalogo-pedido.component';
-import { CatalogoPedidoService } from './catalogo-pedido/servicio-catalogo-pedido/catalogo-pedido.service';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
+import { CatalogoPedidoComponent } from '@components/mantenimiento/inventario/numpedidomercaderia/catalogo-pedido/catalogo-pedido.component';
+import { CatalogoPedidoService } from '@components/mantenimiento/inventario/numpedidomercaderia/catalogo-pedido/servicio-catalogo-pedido/catalogo-pedido.service';
 
 @Component({
   selector: 'app-pedido',

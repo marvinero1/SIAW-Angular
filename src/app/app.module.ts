@@ -467,12 +467,14 @@ import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exce
 import { VistaPreviaNmComponent } from '@components/inventario/CRUD/dialog-tarifa-impresion/vista-previa-nm/vista-previa-nm.component';
 import { PedidoComponent } from '@components/inventario/CRUD/pedido/pedido.component';
 import { ModificarNotaMovimientoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-nota-movimiento/modificar-nota-movimiento.component';
-import { CatalogoPedidoComponent } from '@components/inventario/CRUD/pedido/catalogo-pedido/catalogo-pedido.component';
 import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-pedido/modificar-pedido.component';
 import { CatalogoProvedoresComponent } from '@components/mantenimiento/compras/proveedores/catalogo-provedores/catalogo-provedores.component';
 import { BuscadorAvanzadoPedidosComponent } from '@components/uso-general/buscador-avanzado-pedidos/buscador-avanzado-pedidos.component';
 import { CatalogonotasmovimientosComponent } from '@components/inventario/CRUD/notamovimiento/catalogonotasmovimientos/catalogonotasmovimientos.component';
 import { SolicitudMercaderiaUrgenteComponent } from '@components/inventario/CRUD/solicitud-mercaderia-urgente/solicitud-mercaderia-urgente.component';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { CatalogoPedidoComponent } from '@components/mantenimiento/inventario/numpedidomercaderia/catalogo-pedido/catalogo-pedido.component';
+import { CatalogoSolicitudUrgenteComponent } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/catalogo-solicitud-urgente.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -566,7 +568,7 @@ registerPlugin(UndoRedo);
         FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
         CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
         ExceltoexcelComponent, VistaPreviaNmComponent, PedidoComponent, CatalogoPedidoComponent, ModificarPedidoComponent, CatalogoProvedoresComponent,
-        BuscadorAvanzadoPedidosComponent, SolicitudMercaderiaUrgenteComponent,
+        BuscadorAvanzadoPedidosComponent, SolicitudMercaderiaUrgenteComponent, CatalogoSolicitudUrgenteComponent, 
 
 
 
@@ -630,6 +632,7 @@ registerPlugin(UndoRedo);
         MatListModule,
         MatMenuModule,
         MatProgressBarModule,
+        ProgressBarModule,
         MatProgressSpinnerModule,
         MatRadioModule,
         // MatRippleModule,
@@ -657,6 +660,16 @@ registerPlugin(UndoRedo);
         }),
 
 
+    ], exports: [
+        FormsModule,
+        ReactiveFormsModule,
+        ChartModule,
+        InputTextModule,
+        ListboxModule,
+        ToastModule,
+        RippleModule,
+        FloatLabelModule,
+        ProgressBarModule
     ],
 
     providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,

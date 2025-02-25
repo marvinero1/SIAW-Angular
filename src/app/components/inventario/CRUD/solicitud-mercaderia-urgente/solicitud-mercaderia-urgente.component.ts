@@ -3,14 +3,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { MonedaCatalogoComponent } from '@components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component';
+import { MonedaServicioService } from '@components/mantenimiento/administracion/moneda/servicio-moneda/moneda-servicio.service';
+import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
+import { CatalogoSolicitudUrgenteComponent } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/catalogo-solicitud-urgente.component';
+import { CatalogoSolUrgenteService } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/servicio-catalogo-sol-urgente/catalogo-sol-urgente.service';
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
+import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
+import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
+import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
+import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
+import { ServicioclienteService } from '@components/mantenimiento/ventas/serviciocliente/serviciocliente.service';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
+import { VendedorService } from '@components/mantenimiento/ventas/serviciovendedor/vendedor.service';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
 import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
 import { ApiService } from '@services/api.service';
+import { ItemDetalle } from '@services/modelos/objetos';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-solicitud-mercaderia-urgente',
@@ -33,17 +46,45 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   public array_items_carrito_y_f4_catalogo: any = [];
   public item_seleccionados_catalogo_matriz: any = [];
   private numberFormatter_2decimales: Intl.NumberFormat;
+  private numberFormatter_6decimales: Intl.NumberFormat;
+
+  products!: ItemDetalle[];
+  selectedProducts: ItemDetalle[] = [];
 
 
   FormularioData: FormGroup;
   id_sol_urgente: any;
   numero_id_sol_urgente: any;
+  cod_vendedor: any;
+  almacen_origen: any;
+  almacen_destino: any;
+  codigo_cliente: any;
+  razon_social: any;
+  cod_precio: any;
+  moneda_get: any;
+  transporte: any;
+  cod_cliente: any;
+  nombre_cliente: any;
+
+  
+  array_almacenes: any = [];
+  item_obj_seleccionado: any;
 
 
+  //catalogos
+  id_tipo_sol_urgente: any = [];
+  vendedors_array: any = [];
+  array_precios: any = [];
+  array_clientes: any = [];
 
-
-
-
+  //Saldos
+  almacenes_saldos: any = [];
+  almacn_parame_usuario: any;
+  almacn_parame_usuario_almacen: any;
+  cod_precio_venta_modal_codigo: any;
+  cod_descuento_modal: any;
+  
+  private unsubscribe$ = new Subject<void>();
 
   userConn: any;
   usuarioLogueado: any;
@@ -52,7 +93,9 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService, private _formBuilder: FormBuilder,
     private almacenservice: ServicioalmacenService, private excelService: ExceltoexcelService, private datePipe: DatePipe, private router: Router,
-    private messageService: MessageService, private spinner: NgxSpinnerService) {
+    private messageService: MessageService, private spinner: NgxSpinnerService, private servicioCliente: ServicioclienteService,
+    public servicioCatalogoSolicitudesUrgentes: CatalogoSolUrgenteService, private serviciovendedor: VendedorService,
+    private serviciMoneda: MonedaServicioService) {
     
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -66,11 +109,115 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+    // Crear instancia única de Intl.NumberFormat
+    this.numberFormatter_6decimales = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 6,
+      maximumFractionDigits: 6,
+    });
     
   }
 
   ngOnInit() {
-    
+    this.getParametrosIniciales();
+    this.getHoraFechaServidorBckEnd();
+    this.getIdTipoSolUrgente();
+    this.getVendedorCatalogo();
+    this.getAlmacen();
+    this.getTarifa();
+    this.getClienteCatalogo();
+
+    //ID TIPO
+    this.servicioCatalogoSolicitudesUrgentes.disparadorDeCatalogoDeSolicitudesUrgentes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo ID Sol Urgente: ", data);
+      this.id_sol_urgente = data.id_sol_urgente;
+      this.numero_id_sol_urgente = data.nro_actual;
+    });
+    //
+
+    //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
+    this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
+      console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
+      // console.log("ARRAY COMPLETO DE MATRIZ Y F4: ", this.array_items_carrito_y_f4_catalogo);
+
+      if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+        // Si el array está vacío, simplemente agregamos los nuevos elementos
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+      } else {
+        // this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat(this.item_seleccionados_catalogo_matriz);
+        // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
+        this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
+      }
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+        ...element,
+        codaduana: "0"
+      }));
+    });
+    //
+
+    //CATALOGO F4 ITEMS
+    //ItemElejidoCatalogoF4Procesados
+    this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Item Procesados De Catalogo F4: ", [data]);
+      this.item_seleccionados_catalogo_matriz = [data];
+      console.log("🚀 ~ ProformaComponent ~ this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe ~ data:", [data]);
+
+      if (this.item_seleccionados_catalogo_matriz.length === 0) {
+        this.array_items_carrito_y_f4_catalogo.push(...[data]);
+      } else {
+        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data]);
+      }
+
+      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+        ...element,
+        codaduana: "0"
+      }));
+    });
+    //
+
+    //Almacen
+    this.almacenservice.disparadorDeAlmacenes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Almacen: ", data, this.almacen_seleccionado);
+      if (this.almacen_seleccionado === "origen") {
+        this.almacen_origen = data.almacen.codigo
+      }
+
+      if (this.almacen_seleccionado === "destino") {
+        this.almacen_destino = data.almacen.codigo
+      }
+    });
+    //
+
+    //Clientes
+    this.servicioCliente.disparadorDeClientes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Cliente: ", data);
+      this.cod_cliente = data.cliente.codigo;
+      this.nombre_cliente = data.cliente.nombre
+      //this.getClientByID(data.cliente.codigo);
+    });
+    //
+
+    //Vendedor
+    this.serviciovendedor.disparadorDeVendedores.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Vendedor: ", data);
+      this.cod_vendedor = data.vendedor.codigo;
+    });
+    //finvendedor
+
+    //Monedas
+    this.serviciMoneda.disparadorDeMonedas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Moneda: ", data);
+      this.moneda_get = data.moneda.codigo;
+      //this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
+    });
+    //
+
+    //Servicio ExcelToExcel
+    this.excelService.disparadorDeSolicitudUrgente.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ this.excelService.disparadorDePedido.pipe ~ data:", data)
+      this.array_items_carrito_y_f4_catalogo = data.UrgenteDetalle;
+    });
+    //
   }
 
   get f() {
@@ -78,7 +225,223 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
 
   limpiar() { 
+    this.id_sol_urgente = "";
+    this.numero_id_sol_urgente = "";
+    this.cod_vendedor = "";
+    this.almacen_origen = "";
+    this.almacen_destino = "";
+    this.codigo_cliente = "";
+    this.razon_social = "";
+    this.cod_precio = "";
+    this.transporte = "";
+    this.nombre_cliente = "";
 
+
+    this.array_items_carrito_y_f4_catalogo = [];
+    this.item_obj_seleccionado = '';
+  }
+
+  getParametrosIniciales() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/docinsolurgente/getParamsIniSolUrg/"
+    return this.api.getAll('/docinsolurgente/getParamsIniSolUrg/' + this.userConn + "/" + this.usuarioLogueado + "/"+ this.BD_storage)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ PedidoComponent ~ getParametrosIniciales:", datav);
+          this.almacen_origen = datav.codalmacen;
+          //this.codalmorigenTextDescipcion = datav.codalmacendescripcion;
+          this.moneda_get = datav.codmoneda_total
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getAlmacen() {
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
+    return this.api.getAll('/inventario/mant/inalmacen/catalogo/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.array_almacenes = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          // console.log(datav);
+          this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");
+          this.hora_actual = datav.horaServidor;
+          this.fecha_servidor = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.getMonedaTipoCambio(this.moneda_get_catalogo);
+        }
+      })
+  }
+
+  getIdTipoSolUrgente() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /inventario/mant/intiposolurgente/catalogo/";
+    return this.api.getAll('/inventario/mant/intiposolurgente/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          // console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ getIdTipoSolUrgente ~ datav:", datav)
+          this.id_tipo_sol_urgente = datav;
+
+          console.log('data', datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getVendedorCatalogo() {
+    let errorMessage: string;
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/seg_adm/mant/vevendedor/catalogo/";
+    return this.api.getAll('/seg_adm/mant/vevendedor/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          // console.log(datav);
+          this.vendedors_array = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getTarifa() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET /inventario/mant/intarifa/catalogo/";
+    return this.api.getAll('/inventario/mant/intarifa/catalogo/' + this.userConn + "/" + this.usuarioLogueado)
+      .subscribe({
+        next: (datav) => {
+          console.log(datav);
+          this.array_precios = datav;
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  getClienteCatalogo() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/mant/vecliente/catalogo/";
+    return this.api.getAll('/venta/mant/vecliente/catalogo/' + this.userConn)
+      .subscribe({
+        next: (datav) => {
+          this.array_clientes = datav;
+          // console.log('data', datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  onLeaveIDSolUrgente(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.id_tipo_sol_urgente.some(objeto => objeto.id === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  onLeaveVendedor(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.vendedors_array.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  onLeaveAlmacen(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_almacenes.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = '';
+      console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  onLeavePrecioVenta(event: any) {
+    const inputValue = event.target.value;
+    let entero = Number(inputValue);
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_precios.some(objeto => objeto.codigo === entero);
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = 0;
+      // console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+    }
+  }
+
+  onLeaveCliente(event: any) {
+    const inputValue = event.target.value.toString();
+    let entero = inputValue;
+    console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ onLeaveCliente ~ entero:", entero, this.array_clientes)
+    // Verificar si el valor ingresado está presente en los objetos del array
+    const encontrado = this.array_clientes.some(objeto => objeto.codigo === entero);
+    const encontrado_element = this.array_clientes.find(objeto => objeto.codigo === entero);
+
+    console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ onLeaveCliente ~ encontrado:", encontrado, encontrado_element)
+
+    if (!encontrado) {
+      // Si el valor no está en el array, dejar el campo vacío
+      event.target.value = "";
+      // console.log("NO ENCONTRADO VALOR DE INPUT");
+    } else {
+      event.target.value = entero;
+      this.nombre_cliente = encontrado_element.nombre
+    }
   }
 
   //Importar to ZIP
@@ -185,6 +548,114 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
 
 
+  // eventos de seleccion en la tabla
+  onRowSelect(event: any) {
+    // this.item = event.data.coditem;
+    this.item_obj_seleccionado = event.data;
+
+    console.log('Row Selected:', event.data);
+    this.updateSelectedProducts();
+  }
+
+  onRowSelectForDelete() {
+    // Filtrar el array para eliminar los elementos que están en el array de elementos seleccionados
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+      return !this.selectedProducts.some(selectedItem =>
+        selectedItem.orden === item.orden && selectedItem.coditem === item.coditem);
+    });
+
+    // Actualizar el número de orden de los objetos de datos restantes
+    this.array_items_carrito_y_f4_catalogo.forEach((element, index) => {
+      element.orden = index + 1;
+      element.nroitem = index + 1;
+    });
+
+    // Limpiar el array de productos seleccionados
+    this.selectedProducts = [];
+  }
+
+  onRowUnselect(event: any) {
+    this.updateSelectedProducts();
+  }
+
+  updateSelectedProducts() {
+    const focusedElement = document.activeElement as HTMLElement;
+    if (focusedElement) {
+      const elementTagName = focusedElement.id;
+      console.log(`Elemento enfocado: ${elementTagName}`);
+    }
+  }
+
+
+  onEditComplete(event: any) {
+    const updatedElement = event.data; // La fila editada
+    const updatedField = event.field; // El campo editado (en este caso, "empaque")
+
+    console.log("🚀 ~ onEditComplete ~ Item a editar:", this.item_obj_seleccionado)
+    console.log("🚀 ~ onEditComplete ~ updatedField:", event, updatedField, "valor:", updatedElement);
+
+    // if (updatedField === 'empaque') {
+    //   this.empaqueChangeMatrix(this.item_obj_seleccionado, updatedElement);
+    // }
+
+    // if (updatedField === 'cantidad_pedida') {
+    //   this.copiarValorCantidadPedidaACantidad(this.item_obj_seleccionado, updatedElement);
+    // }
+
+    // if (updatedField === 'cantidad') {
+    //   this.cantidadChangeMatrix(this.item_obj_seleccionado, updatedElement)
+    // }
+  }
+  // fin eventos de seleccion en la tabla
+
+
+
+  getAlmacenesSaldos(codigo) {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinpedido/getSaldoStock/";
+    return this.api.getAll('/inventario/transac/docinpedido/getSaldoStock/' + this.userConn + "/" + codigo +
+      "/" + this.usuarioLogueado + "/" + this.agencia_logueado + "/" + this.BD_storage)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.almacenes_saldos = [datav];
+          console.log("getAlmacenesSaldos: ", datav);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  eliminarItemTabla(orden, coditem) {
+    // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
+
+      return item.orden !== orden || item.coditem !== coditem;
+    });
+    this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+      ...element,
+      codaduana: element.codaduana === undefined ? "0" : element.codaduana
+    }));
+  }
+
+
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString?.toString().replace(',', '.'));
+    return this.numberFormatter_2decimales?.format(formattedNumber);
+  }
+
+  formatNumberTotalSub6Decimales(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+
+    const formattedNumber = parseFloat(numberString?.toString().replace(',', '.'));
+    return this.numberFormatter_6decimales?.format(Number(formattedNumber));
+  }
 
 
 
@@ -197,6 +668,28 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  modalCatalogoIDSolUrgente() {
+    this.dialog.open(CatalogoSolicitudUrgenteComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
+  }
 
   modalExcelToExcel() {
     //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
@@ -206,22 +699,14 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       height: 'auto',
       disableClose: true,
       data: {
-        ventana_origen: 'solicitud_mercaderia_urgente'
+        ventana_origen: 'sol_urgente'
       }
     });
   }
 
-  modalTipoIDSolUrgente() { 
-    //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
-    // LA DATA XDXD
-    this.dialog.open(ExceltoexcelComponent, {
-      width: '800px',
-      height: 'auto',
-      disableClose: true,
-      data: {
-        ventana_origen: 'solicitud_mercaderia_urgente'
-      }
-    });
+  modalProformas() { 
+
+
   }
 
   modalMatrizClasica(): void {
@@ -248,6 +733,76 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         // id_proforma: this.id_tipo_view_get_codigo,
         // num_id_proforma:this.id_proforma_numero_id,
       }
+    });
+  }
+
+  modalCatalogoProductos(): void {
+    this.dialog.open(ModalItemsComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        tarifa: 1,
+        descuento: 0,
+        codcliente: 0,
+        codalmacen: this.agencia_logueado,
+        desc_linea_seg_solicitud: "",
+        codmoneda: "BS",
+        fecha: this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd"),
+        descuento_nivel: "ACTUAL",
+        tipo_ventana: "inventario",
+      },
+    });
+  }
+
+  modalVendedor(): void {
+    this.dialog.open(ModalVendedorComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        ventana: "ventana"
+      }
+    });
+  }
+
+  modalClientes(): void {
+    this.dialog.open(ModalClienteComponent, {
+      width: '700px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        ventana: "ventana_catalogo"
+      }
+    });
+  }
+  
+  modalAlmacen(almacen): void {
+    this.dialog.open(ModalAlmacenComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { almacen: "almacen" }
+    });
+
+    this.almacen_seleccionado = almacen;
+    console.log("🚀 ~ NotamovimientoComponent ~ modalAlmacen ~ this.almacen_seleccionado:", this.almacen_seleccionado)
+  }
+
+  modalPrecioVenta(): void {
+    this.dialog.open(ModalPrecioVentaComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: { detalle: false }
+    });
+  }
+
+  modalCatalogoMoneda(): void {
+    this.dialog.open(MonedaCatalogoComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
     });
   }
 }

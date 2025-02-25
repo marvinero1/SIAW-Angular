@@ -14,10 +14,15 @@
   </div>
 </div>
 
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ffc107" type="pacman" [fullScreen]="true">
-  <p style="color: white"> Conectando al Cloud </p>
+<ngx-spinner bdColor="rgba(251, 216, 0, 0.8)" size="medium" color="#093070" type="pacman" [fullScreen]="true">
+  <p style="color: #093070"> Conectando al Cloud </p>
 </ngx-spinner>
 <p-toast></p-toast>
+
+<div class="card">
+  <p-progressbar mode="indeterminate" [style]="{'height': '6px'}" />
+</div>
+
 <section class="content">
   <p-toast></p-toast>
   <div class="container-fluid">
@@ -87,6 +92,7 @@
     <hr>
 
     <p>El rol actual es: {{ rol }}</p>
+
     <!-- <ng-container *ngIf="['ADM_GERENC_CORP', 'DPD'].includes(rol)">
       <div class="row">
         <div class="col-md-12">

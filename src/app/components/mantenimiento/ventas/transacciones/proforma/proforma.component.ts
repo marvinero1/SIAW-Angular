@@ -6418,6 +6418,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     saveAs(data, fullFileName);
   }
   //FIN Exportar a EXCEL
+  
   item_obj_seleccionado: any;
   // eventos de seleccion en la tabla
   onRowSelect(event: any) {

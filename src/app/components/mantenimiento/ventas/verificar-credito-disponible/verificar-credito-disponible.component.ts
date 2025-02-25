@@ -68,9 +68,6 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
 
 
     console.log(this.cod_cliente_proforma, this.cod_moneda_proforma, this.totalProf);
-    if (this.agencia_logueado === 'Loc') {
-      this.agencia_logueado = '311'
-    }
   }
 
   ngOnInit() {

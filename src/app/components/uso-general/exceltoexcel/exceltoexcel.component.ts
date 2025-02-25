@@ -165,6 +165,12 @@ export class ExceltoexcelComponent implements OnInit {
               PedidoDetalle: this.array_items_carrito_y_f4_catalogo,
             });
           }
+          if (this.ventana_origen_get === "sol_urgente") {
+            //ACA EL SERVICIO QUE LO ENVIE
+            this.excelService.disparadorDeSolicitudUrgente.emit({
+              UrgenteDetalle: this.array_items_carrito_y_f4_catalogo,
+            });
+          }
         },
 
         error: (err: any) => {

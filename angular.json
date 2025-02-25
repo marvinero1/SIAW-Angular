@@ -97,7 +97,7 @@
                             "core-js/modules/es.string.replace.js",
                             "core-js/modules/es.string.starts-with.js"
                         ],
-                        "serviceWorker": true,
+                        "serviceWorker": false,
                         "ngswConfigPath": "ngsw-config.json"
                     },
                     "configurations": {

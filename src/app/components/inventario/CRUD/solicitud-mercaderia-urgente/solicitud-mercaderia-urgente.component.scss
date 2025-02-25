@@ -219,7 +219,7 @@
   /* Para pantallas medianas (resoluciones comunes como 1366px o menos) */
   @media (min-width: 1025px) and (max-width: 1366px) {
     .miTabGroupDetalle {
-      height: 60.2vh;
+      height: 49.0vh;
       max-height:60.2vh;
     }
   }
@@ -227,8 +227,8 @@
   /* Para pantallas grandes (mayores a 1366px, hasta 1920px) */
   @media (min-width: 1367px) and (max-width: 1920px) {
     .miTabGroupDetalle {
-      height: 74.5vh;
-      max-height: 75.5vh;
+      height: 64.5vh;
+      max-height: 65.5vh;
     }
   }
   
@@ -306,7 +306,7 @@
       left: 0;
       width: 100%;
       text-align: center; /* Opcional: para centrar el contenido */
-      background-color: #f0f0f0; /* Opcional: color de fondo */
+      background-color: #ffe0c0; /* Opcional: color de fondo */
       padding: 10px; /* Opcional: espaciado interno */
       box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Opcional: sombra */
       padding-block-end: 30px;

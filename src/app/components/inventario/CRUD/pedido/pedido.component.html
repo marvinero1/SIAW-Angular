@@ -71,21 +71,22 @@
     <!-- cabecera -->
     <div class="mat-elevation-z2">
       <div class="row">
-        <div class="col-md-3" style="padding-right: 0px;padding-left: 6.5px;">
+        <div class="col-md-3 col-lg-3" style="padding-right: 0px;padding-left: 6.5px;">
           <div class="input-group">
-            <div class="input-group-">
+            <div class="input-group-prepend">
               <span class="input-group-text form-control-sm"
                 style="padding: 10px 2px 0px 0px;border: 0 !important;"><u>ID de Tipo</u></span>
             </div>
 
             <ng-container>
-              <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
+              <div style="width: 132px;">
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="id" readonly>
+              </div>
             </ng-container>
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" (click)="modalTipoID();"
-                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"><i
-                  class="fa fa-search"></i>
+                style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscar ID"><i class="fa fa-search"></i>
               </button>&nbsp;&nbsp;
 
               <span><strong>Nro Actual:</strong> {{ numeroid }}</span>

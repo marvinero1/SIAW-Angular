@@ -1,12 +1,6 @@
 <div class="content" style="height: 100%;">
 
   <div class="row" style="height: 100%;">
-    <ngx-spinner bdColor="rgba(84, 84, 84, 0.8)" size="medium" color="#ffc107" type="pacman" [fullScreen]="true">
-      <br>
-      <p style="font-size: 25px; color: rgba(255, 255, 255, 0.8)">🔩 Cargando... 🔩</p>
-    </ngx-spinner>
-
-
     <div class="col-md-6 right">
       <div class="login_wrapper">
         <div class="animate form login_form">
@@ -19,10 +13,10 @@
               <div class="h1">SIAW</div>
               <div class="h1">Pertec S.R.L | Maestros en Pernos</div>
             </div>
-            <p-toast></p-toast>
+
             <!-- /.login-card-body IP Y SERVIDORES -->
             <div *ngIf="ip_servidores">
-              <form [formGroup]="serverForm" (ngSubmit)="loginByAuth()">
+              <form [formGroup]="serverForm" (ngSubmit)="loginAgencias()">
                 <div class="input-group ">
                   <mat-form-field appearance="outline" class="login_input">
                     <mat-icon matPrefix style="padding: 8px 8px 8px 8px !important;margin-bottom: 16px !important;">
@@ -119,25 +113,16 @@
                       domain</mat-icon>
                     <mat-select placeholder="Base de Datos" formControlName="bd" style="padding-top: 7px !important;"
                       required>
-                      <mat-option *ngFor="let agenciass of agencias" [value]="agenciass.codigo">
-                        <ng-container *ngIf="agenciass.codigo === 'PE'else agn">
-                          <div style="background-color: #093070;color: white !important;">
-                            <u>
-                              <strong>{{ agenciass.codigo }}</strong> -
-                              {{ agenciass.descripcion }}
-                            </u>
-                          </div>
-                        </ng-container>
-                        <ng-template #agn>
-                          <div><strong>{{ agenciass.codigo }}</strong>- {{ agenciass.descripcion }} </div>
-                        </ng-template>
+                      <mat-option *ngFor="let agenciass of agencias" [value]="agenciass.codigo"
+                        [class.resaltado]="agenciass.codigo === 'PE'">
+                        <strong>{{ agenciass.codigo }}</strong> - {{ agenciass.descripcion }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
               </form>
 
-              <form [formGroup]="BDForm" (ngSubmit)="loginByAuth()" autocomplete="off">
+              <form [formGroup]="BDForm" (ngSubmit)="conectarBD()" autocomplete="off">
                 <div class="input-group ">
                   <mat-form-field appearance="outline" class="login_inputs"
                     style="height: calc(3.5rem + 5px) !important;">
@@ -172,7 +157,7 @@
                   <div class="col">
                     <button mat-raised-button color="primary" class="loginbutton" [disabled]="!BDForm1.valid"
                       type="submit">
-                      <mat-icon style="color: gray;">input</mat-icon> Ingresar
+                      <mat-icon style="color: gray;">input</mat-icon> Acceder 
                     </button>
                   </div>
                 </div>

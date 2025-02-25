@@ -10,7 +10,7 @@ import { ApiService } from '@services/api.service';
 import { AppService } from '@services/app.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ToggleControlSidebar, ToggleSidebarMenu } from '@/store/ui/actions';
+import { ToggleSidebarMenu } from '@/store/ui/actions';
 
 const BASE_CLASSES = 'bck-azul elevation-4 main-sidebar sidebar-dark-warning';
 @Component({
@@ -60,6 +60,7 @@ export class MenuSidebarComponent implements OnInit {
 
     this.cerrarMenu();
   }
+
 
   ngOnInit() {
     let dataTransform = this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd");
@@ -129,7 +130,6 @@ export class MenuSidebarComponent implements OnInit {
         next: (datav) => {
           this.tipo_cambio_hoy_dia = datav;
           // console.log("Tipo de Cambio HOY DIA: ", this.tipo_cambio_hoy_dia);
-
           this.tipo_cambio_dolar = this.tipo_cambio_hoy_dia.filter((element) => element.moneda === 'US');
           this.tipo_cambio_dolar_dolar = this.tipo_cambio_dolar[0].factor;
           this.tipo_cambio_dolar_moneda_base = this.tipo_cambio_dolar[0].monedabase;

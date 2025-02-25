@@ -49,9 +49,6 @@ export class CuentaEfectivoCuentasContablesComponent implements OnInit {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     console.log(this.agencia_logueado);
 
-    if (this.agencia_logueado == 'Loc') {
-      this.agencia_logueado = "311";
-    }
   }
 
   ngOnInit() {

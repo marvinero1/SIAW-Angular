@@ -51,10 +51,6 @@ export class NumTipoDocumentoVentaComponent implements OnInit, AfterViewInit {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     console.log(this.agencia_logueado);
 
-    if (this.agencia_logueado == 'Loc') {
-      this.agencia_logueado = "311";
-    }
-
     this.mandarNombre();
     this.api.getRolUserParaVentana(this.nombre_ventana);
 
