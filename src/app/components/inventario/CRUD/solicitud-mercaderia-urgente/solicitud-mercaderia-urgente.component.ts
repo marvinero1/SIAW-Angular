@@ -10,11 +10,14 @@ import { ServicioalmacenService } from '@components/mantenimiento/inventario/alm
 import { CatalogoSolicitudUrgenteComponent } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/catalogo-solicitud-urgente.component';
 import { CatalogoSolUrgenteService } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/servicio-catalogo-sol-urgente/catalogo-sol-urgente.service';
 import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/matriz-items-clasica/matriz-items-clasica.component';
+import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
+import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
 import { ServicioclienteService } from '@components/mantenimiento/ventas/serviciocliente/serviciocliente.service';
+import { ServicioprecioventaService } from '@components/mantenimiento/ventas/servicioprecioventa/servicioprecioventa.service';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
 import { VendedorService } from '@components/mantenimiento/ventas/serviciovendedor/vendedor.service';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
@@ -69,6 +72,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   
   array_almacenes: any = [];
   item_obj_seleccionado: any;
+  item_obj_seleccionado_codigo: any = '0';
 
 
   //catalogos
@@ -83,6 +87,13 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   almacn_parame_usuario_almacen: any;
   cod_precio_venta_modal_codigo: any;
   cod_descuento_modal: any;
+
+  public saldoItem: number;
+  saldo_modal_total_1: any;
+  saldo_modal_total_2: any;
+  saldo_modal_total_3: any;
+  saldo_modal_total_4: any;
+  saldo_modal_total_5: any;
   
   private unsubscribe$ = new Subject<void>();
 
@@ -95,7 +106,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     private almacenservice: ServicioalmacenService, private excelService: ExceltoexcelService, private datePipe: DatePipe, private router: Router,
     private messageService: MessageService, private spinner: NgxSpinnerService, private servicioCliente: ServicioclienteService,
     public servicioCatalogoSolicitudesUrgentes: CatalogoSolUrgenteService, private serviciovendedor: VendedorService,
-    private serviciMoneda: MonedaServicioService) {
+    private serviciMoneda: MonedaServicioService, private servicioPrecioVenta: ServicioprecioventaService, private saldoItemServices: SaldoItemMatrizService) {
     
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -127,6 +138,8 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.getTarifa();
     this.getClienteCatalogo();
 
+    this.getAlmacenesSaldos();
+
     //ID TIPO
     this.servicioCatalogoSolicitudesUrgentes.disparadorDeCatalogoDeSolicitudesUrgentes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo ID Sol Urgente: ", data);
@@ -149,9 +162,23 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
       this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
-        ...element,
-        codaduana: "0"
+        codsolurgente: 0,
+        coditem: element.coditem,
+        descripcion: element.descripcion,
+        medida: element.medida,
+        cantidad: element.cantidad,
+        saldoag: 0,
+        stockmax: 0,
+        udm: element.udm,
+        precio: element.preciolista,
+        total: element.total,
+        saldodest: 0,
+        pedtotal: 0,
+        saldoarea: 0,
+        cantidad_pedido: element.cantidad_pedida
       }));
+
+      this.calcularDetalleItems(this.array_items_carrito_y_f4_catalogo);
     });
     //
 
@@ -218,6 +245,42 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       this.array_items_carrito_y_f4_catalogo = data.UrgenteDetalle;
     });
     //
+
+    // precio_venta
+    this.servicioPrecioVenta.disparadorDePrecioVenta.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo Precio de Venta: ", data);
+      // this.cod_precio_venta_modal = data.precio_venta;
+      this.cod_precio = data.precio_venta.codigo;
+
+    });
+    // fin_precio_venta
+
+    //SALDOS ITEM PIE DE PAGINA
+    this.saldoItemServices.disparadorDeSaldoAlm1.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.saldo_modal_total_1 = data.saldo1;
+    });
+
+    this.saldoItemServices.disparadorDeSaldoAlm2.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.saldo_modal_total_2 = data.saldo2;
+    });
+
+    this.saldoItemServices.disparadorDeSaldoAlm3.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.saldo_modal_total_3 = data.saldo3;
+    });
+
+    this.saldoItemServices.disparadorDeSaldoAlm4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.saldo_modal_total_4 = data.saldo4;
+    });
+
+    this.saldoItemServices.disparadorDeSaldoAlm5.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      // console.log("Recibiendo Saldo Total: ", data);
+      this.saldo_modal_total_5 = data.saldo5;
+    });
+    //FIN SALDOS ITEM PIE DE PAGINA
   }
 
   get f() {
@@ -239,6 +302,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
     this.array_items_carrito_y_f4_catalogo = [];
     this.item_obj_seleccionado = '';
+    this.item_obj_seleccionado_codigo = '';
   }
 
   getParametrosIniciales() {
@@ -360,6 +424,9 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         complete: () => { }
       })
   }
+
+
+
 
   onLeaveIDSolUrgente(event: any) {
     const inputValue = event.target.value;
@@ -530,31 +597,112 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     });
   }
 
+  calcularDetalleItems(array) { 
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinsolurgente/calcularDetalle/";
+    return this.api.create('/inventario/transac/docinsolurgente/calcularDetalle/' + this.userConn + "/" + this.agencia_logueado + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.cod_precio, array)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          console.log("calcularDetalleItems: ", datav);
+
+
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+
+  recalcularCarritoCompras() { 
+    if (this.cod_precio === undefined || this.cod_precio === null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA PRECIO, SELECCIONE PRECIO ANTES' });
+      this.spinner.hide();
+      return;
+    }
+
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY ITEMS EN EL DETALLE PARA RECALCULAR !' });
+      this.spinner.hide();
+      return;
+    }
+
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/docinsolurgente/recalcularDetalle/";
+    return this.api.create('/docinsolurgente/recalcularDetalle/' + this.userConn + "/" + this.BD_storage + "/" + this.cod_precio + "/" +
+      this.agencia_logueado + "/" + this.usuarioLogueado, this.array_items_carrito_y_f4_catalogo)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+
+          console.log("recalcularCarritoCompras: ", datav);
+
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
 
 
+  // SALDOS
+  getAlmacenesSaldos() {
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/getCodAlmSlds/";
+    return this.api.getAll('/venta/transac/veproforma/getCodAlmSlds/' + this.userConn + "/" + this.usuarioLogueado)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          this.almacenes_saldos = datav;
+          // console.log("Almacenes: ", this.almacenes_saldos);
+        },
 
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
 
+  getSaldoItem(item) {
+    let agencia_concat = "AG" + this.agencia_logueado;
+    let array_send = {
+      agencia: agencia_concat,
+      codalmacen: this.agencia_logueado,
+      coditem: item,
+      codempresa: this.BD_storage,
+      usuario: this.usuarioLogueado,
 
+      idProforma: this.id_sol_urgente,
+      nroIdProforma: this.numero_id_sol_urgente
+    };
 
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    return this.api.create('/venta/transac/veproforma/getsaldoDetalleSP/' + this.userConn, array_send)
+      .subscribe({
+        next: (datav) => {
+          console.log('data', datav);
+          this.saldoItem = datav.totalSaldo;
+        },
 
-
-
-
-
-
-
-
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => { }
+      })
+  }
+  // FIN SALDOS
 
 
 
   // eventos de seleccion en la tabla
   onRowSelect(event: any) {
-    // this.item = event.data.coditem;
     this.item_obj_seleccionado = event.data;
+    this.item_obj_seleccionado_codigo = event.data?.coditem;
 
-    console.log('Row Selected:', event.data);
-    this.updateSelectedProducts();
+    console.log('Row Selected:', event.data, this.item_obj_seleccionado_codigo);
+
+    this.getSaldoItem(event.data.coditem);
+
   }
 
   onRowSelectForDelete() {
@@ -585,6 +733,9 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       console.log(`Elemento enfocado: ${elementTagName}`);
     }
   }
+  // FIN eventos de seleccion en la tabla
+
+
 
 
   onEditComplete(event: any) {
@@ -610,23 +761,6 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
 
 
-  getAlmacenesSaldos(codigo) {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinpedido/getSaldoStock/";
-    return this.api.getAll('/inventario/transac/docinpedido/getSaldoStock/' + this.userConn + "/" + codigo +
-      "/" + this.usuarioLogueado + "/" + this.agencia_logueado + "/" + this.BD_storage)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          this.almacenes_saldos = [datav];
-          console.log("getAlmacenesSaldos: ", datav);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => { }
-      })
-  }
-
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
@@ -638,7 +772,6 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       codaduana: element.codaduana === undefined ? "0" : element.codaduana
     }));
   }
-
 
   formatNumberTotalSubTOTALES(numberString: number): string {
     if (numberString === null || numberString === undefined) {
@@ -691,6 +824,11 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     });
   }
 
+  modalProformas() {
+
+
+  }
+
   modalExcelToExcel() {
     //PARA EL EXCEL TO EXCEL SE LE PASA EL ORIGEN DE LA VENTANA PARA QUE EL SERVICIO SEPA A QUE VENTANA DEVOLVER 
     // LA DATA XDXD
@@ -704,12 +842,25 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     });
   }
 
-  modalProformas() { 
-
-
-  }
-
   modalMatrizClasica(): void {
+    if (this.cod_precio === undefined || this.cod_precio === null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA PRECIO, SELECCIONE PRECIO ANTES' });
+      this.spinner.hide();
+      return;
+    }
+
+    if (this.id_sol_urgente === undefined || this.id_sol_urgente === null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ID, SELECCIONE ID ANTES' });
+      this.spinner.hide();
+      return;
+    }
+
+    if (this.numero_id_sol_urgente === undefined || this.numero_id_sol_urgente === null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA NUEMERO ID, VERIFIQUE CON SISTEMAS' });
+      this.spinner.hide();
+      return;
+    }
+
     // Realizamos todas las validaciones
     this.dialog.open(MatrizItemsClasicaComponent, {
       width: '100vw',
@@ -729,9 +880,9 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         items: [],
         descuento_nivel: 0,
         tamanio_carrito_compras: this.array_items_carrito_y_f4_catalogo.length,
-        tipo_ventana: "inventario"
-        // id_proforma: this.id_tipo_view_get_codigo,
-        // num_id_proforma:this.id_proforma_numero_id,
+        tipo_ventana: "inventario",
+        id_proforma: this.id_sol_urgente,
+        num_id_proforma: this.numero_id_sol_urgente,
       }
     });
   }
@@ -803,6 +954,21 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       width: 'auto',
       height: 'auto',
       disableClose: true,
+    });
+  }
+
+  modalSaldos(cod_almacen, posicion_fija): void {
+    this.dialog.open(ModalSaldosComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        cod_almacen: cod_almacen,
+        cod_item: this.item_obj_seleccionado_codigo,
+        posicion_fija: posicion_fija,
+        id_proforma: this.id_sol_urgente,
+        numero_id: this.numero_id_sol_urgente,
+      },
     });
   }
 }

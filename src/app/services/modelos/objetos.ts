@@ -1154,3 +1154,11 @@ export interface ItemDetalle {
   udm?: string,
   obs: string,
 }
+
+export interface inGrupoMer {
+  codigo: string;
+  descripcion: string;
+  horareg: string;
+  fechareg: string;
+  usuarioreg: string;
+}

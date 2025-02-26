@@ -46,6 +46,11 @@
       </div>
 
       <div class="input-group-append text-center" style="float: right;">
+          <button class="btn btn-outline-secondary form-control-sm" type="button" matTooltipClass="custom-tooltip"
+            matTooltip="Recalcular Detalle" (click)="recalcularCarritoCompras()">
+            <i class="fa fa-cogs gray"></i>
+          </button>
+
         <button class="btn btn-outline-secondary form-control-sm" type="button" (click)="modalMatrizClasica()"
           matTooltip="Matriz Item" matTooltipClass="custom-tooltip" matTooltipPosition="above">
           <i class="fa fa-th blue" aria-hidden="true"></i>
@@ -185,6 +190,7 @@
               </div>
            </div>
         </div>
+
         <!-- terceraFila -->
         <div class="row">
           <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
@@ -197,7 +203,6 @@
               </div>
               <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                 formControlName="tipocliente">
-                <mat-option value="undefined">Elija una opcion...</mat-option>
                 <mat-option value="NORMAL">FINAL</mat-option>
                 <mat-option value="URGENTE">INTERMEDIARIO</mat-option>
               </mat-select>
@@ -245,7 +250,6 @@
               </div>
               <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                 formControlName="tipocliente">
-                <mat-option value="undefined">Elija una opcion...</mat-option>
                 <mat-option value="CONTADO">CONTADO</mat-option>
                 <mat-option value="CREDITO">CREDITO</mat-option>
               </mat-select>
@@ -261,8 +265,7 @@
 
               <ng-container>
                 <input type="number" class="form-control form-control-sm"
-                  [(ngModel)]="cod_precio" (blur)="onLeavePrecioVenta($event)"
-                  id="inputCatalogoPrecioVenta" formControlName="preciovta">
+                  [(ngModel)]="cod_precio" (blur)="onLeavePrecioVenta($event)" id="inputCatalogoPrecioVenta">
               </ng-container>
 
               <div class="input-group-append">
@@ -334,17 +337,17 @@
                     <u>Transporte</u>
                   </span>
                 </div>
-                <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
+                <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                   [(ngModel)]="transporte" formControlName="transporte">
-                  <option value="CAMION PERTEC">CAMION PERTEC</option>
-                  <option value="FLOTA">FLOTA</option>
-                  <option value="TRANSPORTADORA">TRANSPORTADORA</option>
-                  <option value="RECOGE CLIENTE">RECOGE CLIENTE</option>
-                  <option value="LLEVA VENDEDOR">LLEVA VENDEDOR</option>
-                  <option value="TAXI">TAXI</option>
-                  <option value="CAMION">CAMION</option>
-                  <option value="OTRO">OTRO</option>
-                </select>
+                  <mat-option value="CAMION PERTEC">CAMION PERTEC</mat-option>
+                  <mat-option value="FLOTA">FLOTA</mat-option>
+                  <mat-option value="TRANSPORTADORA">TRANSPORTADORA</mat-option>
+                  <mat-option value="RECOGE CLIENTE">RECOGE CLIENTE</mat-option>
+                  <mat-option value="LLEVA VENDEDOR">LLEVA VENDEDOR</mat-option>
+                  <mat-option value="TAXI">TAXI</mat-option>
+                  <mat-option value="CAMION">CAMION</mat-option>
+                  <mat-option value="OTRO">OTRO</mat-option>
+                </mat-select>
               </div>
            </div>
 
@@ -476,8 +479,7 @@
               </ng-template>
               <ng-template pTemplate="body" let-products let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="products" [pSelectableRowIndex]="rowIndex"
-                  [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}"
-                  (click)="getAlmacenesSaldos(products?.coditem)">
+                  [ngStyle]="{'height': '10px',  'overflow-y': 'scroll', 'overflow-x': 'scroll'}">
                   <td class="center1">
                     <i class="fa fa-trash" style="font-size: 0.6rem !important;color:rgb(222, 12, 12) !important;cursor:pointer;
                       padding-block-start: 3px;" (click)="eliminarItemTabla(products?.orden, products?.coditem);">
@@ -486,8 +488,8 @@
                   <td class="left">{{ products.descripcion }}</td>
                   <td class="left">{{ products.medida }}</td>
                   <td class="center1">{{ products.udm }}</td>
-                  <td class="center1">{{ products.saldo_agencia }}</td>
-                  <td class="center1">{{ products.stock_max }}</td>
+                  <td class="center1">{{ products.saldoag }}</td>
+                  <td class="center1">{{ products.stockmax }}</td>
 
                   <!-- COLUMNA CANTIDAD -->
                   <td class="right1" [pEditableColumn]="products.cantidad"
@@ -510,7 +512,7 @@
                             style="color: #0000ffaf !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- A <input pInputText type="number" [(ngModel)]="products.cantidad" min="0" id="input_cantidad"
-                  style="color: rgba(0, 0, 255, 0.824) !important;"> -->
+                          style="color: rgba(0, 0, 255, 0.824) !important;"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumpleMin === false">
@@ -518,8 +520,7 @@
                             style="color: #ff0000dc !important;background-color: #a6a5bb6b;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- B <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                  id="input_cantidad"
-                  style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                           id="input_cantidad"style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
 
                         <ng-container *ngIf="products?.cumple === false">
@@ -527,19 +528,18 @@
                           <span style="color: #5050e2 !important;font-weight: 900;">
                             {{ formatNumberTotalSubTOTALES(products.cantidad) }}</span>
                           <!-- <input pInputText type="number" [(ngModel)]="products.cantidad_pedida" min="0"
-                  id="input_cantidad"
-                  style="color: rgba(255, 0, 0, 0.824) !important;"> -->
+                            id="input_cantidad" style="color: rgba(255, 0, 0, 0.824) !important;"> -->
                         </ng-container>
                       </ng-template>
                     </p-cellEditor>
                   </td>
                   <!-- FIN COLUMNA CANTIDAD -->
 
-                  <td class="right1">{{ formatNumberTotalSub6Decimales(products.preciolista) }}</td>
+                  <td class="right1">{{ formatNumberTotalSub6Decimales(products.precio) }}</td>
                   <td class="right1">{{ formatNumberTotalSubTOTALES(products.total) }}</td>
 
                   <!-- COLUMNA PEDIDO -->
-                  <td class="right1" [pEditableColumn]="products.cantidad_pedida"
+                  <td class="right1" [pEditableColumn]="products.cantidad_pedido"
                     pEditableColumnField="cantidad_pedida">
                     <p-cellEditor>
                       <ng-template pTemplate="input">
@@ -583,8 +583,8 @@
                     </p-cellEditor>
                   </td>
 
-                  <td class="right1">{{ formatNumberTotalSubTOTALES(products.saldo_destino) }}</td>
-                  <td class="right1">{{ products.saldo_area }}</td>
+                  <td class="right1">{{ formatNumberTotalSubTOTALES(products.saldodest) }}</td>
+                  <td class="right1">{{ products.saldoarea }}</td>
 
                   <!-- <td class="right1">{{ products.porcendesc | json}}</td>
                   <td class="right1">{{ products.preciodesc?.toString()?.replace(',', '.') }}</td>
@@ -601,7 +601,7 @@
 
     <div mat-dialog-footer class="row footersito">
       <!-- Saldos -->
-      <div class="col-6 pl-2" style="text-align: left;">
+      <!-- <div class="col-6 pl-2" style="text-align: left;">
         <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
           <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.saldo1"
             style="font-size: 0.8rem;width:17%;background-color: black;color: #00c600;cursor: pointer;" readOnly
@@ -619,18 +619,60 @@
             style="font-size: 0.8rem;width:17%;background-color: black;color: #00c600;cursor: pointer;" readOnly
             placeholder="0.00">
         </ng-container>
-      </div>
+      </div> -->
 
-      <div class="col-6" style="text-align:right;">
-        <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
-          <span>Min</span>
-          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smin" placeholder="0.00"
-            style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;" readOnly>
 
-          <span>Max</span>
-          <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smax" placeholder="0.00"
-            style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;" readOnly>
-        </ng-container>
+      <!-- Saldos -->
+      <div class="row pl-2">
+        <div class="col-6 pl-2" style="text-align: left;">
+          <input type="text" class="inputsSaldos inputsSaldos2"
+            value="{{ agencia_logueado }}: {{ saldoItem }}"
+            style="font-size: 0.8rem;width:12%;background-color: black;color: rgb(230, 230, 0);" readOnly
+            placeholder="0.00">
+          <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+            <span
+              style="padding: 3px 5px 0px 3px;"><strong>{{  almacenes_saldoss.codalmsald1 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_1"
+              style="font-size: 0.8rem;width:12%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald1, 1);" readOnly placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald2 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_2"
+              style="font-size: 0.8rem;width:12%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald2, 2);" readOnly placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald3 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_3"
+              style="font-size: 0.8rem;width:12%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald3, 3);" readOnly placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald4 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_4"
+              style="font-size: 0.8rem;width:12%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald4, 4);" readOnly placeholder="0.00">
+
+            <span style="padding: 3px 5px 0px 3px;"><strong>{{ almacenes_saldoss.codalmsald5 }}:</strong></span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [ngModel]="saldo_modal_total_5"
+              style="font-size: 0.8rem;width:12%;background-color: black;color: #00c600;cursor: pointer;"
+              (click)="modalSaldos(almacenes_saldoss.codalmsald5, 5);" readOnly placeholder="0.00">
+          </ng-container>
+        </div>
+
+        <div class="col-6" style="float:right;text-align: right;">
+          <ng-container *ngFor="let almacenes_saldoss of almacenes_saldos">
+            <span>Min</span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smin"
+              placeholder="0.00"
+              style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;"
+              readOnly>
+
+            <span>Max</span>
+            <input type="text" class="inputsSaldos inputsSaldos2" [value]="almacenes_saldoss.smax"
+              placeholder="0.00"
+              style="font-size: 0.8rem;width:16%;background-color: black;color: #00c600;cursor: pointer;"
+              readOnly>
+          </ng-container>
+        </div> 
       </div>
       <!-- finSaldos -->
     </div>

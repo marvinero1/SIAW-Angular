@@ -112,7 +112,7 @@ mat-row, mat-header-row, mat-footer-row{
   opacity: 1; /* Firefox */
 }
 .wrapper .content-wrapper{
-  background-color: #CEFFFF !important;
+  background-color: #CEFFFF;
  // min-height: calc(100vh - calc(0.5rem + 1px) - calc(2.5rem + 1px)) !important;
 }
 .mat-mdc-tab.mdc-tab{
@@ -277,7 +277,7 @@ mat-row, mat-header-row, mat-footer-row{
     position: fixed !important;
     display: contents;
     width: 100%;
-    background: #ceffff !important;
+    background: #ceffff;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1) !important;
     z-index: 1000;
     //height: 94px;

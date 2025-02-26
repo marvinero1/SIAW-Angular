@@ -1,0 +1,258 @@
+.col{
+  margin: 1px;
+}
+mat-icon {
+  font-size: 1.1rem !important;
+}
+
+.form-control-sm{
+  height: calc(1.6rem + 0px) !important;
+}
+
+// Tabla SCSS
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+  
+// th, td, .th, .td {
+//     text-align: center !important;
+//     border: 0.5px solid black;
+//     /* padding: 8px; */
+// }
+  
+.mat-mdc-row:nth-child(odd) {
+  background-color: #80808017;
+}
+
+.mat-mdc-header-row, .mat-header-row{
+  position: sticky;
+  top: 0;
+  background-color: #ffc107;
+  //min-height: 25px !important;
+}
+
+.mat-row, .mat-header-row, .mat-footer-row{
+  width: 100%;
+  display: table-row !important;
+}
+
+mat-row, mat-header-row, mat-footer-row{
+  width: 100%;
+  display: table-row !important;
+}
+
+.input-group-text, .form-control-sm {
+  font-size: 0.75rem;
+}
+
+.input-group-text {
+  background-color: transparent;
+  color: black;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff !important;
+  background-color: #093070;
+  border-color: #093070;
+}
+mat-tab-group{
+  font-size: 0.7rem !important;
+}
+span{
+  border: none !important;
+  text-align: right;
+}
+
+.right1{
+text-align: right;
+}
+.center1{
+text-align: center;
+}
+
+/* Para monitores de hasta 19 pulgadas (resoluciones comunes como 1366px de ancho o menos) */
+@media (max-width: 1366px) {
+.miTabGroupDetalle {
+  height: 33vh;
+  max-height: 41vh;
+  --mat-tab-animation-duration: 500ms;
+}
+}
+
+/* Para monitores mayores a 19 pulgadas (resoluciones superiores a 1366px) */
+@media (min-width: 1367px) {
+.miTabGroupDetalle {
+  height: 35vh;
+  max-height: 36vh;
+  --mat-tab-animation-duration: 500ms;
+}
+}
+
+::ng-deep {
+.p-scroller{
+height: 426px !important;
+}
+.p-listbox .p-listbox-list .p-listbox-item{
+height: 20px !important;
+color:#ca316b;
+}
+.p-listbox{
+width: 100% !important;
+}
+.p-icon {
+width: 0.55rem !important;
+height: 0.55rem !important;
+}
+.tablitaDetalle{
+.p-datatable-thead > tr > th {
+padding: 0rem 0rem !important;
+position: sticky;
+top: 0;
+background-color: #fbd800;
+min-height: 25px !important;
+}
+}
+.p-treetable .p-datatable-wrapper .p-datatable-tbody {
+height: 12px !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td{
+padding: 0rem 0rem !important;
+}
+
+.p-datatable .p-datatable-tbody > tr.p-highlight{
+color: black !important;
+background-color: #fbd800 !important;
+}
+
+.p-inputtext{
+// padding: 0rem 0rem !important;
+color: black;
+}
+
+.p-cell-editing {
+color: #fff !important;
+}
+
+
+
+
+
+.btn-outline-primary:hover{
+color: black;
+}
+// .wrapper.content-wrapper{
+//   background-color:#CEFFFF !important;
+// }
+.mat-mdc-tab-labels{
+height: calc(1.3rem + 0px) !important;
+}
+.miTabGroupProformaFooter .mat-mdc-tab-body{
+//height: 14rem !important;
+height: 164px !important;
+}
+.mdc-data-table__cell, .mdc-data-table__header-cell{
+padding: 0px 10px 0px 10px !important;
+}
+.mdc-tab{
+padding-right: 15px;
+padding-left: 15px;
+}
+.invalid-feedback{
+display: contents;
+width: 0%;
+margin-top: 0.25rem;
+font-size: 80%;
+color: #dc3545;
+}
+th{
+font-size: 0.7rem !important;
+}
+.mat-mdc-tab.mdc-tab{
+height: 20px !important;
+padding-right: 13px !important;
+padding-left: 13px !important;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 3px !important;
+}
+.mdc-tab{
+min-width: 79px !important;  
+}
+.mat-mdc-tab-body-content{
+overflow: hidden;
+}
+.mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell{
+z-index: 5;
+}
+// label:not(.form-check-label):not(.custom-file-label) {
+//   font-weight: 100;
+// }
+.mat-mdc-tab .mdc-tab__text-label {
+padding: 0px 0px 0px 0px !important;
+}
+// .mdc-data-table__cell, .mdc-data-table__header-cell{
+//   padding: 0px 0px 0px 0px !important;
+// }
+// .mat-mdc-tab-body-content{
+//   height: 12rem !important;
+// }
+// .mat-mdc-tab .mdc-tab__content{
+//   height: 105px !important;
+// }
+// .mat-tooltip {
+//   font-size: 0.7rem !important;
+//   background-color: #093070 !important;
+//   color:#fbd800 !important
+// }
+.mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target{
+top: 50% !important;
+height: 19px !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+.mat-mdc-form-field-subscript-wrapper{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+/* Cambiar el tamaño de la fuente y el fondo de la tabla AG Grid */
+.ag-theme-alpine .ag-row, .ag-theme-alpine-dark .ag-row, .ag-theme-alpine-auto-dark .ag-row .ag-header-cell{
+font-size: 0.7rem !important;
+padding-left: 0px !important;
+padding-right: 0px !important;
+
+white-space: pre !important;
+white-space: nowrap;
+line-height: 1.5;
+}
+
+
+.custom-ag-grid .ag-row {
+background-color: #e9ecef;
+}
+
+.custom-ag-grid .ag-row-odd {
+background-color: #f8f9fa;
+}
+
+.custom-ag-grid .ag-row-even {
+background-color: #e9ecef;
+}
+}

@@ -1,0 +1,126 @@
+<section style="background-color:#ffe0c0 !important; margin-left: 0px; margin-right: 7.5px; flex: 1; width: 100%; box-sizing: border-box;">
+  <div class="row">
+    <div class="col">
+      <button mat-raised-button class="btn btn-outline-secondary form-control-sm mr-1" type="submit">
+        <span><i class="fa fa-check" aria-hidden="true" style="color: #ffc107;"></i> Cerrar</span>
+      </button>  
+    </div>
+  </div>
+  <p-toast></p-toast>
+  <mat-tab-group>
+    <mat-tab label="Generación Pedido Automático">
+      <div class="mat-elevation-z2 p-2">
+        <!-- Almacén -->
+        <div class="row">
+          <div class="col-md-4">
+            <label><b>Almacén</b></label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="txt_codalmacen" disabled>
+              <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen('origen');"
+                matTooltip="Buscar Almacén">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Pedir a Almacén -->
+          <div class="col-md-4">
+            <label><b>Pedir a Almacén</b></label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="txt_codalmacen2" disabled>
+              <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalAlmacen('destino');"
+                matTooltip="Buscar Almacén">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+          <!-- ID Pedido -->
+          <div class="col-md-4">
+            <label><b>ID de Tipo</b></label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="txt_id" disabled>
+              <button class="btn btn-outline-success form-control-sm" type="button" (click)="modalCatalogoIdPedido();" matTooltip="Buscar ID de Tipo">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Boton Generar Pedido -->
+        <div class="row mt-3">
+          <div class="col-md-6 text-center">
+            <button class="btn btn-outline-success form-control-sm" type="button" (click)="GenerarPedidoAutomatico();" matTooltip="Generar Pedido Automático">
+              <i class="fa fa-plug"></i> Generar Pedido
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opciones de Generación -->
+      <!-- Opciones de Generación en Tabla -->
+      <h3 class="mt-3">Items</h3>
+
+      <mat-radio-group [(ngModel)]="filtro.seleccionado" (change)="onRadioChange($event)">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td>
+                <mat-radio-button value="todos" >Todos </mat-radio-button>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <mat-radio-button value="grupos">Grupos</mat-radio-button>
+              </td>
+              <td>
+                <div *ngIf="filtro.seleccionado === 'grupos'" class="d-flex">
+                  <mat-form-field class="mr-2">
+                    <input matInput [(ngModel)]="txt_grupo_desde" placeholder="Desde"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoIdPedido()">🔍</button>
+                  <mat-form-field class="ml-2">
+                    <input matInput [(ngModel)]="txt_grupo_hasta" placeholder="Hasta"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoIdPedido()">🔍</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-radio-button value="lineas">Líneas</mat-radio-button>
+              </td>
+              <td>
+                <div *ngIf="filtro.seleccionado === 'lineas'" class="d-flex">
+                  <mat-form-field>
+                    <input matInput [(ngModel)]="txt_linea_desde" placeholder="Desde"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoLineaDesde()">🔍</button>
+                  <mat-form-field class="ml-2">
+                    <input matInput [(ngModel)]="txt_linea_hasta" placeholder="Hasta"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoLineaHasta()">🔍</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-radio-button value="items">Ítems</mat-radio-button>
+              </td>
+              <td>
+                <div *ngIf="filtro.seleccionado === 'items'" class="d-flex">
+                  <mat-form-field>
+                    <input matInput [(ngModel)]="txt_item_desde" placeholder="Desde"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoItemsDesde()">🔍</button>
+                  <mat-form-field class="ml-2">
+                    <input matInput [(ngModel)]="txt_item_hasta" placeholder="Hasta"/>
+                  </mat-form-field>
+                  <button mat-button (click)="modalCatalogoItemsHasta()">🔍</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-radio-group>
+    </mat-tab>
+  </mat-tab-group>
+</section>
