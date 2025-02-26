@@ -11,7 +11,6 @@ export class ServicioalmacenService {
 
 
   @Output() disparadorDeAlmacenesOrigen: EventEmitter<any> = new EventEmitter();
-
   @Output() disparadorDeAlmacenesDestino: EventEmitter<any> = new EventEmitter();
 
 

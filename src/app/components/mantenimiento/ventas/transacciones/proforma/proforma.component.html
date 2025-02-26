@@ -1477,18 +1477,18 @@
                             <u>Medio Transporte </u>
                           </span>
                         </div>
-                        <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
+                        <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                           [(ngModel)]="transporte" formControlName="transporte"
                           [class.is-invalid]="f.transporte.invalid && (f.transporte.dirty || f.transporte.touched)">
-                          <option value="CAMION PERTEC">CAMION PERTEC</option>
-                          <option value="FLOTA">FLOTA</option>
-                          <option value="TRANSPORTADORA">TRANSPORTADORA</option>
-                          <option value="RECOGE CLIENTE">RECOGE CLIENTE</option>
-                          <option value="LLEVA VENDEDOR">LLEVA VENDEDOR</option>
-                          <option value="TAXI">TAXI</option>
-                          <option value="CAMION">CAMION</option>
-                          <option value="OTRO">OTRO</option>
-                        </select>
+                          <mat-option value="CAMION PERTEC">CAMION PERTEC</mat-option>
+                          <mat-option value="FLOTA">FLOTA</mat-option>
+                          <mat-option value="TRANSPORTADORA">TRANSPORTADORA</mat-option>
+                          <mat-option value="RECOGE CLIENTE">RECOGE CLIENTE</mat-option>
+                          <mat-option value="LLEVA VENDEDOR">LLEVA VENDEDOR</mat-option>
+                          <mat-option value="TAXI">TAXI</mat-option>
+                          <mat-option value="CAMION">CAMION</mat-option>
+                          <mat-option value="OTRO">OTRO</mat-option>
+                        </mat-select>
                       </div>
                     </div>
 
@@ -1528,13 +1528,13 @@
                             <u>Flete Pagado Por</u>
                           </span>
                         </div>
-                        <select class="custom-select1 form-control-sm" style="margin-left: 5px;"
+                        <mat-select class="custom-select1 form-control-sm" style="margin-left: 5px;"
                           formControlName="fletepor" [(ngModel)]="fletepor"
                           [class.is-invalid]="f.fletepor.invalid && (f.fletepor.dirty || f.fletepor.touched)">
-                          <option value="OTROS">OTROS</option>
-                          <option value="CLIENTE">CLIENTE</option>
-                          <option value="PERTEC POR COBRAR">PERTEC POR COBRAR</option>
-                        </select>
+                          <mat-option value="OTROS">OTROS</mat-option>
+                          <mat-option value="CLIENTE">CLIENTE</mat-option>
+                          <mat-option value="PERTEC POR COBRAR">PERTEC POR COBRAR</mat-option>
+                        </mat-select>
                       </div>
                     </div>
 
@@ -1685,8 +1685,8 @@
             </form>
           </mat-tab>
 
-          <mat-tab label="Anticipo Ventas Contado"><br>
-            <div class="row">
+          <mat-tab label="Anticipo Ventas Contado">
+            <div class="row pt-1">
               <form class="example-form" [formGroup]="FormularioData">
                 <div class="col-md">
                   <div class="row">
@@ -1699,12 +1699,18 @@
 
                         <div class="input-group-prepend">
                           <span class="input-group-text form-control-sm"
-                            style="padding: 10px 0px 0px 5px;border: 0 !important;"><u>El Pago se
+                            style="padding: 15px 0px 0px 5px;border: 0 !important;"><u>El Pago se
                               Realiza de Forma Anticipada</u></span>
                         </div>
                       </div>
 
                       <div class="input-group">
+                        <button class="btn btn-outline-primary form-control-sm" type="button"
+                          (click)="modalAnticiposProforma();" style="border-color: #ffc107;"
+                          [disabled]="!pago_contado_anticipado">
+                          <i class="fa fa-archive"></i> Asignar Anticipo
+                        </button>&nbsp;|&nbsp;
+
                         <div class="input-group-prepend">
                           <span class="input-group-text form-control-sm"
                             style="padding: 10px 0px 0px 0px;border: 0 !important;">
@@ -1713,13 +1719,7 @@
                           </span>
                         </div>
                       </div>
-                      <div style="text-align: center;">
-                        <button class="btn btn-outline-primary form-control-sm" type="button"
-                          (click)="modalAnticiposProforma();" style="border-color: #ffc107;"
-                          [disabled]="!pago_contado_anticipado">
-                          <i class="fa fa-archive"></i> Asignar Anticipo
-                        </button>
-                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -1728,84 +1728,75 @@
           </mat-tab>
 
           <mat-tab label="Cliente Real - Referencial">
-            <form class="example-form" [formGroup]="FormularioData">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="row">
-                    <div class="col">
-                      <div class="input-group-prepend text-center">
-                        <span class="input-group-text form-control-sm"
-                          style="padding: 10px 0px 0px 0px;border: 0 !important;">
-                          <u>El Cliente Referencia-Real que realiza el pedido es:</u></span>
-                      </div>
-                      <div style="display:  -webkit-box;flex-direction:column;">
+            <form class="example-form " [formGroup]="FormularioData">
+              <div class="col-md-7 pt-1">
+                <div class="row">
+                  <div class="col">
+                    <div class="input-group-prepend text-center">
+                      <span class="input-group-text form-control-sm"
+                        style="padding: 10px 0px 0px 0px;border: 0 !important;">
+                        <u>El Cliente Referencia-Real que realiza el pedido es:</u></span>
                         <input type="text" class="form-control form-control-sm"
-                          style="margin-left: 5px;width: 20% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
-                          formControlName="codcliente_real">
-                        <span> {{ nombre_cliente_catalogo_real }}</span>
-                      </div><br>
-                      <div>
-                        <button class="btn btn-outline-primary form-control-sm" type="button"
-                          style="float: left;margin-left: 5px;" [disabled]="!codigo_cliente"
-                          (click)="definirClienteReferencia(codigo_cliente_catalogo_real, cliente_casual);">
-                          <i class="fa fa-cog"></i> Definir Cliente Referencia
-                        </button>
-                      </div>
+                        style="margin-left: 5px;width: 20% !important;" [(ngModel)]="codigo_cliente_catalogo_real"
+                        formControlName="codcliente_real">
+                      <span> {{ nombre_cliente_catalogo_real }}</span>
                     </div>
+                    <button class="btn btn-outline-primary form-control-sm pt-2" type="button" [disabled]="!codigo_cliente"
+                      (click)="definirClienteReferencia(codigo_cliente_catalogo_real, cliente_casual);">
+                      <i class="fa fa-cog"></i> Definir Cliente Referencia
+                    </button>
                   </div>
                 </div>
               </div>
             </form>
           </mat-tab>
 
-          <mat-tab label="Descuentos de Linea de Solicitud"><br>
-            <div class="row">
-              <div class="col-md">
-                <div class="row p-2">
-                  <form class="example-form" [formGroup]="FormularioData">
-                    <div class="col">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text form-control-sm" style="margin-block-start: 8px;">
-                            <u>Habilitar Descuentos de Línea Ségun Solicitud</u>
-                          </span>
+          <mat-tab label="Descuentos de Linea de Solicitud">
+            <div class="col-md">
+              <div class="row p-2">
+                <form class="example-form" [formGroup]="FormularioData">
+                  <div class="col">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm" style="margin-block-start: 8px;">
+                          <u>Habilitar Descuentos de Línea Ségun Solicitud</u>
+                        </span>
 
-                          <mat-checkbox [(ngModel)]="habilitar_desct_sgn_solicitud"
-                            formControlName="desclinea_segun_solicitud">
-                          </mat-checkbox>
-                        </div>
+                        <mat-checkbox [(ngModel)]="habilitar_desct_sgn_solicitud"
+                          formControlName="desclinea_segun_solicitud">
+                        </mat-checkbox>
                       </div>
                     </div>
+                  </div>
 
-                    <div class="col">
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text form-control-sm"
-                            style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID de Tipo</u></span>
-                        </div>
-                        <mat-select *ngFor="let desct_linea_id_tipos of desct_linea_id_tipo"
-                          style="margin-left: 5px;border: 1px solid black; width: 81% !important;"
-                          [(ngModel)]="id_solicitud_desct">
-                          <mat-option value="desct_linea_id_tipos.codigo">
-                            {{ desct_linea_id_tipos.codigo }} -
-                            {{ desct_linea_id_tipos.descripcion }}
-                          </mat-option>
-                        </mat-select>
-                        <input type="text" [(ngModel)]="id_solicitud_desct" hidden="true">
-                      </div><br>
-                      <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
-                        style="border-color: #ffc107;">
-                        <i class="fa fa-archive"></i> Solicitud Descuentos de Nivel
-                      </button> Realizar Ventana? -->
-                    </div>
-                  </form>
-                </div>
+                  <div class="col">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text form-control-sm"
+                          style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>ID de Tipo</u></span>
+                      </div>
+                      <mat-select *ngFor="let desct_linea_id_tipos of desct_linea_id_tipo"
+                        style="margin-left: 5px;border: 1px solid black; width: 81% !important;"
+                        [(ngModel)]="id_solicitud_desct">
+                        <mat-option value="desct_linea_id_tipos.codigo">
+                          {{ desct_linea_id_tipos.codigo }} -
+                          {{ desct_linea_id_tipos.descripcion }}
+                        </mat-option>
+                      </mat-select>
+                      <input type="text" [(ngModel)]="id_solicitud_desct" hidden="true">
+                    </div><br>
+                    <!-- <button class="btn btn-outline-primary form-control-sm" type="button"
+                      style="border-color: #ffc107;">
+                      <i class="fa fa-archive"></i> Solicitud Descuentos de Nivel
+                    </button> Realizar Ventana? -->
+                  </div>
+                </form>
               </div>
             </div>
           </mat-tab>
 
-          <mat-tab label="Complementar Proforma"><br>
-            <div class="row">
+          <mat-tab label="Complementar Proforma">
+            <div class="row pt-1">
               <div class="col-md-4">
                 <div class="input-group">
                   <div class="input-group-prepend">

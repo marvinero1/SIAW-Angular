@@ -47,7 +47,9 @@
   <a mat-menu-item>Determinación Stocks Minimo y Maximo</a>
   <a mat-menu-item>Enlazar Solicitudes Urgentes</a>
   <a mat-menu-item>Generación Pedidos de Excel</a>
-  <a mat-menu-item>Generación Pedidos Automaticos</a>
+  <a mat-menu-item
+    (click)="guardarRutaLOG('generarPedidoAutomatico','inventario/operaciones/generarPedidoAutomatico');">Generación
+    Pedidos Automaticos🟡</a>
   <a mat-menu-item>Liberar lista de Empaques de Excel</a>
   <a mat-menu-item [matMenuTriggerFor]="clasificacion_abc">Clasificación ABC</a>
   <a mat-menu-item>Exportar Notas de Movimiento</a>
