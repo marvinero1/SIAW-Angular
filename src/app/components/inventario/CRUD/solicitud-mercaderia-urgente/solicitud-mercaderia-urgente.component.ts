@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatTabGroup } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { MonedaCatalogoComponent } from '@components/mantenimiento/administracion/moneda/moneda-catalogo/moneda-catalogo/moneda-catalogo.component';
 import { MonedaServicioService } from '@components/mantenimiento/administracion/moneda/servicio-moneda/moneda-servicio.service';
@@ -13,6 +15,7 @@ import { MatrizItemsClasicaComponent } from '@components/mantenimiento/ventas/ma
 import { ModalSaldosComponent } from '@components/mantenimiento/ventas/matriz-items/modal-saldos/modal-saldos.component';
 import { SaldoItemMatrizService } from '@components/mantenimiento/ventas/matriz-items/services-saldo-matriz/saldo-item-matriz.service';
 import { ModalClienteComponent } from '@components/mantenimiento/ventas/modal-cliente/modal-cliente.component';
+import { ModalDetalleObserValidacionComponent } from '@components/mantenimiento/ventas/modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
 import { ModalPrecioVentaComponent } from '@components/mantenimiento/ventas/modal-precio-venta/modal-precio-venta.component';
 import { ModalVendedorComponent } from '@components/mantenimiento/ventas/modal-vendedor/modal-vendedor.component';
@@ -20,6 +23,9 @@ import { ServicioclienteService } from '@components/mantenimiento/ventas/servici
 import { ServicioprecioventaService } from '@components/mantenimiento/ventas/servicioprecioventa/servicioprecioventa.service';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
 import { VendedorService } from '@components/mantenimiento/ventas/serviciovendedor/vendedor.service';
+import { CatalogoProformasComponent } from '@components/mantenimiento/ventas/transacciones/proforma/catalogo-proformas/catalogo-proformas.component';
+import { ServicioCatalogoProformasService } from '@components/mantenimiento/ventas/transacciones/proforma/sevicio-catalogo-proformas/servicio-catalogo-proformas.service';
+import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
 import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
 import { ApiService } from '@services/api.service';
@@ -40,7 +46,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   public detalle = "Pedido";
   public tipo = "transaccion-docinpedido-POST";
 
-  dataform: any = '';
+  dataform: any = {};
   fecha_actual: any;
   fecha_servidor: any;
   hora_actual: any;
@@ -63,17 +69,30 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   almacen_destino: any;
   codigo_cliente: any;
   razon_social: any;
-  cod_precio: any;
-  moneda_get: any;
+  codtarifa: any;
+  codmoneda: any;
   transporte: any;
   cod_cliente: any;
-  nombre_cliente: any;
+  nomcliente: any;
+  especial: any;
+  tipocliente: any;
+  tipopago: any;
+  totalventa: any;
+  total: any;
+  tpollegada: any;
+  obs: any;
+  flete: any;
+  idproforma: any;
+  numeroidproforma: any;
+  peso_pedido: any;
+  codigo_proforma: any;
+  codigo: any;
 
-  
+
+
   array_almacenes: any = [];
   item_obj_seleccionado: any;
   item_obj_seleccionado_codigo: any = '0';
-
 
   //catalogos
   id_tipo_sol_urgente: any = [];
@@ -97,6 +116,43 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   
   private unsubscribe$ = new Subject<void>();
 
+  // NEGATIVOS
+  validacion_post_negativos_filtrados_solo_negativos: any = [];
+  validacion_post_negativos_filtrados_solo_positivos: any = [];
+
+  toggleTodosNegativos: boolean = false;
+  toggleNegativos: boolean = false;
+  togglePositivos: boolean = false;
+  public validacion_post_negativos: any = [];
+
+  dataSource_negativos = new MatTableDataSource();
+  dataSourceWithPageSize_negativos = new MatTableDataSource();
+
+  displayedColumnsNegativos = ['kit', 'nro_partes', 'coditem_cjto', 'coditem_suelto', 'codigo',
+    'descitem', 'cantidad', 'cantidad_conjunto', 'cantidad_suelta', 'saldo_sin_descontar_reservas',
+    'cantidad_reservada_para_cjtos', 'saldo_descontando_reservas', 'obs'];
+  // FIN NEGATIVOS
+
+  // MAX DE VENTAS
+  dataSourceLimiteMaximoVentas = new MatTableDataSource();
+  dataSourceWithPageSize_LimiteMaximoVentas = new MatTableDataSource();
+  public validacion_post_max_ventas: any = [];
+  
+  displayedColumnsLimiteMaximoVentas = ['codigo', 'descripcion', 'cantidad_pf_anterior', 'cantidad', 'saldo',
+    'porcen_venta', 'cod_desct_esp', 'saldo', 'porcen_maximo', 'cantidad_max_venta', 'empaque_precio', 'obs']
+  
+  validacion_post_max_venta_filtrados_si_sobrepasa: any = [];
+  validacion_post_max_venta_filtrados_no_sobrepasa: any = [];
+
+  toggleTodosMaximoVentas: boolean = false;
+  toggleMaximoVentaSobrepasan: boolean = false;
+  toggleMaximoVentasNoSobrepasan: boolean = false;
+  // FIN DE MAX VENTAS
+
+  // TABS
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
+  // FIN TABS
+
   userConn: any;
   usuarioLogueado: any;
   agencia_logueado: any;
@@ -105,7 +161,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   constructor(private dialog: MatDialog, private api: ApiService, private itemservice: ItemServiceService, private _formBuilder: FormBuilder,
     private almacenservice: ServicioalmacenService, private excelService: ExceltoexcelService, private datePipe: DatePipe, private router: Router,
     private messageService: MessageService, private spinner: NgxSpinnerService, private servicioCliente: ServicioclienteService,
-    public servicioCatalogoSolicitudesUrgentes: CatalogoSolUrgenteService, private serviciovendedor: VendedorService,
+    public servicioCatalogoSolicitudesUrgentes: CatalogoSolUrgenteService, private serviciovendedor: VendedorService, public servicioCatalogoProformas: ServicioCatalogoProformasService,
     private serviciMoneda: MonedaServicioService, private servicioPrecioVenta: ServicioprecioventaService, private saldoItemServices: SaldoItemMatrizService) {
     
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
@@ -113,8 +169,9 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
 
-    this.FormularioData = this.createForm();
 
+    this.FormularioData = this.createForm();
+    
     // Crear instancia única de Intl.NumberFormat
     this.numberFormatter_2decimales = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
@@ -125,8 +182,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.numberFormatter_6decimales = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 6,
       maximumFractionDigits: 6,
-    });
-    
+    }); 
   }
 
   ngOnInit() {
@@ -148,6 +204,13 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     });
     //
 
+    //ID PROFORMAS
+    this.servicioCatalogoProformas.disparadorDeIDProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+      console.log("Recibiendo ID Proforma: ", data);
+      this.idproforma = data.proforma.id;
+    });
+    //
+
     //ACA LLEGA EL EL ARRAY DEL CARRITO DE COMPRAS 
     this.itemservice.disparadorDeItemsYaMapeadosAProforma.pipe(takeUntil(this.unsubscribe$)).subscribe(data_carrito => {
       console.log("Recibiendo Item de Carrito Compra: ", data_carrito);
@@ -161,7 +224,8 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         // Si el array ya tiene elementos, concatenamos los nuevos elementos con los existentes
         this.array_items_carrito_y_f4_catalogo.push(...data_carrito);
       }
-      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+
+      let modifica = this.array_items_carrito_y_f4_catalogo.map((element) => ({
         codsolurgente: 0,
         coditem: element.coditem,
         descripcion: element.descripcion,
@@ -178,28 +242,28 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         cantidad_pedido: element.cantidad_pedida
       }));
 
-      this.calcularDetalleItems(this.array_items_carrito_y_f4_catalogo);
+      this.calcularDetalleItems(modifica);
     });
     //
 
     //CATALOGO F4 ITEMS
     //ItemElejidoCatalogoF4Procesados
-    this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
-      console.log("Recibiendo Item Procesados De Catalogo F4: ", [data]);
-      this.item_seleccionados_catalogo_matriz = [data];
-      console.log("🚀 ~ ProformaComponent ~ this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe ~ data:", [data]);
+    // this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+    //   console.log("Recibiendo Item Procesados De Catalogo F4: ", [data]);
+    //   this.item_seleccionados_catalogo_matriz = [data];
+    //   console.log("🚀 ~ ProformaComponent ~ this.itemservice.disparadorDeItemsYaMapeadosAProformaF4.pipe ~ data:", [data]);
 
-      if (this.item_seleccionados_catalogo_matriz.length === 0) {
-        this.array_items_carrito_y_f4_catalogo.push(...[data]);
-      } else {
-        this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data]);
-      }
+    //   if (this.item_seleccionados_catalogo_matriz.length === 0) {
+    //     this.array_items_carrito_y_f4_catalogo.push(...[data]);
+    //   } else {
+    //     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.concat([data]);
+    //   }
 
-      this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
-        ...element,
-        codaduana: "0"
-      }));
-    });
+    //   this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.map((element) => ({
+    //     ...element,
+    //     codaduana: "0"
+    //   }));
+    // });
     //
 
     //Almacen
@@ -219,7 +283,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.servicioCliente.disparadorDeClientes.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Cliente: ", data);
       this.cod_cliente = data.cliente.codigo;
-      this.nombre_cliente = data.cliente.nombre
+      this.nomcliente = data.cliente.nombre
       //this.getClientByID(data.cliente.codigo);
     });
     //
@@ -234,7 +298,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     //Monedas
     this.serviciMoneda.disparadorDeMonedas.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       // console.log("Recibiendo Moneda: ", data);
-      this.moneda_get = data.moneda.codigo;
+      this.codmoneda = data.moneda.codigo;
       //this.tipo_cambio_moneda_catalogo = data.tipo_cambio;
     });
     //
@@ -243,6 +307,8 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.excelService.disparadorDeSolicitudUrgente.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ this.excelService.disparadorDePedido.pipe ~ data:", data)
       this.array_items_carrito_y_f4_catalogo = data.UrgenteDetalle;
+
+
     });
     //
 
@@ -250,7 +316,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.servicioPrecioVenta.disparadorDePrecioVenta.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Precio de Venta: ", data);
       // this.cod_precio_venta_modal = data.precio_venta;
-      this.cod_precio = data.precio_venta.codigo;
+      this.codtarifa = data.precio_venta.codigo;
 
     });
     // fin_precio_venta
@@ -281,6 +347,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       this.saldo_modal_total_5 = data.saldo5;
     });
     //FIN SALDOS ITEM PIE DE PAGINA
+    
   }
 
   get f() {
@@ -295,25 +362,29 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
     this.almacen_destino = "";
     this.codigo_cliente = "";
     this.razon_social = "";
-    this.cod_precio = "";
+    this.codtarifa = "";
     this.transporte = "";
-    this.nombre_cliente = "";
+    this.nomcliente = "";
 
 
     this.array_items_carrito_y_f4_catalogo = [];
+    this.validacion_post_negativos = [];
     this.item_obj_seleccionado = '';
     this.item_obj_seleccionado_codigo = '';
+
+
+
   }
 
   getParametrosIniciales() {
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/docinsolurgente/getParamsIniSolUrg/"
-    return this.api.getAll('/docinsolurgente/getParamsIniSolUrg/' + this.userConn + "/" + this.usuarioLogueado + "/"+ this.BD_storage)
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/transac/docinsolurgente/getParamsIniSolUrg/"
+    return this.api.getAll('/inventario/transac/docinsolurgente/getParamsIniSolUrg/' + this.userConn + "/" + this.usuarioLogueado + "/"+ this.BD_storage)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
           console.log("🚀 ~ PedidoComponent ~ getParametrosIniciales:", datav);
           this.almacen_origen = datav.codalmacen;
           //this.codalmorigenTextDescipcion = datav.codalmacendescripcion;
-          this.moneda_get = datav.codmoneda_total
+          this.codmoneda = datav.codmoneda_total
         },
 
         error: (err: any) => {
@@ -352,9 +423,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-        complete: () => {
-          //this.getMonedaTipoCambio(this.moneda_get_catalogo);
-        }
+        complete: () => { }
       })
   }
 
@@ -424,9 +493,6 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         complete: () => { }
       })
   }
-
-
-
 
   onLeaveIDSolUrgente(event: any) {
     const inputValue = event.target.value;
@@ -507,7 +573,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       // console.log("NO ENCONTRADO VALOR DE INPUT");
     } else {
       event.target.value = entero;
-      this.nombre_cliente = encontrado_element.nombre
+      this.nomcliente = encontrado_element.nombre
     }
   }
 
@@ -591,20 +657,18 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
   //FIN Importar ZIP
 
-  createForm(): FormGroup {
-    return this._formBuilder.group({
-
-    });
-  }
-
   calcularDetalleItems(array) { 
+    this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/transac/docinsolurgente/calcularDetalle/";
-    return this.api.create('/inventario/transac/docinsolurgente/calcularDetalle/' + this.userConn + "/" + this.agencia_logueado + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.cod_precio, array)
+    return this.api.create('/inventario/transac/docinsolurgente/calcularDetalle/' + this.userConn + "/" + this.agencia_logueado + "/" + this.BD_storage + "/" + this.usuarioLogueado + "/" + this.codtarifa, array)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-          console.log("calcularDetalleItems: ", datav);
-
-
+          console.log("calcularDetalleItems: ", datav.detalle);
+          
+          setTimeout(() => {
+            this.spinner.hide()
+          }, 1000);
+          return this.array_items_carrito_y_f4_catalogo = datav.detalle;
         },
 
         error: (err: any) => {
@@ -615,7 +679,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
 
   recalcularCarritoCompras() { 
-    if (this.cod_precio === undefined || this.cod_precio === null) {
+    if (this.codtarifa === undefined || this.codtarifa === null) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA PRECIO, SELECCIONE PRECIO ANTES' });
       this.spinner.hide();
       return;
@@ -627,24 +691,33 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
       return;
     }
 
+    this.spinner.show();
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/docinsolurgente/recalcularDetalle/";
-    return this.api.create('/docinsolurgente/recalcularDetalle/' + this.userConn + "/" + this.BD_storage + "/" + this.cod_precio + "/" +
+    return this.api.create('/inventario/transac/docinsolurgente/recalcularDetalle/' + this.userConn + "/" + this.BD_storage + "/" + this.codtarifa + "/" +
       this.agencia_logueado + "/" + this.usuarioLogueado, this.array_items_carrito_y_f4_catalogo)
       .pipe(takeUntil(this.unsubscribe$)).subscribe({
         next: (datav) => {
-
           console.log("recalcularCarritoCompras: ", datav);
+          this.array_items_carrito_y_f4_catalogo = datav.detalle;
 
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
 
         error: (err: any) => {
           console.log(err, errorMessage);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
         },
-        complete: () => { }
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+         }
       })
   }
-
-
 
   // SALDOS
   getAlmacenesSaldos() {
@@ -735,9 +808,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
   // FIN eventos de seleccion en la tabla
 
-
-
-
+  //Evento Tabla
   onEditComplete(event: any) {
     const updatedElement = event.data; // La fila editada
     const updatedField = event.field; // El campo editado (en este caso, "empaque")
@@ -759,8 +830,317 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
   // fin eventos de seleccion en la tabla
 
+  // NEGATIVOS
+  validarProformaSoloNegativos() {
+    this.spinner.show();
+    // 00060 - VALIDAR SALDOS NEGATIVOS
+    // VACIO - TODOS LOS CONTROLES
 
+    if (this.almacen_destino === undefined || this.almacen_destino === null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ALMACEN DESTINO, SELECCIONE ALMACEN DESTINO'});
+      this.spinner.hide();
+      return;
+    }
 
+    const url = `/inventario/transac/docinsolurgente/validarNegativ/${this.userConn}/${this.BD_storage}/${this.almacen_destino}/${this.usuarioLogueado}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+    this.api.create(url, this.array_items_carrito_y_f4_catalogo).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ this.api.create ~ datav:", datav);
+
+        if (datav.valido) {
+          this.messageService.add({ severity: 'success', summary: 'Alerta', detail: datav.msg });
+        } else { 
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.msg });
+        }
+
+       
+        this.validacion_post_negativos = datav.negativos;
+        this.abrirTabPorLabel("Negativos");
+
+        this.toggleTodosNegativos = true;
+        this.toggleNegativos = false;
+        this.togglePositivos = false;
+
+        this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 500);
+      }
+    });
+  }
+
+  negativosTodosFilterToggle() {
+    this.toggleTodosNegativos = true;
+    this.toggleNegativos = false;
+    this.togglePositivos = false;
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos);
+  }
+
+  negativosNegativosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = true;
+    this.togglePositivos = false;
+
+    this.validacion_post_negativos_filtrados_solo_negativos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Genera Negativo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_negativos);
+  }
+
+  negativosPositivosFilterToggle() {
+    this.toggleTodosNegativos = false;
+    this.toggleNegativos = false;
+    this.togglePositivos = true;
+
+    this.validacion_post_negativos_filtrados_solo_positivos = this.validacion_post_negativos.filter((element) => {
+      return element.obs === "Positivo";
+    });
+
+    this.dataSource_negativos = new MatTableDataSource(this.validacion_post_negativos_filtrados_solo_positivos);
+  }
+  //FIN NEGATIVOS
+
+  // MAX VENTAS
+  validarProformaSoloMaximoVenta() {
+    console.clear();
+    // 00058 - VALIDAR MAXIMO DE VENTA
+    // VACIO - TODOS LOS CONTROLES
+    this.spinner.show();
+    let valores = this.FormularioData?.value;
+
+    if (valores.totalventa === undefined || null) {
+      valores.totalventa = 0
+    };
+
+    if (valores.especial === undefined || null) {
+      valores.especial = false;
+    };
+
+    if (valores.flete === undefined || null) {
+      valores.flete = "";
+    };
+
+    if (valores.tpollegada === undefined || null) {
+      valores.tpollegada = "";
+    };
+
+    if (valores.codproforma_almacen === undefined || null) {
+      valores.codproforma_almacen = 0;
+    };    
+
+    if (valores.peso_pedido === undefined || null) {
+      valores.peso_pedido = 0;
+    };
+
+    if (valores.idproforma === undefined || null) {
+      valores.idproforma = "";
+    };
+
+    if (valores.numeroidproforma === undefined || null) {
+      valores.numeroidproforma = 0;
+    };
+    
+    if (valores.id === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ID' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.numeroid === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA NUMERO ID' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codtarifa === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR PRECIO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codalmacen === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ALMACEN ORIGEN' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codalmdestino === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ALMACEN DESTINO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codcliente === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR CLIENTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.obs === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA OBSERVACIONES' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.tipocliente === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TIPO CLIENTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.tipopago === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TIPO PAGO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.transporte === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TRANSPORTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codmoneda === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA COD MONEDA' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    // if (valores.total === undefined || null) {
+    //   this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TOTAL' });
+    //   setTimeout(() => {
+    //     this.spinner.hide();
+    //   }, 0);
+    //   return;
+    // }
+
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY ITEMS EN EL DETALLE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    let array_submitData = {
+      cabecera: valores,
+      tablaDetalle: this.array_items_carrito_y_f4_catalogo
+    };
+
+    console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ submitData ~ array_submitData:", array_submitData)
+    console.log("DATOS VALIDADOS");
+    
+    const url = `/inventario/transac/docinsolurgente/validarMaximoVta/${this.userConn}/${this.BD_storage}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+    this.api.create(url, array_submitData).subscribe({
+      next: (datav) => {
+        console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ this.api.create ~ datav:", datav);
+        if (datav.valido) {
+          this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
+        } else { 
+          this.validacion_post_max_ventas = datav.dtnocumplenMaxVta;
+          this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: datav.resp });
+        };
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE VALIDO MAX VENTAS, OCURRIO UN PROBLEMA !' });
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
+      }
+    });
+  }
+
+  maximoVentasAllFilterToggle() {
+    this.toggleTodosMaximoVentas = true;
+    this.toggleMaximoVentaSobrepasan = false;
+    this.toggleMaximoVentasNoSobrepasan = false;
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_ventas);
+  }
+
+  maxmoVentasNOSobrepasanFilterToggle() {
+    this.toggleTodosMaximoVentas = false;
+    this.toggleMaximoVentaSobrepasan = false;
+    this.toggleMaximoVentasNoSobrepasan = true;
+
+    this.validacion_post_max_venta_filtrados_no_sobrepasa = this.validacion_post_max_ventas.filter((element) => {
+      return element.obs === "Cumple";
+    });
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_venta_filtrados_no_sobrepasa);
+  }
+
+  maxmoVentasSISobrepasanFilterToggle() {
+    this.toggleTodosMaximoVentas = false;
+    this.toggleMaximoVentaSobrepasan = true;
+    this.toggleMaximoVentasNoSobrepasan = false;
+
+    this.validacion_post_max_venta_filtrados_si_sobrepasa = this.validacion_post_max_ventas.filter((element) => {
+      return element.obs != "Cumple";
+    });
+
+    this.dataSourceLimiteMaximoVentas = new MatTableDataSource(this.validacion_post_max_venta_filtrados_si_sobrepasa);
+  }
+  // FIN MAX VENTAS
+
+  abrirTabPorLabel(label: string) {
+    //abre tab por el id de su etiqueta, muy buena funcion xD
+    const tabs = this.tabGroup._tabs.toArray(); // Obtener todas las pestañas del mat-tab-group
+    // console.log(tabs);
+    const index = tabs.findIndex(tab => tab.textLabel === label); // Encontrar el índice del mat-tab con el label dado
+    if (index !== -1) {
+      this.tabGroup.selectedIndex = index; // Establecer el índice seleccionado del mat-tab-group
+    }
+  }
+  
   eliminarItemTabla(orden, coditem) {
     // Filtrar el array para eliminar el elemento con el número de orden dado y el código de ítem
     this.array_items_carrito_y_f4_catalogo = this.array_items_carrito_y_f4_catalogo.filter(item => {
@@ -805,6 +1185,345 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
 
 
 
+  createForm(): FormGroup {
+    return this._formBuilder.group({
+      codigo: [(this.dataform?.codigo ?? 0)],
+      id: [this.dataform?.id, Validators.compose([Validators.required])],
+      numeroid: [this.dataform?.numeroid, Validators.compose([Validators.required])],
+      fecha: [this.dataform?.fecha_actual, Validators.compose([Validators.required])],
+      fechareg: this.dataform?.fecha_actual,
+      horareg: this.hora_actual,
+      codvendedor: [this.dataform?.codvendedor, Validators.compose([Validators.required])],
+      codalmacen: [Number(this.dataform?.codalmacen), Validators.compose([Validators.required])],
+      codalmdestino: [Number(this.dataform?.codalmdestino), Validators.compose([Validators.required])],
+      especial: this.dataform?.especial ?? false,
+      tipocliente: [this.dataform?.tipocliente, Validators.compose([Validators.required])],
+      codcliente: [this.dataform?.codcliente, Validators.compose([Validators.required])],
+      nomcliente: [this.dataform?.nomcliente, Validators.compose([Validators.required])],
+      tipopago: [this.dataform?.tipopago, Validators.compose([Validators.required])],
+      codtarifa: this.dataform?.codtarifa,
+
+      codmoneda: [this.dataform?.codmoneda, Validators.compose([Validators.required])],
+      total: this.dataform?.total,
+      transporte: this.dataform.transporte,
+      idproforma: this.dataform.idproforma,
+      numeroidproforma: this.dataform.numeroidproforma,
+      peso_pedido: this.dataform?.peso_pedido,
+
+      tpollegada: this.dataform?.tpollegada,
+      obs: [this.dataform?.obs, Validators.compose([Validators.required])],
+      totalventa: this.dataform.totalventa,
+      flete: this.dataform?.flete,
+      anulada: false, // en documento nuevo el anulado siempre es false
+      usuarioreg: this.usuarioLogueado,
+      
+      codproforma_almacen: this.dataform?.codalmacen, // es el codigo de la proforma a la cual se ah 
+      niveles_descuento:"ACTUAL",
+      
+      // datos de uso antiguo hardcodeado a espera de cambion 27-2-2025
+      idnm: "null",
+      numeroidnm: 0,
+
+      idfc: "null",
+      numeroidfc: 0,
+
+      fid: "null",
+      fnumeroid: 0,
+
+      id_comple: "null",
+      numeroid_comple: 0,
+    });
+  }
+
+  valida_aceptaSolUrgBoolean: boolean = false;
+  solUrgcubreSaldoValidoBolean: boolean = false;
+  solUrgVtaMaxValidoBolean: boolean = false;
+    
+  async submitData() {
+    // RECUSIVA
+    this.spinner.show();
+    let valores = this.FormularioData?.value;
+
+
+    if (valores.totalventa === undefined || null) {
+      valores.totalventa = 0
+    };
+
+    if (valores.especial === undefined || null) {
+      valores.especial = false;
+    };
+
+    if (valores.flete === undefined || null) {
+      valores.flete = "";
+    };
+
+    if (valores.tpollegada === undefined || null) {
+      valores.tpollegada = "";
+    };
+
+    if (valores.codproforma_almacen === undefined || null) {
+      valores.codproforma_almacen = 0;
+    };
+
+    if (valores.peso_pedido === undefined || null) {
+      valores.peso_pedido = 0;
+    };
+
+    if (valores.total === undefined || null) {
+      valores.total = 0;
+    };
+
+    if (valores.idproforma === undefined || null) {
+      valores.idproforma = "";
+    };
+
+    if (valores.numeroidproforma === undefined || null) {
+      valores.numeroidproforma = 0;
+    };
+    
+
+    if (valores.id === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ID' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.numeroid === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA NUMERO ID' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codtarifa === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR PRECIO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codalmacen === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ALMACEN ORIGEN' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codalmdestino === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR ALMACEN DESTINO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codcliente === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA ELEGIR CLIENTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.obs === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA OBSERVACIONES' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.tipocliente === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TIPO CLIENTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.tipopago === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TIPO PAGO' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.transporte === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TRANSPORTE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.codmoneda === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA COD. MONEDA' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (this.array_items_carrito_y_f4_catalogo.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'NO HAY ITEMS EN EL DETALLE' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    if (valores.totalventa === undefined || null) {
+      this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA TOTAL VENTA' });
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      return;
+    }
+
+    let array_submitData = {
+      cabecera: valores,
+      tablaDetalle: this.array_items_carrito_y_f4_catalogo
+    };
+
+    console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ submitData ~ array_submitData:", array_submitData)
+    const url = `/inventario/transac/docinsolurgente/grabarDocumento/${this.userConn}/${this.BD_storage}/${this.valida_aceptaSolUrgBoolean}/${this.solUrgcubreSaldoValidoBolean}/${this.solUrgVtaMaxValidoBolean}`;
+    const errorMessage = `La Ruta presenta fallos al hacer la creacion Ruta:- ${url}`;
+    this.api.create(url, array_submitData).subscribe({
+      next: async (datav) => {
+      console.log("🚀 ~ SolicitudMercaderiaUrgenteComponent ~ this.api.create ~ datav:", datav)
+
+        if (!datav.valido) {
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav?.resp });
+          // Espera a que el modal se cierre antes de continuar
+          await this.modalDetalleObservacionesAmarrillo('ALERTAS', `${datav?.alertas}\n${datav?.flete}\n${datav?.resp}` );
+          
+          if (datav.pedirClave) {
+            switch (datav.pedirClave.identificador) {
+              case "23U":
+                const dialogClaveDatoADatoB23U = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: {
+                    dataA: datav.pedirClave.datoA,
+                    dataB: datav.pedirClave.datoB,
+                    dataPermiso: "",
+                    dataCodigoPermiso: datav.pedirClave.servicio,
+                  },
+                });
+
+                dialogClaveDatoADatoB23U.afterClosed().subscribe((result: Boolean) => {
+                  if (result) {
+                    this.solUrgcubreSaldoValidoBolean= true;
+                    this.submitData();
+
+
+                    
+                  } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE CANCELO VERIFICACION' });
+                  }
+                });
+                break;
+              case "23E":
+                const dialogClaveDatoADatoB23E = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: {
+                    dataA: datav.pedirClave.datoA,
+                    dataB: datav.pedirClave.datoB,
+                    dataPermiso: "",
+                    dataCodigoPermiso: datav.pedirClave.servicio,
+                  },
+                });
+
+                dialogClaveDatoADatoB23E.afterClosed().subscribe((result: Boolean) => {
+                  if (result) {
+                    this.valida_aceptaSolUrgBoolean = true;
+                    this.submitData();
+                  } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE CANCELO VERIFICACION' });
+                  }
+                });
+                break;
+              case "20U":
+                const dialogClaveDatoADatoB20U = await this.dialog.open(PermisosEspecialesParametrosComponent, {
+                  width: 'auto',
+                  height: 'auto',
+                  data: {
+                    dataA: datav.pedirClave.datoA,
+                    dataB: datav.pedirClave.datoB,
+                    dataPermiso: "",
+                    dataCodigoPermiso: datav.pedirClave.servicio,
+                  },
+                });
+
+                dialogClaveDatoADatoB20U.afterClosed().subscribe((result: Boolean) => {
+                  if (result) {
+                    this.solUrgVtaMaxValidoBolean = true;
+                    this.submitData();
+                  } else {
+                    this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'SE CANCELO VERIFICACION' });
+                  }
+                });
+                break;
+            
+              default:
+                break;
+            }
+          }
+         
+          if (datav.negativos) {
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'HAY NEGATIVOS' });
+            this.validarProformaSoloNegativos();
+          }
+        } else { 
+          this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav?.resp });
+          await this.modalDetalleObservacionesAmarrillo('ALERTAS', datav?.alertas + '\n' + datav?.flete + '\n' + datav?.resp);
+          
+        }
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 0);
+      },
+      error: (err) => {
+        console.log(err, errorMessage);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: '! NO SE GRABO, OCURRIO UN PROBLEMA !' });
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
+      }
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -825,7 +1544,11 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
 
   modalProformas() {
-
+    this.dialog.open(CatalogoProformasComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
 
   }
 
@@ -843,7 +1566,7 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
   }
 
   modalMatrizClasica(): void {
-    if (this.cod_precio === undefined || this.cod_precio === null) {
+    if (this.codtarifa === undefined || this.codtarifa === null) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'FALTA PRECIO, SELECCIONE PRECIO ANTES' });
       this.spinner.hide();
       return;
@@ -884,6 +1607,26 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         id_proforma: this.id_sol_urgente,
         num_id_proforma: this.numero_id_sol_urgente,
       }
+    });
+  }
+
+  //modal amarrillo donde salen los mensajes largos de las OBS de las validaciones
+  modalDetalleObservacionesAmarrillo(obs: string, obsDetalle: string): Promise<void> {
+    return new Promise((resolve) => {
+      const dialogRef = this.dialog.open(ModalDetalleObserValidacionComponent, {
+        width: '700px',
+        height: 'auto',
+        disableClose: true,
+        data: {
+          obs_titulo: obs,
+          obs_contenido: obsDetalle,
+        },
+      });
+
+      // Se ejecuta cuando el modal se cierra
+      dialogRef.afterClosed().subscribe(() => {
+        resolve(); // Resolvemos la promesa
+      });
     });
   }
 
@@ -968,6 +1711,19 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         posicion_fija: posicion_fija,
         id_proforma: this.id_sol_urgente,
         numero_id: this.numero_id_sol_urgente,
+      },
+    });
+  }
+
+  //modal amarrillo donde salen los mensajes largos de las OBS de las validaciones
+  modalDetalleObservaciones(obs, obsDetalle) {
+    this.dialog.open(ModalDetalleObserValidacionComponent, {
+      width: '700px',
+      height: 'auto',
+      disableClose: true,
+      data: {
+        obs_titulo: obs,
+        obs_contenido: obsDetalle,
       },
     });
   }

@@ -47,12 +47,12 @@ export class CatalogoProformasComponent implements OnInit {
   getProforma() {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/mant/venumeracion/catalogo/";
 
-    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + "2")
+    return this.api.getAll('/venta/mant/venumeracion/catalogo/' + this.userConn + "/" + 2)
       .subscribe({
         next: (datav) => {
           this.proformss = datav;
           this.proforma_get = datav;
-          console.log(this.proforma_get);
+          // console.log(this.proforma_get);
         },
 
         error: (err: any) => {
@@ -64,7 +64,6 @@ export class CatalogoProformasComponent implements OnInit {
 
   onSearchChange(searchValue: string) {
     console.log(searchValue);
-
     // Debounce logic
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {

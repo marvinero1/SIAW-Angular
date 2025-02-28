@@ -994,7 +994,7 @@ export class NotamovimientoComponent implements OnInit {
   }
 
   cargarProformaSolicitudUrgente() {
-    if (this.id_proforma_catalogo === undefined || this.numero_id_catalogo_proforma === undefined) {
+    if (this.id_proforma_sol_urgente === undefined || this.numeroidproforma_solReadOnly === undefined) {
       this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'ID O NUM ID EN BLANCO, FAVOR COLOCAR PROFORMA DE ALMACEN' })
       return;
     }

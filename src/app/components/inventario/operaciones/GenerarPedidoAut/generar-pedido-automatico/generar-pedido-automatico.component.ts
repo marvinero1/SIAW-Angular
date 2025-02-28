@@ -7,15 +7,11 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
 import { ApiService } from '@services/api.service';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { DialogConfirmacionComponent } from '@modules/dialog-confirmacion/dialog-confirmacion.component';
-import { PermisosEspecialesParametrosComponent } from '@components/seguridad/permisos-especiales-parametros/permisos-especiales-parametros.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { MatRadioChange } from '@angular/material/radio';
-import { GruposlineasComponent } from '@components/mantenimiento/inventario/gruposlineas/gruposlineas.component';
-import { ItemComponent } from '@components/mantenimiento/inventario/item/item.component';
 import { ModalItemsComponent } from '@components/mantenimiento/ventas/modal-items/modal-items.component';
 import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosItem/item-service.service';
 import { LineaProductoCatalogoComponent } from '@components/mantenimiento/inventario/lineaproducto/linea-producto-catalogo/linea-producto-catalogo.component';
@@ -24,7 +20,6 @@ import { GrupoMerCatalogoComponent } from '@components/mantenimiento/inventario/
 import { ServicioGrupoMerService } from '@components/mantenimiento/inventario/gruposlineas/service-gruposmerlineas/servicio-gruposmer.service';
 import { CatalogoPedidoComponent } from '@components/mantenimiento/inventario/numpedidomercaderia/catalogo-pedido/catalogo-pedido.component';
 import { CatalogoPedidoService } from '@components/mantenimiento/inventario/numpedidomercaderia/catalogo-pedido/servicio-catalogo-pedido/catalogo-pedido.service';
-
 @Component({
   selector: 'app-generar-pedido-automatico',
   templateUrl: './generar-pedido-automatico.component.html',
@@ -94,12 +89,12 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
   es_linea_desde: boolean;
   es_item_desde: boolean;
 
-  gruposdesde: any;
-  lineasdesde: any;
-  itemsdesde: any;
-  gruposhasta: any;
-  lineashasta: any;
-  itemshasta: any;
+  gruposdesde: string;
+  lineasdesde: string;
+  itemsdesde: string;
+  gruposhasta: string;
+  lineashasta: string;
+  itemshasta: string;
   almacen_seleccionado: any;
 
   userConn: any;
@@ -107,15 +102,15 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
   agencia_logueado: any;
   BD_storage: any;
 
-  codigo_pedido:any;
+  codigo_pedido: any;
 
-  valido:any;
-  respuesta:any;
+  valido: any;
+  respuesta: any;
   private unsubscribe$ = new Subject<void>();
 
   constructor(public dialog: MatDialog, private api: ApiService, private datePipe: DatePipe, public nombre_ventana_service: NombreVentanaService,
-    private almacenservice: ServicioalmacenService,private servicioCatalogoPedido: CatalogoPedidoService, public itemservice: ItemServiceService, 
-    public lineaservice: ServicioLineaProductoService, public grupomerservice: ServicioGrupoMerService, 
+    private almacenservice: ServicioalmacenService, private servicioCatalogoPedido: CatalogoPedidoService, public itemservice: ItemServiceService,
+    public lineaservice: ServicioLineaProductoService, public grupomerservice: ServicioGrupoMerService,
     public router: Router,
     private messageService: MessageService, private spinner: NgxSpinnerService) {
 
@@ -123,14 +118,13 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    
+
     this.api.getRolUserParaVentana(this.nombre_ventana);
   }
 
   ngOnInit() {
     //Almacen Desde
     this.getHoraFechaServidorBckEnd();
-
 
     // IDTIPO
     this.servicioCatalogoPedido.disparadorDeCatalogoDePedidos.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
@@ -154,72 +148,84 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     //
     //Item Hasta
 
-    this.txt_grupo_desde ="";
-    this.txt_grupo_hasta ="";
-    this.txt_linea_desde ="";
-    this.txt_linea_desde ="";
-    this.txt_linea_hasta ="";
-    this.txt_item_desde ="";
+    this.txt_grupo_desde = "";
+    this.txt_grupo_hasta = "";
+    this.txt_linea_desde = "";
+    this.txt_linea_hasta = "";
+    this.txt_item_desde = "";
     this.txt_item_hasta = "";
-    
+
     this.itemservice.disparadorDeItemsCatalogo.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Item: ", data);
       this.codigo_item_catalogo = data;
-      if(this.es_item_desde === true){
+      if (this.es_item_desde === true) {
         this.itemsdesde = this.codigo_item_catalogo.coditem;
         this.txt_item_desde = this.itemsdesde;
         this.es_item_desde = false;
         console.log("Item en desde: ", this.itemsdesde);
-      }else{
+      } else {
         this.itemshasta = this.codigo_item_catalogo.coditem;
         this.txt_item_hasta = this.itemshasta;
         console.log("Item en hasta: ", this.itemshasta);
-      }     
-    } );
+      }
+    });
 
     this.lineaservice.disparadorDeLineaItem.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Linea: ", data);
-      if(this.es_linea_desde === true){
+      if (this.es_linea_desde === true) {
         this.lineasdesde = data.linea.codigo;
         this.txt_linea_desde = this.lineasdesde;
         this.es_linea_desde = false;
         console.log("Linea en desde: ", this.lineasdesde);
-      }else{
+      } else {
         this.lineashasta = data.linea.codigo;
         this.txt_linea_hasta = this.lineashasta;
         console.log("Linea en hasta: ", this.lineashasta);
-      }     
-    } );
+      }
+    });
     this.grupomerservice.disparadorDeGrupoMer.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
       console.log("Recibiendo Grupo: ", data);
-      if(this.es_grupo_desde === true){
-        this.gruposdesde = data.linea.codigo;
+      if (this.es_grupo_desde === true) {
+        this.gruposdesde = data.linea.codigo.toString();
+        //this.gruposdesde = Number(data.linea.codigo);
         this.txt_grupo_desde = this.gruposdesde;
         this.es_grupo_desde = false;
         console.log("Grupo en desde: ", this.gruposdesde);
-      }else{
+      } else {
         this.gruposhasta = data.linea.codigo;
         this.txt_grupo_hasta = this.gruposhasta;
         console.log("Grupo en hasta: ", this.gruposhasta);
-      }     
-    } );
+      }
+    });
     //
-    console.log("Filtro seleccionado INI: ",this.filtro.seleccionado);  // Debe ser 'todos'
+    console.log("Filtro seleccionado INI: ", this.filtro.seleccionado);  // Debe ser 'todos'
+    this.Actualizar_Seleccion()
   }
-   // Método para manejar cambios si es necesario
+  
+  // Método para manejar cambios si es necesario
   onRadioChange(event: MatRadioChange) {
-    console.log("Filtro seleccionado: ",this.filtro.seleccionado);
-    this.todos = this.filtro.seleccionado === "todos";
-  this.grupos = this.filtro.seleccionado === "grupos";
-  this.lineas = this.filtro.seleccionado === "lineas";
-  this.items = this.filtro.seleccionado === "items";
-    console.log("Datos seleccionado todos: ",this.todos);
-    console.log("Datos seleccionado grupos: ",this.grupos);
-    console.log("Datos seleccionado lineas: ",this.lineas);
-    console.log("Datos seleccionado items: ",this.items);
+    this.Actualizar_Seleccion()
   }
 
-  GenerarPedidoAutomatico(){
+  Actualizar_Seleccion() {
+    console.log("Filtro seleccionado: ", this.filtro.seleccionado);
+    this.todos = this.filtro.seleccionado === "todos";
+    this.grupos = this.filtro.seleccionado === "grupos";
+    this.lineas = this.filtro.seleccionado === "lineas";
+    this.items = this.filtro.seleccionado === "items";
+    this.txt_grupo_desde = "";
+    this.txt_grupo_hasta = "";
+    this.txt_linea_desde = "";
+    this.txt_linea_hasta = "";
+    this.txt_item_desde = "";
+    this.txt_item_hasta = "";
+    console.log("Datos seleccionado todos: ", this.todos);
+    console.log("Datos seleccionado grupos: ", this.grupos);
+    console.log("Datos seleccionado lineas: ", this.lineas);
+    console.log("Datos seleccionado items: ", this.items);
+  }
+
+  GenerarPedidoAutomatico() {
     this.spinner.show();
     //VALIDACIONES
     if (this.txt_codalmacen === undefined) {
@@ -240,27 +246,26 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
       this.spinner.hide();
       return;
     }
-    if (this.filtro.seleccionado === "grupos" && this.txt_grupo_desde ==="" && this.txt_grupo_hasta ==="") {
+    if (this.filtro.seleccionado === "grupos" && this.txt_grupo_desde === "" && this.txt_grupo_hasta === "") {
       //console.log("Ingreso a validar ID: ", this.txt_id);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'DEBE SELECCIONAR LOS GRUPOS.' });
       this.spinner.hide();
       return;
     }
-    if (this.filtro.seleccionado === "lineas" && this.txt_linea_desde ==="" && this.txt_linea_hasta ==="") {
+    if (this.filtro.seleccionado === "lineas" && this.txt_linea_desde === "" && this.txt_linea_hasta === "") {
       //console.log("Ingreso a validar ID: ", this.txt_id);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'DEBE SELECCIONAR LAS LINEAS.' });
       this.spinner.hide();
       return;
     }
-    if (this.filtro.seleccionado === "items" && this.txt_item_desde ==="" && this.txt_item_hasta ==="") {
+    if (this.filtro.seleccionado === "items" && this.txt_item_desde === "" && this.txt_item_hasta === "") {
       //console.log("Ingreso a validar ID: ", this.txt_id);
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'DEBE SELECCIONAR LOS ITEMS.' });
       this.spinner.hide();
       return;
     }
-    
 
-    let array_post={
+    let array_post = {
       codalmacen: this.txt_codalmacen,
       codalmacen2: this.txt_codalmacen2,
       id: this.txt_id,
@@ -287,16 +292,11 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
           this.respuesta = datav.resp;
 
           console.log("🚀 ~ GenerarPedidoAutomaticoComponent ~ generarpedidoautomatico ~ this.eventosLogs:", this.respuesta)
-/* 
-          if(datav.msgAlertas.length > 0){
-            this.openConfirmacionDialog(datav.msgAlertas);
-          } */
-          
           if (datav.valido) {
             this.openConfirmacionDialog(datav.resp);
             this.messageService.add({ severity: 'success', summary: 'Accion Completada', detail: datav.resp });
           }
-          else{
+          else {
             this.openConfirmacionDialog(datav.resp + "\n");
           }
         },
@@ -304,12 +304,72 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
         error: (err: any) => {
           console.log(err, errorMessage);
         },
-
         complete: () => { }
       });
   }
 
-  
+  mandarNombre() {
+    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
+      nombre_vent: this.ventana,
+    });
+  }
+
+  getHoraFechaServidorBckEnd() {
+    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
+    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
+      .pipe(takeUntil(this.unsubscribe$)).subscribe({
+        next: (datav) => {
+          // console.log(datav);
+          this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
+          this.hora_fecha_server = datav.horaServidor;
+          // console.log(this.fecha_actual, this.hora_fecha_server);
+        },
+
+        error: (err: any) => {
+          console.log(err, errorMessage);
+        },
+        complete: () => {
+          //this.getMonedaTipoCambio(this.moneda_get_catalogo);
+        }
+      })
+  }
+
+  insertarSaltosDeLinea(texto: string, limite: number = 21): string {
+    let resultado = '';
+    for (let i = 0; i < texto.length; i += limite) {
+      resultado += texto.substring(i, i + limite);
+    }
+    // console.log(resultado);
+    return resultado.trim(); // Quita el salto de línea final si no lo deseas
+  }
+
+  cortarStringSiEsLargo(texto: string): string {
+    if (texto.length >= 27) {
+      return texto.slice(0, 27);  // Corta a los primeros 28 caracteres
+    }
+    return texto;  // Retorna el texto original si tiene menos de 28 caracteres
+  }
+
+  formatNumberTotalSubTOTALES(numberString: number): string {
+    if (numberString === null || numberString === undefined) {
+      return '0.00'; // O cualquier valor predeterminado que desees devolver
+    }
+
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
+  }
+
+  formatNumberTotalSub(numberString: number): string {
+    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
+    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
+  }
+
+
+
+
+
   openConfirmacionDialog(message: string): Promise<boolean> {
     //btn aceptar
     const dialogRef = this.dialog.open(DialogConfirmacionComponent, {
@@ -333,7 +393,6 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     this.almacen_seleccionado = almacen;
     console.log("🚀 ~ NotamovimientoComponent ~ modalAlmacen ~ this.almacen_seleccionado:", this.almacen_seleccionado)
   }
-
 
   modalCatalogoIdPedido(): void {
     this.dialog.open(CatalogoPedidoComponent, {
@@ -381,7 +440,7 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     });
     this.es_item_desde = false;
   }
-  modalCatalogoLineaDesde(){
+  modalCatalogoLineaDesde() {
     this.dialog.open(LineaProductoCatalogoComponent, {
       width: 'auto',
       height: 'auto',
@@ -389,7 +448,7 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     });
     this.es_linea_desde = true;
   }
-  modalCatalogoLineaHasta(){
+  modalCatalogoLineaHasta() {
     this.dialog.open(LineaProductoCatalogoComponent, {
       width: 'auto',
       height: 'auto',
@@ -397,8 +456,8 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     });
     this.es_linea_desde = false;
   }
-  
-  modalCatalogoGrupomerDesde(){
+
+  modalCatalogoGrupomerDesde() {
     this.dialog.open(GrupoMerCatalogoComponent, {
       width: 'auto',
       height: 'auto',
@@ -406,7 +465,7 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     });
     this.es_grupo_desde = true;
   }
-  modalCatalogoGrupomerHasta(){
+  modalCatalogoGrupomerHasta() {
     this.dialog.open(GrupoMerCatalogoComponent, {
       width: 'auto',
       height: 'auto',
@@ -414,62 +473,4 @@ export class GenerarPedidoAutomaticoComponent implements OnInit {
     });
     this.es_grupo_desde = false;
   }
-
-  mandarNombre() {
-    this.nombre_ventana_service.disparadorDeNombreVentana.emit({
-      nombre_vent: this.ventana,
-    });
-  }
-
-  getHoraFechaServidorBckEnd() {
-    let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET -/venta/transac/veproforma/fechaHoraServidor/";
-    return this.api.getAll('/venta/transac/veproforma/fechaHoraServidor/' + this.userConn)
-      .pipe(takeUntil(this.unsubscribe$)).subscribe({
-        next: (datav) => {
-          // console.log(datav);
-          this.fecha_actual = this.datePipe.transform(datav.fechaServidor, "yyyy-MM-dd");;
-          this.hora_fecha_server = datav.horaServidor;
-          // console.log(this.fecha_actual, this.hora_fecha_server);
-        },
-
-        error: (err: any) => {
-          console.log(err, errorMessage);
-        },
-        complete: () => {
-          //this.getMonedaTipoCambio(this.moneda_get_catalogo);
-        }
-      })
-  }
-  insertarSaltosDeLinea(texto: string, limite: number = 21): string {
-    let resultado = '';
-    for (let i = 0; i < texto.length; i += limite) {
-      resultado += texto.substring(i, i + limite);
-    }
-    // console.log(resultado);
-    return resultado.trim(); // Quita el salto de línea final si no lo deseas
-  }
-  
-  cortarStringSiEsLargo(texto: string): string {
-    if (texto.length >= 27) {
-      return texto.slice(0, 27);  // Corta a los primeros 28 caracteres
-    }
-    return texto;  // Retorna el texto original si tiene menos de 28 caracteres
-  }
-
-  formatNumberTotalSubTOTALES(numberString: number): string {
-    if (numberString === null || numberString === undefined) {
-      return '0.00'; // O cualquier valor predeterminado que desees devolver
-    }
-
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(formattedNumber);
-  }
-
-  formatNumberTotalSub(numberString: number): string {
-    // Convertir a cadena de texto y luego reemplazar la coma por el punto y convertir a número
-    const formattedNumber = parseFloat(numberString.toString().replace(',', '.'));
-    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(formattedNumber);
-  }
-  
 }

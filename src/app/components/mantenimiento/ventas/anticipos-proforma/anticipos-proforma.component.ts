@@ -203,7 +203,7 @@ export class AnticiposProformaComponent implements OnInit {
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/venta/transac/prgveproforma_anticipo/buscar_anticipos_asignados/";
     return this.api.update('/venta/transac/prgveproforma_anticipo/btnrefrescar_Anticipos/' + this.userConn + "/" + this.cod_cliente_proforma + "/" + this.fecha_formateada1 + "/" + this.fecha_formateada2 + "/" +
-      this.nit_get + "/" + this.cod_cliente_proforma + "/" + this.BD_storage, [])
+      this.nit_get + "/" + this.cod_cliente_real_get + "/" + this.BD_storage+"/"+this.usuarioLogueado, [])
       .subscribe({
         next: (datav) => {
           this.data_tabla_anticipos = datav;

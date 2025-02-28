@@ -201,10 +201,10 @@
                 style="padding: 10px 0px 0px 0px;border: 0 !important;"><u>Concepto</u></span>
             </div>
 
-            <ng-container>
+            <div style="width: 60px;">
               <input type="text" class="form-control form-control-sm" [(ngModel)]="id_concepto" id="inputCatalogoIdTipo"
                 (blur)="onLeaveConceptoCatalogo($event)">
-            </ng-container>
+            </div>
 
             <div class="input-group-append">
               <button class="btn btn-outline-primary form-control-sm" type="button" style="border-color: #093070;"
@@ -212,7 +212,7 @@
                   class="fa fa-search"></i>
               </button>
               <input type="text" class="form-control form-control-sm" readonly [(ngModel)]="id_concepto_descripcion"
-                style="width: 175px !important;">
+                style="width: 188px !important;">
             </div>
           </div>
         </div>
@@ -375,7 +375,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-2" style="padding-right: 0px;padding-left: 6.5px;">
+        <div class="col-md-4" style="padding-right: 0px;padding-left: 6.5px;">
           <div class="input-group">
             <div class="input-group-">
               <span class="input-group-text form-control-sm"
@@ -386,11 +386,7 @@
               <input type="text" class="form-control form-control-sm" (blur)="onLeaveCatalogoProforma($event)"
                 [(ngModel)]="id_proforma_sol_urgente" [readonly]="id_proforma_solReadOnly">
             </ng-container>
-          </div>
-        </div>
 
-        <div class="col-md-3" style="padding-left: 0px !important;">
-          <div class="input-group-append">
             <button class="btn btn-outline-primary form-control-sm" type="button"
               (click)="catalogoProformas('proforma_almacen')" [disabled]="id_proforma_solReadOnly"
               style="border-color: #093070;" matTooltipClass="custom-tooltip" matTooltip="Buscador Proformas">
@@ -399,15 +395,17 @@
 
             <input type="number" class="form-control form-control-sm" [(ngModel)]="numero_id_proforma_sol_urgente"
               [readonly]="numeroidproforma_solReadOnly" style="width: 19%;">
-
-            <button mat-raised-button class="btn btn-outline-secondary form-control-sm"
+            
+              <button mat-raised-button class="btn btn-outline-secondary form-control-sm"
               [disabled]="cargar_proformaEnabled" matTooltipClass="custom-tooltip" matTooltip="Cargar PF de Sol Urgente"
               (click)="cargarProformaSolicitudUrgente();">
               <mat-icon style="color: #05970c;height: 13px !important;width: 16px !important;">description</mat-icon>PF
               Sol. Urgente
-            </button>
+            </button>  
           </div>
         </div>
+
+        <div class="col-md-1" style="padding-left: 0px !important;"></div>
 
         <div class="col-md-3">
           <div class="input-group">

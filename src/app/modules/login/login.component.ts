@@ -265,7 +265,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             // UNA VEZ QUE SE CARGUE EL TOKEN SIGNIFICA LOGIN EXITOSO PROCEDEMOS A
             // GRABAR NUESTRA INFO NECESARIA EN EL SESSION STORAGE
             this.guardarStorageUsuario(usuario);
-            this.guardarStorageBD(base_dato_seleccionada);
+            this.getFirstEmpresa(userConn);
             this.guardarStorageuserConn(userConn);
             this.guardarToken(datav);
                     
@@ -351,7 +351,37 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
+  getFirstEmpresa(userConn) {
+    this.spinner.show();
+    let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adempresa/getFirstEmpresa//";
+    return this.api.getAll("/seg_adm/mant/adempresa/getFirstEmpresa/" + userConn)
+      .subscribe({
+        next: (datav) => {
+          console.log("🚀 ~ LoginComponent ~ getFirstEmpresa ~ datav:", datav)
+          let empresa = datav.empresa;
+          this.guardarStorageBD(empresa);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
 
+        error: (err) => {
+          console.log(err, errorMessage);
+          this._snackBar.open('¡ EL USUARIO BD NO ESTA DISPONIBLE !', '⚠️', {
+            duration: 3000,
+            panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
+          })
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1000);
+        }
+      });
+  }
 
 
 
