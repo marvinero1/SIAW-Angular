@@ -1484,11 +1484,10 @@ export class SolicitudMercaderiaUrgenteComponent implements OnInit {
         } else { 
           this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: datav?.resp });
           await this.modalDetalleObservacionesAmarrillo('ALERTAS', datav?.alertas + '\n' + datav?.flete + '\n' + datav?.resp);
-          
         }
-      setTimeout(() => {
-        this.spinner.hide();
-      }, 0);
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 0);
       },
       error: (err) => {
         console.log(err, errorMessage);

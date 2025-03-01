@@ -1844,8 +1844,8 @@ export class ModificarNotaMovimientoComponent implements OnInit {
           this.descripcion_usuario_final = datav.codpersonadesdedesc;
           this.es_tienda = datav.esTienda;
 
-          this.id = datav.cabecera?.id;
-          this.numeroid = datav.cabecera?.numeroid;
+          // this.id = datav.cabecera?.id;
+          // this.numeroid = datav.cabecera?.numeroid;
 
           this.id_concepto = datav.cabecera?.codconcepto;
           this.validarPorConcepto(datav.cabecera?.codconcepto);
