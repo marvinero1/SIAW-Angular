@@ -495,7 +495,6 @@ export class ModificarPedidoComponent implements OnInit {
         this.observaciones = datav.cabecera.obs
         this.fecha_ULPedido = this.datePipe.transform(datav.cabecera.fechareg, "yyyy-MM-dd");
 
-
         this.grabarReadOnly = datav.grabarReadOnly;
         this.array_items_carrito_y_f4_catalogo = datav.detalle;
       },

@@ -477,6 +477,7 @@ import { CatalogoPedidoComponent } from '@components/mantenimiento/inventario/nu
 import { CatalogoSolicitudUrgenteComponent } from '@components/mantenimiento/inventario/numsolicitudurgente/catalogo-solicitud-urgente/catalogo-solicitud-urgente.component';
 import { GrupoMerCatalogoComponent } from '@components/mantenimiento/inventario/gruposlineas/gruposlineas-catalogo/grupomer-catalogo.component';
 import { GenerarPedidoAutomaticoComponent } from '@components/inventario/operaciones/GenerarPedidoAut/generar-pedido-automatico/generar-pedido-automatico.component';
+import { ModificarSolicitudMercaderiaUrgenteComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-solicitud-mercaderia-urgente/modificar-solicitud-mercaderia-urgente.component';
 
 // Función para inicializar los Web Components
 export function initializeCustomElements() {
@@ -570,7 +571,8 @@ registerPlugin(UndoRedo);
         FacturacionMostradorTiendasComponent, BuscadorAvanzadoAnticiposComponent, TiposAnulacionFelComponent, NotamovimientoComponent,
         CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
         ExceltoexcelComponent, VistaPreviaNmComponent, PedidoComponent, CatalogoPedidoComponent, ModificarPedidoComponent, CatalogoProvedoresComponent,
-        BuscadorAvanzadoPedidosComponent, SolicitudMercaderiaUrgenteComponent, CatalogoSolicitudUrgenteComponent, GrupoMerCatalogoComponent, GenerarPedidoAutomaticoComponent,
+        BuscadorAvanzadoPedidosComponent, SolicitudMercaderiaUrgenteComponent, CatalogoSolicitudUrgenteComponent, GrupoMerCatalogoComponent, ModificarSolicitudMercaderiaUrgenteComponent,
+        GenerarPedidoAutomaticoComponent,
 
 
 

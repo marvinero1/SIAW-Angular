@@ -129,6 +129,7 @@ import { ModificarPedidoComponent } from '@components/inventario/CRUD/MODIFICAR/
 import { SolicitudMercaderiaUrgenteComponent } from '@components/inventario/CRUD/solicitud-mercaderia-urgente/solicitud-mercaderia-urgente.component';
 import { GenerarPedidoAutomaticoComponent } from '@components/inventario/operaciones/GenerarPedidoAut/generar-pedido-automatico/generar-pedido-automatico.component';
 import { GrupoMerCatalogoComponent } from '@components/mantenimiento/inventario/gruposlineas/gruposlineas-catalogo/grupomer-catalogo.component';
+import { ModificarSolicitudMercaderiaUrgenteComponent } from '@components/inventario/CRUD/MODIFICAR/modificar-solicitud-mercaderia-urgente/modificar-solicitud-mercaderia-urgente.component';
 
 
 //AuthGuard canActive poner en el canActive para cuando ya funcione EL JWT
@@ -376,6 +377,8 @@ const routes: Routes = [
                 canActivate: [AuthGuard]
             },
 
+            
+
 
 
 
@@ -408,8 +411,11 @@ const routes: Routes = [
                 component: ModificarPedidoComponent,
                 canActivate: [AuthGuard]
             },
-
-
+            {
+                path: 'inventario/modificaciones/modificarSolicitudMercaderiaUrgente',
+                component: ModificarSolicitudMercaderiaUrgenteComponent,
+                canActivate: [AuthGuard]
+            },
 
 
             
