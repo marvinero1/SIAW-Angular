@@ -26,6 +26,8 @@ export class TiposCreditoEditComponent implements OnInit {
   userConn: any;
   credito_edit_codigo: any = [];
   credito_edit_duracion: any = []
+  credito_edit_descripcion: any;
+  credito_edit_es_fijo: any;
   userLogueado: any = [];
   array_copy: any = [];
   inputValue: number | null = null;
@@ -40,9 +42,11 @@ export class TiposCreditoEditComponent implements OnInit {
 
     this.FormularioData = this.createForm();
 
-    this.credito_edit = this.dataCreditoEdit.dataCreditoEdit;
-    this.credito_edit_codigo = this.dataCreditoEdit.dataCreditoEdit.codigo;
-    this.credito_edit_duracion = this.dataCreditoEdit.dataCreditoEdit.duracion;
+    this.credito_edit = this.dataCreditoEdit?.dataCreditoEdit;
+    this.credito_edit_codigo = this.dataCreditoEdit?.dataCreditoEdit?.codigo;
+    this.credito_edit_duracion = this.dataCreditoEdit?.dataCreditoEdit?.duracion;
+    this.credito_edit_descripcion = this.dataCreditoEdit?.dataCreditoEdit?.descripcion;
+    this.credito_edit_es_fijo = this.dataCreditoEdit?.dataCreditoEdit?.es_fijo;
     console.log(this.credito_edit);
   }
 
@@ -52,7 +56,7 @@ export class TiposCreditoEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-    this.credito_edit_codigo = this.dataCreditoEdit.dataCreditoEdit.codigo;
+    this.credito_edit_codigo = this.dataCreditoEdit?.dataCreditoEdit?.codigo;
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
@@ -60,7 +64,7 @@ export class TiposCreditoEditComponent implements OnInit {
 
     return this._formBuilder.group({
       codigo: this.credito_edit_codigo,
-      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      descripcion: [this.dataform?.descripcion, Validators.compose([Validators.required])],
       es_fijo: [this.dataform.es_fijo],
       duracion: [this.dataform.duracion, Validators.compose([Validators.required])],
 
@@ -74,7 +78,7 @@ export class TiposCreditoEditComponent implements OnInit {
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /venta/mant/verubro/";
 
-    return this.api.update("/venta/mant/vetipocredito/" + this.userConn + "/" + this.credito_edit.codigo, data)
+    return this.api.update("/venta/mant/vetipocredito/" + this.userConn + "/" + this.credito_edit?.codigo, data)
       .subscribe({
         next: (datav) => {
           this.rubro = datav;

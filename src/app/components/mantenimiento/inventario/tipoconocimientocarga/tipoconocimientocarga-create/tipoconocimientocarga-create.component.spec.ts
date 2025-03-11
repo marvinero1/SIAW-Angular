@@ -1,7 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { TipoconocimientocargaCreateComponent } from './tipoconocimientocarga-create.component';
 
@@ -9,9 +11,13 @@ describe('TipoconocimientocargaCreateComponent', () => {
   let component: TipoconocimientocargaCreateComponent;
   let fixture: ComponentFixture<TipoconocimientocargaCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TipoconocimientocargaCreateComponent ]
+      declarations: [TipoconocimientocargaCreateComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ]
     })
     .compileComponents();
   }));

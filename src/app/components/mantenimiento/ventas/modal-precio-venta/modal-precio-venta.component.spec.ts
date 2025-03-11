@@ -1,7 +1,8 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { ModalPrecioVentaComponent } from './modal-precio-venta.component';
 
@@ -9,9 +10,12 @@ describe('ModalPrecioVentaComponent', () => {
   let component: ModalPrecioVentaComponent;
   let fixture: ComponentFixture<ModalPrecioVentaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalPrecioVentaComponent ]
+      declarations: [ModalPrecioVentaComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: {} } 
+      ]
     })
     .compileComponents();
   }));

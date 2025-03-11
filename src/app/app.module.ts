@@ -634,7 +634,6 @@ registerPlugin(UndoRedo);
         MatGridListModule,
         MatIconModule,
         MatListModule,
-        MatMenuModule,
         MatProgressBarModule,
         ProgressBarModule,
         MatProgressSpinnerModule,
@@ -673,7 +672,6 @@ registerPlugin(UndoRedo);
         ToastModule,
         RippleModule,
         FloatLabelModule,
-        ProgressBarModule
     ],
 
     providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,

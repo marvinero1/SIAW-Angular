@@ -1,17 +1,33 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DeudoresCatalogoComponent } from './deudores-catalogo.component';
 
 describe('DeudoresCatalogoComponent', () => {
   let component: DeudoresCatalogoComponent;
   let fixture: ComponentFixture<DeudoresCatalogoComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeudoresCatalogoComponent ]
+      declarations: [DeudoresCatalogoComponent],
+      providers: [
+        DatePipe,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: MatSnackBar, useValue: { open: () => { } } },
+        { provide: MatDialog, useValue: { open: () => { } } },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: ToastrService, useValue: { success: () => { }, error: () => { } } }
+      ]
+      
     })
     .compileComponents();
   }));

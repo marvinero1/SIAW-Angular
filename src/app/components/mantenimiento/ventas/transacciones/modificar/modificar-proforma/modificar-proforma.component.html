@@ -2489,12 +2489,17 @@
           <div class="col-md">
             <div class="text-right">
               <button mat-button mat-raised-button style="height: 20px !important;background-color: #fbd800;"
-                [matMenuTriggerFor]="menu">Descuentos </button>
+                [matMenuTriggerFor]="menu">
+                Descuentos
+              </button>
+
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="aplicarDesctPorDepositoHTML();"><i class="fa fa-check green"
-                    aria-hidden="true"></i> Apli. Desc. Deposito</button>
-                <button mat-menu-item (click)="quitarDescDeposito23();"><i class="fa fa-times red"
-                    aria-hidden="true"></i> Quitar Desc. Deposito</button>
+                <button mat-menu-item (click)="aplicarDesctPorDepositoHTML();">
+                  <i class="fa fa-check green" aria-hidden="true"></i> Apli. Desc. Deposito
+                </button>
+                <button mat-menu-item (click)="quitarDescDeposito23();">
+                  <i class="fa fa-times red" aria-hidden="true"></i> Quitar Desc. Deposito
+                </button>
               </mat-menu>
             </div>
           </div>

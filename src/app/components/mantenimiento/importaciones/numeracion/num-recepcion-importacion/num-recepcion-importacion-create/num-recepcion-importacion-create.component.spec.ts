@@ -1,17 +1,18 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
+import { DatePipe } from '@angular/common';
 import { NumRecepcionImportacionCreateComponent } from './num-recepcion-importacion-create.component';
 
 describe('NumRecepcionImportacionCreateComponent', () => {
   let component: NumRecepcionImportacionCreateComponent;
   let fixture: ComponentFixture<NumRecepcionImportacionCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumRecepcionImportacionCreateComponent ]
+      declarations: [NumRecepcionImportacionCreateComponent],
+      providers: [DatePipe] 
     })
     .compileComponents();
   }));

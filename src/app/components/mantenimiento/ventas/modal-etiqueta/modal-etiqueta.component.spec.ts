@@ -1,17 +1,32 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ModalEtiquetaComponent } from './modal-etiqueta.component';
 
 describe('ModalEtiquetaComponent', () => {
   let component: ModalEtiquetaComponent;
   let fixture: ComponentFixture<ModalEtiquetaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalEtiquetaComponent ]
+      declarations: [ModalEtiquetaComponent],
+      providers: [
+        DatePipe,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: MatSnackBar, useValue: { open: () => { } } },
+        { provide: MatDialog, useValue: { open: () => { } } },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: ToastrService, useValue: { success: () => { }, error: () => { } } }
+      ]
     })
     .compileComponents();
   }));

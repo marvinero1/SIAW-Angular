@@ -24,8 +24,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(private primengConfig: PrimeNGConfig) {
     this.agencia_storage = sessionStorage.getItem("agencia_logueado") === null ? "SIAW" : JSON.parse(sessionStorage.getItem("agencia_logueado"));
     this.agencia_storage = this.agencia_storage + "-";
-
-    console.log("🚀 ~ AppComponent ~ constructor ~ this.agencia_storage:", this.agencia_storage)
     // this.abrirModalSesionExpirada();
     // console.log(publicIpv4());
   }

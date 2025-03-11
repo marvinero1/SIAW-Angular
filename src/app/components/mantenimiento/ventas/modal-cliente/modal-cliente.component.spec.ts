@@ -1,17 +1,20 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
+import { MatDialogRef } from '@angular/material/dialog';
 import { ModalClienteComponent } from './modal-cliente.component';
 
 describe('ModalClienteComponent', () => {
   let component: ModalClienteComponent;
   let fixture: ComponentFixture<ModalClienteComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalClienteComponent ]
+      declarations: [ModalClienteComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: {} } // ✅ Proveer un mock de MatDialogRef
+      ]
     })
     .compileComponents();
   }));

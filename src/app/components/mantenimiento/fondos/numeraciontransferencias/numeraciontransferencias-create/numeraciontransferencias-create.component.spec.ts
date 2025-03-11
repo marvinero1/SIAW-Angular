@@ -1,17 +1,19 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { DatePipe } from '@angular/common';
 import { NumeraciontransferenciasCreateComponent } from './numeraciontransferencias-create.component';
 
 describe('NumeraciontransferenciasCreateComponent', () => {
   let component: NumeraciontransferenciasCreateComponent;
   let fixture: ComponentFixture<NumeraciontransferenciasCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumeraciontransferenciasCreateComponent ]
+      declarations: [NumeraciontransferenciasCreateComponent],
+      providers: [DatePipe] 
     })
     .compileComponents();
   }));

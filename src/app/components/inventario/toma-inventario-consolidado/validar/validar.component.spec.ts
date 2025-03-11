@@ -1,17 +1,20 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
+import { MatDialogRef } from '@angular/material/dialog';
 import { ValidarComponent } from './validar.component';
 
 describe('ValidarComponent', () => {
   let component: ValidarComponent;
   let fixture: ComponentFixture<ValidarComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValidarComponent ]
+      declarations: [ValidarComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+      ]
     })
     .compileComponents();
   }));

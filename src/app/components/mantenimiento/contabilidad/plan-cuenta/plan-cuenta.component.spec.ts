@@ -1,7 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { PlanCuentaComponent } from './plan-cuenta.component';
 
@@ -9,9 +11,13 @@ describe('PlanCuentaComponent', () => {
   let component: PlanCuentaComponent;
   let fixture: ComponentFixture<PlanCuentaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlanCuentaComponent ]
+      declarations: [PlanCuentaComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ]
     })
     .compileComponents();
   }));

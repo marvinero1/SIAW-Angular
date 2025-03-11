@@ -1,17 +1,18 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
+import { DatePipe } from '@angular/common';
 import { NumentregascargoEditComponent } from './numentregascargo-edit.component';
 
 describe('NumentregascargoEditComponent', () => {
   let component: NumentregascargoEditComponent;
   let fixture: ComponentFixture<NumentregascargoEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumentregascargoEditComponent ]
+      declarations: [NumentregascargoEditComponent],
+      providers: [DatePipe] 
     })
     .compileComponents();
   }));

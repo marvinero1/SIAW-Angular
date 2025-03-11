@@ -1,7 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { NumeracionDescuentoPorMoraComponent } from './numeracion-descuento-por-mora.component';
 
@@ -9,9 +11,13 @@ describe('NumeracionDescuentoPorMoraComponent', () => {
   let component: NumeracionDescuentoPorMoraComponent;
   let fixture: ComponentFixture<NumeracionDescuentoPorMoraComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NumeracionDescuentoPorMoraComponent ]
+      declarations: [NumeracionDescuentoPorMoraComponent],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ]
     })
     .compileComponents();
   }));

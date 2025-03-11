@@ -1,17 +1,19 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
+import { DatePipe } from '@angular/common';
 import { TipocambiovalidacionCreateComponent } from './tipocambiovalidacion-create.component';
 
 describe('TipocambiovalidacionCreateComponent', () => {
   let component: TipocambiovalidacionCreateComponent;
   let fixture: ComponentFixture<TipocambiovalidacionCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TipocambiovalidacionCreateComponent ]
+      declarations: [TipocambiovalidacionCreateComponent],
+      providers: [DatePipe] 
     })
     .compileComponents();
   }));

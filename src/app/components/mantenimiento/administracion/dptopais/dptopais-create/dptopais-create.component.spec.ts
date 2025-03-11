@@ -1,17 +1,18 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-
+import { DatePipe } from '@angular/common';
 import { DptopaisCreateComponent } from './dptopais-create.component';
 
 describe('DptopaisCreateComponent', () => {
   let component: DptopaisCreateComponent;
   let fixture: ComponentFixture<DptopaisCreateComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DptopaisCreateComponent ]
+      declarations: [DptopaisCreateComponent],
+      providers: [DatePipe] 
     })
     .compileComponents();
   }));
