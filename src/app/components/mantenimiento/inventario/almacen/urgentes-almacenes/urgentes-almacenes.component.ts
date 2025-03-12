@@ -67,7 +67,7 @@ export class UrgentesAlmacenesComponent implements OnInit {
 
     this.FormularioData = this.createForm();
     this.almacen = cod_almacen_solurgente.cod_almacen_solurgente;
-    this.almacen_codigo = cod_almacen_solurgente.cod_almacen_solurgente.codigo;
+    this.almacen_codigo = cod_almacen_solurgente.cod_almacen_solurgente?.codigo;
 
     this.cargarTablaPedidosUrgentes();
   }

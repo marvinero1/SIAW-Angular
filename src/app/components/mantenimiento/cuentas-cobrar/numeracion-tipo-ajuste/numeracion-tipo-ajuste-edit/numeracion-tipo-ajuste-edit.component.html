@@ -1,5 +1,5 @@
 <div class="p-2">
-  <h1 mat-dialog-title>Editar Tipos de Pago {{ tiposAjuste_edit.id }}</h1>
+  <h1 mat-dialog-title>Editar Tipos de Pago {{ tiposAjuste_edit?.id }}</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
 </div>
 
@@ -10,8 +10,7 @@
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
-            <input type="text" matInput formControlName="descripcion" maxlength="30"
-              [(ngModel)]="tiposAjuste_edit.descripcion" required>
+            <input type="text" matInput formControlName="descripcion" maxlength="30" required>
           </mat-form-field>
         </div>
       </div>
@@ -21,7 +20,7 @@
           <mat-form-field appearance="outline" class="example-full-small">
             <mat-label>Número Actual </mat-label>
             <input matInput type="number" (input)="onInputChange($event.target.value)" min="0" step="1"
-            [(ngModel)]="tiposAjuste_edit.nroactual" formControlName="nroactual" required>
+             formControlName="nroactual" required>
           </mat-form-field>
         </div>
       </div>

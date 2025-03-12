@@ -12,7 +12,7 @@
         <div class="col">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Codigo</mat-label>
-            <input matInput type="text" [(ngModel)]="item_edit.codigo" formControlName="codigo" maxlength="12" required>
+            <input matInput type="text" [(value)]="item_edit.codigo" formControlName="codigo" maxlength="12" required>
           </mat-form-field>
         </div>
       </div>
@@ -21,25 +21,25 @@
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Caracteristica Primaria </mat-label>
-            <input matInput type="text" [(ngModel)]="item_edit.descripcion" formControlName="descripcion" maxlength="50" required>
+            <input matInput type="text" [(value)]="item_edit.descripcion" formControlName="descripcion" maxlength="50" required>
           </mat-form-field>
         </div>
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción Corta</mat-label>
-            <input type="text" matInput [(ngModel)]="item_edit.descripcorta" formControlName="descripcorta" maxlength="50" required>
+            <input type="text" matInput [(value)]="item_edit.descripcorta" formControlName="descripcorta" maxlength="50" required>
           </mat-form-field>
         </div>
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción Abreviada</mat-label>
-            <input type="text" matInput [(ngModel)]="item_edit.descripabr" formControlName="descripabr" maxlength="50" required>
+            <input type="text" matInput [(value)]="item_edit.descripabr" formControlName="descripabr" maxlength="50" required>
           </mat-form-field>
         </div>
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Caracteristica Secundaria</mat-label>
-            <input type="text" matInput [(ngModel)]="item_edit.medida" formControlName="medida" maxlength="50">
+            <input type="text" matInput [(value)]="item_edit.medida" formControlName="medida" maxlength="50">
           </mat-form-field>
         </div>
       </div>
@@ -91,13 +91,13 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Peso Kg.</mat-label>
-              <input type="number" matInput [(ngModel)]="item_edit.peso" formControlName="peso">
+              <input type="number" matInput [(value)]="item_edit.peso" formControlName="peso">
           </mat-form-field>
         </div>
 
         <div class="col">
           <section class="example-section">
-            <mat-checkbox class="example-margin" formControlName="kit" value="true" [ngModel]="conjunto">
+            <mat-checkbox class="example-margin" formControlName="kit" value="true" [value]="conjunto">
               Conjuntodd</mat-checkbox>
           </section>
         </div>
@@ -146,7 +146,8 @@
           <section class="example-section" style="text-align: center !important;">
             <ng-container>
               <section class="example-section">
-                <mat-checkbox class="example-margin" formControlName="enlinea" value="false" [ngModel]="item_edit.enlinea">
+                <mat-checkbox class="example-margin" formControlName="enlinea" value="false"
+                  [value]="item_edit.enlinea">
                   El Item Se Encuentra en Linea</mat-checkbox>
               </section>
             </ng-container>
@@ -158,12 +159,11 @@
             <ng-container>
               <section class="example-section">
                 <mat-checkbox class="example-margin" formControlName="reservastock" value="true" 
-                  [ngModel]="item_edit.reservastock" checked>
+                  [value]="item_edit.reservastock" checked>
                   El Item Reserva Stocks Para Tiendas
                 </mat-checkbox>
               </section>
             </ng-container>
-            
           </section>
         </div>
 
@@ -172,7 +172,7 @@
             <ng-container>
               <section class="example-section">
                 <mat-checkbox class="example-margin" formControlName="usar_en_movimiento" 
-                  [ngModel]="item_edit.usar_en_movimiento"  value="true" checked>
+                  [value]="item_edit.usar_en_movimiento" value="true" checked>
                   Usar en Notas de Movimiento
                 </mat-checkbox>
               </section>
@@ -186,7 +186,8 @@
           <section class="example-section" style="text-align: center !important;">
             <ng-container>
               <section class="example-section">
-                <mat-checkbox class="example-margin" formControlName="controla_negativo" [ngModel]="item_edit.controla_negativo" 
+                <mat-checkbox class="example-margin" formControlName="controla_negativo"
+                  [value]="item_edit.controla_negativo"
                 value="true" checked>
                   Controlar Saldos Negativos</mat-checkbox>
               </section>
@@ -196,7 +197,7 @@
         <div class="col">
           <ng-container>
             <section class="example-section">
-              <mat-checkbox class="example-margin" formControlName="paga_comision" [ngModel]="item_edit.paga_comision" 
+              <mat-checkbox class="example-margin" formControlName="paga_comision" [value]="item_edit.paga_comision"
               value="true" checked>
                 Paga Comisión</mat-checkbox>
             </section>
@@ -208,7 +209,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Código de Barras</mat-label>
-              <input matInput type="text" [(ngModel)]="item_edit.codigobarra" formControlName="codigobarra">
+              <input matInput type="text" [(value)]="item_edit.codigobarra" formControlName="codigobarra">
           </mat-form-field>
         </div>
       </div>

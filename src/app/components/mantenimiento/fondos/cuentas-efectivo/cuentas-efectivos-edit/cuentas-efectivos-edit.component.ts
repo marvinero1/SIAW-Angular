@@ -55,7 +55,7 @@ export class CuentasEfectivosEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.cuentas_efectivas_edit.id, Validators.compose([Validators.required])],
+      id: [this.cuentas_efectivas_edit?.id, Validators.compose([Validators.required])],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       balance: [this.dataform.balance, Validators.compose([Validators.required])],
       codmoneda: [this.dataform.codmoneda],

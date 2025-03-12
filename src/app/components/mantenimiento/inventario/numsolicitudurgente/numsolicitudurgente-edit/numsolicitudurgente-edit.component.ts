@@ -34,7 +34,7 @@ export class NumsolicitudurgenteEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dataSolUrgenteEdit: any) {
 
     this.dataSolUrgenteEdit1 = dataSolUrgenteEdit.dataSolUrgenteEdit;
-    this.dataSolUrgenteEditcodigo = dataSolUrgenteEdit.dataSolUrgenteEdit.id;
+    this.dataSolUrgenteEditcodigo = dataSolUrgenteEdit.dataSolUrgenteEdit?.id;
 
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;

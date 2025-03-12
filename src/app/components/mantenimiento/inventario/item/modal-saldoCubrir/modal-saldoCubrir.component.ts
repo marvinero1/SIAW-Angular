@@ -46,7 +46,7 @@ export class ModalSaldoCubrirComponent implements OnInit {
 
   createForm(): FormGroup {
     return this._formBuilder.group({
-      coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
+      coditem: [this.dataItem.dataItem?.codigo, Validators.compose([Validators.required])],
       porcentaje: [this.dataform.porcentaje, Validators.compose([Validators.required])],
       coditemcontrol: [this.dataform.coditemcontrol]
     });

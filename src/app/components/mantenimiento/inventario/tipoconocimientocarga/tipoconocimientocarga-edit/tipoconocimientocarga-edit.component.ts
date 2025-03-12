@@ -33,8 +33,8 @@ export class TipoconocimientocargaEditComponent implements OnInit {
     private _formBuilder: FormBuilder, private datePipe: DatePipe, public log_module: LogService, private toastr: ToastrService,
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public dataConocimientoEdit: any) {
 
-    this.dataEdit = dataConocimientoEdit.dataConocimientoEdit;
-    this.dataEdit_codigo = dataConocimientoEdit.dataConocimientoEdit.id;
+    this.dataEdit = dataConocimientoEdit?.dataConocimientoEdit;
+    this.dataEdit_codigo = dataConocimientoEdit?.dataConocimientoEdit?.id;
 
     console.log(this.dataEdit_codigo);
 

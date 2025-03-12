@@ -46,7 +46,7 @@ export class PreciosPermitidoDesctComponent implements OnInit {
     private toastr: ToastrService, public servicioPrecioVenta: ServicioprecioventaService) {
 
     this.descuento_edit = this.descuento.descuento;
-    this.desct_codigo = this.descuento.descuento.codigo;
+    this.desct_codigo = this.descuento.descuento?.codigo;
     console.log(this.descuento_edit);
   }
 
@@ -65,8 +65,8 @@ export class PreciosPermitidoDesctComponent implements OnInit {
 
   savePrecioVenta() {
     let data = {
-      coddescuento: this.descuento_edit.codigo,
-      codtarifa: this.cod_precio_venta_modal.codigo,
+      coddescuento: this.descuento_edit?.codigo,
+      codtarifa: this.cod_precio_venta_modal?.codigo,
     };
 
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /venta/mant/vedescuento/vedescuento_tarifa/";

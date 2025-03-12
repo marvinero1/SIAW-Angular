@@ -55,9 +55,7 @@ export class DeudoresIntegrantesComponent implements OnInit {
     this.FormularioData = this.createForm();
 
     this.deudor_edit = dataIntegrantes.dataIntegrantes;
-    this.deudor_edit_codigo = dataIntegrantes.dataIntegrantes.id;
-    console.log(this.deudor_edit);
-
+    this.deudor_edit_codigo = dataIntegrantes.dataIntegrantes?.id;
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuario = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;

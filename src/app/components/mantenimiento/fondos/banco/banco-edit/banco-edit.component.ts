@@ -35,7 +35,7 @@ export class BancoEditComponent implements OnInit {
     public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public datanumRetBancEdit: any) {
 
     this.banco_modat_data = datanumRetBancEdit.datanumRetBancEdit;
-    this.codigo_banco = this.banco_modat_data.codigo
+    this.codigo_banco = this.banco_modat_data?.codigo
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;

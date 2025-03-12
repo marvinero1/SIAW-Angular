@@ -51,8 +51,8 @@ export class LineasPorcentajeDesctComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
-    this.descuento_edit = this.descuento.descuento;
-    this.desct_codigo = this.descuento.descuento.codigo;
+    this.descuento_edit = this.descuento?.descuento;
+    this.desct_codigo = this.descuento?.descuento?.codigo;
     console.log(this.descuento_edit);
 
     this.getLineas()

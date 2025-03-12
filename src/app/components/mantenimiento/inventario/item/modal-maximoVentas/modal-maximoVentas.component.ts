@@ -49,7 +49,7 @@ export class ModalMaximoVentasComponent implements OnInit {
 
   createForm(): FormGroup {
     return this._formBuilder.group({
-      coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
+      coditem: [this.dataItem.dataItem?.codigo, Validators.compose([Validators.required])],
       codtarifa: [this.dataform.codtarifa, Validators.compose([Validators.required])],
       codalmacen: [this.dataform.codalmacen, Validators.compose([Validators.required])],
       dias: [this.dataform.dias, Validators.compose([Validators.required])],

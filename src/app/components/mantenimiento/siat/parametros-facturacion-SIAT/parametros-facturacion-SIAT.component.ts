@@ -171,7 +171,7 @@ export class ParametrosFacturacionSIATComponent implements OnInit {
 
   getAlmacenLocal(bd) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/' + this.userConn + "/" + bd.bd)
+    return this.api.getAll('/seg_adm/mant/adempresa/' + this.userConn + "/" + bd?.bd)
       .subscribe({
         next: (datav) => {
           this.almacen_local = datav;

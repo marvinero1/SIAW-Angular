@@ -53,7 +53,6 @@ export class ConsolidarInventarioComponent implements OnInit {
 
     console.log(this.data_cabezera, this.data_items);
 
-
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
 
@@ -64,7 +63,7 @@ export class ConsolidarInventarioComponent implements OnInit {
 
   getData() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET /inventario/oper/prgconsolinv/";
-    return this.api.getAll('/inventario/oper/prgconsolinv/' + this.userConn + "/" + this.data_cabezera.codigo)
+    return this.api.getAll('/inventario/oper/prgconsolinv/' + this.userConn + "/" + this.data_cabezera?.codigo)
       .subscribe({
         next: (datav) => {
           this.data = datav;

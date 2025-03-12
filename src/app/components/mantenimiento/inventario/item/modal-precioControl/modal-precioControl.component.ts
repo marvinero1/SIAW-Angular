@@ -9,6 +9,7 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modal-precioControl',
   templateUrl: './modal-precioControl.component.html',
   styleUrls: ['./modal-precioControl.component.scss']
@@ -48,7 +49,7 @@ export class ModalPrecioControlComponent implements OnInit {
 
   createForm(): FormGroup {
     return this._formBuilder.group({
-      coditem: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
+      coditem: [this.dataItem.dataItem?.codigo, Validators.compose([Validators.required])],
       codtarifa_a: [this.dataform.codtarifa_a, Validators.compose([Validators.required])],
       codtarifa_b: [this.dataform.codtarifa_b, Validators.compose([Validators.required])],
     });
@@ -86,7 +87,7 @@ export class ModalPrecioControlComponent implements OnInit {
   getAllControlTarifa() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --inventario/mant/initem_controltarifa";
-    return this.api.getAll('/inventario/mant/initem_controltarifa/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
+    return this.api.getAll('/inventario/mant/initem_controltarifa/' + this.userConn + "/" + this.dataItem.dataItem?.codigo)
       .subscribe({
         next: (datav) => {
           this.control_tarifa = datav;

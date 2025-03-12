@@ -67,7 +67,7 @@ export class NumretirobancarioEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumRetBancEdit.datanumRetBancEdit.id],
+      id: [this.datanumRetBancEdit.datanumRetBancEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

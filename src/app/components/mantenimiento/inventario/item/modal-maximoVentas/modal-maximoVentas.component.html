@@ -9,8 +9,8 @@
         </div><hr>
 
         <div class="row">
-          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem.codigo }} <strong>&nbsp; 
-            Descripción:</strong>&nbsp; {{ dataItem.dataItem.descripcion }} </p>
+          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem?.codigo }} <strong>&nbsp; 
+            Descripción:</strong>&nbsp; {{ dataItem.dataItem?.descripcion }} </p>
         </div>
 
         <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
@@ -20,7 +20,7 @@
                 <mat-label>Almacen</mat-label>
                 <mat-select formControlName="codalmacen">
                   <mat-option *ngFor="let almacens of almacen" [value]="almacens.codigo">
-                  {{ almacens.codigo }} - {{ almacens.descripcion }}
+                  {{ almacens?.codigo }} - {{ almacens?.descripcion }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -31,7 +31,7 @@
                 <mat-label>Lista de Precios</mat-label>
                 <mat-select formControlName="codtarifa">
                   <mat-option *ngFor="let precio_listas of precio_lista" [value]="precio_listas.codigo">
-                  {{ precio_listas.codigo }} - {{ precio_listas.descripcion }}
+                  {{ precio_listas?.codigo }} - {{ precio_listas?.descripcion }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

@@ -36,7 +36,6 @@ export class ItemComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorPageSize') paginatorPageSize: MatPaginator;
 
-
   myControl = new FormControl<string | Item>('');
   options: Item[] = [];
   filteredOptions: Observable<Item[]>;
@@ -48,6 +47,7 @@ export class ItemComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, private spinner: NgxSpinnerService, private toastr: ToastrService,
     public log_module: LogService, public nombre_ventana_service: NombreVentanaService) {
+   
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.mandarNombre();
@@ -84,22 +84,18 @@ export class ItemComponent implements OnInit {
   }
 
   getAllitem() {
-    let user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/mant/initem/' + user_conn)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/inventario/mant/initem";
+    return this.api.getAll('/inventario/mant/initem/' + this.userConn)
       .subscribe({
         next: (datav) => {
           this.item = datav;
-
           this.dataSource = new MatTableDataSource(this.item);
           this.dataSource.paginator = this.paginator;
           this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
-
           this.spinner.show();
           setTimeout(() => {
             this.spinner.hide();
-          }, 1500);
+          }, 0);
         },
 
         error: (err: any) => {
@@ -111,7 +107,6 @@ export class ItemComponent implements OnInit {
 
   eliminar(element): void {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  seg_adm/mant/adarea/ Delete";
-
     const dialogRef = this.dialog.open(DialogDeleteComponent, {
       width: '350px',
       height: 'auto',
@@ -154,7 +149,7 @@ export class ItemComponent implements OnInit {
 
   editar(item): void {
     this.data = item;
-    const dialogRef = this.dialog.open(ItemEditComponent, {
+    this.dialog.open(ItemEditComponent, {
       data: { dataItem: item },
       width: '750px',
     });
@@ -162,7 +157,7 @@ export class ItemComponent implements OnInit {
 
   saldosAcubrir(item) {
     this.data = item;
-    const dialogRef = this.dialog.open(ModalSaldoCubrirComponent, {
+    this.dialog.open(ModalSaldoCubrirComponent, {
       data: { dataItem: item },
       width: '750px',
     });
@@ -170,7 +165,7 @@ export class ItemComponent implements OnInit {
 
   componentesArmarKit(item) {
     this.data = item;
-    const dialogRef = this.dialog.open(ModalComponenteskitComponent, {
+    this.dialog.open(ModalComponenteskitComponent, {
       data: { dataItem: item },
       width: '750px',
     });
@@ -178,7 +173,7 @@ export class ItemComponent implements OnInit {
 
   maximoVentas(item) {
     this.data = item;
-    const dialogRef = this.dialog.open(ModalMaximoVentasComponent, {
+    this.dialog.open(ModalMaximoVentasComponent, {
       data: { dataItem: item },
       width: '1050px',
     });
@@ -186,7 +181,7 @@ export class ItemComponent implements OnInit {
 
   controPrecio(item) {
     this.data = item;
-    const dialogRef = this.dialog.open(ModalPrecioControlComponent, {
+    this.dialog.open(ModalPrecioControlComponent, {
       data: { dataItem: item },
       width: '750px',
     });

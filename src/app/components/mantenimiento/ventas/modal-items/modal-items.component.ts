@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, ViewChild, QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -14,7 +14,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './modal-items.component.html',
   styleUrls: ['./modal-items.component.scss']
 })
-export class ModalItemsComponent implements OnInit, AfterViewInit {
+export class ModalItemsComponent implements OnInit {
 
   @HostListener("document:keydown.enter", []) unloadHandler(event: KeyboardEvent) {
     this.mandarItem(this.item_view);
@@ -131,9 +131,6 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getCatalogoItems();
-  }
-
-  ngAfterViewInit(): void {
     //Add 'implements AfterViewInit' to the class.
     this.selectedIndex$.subscribe(index => {
       const rowElement = this.rowElements.toArray()[index];
@@ -246,7 +243,7 @@ export class ModalItemsComponent implements OnInit, AfterViewInit {
           this.item_valido = datav;
           console.log('item valido para venta: ', this.item_valido);
 
-          if (this.item_valido == true) {
+          if (this.item_valido) {
             this.btn_confirmar = true;
           } else {
             // this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: '! ITEM NO VALIDO PARA LA VENTA !' });

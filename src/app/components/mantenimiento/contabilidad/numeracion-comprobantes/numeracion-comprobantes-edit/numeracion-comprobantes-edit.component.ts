@@ -49,7 +49,7 @@ export class NumeracionComprobantesEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumcomprobEdit.datanumcomprobEdit.id],
+      id: [this.datanumcomprobEdit.datanumcomprobEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       ajuste: [false],

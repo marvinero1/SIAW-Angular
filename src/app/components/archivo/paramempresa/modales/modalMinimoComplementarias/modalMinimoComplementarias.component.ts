@@ -9,6 +9,7 @@ import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modalMinimoComplementarias',
   templateUrl: './modalMinimoComplementarias.component.html',
   styleUrls: ['./modalMinimoComplementarias.component.scss']
@@ -102,7 +103,7 @@ export class ModalMinimoComplementariasComponent implements OnInit {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
     // return this.api.getAll('/seg_adm/mant/getParametroMinimoComplementarias/'+this.dataEmpresaParametros.dataEmpresaParametros)
-    return this.api.getAll('/seg_adm/mant/adparametros_complementarias/' + userConn + "/" + bd.bd)
+    return this.api.getAll('/seg_adm/mant/adparametros_complementarias/' + userConn + "/" + bd?.bd)
       .subscribe({
         next: (datav) => {
           this.dataparametros_complementario = datav;

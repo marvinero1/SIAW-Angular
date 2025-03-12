@@ -41,21 +41,16 @@
       <div class="row">
         <div class="col-md-8" style="padding: 15px 20px 2px;">
           <p><strong>Item:</strong> &nbsp; {{ item_view }} </p>
-          <ng-container *ngIf="btn_confirmar === false">
+          <ng-container *ngIf="!btn_confirmar">
             <span style="color: rgb(227, 0, 0);">NO VENTA</span>
           </ng-container>
 
-          <ng-container *ngIf="btn_confirmar === true">
+          <ng-container *ngIf="btn_confirmar">
             <span style="color: rgb(rgb(22, 234, 22));">SI VENTA</span>
           </ng-container>
         </div>
 
         <div class="col-md-4 text-center p-2">
-          <!-- <button mat-stroked-button color="primary" [disabled]="btn_confirmar === false"
-            (click)="mandarItem(item_view);">
-            <i class="fa fa-check"></i>
-          </button> -->
-
           <button mat-stroked-button color="primary" (click)="mandarItem(item_view);">
           <i class="fa fa-check"></i>
         </button>

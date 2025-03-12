@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modificar-parametro-A',
   templateUrl: './modificar-parametro-A.component.html',
   styleUrls: ['./modificar-parametro-A.component.scss']
@@ -59,7 +60,7 @@ export class ModificarParametroAComponent implements OnInit {
 
   getCodEmpresa() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/seg_adm/mant/adparametros/";
-    return this.api.getAll('/seg_adm/mant/adparametros/' + this.userConn + "/" + this.bd.bd)
+    return this.api.getAll('/seg_adm/mant/adparametros/' + this.userConn + "/" + this.bd?.bd)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;

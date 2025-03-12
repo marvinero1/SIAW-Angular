@@ -50,8 +50,8 @@ export class ItemEditComponent implements OnInit {
     this.getAllinReistencia();
     this.getAllinLinea();
 
-    this.item_edit = this.dataItem.dataItem;
-    this.conjunto = this.item_edit.kit;
+    this.item_edit = this.dataItem?.dataItem;
+    this.conjunto = this.item_edit?.kit;
   }
 
   createForm(): FormGroup {

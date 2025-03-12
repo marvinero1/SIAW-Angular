@@ -43,7 +43,7 @@ export class SucursalEditComponent implements OnInit {
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
     this.sucursal_edit = datasucurEdit.datasucurEdit;
-    this.sucursal_edit_codigo = datasucurEdit.datasucurEdit.codigo;
+    this.sucursal_edit_codigo = datasucurEdit.datasucurEdit?.codigo;
     this.FormularioData = this.createForm();
   }
 

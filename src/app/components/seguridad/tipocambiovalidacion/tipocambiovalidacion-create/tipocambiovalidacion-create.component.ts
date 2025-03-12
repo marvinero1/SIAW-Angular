@@ -28,7 +28,7 @@ export class TipocambiovalidacionCreateComponent implements OnInit {
   public tipo = "transaccion-tipocambio-POST";
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, public dialogRef: MatDialogRef<TipocambiovalidacionCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public dataMoneda: any, private api: ApiService, public _snackBar: MatSnackBar, public log_module: LogService,
-    public dialog: MatDialog, private Tipocambio: TipocambiovalidacionComponent) {
+    public dialog: MatDialog, ) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
   }
@@ -58,8 +58,6 @@ export class TipocambiovalidacionCreateComponent implements OnInit {
         next: (datav) => {
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.moneda_save = datav;
-          this.Tipocambio.getAllTipoCambio();
-
           location.reload();
 
           this._snackBar.open('Se ha guardado correctamente el tipo de cambio!', 'Ok', {

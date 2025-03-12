@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LineasPorcentajeDesctComponent } from './lineas-porcentaje-desct.component';
@@ -28,6 +28,7 @@ describe('LineasPorcentajeDesctComponent', () => {
         { provide: MatDialog, useValue: { open: () => { } } },
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
         { provide: MatDialogRef, useValue: {} }, 
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

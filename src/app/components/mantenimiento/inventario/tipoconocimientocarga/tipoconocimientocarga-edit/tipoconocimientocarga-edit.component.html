@@ -1,5 +1,5 @@
 <div class="p-2">
-  <h1 mat-dialog-title>Editar Numeración Conocimiento Carga: {{ dataEdit.id }}</h1>
+  <h1 mat-dialog-title>Editar Numeración Conocimiento Carga: {{ dataEdit?.id }}</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
 </div>
 
@@ -10,7 +10,7 @@
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
-            <input type="text" matInput formControlName="descripcion" [(ngModel)]="dataEdit.descripcion" maxlength="150"
+            <input type="text" matInput formControlName="descripcion" maxlength="150"
               required>
           </mat-form-field>
         </div>
@@ -19,7 +19,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Número Actual</mat-label>
-            <input type="number" matInput formControlName="nroactual" [(ngModel)]="dataEdit.nroactual" min="0"
+            <input type="number" matInput formControlName="nroactual" min="0"
               [step]="0">
           </mat-form-field>
         </div>

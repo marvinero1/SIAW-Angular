@@ -2,6 +2,12 @@
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { TipoinventarioComponent } from './tipoinventario.component';
 
@@ -11,7 +17,17 @@ describe('TipoinventarioComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TipoinventarioComponent ]
+      declarations: [TipoinventarioComponent],
+      providers: [
+        DatePipe,
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: MatSnackBar, useValue: { open: () => { } } },
+        { provide: MatDialog, useValue: { open: () => { } } },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: ToastrService, useValue: { success: () => { }, error: () => { } } }
+      ]
+      
     })
     .compileComponents();
   }));

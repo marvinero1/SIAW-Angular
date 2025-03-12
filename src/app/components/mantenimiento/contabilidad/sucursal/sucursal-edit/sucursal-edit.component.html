@@ -11,8 +11,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Descripción </mat-label>
-              <input matInput type="text" formControlName="descripcion" [(ngModel)]="sucursal_edit.descripcion"
-                maxlength="30" required>
+              <input matInput type="text" formControlName="descripcion" maxlength="30" required>
             </mat-form-field>
           </div>
         </div>
@@ -22,15 +21,14 @@
             <mat-label style="padding-right: 4px;padding-top: 7px;"><u>Almacen</u>
             </mat-label>
             <input type="number" style="width: 36% !important;" formControlName="codalmacen"
-              [(ngModel)]="cod_almacen.codigo" (blur)="onLeaveAlmacen($event)" id="almacen" min="0" step="1"
-              [(ngModel)]="sucursal_edit.codalmacen" required>
+               (blur)="onLeaveAlmacen($event)" id="almacen" min="0" step="1"  required>
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
                 style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;">
                 <i class="fa fa-search"></i>
               </button>
             </div>&nbsp;
-            <span>{{ cod_almacen.descripcion }}</span>
+            <span>{{ cod_almacen?.descripcion }}</span>
           </div>
         </div>
         <div class="mat-dialog-actions" mat-dialog-actions>

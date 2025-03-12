@@ -1,6 +1,6 @@
 <div style="background-color: #f0f0f0;">
   <div class="p-2">
-    <h1 mat-dialog-title>Editar Numeración de Libro con Codigo: <strong>{{ numChecCli_edit.id }}</strong></h1>
+    <h1 mat-dialog-title>Editar Numeración de Libro con Codigo: <strong>{{ numChecCli_edit?.id }}</strong></h1>
     <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
   </div>
 
@@ -12,8 +12,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Descripción </mat-label>
-              <input matInput type="text" formControlName="descripcion" [(ngModel)]="numChecCli_edit.descripcion"
-                maxlength="30" required>
+              <input matInput type="text" formControlName="descripcion" maxlength="30" required>
             </mat-form-field>
           </div>
         </div>
@@ -22,8 +21,7 @@
           <div class="col">
             <mat-form-field appearance="outline">
               <mat-label>Nro. Actual</mat-label>
-              <input type="text" (input)="onInputChange($event.target.value)" min="0" step="1" matInput
-                [(ngModel)]="numChecCli_edit.nroactual" formControlName="nroactual" (ngModel)="inputValue" required>
+              <input type="text" (input)="onInputChange($event.target.value)" min="0" step="1" matInput formControlName="nroactual" (ngModel)="inputValue" required>
             </mat-form-field>
           </div>
         </div>
@@ -32,7 +30,7 @@
           <div class="col-md">
             <mat-form-field color="accent">
               <mat-label>Valido Desde</mat-label>
-              <input matInput formControlName="desde" [(ngModel)]="numChecCli_edit.desde" [matDatepicker]="picker21">
+              <input matInput formControlName="desde" [matDatepicker]="picker21">
               <mat-datepicker-toggle matIconSuffix [for]="picker21"></mat-datepicker-toggle>
               <mat-datepicker #picker21 color="primary"></mat-datepicker>
             </mat-form-field>
@@ -41,7 +39,7 @@
           <div class="col-md">
             <mat-form-field color="accent">
               <mat-label>Valido Hasta</mat-label>
-              <input matInput formControlName="hasta" [(ngModel)]="numChecCli_edit.hasta" [matDatepicker]="picker2">
+              <input matInput formControlName="hasta" [matDatepicker]="picker2">
               <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2 color="primary"></mat-datepicker>
             </mat-form-field>
@@ -52,10 +50,10 @@
           <div class="col">
             <mat-form-field appearance="outline">
               <mat-label>Nro. de Cuenta</mat-label>
-              <mat-select formControlName="codcuentab" [(ngModel)]="numChecCli_edit.codcuentab">
+              <mat-select formControlName="codcuentab">
                 <mat-option *ngFor="let cuentas_bancariass of cuentas_bancarias" [value]="cuentas_bancariass.codigo">
-                  {{ cuentas_bancariass.codbanco }} - {{ cuentas_bancariass.descripcion }} -
-                  {{ cuentas_bancariass.codigo }}
+                  {{ cuentas_bancariass?.codbanco }} - {{ cuentas_bancariass?.descripcion }} -
+                  {{ cuentas_bancariass?.codigo }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -66,7 +64,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline">
               <mat-label>Origen por Defecto</mat-label>
-              <mat-select formControlName="origen" [(ngModel)]="numChecCli_edit.origen">
+              <mat-select formControlName="origen">
                 <mat-option value="OTRO">OTRO</mat-option>
                 <mat-option value="PROVINCIA">PROVINCIA</mat-option>
                 <mat-option value="CIUDAD">CIUDAD</mat-option>

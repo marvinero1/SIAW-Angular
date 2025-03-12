@@ -33,7 +33,7 @@ export class RolesEditComponent implements OnInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
-    this.role_edit_codigo = this.dataRolEdit.dataRolEdit.codigo;
+    this.role_edit_codigo = this.dataRolEdit.dataRolEdit?.codigo;
 
   }
 

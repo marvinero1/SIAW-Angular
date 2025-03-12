@@ -67,7 +67,7 @@ export class NumeracionPagosMoraEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datatipPagMorEdit.datatipPagMorEdit.id],
+      id: [this.datatipPagMorEdit.datatipPagMorEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

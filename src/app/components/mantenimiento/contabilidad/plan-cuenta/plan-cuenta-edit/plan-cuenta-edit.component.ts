@@ -50,7 +50,7 @@ export class PlanCuentaEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataplancuentEdit.dataplancuentEdit.codigo],
+      codigo: [this.dataplancuentEdit.dataplancuentEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],

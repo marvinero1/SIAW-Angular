@@ -57,7 +57,7 @@ export class ClasificacionClientesComponent implements OnInit {
   getNivelesClientes() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/venta/mant/vedesnivel/vedesnivel_clasificacion/' + this.userConn + "/" + this.nivel.codigo)
+    return this.api.getAll('/venta/mant/vedesnivel/vedesnivel_clasificacion/' + this.userConn + "/" + this.nivel?.codigo)
       .subscribe({
         next: (datav) => {
           this.nivel_clientes = datav;

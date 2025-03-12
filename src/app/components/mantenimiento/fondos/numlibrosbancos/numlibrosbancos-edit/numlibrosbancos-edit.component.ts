@@ -37,7 +37,7 @@ export class NumlibrosbancosEditComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
-    this.numChecCli_edit = this.datanumChecCliEdit.datanumChecCliEdit;
+    this.numChecCli_edit = this.datanumChecCliEdit?.datanumChecCliEdit;
     this.FormularioData = this.createForm();
   }
 
@@ -53,7 +53,7 @@ export class NumlibrosbancosEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.numChecCli_edit.id],
+      id: [this.numChecCli_edit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       codcuentab: [this.dataform.codcuentab],
@@ -71,7 +71,7 @@ export class NumlibrosbancosEditComponent implements OnInit {
     let data = this.FormularioData.value;
     let errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:-- /fondos/mant/fntipo_librobanco/";
 
-    return this.api.update("/fondos/mant/fntipo_librobanco/" + this.userConn + "/" + this.numChecCli_edit.id, data)
+    return this.api.update("/fondos/mant/fntipo_librobanco/" + this.userConn + "/" + this.numChecCli_edit?.id, data)
       .subscribe({
         next: (datav) => {
           this.numLibrBanco = datav;

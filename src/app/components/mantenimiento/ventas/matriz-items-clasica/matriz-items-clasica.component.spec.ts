@@ -3,11 +3,12 @@ import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog'; 
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog'; 
 import { of } from 'rxjs'; 
 
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -20,6 +21,7 @@ describe('MatrizItemsClasicaComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [MatMenuModule],
       declarations: [MatrizItemsClasicaComponent],
       providers: [
         DatePipe,
@@ -30,6 +32,7 @@ describe('MatrizItemsClasicaComponent', () => {
         { provide: MatDialog, useValue: { open: () => { } } },
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
         { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

@@ -9,7 +9,7 @@
 
         <div class="col">
           <strong>Precios Permitidos de Descuentos</strong><br>
-          <span><strong>Desct.</strong></span><span>{{ descuento_edit.codigo }} - {{ descuento_edit.descripcion}}</span>
+          <span><strong>Desct.</strong></span><span>{{ descuento_edit?.codigo }} - {{ descuento_edit?.descripcion}}</span>
         </div>
       </mat-card-title>
 
@@ -52,7 +52,7 @@
           <div class="mat-dialog-actions" mat-dialog-actions align="start">
             <button mat-stroked-button color="primary" (click)="catalogoVentas();"><i class="fa fa-plus"></i></button>
             &nbsp;&nbsp;&nbsp;
-            <span>Desea Agregar: {{ cod_precio_venta_modal.codigo }} -
+            <span>Desea Agregar: {{ cod_precio_venta_modal?.codigo }} -
               {{ cod_precio_venta_modal.descripcion }}</span>&nbsp;
 
             <button mat-stroked-button color="primary" (click)="savePrecioVenta();"

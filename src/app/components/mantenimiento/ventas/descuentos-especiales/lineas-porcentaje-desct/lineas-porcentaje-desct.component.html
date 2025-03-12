@@ -9,7 +9,7 @@
 
         <div class="col">
           <strong>Lineas con Porcentaje de Descuento Especial</strong><br>
-          <span><strong>Desct.</strong></span><span>{{ descuento_edit.codigo }} - {{ descuento_edit.descripcion}}</span>
+          <span><strong>Desct.</strong></span><span>{{ descuento_edit?.codigo }} - {{ descuento_edit?.descripcion}}</span>
         </div>
       </mat-card-title>
 
@@ -19,12 +19,12 @@
             <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
               <ng-container matColumnDef="coddescuento">
                 <th mat-header-cell *matHeaderCellDef> Código</th>
-                <td mat-cell *matCellDef="let element"> {{ element.codlinea }} </td>
+                <td mat-cell *matCellDef="let element"> {{ element?.codlinea }} </td>
               </ng-container>
 
               <ng-container matColumnDef="descripcion">
                 <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element.descripcion }} </td>
+                <td mat-cell *matCellDef="let element" style="text-align: center;">{{ element?.descripcion }} </td>
               </ng-container>
 
               <ng-container matColumnDef="accion">
@@ -52,12 +52,12 @@
           <div class="mat-dialog-actions" mat-dialog-actions align="start">
             <button mat-stroked-button color="primary" (click)="catalogoLineas();"><i class="fa fa-plus"></i></button>
             &nbsp;&nbsp;&nbsp;
-            <span>Desea Agregar: {{ linea_catalogo.codigo }} -
-              {{ linea_catalogo.descripcion }}</span>&nbsp;
+            <span>Desea Agregar: {{ linea_catalogo?.codigo }} -
+              {{ linea_catalogo?.descripcion }}</span>&nbsp;
             <hr>
 
             <div class="row">
-              <button mat-stroked-button color="primary" [disabled]="!linea_catalogo.codigo" (click)="submitData();"><i
+              <button mat-stroked-button color="primary" [disabled]="!linea_catalogo?.codigo" (click)="submitData();"><i
                   class="fa fa-save"></i>&nbsp; SI</button>
 
               <button mat-stroked-button color="primary" (click)="eliminarTodo();"><i class="fa fa-trash"></i>&nbsp;
