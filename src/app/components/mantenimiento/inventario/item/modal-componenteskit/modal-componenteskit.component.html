@@ -9,8 +9,8 @@
         </div><hr>
 
         <div class="row">
-          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem.codigo }} <strong>&nbsp; 
-            Descripción:</strong>&nbsp; {{ dataItem.dataItem.descripcion }} </p>
+          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem?.codigo }} <strong>&nbsp; 
+            Descripción:</strong>&nbsp; {{ dataItem.dataItem?.descripcion }} </p>
         </div>
 
         <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">

@@ -33,19 +33,19 @@ export class NumpagodeudorEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumpagodeudorEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datanumPagoDeuEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
+    this.numPagoDeu_edit = this.datanumPagoDeuEdit.datanumPagoDeuEdit;
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.numPagoDeu_edit = this.datanumPagoDeuEdit.datanumPagoDeuEdit;
     this.getAllUnidadesNegocio();
   }
 
   getAllUnidadesNegocio() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adunidad/catalogo/";
     return this.api.getAll('/seg_adm/mant/adunidad/catalogo/' + this.user_conn)
       .subscribe({
         next: (datav) => {
@@ -67,7 +67,7 @@ export class NumpagodeudorEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumPagoDeuEdit.datanumPagoDeuEdit.id],
+      id: [this.datanumPagoDeuEdit.datanumPagoDeuEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

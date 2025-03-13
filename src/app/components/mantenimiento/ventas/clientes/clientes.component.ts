@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteComponent } from '@modules/dialog-delete/dialog-delete.component';
@@ -23,7 +23,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss']
 })
-export class ClientesComponent implements OnInit, AfterViewInit {
+export class ClientesComponent implements OnInit {
 
   FormularioData: FormGroup;
   public codigo_cliente_catalogo: string;
@@ -119,10 +119,6 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       // this.getClienteByIDCasaMatriz(this.codigo_cliente_catalogo)
       // this.getRutaCliente(data.cliente);
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.vendedor();
   }
 
   getVendedor() {

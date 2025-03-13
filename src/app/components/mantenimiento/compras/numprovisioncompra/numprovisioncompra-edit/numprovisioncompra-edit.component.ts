@@ -34,14 +34,13 @@ export class NumprovisioncompraEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumprovisioncompraEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datanumProvCompEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.numProvComp_edit = this.datanumProvCompEdit.datanumProvCompEdit;
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.numProvComp_edit = this.datanumProvCompEdit.datanumProvCompEdit;
     this.getAllUnidadesNegocio();
   }
 
@@ -66,7 +65,7 @@ export class NumprovisioncompraEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumProvCompEdit.datanumProvCompEdit.id],
+      id: [this.datanumProvCompEdit.datanumProvCompEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
@@ -80,7 +79,7 @@ export class NumprovisioncompraEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /compras/mant/cmtipoprovision/ Update";
-    return this.api.update('/compras/mant/cmtipoprovision/' + this.user_conn + "/" + this.numProvComp_edit.id, data)
+    return this.api.update('/compras/mant/cmtipoprovision/' + this.user_conn + "/" + this.numProvComp_edit?.id, data)
       .subscribe({
         next: (datav) => {
           this.numProvComp = datav;
@@ -111,5 +110,4 @@ export class NumprovisioncompraEditComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }

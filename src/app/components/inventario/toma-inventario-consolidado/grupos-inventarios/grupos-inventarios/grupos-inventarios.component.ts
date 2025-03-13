@@ -73,7 +73,6 @@ export class GruposInventariosComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSourceWithPageSize.paginator = this.paginatorPageSize;
     });
-
   }
 
   createForm(): FormGroup {
@@ -86,7 +85,7 @@ export class GruposInventariosComponent implements OnInit {
 
     return this._formBuilder.group({
       // codigo: [this.dataform.codigo],
-      codinvconsol: [this.data_inventario.codigo],
+      codinvconsol: [this.data_inventario?.codigo],
       nro: [this.dataform.nro, Validators.compose([Validators.required])],
       obs: [this.dataform.obs],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
@@ -124,24 +123,21 @@ export class GruposInventariosComponent implements OnInit {
 
   agregarPersonas() {
     // console.log(this.array);
-
     // {
     //   "codgrupoper": 0,
     //   "codpersona": 0
     // }
-
     // mapeo que cambia un valor de un array
     this.array_new.map(function (dato) {
       console.log(dato);
 
       dato.codgrupoper = "store";
       dato.codpersona = "store";
-
     })
   }
 
   cargarGrupos() {
-    let code = this.data_inventario.codigo;
+    let code = this.data_inventario?.codigo;
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET -/inventario/mant/ingrupoper/"
 
     return this.api.getAll('/inventario/mant/ingrupoper/' + this.userConn + "/" + code)
@@ -240,7 +236,7 @@ export class GruposInventariosComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete('/inventario/mant/ingrupoper1/' + this.userConn + "/" + integrante_codigo.codgrupoper + "/" + integrante_codigo.codpersona)
+        return this.api.delete('/inventario/mant/ingrupoper1/' + this.userConn + "/" + integrante_codigo?.codgrupoper + "/" + integrante_codigo.codpersona)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(ventana, detalle, tipo, "", "");

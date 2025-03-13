@@ -106,7 +106,7 @@ export class ParametrosFacturacionSIATComponent implements OnInit {
 
   getNombreEmpresa(bd) {
     let errorMessage: string = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + bd.bd)
+    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + bd?.bd)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;

@@ -66,8 +66,6 @@ export class CatalogoInventarioComponent implements OnInit {
         return name ? this._filter(name as string) : this.options.slice();
       }),
     );
-
-    this.myInputField.nativeElement.focus();
   }
 
 

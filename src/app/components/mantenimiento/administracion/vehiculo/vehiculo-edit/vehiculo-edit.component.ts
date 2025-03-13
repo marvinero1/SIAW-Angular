@@ -31,14 +31,13 @@ export class VehiculoEditComponent implements OnInit {
     public log_module: LogService, private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public dataVehiculoEdit: any, private api: ApiService, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.vehiculo_edit = this.dataVehiculoEdit.dataVehiculoEdit;
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.vehiculo_edit = this.dataVehiculoEdit.dataVehiculoEdit;
   }
 
   createForm(): FormGroup {
@@ -60,8 +59,8 @@ export class VehiculoEditComponent implements OnInit {
   submitData() {
     let data = this.FormularioDataEdit.value;
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
-    return this.api.update('/seg_adm/mant/advehiculo/' + this.user_conn + "/" + this.vehiculo_edit.placa, data)
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion Ruta:-/seg_adm/mant/advehiculo/ Update";
+    return this.api.update('/seg_adm/mant/advehiculo/' + this.user_conn + "/" + this.vehiculo_edit?.placa, data)
       .subscribe({
         next: (datav) => {
           this.area = datav;

@@ -10,6 +10,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RefreshPasswordComponent } from './refresh-password.component';
+import { LoginComponent } from '@modules/login/login.component';
+import { MessageService } from 'primeng/api';
 
 describe('RefreshPasswordComponent', () => {
   let component: RefreshPasswordComponent;
@@ -17,9 +19,11 @@ describe('RefreshPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [LoginComponent],
       declarations: [RefreshPasswordComponent],
       providers: [
         DatePipe,
+        MessageService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatSnackBar, useValue: { open: () => { } } },

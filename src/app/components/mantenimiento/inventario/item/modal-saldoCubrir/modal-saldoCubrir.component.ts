@@ -9,6 +9,7 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modal-saldoCubrir',
   templateUrl: './modal-saldoCubrir.component.html',
   styleUrls: ['./modal-saldoCubrir.component.scss']
@@ -85,7 +86,7 @@ export class ModalSaldoCubrirComponent implements OnInit {
   getAllItemControlTarifa() {
     let errorMessage: string;
     errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getById('/inventario/mant/inctrlstock/initem_inctrlstock/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
+    return this.api.getById('/inventario/mant/inctrlstock/initem_inctrlstock/' + this.userConn + "/" + this.dataItem.dataItem?.codigo)
       .subscribe({
         next: (datav) => {
           this.item_contro_tarifa = datav;

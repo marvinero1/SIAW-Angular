@@ -38,8 +38,6 @@ export class ModalClienteInfoComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.bd_logueado = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-
-    console.log(this.cod_cliente);
   }
 
   ngOnInit() {
@@ -48,7 +46,7 @@ export class ModalClienteInfoComponent implements OnInit {
 
   infoClientesCompleto() {
     let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/oper/prgcrearinv/catalogointipoinv/"
-    return this.api.getAll('/venta/transac/prgveclienteinfo/' + this.userConn + "/" + this.cod_cliente + "/" + this.bd_logueado.bd + "/" + this.usuario_logueado)
+    return this.api.getAll('/venta/transac/prgveclienteinfo/' + this.userConn + "/" + this.cod_cliente + "/" + this.bd_logueado?.bd + "/" + this.usuario_logueado)
       .subscribe({
         next: (datav) => {
 

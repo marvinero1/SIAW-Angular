@@ -36,8 +36,6 @@ export class PercepcionesretencionesEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
     this.percpRet_edit = this.datapercpRetEdit.datapercpRetEdit;
   }
 
@@ -47,7 +45,7 @@ export class PercepcionesretencionesEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.datapercpRetEdit.datapercpRetEdit.codigo],
+      codigo: [this.datapercpRetEdit.datapercpRetEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       porcentaje: [this.dataform.porcentaje, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],

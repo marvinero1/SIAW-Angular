@@ -32,14 +32,15 @@ export class AreaEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<AreaEditComponent>,
     @Inject(MAT_DIALOG_DATA) public dataAreaEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+      
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.area_edit = this.dataAreaEdit.dataAreaEdit;
+    
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
-    this.area_edit = this.dataAreaEdit.dataAreaEdit;
     this.getAllEmpresa();
   }
 
@@ -59,13 +60,12 @@ export class AreaEditComponent implements OnInit {
   }
 
   createForm(): FormGroup {
-
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataAreaEdit.dataAreaEdit.codigo],
+      codigo: [this.dataAreaEdit.dataAreaEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       ciudad: [this.dataform.ciudad, Validators.compose([Validators.required])],
       empresa: [this.dataform.empresa],

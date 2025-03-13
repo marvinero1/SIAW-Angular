@@ -39,15 +39,14 @@ export class TalonarioRecibosEditComponent implements OnInit, AfterViewInit {
   constructor(private _formBuilder: FormBuilder, public dialog: MatDialog, public log_module: LogService, public dialogRef: MatDialogRef<TalonarioRecibosEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datatalonEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar, public serviciovendedor: VendedorService) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.talon_edit = this.datatalonEdit.datatalonEdit;
+
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.talon_edit = this.datatalonEdit.datatalonEdit;
-
     this.serviciovendedor.disparadorDeVendedores.subscribe(data => {
       console.log("Recibiendo Vendedor: ", data);
       this.talon_edit.codvendedor = data.vendedor;
@@ -108,7 +107,7 @@ export class TalonarioRecibosEditComponent implements OnInit, AfterViewInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.datatalonEdit.datatalonEdit.codigo],
+      codigo: [this.datatalonEdit.datatalonEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
 
       TalDel: [this.dataform.TalDel, Validators.pattern(/^-?\d+$/)],
@@ -127,8 +126,8 @@ export class TalonarioRecibosEditComponent implements OnInit, AfterViewInit {
   submitData() {
     let data = this.FormularioDataEdit.value;
 
-    this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /ctsxcob/mant/cotalonario/ Update";
-    return this.api.update('/ctsxcob/mant/cotalonario/' + this.user_conn + "/" + this.talon_edit.codigo, data)
+    this.errorMessage = "La Ruta presenta fallos al hacer la creacion Ruta:-/ctsxcob/mant/cotalonario/ Update";
+    return this.api.update('/ctsxcob/mant/cotalonario/' + this.user_conn + "/" + this.talon_edit?.codigo, data)
       .subscribe({
         next: (datav) => {
           this.talon = datav;

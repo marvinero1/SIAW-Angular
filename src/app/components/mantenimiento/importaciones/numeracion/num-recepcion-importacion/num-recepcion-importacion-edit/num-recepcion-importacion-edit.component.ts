@@ -37,8 +37,6 @@ export class NumRecepcionImportacionEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
     this.numRecepc_edit = this.datanumRecepcEdit.datanumRecepcEdit;
   }
 
@@ -51,7 +49,7 @@ export class NumRecepcionImportacionEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumRecepcEdit.datanumRecepcEdit.id],
+      id: [this.datanumRecepcEdit.datanumRecepcEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

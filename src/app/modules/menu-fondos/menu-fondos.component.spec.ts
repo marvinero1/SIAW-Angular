@@ -18,7 +18,6 @@ describe('MenuFondosComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule],
       providers: [
         DatePipe,
         provideHttpClient(),

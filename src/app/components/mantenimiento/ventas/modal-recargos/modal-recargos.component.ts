@@ -55,14 +55,14 @@ export class ModalRecargosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public tamanio_recargos: any,
     @Inject(MAT_DIALOG_DATA) public cliente_real: any) {
 
-    this.recargos_ya_en_array = recargos.recargos;
+    this.recargos_ya_en_array = recargos?.recargos;
 
     this.map_table = [this.recargos_ya_en_array].map(element => ({
-      codigo: element.codrecargo,
-      descripcion: element.descrip,
-      porcentaje: element.porcen,
-      monto: element.monto,
-      moneda: element.moneda
+      codigo: element?.codrecargo,
+      descripcion: element?.descrip,
+      porcentaje: element?.porcen,
+      monto: element?.monto,
+      moneda: element?.moneda
     }))
 
     this.cabecera_proforma = cabecera.cabecera;
@@ -80,7 +80,7 @@ export class ModalRecargosComponent implements OnInit {
     this.recargos_ya_en_array_tamanio = tamanio_recargos.tamanio_recargos;
     console.log("Array de Recargos q vienen de proforma: ", this.recargos_ya_en_array, "Tamanio Array: " + this.recargos_ya_en_array_tamanio);
 
-    this.recargos_ya_en_array = this.recargos_ya_en_array.map(element => ({
+    this.recargos_ya_en_array = this.recargos_ya_en_array?.map(element => ({
       codigo: element.codrecargo,
       descripcion: element.descripcion,
       porcentaje: element.porcen,

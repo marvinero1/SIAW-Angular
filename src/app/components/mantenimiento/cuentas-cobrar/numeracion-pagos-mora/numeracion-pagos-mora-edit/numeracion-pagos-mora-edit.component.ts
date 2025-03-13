@@ -33,12 +33,12 @@ export class NumeracionPagosMoraEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumeracionPagosMoraEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datatipPagMorEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.tipPagMor_edit = this.datatipPagMorEdit.datatipPagMorEdit;
     this.getAllUnidadesNegocio();

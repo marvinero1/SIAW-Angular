@@ -10,7 +10,7 @@
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripcion </mat-label>
-            <input type="text" matInput formControlName="descripcion" [(ngModel)]="data_inventario.descripcion"
+            <input type="text" matInput formControlName="descripcion" [value]="data_inventario?.descripcion"
               maxlength="50" required>
           </mat-form-field>
         </div>
@@ -19,7 +19,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Numero Actual</mat-label>
-            <input type="number" matInput formControlName="nroactual" [(ngModel)]="data_inventario.nroactual" min="0">
+            <input type="number" matInput formControlName="nroactual" [value]="data_inventario?.nroactual" min="0">
           </mat-form-field>
         </div>
       </div>

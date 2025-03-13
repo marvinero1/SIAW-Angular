@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DatePipe } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -14,8 +14,8 @@ describe('GenerarPedidoAutomaticoComponent', () => {
   let component: GenerarPedidoAutomaticoComponent;
   let fixture: ComponentFixture<GenerarPedidoAutomaticoComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(async () => {
+     TestBed.configureTestingModule({
       imports: [GenerarPedidoAutomaticoComponent],
       providers: [
         provideHttpClient(),
@@ -29,11 +29,11 @@ describe('GenerarPedidoAutomaticoComponent', () => {
       ]
     })
     .compileComponents();
-
+    
     fixture = TestBed.createComponent(GenerarPedidoAutomaticoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();

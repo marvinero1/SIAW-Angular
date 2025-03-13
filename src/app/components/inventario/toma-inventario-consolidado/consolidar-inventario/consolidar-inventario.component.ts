@@ -84,7 +84,7 @@ export class ConsolidarInventarioComponent implements OnInit {
 
   cargarCabecera() {
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET";
-    return this.api.getAll('/inventario/oper/docininvconsol/cargarCabecera/' + this.userConn + "/" + this.data_cabezera.id + "/" + this.data_cabezera.numeroid)
+    return this.api.getAll('/inventario/oper/docininvconsol/cargarCabecera/' + this.userConn + "/" + this.data_cabezera?.id + "/" + this.data_cabezera?.numeroid)
       .subscribe({
         next: (datav) => {
           this.cabecera = datav;

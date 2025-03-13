@@ -37,7 +37,7 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+ 
 
     this.numDevAnti_edit = this.datanumDevAntiEdit.datanumDevAntiEdit;
     this.getAllUnidadesNegocio();
@@ -66,7 +66,7 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumDevAntiEdit.datanumDevAntiEdit.id],
+      id: [this.datanumDevAntiEdit.datanumDevAntiEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
@@ -80,7 +80,7 @@ export class NumeracionDevoclucionAnticipoEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /ctsxcob/mant/cotipodevanticipo/ Update";
-    return this.api.update('/ctsxcob/mant/cotipodevanticipo/' + this.user_conn + "/" + this.numDevAnti_edit.id, data)
+    return this.api.update('/ctsxcob/mant/cotipodevanticipo/' + this.user_conn + "/" + this.numDevAnti_edit?.id, data)
       .subscribe({
         next: (datav) => {
           this.numDevAnti = datav;

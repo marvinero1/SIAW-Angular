@@ -33,14 +33,14 @@ export class NumentregascargoEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumentregascargoEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datanumEntCEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.numEntC_edit = this.datanumEntCEdit.datanumEntCEdit;
+
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.numEntC_edit = this.datanumEntCEdit.datanumEntCEdit;
     this.getAllUnidadesNegocio();
   }
 
@@ -67,7 +67,7 @@ export class NumentregascargoEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumEntCEdit.datanumEntCEdit.id],
+      id: [this.datanumEntCEdit.datanumEntCEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

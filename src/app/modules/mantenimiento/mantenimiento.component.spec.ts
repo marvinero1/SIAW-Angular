@@ -10,6 +10,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MantenimientoComponent } from './mantenimiento.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('MantenimientoComponent', () => {
   let component: MantenimientoComponent;
@@ -17,6 +18,7 @@ describe('MantenimientoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [MatMenuModule],
       declarations: [MantenimientoComponent],
       providers: [
         DatePipe,

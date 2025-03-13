@@ -9,8 +9,8 @@
         </div><hr>
 
         <div class="row">
-          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem.codigo }} <strong>&nbsp; 
-            Descripción:</strong>&nbsp; {{ dataItem.dataItem.descripcion }} </p>
+          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem?.codigo }} <strong>&nbsp; 
+            Descripción:</strong>&nbsp; {{ dataItem.dataItem?.descripcion }} </p>
         </div>
 
         <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
@@ -20,7 +20,7 @@
                 <mat-label>Si compra a este precio: </mat-label>
                 <mat-select formControlName="codtarifa_a">
                   <mat-option *ngFor="let precio_listas of precio_lista" [value]="precio_listas.codigo">
-                  {{ precio_listas.codigo }} - {{ precio_listas.descripcion }}
+                  {{ precio_listas?.codigo }} - {{ precio_listas?.descripcion }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -30,8 +30,8 @@
               <mat-form-field appearance="outline">
                 <mat-label>Prohibir compra a este precio</mat-label>
                 <mat-select formControlName="codtarifa_b">
-                  <mat-option *ngFor="let precio_listas of precio_lista" [value]="precio_listas.codigo">
-                  {{ precio_listas.codigo }} - {{ precio_listas.descripcion }}
+                  <mat-option *ngFor="let precio_listas of precio_lista" [value]="precio_listas?.codigo">
+                  {{ precio_listas?.codigo }} - {{ precio_listas?.descripcion }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -54,12 +54,12 @@
     
                 <ng-container matColumnDef="codtarifa_a">
                   <th mat-header-cell *matHeaderCellDef> Si compra con precio </th>
-                  <td mat-cell *matCellDef="let element"> {{ element.codtarifa_a }} </td>
+                  <td mat-cell *matCellDef="let element"> {{ element?.codtarifa_a }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="codtarifa_b">
                   <th mat-header-cell *matHeaderCellDef> Prohibir compra con precio </th>
-                  <td mat-cell *matCellDef="let element"> {{ element.codtarifa_b }} </td>
+                  <td mat-cell *matCellDef="let element"> {{ element?.codtarifa_b }} </td>
                 </ng-container>
     
                 <ng-container matColumnDef="accion">

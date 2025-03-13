@@ -38,7 +38,6 @@ export class NumretirobancarioEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
 
     this.numRetBanc_edit = this.datanumRetBancEdit.datanumRetBancEdit;
     this.getAllEmpresa();

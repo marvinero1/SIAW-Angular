@@ -34,7 +34,7 @@ export class DeudoresCompEditComponent implements OnInit {
     public log_module: LogService, private toastr: ToastrService, @Inject(MAT_DIALOG_DATA) public dataDeudorCompEdit: any) {
 
     this.deudor_edit = dataDeudorCompEdit.dataDeudorCompEdit;
-    this.deudor_edit_codigo = dataDeudorCompEdit.dataDeudorCompEdit.id;
+    this.deudor_edit_codigo = dataDeudorCompEdit.dataDeudorCompEdit?.id;
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;

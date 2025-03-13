@@ -10,7 +10,7 @@
     </div>
 
     <div class="pl-2">
-      <span><strong><u>Almacen: </u></strong>&nbsp; {{ almacen.codigo }}</span> &nbsp;
+      <span><strong><u>Almacen: </u></strong>&nbsp; {{ almacen?.codigo }}</span> &nbsp;
     </div>
 
     <div class="row">
@@ -116,7 +116,7 @@
 
             <select formControlName="codmoneda" style="width: 30% !important;">
               <option *ngFor="let monedas of moneda" [value]="monedas.codigo">
-                {{ monedas.codigo }}
+                {{ monedas?.codigo }}
               </option>
             </select>
           </div>

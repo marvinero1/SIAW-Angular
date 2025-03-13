@@ -61,7 +61,7 @@ export class ReservaAlmacenesComponent implements OnInit {
 
     this.FormularioData = this.createForm();
     this.almacen = cod_almacen_reserva.cod_almacen_reserva;
-    this.almacen_codigo = cod_almacen_reserva.cod_almacen_reserva.codigo;
+    this.almacen_codigo = cod_almacen_reserva.cod_almacen_reserva?.codigo;
 
     this.getAllReservas();
     this.getAlmacen();
@@ -71,8 +71,8 @@ export class ReservaAlmacenesComponent implements OnInit {
     //Almacen
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);
-      this.almacen_codigo_catalogo = data.almacen.codigo;
-      this.almacen_descripcion_catalogo = data.almacen.descripcion;
+      this.almacen_codigo_catalogo = data.almacen?.codigo;
+      this.almacen_descripcion_catalogo = data.almacen?.descripcion;
       this.getAlmacenID(this.almacen_codigo_catalogo);
       console.log(this.almacen_descripcion_catalogo);
     });
@@ -213,7 +213,7 @@ export class ReservaAlmacenesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete('/inventario/mant/inalmacen_reserva/' + this.userConn + "/" + this.almacen_codigo + "/" + element.codigo)
+        return this.api.delete('/inventario/mant/inalmacen_reserva/' + this.userConn + "/" + this.almacen_codigo + "/" + element?.codigo)
           .subscribe({
             next: () => {
               this.toastr.success('!ELIMINADO EXITOSAMENTE!');

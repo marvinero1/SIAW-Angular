@@ -54,7 +54,7 @@ export class ObserHojaRutaEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: this.hoja_data_edit.codigo,
+      codigo: this.hoja_data_edit?.codigo,
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       tipo: [this.dataform.tipo, Validators.compose([Validators.required])],
 

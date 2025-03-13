@@ -53,7 +53,7 @@ export class NumnotasdemovimientoEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.numnotasmovimientoedit.id],
+      id: [this.numnotasmovimientoedit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual],
       codunidad: [this.dataform.codunidad],
@@ -65,7 +65,7 @@ export class NumnotasdemovimientoEditComponent implements OnInit {
   }
 
   getAllUnidadNegocio() {
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /seg_adm/mant/adempresa/";
     return this.api.getAll('/seg_adm/mant/adempresa/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -83,7 +83,7 @@ export class NumnotasdemovimientoEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
     this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
 
-    return this.api.update('/inventario/mant/intipomovimiento/' + this.userConn + "/" + this.numnotasmovimientoedit.id, data)
+    return this.api.update('/inventario/mant/intipomovimiento/' + this.userConn + "/" + this.numnotasmovimientoedit?.id, data)
       .subscribe({
         next: (datav) => {
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");

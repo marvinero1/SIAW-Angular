@@ -19,7 +19,7 @@
         <mat-label style="padding-right: 4px;">Con Diferencias:</mat-label> &nbsp;&nbsp;
         <section class="example-section">
           <mat-slide-toggle class="example-margin" [checked]="false" [disabled]="faltantesFisicos"
-            [(ngModel)]="sobrantesFisicos">
+            [value]="sobrantesFisicos">
             Sobrantes Fisicos
           </mat-slide-toggle>
         </section>
@@ -27,7 +27,7 @@
         &nbsp;&nbsp;
         <section class="example-section">
           <mat-slide-toggle class="example-margin" [checked]="false" [disabled]="sobrantesFisicos"
-            [(ngModel)]="faltantesFisicos">
+            [value]="faltantesFisicos">
             Faltantes Fisicos
           </mat-slide-toggle>
         </section>
@@ -36,7 +36,7 @@
 
       <div class="row">
         <mat-label style="padding-right: 14px;padding-top: 4px;"><u>Documento</u></mat-label>
-        <input type="text" [(ngModel)]="cabecera.id" disabled>
+        <input type="text" [value]="cabecera?.id" disabled>
       </div>
       <hr>
 
@@ -44,7 +44,7 @@
         <div>
           <div class="input-group">
             <mat-label style="padding-right: 62px;padding-top: 7px;"><u>ID</u></mat-label>
-            <input type="text" formControlName="id" [(ngModel)]="notas_movimiento_get_codigo">
+            <input type="text" formControlName="id" [value]="notas_movimiento_get_codigo">
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="button" (click)="modalNotasMovimiento()"
                 style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
@@ -52,7 +52,7 @@
                 <i class="fa fa-search"></i>
               </button>
             </div>
-            <input type="text" formControlName="numeroid" [(ngModel)]="notas_movimiento_get_nro_actual"
+            <input type="text" formControlName="numeroid" [value]="notas_movimiento_get_nro_actual"
               style="width: 25.5%;" disabled="true">
           </div>
         </div>
@@ -60,8 +60,8 @@
         <div>
           <div class="input-group">
             <mat-label style="padding-right: 25px;padding-top: 7px;"><u>Concepto</u></mat-label>
-            <input type="text" formControlName="codconcepto" [(ngModel)]="concepto_movimiento_codigo">
-            <input type="text" formControlName="factor" [(ngModel)]="concepto_movimiento_factor" hidden>
+            <input type="text" formControlName="codconcepto" [value]="concepto_movimiento_codigo">
+            <input type="text" formControlName="factor" [value]="concepto_movimiento_factor" hidden>
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="button" (click)="modalcatalogoConcepto()"
                 style="border-color: #093070;padding: 4px 5px 1px 5px;line-height: 0 !important;"
@@ -70,14 +70,14 @@
               </button>
             </div>
 
-            <input type="date" formControlName="fechareg" [(ngModel)]="fecha_actual" disabled>
+            <input type="date" formControlName="fechareg" [value]="fecha_actual" disabled>
           </div>
         </div>
 
         <div>
           <div class="input-group">
             <mat-label style="padding-right: 25px;padding-top: 7px;"><u>Vendedor</u></mat-label>
-            <input type="text" formControlName="codvendedor" [(ngModel)]="cod_vendedor_cliente_modal">
+            <input type="text" formControlName="codvendedor" [value]="cod_vendedor_cliente_modal">
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="button" (click)="modalVendedor()"
                 style="border-color: #093070;padding: 4px 5px 1px 5px; line-height: 0 !important;"
@@ -91,7 +91,7 @@
         <div>
           <div class="input-group">
             <mat-label style="padding-right: 29px;padding-top: 7px;"><u>Almacen</u></mat-label>
-            <input type="text" formControlName="codalmacen" [(ngModel)]="cod_almacen_cliente.codigo"
+            <input type="text" formControlName="codalmacen" [value]="cod_almacen_cliente?.codigo"
               style="width: 55px;">
             <div class="input-group-append" style="padding-right: 10px;">
               <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen()"
@@ -102,7 +102,7 @@
             </div>
 
             <mat-label style="padding-right: 2px;padding-top: 7px;"><u>Origen</u></mat-label>
-            <input type="text" formControlName="codalmorigen" [(ngModel)]="cod_almacen_cliente_origen.codigo"
+            <input type="text" formControlName="codalmorigen" [value]="cod_almacen_cliente_origen?.codigo"
               style="width: 55px;">
             <div class="input-group-append" style="padding-right: 10px;">
               <button class="btn btn-outline-primary" type="button" (click)="modalAlmacenOrigen()"
@@ -113,7 +113,7 @@
             </div>
 
             <mat-label style="padding-right: 2px;padding-top: 7px;"><u>Destino</u></mat-label>
-            <input type="text" formControlName="codalmdestino" [(ngModel)]="cod_almacen_cliente_destinado.codigo"
+            <input type="text" formControlName="codalmdestino" [value]="cod_almacen_cliente_destinado?.codigo"
               style="width: 55px;">
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="button" (click)="modalAlmacenDestino()"

@@ -38,8 +38,6 @@ export class NumcomprasmenoresEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
     this.numCmpMen_edit = this.datanumCmpMenEdit.datanumCmpMenEdit;
     this.getAllUnidadesNegocio();
   }
@@ -65,7 +63,7 @@ export class NumcomprasmenoresEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumCmpMenEdit.datanumCmpMenEdit.id],
+      id: [this.datanumCmpMenEdit.datanumCmpMenEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],

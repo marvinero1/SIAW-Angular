@@ -34,9 +34,7 @@ export class NumeracionTipoAjusteEditComponent implements OnInit {
     public _snackBar: MatSnackBar) {
     this.FormularioDataEdit = this.createForm();
 
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;    
     this.tiposAjuste_edit = this.datatiposAjusteEdit.datatiposAjusteEdit;
   }
 

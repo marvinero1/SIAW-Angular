@@ -56,8 +56,8 @@ export class StockAlmacenesComponent implements OnInit {
   }
 
   cargarTablaItems() {
-    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/inalmacen/catalogo/"
-    return this.api.getAll('/inventario/mant/abminstockalm/stockAlm/' + this.userConn + "/" + this.almacen.codigo)
+    let errorMessage = "La Ruta presenta fallos al hacer peticion GET --/inventario/mant/abminstockalm/stockAlm/"
+    return this.api.getAll('/inventario/mant/abminstockalm/stockAlm/' + this.userConn + "/" + this.almacen?.codigo)
       .subscribe({
         next: (datav) => {
           this.items = datav;

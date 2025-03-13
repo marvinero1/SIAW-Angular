@@ -5,6 +5,7 @@ import { DebugElement } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { MessageService } from 'primeng/api';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
@@ -20,6 +21,7 @@ describe('ClientesIgualesComponent', () => {
       declarations: [ClientesIgualesComponent],
       providers: [
         DatePipe,
+        MessageService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatSnackBar, useValue: { open: () => { } } },

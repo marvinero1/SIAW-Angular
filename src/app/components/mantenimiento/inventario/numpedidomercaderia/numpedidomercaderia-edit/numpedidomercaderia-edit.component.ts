@@ -40,7 +40,7 @@ export class NumpedidomercaderiaEditComponent implements OnInit {
 
   ngOnInit() {
     this.numntipopedmercaderia = this.dataMercaderiaEdit.dataMercaderiaEdit;
-    console.log(this.dataMercaderiaEdit.dataMercaderiaEdit.id);
+    console.log(this.dataMercaderiaEdit.dataMercaderiaEdit?.id);
   }
 
   createForm(): FormGroup {
@@ -49,7 +49,7 @@ export class NumpedidomercaderiaEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.dataMercaderiaEdit.dataMercaderiaEdit.id],
+      id: [this.dataMercaderiaEdit.dataMercaderiaEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],

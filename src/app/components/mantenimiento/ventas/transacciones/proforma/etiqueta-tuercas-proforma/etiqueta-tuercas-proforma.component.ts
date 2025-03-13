@@ -17,7 +17,7 @@ export class EtiquetaTuercasProformaComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "etiquetasItemsProforma";
-  public data_impresion: any = [];
+  public data_impresion: any[] = [];
 
   userConn: any;
   BD_storage: any;

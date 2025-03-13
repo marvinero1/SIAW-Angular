@@ -4,12 +4,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { MessageService } from 'primeng/api';
 import { PermisosEspecialesEditComponent } from './permisos-especiales-edit.component';
 
@@ -29,6 +28,7 @@ describe('PermisosEspecialesEditComponent', () => {
         { provide: MatSnackBar, useValue: { open: () => { } } },
         { provide: MatDialogRef, useValue: {} },
         { provide: MatDialog, useValue: { open: () => { } } },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

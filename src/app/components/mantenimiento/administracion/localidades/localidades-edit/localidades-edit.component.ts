@@ -46,7 +46,7 @@ export class LocalidadesEditComponent implements OnInit {
 
   createForm(): FormGroup {
     let userLogueado1 = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.codigo = this.dataLocalidadEdit.dataLocalidadEdit.codigo;
+    this.codigo = this.dataLocalidadEdit.dataLocalidadEdit?.codigo;
     console.log(this.codigo);
 
     let hour = this.hora_actual.getHours();

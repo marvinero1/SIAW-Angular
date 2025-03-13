@@ -70,11 +70,11 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
 
   getDataPDF() {
     let array_send = {
-      codProforma: this.data_impresion[0].codigo_proforma,
-      codcliente: this.data_impresion[0].cod_cliente,
-      codcliente_real: this.data_impresion[0].cod_cliente_real,
+      codProforma: this.data_impresion[0]?.codigo_proforma,
+      codcliente: this.data_impresion[0]?.cod_cliente,
+      codcliente_real: this.data_impresion[0]?.cod_cliente_real,
       codempresa: this.BD_storage,
-      cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
+      cmbestado_contra_entrega: this.data_impresion[0]?.cmbestado_contra_entrega.toString(),
       paraAprobar: this.data_impresion[0].grabar_aprobar
     };
 
@@ -175,7 +175,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
     console.log(formData);
 
     const errormesagge = "La Ruta presenta fallos al hacer petición POST -/notif/envioCorreos/envioCorreoProforma/";
-    this.api.createAllWithOutToken(`/notif/envioCorreos/envioCorreoProforma/${this.userConn}/${this.usuarioLogueado}/${this.data_impresion[0].codigo_vendedor}/${this.data_impresion[0].codigo_proforma}`, formData).subscribe({
+    this.api.createAllWithOutToken(`/notif/envioCorreos/envioCorreoProforma/${this.userConn}/${this.usuarioLogueado}/${this.data_impresion[0]?.codigo_vendedor}/${this.data_impresion[0]?.codigo_proforma}`, formData).subscribe({
       next: (datav) => {
         console.log(datav);
         this.toastr.success("CORREO ELECTRONICO ENVIADO ! 📧");

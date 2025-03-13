@@ -10,17 +10,17 @@
         <div class="col-md">
           <mat-form-field appearance="outline" class="example-full-small">
             <mat-label>Placa </mat-label>
-            <input matInput type="text" formControlName="placa" [(ngModel)]="vehiculo_edit.placa" maxlength="7" required>
+            <input matInput type="text" formControlName="placa" [value]="vehiculo_edit?.placa" maxlength="7" required>
           </mat-form-field>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Descripción </mat-label>
-            <input type="text" matInput formControlName="descripcion" [(ngModel)]="vehiculo_edit.descripcion"  maxlength="50" required>
+            <input type="text" matInput formControlName="descripcion" [value]="vehiculo_edit?.descripcion"  maxlength="50" required>
           </mat-form-field>
         </div>
         <div class="col-md">
-          <mat-checkbox class="example-margin" [(ngModel)]="vehiculo_edit.activo"  formControlName="activo">Activo</mat-checkbox>
+          <mat-checkbox class="example-margin" [value]="vehiculo_edit?.activo"  formControlName="activo">Activo</mat-checkbox>
         </div>
       </div>
 

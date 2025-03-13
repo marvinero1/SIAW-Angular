@@ -7,6 +7,7 @@ import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ModalDetalleObserValidacionComponent } from '../modal-detalle-obser-validacion/modal-detalle-obser-validacion.component';
 import { DialogConfirmActualizarComponent } from '@modules/dialog-confirm-actualizar/dialog-confirm-actualizar.component';
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-verificar-credito-disponible',
   templateUrl: './verificar-credito-disponible.component.html',
@@ -54,7 +55,7 @@ export class VerificarCreditoDisponibleComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public id_prof: any, @Inject(MAT_DIALOG_DATA) public numero_id_prof: any) {
 
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
 

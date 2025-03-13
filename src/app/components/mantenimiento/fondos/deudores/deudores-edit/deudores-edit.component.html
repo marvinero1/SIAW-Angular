@@ -1,6 +1,6 @@
 <div style="background-color: #f0f0f0;">
   <div class="p-2">
-    <h1 mat-dialog-title>Editar Deudor: <strong>{{ deudor_edit.id }}</strong></h1>
+    <h1 mat-dialog-title>Editar Deudor: <strong>{{ deudor_edit?.id }}</strong></h1>
     <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
   </div>
 
@@ -11,7 +11,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Descripción </mat-label>
-              <input matInput type="text" formControlName="descripcion" [(ngModel)]="deudor_edit.descripcion"
+              <input matInput type="text" formControlName="descripcion" [value]="deudor_edit?.descripcion"
                 maxlength="30" required>
             </mat-form-field>
           </div>
@@ -22,9 +22,8 @@
             <div class="input-group">
               <mat-form-field appearance="outline" style="width: 30% !important;">
                 <mat-label>Persona</mat-label>
-                <input matInput type="number" formControlName="codpersona" [(ngModel)]="persona_get_catalogo_id"
-                  [(ngModel)]="deudor_edit.codpersona" maxlength="30" min="0" (blur)="onLeave($event)"
-                  (focus)="onFocus()" required>
+                <input matInput type="number" formControlName="codpersona" [value]="persona_get_catalogo_id"
+                maxlength="30" min="0" (blur)="onLeave($event)" (focus)="onFocus()" required>
               </mat-form-field>
               <button class="btn btn-outline-primary form-control-sm" type="button" (click)="catalogoPersona();"
                 style="border-color: #093070;"><i class="fa fa-search"></i>

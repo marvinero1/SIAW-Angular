@@ -32,16 +32,15 @@ export class NumeracionComprobantesEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<NumeracionComprobantesEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datanumcomprobEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
+    this.numcomprob_edit = this.datanumcomprobEdit.datanumcomprobEdit;
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
-    this.numcomprob_edit = this.datanumcomprobEdit.datanumcomprobEdit;
   }
-
 
   createForm(): FormGroup {
     let hour = this.hora_actual.getHours();
@@ -50,7 +49,7 @@ export class NumeracionComprobantesEditComponent implements OnInit {
 
     return this._formBuilder.group({
       id: [this.datanumcomprobEdit.datanumcomprobEdit?.id],
-      descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
+      descripcion: [this.dataform?.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       ajuste: [false],
       desde: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
@@ -65,7 +64,7 @@ export class NumeracionComprobantesEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /contab/mant/cnnumeracion/ Update";
-    return this.api.update('/contab/mant/cnnumeracion/' + this.user_conn + "/" + this.numcomprob_edit.id, data)
+    return this.api.update('/contab/mant/cnnumeracion/' + this.user_conn + "/" + this.numcomprob_edit?.id, data)
       .subscribe({
         next: (datav) => {
           this.numcomprob = datav;

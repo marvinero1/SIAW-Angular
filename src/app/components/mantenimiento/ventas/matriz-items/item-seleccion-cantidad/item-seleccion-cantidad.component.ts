@@ -116,7 +116,7 @@ export class ItemSeleccionCantidadComponent implements OnInit {
     this.tamanio_carrito_viene_de_matriz = tamanio_carrito_compras.tamanio_carrito_compras
     //this.tamanio_carrito = this.items_get_carrito.length
 
-    console.log("Items de carrito: ", this.items_get_carrito, this.items_get_carrito.length, "Tamanio Carrito: ", this.tamanio_carrito_viene_de_matriz)
+    console.log("Items de carrito: ", this.items_get_carrito, this.items_get_carrito?.length, "Tamanio Carrito: ", this.tamanio_carrito_viene_de_matriz)
   }
 
   ngOnInit() {

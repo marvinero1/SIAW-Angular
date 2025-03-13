@@ -37,8 +37,6 @@ export class NumPedidosImportacionEditComponent implements OnInit {
 
   ngOnInit() {
     this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
     this.numPediCmp_edit = this.datanumPediCmpEdit.datanumPediCmpEdit;
   }
 
@@ -51,7 +49,7 @@ export class NumPedidosImportacionEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.datanumPediCmpEdit.datanumPediCmpEdit.id],
+      id: [this.datanumPediCmpEdit.datanumPediCmpEdit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       nroactual: [this.dataform.nroactual, Validators.pattern(/^-?\d+$/)],
       horareg: [hora_actual_complete],
@@ -64,14 +62,14 @@ export class NumPedidosImportacionEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /importaciones/mant/cpidpedido/ Update";
-    return this.api.update('/importaciones/mant/cpidpedido/' + this.user_conn + "/" + this.numPediCmp_edit.id, data)
+    return this.api.update('/importaciones/mant/cpidpedido/' + this.user_conn + "/" + this.numPediCmp_edit?.id, data)
       .subscribe({
         next: (datav) => {
           this.numPediCmp = datav;
           this.onNoClick();
           this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
           this.toastr.success('! SE EDITO EXITOSAMENTE !');
-          location.reload();
+          window.location.reload();
         },
 
         error: (err: any) => {

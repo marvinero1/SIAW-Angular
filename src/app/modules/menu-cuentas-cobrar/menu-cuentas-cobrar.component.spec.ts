@@ -18,7 +18,7 @@ describe('MenuCuentasCobrarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MatMenuModule],
+      //declarations: [MatMenuModule],
       providers: [
         DatePipe,
         provideHttpClient(),
@@ -29,7 +29,6 @@ describe('MenuCuentasCobrarComponent', () => {
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
         { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
-
     })
     .compileComponents();
   }));

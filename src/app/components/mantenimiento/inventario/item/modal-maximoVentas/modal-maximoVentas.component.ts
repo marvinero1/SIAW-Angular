@@ -90,7 +90,7 @@ export class ModalMaximoVentasComponent implements OnInit {
 
   getAllMaximoVentasItem() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET -/initem_max/initem_initemMax/";
-    return this.api.getAll('/inventario/mant/initem_max/initem_initemMax/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
+    return this.api.getAll('/inventario/mant/initem_max/initem_initemMax/' + this.userConn + "/" + this.dataItem?.dataItem?.codigo)
       .subscribe({
         next: (datav) => {
           this.max_venta_item = datav;

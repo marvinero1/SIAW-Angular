@@ -11,6 +11,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PermisosEspecialesParametrosComponent } from './permisos-especiales-parametros.component';
+import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
 
 describe('PermisosEspecialesParametrosComponent', () => {
   let component: PermisosEspecialesParametrosComponent;
@@ -18,6 +19,7 @@ describe('PermisosEspecialesParametrosComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [ModalGenerarAutorizacionComponent],
       declarations: [PermisosEspecialesParametrosComponent],
       providers: [
         DatePipe,

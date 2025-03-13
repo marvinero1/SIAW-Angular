@@ -69,7 +69,7 @@ export class ModalSubTotalComponent implements OnInit {
 
   sacarSubTotal() {
     this.spinner.show();
-    const arrayTransformado = this.items_carrito.map(item => ({
+    const arrayTransformado = this.items_carrito?.map(item => ({
       coditem: item.coditem,
       tarifa: item.codtarifa,
       descuento: item.coddescuento,

@@ -72,7 +72,7 @@ export class NumchequesclientesEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: this.numChecCli_edit.id,
+      id: this.numChecCli_edit?.id,
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       codcuentab: [this.dataform.codcuentab, Validators.compose([Validators.required])],
       nrodesde: [this.dataform.nrodesde, Validators.pattern(/^-?\d+$/)],

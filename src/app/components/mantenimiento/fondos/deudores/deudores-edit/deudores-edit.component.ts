@@ -67,7 +67,7 @@ export class DeudoresEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      id: [this.deudor_edit.id],
+      id: [this.deudor_edit?.id],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       codpersona: [this.dataform.codpersona, Validators.compose([Validators.required])],
 

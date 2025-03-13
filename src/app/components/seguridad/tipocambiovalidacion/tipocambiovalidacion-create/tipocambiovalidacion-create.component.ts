@@ -42,7 +42,7 @@ export class TipocambiovalidacionCreateComponent implements OnInit {
     return this._formBuilder.group({
       monedabase: ["BS"],
       factor: [this.dataform.factor, Validators.compose([Validators.required])],
-      moneda: [this.dataMoneda.dataMoneda.codigo],
+      moneda: [this.dataMoneda.dataMoneda?.codigo],
       fecha: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: ["DPD200"],
       codalmacen: ["310"],
@@ -73,7 +73,7 @@ export class TipocambiovalidacionCreateComponent implements OnInit {
   }
 
   reabrirModal() {
-    const dialogRef = this.dialog.open(TipocambiovalidacionCreateComponent, {
+    this.dialog.open(TipocambiovalidacionCreateComponent, {
       width: '350px',
       height: 'auto',
     });

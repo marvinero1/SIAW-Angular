@@ -9,6 +9,7 @@ import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modalCreditoAutorizacion',
   templateUrl: './modalCreditoAutorizacion.component.html',
   styleUrls: ['./modalCreditoAutorizacion.component.scss']
@@ -58,7 +59,7 @@ export class ModalCreditoAutorizacionComponent implements OnInit {
 
   getbyCodigoParametros(userConn, bd) {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET --/seg_adm/mant/adparametros_diasextranc";
-    return this.api.getAll('/seg_adm/mant/adparametros_diasextranc/' + userConn + "" + "/" + bd.bd)
+    return this.api.getAll('/seg_adm/mant/adparametros_diasextranc/' + userConn + "" + "/" + bd?.bd)
       .subscribe({
         next: (datav) => {
           this.nota_credito = datav;

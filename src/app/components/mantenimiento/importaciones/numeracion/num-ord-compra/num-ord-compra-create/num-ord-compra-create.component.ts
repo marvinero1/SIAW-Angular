@@ -39,15 +39,12 @@ export class NumOrdCompraCreateComponent implements OnInit {
     this.FormularioData = this.createForm();
   }
 
-
-
   ngOnInit() {
 
   }
 
   createForm(): FormGroup {
     let usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-
 
     let hour = this.hora_actual.getHours();
     let minuts = this.hora_actual.getMinutes();

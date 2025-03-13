@@ -30,10 +30,11 @@ describe('LaboratorioComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule],
+      imports: [MatMenuModule, ProductService],
       declarations: [LaboratorioComponent],
       providers: [
         DatePipe,
+        ProductService,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatSnackBar, useValue: { open: () => { } } },

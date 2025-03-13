@@ -1,7 +1,7 @@
 <div class="p-2">
   <div class="row">
     <h1 mat-dialog-title><strong>Editar Rosca con Codigo:</strong></h1>
-    <p mat-dialog-title>{{rosca_edit.codigo}}</p>
+    <p mat-dialog-title>{{rosca_edit?.codigo}}</p>
   </div>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
 </div>
@@ -13,7 +13,7 @@
         <div class="col-md">
           <mat-form-field appearance="outline" class="example-full-width">
             <mat-label>Descripción</mat-label>
-            <input type="text" matInput [(ngModel)]="rosca_edit.descripcion" formControlName="descripcion"
+            <input type="text" matInput [value]="rosca_edit?.descripcion" formControlName="descripcion"
               maxlength="50" required>
           </mat-form-field>
         </div>

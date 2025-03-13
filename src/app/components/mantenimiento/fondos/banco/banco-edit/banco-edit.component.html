@@ -11,7 +11,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Nombre </mat-label>
-              <input matInput type="text" formControlName="nombre" [(value)]="banco_modat_data.nombre" maxlength="30"
+              <input matInput type="text" formControlName="nombre" [value]="banco_modat_data?.nombre" maxlength="30"
                 required>
             </mat-form-field>
           </div>
@@ -21,14 +21,14 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Direccion </mat-label>
-              <input type="text" matInput formControlName="direccion" [(value)]="banco_modat_data.direccion" required>
+              <input type="text" matInput formControlName="direccion" [value]="banco_modat_data?.direccion" required>
             </mat-form-field>
           </div>
 
           <div class="col-md">
             <mat-form-field appearance="outline">
               <mat-label>NIT</mat-label>
-              <input type="text" matInput formControlName="nit" [(value)]="banco_modat_data.nit">
+              <input type="text" matInput formControlName="nit" [value]="banco_modat_data?.nit">
             </mat-form-field>
           </div>
         </div>

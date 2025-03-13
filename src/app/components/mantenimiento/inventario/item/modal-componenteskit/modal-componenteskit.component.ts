@@ -45,10 +45,10 @@ export class ModalComponenteskitComponent implements OnInit {
 
   createForm(): FormGroup {
     return this._formBuilder.group({
-      codigo: [this.dataItem.dataItem.codigo, Validators.compose([Validators.required])],
+      codigo: [this.dataItem.dataItem?.codigo, Validators.compose([Validators.required])],
       item: [this.dataform.item, Validators.compose([Validators.required])],
       cantidad: [this.dataform.cantidad],
-      unidad: [this.dataItem.dataItem.unidad],
+      unidad: [this.dataItem.dataItem?.unidad],
     });
   }
 
@@ -60,7 +60,7 @@ export class ModalComponenteskitComponent implements OnInit {
     let data = this.FormularioData.value;
     // console.log(data);
 
-    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /inventario/mant/inctrlstock  POST";
+    let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion Ruta:-/inventario/mant/inkit/";
     return this.api.create("/inventario/mant/inkit/" + this.userConn, data)
       .subscribe({
         next: (datav) => {
@@ -84,7 +84,7 @@ export class ModalComponenteskitComponent implements OnInit {
 
   getAllitem() {
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /inventario/mant/initem/catalogo/";
     return this.api.getAll('/inventario/mant/initem/catalogo/' + this.userConn)
       .subscribe({
         next: (datav) => {
@@ -100,8 +100,8 @@ export class ModalComponenteskitComponent implements OnInit {
 
   getAllinKit() {
     let errorMessage: string;
-    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getById('/inventario/mant/inkit/initem_inkit/' + this.userConn + "/" + this.dataItem.dataItem.codigo)
+    errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET /inventario/mant/inkit/initem_inkit/";
+    return this.api.getById('/inventario/mant/inkit/initem_inkit/' + this.userConn + "/" + this.dataItem.dataItem?.codigo)
       .subscribe({
         next: (datav) => {
           this.item_inkit = datav;
@@ -132,7 +132,7 @@ export class ModalComponenteskitComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: Boolean) => {
       if (result) {
-        return this.api.delete('/inventario/mant/inkit/' + this.userConn + "/" + this.dataItem.dataItem.codigo + '/' + element.item)
+        return this.api.delete('/inventario/mant/inkit/' + this.userConn + "/" + this.dataItem.dataItem?.codigo + '/' + element.item)
           .subscribe({
             next: () => {
               this.log_module.guardarLog(ventana, detalle, tipo, "", "");

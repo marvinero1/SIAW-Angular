@@ -1,5 +1,5 @@
 <div class="p-2">
-  <h1 mat-dialog-title>Editar Area {{ area_edit.codigo }}</h1>
+  <h1 mat-dialog-title>Editar Area {{ area_edit?.codigo }}</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
 </div>
 
@@ -7,16 +7,10 @@
   <div class="container">
     <form class="example-form" [formGroup]="FormularioDataEdit" (ngSubmit)="submitData()">
       <div class="row mb-2">
-        <!-- <div class="col-md">
-            <mat-form-field class="example-full-width">
-                <mat-label>Codigo </mat-label>
-                <input matInput type="text" [value]="area_edit.codigo" maxlength="6" [(ngModel)]="area_edit.codigo" disabled required>
-            </mat-form-field>
-        </div> -->
         <div class="col-md">
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
-            <input type="text" matInput formControlName="descripcion" maxlength="50" [(ngModel)]="area_edit.descripcion"
+            <input type="text" matInput formControlName="descripcion" maxlength="50" [value]="area_edit?.descripcion"
               required>
           </mat-form-field>
         </div>
@@ -43,7 +37,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Empresa</mat-label>
             <mat-select formControlName="empresa">
-              <mat-option *ngFor="let empresas of empresa" [value]="empresas.codigo">
+              <mat-option *ngFor="let empresas of empresa" [value]="empresas?.codigo">
                 {{ empresas.codigo }}
               </mat-option>
             </mat-select>

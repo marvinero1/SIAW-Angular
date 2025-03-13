@@ -52,7 +52,7 @@ export class RecargoDocumentoEditComponent implements OnInit {
 
 
     this.recargo_edit = this.dataRecargoEdit.dataRecargoEdit;
-    this.recargo_edit_codigo = this.dataRecargoEdit.dataRecargoEdit.codigo;
+    this.recargo_edit_codigo = this.dataRecargoEdit.dataRecargoEdit?.codigo;
     console.log(this.recargo_edit);
   }
 

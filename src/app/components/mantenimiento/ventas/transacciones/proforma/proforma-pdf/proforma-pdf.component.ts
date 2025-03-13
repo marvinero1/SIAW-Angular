@@ -17,7 +17,7 @@ export class ProformaPdfComponent implements OnInit {
   codigo_get_proforma: any;
   ventana: string = "proformaPDF";
 
-  public data_impresion: any = [];
+  public data_impresion: any[] = [];
 
   userConn: any;
   BD_storage: any;
@@ -59,12 +59,12 @@ export class ProformaPdfComponent implements OnInit {
 
   getDataPDF() {
     let array_send = {
-      codProforma: this.data_impresion[0].codigo_proforma,
-      codcliente: this.data_impresion[0].cod_cliente,
-      codcliente_real: this.data_impresion[0].cod_cliente_real,
+      codProforma: this.data_impresion[0]?.codigo_proforma,
+      codcliente: this.data_impresion[0]?.cod_cliente,
+      codcliente_real: this.data_impresion[0]?.cod_cliente_real,
       codempresa: this.BD_storage,
-      cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
-      paraAprobar: this.data_impresion[0].grabar_aprobar
+      cmbestado_contra_entrega: this.data_impresion[0]?.cmbestado_contra_entrega.toString(),
+      paraAprobar: this.data_impresion[0]?.grabar_aprobar
     };
 
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";

@@ -52,12 +52,12 @@ export class MenuItemComponent implements OnInit {
         this.isOneOfChildrenActive = false;
         if (this.isExpandable) {
             this.menuItem.children.forEach((item) => {
-                if(item.path[0] === url) {
+                if(item?.path[0] === url) {
                     this.isOneOfChildrenActive = true;
                     this.isMenuExtended = true;
                 }
             });
-        } else if (this.menuItem.path[0] === url) {
+        } else if (this.menuItem?.path[0] === url) {
             this.isMainActive = true;
         }
         if (!this.isMainActive && !this.isOneOfChildrenActive) {

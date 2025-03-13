@@ -4,6 +4,7 @@ import {By} from '@angular/platform-browser';
 import {DebugElement} from '@angular/core';
 
 import {HeaderComponent} from './header.component';
+import { Store } from '@ngrx/store';
 
 describe('HeaderComponent', () => {
     let component: HeaderComponent;
@@ -12,6 +13,7 @@ describe('HeaderComponent', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
+                imports: [Store],
                 declarations: [HeaderComponent]
             }).compileComponents();
         })

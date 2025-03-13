@@ -11,7 +11,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Descripción </mat-label>
-              <input matInput type="text" formControlName="descripcion" [(ngModel)]="deudor_edit.descripcion"
+              <input matInput type="text" formControlName="descripcion" [value]="deudor_edit?.descripcion"
                 maxlength="50" required>
             </mat-form-field>
           </div>

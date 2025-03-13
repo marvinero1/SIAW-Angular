@@ -12,7 +12,7 @@
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Descripción </mat-label>
-              <input matInput type="text" formControlName="descripcion" [(ngModel)]="numChecCli_edit.descripcion"
+              <input matInput type="text" formControlName="descripcion" [value]="numChecCli_edit?.descripcion"
                 maxlength="30" required>
             </mat-form-field>
           </div>
@@ -22,8 +22,8 @@
           <div class="col">
             <mat-form-field appearance="outline">
               <mat-label>Nro. de Cuenta</mat-label>
-              <mat-select formControlName="codcuentab" [(ngModel)]="numChecCli_edit.codcuentab" required>
-                <mat-option *ngFor="let cuentas_bancariass of cuentas_bancarias" [value]="cuentas_bancariass.codigo">
+              <mat-select formControlName="codcuentab" [value]="numChecCli_edit?.codcuentab" required>
+                <mat-option *ngFor="let cuentas_bancariass of cuentas_bancarias" [value]="cuentas_bancariass?.codigo">
                   {{ cuentas_bancariass.codigo }} - {{ cuentas_bancariass.descripcion }}
                 </mat-option>
               </mat-select>
@@ -36,14 +36,14 @@
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Desde el Número </mat-label>
               <input type="number" (input)="onInputChange1($event.target.value)" min="0" step="1" matInput
-                formControlName="nrodesde" [(ngModel)]="inputValue1" [(ngModel)]="numChecCli_edit.nrodesde" required>
+                formControlName="nrodesde" [value]="inputValue1" [value]="numChecCli_edit?.nrodesde" required>
             </mat-form-field>
           </div>
           <div class="col-md">
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Hasta el Número </mat-label>
               <input type="number" (input)="onInputChange2($event.target.value)" min="0" step="1" matInput
-                formControlName="nrohasta" [(ngModel)]="inputValue2" [(ngModel)]="numChecCli_edit.nrohasta" required>
+                formControlName="nrohasta" [value]="inputValue2" [value]="numChecCli_edit?.nrohasta" required>
             </mat-form-field>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <mat-form-field appearance="outline" class="example-full-small">
               <mat-label>Número Actual</mat-label>
               <input type="number" (input)="onInputChange3($event.target.value)" min="0" step="1" matInput
-                formControlName="nroactual" [(ngModel)]="inputValue3" [(ngModel)]="numChecCli_edit.nroactual" required>
+                formControlName="nroactual" [value]="inputValue3" [value]="numChecCli_edit?.nroactual" required>
             </mat-form-field>
           </div>
         </div>

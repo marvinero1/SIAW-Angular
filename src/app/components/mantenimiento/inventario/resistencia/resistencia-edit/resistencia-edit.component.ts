@@ -48,7 +48,7 @@ export class ResistenciaEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataRoscaEdit.dataRoscaEdit.codigo],
+      codigo: [this.dataRoscaEdit.dataRoscaEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       horareg: [hora_actual_complete],
@@ -60,7 +60,7 @@ export class ResistenciaEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:--  /seg_adm/mant/adusuario Update";
-    return this.api.update('/inventario/mant/inresistencia/' + this.userConn + "/" + this.resistencia_edit.codigo, data)
+    return this.api.update('/inventario/mant/inresistencia/' + this.userConn + "/" + this.resistencia_edit?.codigo, data)
       .subscribe({
         next: (datav) => {
 

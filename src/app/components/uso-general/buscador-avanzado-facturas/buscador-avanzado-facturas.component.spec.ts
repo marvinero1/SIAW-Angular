@@ -8,8 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MessageService } from 'primeng/api';
 import { BuscadorAvanzadoFacturasComponent } from './buscador-avanzado-facturas.component';
 
@@ -29,6 +28,7 @@ describe('BuscadorAvanzadoFacturasComponent', () => {
         { provide: MatSnackBar, useValue: { open: () => { } } },
         { provide: MatDialogRef, useValue: {} },
         { provide: MatDialog, useValue: { open: () => { } } },
+        { provide: MAT_DIALOG_DATA, useValue: {} }
       ]
     })
     .compileComponents();

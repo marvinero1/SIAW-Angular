@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
 import { LogService } from '@services/log-service.service';
 import { MessageService } from 'primeng/api';
-
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -402,26 +402,35 @@ export class LoginComponent implements OnInit, OnDestroy {
   guardarToken(token) {
     // localStorage.setItem('token', JSON.stringify(token));
     sessionStorage.setItem('token', JSON.stringify(token));
-    sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
+    // sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(this.contrasenia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    sessionStorage.setItem('contrasenia', encryptedData);
   }
 
   guardarStorageUsuario(usuario) {
     // localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
-    sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    // sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    sessionStorage.setItem('usuario_logueado', encryptedData);
   }
 
   guardarStorageBD(data) {
     // localStorage.setItem('bd_logueado', JSON.stringify(data));
-    sessionStorage.setItem('bd_logueado', JSON.stringify(data));
+    // sessionStorage.setItem('bd_logueado', JSON.stringify(data));
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    sessionStorage.setItem('bd_logueado', encryptedData);
   }
 
   guardarStorageuserConn(data) {
     // localStorage.setItem('user_conn', JSON.stringify(data));
-    sessionStorage.setItem('user_conn', JSON.stringify(data));
+    // sessionStorage.setItem('user_conn', JSON.stringify(data));
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    sessionStorage.setItem('user_conn', encryptedData);
   }
 
-  guardarStorageAgenciaLogueada(agencia) { 
-    sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
+  guardarStorageAgenciaLogueada(agencia) {
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(agencia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    sessionStorage.setItem('agencia_logueado', encryptedData);
   }
 
   // obtenerStorage() {

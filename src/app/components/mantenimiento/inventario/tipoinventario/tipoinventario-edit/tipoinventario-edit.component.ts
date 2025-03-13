@@ -34,7 +34,7 @@ export class TipoinventarioEditComponent implements OnInit {
     public _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public dataInventarioEdit: any) {
 
     this.data_inventario = dataInventarioEdit.dataInventarioEdit;
-    this.data_inventario_codigo = dataInventarioEdit.dataInventarioEdit.id;
+    this.data_inventario_codigo = dataInventarioEdit.dataInventarioEdit?.id;
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;

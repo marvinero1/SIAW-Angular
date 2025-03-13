@@ -248,7 +248,7 @@ export class PermisosEspecialesEditComponent implements OnInit {
 
   getEmpresa() {
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer peticion GET";
-    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + this.bd.bd)
+    return this.api.getAll('/seg_adm/mant/adempresa/getNomEmpresa/' + this.userConn + "/" + this.bd?.bd)
       .subscribe({
         next: (datav) => {
           this.empresa = datav;
@@ -272,11 +272,11 @@ export class PermisosEspecialesEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [permiso_edit.codigo],
-      nivel: [permiso_edit.nivel],
+      codigo: [permiso_edit?.codigo],
+      nivel: [permiso_edit?.nivel],
       password: [""],
       obs: [this.dataform.obs],
-      codempresa: [bd.bd],
+      codempresa: [bd?.bd],
       codpersona: [this.dataform.codpersona, Validators.compose([Validators.required])],
       vencimiento: [this.datePipe.transform(this.dataform.vencimiento, "yyyy-MM-dd"), Validators.compose([Validators.required])],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],

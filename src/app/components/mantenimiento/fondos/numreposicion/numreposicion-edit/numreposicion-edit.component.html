@@ -11,7 +11,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
             <input type="text" matInput formControlName="descripcion" maxlength="30"
-              [(ngModel)]="numRepo_edit.descripcion" required>
+              [value]="numRepo_edit?.descripcion" required>
           </mat-form-field>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Número Actual </mat-label>
             <input type="number" min="0" step="1" (input)="onInputChange($event.target.value)" matInput
-              formControlName="nroactual" [(ngModel)]="numRepo_edit.nroactual" required>
+              formControlName="nroactual" [value]="numRepo_edit?.nroactual" required>
           </mat-form-field>
         </div>
       </div>
@@ -29,8 +29,8 @@
         <div class="col-md">
           <mat-form-field appearance="outline">
             <mat-label>Unidad de Negocio</mat-label>
-            <mat-select formControlName="codunidad" [(ngModel)]="numRepo_edit.codunidad">
-              <mat-option *ngFor="let unidad of unidadNegocio" [value]="unidad.codigo">
+            <mat-select formControlName="codunidad" [value]="numRepo_edit?.codunidad">
+              <mat-option *ngFor="let unidad of unidadNegocio" [value]="unidad?.codigo">
                 {{ unidad.codigo }} - {{ unidad.descripcion }}
               </mat-option>
             </mat-select>

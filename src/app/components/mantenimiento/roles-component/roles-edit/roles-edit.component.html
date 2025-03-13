@@ -9,14 +9,14 @@
       <div class="row">
         <div class="col">
           <mat-label style="padding-right: 7px;"><u>Descripción</u> </mat-label>
-          <input matInput type="text" [(ngModel)]="role_edit.descripcion" formControlName="descripcion" required>
+          <input matInput type="text" [value]="role_edit?.descripcion" formControlName="descripcion" required>
         </div>
       </div>
 
       <div class="row">
         <div class="col">
           <section class="example-section" style="padding-left: 82px;">
-            <input type="checkbox" [(ngModel)]="role_edit.contabilizar" formControlName="contabilizar">
+            <input type="checkbox" [value]="role_edit?.contabilizar" formControlName="contabilizar">
             <label><u>Puede Contabilizar Documentos</u></label>
           </section>
         </div>
@@ -26,14 +26,14 @@
         <div class="row">
           <div class="col">
             <mat-label style="padding-right: 17px;"><u>Cambiar cada</u> </mat-label>
-            <input matInput type="number" [(ngModel)]="role_edit.dias_cambio" formControlName="dias_cambio" required>
+            <input matInput type="number" [value]="role_edit?.dias_cambio" formControlName="dias_cambio" required>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
             <mat-label style="padding-right: 1px;"><u>Longitud Minima</u></mat-label>
-            <select matNativeControl formControlName="long_minima" [(ngModel)]="role_edit.long_minima">
+            <select matNativeControl formControlName="long_minima" [value]="role_edit?.long_minima">
               <option value=0>0</option>
               <option value=1>1</option>
               <option value=2>2</option>
@@ -52,7 +52,7 @@
         <div class="row">
           <div class="col">
             <section class="example-section" style="padding-left: 110px;">
-              <input type="checkbox" [(ngModel)]="role_edit.con_letras" formControlName="con_letras" value="true">
+              <input type="checkbox" [value]="role_edit?.con_letras" formControlName="con_letras" value="true">
               <label><u>Debe incluir al menos una Letra</u> </label>
             </section>
           </div>
@@ -61,7 +61,7 @@
         <div class="row">
           <div class="col">
             <section class="example-section" style="padding-left: 110px;">
-              <input type="checkbox" [(ngModel)]="role_edit.con_numeros" formControlName="con_numeros" value="true">
+              <input type="checkbox" [value]="role_edit?.con_numeros" formControlName="con_numeros" value="true">
               <label><u>Debe incluir al menos un Numero</u> </label>
             </section>
           </div>

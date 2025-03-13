@@ -1,5 +1,5 @@
 <div class="p-2">
-  <h1 mat-dialog-title>Editar Numeración de Pedidos de Compra {{ numPediCmp_edit.id }}</h1>
+  <h1 mat-dialog-title>Editar Numeración de Pedidos de Compra {{ numPediCmp_edit?.id }}</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div><br>
 </div>
 
@@ -11,7 +11,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
             <input type="text" matInput formControlName="descripcion" maxlength="30"
-              [(ngModel)]="numPediCmp_edit.descripcion" required>
+              [value]="numPediCmp_edit?.descripcion" required>
           </mat-form-field>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Número Actual </mat-label>
             <input type="number" min="0" step="1" (input)="onInputChange($event.target.value)" matInput
-              formControlName="nroactual" [(ngModel)]="numPediCmp_edit.nroactual" required>
+              formControlName="nroactual" [value]="numPediCmp_edit?.nroactual" required>
           </mat-form-field>
         </div>
       </div>

@@ -9,8 +9,8 @@
             <h5>Saldos a Cubrir</h5>
           </div><hr>
           
-          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem.codigo }} <strong>&nbsp; 
-            Descripción:</strong>&nbsp; {{ dataItem.dataItem.descripcion }} </p>
+          <p><strong>Código:</strong>&nbsp; {{ dataItem.dataItem?.codigo }} <strong>&nbsp; 
+            Descripción:</strong>&nbsp; {{ dataItem.dataItem?.descripcion }} </p>
         </div>
 
         <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
@@ -18,8 +18,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Item</mat-label>
               <mat-select formControlName="coditemcontrol">
-                <mat-option *ngFor="let items of item" [value]="items.codigo">
-                {{ items.codigo }} - {{ items.descripcion }}
+                <mat-option *ngFor="let items of item" [value]="items?.codigo">
+                {{ items?.codigo }} - {{ items?.descripcion }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

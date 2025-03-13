@@ -40,15 +40,12 @@ export class CuentaEfectivoCuentasContablesComponent implements OnInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.userLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
+
     this.FormularioData = this.createForm();
 
     this.cuentas_efectivas_edit = datacuentasefectivoEdit.datacuentasefectivoEdit;
-    this.cuentas_efectivas_edit_id = datacuentasefectivoEdit.datacuentasefectivoEdit.id;
-    console.log(this.cuentas_efectivas_edit, this.cuentas_efectivas_edit_id);
-
-    this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
-    console.log(this.agencia_logueado);
-
+    this.cuentas_efectivas_edit_id = datacuentasefectivoEdit.datacuentasefectivoEdit?.id;
   }
 
   ngOnInit() {

@@ -11,7 +11,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
             <input type="text" matInput formControlName="descripcion" maxlength="30"
-              [(ngModel)]="numcomprob_edit.descripcion" required>
+              [value]="numcomprob_edit?.descripcion" required>
           </mat-form-field>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Número Actual </mat-label>
             <input type="number" min="0" step="1" (input)="onInputChange($event.target.value)" matInput
-              formControlName="nroactual" [(ngModel)]="numcomprob_edit.nroactual" required>
+              formControlName="nroactual" [value]="numcomprob_edit?.nroactual" required>
           </mat-form-field>
         </div>
       </div>
@@ -29,7 +29,7 @@
         <div class="col-md">
           <mat-form-field color="accent">
             <mat-label>Valido Desde</mat-label>
-            <input matInput formControlName="desde" [(ngModel)]="numcomprob_edit.desde" [matDatepicker]="picker21">
+            <input matInput formControlName="desde" [value]="numcomprob_edit?.desde" [matDatepicker]="picker21">
             <mat-datepicker-toggle matIconSuffix [for]="picker21"></mat-datepicker-toggle>
             <mat-datepicker #picker21 color="primary"></mat-datepicker>
           </mat-form-field>
@@ -40,7 +40,7 @@
         <div class="col-md">
           <mat-form-field color="accent">
             <mat-label>Valido Hasta</mat-label>
-            <input matInput formControlName="hasta" [(ngModel)]="numcomprob_edit.hasta" [matDatepicker]="picker2">
+            <input matInput formControlName="hasta" [value]="numcomprob_edit?.hasta" [matDatepicker]="picker2">
             <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2 color="primary"></mat-datepicker>
           </mat-form-field>

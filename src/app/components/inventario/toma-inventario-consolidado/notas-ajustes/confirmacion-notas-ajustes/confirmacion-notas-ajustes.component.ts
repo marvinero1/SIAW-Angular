@@ -12,7 +12,7 @@ export class ConfirmacionNotasAjustesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
   onNoClick(): void {

@@ -46,7 +46,7 @@ export class DptopaisEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataDptoEdit.dataDptoEdit.codigo],
+      codigo: [this.dataDptoEdit.dataDptoEdit?.codigo],
       nombre: [this.dataform.nombre, Validators.compose([Validators.required])],
 
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
@@ -59,7 +59,7 @@ export class DptopaisEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-/seg_adm/mant/addepto/";
-    return this.api.update('/seg_adm/mant/addepto/' + this.userConn + "/" + this.dataDptoEdit.dataDptoEdit.codigo, data)
+    return this.api.update('/seg_adm/mant/addepto/' + this.userConn + "/" + this.dataDptoEdit.dataDptoEdit?.codigo, data)
       .subscribe({
         next: (datav) => {
           this.dpto = datav;

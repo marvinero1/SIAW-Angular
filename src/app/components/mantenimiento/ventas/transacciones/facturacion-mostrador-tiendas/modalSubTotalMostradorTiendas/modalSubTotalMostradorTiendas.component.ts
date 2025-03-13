@@ -5,7 +5,6 @@ import { ItemServiceService } from '@components/mantenimiento/ventas/serviciosIt
 import { ApiService } from '@services/api.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'app-modalSubTotalMostradorTiendas',
@@ -68,7 +67,7 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
 
   sacarSubTotal() {
     this.spinner.show();
-    const arrayTransformado = this.items_carrito.map(item => ({
+    const arrayTransformado = this.items_carrito?.map(item => ({
       ...item,
       coditem: item.coditem,
       cantidad: item.cantidad,
@@ -102,12 +101,7 @@ export class ModalSubTotalMostradorTiendasComponent implements OnInit {
   }
 
   mandarArrayItemSubTotal(items) {
-    // console.log(items);
     this.itemservice.enviarItemsProcesadosSubTotal(items);
-
-    // this.subtotal_service.disparadorDeSubTotal.emit({
-    //   subtotal: this.sub_totabilizar_post.e,
-    // });
   }
 
   formatNumberTotalSub(numberString: number): string {

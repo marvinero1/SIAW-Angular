@@ -6,7 +6,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-tipo-pago-edit',
   templateUrl: './tipo-pago-edit.component.html',
@@ -32,16 +31,15 @@ export class TipoPagoEditComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, public log_module: LogService, public dialogRef: MatDialogRef<TipoPagoEditComponent>,
     @Inject(MAT_DIALOG_DATA) public datatiposPagoEdit: any, private api: ApiService, private datePipe: DatePipe, private toastr: ToastrService,
     public _snackBar: MatSnackBar) {
+    
+    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+
     this.FormularioDataEdit = this.createForm();
   }
 
   ngOnInit() {
-    this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-    this.user_conn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-
     this.tiposPago_edit = this.datatiposPagoEdit.datatiposPagoEdit;
   }
-
 
   createForm(): FormGroup {
     const usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
@@ -51,7 +49,7 @@ export class TipoPagoEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.datatiposPagoEdit.datatiposPagoEdit.codigo],
+      codigo: [this.datatiposPagoEdit.datatiposPagoEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
       tipo: [this.dataform.tipo, Validators.compose([Validators.required])],
       horareg: [hora_actual_complete],
@@ -64,7 +62,7 @@ export class TipoPagoEditComponent implements OnInit {
     let data = this.FormularioDataEdit.value;
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:--  /ctsxcob/mant/cotippago/ Update";
-    return this.api.update('/ctsxcob/mant/cotippago/' + this.user_conn + "/" + this.tiposPago_edit.codigo, data)
+    return this.api.update('/ctsxcob/mant/cotippago/' + this.user_conn + "/" + this.tiposPago_edit?.codigo, data)
       .subscribe({
         next: (datav) => {
           this.tiposPago = datav;

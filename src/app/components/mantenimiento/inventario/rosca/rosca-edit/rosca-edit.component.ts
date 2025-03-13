@@ -47,7 +47,7 @@ export class RoscaEditComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataRoscaEdit.dataRoscaEdit.codigo],
+      codigo: [this.dataRoscaEdit.dataRoscaEdit?.codigo],
       descripcion: [this.dataform.descripcion, Validators.compose([Validators.required])],
 
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
