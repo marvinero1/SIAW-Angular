@@ -14,12 +14,15 @@ import { NombreVentanaService } from './footer/servicio-nombre-ventana/nombre-ve
 export class MainComponent implements OnInit {
 	@HostBinding('class') class = 'wrapper';
 
-	
 	public ui: Observable<UiState>;
 
-	private proformaPdfRoutes = ['proformaPDF', 'etiquetasItemsProforma', 'etiquetaImpresionProforma', 'etiquetaTuercasProforma',
-		'Proforma', 'Facturacion Mostrador FEL', 'Modificar Proforma', 'Modificar Factura Mostrador FEL'];
-
+	private proformaPdfRoutes = ['proformaPDF',
+		'etiquetasItemsProforma',
+		'etiquetaImpresionProforma',
+		'etiquetaTuercasProforma',
+		'Facturacion Mostrador FEL',
+		'Modificar Factura Mostrador FEL'];
+	
 	nombre_ventana: string;
 	isProformaPdfPage = false;
 	isProformPage = false;

@@ -20,7 +20,8 @@ import { NombreVentanaService } from '@modules/main/footer/servicio-nombre-venta
   styleUrls: ['./permisos-especiales.component.scss']
 })
 export class PermisosEspecialesComponent implements OnInit {
-
+  //NO SE ISA
+  
   autorizacion: Autorizacion[] = [
     { codigo: "01", descripcion: "MODIFICACION DE PLAN DE PAGOS", codigo_descripcion: "01 - MODIFICACION DE PLAN DE PAGOS" },
     { codigo: "02", descripcion: "DISTRIBUCION MANUAL DE COBRANZAS", codigo_descripcion: "02 - DISTRIBUCION MANUAL DE COBRANZAS" },

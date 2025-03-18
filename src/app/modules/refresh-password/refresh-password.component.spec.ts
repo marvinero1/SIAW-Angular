@@ -1,7 +1,7 @@
 /* tslint:disable:no-unused-variable */
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { DebugElement, Renderer2 } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -10,8 +10,13 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RefreshPasswordComponent } from './refresh-password.component';
-import { LoginComponent } from '@modules/login/login.component';
 import { MessageService } from 'primeng/api';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ApiService } from '@services/api.service';
+import { LogService } from '@services/log-service.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LoginComponent } from '@modules/login/login.component';
 
 describe('RefreshPasswordComponent', () => {
   let component: RefreshPasswordComponent;
@@ -19,7 +24,7 @@ describe('RefreshPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [LoginComponent],
+      imports: [],
       declarations: [RefreshPasswordComponent],
       providers: [
         DatePipe,
@@ -30,7 +35,15 @@ describe('RefreshPasswordComponent', () => {
         { provide: MatDialog, useValue: { open: () => { } } },
         { provide: MatDialogRef, useValue: {} },
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
-        { provide: MAT_DIALOG_DATA, useValue: {} }
+        { provide: MAT_DIALOG_DATA, useValue: {} }, 
+        
+        // 🔹 Mocks para los servicios del constructor
+        { provide: Renderer2, useValue: { setStyle: () => { } } },
+        { provide: FormBuilder, useValue: new FormBuilder() },
+        { provide: Router, useValue: { navigate: () => { } } },
+        { provide: ApiService, useValue: { login: () => { }, logout: () => { } } },
+        { provide: LogService, useValue: {} },
+        { provide: NgxSpinnerService, useValue: { show: () => { }, hide: () => { } } }
       ]
     })
     .compileComponents();

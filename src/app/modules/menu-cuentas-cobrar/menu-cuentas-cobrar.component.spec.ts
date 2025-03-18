@@ -11,6 +11,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { MenuCuentasCobrarComponent } from './menu-cuentas-cobrar.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('MenuCuentasCobrarComponent', () => {
   let component: MenuCuentasCobrarComponent;
@@ -18,7 +20,12 @@ describe('MenuCuentasCobrarComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      //declarations: [MatMenuModule],
+      imports: [
+        MatMenuModule,    // Correcto, debe ir en 'imports'
+        MatButtonModule,  // Importa otros módulos necesarios, como MatButtonModule.
+        MatIconModule     // Si usas iconos.
+      ],
+      declarations: [MenuCuentasCobrarComponent],
       providers: [
         DatePipe,
         provideHttpClient(),

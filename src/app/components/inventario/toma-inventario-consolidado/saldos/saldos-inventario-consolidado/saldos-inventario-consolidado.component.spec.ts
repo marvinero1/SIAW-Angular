@@ -18,7 +18,8 @@ describe('SaldosInventarioConsolidadoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SaldosInventarioConsolidadoComponent, TomaInventarioConsolidadoComponent],
+      imports:[TomaInventarioConsolidadoComponent],
+      declarations: [SaldosInventarioConsolidadoComponent, ],
       providers: [
         DatePipe,
         provideHttpClient(),

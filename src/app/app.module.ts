@@ -672,11 +672,13 @@ registerPlugin(UndoRedo);
         ToastModule,
         RippleModule,
         FloatLabelModule,
+        MatMenuModule,
+        MatButtonModule,
+        MatIconModule
     ],
 
     providers: [provideAnimationsAsync(), MatDialog, DatePipe, TipocambiovalidacionComponent, LogService, AuthGuard, NonAuthGuard,
-        MenuSidebarComponent, LoginComponent, DecimalPipe, BnNgIdleService, ModalGenerarAutorizacionComponent,
-        TomaInventarioConsolidadoComponent, ProductService, MessageService,
+        MenuSidebarComponent, DecimalPipe, BnNgIdleService, LoginComponent, TomaInventarioConsolidadoComponent, ProductService, MessageService,
     { provide: ServiceRefreshItemsService },
     { provide: LOCALE_ID, useValue: 'es-BO' },
     { provide: LocationStrategy, useClass: PathLocationStrategy },

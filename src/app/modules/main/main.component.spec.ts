@@ -9,7 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import {MainComponent} from './main.component';
+import { MainComponent } from './main.component';
+import { StoreModule } from '@ngrx/store';
 import { StateObservable, Store } from '@ngrx/store';
 
 describe('MainComponent', () => {
@@ -19,6 +20,7 @@ describe('MainComponent', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
+                imports: [StoreModule.forRoot({})],
                 declarations: [MainComponent],
                 providers: [
                     DatePipe,

@@ -10,6 +10,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ModalPasswordComponent } from './modal-password.component';
+import { ModalGenerarAutorizacionComponent } from '../modal-generar-autorizacion/modal-generar-autorizacion.component';
 
 describe('ModalPasswordComponent', () => {
   let component: ModalPasswordComponent;
@@ -17,7 +18,7 @@ describe('ModalPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ModalPasswordComponent],
+      declarations: [ModalPasswordComponent, ModalGenerarAutorizacionComponent],
       providers: [
         DatePipe,
         provideHttpClient(),

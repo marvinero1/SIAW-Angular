@@ -9,7 +9,7 @@ import { LogService } from '@services/log-service.service';
 })
 export class MenuFondosComponent implements OnInit {
 
-  constructor(public router:Router,public log_module:LogService) { }
+  constructor(public router:Router, public log_module:LogService) { }
  
   ngOnInit() {
   }

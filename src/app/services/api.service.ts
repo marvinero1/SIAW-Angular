@@ -18,7 +18,7 @@ export class ApiService {
     ventana: "",
     url: "",
     estado: "",
-  }]
+  }];
 
   data: any = [];
   rol: any;

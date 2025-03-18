@@ -10,7 +10,7 @@ import { FormaPagoService } from './services-forma-pago/forma-pago.service';
   styleUrls: ['./modal-forma-pago.component.scss']
 })
 
-export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
+export class ModalFormaPagoComponent implements OnInit{
 
   catalogo_fn_cuentas:any=[];
   selectedfn_cuenta:any;
@@ -44,26 +44,18 @@ export class ModalFormaPagoComponent implements OnInit, AfterViewInit {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
       
-
-
-    this.tipo_pago_nota_remision = tipo_pago.tipo_pago;
+    this.tipo_pago_nota_remision = tipo_pago?.tipo_pago;
     console.log("🚀 ~ ModalFormaPagoComponent ~ tipo_pago_nota_remision:", this.tipo_pago_nota_remision)
-  
   }
 
   ngOnInit() {
     
     this.getCatalogoTipoPago();
     this.getCatalogoFncuentas();
+    this.getValorDefaultArray();
 
     // valor por defecto del array
     // this.getCatalogoBancosCheques();
-  }
-
-  ngAfterViewInit(): void {
-    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-    //Add 'implements AfterViewInit' to the class.
-    this.getValorDefaultArray();
   }
 
   getCatalogoFncuentas() {

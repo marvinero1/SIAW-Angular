@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { MessageService } from 'primeng/api';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { PermisosEspecialesParametrosComponent } from './permisos-especiales-parametros.component';
@@ -19,8 +19,11 @@ describe('PermisosEspecialesParametrosComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ModalGenerarAutorizacionComponent],
-      declarations: [PermisosEspecialesParametrosComponent],
+      imports: [MatDialogModule],
+      declarations: [
+        PermisosEspecialesParametrosComponent,
+        ModalGenerarAutorizacionComponent  // 🔹 Agregar el componente aquí
+      ],
       providers: [
         DatePipe,
         MessageService,

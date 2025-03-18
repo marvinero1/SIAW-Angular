@@ -11,7 +11,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Descripción </mat-label>
             <input type="text" matInput formControlName="descripcion" maxlength="50"
-              [(ngModel)]="percpRet_edit.descripcion" required>
+              [value]="percpRet_edit?.descripcion" required>
           </mat-form-field>
         </div>
       </div>
@@ -20,7 +20,7 @@
           <mat-form-field class="example-full-width" appearance="outline">
             <mat-label>Porcentaje </mat-label>
             <input type="number" min="0" step="1" matInput
-              formControlName="porcentaje" [(ngModel)]="percpRet_edit.porcentaje" required>
+              formControlName="porcentaje" [value]="percpRet_edit?.porcentaje" required>
           </mat-form-field>
         </div>
       </div>

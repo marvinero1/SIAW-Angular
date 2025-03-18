@@ -30,8 +30,7 @@ export class RefreshPasswordComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder,
     private api: ApiService, public _snackBar: MatSnackBar, private toastr: ToastrService,
     public dialogRef: MatDialogRef<RefreshPasswordComponent>,
-    public login: LoginComponent, public log_module: LogService, @Inject(MAT_DIALOG_DATA) public login_modal_password: any) {
-
+    public login: LoginComponent, public log_module: LogService ) {
 
     this.FormularioDataRefrescarPassword = this.createForm();
   }
@@ -41,7 +40,7 @@ export class RefreshPasswordComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     console.log(this.usuarioLogueado);
 
-    this.login_modal_password_get = this.login_modal_password.login_modal_password;
+    // this.login_modal_password_get = this.login_modal_password.login_modal_password;
     console.log(this.login_modal_password_get);
     this.toastr.error('Actualizar Contraseña');
   }

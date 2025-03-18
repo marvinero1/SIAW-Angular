@@ -27,10 +27,11 @@ export class RecoverPasswordComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.renderer.addClass(
-            document.querySelector('app-root'),
-            'login-page'
-        );
+        const appRoot = document.querySelector('app-root');
+        if (appRoot) {
+            this.renderer.addClass(appRoot, 'login-page');
+        }
+
         this.recoverPasswordForm = new UntypedFormGroup({
             password: new UntypedFormControl(null, Validators.required),
             confirmPassword: new UntypedFormControl(null, Validators.required)

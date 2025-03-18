@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { UsuarioComponent } from './usuario.component';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 
 describe('UsuarioComponent', () => {
   let component: UsuarioComponent;
@@ -14,6 +15,7 @@ describe('UsuarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [MatAutocompleteModule],
       declarations: [UsuarioComponent],
       providers: [
         DatePipe,

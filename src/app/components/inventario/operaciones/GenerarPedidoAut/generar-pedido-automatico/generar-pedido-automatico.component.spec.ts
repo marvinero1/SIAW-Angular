@@ -16,7 +16,7 @@ describe('GenerarPedidoAutomaticoComponent', () => {
 
   beforeEach(waitForAsync(async () => {
      TestBed.configureTestingModule({
-      imports: [GenerarPedidoAutomaticoComponent],
+      declarations: [GenerarPedidoAutomaticoComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),

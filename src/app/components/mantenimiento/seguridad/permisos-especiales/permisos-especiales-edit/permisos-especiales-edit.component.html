@@ -8,14 +8,14 @@
     <div class="row mb-2">
       <div class="col-md">
         <mat-label>Empresa </mat-label>
-        <input matInput type="text" [(ngModel)]="empresa.nombre" disabled>
+        <input matInput type="text" [value]="empresa?.nombre" disabled>
       </div>
     </div>
     <form class="example-form" [formGroup]="FormularioData" (ngSubmit)="submitData()">
       <div class="row">
         <div class="col-md">
           <mat-label style="padding-right: 34px;"><u>Servicio</u></mat-label>
-          <input type="text" matInput [ngModel]="permiso_edit.nivel" formControlName="nivel">
+          <input type="text" matInput [ngModel]="permiso_edit?.nivel" formControlName="nivel">
         </div>
       </div>
 
@@ -29,7 +29,7 @@
       <div class="row">
         <div class="col-md">
           <mat-label style="padding-right: 7px;"><u>Vencimiento</u></mat-label>
-          <input type="date" [(ngModel)]="permiso_edit.vencimiento" formControlName="vencimiento" required>
+          <input type="date" [value]="permiso_edit?.vencimiento" formControlName="vencimiento" required>
         </div>
       </div>
 

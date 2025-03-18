@@ -3,7 +3,8 @@ import {
     OnInit,
     Renderer2,
     OnDestroy,
-    HostBinding
+    HostBinding,
+    ElementRef
 } from '@angular/core';
 import {UntypedFormGroup, UntypedFormControl, Validators} from '@angular/forms';
 import {AppService} from '@services/app.service';
@@ -25,14 +26,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
     constructor(
         private renderer: Renderer2,
         private toastr: ToastrService,
-        private appService: AppService
+        private appService: AppService,
+        private el: ElementRef
     ) {}
 
     ngOnInit() {
-        this.renderer.addClass(
-            document.querySelector('app-root'),
-            'register-page'
-        );
+        // Usar `this.el.nativeElement` en lugar de `document.querySelector`
+        this.renderer.addClass(this.el.nativeElement, 'register-page');
+
         this.registerForm = new UntypedFormGroup({
             email: new UntypedFormControl(null, Validators.required),
             password: new UntypedFormControl(null, [Validators.required]),

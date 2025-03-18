@@ -15,7 +15,7 @@ import {AppService} from '@services/app.service';
     templateUrl: './forgot-password.component.html',
     styleUrls: ['./forgot-password.component.scss']
 })
-export class ForgotPasswordComponent implements OnDestroy, AfterViewInit {
+export class ForgotPasswordComponent implements OnDestroy, OnInit {
     @HostBinding('class') class = 'login-box';
     public forgotPasswordForm: UntypedFormGroup;
     public isAuthLoading = false;
@@ -23,18 +23,15 @@ export class ForgotPasswordComponent implements OnDestroy, AfterViewInit {
     constructor(
         private renderer: Renderer2,
         private toastr: ToastrService,
-        private appService: AppService
-    ) {
+        private appService: AppService ) {
         
     }
 
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.forgotPasswordForm = new UntypedFormGroup({
-                email: new UntypedFormControl(null, Validators.required)
-            });
+    ngOnInit(): void {
+        this.forgotPasswordForm = new UntypedFormGroup({
+            email: new UntypedFormControl(null, Validators.required)
         });
-
+      
         const appRoot = document.querySelector('app-root');
         if (appRoot) {
             this.renderer.addClass(appRoot, 'login-page');
@@ -46,7 +43,6 @@ export class ForgotPasswordComponent implements OnDestroy, AfterViewInit {
             email: new UntypedFormControl(null, Validators.required)
         });
     }
-
 
     forgotPassword() {
         if (this.forgotPasswordForm.valid) {

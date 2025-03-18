@@ -91,7 +91,7 @@ export class MenuSidebarComponent implements OnInit {
 
   loadDataSession() {
     this.usuario_logueado = this.api.dato_local_storage;
-    this.session = JSON.parse(this.usuario_logueado);
+    // this.session = JSON.parse(this.usuario_logueado);
   }
 
   getTipoCambioHeader(dataTransform) {

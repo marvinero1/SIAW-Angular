@@ -17,20 +17,23 @@ export class LogService {
   usuarioLogueado: any;
 
   constructor(private _formBuilder: FormBuilder, private datePipe: DatePipe, private api: ApiService) {
-    // this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
-    //this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+    this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
+    // this.usuario_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
 
-    const encryptedDatauserConn = sessionStorage.getItem("user_conn");
-    console.log("🚀 ~ LogService ~ constructor ~ encryptedDatauserConn:", encryptedDatauserConn)
-    this.userConn = encryptedDatauserConn
-      ? JSON.parse(CryptoJS.AES.decrypt(encryptedDatauserConn, 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString(CryptoJS.enc.Utf8))
-      : null;
+    // this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
+
+    // const encryptedDatauserConn = sessionStorage.getItem("user_conn");
+    // console.log("🚀 ~ LogService ~ constructor ~ encryptedDatauserConn:", encryptedDatauserConn)
+    // this.userConn = encryptedDatauserConn
+    //   ? JSON.parse(CryptoJS.AES.decrypt(encryptedDatauserConn, 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString(CryptoJS.enc.Utf8))
+    //   : null;
     
-    const encryptedDatausuarioLogueado = sessionStorage.getItem("usuario_logueado");
-    console.log("🚀 ~ LogService ~ constructor ~ encryptedDatausuarioLogueado:", encryptedDatausuarioLogueado)
-    this.userConn = encryptedDatauserConn
-      ? JSON.parse(CryptoJS.AES.decrypt(encryptedDatausuarioLogueado, 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString(CryptoJS.enc.Utf8))
-      : null;
+    // const encryptedDatausuarioLogueado = sessionStorage.getItem("usuario_logueado");
+    // console.log("🚀 ~ LogService ~ constructor ~ encryptedDatausuarioLogueado:", encryptedDatausuarioLogueado)
+    // this.userConn = encryptedDatauserConn
+    //   ? JSON.parse(CryptoJS.AES.decrypt(encryptedDatausuarioLogueado, 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString(CryptoJS.enc.Utf8))
+    //   : null;
   }
 
   createFormLog(ventana: string, detalle: string, tipo: string, id, numero_id): FormGroup {

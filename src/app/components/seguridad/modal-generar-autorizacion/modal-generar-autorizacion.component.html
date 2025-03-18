@@ -14,7 +14,7 @@
         <div class="col-md">
           <mat-label style="padding-right: 7px;"><u>Servicio</u></mat-label>
           <select [(ngModel)]="sevicio_select" required>
-            <option *ngFor="let autorizacions of autorizacion" [value]="autorizacions.codigo">
+            <option *ngFor="let autorizacions of autorizacion" [value]="autorizacions?.codigo">
               <strong>{{ autorizacions.codigo }}</strong> - {{ autorizacions.descripcion }}
               <hr style="border-top: 1px solid #093070;margin-top: 0px !important;margin-bottom: 1px !important;">
             </option>
@@ -25,7 +25,7 @@
       <div class="row">
         <div class="input-group">
           <mat-label style="padding-right: 5px; padding-left: 6px;padding-block-start: 5px;"><u>Almacen</u></mat-label>
-          <input type="text" matInput [(ngModel)]="cod_almacen_cliente.codigo" disabled required>
+          <input type="text" matInput [value]="cod_almacen_cliente?.codigo" disabled required>
 
           <div class="input-group-append">
             <button class="btn btn-outline-primary" type="button" (click)="modalAlmacen();"
@@ -41,14 +41,14 @@
       <div class="row">
         <div class="col-md">
           <mat-label style="padding-right: 13px;"><u>Dato A</u></mat-label>
-          <input type="text" matInput style="width: 90%;" [(ngModel)]="datoA" maxlength="12" required>
+          <input type="text" matInput style="width: 90%;" [value]="datoA" maxlength="12" required>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md">
           <mat-label style="padding-right: 13px;"><u>Dato B</u></mat-label>
-          <input type="text" matInput style="width: 90%;" [(ngModel)]="datoB" maxlength="12" required>
+          <input type="text" matInput style="width: 90%;" [value]="datoB" maxlength="12" required>
         </div>
       </div>
     </div>

@@ -32,11 +32,11 @@ describe('RegisterComponent', () => {
 
     beforeEach(() => {
         fixture = TestBed.createComponent(RegisterComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+        fixture.detectChanges(); // 🔥 Esto asegura que Angular renderice el componente antes del test
     });
 
     it('should create', () => {
-        expect(component).toBeTruthy();
+        fixture.detectChanges(); // Asegura que el DOM está listo
+        expect(fixture.componentInstance).toBeTruthy();
     });
 });

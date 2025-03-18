@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ControlSidebarComponent } from './control-sidebar.component';
+import { StoreModule } from '@ngrx/store';
 
 describe('ControlSidebarComponent', () => {
   let component: ControlSidebarComponent;
@@ -8,6 +9,7 @@ describe('ControlSidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [StoreModule.forRoot({})],
       declarations: [ ControlSidebarComponent ]
     })
     .compileComponents();

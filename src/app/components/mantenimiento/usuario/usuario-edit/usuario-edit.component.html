@@ -1,5 +1,5 @@
 <div class="p-2">
-  <h1 mat-dialog-title>Editar Usuario: {{ usuario_edit.login }}</h1>
+  <h1 mat-dialog-title>Editar Usuario: {{ usuario_edit?.login }}</h1>
   <div style="font-size: 0.6rem;padding: 0 24px 0px;">Los campos (*) son obligatorios</div>
 </div>
 
@@ -10,7 +10,7 @@
         <div class="col-md">
           <mat-form-field class="example-full-width">
             <mat-label>Usuario </mat-label>
-            <input matInput type="text" [(ngModel)]="usuario_edit.login" formControlName="login" required>
+            <input matInput type="text" [value]="usuario_edit?.login" formControlName="login" required>
           </mat-form-field>
         </div>
         <div class="col-md">
@@ -25,7 +25,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Persona</mat-label>
-            <mat-select [(ngModel)]="usuario_edit.$id" formControlName="persona">
+            <mat-select [value]="usuario_edit?.$id" formControlName="persona">
               <mat-option *ngFor="let pepersonas of pepersona" [value]="pepersonas.$id">
                 {{ pepersonas.codigo }} - {{ pepersonas.descrip }}
               </mat-option>
@@ -35,7 +35,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Vencimiento </mat-label>
-            <input matInput [matDatepicker]="picker" required [(ngModel)]="usuario_edit.vencimiento "
+            <input matInput [matDatepicker]="picker" required [value]="usuario_edit?.vencimiento "
               formControlName="vencimiento">
             <mat-hint>YYYY/MM/DD</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -47,7 +47,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Activo</mat-label>
-            <mat-select [(ngModel)]="usuario_edit.activo" formControlName="activo">
+            <mat-select [value]="usuario_edit?.activo" formControlName="activo">
               <mat-option value="true">SI</mat-option>
               <mat-option value="false">NO</mat-option>
             </mat-select>
@@ -56,7 +56,7 @@
         <div class="col">
           <mat-form-field appearance="outline">
             <mat-label>Roles</mat-label>
-            <mat-select [(ngModel)]="usuario_edit.codrol" formControlName="codrol">
+            <mat-select [value]="usuario_edit?.codrol" formControlName="codrol">
               <mat-option *ngFor="let serols of serol" [value]="serols.codigo">
                 {{ serols.descripcion }}
               </mat-option>

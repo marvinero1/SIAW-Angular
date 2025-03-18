@@ -12,7 +12,7 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "etiquetaImpresionProforma";
-  public data_impresion: any = [];
+  public data_impresion: any[] = [];
 
   userConn: any;
   BD_storage: any;
@@ -35,28 +35,30 @@ export class EtiquetaImpresionProformaComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    this.data_impresion = sessionStorage.getItem("data_impresion") !== undefined ? JSON.parse(sessionStorage.getItem("data_impresion")) : null;
+    this.data_impresion = sessionStorage.getItem("data_impresion") !== null ? JSON.parse(sessionStorage.getItem("data_impresion")!) : [];
 
     this.getDataPDF();
     this.mandarNombre();
 
     console.log(this.data_impresion);
-    this.cod_cliente_get = this.data_impresion[0].cod_cliente;
-    this.cod_cliente_real_get = this.data_impresion[0].cod_cliente_real;
   }
 
   ngOnInit(): void {
+    this.cod_cliente_get = this.data_impresion[0]?.cod_cliente;
+    this.cod_cliente_real_get = this.data_impresion[0]?.cod_cliente_real;
   }
 
   getDataPDF() {
-    let array_send={
-      codProforma: this.data_impresion[0].codigo_proforma,
-      codcliente: this.data_impresion[0].cod_cliente ,
-      codcliente_real: this.data_impresion[0].cod_cliente_real,
-      codempresa: this.BD_storage,
-      cmbestado_contra_entrega: this.data_impresion[0].cmbestado_contra_entrega.toString(),
-      paraAprobar: this.data_impresion[0].grabar_aprobar
-    };
+    let array_send = this.data_impresion?.length
+      ? {
+        codProforma: this.data_impresion[0]?.codigo_proforma,
+        codcliente: this.data_impresion[0]?.cod_cliente,
+        codcliente_real: this.data_impresion[0]?.cod_cliente_real,
+        codempresa: this.BD_storage,
+        cmbestado_contra_entrega: this.data_impresion[0]?.cmbestado_contra_entrega?.toString() || "",
+        paraAprobar: this.data_impresion[0]?.grabar_aprobar ?? false
+      }
+      : null;
 
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";
     return this.api.create('/venta/transac/veproforma/getDataPDF/' + this.userConn, array_send)

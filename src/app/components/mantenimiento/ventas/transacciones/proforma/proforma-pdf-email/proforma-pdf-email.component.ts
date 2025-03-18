@@ -33,7 +33,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    this.data_impresion = sessionStorage.getItem("data_impresion") !== undefined ? JSON.parse(sessionStorage.getItem("data_impresion")) : null;
+    this.data_impresion = sessionStorage.getItem("data_impresion") !== null ? JSON.parse(sessionStorage.getItem("data_impresion")!) : [];
 
     console.log("data impresion: ", this.data_impresion);
 
@@ -75,7 +75,7 @@ export class ProformaPdfEmailComponent implements OnInit, AfterViewInit {
       codcliente_real: this.data_impresion[0]?.cod_cliente_real,
       codempresa: this.BD_storage,
       cmbestado_contra_entrega: this.data_impresion[0]?.cmbestado_contra_entrega.toString(),
-      paraAprobar: this.data_impresion[0].grabar_aprobar
+      paraAprobar: this.data_impresion[0]?.grabar_aprobar
     };
 
     let errorMessage: string = "La Ruta presenta fallos al hacer peticion GET -/venta/transac/veproforma/getDataPDF/";

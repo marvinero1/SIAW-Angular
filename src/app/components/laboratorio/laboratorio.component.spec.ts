@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-
 import { DatePipe } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
 import { ToastrService } from 'ngx-toastr';
@@ -10,31 +9,19 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LaboratorioComponent } from './laboratorio.component';
 import { ProductService } from './product.service';
+import { of } from 'rxjs';
 
 describe('LaboratorioComponent', () => {
   let component: LaboratorioComponent;
   let fixture: ComponentFixture<LaboratorioComponent>;
 
-  beforeEach(async () => {
-    TestBed.configureTestingModule({
-      imports: [ProductService],
-      declarations: [],
-
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(LaboratorioComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatMenuModule, ProductService],
+      imports: [MatMenuModule],
       declarations: [LaboratorioComponent],
       providers: [
         DatePipe,
-        ProductService,
+        { provide: ProductService, useValue: { getProducts: () => of([]) } }, // Mock básico
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatSnackBar, useValue: { open: () => { } } },
@@ -46,8 +33,14 @@ describe('LaboratorioComponent', () => {
       .compileComponents();
   }));
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LaboratorioComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges(); // 🔹 Asegurar que Angular detecte los cambios
+  });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeTruthy(); // 🔹 Si sigue fallando, loguear component
   });
+
 });

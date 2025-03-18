@@ -5,12 +5,15 @@ import { DebugElement } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MenuFondosComponent } from './menu-fondos.component';
+
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('MenuFondosComponent', () => {
   let component: MenuFondosComponent;
@@ -18,8 +21,16 @@ describe('MenuFondosComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MatMenuModule,
+        MatButtonModule,  // Añadido MatButtonModule
+        MatIconModule,     // Añadido MatIconModule (si estás usando iconos)
+        MatMenuModule
+      ],
+      declarations: [MenuFondosComponent],
       providers: [
         DatePipe,
+        MatMenuModule,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatSnackBar, useValue: { open: () => { } } },
@@ -27,7 +38,8 @@ describe('MenuFondosComponent', () => {
         { provide: MatDialogRef, useValue: {} },
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
         { provide: MAT_DIALOG_DATA, useValue: {} }
-      ]
+      ],
+      
     })
     .compileComponents();
   }));

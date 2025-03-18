@@ -11,7 +11,7 @@
             <div class="col-md">
                 <mat-form-field appearance="outline" class="example-full-width">
                   <mat-label>Descripción </mat-label>
-                  <input type="text" matInput [(value]="localidad_edit?.descripcion" formControlName="descripcion" maxlength="50" required>
+                  <input type="text" matInput [value]="localidad_edit?.descripcion" formControlName="descripcion" maxlength="50" required>
                 </mat-form-field>
             </div>
           </div>
@@ -19,14 +19,14 @@
             <div class="col-md">
               <mat-form-field appearance="outline" class="example-full-width">
                 <mat-label>Provincia </mat-label>
-                <input type="text" matInput [(value]="localidad_edit?.provincia" formControlName="provincia" maxlength="15">
+                <input type="text" matInput [value]="localidad_edit?.provincia" formControlName="provincia" maxlength="15">
               </mat-form-field>
             </div>
 
             <div class="col-md">
               <mat-form-field appearance="outline" class="example-full-width">
                 <mat-label>Código Postal </mat-label>
-                <input type="text" matInput [(value]="localidad_edit?.codigo_postal" formControlName="codigo_postal" maxlength="5">
+                <input type="text" matInput [value]="localidad_edit?.codigo_postal" formControlName="codigo_postal" maxlength="5">
               </mat-form-field>
             </div>
           </div>

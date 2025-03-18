@@ -403,34 +403,36 @@ export class LoginComponent implements OnInit, OnDestroy {
     // localStorage.setItem('token', JSON.stringify(token));
     sessionStorage.setItem('token', JSON.stringify(token));
     // sessionStorage.setItem('contrasenia', JSON.stringify(this.contrasenia));
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(this.contrasenia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
-    sessionStorage.setItem('contrasenia', encryptedData);
+    // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(this.contrasenia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    // sessionStorage.setItem('contrasenia', encryptedData);
   }
 
   guardarStorageUsuario(usuario) {
     // localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
-    // sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
-    sessionStorage.setItem('usuario_logueado', encryptedData);
+    sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    // sessionStorage.setItem('usuario_logueado', encryptedData);
   }
 
   guardarStorageBD(data) {
     // localStorage.setItem('bd_logueado', JSON.stringify(data));
-    // sessionStorage.setItem('bd_logueado', JSON.stringify(data));
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
-    sessionStorage.setItem('bd_logueado', encryptedData);
+    sessionStorage.setItem('bd_logueado', JSON.stringify(data));
+    // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    // sessionStorage.setItem('bd_logueado', encryptedData);
   }
 
   guardarStorageuserConn(data) {
     // localStorage.setItem('user_conn', JSON.stringify(data));
-    // sessionStorage.setItem('user_conn', JSON.stringify(data));
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
-    sessionStorage.setItem('user_conn', encryptedData);
+    sessionStorage.setItem('user_conn', JSON.stringify(data));
+    // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    // sessionStorage.setItem('user_conn', encryptedData);
   }
 
   guardarStorageAgenciaLogueada(agencia) {
-    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(agencia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
-    sessionStorage.setItem('agencia_logueado', encryptedData);
+    // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(agencia), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
+    // sessionStorage.setItem('agencia_logueado', encryptedData);
+    sessionStorage.setItem('agencia_logueado', JSON.stringify(agencia));
+
   }
 
   // obtenerStorage() {

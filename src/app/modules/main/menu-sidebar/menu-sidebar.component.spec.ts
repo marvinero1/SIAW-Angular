@@ -9,7 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import {MenuSidebarComponent} from './menu-sidebar.component';
+import { StoreModule } from '@ngrx/store';
+import { MenuSidebarComponent } from './menu-sidebar.component';
 
 describe('MenuSidbarComponent', () => {
     let component: MenuSidebarComponent;
@@ -18,6 +19,7 @@ describe('MenuSidbarComponent', () => {
     beforeEach(
         waitForAsync(() => {
             TestBed.configureTestingModule({
+                imports: [StoreModule.forRoot({})],
                 declarations: [MenuSidebarComponent],
                 providers: [
                     DatePipe,

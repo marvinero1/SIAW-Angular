@@ -18,7 +18,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
 
   codigo_get_proforma: any;
   ventana: string = "etiquetasItemsProforma";
-  public data_impresion: any = [];
+  public data_impresion: any[] = [];
 
   userConn: any;
   BD_storage: any;
@@ -35,7 +35,7 @@ export class EtiquetasItemProformaComponent implements OnInit {
     this.usuarioLogueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    this.data_impresion = sessionStorage.getItem("data_impresion") !== undefined ? JSON.parse(sessionStorage.getItem("data_impresion")) : null;
+    this.data_impresion = sessionStorage.getItem("data_impresion") !== null ? JSON.parse(sessionStorage.getItem("data_impresion")!) : [];
 
     this.mandarNombre();
     this.getDataPDF();
