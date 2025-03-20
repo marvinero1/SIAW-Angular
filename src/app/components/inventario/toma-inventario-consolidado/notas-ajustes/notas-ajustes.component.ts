@@ -28,7 +28,7 @@ export class NotasAjustesComponent implements OnInit {
   FormularioData: FormGroup;
 
   hora_actual = new Date();
-  fecha_actual = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+
 
   public cod_vendedor_cliente_modal: string;
   public notas_movimiento_get: string;
@@ -54,6 +54,8 @@ export class NotasAjustesComponent implements OnInit {
   items_negativos: any = [];
   save_ajustes: any = [];
 
+  fecha_actual: any;
+
   nombre_ventana: string = "prggeneraajuste.vb";
   public ventana = "Generar Notas de Ajuste"
 
@@ -78,7 +80,7 @@ export class NotasAjustesComponent implements OnInit {
 
   ngOnInit() {
     console.log("Sobrantes: " + this.sobrantesFisicos, "Faltantes Fisicos: " + this.faltantesFisicos);
-
+    this.fecha_actual = this.datePipe.transform(new Date(), "yyyy-MM-dd");
     this.notasMovimientoService.disparadorDeNotasMovimiento.subscribe(data => {
       console.log("Recibiendo Notas de Movimiento: ", data);
       this.notas_movimiento_get = data.movimiento;

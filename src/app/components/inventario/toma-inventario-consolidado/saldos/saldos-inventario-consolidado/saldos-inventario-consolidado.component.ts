@@ -8,7 +8,6 @@ import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { TomaInventarioConsolidadoComponent } from '../../toma-inventario-consolidado.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
 import { ServiceRefreshItemsService } from '../../services-refresh-item/service-refresh-items.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
@@ -45,7 +44,7 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<SaldosInventarioConsolidadoComponent>, public almacenservice: ServicioalmacenService,
     public dialog: MatDialog, private _formBuilder: FormBuilder, public log_module: LogService, private api: ApiService,
     private toastr: ToastrService, private datePipe: DatePipe, @Inject(MAT_DIALOG_DATA) public dataCabecera: any,
-    private spinner: NgxSpinnerService, public tomaInventario: TomaInventarioConsolidadoComponent, private refreshItemSer: ServiceRefreshItemsService) {
+    private spinner: NgxSpinnerService, private refreshItemSer: ServiceRefreshItemsService) {
 
     console.log(dataCabecera);
     this.FormularioDataEdit = this.createForm();
@@ -68,14 +67,14 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
     let hora_actual_complete = hour + ":" + minuts;
 
     return this._formBuilder.group({
-      codigo: [this.dataCabecera.dataCabecera.codigo],
-      id: [this.dataCabecera.dataCabecera.id],
-      numeroid: [this.dataCabecera.dataCabecera.numeroid],
-      fechainicio: [this.dataCabecera.dataCabecera.fechainicio],
-      fechafin: [this.dataCabecera.dataCabecera.fechafin],
-      obs: [this.dataCabecera.dataCabecera.obs],
-      codpersona: [this.dataCabecera.dataCabecera.codpersona],
-      codalmacen: [this.dataCabecera.dataCabecera.codalmacen],
+      codigo: [this.dataCabecera.dataCabecera?.codigo],
+      id: [this.dataCabecera.dataCabecera?.id],
+      numeroid: [this.dataCabecera.dataCabecera?.numeroid],
+      fechainicio: [this.dataCabecera.dataCabecera?.fechainicio],
+      fechafin: [this.dataCabecera.dataCabecera?.fechafin],
+      obs: [this.dataCabecera.dataCabecera?.obs],
+      codpersona: [this.dataCabecera.dataCabecera?.codpersona],
+      codalmacen: [this.dataCabecera.dataCabecera?.codalmacen],
       horareg: [hora_actual_complete],
       fechareg: [this.datePipe.transform(this.fecha_actual, "yyyy-MM-dd")],
       usuarioreg: [usuario_logueado],
@@ -89,7 +88,7 @@ export class SaldosInventarioConsolidadoComponent implements OnInit {
     console.log(data);
 
     this.errorMessage = "La Ruta presenta fallos al hacer la creacion" + "Ruta:- /inventario/oper/prgsaldoinv Update";
-    return this.api.update('/inventario/oper/prgsaldoinv/' + this.userConn + "/" + this.dataCabecera.dataCabecera.codigo + "/" + this.cod_almacen_cliente.codigo, data)
+    return this.api.update('/inventario/oper/prgsaldoinv/' + this.userConn + "/" + this.dataCabecera.dataCabecera?.codigo + "/" + this.cod_almacen_cliente.codigo, data)
       .subscribe({
         next: (datav) => {
           this.saldo_inventario = datav;

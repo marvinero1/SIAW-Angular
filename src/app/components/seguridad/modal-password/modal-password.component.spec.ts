@@ -18,7 +18,7 @@ describe('ModalPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ModalPasswordComponent, ModalGenerarAutorizacionComponent],
+      declarations: [ModalPasswordComponent],
       providers: [
         DatePipe,
         provideHttpClient(),

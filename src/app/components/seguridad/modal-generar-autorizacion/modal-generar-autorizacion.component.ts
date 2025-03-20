@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Autorizacion } from '@services/modelos/objetos';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LogService } from '@services/log-service.service';
 import { ModalAlmacenComponent } from '@components/mantenimiento/inventario/almacen/modal-almacen/modal-almacen.component';
 import { ServicioalmacenService } from '@components/mantenimiento/inventario/almacen/servicioalmacen/servicioalmacen.service';
@@ -204,11 +204,14 @@ export class ModalGenerarAutorizacionComponent implements OnInit {
   sevicio_select: any;
   cod_almacen_cliente: any = [];
 
-  constructor(public dialog: MatDialog, public dialogRef: MatDialogRef<ModalGenerarAutorizacionComponent>,
-    public log_module: LogService, public almacenservice: ServicioalmacenService) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<any>, // Cambiado a MatDialogRef<any>
+    public log_module: LogService,
+    public almacenservice: ServicioalmacenService,
+    @Inject(MAT_DIALOG_DATA) public data: any ) {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
   }
-
   ngOnInit() {
     this.almacenservice.disparadorDeAlmacenes.subscribe(data => {
       console.log("Recibiendo Almacen: ", data);

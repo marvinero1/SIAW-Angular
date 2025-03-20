@@ -156,7 +156,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   conectarAgencia(agencia) {
-
     let errorMessage = "La Ruta o el servidor presenta fallos al hacer la creacion" + "Ruta:-- /Connection/connServers/";
     return this.api.getAll("/Connection/connServers/" + agencia)
       .subscribe({
@@ -268,7 +267,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.getFirstEmpresa(userConn);
             this.guardarStorageuserConn(userConn);
             this.guardarToken(datav);
-                    
+            sessionStorage.setItem('HOLA SAMU', JSON.stringify(usuario));
             this.isAuthLoading = false;
             this.log_module.guardarLog(this.ventana, this.detalle, this.tipo, "", "");
             // this.getParametrosIniciales(userConn, dataForm.login);
@@ -410,6 +409,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   guardarStorageUsuario(usuario) {
     // localStorage.setItem('usuario_logueado', JSON.stringify(usuario));
     sessionStorage.setItem('usuario_logueado', JSON.stringify(usuario));
+    
+
     // const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'Xy8$9zA&dL!pK3mN0qB@tR4uV7wG#fC').toString();
     // sessionStorage.setItem('usuario_logueado', encryptedData);
   }

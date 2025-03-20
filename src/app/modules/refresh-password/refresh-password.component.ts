@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LoginComponent } from '@modules/login/login.component';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { ToastrService } from 'ngx-toastr';
@@ -29,8 +28,7 @@ export class RefreshPasswordComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     private api: ApiService, public _snackBar: MatSnackBar, private toastr: ToastrService,
-    public dialogRef: MatDialogRef<RefreshPasswordComponent>,
-    public login: LoginComponent, public log_module: LogService ) {
+    public dialogRef: MatDialogRef<RefreshPasswordComponent>, public log_module: LogService ) {
 
     this.FormularioDataRefrescarPassword = this.createForm();
   }

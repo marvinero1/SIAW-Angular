@@ -16,7 +16,6 @@ import { Router } from '@angular/router';
 import { ApiService } from '@services/api.service';
 import { LogService } from '@services/log-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { LoginComponent } from '@modules/login/login.component';
 
 describe('RefreshPasswordComponent', () => {
   let component: RefreshPasswordComponent;

@@ -93,6 +93,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { AuthGuard } from '@guards/auth.guard';
 import { Interceptor } from '@services/interceptor';
 import { NonAuthGuard } from '@guards/non-auth.guard';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 import { RefreshPasswordComponent } from '@modules/refresh-password/refresh-password.component';
 import { TransformacionDigitalComponent } from '@modules/transformacion-digital/transformacion-digital.component';
@@ -572,7 +573,7 @@ registerPlugin(UndoRedo);
         CatalogonotasmovimientosComponent, ModificarNotaMovimientoComponent, NotaMovimientoBuscadorAvanzadoComponent, DialogTarifaImpresionComponent,
         ExceltoexcelComponent, VistaPreviaNmComponent, PedidoComponent, CatalogoPedidoComponent, ModificarPedidoComponent, CatalogoProvedoresComponent,
         BuscadorAvanzadoPedidosComponent, SolicitudMercaderiaUrgenteComponent, CatalogoSolicitudUrgenteComponent, GrupoMerCatalogoComponent, ModificarSolicitudMercaderiaUrgenteComponent,
-        GenerarPedidoAutomaticoComponent,
+        GenerarPedidoAutomaticoComponent, MainComponent,
 
 
 
@@ -652,7 +653,7 @@ registerPlugin(UndoRedo);
         QRCodeModule,
         ToastModule,
         ListboxModule,
-
+        CdkDrag,
 
         ToastrModule.forRoot({
             timeOut: 5000, // Duración infinita

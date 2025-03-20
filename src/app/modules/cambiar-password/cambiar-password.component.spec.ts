@@ -24,7 +24,7 @@ describe('CambiarPasswordComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CambiarPasswordComponent, LoginComponent],
+      declarations: [CambiarPasswordComponent],
       providers: [
         DatePipe,
         MessageService,
@@ -35,14 +35,6 @@ describe('CambiarPasswordComponent', () => {
         { provide: MatDialogRef, useValue: {} },
         { provide: ToastrService, useValue: { success: () => { }, error: () => { } } },
         { provide: MAT_DIALOG_DATA, useValue: {} },
-
-        // 🔹 Agrega los mocks de los servicios que usa LoginComponent
-        { provide: Renderer2, useValue: { setStyle: () => { } } },
-        { provide: FormBuilder, useValue: new FormBuilder() },
-        { provide: Router, useValue: { navigate: () => { } } },
-        { provide: ApiService, useValue: { login: () => { }, logout: () => { } } },
-        { provide: LogService, useValue: {} },
-        { provide: NgxSpinnerService, useValue: { show: () => { }, hide: () => { } } }
       ]
     })
     .compileComponents();

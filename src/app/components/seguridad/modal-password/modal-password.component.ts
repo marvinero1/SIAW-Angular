@@ -218,8 +218,7 @@ export class ModalPasswordComponent implements OnInit {
 
   constructor(private api: ApiService, public dialog: MatDialog, public dialogRef: MatDialogRef<ModalPasswordComponent>,
     public log_module: LogService, private toastr: ToastrService, public _snackBar: MatSnackBar,
-    public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
-    public almacenservice: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public dataA: any,
+    private clipboard: Clipboard, public almacenservice: ServicioalmacenService, @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any, @Inject(MAT_DIALOG_DATA) public sevicio_select: any,
     @Inject(MAT_DIALOG_DATA) public cod_almacen: any,) {
 
@@ -229,11 +228,9 @@ export class ModalPasswordComponent implements OnInit {
 
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    console.log(this.BD_storage);
-
 
     this.data_servicio = this.sevicio_select.sevicio_select;
-    this.data_text_area = this.autorizacion.find(x => x.codigo == this.data_servicio);
+    this.data_text_area = this.autorizacion.find(x => x?.codigo == this.data_servicio);
   }
 
   ngOnInit() {
@@ -250,7 +247,7 @@ export class ModalPasswordComponent implements OnInit {
 
           if (datav = 712) {
             this._snackBar.open('¡ Permiso Autorizado !' + this.autorizacion_recibida.resp, '☑️', {
-              duration: 12000,
+              duration: 4000,
               panelClass: ['coorporativo-snackbarBlue', 'login-snackbar'],
             });
             this.getPassword();

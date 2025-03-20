@@ -66,8 +66,8 @@ export class ModalBotonesImpresionComponent implements OnInit {
   close() {
     this.toastr.info("PROCESO COMPLETADO ✅");
     sessionStorage.removeItem("data_impresion");
+    
     this.dialogRef.close();
-
     window.location.reload();
   }
 }

@@ -68,6 +68,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ExceltoexcelComponent } from '@components/uso-general/exceltoexcel/exceltoexcel.component';
 import { ExceltoexcelService } from '@components/uso-general/exceltoexcel/servicio-excel-to-excel/exceltoexcel.service';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-proforma',
@@ -531,7 +532,7 @@ export class ProformaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.agencia_logueado = sessionStorage.getItem("agencia_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("agencia_logueado")) : null;
    
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
-    this.password = sessionStorage.getItem("contrasenia") !== undefined ? JSON.parse(sessionStorage.getItem("contrasenia")) : null;
+    // this.password = sessionStorage.getItem("contrasenia") !== undefined ? JSON.parse(sessionStorage.getItem("contrasenia")) : null;
 
     // console.log("Longitud del array de validaciones aca esta vacio supuestamente xd xd:", this.validacion_post.length);
     this.api.getRolUserParaVentana(this.nombre_ventana);

@@ -241,7 +241,8 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
   constructor(private api: ApiService, public dialog: MatDialog, public almacenservice: ServicioalmacenService,
     public dialogRef: MatDialogRef<PermisosEspecialesParametrosComponent>, private datePipe: DatePipe,
     public log_module: LogService, public _snackBar: MatSnackBar, private messageService: MessageService,
-    public modalAutorizacion: ModalGenerarAutorizacionComponent, private clipboard: Clipboard,
+    private clipboard: Clipboard,
+
     @Inject(MAT_DIALOG_DATA) public dataA: any,
     @Inject(MAT_DIALOG_DATA) public dataB: any,
     @Inject(MAT_DIALOG_DATA) public dataPermiso: any,
@@ -251,7 +252,7 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     this.data_inventario_code = dataCodigoPermiso.dataCodigoPermiso;
 
     let inventario_codigo: string;
-    inventario_codigo = this.data_inventario_code.toString();
+    inventario_codigo = this.data_inventario_code?.toString();
     console.log("🚀 ~ PermisosEspecialesParametrosComponent ~ @Inject ~ inventario_codigo en entero:", inventario_codigo)
 
     let a = this.autorizacion.find((element) => element.codigo === inventario_codigo);
@@ -270,8 +271,6 @@ export class PermisosEspecialesParametrosComponent implements OnInit {
     this.userConn = sessionStorage.getItem("user_conn") !== undefined ? JSON.parse(sessionStorage.getItem("user_conn")) : null;
     this.BD_storage = sessionStorage.getItem("bd_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("bd_logueado")) : null;
     this.user_logueado = sessionStorage.getItem("usuario_logueado") !== undefined ? JSON.parse(sessionStorage.getItem("usuario_logueado")) : null;
-
-    // console.log(this.BD_storage);
 
     this.data_text_area = this.autorizacion.find(x => x.codigo == this.data_servicio);
   }

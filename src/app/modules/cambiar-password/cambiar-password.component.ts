@@ -28,7 +28,7 @@ export class CambiarPasswordComponent implements OnInit {
   public tipo = "transaccion-refresh-pasword-UPDATE";
 
   constructor(private _formBuilder: FormBuilder, private api: ApiService, public _snackBar: MatSnackBar, private messageService: MessageService,
-    public dialogRef: MatDialogRef<CambiarPasswordComponent>, public login: LoginComponent, public log_module: LogService,
+    public dialogRef: MatDialogRef<CambiarPasswordComponent>, public log_module: LogService,
     @Inject(MAT_DIALOG_DATA) public login_modal_password: any) {
     this.FormularioDataRefrescarPassword = this.createForm();
   }

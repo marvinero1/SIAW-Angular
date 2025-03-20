@@ -39,18 +39,24 @@ export class MainComponent implements OnInit {
 
 	ngOnInit() {
 		this.ui = this.store.select('ui');
-		this.renderer.removeClass(
-			document.querySelector('app-root'),
-			'login-page'
-		);
-		this.renderer.removeClass(
-			document.querySelector('app-root'),
-			'register-page'
-		);
-		this.renderer.addClass(
-			document.querySelector('app-root'),
-			'layout-fixed'
-		);
+		if (document.querySelector('app-root')) {
+			this.renderer.removeClass(
+				document.querySelector('app-root'),
+				'login-page'
+			);
+		};
+		if (document.querySelector('app-root')) {
+			this.renderer.removeClass(
+				document.querySelector('app-root'),
+				'register-page'
+			);
+		};
+		if (document.querySelector('app-root')) {
+			this.renderer.addClass(
+				document.querySelector('app-root'),
+				'layout-fixed'
+			);
+		};
 
 		this.ui.subscribe(
 			({

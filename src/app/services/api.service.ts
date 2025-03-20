@@ -343,6 +343,8 @@ export class ApiService {
   }
 
   async logout() {
+    this.eliminarToken();
+
     // localStorage.removeItem("usuario_logueado");
     sessionStorage.removeItem("usuario_logueado");
 
@@ -358,7 +360,6 @@ export class ApiService {
     // localStorage.removeItem("contrasenia");
     sessionStorage.removeItem("contrasenia");
 
-    this.eliminarToken();
     // localStorage.removeItem("token");
     sessionStorage.removeItem("token");
 

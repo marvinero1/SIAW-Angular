@@ -28,7 +28,6 @@ export class ProformaPdfComponent implements OnInit {
   data_detalle_proforma: any = [];
   data_detalle_etiqueta: any = [];
 
-
   private numberFormatter_4decimales: Intl.NumberFormat;
   private numberFormatter_2decimales: Intl.NumberFormat;
 
